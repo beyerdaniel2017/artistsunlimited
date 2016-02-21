@@ -135,7 +135,7 @@
 
     SC.initialize({
         client_id: "bd30924b4a322ba9e488c06edc73f909",
-        redirect_uri: "http://serene-sands-30935.herokuapp.com/SCCallback.html"
+        redirect_uri: "http://serene-sands-30935.herokuapp.com/callback.html"
     });
 
 })();
