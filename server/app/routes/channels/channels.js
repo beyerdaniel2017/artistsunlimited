@@ -41,6 +41,10 @@ router.post('/initializeDBBaby', function(req, res, next) {
     channelID: '198031384',
     displayName: 'Test Account',
     url: 'https://soundcloud.com/latropicalmixes'
+  }, {
+
+    displayName: 'Red Tag',
+    url: 'https://soundcloud.com/red-tag'
   }];
   for (var i in names) {
     var channel = new Channel(names[i]);

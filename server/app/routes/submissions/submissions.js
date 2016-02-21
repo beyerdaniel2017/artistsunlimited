@@ -115,7 +115,7 @@ router.post('/paid', function(req, res, next) {
         ev = events[index];
       }
       Channel.findOne({
-        channelID = chanID;
+        channelID: chanID
       }).then(function(channel) {
         if (!ev) {
           var SC = require('soundclouder');
