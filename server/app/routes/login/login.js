@@ -8,7 +8,7 @@ var Event = mongoose.model('Event');
 var SC = require('soundclouder');
 var client_id = "bd30924b4a322ba9e488c06edc73f909";
 var client_secret = "f09ab9b33abcefcb2dacdc58fb2b5558";
-var redirect_uri = "http://localhost:1337/SCCallback.html";
+var redirect_uri = "http://serene-sands-30935.herokuapp.com//SCCallback.html";
 
 router.post('/', function(req, res, next) {
   console.log(req.body.password);

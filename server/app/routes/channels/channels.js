@@ -48,5 +48,5 @@ router.post('/initializeDBBaby', function(req, res, next) {
     channel.price = 10;
     channel.save();
   }
-  res.send('done');
+  res.w('done');
 });
