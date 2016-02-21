@@ -1,0 +1,18 @@
+<div style="text-align:center">
+  <h2>Song Submission</h2>
+<!--   <h3>Channel:</h3>
+  <select ng-model="chosenChannel">
+    <option ng-repeat="channel in channels" value='{{channel.channelID}}'>{{channel.displayName}} - ${{channel.price}}</option>
+  </select> -->
+  <h3>Song URL:</h3>
+  <input type="text" ng-model="url" ng-change="urlChange()"/>
+  <h4 ng-if="notFound">Song not found.</h4>
+  <div id="scPlayer" style="margin:10px 0"></div>
+  <h3>Your Name:</h3>
+  <input type="text" ng-model="name"/>
+  <br>
+  <h3>Your Email:</h3>
+  <input type="text" ng-model="email"/>
+  <br><br>
+  <button ng-click="submit()">Submit</button>
+</div>
