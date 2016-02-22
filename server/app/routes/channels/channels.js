@@ -57,7 +57,7 @@ router.post('/initializeDBBaby', function(req, res, next) {
   }];
   for (var i in names) {
     var channel = new Channel(names[i]);
-    channel.price = 10;
+    channel.price = 1;
     channel.save();
   }
   res.send('done');

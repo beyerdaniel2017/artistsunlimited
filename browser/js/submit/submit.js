@@ -43,10 +43,10 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     console.log($scope.chosenChannel)
 
     $http.post('/api/submissions', {
-        // channelID: $scope.chosenChannel,
         email: $scope.email,
         trackID: $scope.track.id,
-        name: $scope.name
+        name: $scope.name,
+        channelIDS: []
       })
       .then(function(res) {
         window.alert("Your song has been submitted and will be reviewed soon.");
