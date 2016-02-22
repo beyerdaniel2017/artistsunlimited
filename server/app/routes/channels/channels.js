@@ -5,10 +5,7 @@ var mongoose = require('mongoose');
 var Channel = mongoose.model('Channel');
 
 router.get('/', function(req, res, next) {
-  Channel.find({
-      active: true
-    })
-    .exec()
+  Channel.find({}).exec()
     .then(function(channels) {
       channels.forEach(function(c) {
         c.accessToken = undefined;
@@ -57,7 +54,6 @@ router.post('/initializeDBBaby', function(req, res, next) {
   }];
   for (var i in names) {
     var channel = new Channel(names[i]);
-    channel.active = true;
     channel.price = 10;
     channel.save();
   }
