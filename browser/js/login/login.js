@@ -62,7 +62,6 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         return $http.get('/api/channels');
       })
       .then(function(res) {
-        console.log(channels);
         console.log(res.data);
         $scope.channels = res.data;
         console.log(res.data);
