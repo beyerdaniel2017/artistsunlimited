@@ -78,6 +78,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
     } else {
       sub.channelIDS.splice(index, 1);
     }
+    console.log(sub.channelIDS);
   }
 
   $scope.save = function(submi) {
