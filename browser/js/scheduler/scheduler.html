@@ -65,7 +65,7 @@
 <!-- overlay -->
 <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showOverlay">
   <div style="width: 500px; height:400px; background-color: white; margin: 300px auto; padding: 50px 0;">
-    <span>Day: {{makeEvent.day.toLocaleDateString()}}     Hour: {{makeEvent.hour}}</span><br><br>
+    <span>Day: {{makeEvent.day.toLocaleDateString()}}     Hour: {{makeEvent.day.getHours()}}</span><br><br>
     <span>Paid: </span><input type="checkbox" ng-model="makeEvent.paid" ng-change="changePaid()" ng-hide="makeEvent.paid && makeEvent.trackID"/><br><br>
     <div ng-hide="makeEvent.paid">
       <span >URL: </span><input type="text" ng-model="makeEventURL" ng-change="changeURL()"/><br><br>

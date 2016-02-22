@@ -18,7 +18,6 @@ router.get('/', function(req, res, next) {
     .then(null, next);
 });
 
-
 router.put('/', function(req, res, next) {
   if (req.body.password != "letMeManage") next(new Error("Wrong password"));
   Channel.findByIdAndUpdate(req.body._id, req.body, {
@@ -30,8 +29,6 @@ router.put('/', function(req, res, next) {
     .then(null, next);
 })
 
-
-
 router.post('/initializeDBBaby', function(req, res, next) {
   var names = [{
     channelID: '86560544',
@@ -39,12 +36,24 @@ router.post('/initializeDBBaby', function(req, res, next) {
     url: 'https://soundcloud.com/latropical'
   }, {
     channelID: '198031384',
-    displayName: 'Test Account',
+    displayName: 'La Tropical Mixes',
     url: 'https://soundcloud.com/latropicalmixes'
   }, {
-
+    channelID: '206926900',
     displayName: 'Red Tag',
     url: 'https://soundcloud.com/red-tag'
+  }, {
+    channelID: '64684860',
+    displayName: 'Etiquette Noir',
+    url: 'https://soundcloud.com/etiquettenoir'
+  }, {
+    channelID: '164339022',
+    displayName: 'Le Sol',
+    url: 'https://soundcloud.com/lesolmusique'
+  }, {
+    channelID: '203522426',
+    displayName: 'Classy Records',
+    url: 'https://soundcloud.com/onlyclassy'
   }];
   for (var i in names) {
     var channel = new Channel(names[i]);
@@ -52,5 +61,5 @@ router.post('/initializeDBBaby', function(req, res, next) {
     channel.price = 10;
     channel.save();
   }
-  res.w('done');
+  res.send('done');
 });

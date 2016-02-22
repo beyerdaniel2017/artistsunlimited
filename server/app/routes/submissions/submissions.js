@@ -100,7 +100,6 @@ router.post('/paid', function(req, res, next) {
     .then(function(events) {
       events.forEach(function(event) {
         event.day = new Date(event.day);
-        event.day.setHours(event.hour);
       });
       events.sort(function(a, b) {
         return a.day.getTime() - b.day.getTime();
@@ -115,30 +114,65 @@ router.post('/paid', function(req, res, next) {
         ev = events[index];
       }
       Channel.findOne({
-        channelID: chanID
-      }).then(function(channel) {
-        if (!ev) {
-          var SC = require('soundclouder');
-          var client_id = "bd30924b4a322ba9e488c06edc73f909";
-          var client_secret = "f09ab9b33abcefcb2dacdc58fb2b5558";
-          var redirect_uri = "http://serene-sands-30935.herokuapp.com/callback.html";
-          SC.init(client_id, client_secret, redirect_uri);
-          SC.put('/e1/me/track_reposts/' + id, channel.accessToken, function(err, data) {
-            if (err) {
-              console.log(err);
-            } else {
-              sendMessage(submission.name, submission.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey" + submission.name + "<br><br>We would just like to let you know the track has been reposted! If you would like to do another round of reposts please resubmit your song to <a href='http://etiquettenoir.co/'>Etiquette Noir</a> or <a href='http://lesol.co/'>Le Sol</a> and we will get back to you.<br><br>How was this experience by the way? Feel free to email some feedback or suggestions to feedback@peninsulamgmt.com.<br><br>Goodluck and thanks again<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com / kevinlatropical<br> www.facebook.com / edwardlatropical");
-            }
-          });
-        } else {
-          ev.trackID = submission.trackID;
-          ev.save().then(function(ev) {
+          channelID: chanID
+        }).exec()
+        .then(function(channel) {
+          if (!ev) {
+            Event.find({
+                channelID: chanID
+              }).exec()
+              .then(function(allEvents) {
+                //find the next open spot starting tomorrow: 10:00PM — 12:00AM — 3:00AM — 6:00AM — 9:00AM
+                var currentEvents = allEvents.filter(function(event) {
+                  event.day = new Date(event.day);
+                  return event.day.getTime() > today.getTime();
+                });
 
-            sendEmail(submission.name, submission.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + submission.name + ",<br><br>Thank you for completing the last step for promotion on your track! After reviewing the track and receiving your payment we have scheduled the repost for " + ev.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our other PR services over at (ARTISTS UNLIMITED x OTHER PAY FOR POST CHANNELS)<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com / kevinlatropical<br> www.facebook.com / edwardlatropical");
-            res.send({});
-          })
-        }
-      })
+              });
+            var SC = require('soundclouder');
+            var client_id = "bd30924b4a322ba9e488c06edc73f909";
+            var client_secret = "f09ab9b33abcefcb2dacdc58fb2b5558";
+            var redirect_uri = "http://serene-sands-30935.herokuapp.com/callback.html";
+            SC.init(client_id, client_secret, redirect_uri);
+            SC.put('/e1/me/track_reposts/' + id, channel.accessToken, function(err, data) {
+              if (err) {
+                console.log(err);
+                next(err);
+              } else {
+                sendMessage(submission.name, submission.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey" + submission.name + "<br><br>We would just like to let you know the track has been reposted! If you would like to do another round of reposts please resubmit your song to <a href='http://etiquettenoir.co/'>Etiquette Noir</a> or <a href='http://lesol.co/'>Le Sol</a> and we will get back to you.<br><br>How was this experience by the way? Feel free to email some feedback or suggestions to feedback@peninsulamgmt.com.<br><br>Goodluck and thanks again<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com / kevinlatropical<br> www.facebook.com / edwardlatropical");
+                res.send({});
+              }
+            });
+          } else {
+            ev.trackID = submission.trackID;
+            ev.save().then(function(ev) {
+              sendEmail(submission.name, submission.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + submission.name + ",<br><br>Thank you for completing the last step for promotion on your track! After reviewing the track and receiving your payment we have scheduled the repost for " + ev.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our other PR services over at (ARTISTS UNLIMITED x OTHER PAY FOR POST CHANNELS)<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com / kevinlatropical<br> www.facebook.com / edwardlatropical");
+              res.send({});
+            })
+          }
+        })
     })
     .then(null, next);
+});
+
+router.post('/test', function(req, res, next) {
+  Channel.findOne({
+      channelID: chanID
+    }).exec()
+    .then(function(channel) {
+      if (!ev) {
+        Event.find({
+            channelID: chanID
+          }).exec()
+          .then(function(allEvents) {
+            //find the next open spot starting tomorrow: 10:00PM — 12:00AM — 3:00AM — 6:00AM — 9:00AM
+            var currentEvents = allEvents.filter(function(event) {
+              event.day = new Date(event.day);
+              return event.day.getTime() > today.getTime();
+            });
+            console.log(currentEvents);
+
+          });
+      }
+    });
 });

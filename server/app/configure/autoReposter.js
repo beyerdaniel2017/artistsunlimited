@@ -24,12 +24,11 @@ function doRepost() {
     .then(function(channels) {
       channels.forEach(function(chan) {
         Event.find({
-            hour: hour,
             channelID: chan.channelID
           }).exec()
           .then(function(events) {
             var event = events.find(function(even) {
-              return even.day.toLocaleDateString() == date.toLocaleDateString();
+              return even.day.toLocaleDateString() == date.toLocaleDateString() && even.day.getHours() == date.getHours();
             });
             if (event) repostAndRemove(event, chan);
           })

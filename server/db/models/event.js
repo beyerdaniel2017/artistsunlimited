@@ -12,9 +12,6 @@ var schema = new mongoose.Schema({
   },
   day: {
     type: Date
-  },
-  hour: {
-    type: Number
   }
 });
 

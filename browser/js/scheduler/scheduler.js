@@ -53,10 +53,11 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
     $scope.makeEvent = calendarDay.events[hour];
     console.log($scope.makeEvent);
     if ($scope.makeEvent == "-") {
+      var makeDay = new Date(day);
+      makeDay.setHours(hour);
       $scope.makeEvent = {
         channelID: $scope.channel.channelID,
-        day: new Date(day),
-        hour: hour,
+        day: makeDay,
         paid: false
       };
       $scope.newEvent = true;
@@ -109,7 +110,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
             var calendarDay = $scope.calendar.find(function(calD) {
               return calD.day.toLocaleDateString() == $scope.makeEvent.day.toLocaleDateString();
             });
-            calendarDay.events[$scope.makeEvent.hour] = "-";
+            calendarDay.events[$scope.makeEvent.day.getHours()] = "-";
             $scope.showOverlay = false;
             window.alert("Deleted");
           })
@@ -120,7 +121,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
         var calendarDay = $scope.calendar.find(function(calD) {
           return calD.day.toLocaleDateString() == $scope.makeEvent.day.toLocaleDateString();
         });
-        calendarDay.events[$scope.makeEvent.hour] = "-";
+        calendarDay.events[$scope.makeEvent.getHours()] = "-";
         var events
         $scope.showOverlay = false;
       }
@@ -142,7 +143,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
             var calendarDay = $scope.calendar.find(function(calD) {
               return calD.day.toLocaleDateString() == event.day.toLocaleDateString();
             });
-            calendarDay.events[event.hour] = event;
+            calendarDay.events[event.day.getHours()] = event;
             $scope.showOverlay = false;
             window.alert("Saved");
           })
@@ -161,7 +162,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
             var calendarDay = $scope.calendar.find(function(calD) {
               return calD.day.toLocaleDateString() == event.day.toLocaleDateString();
             });
-            calendarDay.events[event.hour] = event;
+            calendarDay.events[event.getHours()] = event;
             $scope.showOverlay = false;
             window.alert("Saved");
           })
@@ -317,7 +318,7 @@ function fillDateArrays(events) {
       eventArray[j] = "-";
     }
     dayEvents.forEach(function(ev) {
-      eventArray[ev.hour] = ev;
+      eventArray[ev.day.getHours()] = ev;
     });
     calDay.events = eventArray;
     calendar.push(calDay);
