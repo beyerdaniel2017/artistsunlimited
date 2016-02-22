@@ -27,6 +27,9 @@ function doRepost() {
             channelID: chan.channelID
           }).exec()
           .then(function(events) {
+            events.forEach(function(ev) {
+              ev.day = new Date(ev.day);
+            });
             var event = events.find(function(even) {
               return even.day.toLocaleDateString() == date.toLocaleDateString() && even.day.getHours() == date.getHours();
             });

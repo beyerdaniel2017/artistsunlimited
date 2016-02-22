@@ -14,6 +14,7 @@ router.put('/', function(req, res, next) {
       return event.save()
     })
     .then(function(ev) {
+      ev.day = new Date(ev.day);
       res.send(ev);
     })
     .then(null, next);
@@ -24,6 +25,7 @@ router.post('/', function(req, res, next) {
   var event = new Event(req.body);
   event.save()
     .then(function(ev) {
+      ev.day = new Date(ev.day);
       res.send(ev)
     })
     .then(null, next);
@@ -33,6 +35,7 @@ router.delete('/:id/:password', function(req, res, next) {
   if (req.params.password != "letMeManage") next(new Error("Wrong password"));
   Event.findByIdAndRemove(req.params.id).exec()
     .then(function(event) {
+      event.day = new Date(event.day);
       res.send(event);
     })
     .then(null, next);

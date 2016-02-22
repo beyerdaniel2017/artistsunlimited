@@ -123,6 +123,9 @@ router.post('/paid', function(req, res, next) {
               }).exec()
               .then(function(allEvents) {
                 //find the next open spot starting tomorrow: 10:00PM — 12:00AM — 3:00AM — 6:00AM — 9:00AM
+                allEvents.forEach(function(ev) {
+                  ev.day = new Date(ev.day);
+                });
                 var searchHours = [0, 3, 6, 9, 22];
                 var continu = true;
                 var ind = 1;
