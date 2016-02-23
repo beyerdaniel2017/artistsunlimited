@@ -72,18 +72,8 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   }
 
   $scope.changePaid = function() {
-    if ($scope.makeEvent.paid == false) {
-      if (!$scope.canLowerOpenEvents()) {
-        $scope.makeEvent.paid = true;
-        window.alert('Not enough unfilled "paid" slots.')
-      } {
-        $scope.makeEvent.trackID = undefined;
-        $scope.makeEventURL = undefined;
-      }
-    } else {
-      $scope.makeEvent.trackID = undefined;
-      $scope.makeEventURL = undefined;
-    }
+    $scope.makeEvent.trackID = undefined;
+    $scope.makeEventURL = undefined;
   }
 
   $scope.changeURL = function() {
@@ -101,30 +91,26 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   }
 
   $scope.deleteEvent = function() {
-    if ($scope.canLowerOpenEvents()) {
-      if (!$scope.newEvent) {
-        $http.delete('/api/events/' + $scope.makeEvent._id + '/' + $rootScope.password)
-          .then(function(res) {
-            var calendarDay = $scope.calendar.find(function(calD) {
-              return calD.day.toLocaleDateString() == $scope.makeEvent.day.toLocaleDateString();
-            });
-            calendarDay.events[$scope.makeEvent.day.getHours()] = "-";
-            $scope.showOverlay = false;
-            window.alert("Deleted");
-          })
-          .then(null, function(err) {
-            window.alert("ERROR: did not Delete.")
+    if (!$scope.newEvent) {
+      $http.delete('/api/events/' + $scope.makeEvent._id + '/' + $rootScope.password)
+        .then(function(res) {
+          var calendarDay = $scope.calendar.find(function(calD) {
+            return calD.day.toLocaleDateString() == $scope.makeEvent.day.toLocaleDateString();
           });
-      } else {
-        var calendarDay = $scope.calendar.find(function(calD) {
-          return calD.day.toLocaleDateString() == $scope.makeEvent.day.toLocaleDateString();
+          calendarDay.events[$scope.makeEvent.day.getHours()] = "-";
+          $scope.showOverlay = false;
+          window.alert("Deleted");
+        })
+        .then(null, function(err) {
+          window.alert("ERROR: did not Delete.")
         });
-        calendarDay.events[$scope.makeEvent.getHours()] = "-";
-        var events
-        $scope.showOverlay = false;
-      }
     } else {
-      window.alert('Not enough unfilled "paid" slots.')
+      var calendarDay = $scope.calendar.find(function(calD) {
+        return calD.day.toLocaleDateString() == $scope.makeEvent.day.toLocaleDateString();
+      });
+      calendarDay.events[$scope.makeEvent.getHours()] = "-";
+      var events
+      $scope.showOverlay = false;
     }
   }
 
@@ -253,19 +239,19 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
     $scope.loadQueueSongs([$scope.channel.queue[index], $scope.channel.queue[index + 1]]);
   }
 
-  $scope.canLowerOpenEvents = function() {
-    var waitingSubs = $scope.submissions.filter(function(sub) {
-      return sub.invoiceID;
-    });
-    var openSlots = [];
-    $scope.calendar.forEach(function(day) {
-      day.events.forEach(function(ev) {
-        if (ev.paid && !ev.trackID) openSlots.push(ev);
-      });
-    });
-    var openNum = openSlots.length - waitingSubs.length;
-    return openNum > 0;
-  }
+  // $scope.canLowerOpenEvents = function() {
+  //   var waitingSubs = $scope.submissions.filter(function(sub) {
+  //     return sub.invoiceID;
+  //   });
+  //   var openSlots = [];
+  //   $scope.calendar.forEach(function(day) {
+  //     day.events.forEach(function(ev) {
+  //       if (ev.paid && !ev.trackID) openSlots.push(ev);
+  //     });
+  //   });
+  //   var openNum = openSlots.length - waitingSubs.length;
+  //   return openNum > 0;
+  // }
 
   $scope.loadSubmissions = function() {
     setTimeout(function() {
