@@ -2,26 +2,17 @@ app.config(function($stateProvider) {
   $stateProvider.state('submitSong', {
     url: '/',
     templateUrl: 'js/submit/submit.html',
-    controller: 'SubmitSongController',
-    // resolve: {
-    //   channels: function($http) {
-    //     return $http.get('/api/channels/')
-    //       .then(function(res) {
-    //         return res.data.channels;
-    //       });
-    //   }
-    // }
+    controller: 'SubmitSongController'
   });
 });
 
 app.controller('SubmitSongController', function($rootScope, $state, $scope, $http, CLIENT_ID) {
 
-  // $scope.channels = channels;
-
   $scope.urlChange = function() {
     var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.url + '&client_id=' + CLIENT_ID;
     $http.get(getPath)
       .then(function(res) {
+        console.log(res.data);
         $scope.track = res.data;
         $scope.track.uri
         SC.oEmbed($scope.url, {
