@@ -17,11 +17,9 @@ app.config(function($stateProvider) {
 app.controller('SubmitSongController', function($rootScope, $state, $scope, $http, CLIENT_ID) {
 
   // $scope.channels = channels;
-  // console.log($scope.channels);
 
   $scope.urlChange = function() {
     var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.url + '&client_id=' + CLIENT_ID;
-    console.log(getPath);
     $http.get(getPath)
       .then(function(res) {
         $scope.track = res.data;
@@ -40,13 +38,13 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.submit = function() {
-    console.log($scope.chosenChannel)
 
     $http.post('/api/submissions', {
         email: $scope.email,
         trackID: $scope.track.id,
         name: $scope.name,
-        channelIDS: []
+        channelIDS: [],
+        invoiceIDS: []
       })
       .then(function(res) {
         window.alert("Your song has been submitted and will be reviewed soon.");

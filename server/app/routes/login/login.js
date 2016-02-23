@@ -11,7 +11,6 @@ var client_secret = "f09ab9b33abcefcb2dacdc58fb2b5558";
 var redirect_uri = "http://serene-sands-30935.herokuapp.com/callback.html"; //serene-sands-30935.herokuapp.com
 
 router.post('/', function(req, res, next) {
-  console.log(req.body.password);
   if (req.body.password == 'letMeManage') {
     res.send('OK');
   } else {

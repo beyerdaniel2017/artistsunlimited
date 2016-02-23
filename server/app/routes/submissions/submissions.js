@@ -11,6 +11,7 @@ var sendInvoice = require("../../payPal/sendInvoice.js");
 
 router.post('/', function(req, res, next) {
   var submission = new Submission(req.body);
+  submission.invoiceIDS = [];
   submission.save()
     .then(function(sub) {
       res.send('Submitted');
@@ -18,9 +19,12 @@ router.post('/', function(req, res, next) {
     .then(null, next);
 });
 
-router.get('/', function(req, res, next) {
+router.get('/unaccepted', function(req, res, next) {
   Submission.find({}).exec()
     .then(function(subs) {
+      subs = subs.filter(function(sub) {
+        return sub.channelIDS.length == 0;
+      });
       res.send(subs);
     })
     .then(null, next);
@@ -38,7 +42,6 @@ router.put('/save', function(req, res, next) {
           var chans = channels.filter(function(cha) {
             return sub.channelIDS.indexOf(cha.channelID) != -1;
           });
-          console.log(chans);
           var nameString = "";
           chans.forEach(function(cha, index) {
             var addString = "<a href='" + cha.url + "'>" + cha.displayName + "</a>";
@@ -86,7 +89,6 @@ router.post('/paid', function(req, res, next) {
       invoiceIDS: req.body.resource.invoice.id
     }).exec()
     .then(function(sub) {
-      console.log(sub);
       submission = sub;
       var index = sub.invoiceIDS.indexOf(req.body.resource.invoice.id);
       chanID = sub.channelIDS[index];
@@ -106,8 +108,6 @@ router.post('/paid', function(req, res, next) {
       var index = 0;
       var today = new Date();
       var ev = events[index];
-      console.log(events);
-      console.log(ev);
       while (ev && ev.day.getTime() < today.getTime()) {
         index++;
         ev = events[index];
@@ -122,25 +122,26 @@ router.post('/paid', function(req, res, next) {
               }).exec()
               .then(function(allEvents) {
                 //find the next open spot starting tomorrow: 10:00PM — 12:00AM — 3:00AM — 6:00AM — 9:00AM
-                allEvents.forEach(function(ev) {
-                  ev.day = new Date(ev.day);
+                allEvents.forEach(function(event1) {
+                  event1.day = new Date(event1.day);
                 });
-                console.log(allEvents);
-                var searchHours = [0, 3, 6, 9, 22];
+                var searchHours = [3, 6, 9, 22, 24];
                 var continu = true;
                 var ind = 1;
                 while (continu) {
-                  var desiredDay = new Date();
-                  desiredDay.setDate(desiredDay.getDate() + ind);
                   searchHours.forEach(function(hour) {
+                    var actualHour = calcHour(hour, -5);
+                    var desiredDay = new Date();
+                    desiredDay.setDate(desiredDay.getDate() + ind);
+                    desiredDay.setHours(actualHour);
                     if (continu) {
                       var event = allEvents.find(function(eve) {
-                        return eve.day.getHours() == hour && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
+                        return eve.day.getHours() == actualHour && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
                       });
                       if (!event) {
                         continu = false;
                         var newDay = desiredDay;
-                        newDay.setHours(hour);
+                        newDay.setHours(actualHour);
                         var newEve = new Event({
                           paid: true,
                           day: newDay,
@@ -149,10 +150,8 @@ router.post('/paid', function(req, res, next) {
                         });
                         newEve.save()
                           .then(function(eve) {
-                            console.log("newEve:")
-                            console.log(eve);
                             eve.day = new Date(eve.day);
-                            sendEmail(submission.name, submission.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + submission.name + ",<br><br>Thank you for completing the last step for promotion of your track! After reviewing the track and receiving your payment we have scheduled the repost on " + channel.displayName + " for " + eve.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our other PR services over at (ARTISTS UNLIMITED x OTHER PAY FOR POST CHANNELS)<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com / kevinlatropical<br> www.facebook.com / edwardlatropical");
+                            sendEmail(submission.name, submission.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + submission.name + ",<br><br>Thank you for completing the last step for promotion of your track! After reviewing the track and receiving your payment we have scheduled the repost on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our other PR services over at (ARTISTS UNLIMITED x OTHER PAY FOR POST CHANNELS)<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com / kevinlatropical<br> www.facebook.com / edwardlatropical");
                             res.send({});
                           })
                           .then(null, next);
@@ -160,15 +159,13 @@ router.post('/paid', function(req, res, next) {
                     }
                   });
                   ind++;
-                  console.log(ind);
                 }
               });
           } else {
-            console.log('filling slot');
             ev.trackID = submission.trackID;
-            ev.save().then(function(ev) {
-              ev.day = new Date(ev.day);
-              sendEmail(submission.name, submission.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + submission.name + ",<br><br>Thank you for completing the last step for promotion of your track! After reviewing the track and receiving your payment we have scheduled the repost on " + channel.displayName + " for " + ev.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our other PR services over at (ARTISTS UNLIMITED x OTHER PAY FOR POST CHANNELS)<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com / kevinlatropical<br> www.facebook.com / edwardlatropical");
+            ev.save().then(function(event2) {
+              event2.day = new Date(event2.day);
+              sendEmail(submission.name, submission.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + submission.name + ",<br><br>Thank you for completing the last step for promotion of your track! After reviewing the track and receiving your payment we have scheduled the repost on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + event2.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our other PR services over at (ARTISTS UNLIMITED x OTHER PAY FOR POST CHANNELS)<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com / kevinlatropical<br> www.facebook.com / edwardlatropical");
               res.send({});
             })
           }
@@ -176,3 +173,11 @@ router.post('/paid', function(req, res, next) {
     })
     .then(null, next);
 });
+
+function calcHour(hour, destOffset) {
+  var day = new Date();
+  var diff = (3600000 * destOffset) + day.getTimezoneOffset() * 60000;
+  var hourDiff = -diff / 3600000;
+
+  return hour + hourDiff;
+}

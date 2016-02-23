@@ -15,7 +15,6 @@ module.exports = function(submission) {
         channelID: id
       }).exec()
       .then(function(chan) {
-        console.log(chan);
         var invoice_json = {
           "merchant_info": {
             "email": "kevinwzimmermann@gmail.com",
@@ -57,7 +56,6 @@ module.exports = function(submission) {
         };
 
         paypal.invoice.create(invoice_json, function(error, invoice) {
-          console.log(invoice.note);
           if (error) {
             throw error;
           } else {
@@ -68,7 +66,7 @@ module.exports = function(submission) {
                 submission.invoiceIDS[index] = invoice.id;
                 Submission.findByIdAndUpdate(submission._id, submission).exec()
                   .then(function(sub) {})
-                  .then(null, console.log);
+              .then(null, console.log);
               }
             });
           }

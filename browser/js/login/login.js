@@ -46,7 +46,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.loadSubmissions = function() {
-    $http.get('/api/submissions')
+    $http.get('/api/submissions/unaccepted')
       .then(function(res) {
         $scope.submissions = res.data;
         setTimeout(function() {
@@ -58,16 +58,13 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
             });
           });
         }, 50);
-        console.log(res.data);
         return $http.get('/api/channels');
       })
       .then(function(res) {
-        console.log(res.data);
         $scope.channels = res.data;
-        console.log(res.data);
       })
       .then(null, function(err) {
-        console.log(err);
+      console.log(err);
       });
   }
 
@@ -78,7 +75,6 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
     } else {
       sub.channelIDS.splice(index, 1);
     }
-    console.log(sub.channelIDS);
   }
 
   $scope.save = function(submi) {
@@ -100,7 +96,6 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
   $scope.ignore = function(submission) {
     $http.delete('/api/submissions/ignore/' + submission._id + '/' + $rootScope.password)
       .then(function(res) {
-        console.log(res.data);
         var index = $scope.submissions.indexOf(submission);
         $scope.submissions.splice(index, 1);
         window.alert("Ignored");
@@ -113,7 +108,6 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
   $scope.decline = function(submission) {
     $http.delete('/api/submissions/decline/' + submission._id + '/' + $rootScope.password)
       .then(function(res) {
-        console.log(res.data);
         var index = $scope.submissions.indexOf(submission);
         $scope.submissions.splice(index, 1);
         window.alert("Declined");

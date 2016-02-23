@@ -27,9 +27,7 @@ router.put('/', function(req, res, next) {
 })
 
 router.post('/initializeDBBaby', function(req, res, next) {
-  Channel.remove({}, function(err) {
-    console.log('collection removed')
-  });
+  Channel.remove({}, function(err) {});
   var names = [{
     channelID: '86560544',
     displayName: 'La Tropical',

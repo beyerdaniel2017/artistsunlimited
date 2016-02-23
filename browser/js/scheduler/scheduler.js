@@ -51,7 +51,6 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
     });
     $scope.makeEventURL = undefined;
     $scope.makeEvent = calendarDay.events[hour];
-    console.log($scope.makeEvent);
     if ($scope.makeEvent == "-") {
       var makeDay = new Date(day);
       makeDay.setHours(hour);
@@ -89,7 +88,6 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
 
   $scope.changeURL = function() {
     var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.makeEventURL + '&client_id=' + CLIENT_ID;
-    console.log(getPath);
     $http.get(getPath)
       .then(function(res) {
         var track = res.data;
@@ -156,8 +154,6 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
         $http.put('/api/events', $scope.makeEvent)
           .then(function(res) {
             var event = res.data;
-            console.log("RES");
-            console.log(event);
             event.day = new Date(event.day);
             var calendarDay = $scope.calendar.find(function(calD) {
               return calD.day.toLocaleDateString() == event.day.toLocaleDateString();
@@ -227,7 +223,6 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
 
   $scope.changeQueueSong = function() {
     var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.newQueueSong + '&client_id=' + CLIENT_ID;
-    console.log(getPath);
     $http.get(getPath)
       .then(function(res) {
         var track = res.data;
@@ -269,8 +264,6 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
       });
     });
     var openNum = openSlots.length - waitingSubs.length;
-    console.log(openSlots);
-    console.log(waitingSubs);
     return openNum > 0;
   }
 
