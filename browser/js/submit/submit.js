@@ -14,8 +14,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
       .then(function(res) {
         console.log(res.data);
         $scope.track = res.data;
-        $scope.track.uri
-        SC.oEmbed($scope.url, {
+        SC.oEmbed($scope.track.uri, {
           element: document.getElementById('scPlayer'),
           auto_play: false,
           maxheight: 150

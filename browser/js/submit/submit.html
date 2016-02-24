@@ -1,18 +1,25 @@
-<div style="text-align:center">
-  <h2>Song Submission</h2>
-<!--   <h3>Channel:</h3>
-  <select ng-model="chosenChannel">
-    <option ng-repeat="channel in channels" value='{{channel.channelID}}'>{{channel.displayName}} - ${{channel.price}}</option>
-  </select> -->
-  <h3>Song URL:</h3>
-  <input type="text" ng-model="url" ng-change="urlChange()"/>
+<div style="text-align:center; margin:10px 0;">
+  <h1 style="background-color:black; color:white; padding:20px">Submission for Promotion</h1>
+  <div style="text-align:center; width:600px; font-weight: 500; font-size:1.4em; margin:20px auto;">
+    <p><span>Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.</span></p>
+    <p><i><span>If we deem that your track fits the goals of our page and meets our high standards for quality, we may decide to repost or otherwise promote it (i.e. via Facebook, Soundcloud and/or Youtube) in which case we will contact you.</span></i></p>
+    <p><span>If you are confident that your music has what it takes to be promoted to an audience of over 150,000 followers, as well as various record labels, talent agencies, and headliner DJs—consider presenting it to us.</span></p>
+  </div>
+  <div style="color: white; width:900px; text-align:center; margin:10px auto; background-color: black; padding: 20px 10px; border-radius:5px;">
+  <div style="display:inline-block; width: 250px; text-align:center; margin:0 10px;">
+    <h4>Song URL</h4>
+    <input class="form-control" style="color:black; width:100%;" type="text" ng-model="url" ng-change="urlChange()"/>
+  </div>
+  <div style="display:inline-block; width: 250px; text-align:center;  margin:0 10px;">
+    <h4>Your Name</h4>
+    <input class="form-control" style="color:black; width:100%;" type="text" ng-model="name"/>
+  </div>
+  <div style="display:inline-block; width:250px; text-align:center; margin:0 10px;">
+    <h4>Your Email</h4>
+    <input class="form-control" style="color:black; width:100%;" type="text" ng-model="email"/>
+  </div>
+  </div>
   <h4 ng-if="notFound">Song not found.<br>If a private track, please email it to: edward@peninsulamgmt.com</h4>
   <div id="scPlayer" style="margin:10px 0"></div>
-  <h3>Your Name:</h3>
-  <input type="text" ng-model="name"/>
-  <br>
-  <h3>Your Email:</h3>
-  <input type="text" ng-model="email"/>
-  <br><br>
-  <button ng-click="submit()">Submit</button>
+  <button class="btn btn-default" style="background-color: #d3d3d3; font-size:1.4em; margin:5px 5px;" ng-click="submit()">Submit</button>
 </div>

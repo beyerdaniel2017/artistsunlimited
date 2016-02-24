@@ -7,7 +7,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, CLIENT_ID) {
+app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, CLIENT_ID, REDIRECT_URI) {
   $scope.login = function() {
     $http.post('/api/login', {
       password: $scope.password
@@ -22,8 +22,8 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
 
   $scope.manage = function() {
     SC.initialize({
-      client_id: "bd30924b4a322ba9e488c06edc73f909",
-      redirect_uri: "http://tracksubmission.herokuapp.com/callback.html",
+      client_id: CLIENT_ID,
+      redirect_uri: REDIRECT_URI,
       scope: "non-expiring"
     });
     SC.connect().then(function(res) {
