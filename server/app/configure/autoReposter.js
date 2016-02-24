@@ -56,7 +56,6 @@ function repostAndRemove(event, channel) {
     if (err) {
       console.log(err);
     } else {
-      sendMessage(sub.name, sub.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey" + sub.name + "<br><br>We would just like to let you know the track has been reposted on" + channel.displayName + "! If you would like to do another round of reposts please resubmit your song to <a href='http://etiquettenoir.co/'>Etiquette Noir</a> or <a href='http://lesol.co/'>Le Sol</a> and we will get back to you.<br><br>How was this experience by the way? Feel free to email some feedback or suggestions to feedback@peninsulamgmt.com.<br><br>Goodluck and thanks again<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com / kevinlatropical<br> www.facebook.com / edwardlatropical");
       Event.findByIdAndRemove(event._id).exec();
       Channel.findByIdAndUpdate(channel._id, channel).exec();
     }
