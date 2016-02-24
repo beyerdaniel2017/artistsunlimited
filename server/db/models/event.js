@@ -12,6 +12,12 @@ var schema = new mongoose.Schema({
   },
   day: {
     type: Date
+  },
+  email: {
+    type: String
+  },
+  name: {
+    type: String
   }
 });
 

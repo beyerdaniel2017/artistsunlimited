@@ -146,12 +146,14 @@ router.post('/paid', function(req, res, next) {
                           paid: true,
                           day: newDay,
                           trackID: submission.trackID,
-                          channelID: chanID
+                          channelID: chanID,
+                          email: submission.email,
+                          name: submission.name
                         });
                         newEve.save()
                           .then(function(eve) {
                             eve.day = new Date(eve.day);
-                            sendEmail(submission.name, submission.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + submission.name + ",<br><br>Thank you for completing the last step for promotion of your track! After reviewing the track and receiving your payment we have scheduled the repost on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our more extensive PR services by emailing artistsunlimited.pr@gmail.com.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
+                            sendEmail(eve.name, eve.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>Thank you for completing the last step for promotion of your track! After reviewing the track and receiving your payment we have scheduled the repost on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our more extensive PR services by emailing artistsunlimited.pr@gmail.com.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
                             res.send({});
                           })
                           .then(null, next);
@@ -163,9 +165,11 @@ router.post('/paid', function(req, res, next) {
               });
           } else {
             ev.trackID = submission.trackID;
+            ev.email = submission.email;
+            ev.name = submission.name;
             ev.save().then(function(event2) {
               event2.day = new Date(event2.day);
-              sendEmail(submission.name, submission.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + submission.name + ",<br><br>Thank you for completing the last step for promotion of your track! After reviewing the track and receiving your payment we have scheduled the repost on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + event2.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our more extensive PR services by emailing artistsunlimited.pr@gmail.com.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
+              sendEmail(event2.name, event2.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + event2.name + ",<br><br>Thank you for completing the last step for promotion of your track! After reviewing the track and receiving your payment we have scheduled the repost on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + event2.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our more extensive PR services by emailing artistsunlimited.pr@gmail.com.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
               res.send({});
             })
           }
