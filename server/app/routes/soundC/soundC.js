@@ -14,11 +14,16 @@ router.post('/soundcloudTrack', function(req, res, next) {
       },
       function(httpRes) {
         httpRes.on("data", function(chunk) {
+
           var chunkString = "" + chunk;
           var userID = chunkString.slice(chunkString.indexOf('/tracks/') + 8, chunkString.indexOf('.json?'));
-          res.send({
-            trackID: userID
-          });
+          if (chunkString.includes("404")) {
+            next(new Error('song not found'));
+          } else {
+            res.send({
+              trackID: userID
+            });
+          }
         });
       })
     .on('error', next)
