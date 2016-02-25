@@ -9,10 +9,12 @@ app.config(function($stateProvider) {
 app.controller('SubmitSongController', function($rootScope, $state, $scope, $http, CLIENT_ID) {
 
   $scope.urlChange = function() {
-    var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.url + '&client_id=' + CLIENT_ID;
-    $http.get(getPath)
+    // var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.url + '&client_id=' + CLIENT_ID;
+    $http.post('/api/soundcloud/soundcloudTrack', {
+        url: $scope.url
+      })
       .then(function(res) {
-        $scope.track = res.data;
+        $scope.trackID = res.data.trackID;
         SC.oEmbed($scope.url, {
           element: document.getElementById('scPlayer'),
           auto_play: false,
@@ -31,12 +33,13 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
 
     $http.post('/api/submissions', {
         email: $scope.email,
-        trackID: $scope.track.id,
+        trackID: $scope.trackID,
         name: $scope.name,
         channelIDS: [],
         invoiceIDS: []
       })
       .then(function(res) {
+        console.log(res.data);
         window.alert("Your song has been submitted and will be reviewed soon.");
         location.reload();
       })

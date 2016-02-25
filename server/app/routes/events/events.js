@@ -39,4 +39,4 @@ router.delete('/:id/:password', function(req, res, next) {
       res.send(event);
     })
     .then(null, next);
-})
+});

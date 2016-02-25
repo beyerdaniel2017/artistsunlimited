@@ -77,16 +77,21 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   }
 
   $scope.changeURL = function() {
-    var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.makeEventURL + '&client_id=' + CLIENT_ID;
-    $http.get(getPath)
+    $http.post('/api/soundcloud/soundcloudTrack', {
+        url: $scope.makeEventURL
+      })
       .then(function(res) {
-        var track = res.data;
-        SC.oEmbed(track.uri, {
+        $scope.makeEvent.trackID = res.data.trackID;
+        SC.oEmbed($scope.makeEventURL, {
           element: document.getElementById('scPlayer'),
           auto_play: false,
           maxheight: 150
-        });
-        $scope.makeEvent.trackID = track.id;
+        })
+        document.getElementById('scPlayer').style.visibility = "visible";
+        $scope.notFound = false;
+      }).then(null, function(err) {
+        document.getElementById('scPlayer').style.visibility = "hidden";
+        $scope.notFound = true;
       });
   }
 

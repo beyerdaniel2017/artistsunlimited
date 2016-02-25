@@ -3,9 +3,10 @@ var router = require('express').Router();
 module.exports = router;
 
 router.use('/channels', require('./channels/channels.js'));
-router.use('/submissions', require('./submissions/submissions.js'))
+router.use('/submissions', require('./submissions/submissions.js'));
 router.use('/login', require('./login/login.js'));
 router.use('/events', require('./events/events.js'));
+router.use('/soundcloud', require('./soundCloud/soundCloud.js'));
 
 // Make sure this is after all of
 // the registered routes!
