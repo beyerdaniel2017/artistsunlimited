@@ -1,13 +1,11 @@
 var SC = require('soundclouder');
 var HTTP = require('http');
-var client_id = "bd30924b4a322ba9e488c06edc73f909";
-// var client_secret = "f09ab9b33abcefcb2dacdc58fb2b5558";
-// var redirect_uri = "http://tracksubmission.herokuapp.com/callback.html";
 var router = require('express').Router();
 module.exports = router;
+var scConfig = global.env.SOUNDCLOUD;
 
 router.post('/soundcloudTrack', function(req, res, next) {
-  var getPath = '/resolve.json?url=' + req.body.url + '&client_id=' + client_id;
+  var getPath = '/resolve.json?url=' + req.body.url + '&client_id=' + scConfig.clientID;
   HTTP.request({
         host: 'api.soundcloud.com',
         path: getPath,

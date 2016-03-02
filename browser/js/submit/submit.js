@@ -6,10 +6,9 @@ app.config(function($stateProvider) {
   });
 });
 
-app.controller('SubmitSongController', function($rootScope, $state, $scope, $http, CLIENT_ID) {
+app.controller('SubmitSongController', function($rootScope, $state, $scope, $http) {
 
   $scope.urlChange = function() {
-    // var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.url + '&client_id=' + CLIENT_ID;
     $http.post('/api/soundcloud/soundcloudTrack', {
         url: $scope.url
       })

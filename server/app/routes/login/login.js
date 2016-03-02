@@ -6,9 +6,6 @@ var Channel = mongoose.model('Channel');
 var Submission = mongoose.model('Submission');
 var Event = mongoose.model('Event');
 var SC = require('soundclouder');
-var client_id = "bd30924b4a322ba9e488c06edc73f909";
-var client_secret = "f09ab9b33abcefcb2dacdc58fb2b5558";
-var redirect_uri = "http://tracksubmission.herokuapp.com/callback.html";
 
 router.post('/', function(req, res, next) {
   if (req.body.password == 'letMeManage') {
@@ -20,7 +17,8 @@ router.post('/', function(req, res, next) {
 
 router.post('/authenticated', function(req, res, next) {
   if (req.body.password != "letMeManage") next(new Error("Wrong password"));
-  SC.init(client_id, client_secret, redirect_uri);
+  var scConfig = global.env.SOUNDCLOUD;
+  SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
   SC.get('/me', req.body.token, function(err, data) {
     var sendObj = {};
     Channel.findOneAndUpdate({

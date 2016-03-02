@@ -7,7 +7,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, CLIENT_ID, REDIRECT_URI) {
+app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, SOUNDCLOUD) {
   $scope.login = function() {
     $http.post('/api/login', {
       password: $scope.password
@@ -22,8 +22,8 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
 
   $scope.manage = function() {
     SC.initialize({
-      client_id: CLIENT_ID,
-      redirect_uri: REDIRECT_URI,
+      client_id: SOUNDCLOUD.clientID,
+      redirect_uri: SOUNDCLOUD.redirectURL,
       scope: "non-expiring"
     });
     SC.connect().then(function(res) {

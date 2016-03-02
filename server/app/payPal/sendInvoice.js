@@ -66,7 +66,7 @@ module.exports = function(submission) {
                 submission.invoiceIDS[index] = invoice.id;
                 Submission.findByIdAndUpdate(submission._id, submission).exec()
                   .then(function(sub) {})
-              .then(null, console.log);
+                  .then(null, console.log);
               }
             });
           }

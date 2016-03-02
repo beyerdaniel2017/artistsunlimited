@@ -9,6 +9,11 @@
 module.exports = {
     "DATABASE_URI": process.env.MONGOLAB_URI,
     "SESSION_SECRET": process.env.SESSION_SECRET,
+    "SOUNDCLOUD": {
+        "clientID": process.env.SOUNDCLOUD_CLIENT_ID,
+        "clientSecret": process.env.SOUNDCLOUD_CLIENT_SECRET,
+        "callbackURL": process.env.SOUNDCLOUD_CALLBACK_URL
+    },
     "TWITTER": {
         "consumerKey": process.env.TWITTER_CONSUMER_KEY,
         "consumerSecret": process.env.TWITTER_CONSUMER_SECRET,
@@ -22,6 +27,6 @@ module.exports = {
     "GOOGLE": {
         "clientID": process.env.GOOGLE_CLIENT_ID,
         "clientSecret": process.env.GOOGLE_CLIENT_SECRET,
-        "callbackURL": process.env.CALLBACK_URL
+        "callbackURL": process.env.GOOGLE_CALLBACK_URL
     }
 };

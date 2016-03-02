@@ -7,7 +7,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller('SchedulerController', function($rootScope, $state, $scope, $http, AuthService, CLIENT_ID) {
+app.controller('SchedulerController', function($rootScope, $state, $scope, $http, AuthService, SOUNDCLOUD) {
 
   $scope.makeEventURL = "";
   $scope.showOverlay = false;
@@ -213,7 +213,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   }
 
   $scope.changeQueueSong = function() {
-    var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.newQueueSong + '&client_id=' + CLIENT_ID;
+    var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.newQueueSong + '&client_id=' + SOUNDCLOUD.clientID;
     $http.get(getPath)
       .then(function(res) {
         var track = res.data;

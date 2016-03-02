@@ -3,11 +3,11 @@ var mongoose = require('mongoose');
 var Channel = mongoose.model('Channel');
 var Event = mongoose.model('Event');
 var SC = require('soundclouder');
-var client_id = "bd30924b4a322ba9e488c06edc73f909";
-var client_secret = "f09ab9b33abcefcb2dacdc58fb2b5558";
-var redirect_uri = "http://tracksubmission.herokuapp.com/callback.html";
 var sendMessage = require('../mandrill/sendEmail.js');
+
 module.exports = function() {
+  var scConfig = global.env.SOUNDCLOUD;
+  SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
   doRepost();
 }
 
@@ -51,7 +51,6 @@ function repostAndRemove(event, channel) {
   } else {
     var id = event.trackID;
   }
-  SC.init(client_id, client_secret, redirect_uri);
   SC.put('/e1/me/track_reposts/' + id, channel.accessToken, function(err, data) {
     if (err) {
       console.log(err);

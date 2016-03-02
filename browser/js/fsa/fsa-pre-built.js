@@ -131,11 +131,9 @@
     });
 
     // run any setup JS
-    app.constant("CLIENT_ID", "bd30924b4a322ba9e488c06edc73f909");
-    app.constant("REDIRECT_URI", "http://tracksubmission.herokuapp.com/callback.html");
-    SC.initialize({
-        client_id: "bd30924b4a322ba9e488c06edc73f909",
-        redirect_uri: "http://tracksubmission.herokuapp.com/callback.html"
+    app.value("SOUNDCLOUD", {
+        clientID: "bd30924b4a322ba9e488c06edc73f909",
+        redirectURL: "http://localhost:1337/callback.html"
     });
 
 })();

@@ -5,3 +5,4 @@ require('./user');
 require('./channel');
 require('./submission');
 require('./event');
+require('./email');
