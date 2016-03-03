@@ -20,7 +20,7 @@ router.post('/', function(req, res, next) {
         email: sub.email,
         name: sub.name
       });
-      email.save();
+      email.save()
       res.send(sub);
     })
     .then(null, next);
@@ -64,6 +64,7 @@ router.put('/save', function(req, res, next) {
 
           sendInvoice(sub);
           sendEmail(sub.name, sub.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Congratulations on your Submission", "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting your track to us! We checked out your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by " + nameString + ". In less than 5 minutes you will receive a series of emails with PayPal links for each channels you were approved for! This is the last step until your track will be reposted and shared by " + nameString + ". After payment you will be assigned a time slot for reposting and we will email you in less than 1 hour letting you know the exact time and day your track will be reposted. To maintain our feed’s integrity, we do not offer more than 1 repost of the approved track on any channel. With that said, if you are interested in more extensive PR packages and campaigns that guarantee anywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be hear to help you with the rest.<br><br>All the best,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
+          res.send(sub)
         });
     })
     .then(null, next);
