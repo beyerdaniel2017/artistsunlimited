@@ -6,8 +6,6 @@ var SC = require('soundclouder');
 var sendMessage = require('../mandrill/sendEmail.js');
 
 module.exports = function() {
-  var scConfig = global.env.SOUNDCLOUD;
-  SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
   doRepost();
 }
 
@@ -15,7 +13,7 @@ module.exports = function() {
 function doRepost() {
   setTimeout(function() {
     doRepost();
-  }, 1800000);
+  }, 10000);
 
   var date = new Date();
   var hour = date.getHours();
@@ -51,6 +49,8 @@ function repostAndRemove(event, channel) {
   } else {
     var id = event.trackID;
   }
+  var scConfig = global.env.SOUNDCLOUD;
+  SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
   SC.put('/e1/me/track_reposts/' + id, channel.accessToken, function(err, data) {
     if (err) {
       console.log(err);
@@ -58,8 +58,6 @@ function repostAndRemove(event, channel) {
       if (event.email) {
         sendMessage(event.name, event.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + event.name + ",<br><br>We would just like to let you know the track has been reposted on " + channel.displayName + "! If you would like to do another round of reposts please resubmit your track to bit.ly/SoundCloudSubmission. We will get back to you ASAP and continue to do our best in making our submission process as quick and easy as possible.<br><br>How was this experience by the way? Feel free to email some feedback, suggestions or just positive reviews to feedback@peninsulamgmt.com.<br><br>Goodluck and thanks again!<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com / kevinlatropical<br> www.facebook.com / edwardlatropical");
       }
-      Event.findByIdAndRemove(event._id).exec();
-      Channel.findByIdAndUpdate(channel._id, channel).exec();
     }
   });
 }

@@ -50,8 +50,8 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
           });
       })
       .then(null, function(err) {
+        alert('Error: Could not log in');
         $scope.processing = false;
-        alert('Could not log in');
       });
   }
 
