@@ -22,14 +22,17 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   $scope.dayIncr = 0;
 
   $scope.saveChannel = function() {
+    $scope.processing = true;
     $scope.channel.password = $rootScope.password;
     $http.put("/api/channels", $scope.channel)
       .then(function(res) {
         window.alert("Saved");
         $scope.channel = res.data;
+        $scope.processing = false;
       })
       .then(null, function(err) {
         window.alert("Error: did not save");
+        $scope.processing = false;
       });
   }
 
@@ -77,6 +80,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   }
 
   $scope.changeURL = function() {
+    $scope.processing = true;
     $http.post('/api/soundcloud/soundcloudTrack', {
         url: $scope.makeEventURL
       })
@@ -89,14 +93,17 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
         })
         document.getElementById('scPlayer').style.visibility = "visible";
         $scope.notFound = false;
+        $scope.processing = false;
       }).then(null, function(err) {
         document.getElementById('scPlayer').style.visibility = "hidden";
         $scope.notFound = true;
+        $scope.processing = false;
       });
   }
 
   $scope.deleteEvent = function() {
     if (!$scope.newEvent) {
+      $scope.processing = true;
       $http.delete('/api/events/' + $scope.makeEvent._id + '/' + $rootScope.password)
         .then(function(res) {
           var calendarDay = $scope.calendar.find(function(calD) {
@@ -104,9 +111,11 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
           });
           calendarDay.events[$scope.makeEvent.day.getHours()] = "-";
           $scope.showOverlay = false;
+          $scope.processing = false;
           window.alert("Deleted");
         })
         .then(null, function(err) {
+          $scope.processing = false;
           window.alert("ERROR: did not Delete.")
         });
     } else {
@@ -125,6 +134,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
     } else {
       if ($scope.newEvent) {
         $scope.makeEvent.password = $rootScope.password;
+        $scope.processing = true;
         $http.post('/api/events', $scope.makeEvent)
           .then(function(res) {
             var event = res.data;
@@ -134,14 +144,16 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
             });
             calendarDay.events[event.day.getHours()] = event;
             $scope.showOverlay = false;
+            $scope.processing = false;
             window.alert("Saved");
           })
           .then(null, function(err) {
+            $scope.processing = false;
             window.alert("ERROR: did not Save.");
           });
       } else {
         $scope.newEvent.password = $rootScope.password;
-
+        $scope.processing = true;
         $http.put('/api/events', $scope.makeEvent)
           .then(function(res) {
             var event = res.data;
@@ -151,9 +163,11 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
             });
             calendarDay.events[event.getHours()] = event;
             $scope.showOverlay = false;
+            $scope.processing = false;
             window.alert("Saved");
           })
           .then(null, function(err) {
+            $scope.processing = false;
             window.alert("ERROR: did not Save.");
           });
       }
@@ -164,39 +178,6 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
     $scope.makeEvent = null;
     $scope.showOverlay = false;
   }
-
-  // $scope.accept = function(submission) {
-  //   if ($scope.canLowerOpenEvents()) {
-  //     $http.put('/api/submissions/accept', submission)
-  //       .then(function(res) {
-  //         console.log("RES")
-  //         console.log(res.data);
-  //         var index = $scope.submissions.indexOf(submission);
-  //         $scope.submissions[index] = res.data;
-  //         $scope.loadSubmissions();
-  //         console.log($scope.submissions);
-  //         window.alert("Accepted. Invoice sent.");
-  //       })
-  //       .then(null, function(err) {
-  //         window.alert("ERROR: did not Accept.");
-  //       });
-  //   } else {
-  //     window.alert('Not enough unfilled "paid" slots.')
-  //   }
-  // }
-
-  // $scope.decline = function(submission) {
-  //   $http.delete('/api/submissions/decline/' + submission._id)
-  //     .then(function(res) {
-  //       console.log(res.data);
-  //       var index = $scope.submissions.indexOf(submission);
-  //       $scope.submissions.splice(index, 1);
-  //       window.alert("Declined");
-  //     })
-  //     .then(null, function(err) {
-  //       window.alert("ERROR: did not Decline");
-  //     });
-  // }
 
   $scope.removeQueueSong = function(index) {
     $scope.channel.queue.splice(index, 1);
@@ -213,9 +194,11 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   }
 
   $scope.changeQueueSong = function() {
+    $scope.processing = true;
     var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.newQueueSong + '&client_id=' + SOUNDCLOUD.clientID;
     $http.get(getPath)
       .then(function(res) {
+        $scope.processing = false;
         var track = res.data;
         // SC.oEmbed(track.uri, {
         //   element: document.getElementById('newQueuePlayer'),

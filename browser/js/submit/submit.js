@@ -22,14 +22,14 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
         document.getElementById('scPlayer').style.visibility = "visible";
         $scope.notFound = false;
       }).then(null, function(err) {
+        $scope.processing = false;
         document.getElementById('scPlayer').style.visibility = "hidden";
-        $scope.notFound = true;
       });
 
   }
 
   $scope.submit = function() {
-
+    $scope.processing = true;
     $http.post('/api/submissions', {
         email: $scope.email,
         trackID: $scope.trackID,
@@ -39,11 +39,13 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
       })
       .then(function(res) {
         console.log(res.data);
+        $scope.processing = false;
         window.alert("Your song has been submitted and will be reviewed soon.");
         location.reload();
       })
       .then(null, function(err) {
-        window.alert("Error: " + err.message);
+        $scope.processing = false;
+        window.alert("Error: Could not submit song.");
       });
   }
 });
