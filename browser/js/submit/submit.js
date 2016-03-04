@@ -22,6 +22,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
         document.getElementById('scPlayer').style.visibility = "visible";
         $scope.notFound = false;
       }).then(null, function(err) {
+        $scope.notFound = true;
         $scope.processing = false;
         document.getElementById('scPlayer').style.visibility = "hidden";
       });

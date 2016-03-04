@@ -19,11 +19,11 @@
     <input class="form-control" style="color:black; width:100%;" type="text" ng-model="email"/>
   </div>
   </div>
-  <h4 ng-if="notFound">Error.<br>Do not use Safari.<br>If a private track, please email it to: edward@peninsulamgmt.com</h4>
+  <h4 ng-if="notFound">Track not found.<br>If a private track, please email it to: edward@peninsulamgmt.com</h4>
   <div id="scPlayer" style="margin:10px 0"></div>
   <button class="btn btn-default" style="background-color: #d3d3d3; font-size:1.4em; margin:5px 5px;" ng-click="submit()">Submit</button>
 </div>
 
-<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.9); text-align:center;" ng-show="processing">
-  <h1 style="font-color:white; margin-top:200px;">Processing...</h1>
+<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.9); text-align:center; z-index:1" ng-show="processing">
+  <h1 style="font-color:white; margin-top:400px; z-index:2">Processing...</h1>
 </div>
