@@ -181,6 +181,92 @@ router.post('/paid', function(req, res, next) {
     .then(null, next);
 });
 
+//reschedule repost
+router.post('/rescheduleRepost', function(req, res, next) {
+  var eventHolder;
+  console.log(req.body);
+  Event.findByIdAndRemove(req.body.id).exec()
+    .then(function(remEvent) {
+      eventHolder = remEvent;
+      return Event.find({
+        paid: true,
+        trackID: null,
+        channelID: eventHolder.channelID
+      }).exec()
+    })
+    .then(function(events) {
+      events.forEach(function(event) {
+        event.day = new Date(event.day);
+      });
+      events.sort(function(a, b) {
+        return a.day.getTime() - b.day.getTime();
+      });
+      var index = 0;
+      var today = new Date();
+      var ev = events[index];
+      while (ev && ev.day.getTime() < today.getTime()) {
+        index++;
+        ev = events[index];
+      }
+      Channel.findOne({
+          channelID: eventHolder.channelID
+        }).exec()
+        .then(function(channel) {
+          if (!ev) {
+            Event.find({
+                channelID: eventHolder.channelID
+              }).exec()
+              .then(function(allEvents) {
+                allEvents.forEach(function(event1) {
+                  event1.day = new Date(event1.day);
+                });
+                var searchHours = [27, 30, 33, 46, 48];
+                var continu = true;
+                var ind = 1;
+                while (continu) {
+                  searchHours.forEach(function(hour) {
+                    var actualHour = calcHour(hour, -5);
+                    var desiredDay = new Date();
+                    desiredDay.setDate(desiredDay.getDate() + ind);
+                    desiredDay.setHours(actualHour);
+                    if (continu) {
+                      var event = allEvents.find(function(eve) {
+                        return eve.day.getHours() == actualHour && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
+                      });
+                      if (!event) {
+                        continu = false;
+                        eventHolder._id = null;
+                        eventHolder.__v = null;
+                        eventHolder.day = desiredDay;
+                        var newEve = new Event(eventHolder);
+                        newEve.save()
+                          .then(function(eve) {
+                            eve.day = new Date(eve.day);
+                            sendEmail(eve.name, eve.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>Thank you for completing the last step for promotion of your track! After reviewing the track and receiving your payment we have scheduled the repost on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our more extensive PR services by emailing artistsunlimited.pr@gmail.com.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
+                            res.send({});
+                          })
+                          .then(null, next);
+                      }
+                    }
+                  });
+                  ind++;
+                }
+              });
+          } else {
+            ev.trackID = eventHolder.trackID;
+            ev.email = eventHolder.email;
+            ev.name = eventHolder.name;
+            ev.save().then(function(event2) {
+              event2.day = new Date(event2.day);
+              sendEmail(event2.name, event2.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + event2.name + ",<br><br>Thank you for completing the last step for promotion of your track! After reviewing the track and receiving your payment we have scheduled the repost on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + event2.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our more extensive PR services by emailing artistsunlimited.pr@gmail.com.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
+              res.send({});
+            })
+          }
+        })
+    })
+    .then(null, next);
+});
+
 function calcHour(hour, destOffset) {
   var day = new Date();
   var diff = (3600000 * destOffset) + day.getTimezoneOffset() * 60000;

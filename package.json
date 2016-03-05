@@ -61,6 +61,7 @@
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.2",
     "paypal-rest-sdk": "^1.6.8",
+    "request": "^2.69.0",
     "run-sequence": "^1.0.2",
     "serve-favicon": "^2.2.0",
     "sinon": "^1.13.0",
