@@ -29,27 +29,27 @@ router.put('/', function(req, res, next) {
 router.post('/initializeDBBaby', function(req, res, next) {
   Channel.remove({}, function(err) {});
   var names = [{
-    channelID: '86560544',
+    channelID: 86560544,
     displayName: 'La Tropical',
     url: 'https://soundcloud.com/latropical'
   }, {
-    channelID: '198031384',
+    channelID: 198031384,
     displayName: 'La Tropical Mixes',
     url: 'https://soundcloud.com/latropicalmixes'
   }, {
-    channelID: '206926900',
+    channelID: 206926900,
     displayName: 'Red Tag',
     url: 'https://soundcloud.com/red-tag'
   }, {
-    channelID: '64684860',
+    channelID: 64684860,
     displayName: 'Etiquette Noir',
     url: 'https://soundcloud.com/etiquettenoir'
   }, {
-    channelID: '164339022',
+    channelID: 164339022,
     displayName: 'Le Sol',
     url: 'https://soundcloud.com/lesolmusique'
   }, {
-    channelID: '203522426',
+    channelID: 203522426,
     displayName: 'Classy Records',
     url: 'https://soundcloud.com/onlyclassy'
   }];

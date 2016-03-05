@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
   channelID: {
-    type: String
+    type: Number
   },
   paid: {
     type: Boolean
