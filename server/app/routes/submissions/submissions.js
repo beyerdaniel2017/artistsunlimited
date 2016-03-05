@@ -61,7 +61,6 @@ router.put('/save', function(req, res, next) {
             }
             nameString += addString;
           });
-
           sendInvoice(sub);
           sendEmail(sub.name, sub.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Congratulations on your Submission", "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting your track to us! We checked out your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by " + nameString + ". In less than 5 minutes you will receive a series of emails with PayPal links for each channels you were approved for! This is the last step until your track will be reposted and shared by " + nameString + ". After payment you will be assigned a time slot for reposting and we will email you in less than 1 hour letting you know the exact time and day your track will be reposted. To maintain our feed’s integrity, we do not offer more than 1 repost of the approved track on any channel. With that said, if you are interested in more extensive PR packages and campaigns that guarantee anywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be hear to help you with the rest.<br><br>All the best,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
           res.send(sub)
@@ -128,11 +127,10 @@ router.post('/paid', function(req, res, next) {
                 channelID: chanID
               }).exec()
               .then(function(allEvents) {
-                //find the next open spot starting tomorrow: 10:00PM — 12:00AM — 3:00AM — 6:00AM — 9:00AM
                 allEvents.forEach(function(event1) {
                   event1.day = new Date(event1.day);
                 });
-                var searchHours = [3, 6, 9, 22, 24];
+                var searchHours = [27, 30, 33, 46, 48];
                 var continu = true;
                 var ind = 1;
                 while (continu) {
@@ -147,11 +145,9 @@ router.post('/paid', function(req, res, next) {
                       });
                       if (!event) {
                         continu = false;
-                        var newDay = desiredDay;
-                        newDay.setHours(actualHour);
                         var newEve = new Event({
                           paid: true,
-                          day: newDay,
+                          day: desiredDay,
                           trackID: submission.trackID,
                           channelID: chanID,
                           email: submission.email,
@@ -189,6 +185,6 @@ function calcHour(hour, destOffset) {
   var day = new Date();
   var diff = (3600000 * destOffset) + day.getTimezoneOffset() * 60000;
   var hourDiff = -diff / 3600000;
-
-  return hour + hourDiff;
+  var retHour = (hour + hourDiff) % 24;
+  return retHour;
 }

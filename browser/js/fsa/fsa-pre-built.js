@@ -132,7 +132,7 @@
 
     // run any setup JS
     app.value("SOUNDCLOUD", {
-        clientID: "bd30924b4a322ba9e488c06edc73f909",
+        clientID: "3947f8d665f6c6c58e865f894798eb3e",
         redirectURL: "http://tracksubmission.herokuapp.com/callback.html"
     });
 

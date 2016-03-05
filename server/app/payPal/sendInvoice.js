@@ -57,11 +57,11 @@ module.exports = function(submission) {
 
         paypal.invoice.create(invoice_json, function(error, invoice) {
           if (error) {
-            throw error;
+            console.log(error);
           } else {
             paypal.invoice.send(invoice.id, function(error, rv) {
               if (error) {
-                throw error;
+                console.log(error);
               } else {
                 submission.invoiceIDS[index] = invoice.id;
                 Submission.findByIdAndUpdate(submission._id, submission).exec()

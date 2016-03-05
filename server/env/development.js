@@ -2,8 +2,8 @@ module.exports = {
   "DATABASE_URI": "mongodb://localhost:27017/songScheduler",
   "SESSION_SECRET": "Optimus Prime is my real dad",
   "SOUNDCLOUD": {
-    "clientID": "bd30924b4a322ba9e488c06edc73f909",
-    "clientSecret": "f09ab9b33abcefcb2dacdc58fb2b5558",
+    "clientID": "3947f8d665f6c6c58e865f894798eb3e",
+    "clientSecret": "8586b9dbb45ce4c062d23efac6ad2f27",
     "callbackURL": "http://localhost:1337/callback.html"
   },
   "TWITTER": {
