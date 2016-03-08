@@ -7,17 +7,23 @@ var schema = new mongoose.Schema({
   paid: {
     type: Boolean
   },
-  trackID: {
-    type: Number
-  },
-  day: {
-    type: Date
-  },
   email: {
     type: String
   },
   name: {
     type: String
+  },
+  trackID: {
+    type: Number
+  },
+  title: {
+    type: String
+  },
+  trackURL: {
+    type: String
+  },
+  day: {
+    type: Date
   }
 });
 

@@ -37,14 +37,14 @@ module.exports = function(submission) {
             "email": submission.email
           }],
           "items": [{
-            "name": "For " + chan.displayName + " repost.",
+            "name": submission.title + " repost on " + chan.displayName + ".",
             "quantity": 1,
             "unit_price": {
               "currency": "USD",
               "value": chan.price
             }
           }],
-          "note": "For " + chan.displayName + " repost.",
+          "note": submission.title + " repost on " + chan.displayName + ".",
           "payment_term": {
             "term_type": "NET_45"
           },

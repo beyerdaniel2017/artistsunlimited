@@ -8,13 +8,17 @@ app.config(function($stateProvider) {
 
 app.controller('SubmitSongController', function($rootScope, $state, $scope, $http) {
 
+  $scope.submission = {};
+
   $scope.urlChange = function() {
     $http.post('/api/soundcloud/soundcloudTrack', {
         url: $scope.url
       })
       .then(function(res) {
-        $scope.trackID = res.data.trackID;
-        SC.oEmbed($scope.url, {
+        $scope.submission.trackID = res.data.id;
+        $scope.submission.title = res.data.title;
+        $scope.submission.trackURL = res.data.trackURL;
+        SC.oEmbed($scope.submission.trackURL, {
           element: document.getElementById('scPlayer'),
           auto_play: false,
           maxheight: 150
@@ -32,9 +36,11 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   $scope.submit = function() {
     $scope.processing = true;
     $http.post('/api/submissions', {
-        email: $scope.email,
-        trackID: $scope.trackID,
-        name: $scope.name,
+        email: $scope.submission.email,
+        trackID: $scope.submission.trackID,
+        name: $scope.submission.name,
+        title: $scope.submission.title,
+        trackURL: $scope.submission.trackURL,
         channelIDS: [],
         invoiceIDS: []
       })

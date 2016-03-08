@@ -4,6 +4,9 @@ var schema = new mongoose.Schema({
   channelIDS: {
     type: [Number]
   },
+  invoiceIDS: {
+    type: [String]
+  },
   email: {
     type: String
   },
@@ -13,8 +16,14 @@ var schema = new mongoose.Schema({
   trackID: {
     type: Number
   },
-  invoiceIDS: {
-    type: [String]
+  title: {
+    type: String
+  },
+  trackURL: {
+    type: String
+  },
+  submissionDate: {
+    type: Date
   }
 });
 

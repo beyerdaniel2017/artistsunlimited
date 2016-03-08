@@ -1,0 +1,27 @@
+<div style="text-align:center">
+  <h3>Master Password:</h3>
+  <input type="password" ng-model="password">
+  <br>
+  <button ng-click="login()">Login</button>
+  <br>
+  <div ng-show="loggedIn">
+    <h2>Add user for genre</h2>
+    <span>Soundcloud URL:</span><input type="text" ng-model="addUser.url" ng-change="urlChange(1)"></input>
+    <span>Genre</span><select ng-model="addUser.genre">
+      <option value="Chill/Mainstream">Chill/Mainstream</option>
+      <option value="HipHop">HipHop</option>
+      <option value="Trap">Trap</option>
+      <option value="Festival">Festival</option>
+      <option value="Creative">Creative</option>
+      <option value="House">House</option>
+      <option value="Indie/Alternative">Indie/Alternative</option>
+      <option value="Latin">Latin</option>
+      <option value="Vocalists">Vocalists</option>
+    </select>
+    <span>{{addUser.username}}</span>
+  </div>
+</div>
+
+<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.9); text-align:center; z-index:1" ng-show="processing">
+  <h1 style="font-color:white; margin-top:400px; z-index:2">Processing...</h1>
+</div>

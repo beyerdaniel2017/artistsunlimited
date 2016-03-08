@@ -85,7 +85,9 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
         url: $scope.makeEventURL
       })
       .then(function(res) {
-        $scope.makeEvent.trackID = res.data.trackID;
+        $scope.makeEvent.trackID = res.data.id;
+        $scope.makeEvent.title = res.data.title;
+        $scope.makeEvent.trackURL = res.data.trackURL;
         SC.oEmbed($scope.makeEventURL, {
           element: document.getElementById('scPlayer'),
           auto_play: false,
