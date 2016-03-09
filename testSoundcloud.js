@@ -6,16 +6,27 @@ var redirect_uri = "http://tracksubmission.herokuapp.com/callback.html";
 SC.init({
   id: client_id,
   secret: client_secret,
-  uri: redirect_uri
+  uri: redirect_uri,
+  accessToken: "1-183955-86560544-ef29d3c0da9f78"
 });
-SC.put('/e1/me/track_reposts/' + 249593005, "1-183955-64684860-3d8de854e1ad1a", function(err, resp) {
-  console.log(resp);
-  console.log(err);
-});
-// SC.get('/e1/me/track_reposts/246530869', "1-183955-198031384-ab51f5a4123c3", function(err, data) {
-//   console.log(err);
-//   console.log(data);
-// });
+var id = 249651811;
+var accessToken = "1-183955-86560544-ef29d3c0da9f78";
+SC.delete('/e1/me/track_reposts/' + id, function(err, data) {
+    SC.put('/e1/me/track_reposts/' + id, function(err, data) {
+      if (err) {
+        sendMessage("CHRISTIAN", "coayscue@gmail.com", "ERROR", "coayscue@gmail.com", "ERROR REPOSTING", "Error: " + JSON.stringify(err) + "\n   Event:" + JSON.stringify(event));
+      } else {
+        if (event.email) {
+          sendMessage(event.name, event.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + event.name + ",<br><br>We would just like to let you know the track has been reposted on <a href='" + channel.url + "'>" + channel.displayName + "</a>! If you would like to do another round of reposts please resubmit your track to bit.ly/SoundCloudSubmission. We will get back to you ASAP and continue to do our best in making our submission process as quick and easy as possible.<br><br>How was this experience by the way? Feel free to email some feedback, suggestions or just positive reviews to feedback@peninsulamgmt.com.<br><br>Goodluck and thanks again!<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com / kevinlatropical<br> www.facebook.com / edwardlatropical");
+        }
+        Event.findByIdAndRemove(event._id).exec();
+      }
+    });
+  })
+  // SC.get('/e1/me/track_reposts/246530869', "1-183955-198031384-ab51f5a4123c3", function(err, data) {
+  //   console.log(err);
+  //   console.log(data);
+  // });
 
 // var postArr = [{
 //   "paid": true,
