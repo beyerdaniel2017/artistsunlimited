@@ -29,7 +29,7 @@ function doRepost() {
               ev.day = new Date(ev.day);
             });
             var event = events.find(function(even) {
-              return even.day.toLocaleDateString() == date.toLocaleDateString() && even.day.getHours() == date.getHours() && !event.completed;
+              return even.day.toLocaleDateString() == date.toLocaleDateString() && even.day.getHours() == date.getHours() && !even.completed;
             });
             if (event) repostAndRemove(event, chan);
           })
@@ -44,7 +44,6 @@ function doRepost() {
 }
 
 function repostAndRemove(event, channel) {
-  console.log(event);
   if (!event.trackID) {
     var id = channel.queue.splice(0, 1)[0];
   } else {
