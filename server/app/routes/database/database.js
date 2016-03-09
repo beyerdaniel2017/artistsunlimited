@@ -6,8 +6,8 @@ var mongoose = require('mongoose');
 var Follower = mongoose.model('Follower');
 var TrackedUser = mongoose.model('TrackedUser');
 
-var SC = require('node-soundcloud');
 var scConfig = global.env.SOUNDCLOUD;
+var SC = require('soundclouder');
 
 router.post('/adduser', function(req, res, next) {
   if (req.body.password != 'letMeManage') next(new Error('wrong password'));
@@ -26,27 +26,31 @@ router.post('/adduser', function(req, res, next) {
                 })
                 .on("end", function() {
                   var user = JSON.parse(userBody);
-                  TrackedUser.findOne({
-                      "soundcloudID": user.id
-                    }).exec()
-                    .then(function(trdUser) {
-                      SC.get()
-                      if (trdUser) {
-                        throw new Error('already exists');
-                      } else {
-                        var tUser = new TrackedUser({
-                          soundcloudURL: req.body.url,
-                          soundcloudID: user.id,
-                          username: user.username,
-                          followers: user.folowers_count,
-                          description: user.description
-                        });
-                        return tUser.save();
-                      }
-                    }).then(function(followUser) {
-                      addFollowers(followUser._id, '/users/' + followUser.soundcloudID + '/followers');
-                      res.send(followUser);
-                    }).then(null, next);
+                  SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
+                  SC.put('/aaas/users/' + user.id, function(err, res) {
+                    console.log(res);
+                    console.log(err);
+                  });
+                  // TrackedUser.findOne({
+                  //     "soundcloudID": user.id
+                  //   }).exec()
+                  //   .then(function(trdUser) {
+                  //     if (trdUser) {
+                  //       throw new Error('already exists');
+                  //     } else {
+                  //       var tUser = new TrackedUser({
+                  //         soundcloudURL: req.body.url,
+                  //         soundcloudID: user.id,
+                  //         username: user.username,
+                  //         followers: user.folowers_count,
+                  //         description: user.description
+                  //       });
+                  //       return tUser.save();
+                  //     }
+                  //   }).then(function(followUser) {
+                  //     addFollowers(followUser._id, '/users/' + followUser.soundcloudID + '/followers');
+                  //     res.send(followUser);
+                  //   }).then(null, next);
                 })
             })
             .on('error', next)
@@ -65,6 +69,7 @@ function addFollowers(followUserID, nextURL) {
   SC.get(nextURL, {
     limit: 200
   }, function(err, res) {
+    console.log(err);
     if (res.next_href) {
       addFollowers(followUserID, res.next_href);
     }
