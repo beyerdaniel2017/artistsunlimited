@@ -93,8 +93,6 @@ router.post('/paid', function(req, res, next) {
       invoiceIDS: req.body.resource.invoice.id
     }).exec()
     .then(function(sub) {
-      sub.paidInvoices.push(req.body.resourece.invoice.id);
-      sub.save();
       submission = sub;
       var index = sub.invoiceIDS.indexOf(req.body.resource.invoice.id);
       chanID = sub.channelIDS[index];

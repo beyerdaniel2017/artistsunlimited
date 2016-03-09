@@ -7,8 +7,11 @@ var schema = new mongoose.Schema({
   invoiceIDS: {
     type: [String]
   },
-  paidInvoices: {
-    type: [String]
+  events: {
+    type: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Event'
+    }]
   },
   email: {
     type: String
