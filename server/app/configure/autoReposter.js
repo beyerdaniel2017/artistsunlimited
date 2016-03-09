@@ -44,6 +44,7 @@ function doRepost() {
 }
 
 function repostAndRemove(event, channel) {
+  console.log(event);
   if (!event.trackID) {
     var id = channel.queue.splice(0, 1)[0];
   } else {
