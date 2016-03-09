@@ -10,18 +10,6 @@ app.config(function($stateProvider) {
 app.controller('DatabaseController', function($rootScope, $state, $scope, $http, AuthService, SOUNDCLOUD) {
   $scope.addUser = {};
 
-  $scope.urlChange = function(ind) {
-    $http.post('/api/soundcloud/soundcloudUser', {
-        url: $scope.url
-      })
-      .then(function(res) {
-        $scope.addUser.username = res.name
-        document.getElementById('scPlayer' + ind).style.visibility = "visible";
-      }).then(null, function(err) {
-        document.getElementById('scPlayer').style.visibility = "hidden";
-      });
-  }
-
   $scope.login = function() {
     $scope.processing = true;
     $http.post('/api/login', {
@@ -34,6 +22,22 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
       $scope.processing = false;
       alert('Wrong Password');
     });
+  }
+
+  $scope.saveAddUser = function() {
+    $scope.processing = true;
+    $scope.addUser.password = $rootScope.password;
+    console.log($scope.addUser);
+    $http.post('/api/database/adduser', $scope.addUser)
+      .then(function(res) {
+        console.log(res);
+        // alert('User ' + res.data.userName + "'s followers added");
+        $scope.processing = false;
+      })
+      .catch(function(err) {
+        alert('Bad submission');
+        $scope.processing = false;
+      });
   }
 
 });

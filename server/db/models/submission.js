@@ -7,6 +7,9 @@ var schema = new mongoose.Schema({
   invoiceIDS: {
     type: [String]
   },
+  paidInvoices: {
+    type: [String]
+  },
   email: {
     type: String
   },

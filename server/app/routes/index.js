@@ -7,6 +7,7 @@ router.use('/submissions', require('./submissions/submissions.js'));
 router.use('/login', require('./login/login.js'));
 router.use('/events', require('./events/events.js'));
 router.use('/soundcloud', require('./soundC/soundC.js'));
+router.use('/database', require('./database/database.js'));
 
 // Make sure this is after all of
 // the registered routes!

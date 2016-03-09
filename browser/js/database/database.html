@@ -1,4 +1,5 @@
 <div style="text-align:center">
+  <h2>Database</h2>
   <h3>Master Password:</h3>
   <input type="password" ng-model="password">
   <br>
@@ -6,7 +7,7 @@
   <br>
   <div ng-show="loggedIn">
     <h2>Add user for genre</h2>
-    <span>Soundcloud URL:</span><input type="text" ng-model="addUser.url" ng-change="urlChange(1)"></input>
+    <span>Soundcloud URL:</span><input type="text" ng-model="addUser.url"></input>
     <span>Genre</span><select ng-model="addUser.genre">
       <option value="Chill/Mainstream">Chill/Mainstream</option>
       <option value="HipHop">HipHop</option>
@@ -18,7 +19,7 @@
       <option value="Latin">Latin</option>
       <option value="Vocalists">Vocalists</option>
     </select>
-    <span>{{addUser.username}}</span>
+    <button ng-click="saveAddUser()">Submit</button>
   </div>
 </div>
 

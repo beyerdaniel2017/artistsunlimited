@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var Channel = mongoose.model('Channel');
 var Submission = mongoose.model('Submission');
 var Event = mongoose.model('Event');
-var SC = require('soundclouder');
+var SC = require('node-soundcloud');
 
 router.post('/', function(req, res, next) {
   if (req.body.password == 'letMeManage') {
@@ -18,8 +18,13 @@ router.post('/', function(req, res, next) {
 router.post('/authenticated', function(req, res, next) {
   if (req.body.password != "letMeManage") next(new Error("Wrong password"));
   var scConfig = global.env.SOUNDCLOUD;
-  SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
-  SC.get('/me', req.body.token, function(err, data) {
+  SC.init({
+    id: scConfig.clientID,
+    secret: scConfig.clientSecret,
+    uri: scConfig.redirectURL,
+    accessToken: req.body.token
+  });
+  SC.get('/me', function(err, data) {
     var sendObj = {};
     Channel.findOneAndUpdate({
         channelID: data.id

@@ -46,7 +46,6 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
       })
       .then(function(res) {
         console.log(res.data);
-        $scope.processing = false;
         window.alert("Your song has been submitted and will be reviewed soon.");
         location.reload();
       })

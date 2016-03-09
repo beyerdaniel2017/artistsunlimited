@@ -1,3 +1,4 @@
+var scConfig = global.env.SOUNDCLOUD;
 'use strict';
 var router = require('express').Router();
 module.exports = router;
@@ -14,13 +15,10 @@ var sendInvoice = require("../../payPal/sendInvoice.js");
 router.post('/', function(req, res, next) {
   var submission = new Submission(req.body);
   submission.invoiceIDS = [];
+  submission.paidInvoices = [];
+  submission.submissionDate = new Date();
   submission.save()
     .then(function(sub) {
-      var email = new Email({
-        email: sub.email,
-        name: sub.name
-      });
-      email.save()
       res.send(sub);
     })
     .then(null, next);
@@ -95,6 +93,8 @@ router.post('/paid', function(req, res, next) {
       invoiceIDS: req.body.resource.invoice.id
     }).exec()
     .then(function(sub) {
+      sub.paidInvoices.push(req.body.resourece.invoice.id);
+      sub.save();
       submission = sub;
       var index = sub.invoiceIDS.indexOf(req.body.resource.invoice.id);
       chanID = sub.channelIDS[index];
@@ -246,7 +246,7 @@ router.post('/rescheduleRepost', function(req, res, next) {
                         newEve.save()
                           .then(function(eve) {
                             eve.day = new Date(eve.day);
-                            sendEmail(eve.name, eve.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>Thank you for completing the last step for promotion of your track <a href='" + eve.trackURL + "'>" + eve.title + "</a>! After reviewing the track and receiving your payment we have scheduled the repost on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our more extensive PR services by emailing artistsunlimited.pr@gmail.com.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
+                            sendEmail(eve.name, eve.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>We are terribly sorry for the inconvenience, but we have had to reschedule your repost of <a href='" + eve.trackURL + "'>" + eve.title + "</a> on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". Thank you for your patience as we work out the early bugs in our system.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
                             res.send({});
                           })
                           .then(null, next);
@@ -262,7 +262,7 @@ router.post('/rescheduleRepost', function(req, res, next) {
             ev.name = eventHolder.name;
             ev.save().then(function(event2) {
               event2.day = new Date(event2.day);
-              sendEmail(event2.name, event2.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + event2.name + ",<br><br>Thank you for completing the last step for promotion of your track <a href='" + event2.trackURL + "'>" + event2.title + "</a>! After reviewing the track and receiving your payment we have scheduled the repost on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + event2.day.toLocaleDateString() + ". Thank you for your business and if you haven’t already, check out our more extensive PR services by emailing artistsunlimited.pr@gmail.com.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
+              sendEmail(eve.name, eve.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>We are terribly sorry for the inconvenience, but we have had to reschedule your repost of <a href='" + event2.trackURL + "'>" + event2.title + "</a> on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + event2.day.toLocaleDateString() + ". Thank you for your patience as we work out the early bugs in our system.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
               res.send({});
             })
           }
