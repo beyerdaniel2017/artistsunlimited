@@ -24,6 +24,9 @@ var schema = new mongoose.Schema({
   },
   day: {
     type: Date
+  },
+  completed: {
+    type: Boolean
   }
 });
 

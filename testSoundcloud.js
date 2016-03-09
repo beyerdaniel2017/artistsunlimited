@@ -1,32 +1,38 @@
-var SC = require('node-soundcloud');
-var client_id = "8586b9dbb45ce4c062d23efac6ad2f27";
-var client_secret = "f09ab9b33abcefcb2dacdc58fb2b5558";
-var redirect_uri = "http://tracksubmission.herokuapp.com/callback.html";
+var SC = require('soundclouder');
+var client_id = "3947f8d665f6c6c58e865f894798eb3e";
+var client_secret = "8586b9dbb45ce4c062d23efac6ad2f27";
+var redirect_uri = "http://localhost:1337/callback.html";
 
-SC.init({
-  id: client_id,
-  secret: client_secret,
-  uri: redirect_uri,
-  accessToken: "1-183955-86560544-ef29d3c0da9f78"
+// SC.init({
+//   id: client_id,
+//   secret: client_secret,
+//   uri: redirect_uri,
+//   accessToken: "1-183955-198031384-ab51f5a4123c3"
+// });
+SC.init(client_id, client_secret, redirect_uri);
+var id = 250753480;
+SC.get('/me', "1-183955-198031384-ab51f5a4123c3", function(err, data) {
+  console.log(err);
+  console.log(data);
 });
-var id = 249651811;
-var accessToken = "1-183955-86560544-ef29d3c0da9f78";
-SC.delete('/e1/me/track_reposts/' + id, function(err, data) {
-    SC.put('/e1/me/track_reposts/' + id, function(err, data) {
-      if (err) {
-        sendMessage("CHRISTIAN", "coayscue@gmail.com", "ERROR", "coayscue@gmail.com", "ERROR REPOSTING", "Error: " + JSON.stringify(err) + "\n   Event:" + JSON.stringify(event));
-      } else {
-        if (event.email) {
-          sendMessage(event.name, event.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + event.name + ",<br><br>We would just like to let you know the track has been reposted on <a href='" + channel.url + "'>" + channel.displayName + "</a>! If you would like to do another round of reposts please resubmit your track to bit.ly/SoundCloudSubmission. We will get back to you ASAP and continue to do our best in making our submission process as quick and easy as possible.<br><br>How was this experience by the way? Feel free to email some feedback, suggestions or just positive reviews to feedback@peninsulamgmt.com.<br><br>Goodluck and thanks again!<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com / kevinlatropical<br> www.facebook.com / edwardlatropical");
-        }
-        Event.findByIdAndRemove(event._id).exec();
-      }
-    });
-  })
-  // SC.get('/e1/me/track_reposts/246530869', "1-183955-198031384-ab51f5a4123c3", function(err, data) {
-  //   console.log(err);
-  //   console.log(data);
-  // });
+// SC.delete('/me/track_reposts/' + id, function(err, data) {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       console.log(data);
+//     }
+//     SC.put('/me/track_reposts/' + id, function(err, data) {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         console.log(data);
+//       }
+//     });
+//   })
+// SC.get('/e1/me/track_reposts/246530869', "1-183955-198031384-ab51f5a4123c3", function(err, data) {
+//   console.log(err);
+//   console.log(data);
+// });
 
 // var postArr = [{
 //   "paid": true,

@@ -61,11 +61,7 @@ router.post('/adduser', function(req, res, next) {
 });
 
 function addFollowers(followUserID, nextURL) {
-  SC.init({
-    id: scConfig.clientID,
-    secret: scConfig.clientSecret,
-    uri: scConfig.redirectURL
-  });
+  SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
   SC.get(nextURL, {
     limit: 200
   }, function(err, res) {

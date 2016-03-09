@@ -31,6 +31,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
       scope: "non-expiring"
     });
     SC.connect().then(function(res) {
+        console.log(res);
         $rootScope.accessToken = res.oauth_token;
         $http.post('/api/login/authenticated', {
             token: res.oauth_token,
