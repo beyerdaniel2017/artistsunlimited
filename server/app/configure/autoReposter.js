@@ -13,7 +13,7 @@ module.exports = function() {
 function doRepost() {
   setTimeout(function() {
     doRepost();
-  }, 10000);
+  }, 1800000);
 
   var date = new Date();
   var hour = date.getHours();
