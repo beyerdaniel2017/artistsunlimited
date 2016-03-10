@@ -2,9 +2,7 @@ var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
   scID: {
-    type: Number,
-    unique: true,
-    dropDups: true
+    type: Number
   },
   scURL: {
     type: String

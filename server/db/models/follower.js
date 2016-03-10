@@ -5,9 +5,7 @@ var schema = new mongoose.Schema({
     type: Boolean
   },
   scID: {
-    type: Number,
-    unique: true,
-    dropDups: true
+    type: Number
   },
   scURL: {
     type: String

@@ -73,7 +73,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
         $scope.processing = false;
       })
       .then(null, function(err) {
-        alert(err.message);
+        alert("ERROR: Bad Query or No Matches");
         $scope.processing = false;
       });
   }
@@ -93,7 +93,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
         $scope.processing = false;
       })
       .then(null, function(err) {
-        alert(err.message);
+        alert("ERROR: Unable to download");
         $scope.processing = false;
       })
   }
