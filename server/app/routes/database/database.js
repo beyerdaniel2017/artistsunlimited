@@ -54,9 +54,11 @@ function createAndSendFile(query, res, next) {
   stream.on('error', next);
 }
 
+
 router.get('/downloadFile', function(req, res, next) {
   res.download('tmp/userDBQuery.csv');
 })
+
 
 router.post('/adduser', function(req, res, next) {
   if (req.body.password != 'letMeManage') next(new Error('wrong password'));
@@ -75,6 +77,7 @@ router.post('/adduser', function(req, res, next) {
                 })
                 .on("end", function() {
                   var user = JSON.parse(userBody);
+                  console.log(user);
                   TrackedUser.findOne({
                       "scID": user.id
                     }).exec()
