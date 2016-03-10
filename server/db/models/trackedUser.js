@@ -1,12 +1,15 @@
 var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
-  soundcloudID: {
+  scID: {
     type: Number,
     unique: true,
     dropDups: true
   },
-  soundcloudURL: {
+  scURL: {
+    type: String
+  },
+  genre: {
     type: String
   },
   username: {

@@ -4,8 +4,10 @@ var schema = new mongoose.Schema({
   artist: {
     type: Boolean
   },
-  soundcloudID: {
-    type: Number
+  scID: {
+    type: Number,
+    unique: true,
+    dropDups: true
   },
   scURL: {
     type: String
@@ -40,11 +42,14 @@ var schema = new mongoose.Schema({
   youtubeURL: {
     type: String
   },
-  trackedUser: {
-    type: {
+  dayNum: {
+    type: Number
+  },
+  trackedUsers: {
+    type: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'TrackedUser'
-    }
+    }]
   }
 });
 

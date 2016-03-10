@@ -1,0 +1,1 @@
+var sendMessage = require('../mandrill/sendEmail.js');
