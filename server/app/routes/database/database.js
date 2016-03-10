@@ -38,12 +38,12 @@ router.post('/followers', function(req, res, next) {
 
 function createAndSendFile(query, res, next) {
   var writer = csv({
-    headers: ["username", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube"]
+    headers: ["username", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", 'Auto Email Day']
   });
   writer.pipe(fs.createWriteStream("tmp/userDBQuery.csv"));
   var stream = Follower.find(query).stream();
   stream.on('data', function(flwr) {
-    var row = [flwr.username, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL];
+    var row = [flwr.username, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.emailDayNum];
     writer.write(row);
   });
   stream.on('close', function() {
@@ -160,13 +160,13 @@ function addFollowers(followUser, nextURL) {
                     username: follower.username,
                     followers: follower.followers_count,
                     email: email,
-                    dayNum: Math.floor(Math.random() * 14) + 1,
                     description: follower.description,
                     numTracks: follower.track_count,
                     facebookURL: follower.facebookURL,
                     instagramURL: follower.facebookURL,
                     twitterURL: follower.twitterURL,
                     youtubeURL: follower.youtubeURL,
+                    emailDayNum: Math.floor(Math.random() * 14) + 1,
                     trackedUsers: [followUser._id]
                   });
                 }

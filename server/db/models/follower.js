@@ -42,7 +42,7 @@ var schema = new mongoose.Schema({
   youtubeURL: {
     type: String
   },
-  dayNum: {
+  emailDayNum: {
     type: Number
   },
   trackedUsers: {
