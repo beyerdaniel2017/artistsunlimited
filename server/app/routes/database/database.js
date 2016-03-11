@@ -38,12 +38,12 @@ router.post('/followers', function(req, res, next) {
 
 function createAndSendFile(query, res, next) {
   var writer = csv({
-    headers: ["username", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", 'Auto Email Day']
+    headers: ["username", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", 'Auto Email Day', 'All Emails']
   });
   writer.pipe(fs.createWriteStream("tmp/userDBQuery.csv"));
   var stream = Follower.find(query).stream();
   stream.on('data', function(flwr) {
-    var row = [flwr.username, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.emailDayNum];
+    var row = [flwr.username, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.emailDayNum, flwr.allEmails.toString()];
     writer.write(row);
   });
   stream.on('close', function() {
@@ -56,7 +56,10 @@ function createAndSendFile(query, res, next) {
 
 
 router.get('/downloadFile', function(req, res, next) {
-  res.download('tmp/userDBQuery.csv');
+  var stream = fs.createReadStream('tmp/userDBQuery.csv', {
+    bufferSize: 64 * 1024
+  });
+  stream.pipe(res);
 })
 
 
@@ -117,8 +120,11 @@ function addFollowers(followUser, nextURL) {
   SC.get(nextURL, {
     limit: 200
   }, function(err, res) {
-    if (res.next_href) {
+    if (err) console.log(err);
+    else if (res.next_href) {
       addFollowers(followUser, res.next_href);
+    } else {
+      console.log('done');
     }
     res.collection.forEach(function(follower) {
       SC.get('/users/' + follower.id + '/web-profiles', function(err, webProfs) {
@@ -146,36 +152,35 @@ function addFollowers(followUser, nextURL) {
           var myArray = null;
         }
         if (myArray) {
-          for (var index in myArray) {
-            var email = myArray[index];
-            Follower.findOne({
-                "scID": follower.id
-              }).exec()
-              .then(function(flwr) {
-                if (flwr && flwr.email == email) {
-                  flwr.trackedUsers.push(followUser._id)
-                } else {
-                  var newFollower = new Follower({
-                    artist: follower.track_count > 0,
-                    scID: follower.id,
-                    scURL: follower.permalink_url,
-                    name: follower.full_name,
-                    username: follower.username,
-                    followers: follower.followers_count,
-                    email: email,
-                    description: follower.description,
-                    numTracks: follower.track_count,
-                    facebookURL: follower.facebookURL,
-                    instagramURL: follower.facebookURL,
-                    twitterURL: follower.twitterURL,
-                    youtubeURL: follower.youtubeURL,
-                    emailDayNum: Math.floor(Math.random() * 14) + 1,
-                    trackedUsers: [followUser._id]
-                  });
-                }
-                newFollower.save();
-              });
-          }
+          var email = myArray[0];
+          Follower.findOne({
+              "scID": follower.id
+            }).exec()
+            .then(function(flwr) {
+              if (flwr) {
+                flwr.trackedUsers.push(followUser._id)
+              } else {
+                var newFollower = new Follower({
+                  artist: follower.track_count > 0,
+                  scID: follower.id,
+                  scURL: follower.permalink_url,
+                  name: follower.full_name,
+                  username: follower.username,
+                  followers: follower.followers_count,
+                  email: email,
+                  description: follower.description,
+                  numTracks: follower.track_count,
+                  facebookURL: follower.facebookURL,
+                  instagramURL: follower.facebookURL,
+                  twitterURL: follower.twitterURL,
+                  youtubeURL: follower.youtubeURL,
+                  emailDayNum: Math.floor(Math.random() * 14) + 1,
+                  trackedUsers: [followUser._id],
+                  allEmails: myArray
+                });
+              }
+              newFollower.save();
+            });
         }
       });
     })

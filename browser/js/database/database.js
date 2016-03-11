@@ -33,7 +33,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
     $http.post('/api/database/adduser', $scope.addUser)
       .then(function(res) {
         console.log(res);
-        // alert('User ' + res.data.userName + "'s followers added");
+        alert("Success: Database is being populated.");
         $scope.processing = false;
       })
       .catch(function(err) {
