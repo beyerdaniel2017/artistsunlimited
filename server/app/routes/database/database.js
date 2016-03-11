@@ -12,6 +12,7 @@ var SC = require('node-soundcloud');
 
 
 router.post('/followers', function(req, res, next) {
+  var filename = "QueryDB:" + JSON.stringify(req.body.query);
   if (req.body.password != 'letMeManage') next(new Error('wrong password'));
   var query1 = {};
   if (req.body.query.genre) query1.genre = req.body.query.genre;
@@ -30,13 +31,13 @@ router.post('/followers', function(req, res, next) {
         query2.trackedUsers = {
           $in: [usr._id]
         };
-        createAndSendFile(query2, res, next);
+        createAndSendFile(filename, query2, res, next);
       })
       .then(null, next);
   }
 });
 
-function createAndSendFile(query, res, next) {
+function createAndSendFile(filename, query, res, next) {
   var writer = csv({
     headers: ["username", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", 'Auto Email Day', 'All Emails']
   });
@@ -49,18 +50,16 @@ function createAndSendFile(query, res, next) {
   stream.on('close', function() {
     console.log('ended');
     writer.end();
-    res.send('ok');
+    res.send(filename);
   });
   stream.on('error', next);
 }
-
-
-router.get('/downloadFile', function(req, res, next) {
-  var stream = fs.createReadStream('tmp/userDBQuery.csv', {
-    bufferSize: 64 * 1024
-  });
-  stream.pipe(res);
-})
+// router.get('/downloadFile', function(req, res, next) {
+//   var stream = fs.createReadStream('tmp/userDBQuery.csv', {
+//     bufferSize: 64 * 1024
+//   });
+//   stream.pipe(res);
+// })
 
 
 router.post('/adduser', function(req, res, next) {

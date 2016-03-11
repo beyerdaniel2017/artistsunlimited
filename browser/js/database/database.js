@@ -68,7 +68,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
     $scope.processing = true;
     $http.post('/api/database/followers', body)
       .then(function(res) {
-        console.log(res);
+        $scope.filename = res.data;
         $scope.downloadButtonVisible = true;
         $scope.processing = false;
       })
@@ -79,22 +79,20 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   }
 
   $scope.download = function() {
-    $scope.downloadButtonVisible = false;
-    $scope.processing = true;
-    $http.get('/api/database/downloadFile')
-      .then(function(res) {
-        console.log(res);
-        var anchor = angular.element('<a/>');
-        anchor.attr({
-          href: 'data:attachment/csv;charset=utf-8,' + encodeURI(res.data),
-          target: '_blank',
-          download: 'userDBQuery.csv'
-        })[0].click();
-        $scope.processing = false;
-      })
-      .then(null, function(err) {
-        alert("ERROR: Unable to download");
-        $scope.processing = false;
-      })
+    // $scope.downloadButtonVisible = false;
+    // $scope.processing = true;
+    // $http.get('/api/database/downloadFile')
+    //   .then(function(res) {
+    var anchor = angular.element('<a/>');
+    anchor.attr({
+      href: $scope.filename,
+      download: 'userDBQuery.csv'
+    })[0].click();
+    //   $scope.processing = false;
+    // })
+    // .then(null, function(err) {
+    //   alert("ERROR: Unable to download");
+    //   $scope.processing = false;
+    // })
   }
 });
