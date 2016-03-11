@@ -12,7 +12,7 @@ var SC = require('node-soundcloud');
 
 
 router.post('/followers', function(req, res, next) {
-  var filename = "QueryDB:" + JSON.stringify(req.body.query);
+  var filename = "QueryDB_" + JSON.stringify(req.body.query) + ".csv";
   if (req.body.password != 'letMeManage') next(new Error('wrong password'));
   var query1 = {};
   if (req.body.query.genre) query1.genre = req.body.query.genre;
@@ -41,7 +41,7 @@ function createAndSendFile(filename, query, res, next) {
   var writer = csv({
     headers: ["username", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", 'Auto Email Day', 'All Emails']
   });
-  writer.pipe(fs.createWriteStream("tmp/userDBQuery.csv"));
+  writer.pipe(fs.createWriteStream(filename));
   var stream = Follower.find(query).stream();
   stream.on('data', function(flwr) {
     var row = [flwr.username, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.emailDayNum, flwr.allEmails.toString()];
