@@ -38,12 +38,12 @@ router.post('/followers', function(req, res, next) {
 
 function createAndSendFile(filename, query, res, next) {
   var writer = csv({
-    headers: ["username", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", 'Auto Email Day', 'All Emails']
+    headers: ["username", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", "Websites", 'Auto Email Day', 'All Emails']
   });
   writer.pipe(fs.createWriteStream('tmp/' + filename));
   var stream = Follower.find(query).stream();
   stream.on('data', function(flwr) {
-    var row = [flwr.username, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.emailDayNum, flwr.allEmails.join(', ')];
+    var row = [flwr.username, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.websites, flwr.emailDayNum, flwr.allEmails.join(', ')];
     writer.write(row);
   });
   stream.on('close', function() {
@@ -118,7 +118,7 @@ function addFollowers(followUser, nextURL) {
     }
     res.collection.forEach(function(follower) {
       SC.get('/users/' + follower.id + '/web-profiles', function(err, webProfiles) {
-        follower.websites = ''
+        follower.websites = '';
         if (webProfiles) {
           for (var index in webProfiles) {
             switch (webProfiles[index].service) {
@@ -168,6 +168,7 @@ function addFollowers(followUser, nextURL) {
                   twitterURL: follower.twitterURL,
                   youtubeURL: follower.youtubeURL,
                   emailDayNum: Math.floor(Math.random() * 14) + 1,
+                  websites: follower.websites,
                   trackedUsers: [followUser._id],
                   allEmails: myArray
                 });

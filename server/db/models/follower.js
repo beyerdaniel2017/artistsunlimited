@@ -51,6 +51,9 @@ var schema = new mongoose.Schema({
   },
   allEmails: {
     type: [String]
+  },
+  websites: {
+    type: String
   }
 });
 
