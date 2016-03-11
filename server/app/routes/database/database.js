@@ -43,7 +43,7 @@ function createAndSendFile(filename, query, res, next) {
   writer.pipe(fs.createWriteStream('tmp/' + filename));
   var stream = Follower.find(query).stream();
   stream.on('data', function(flwr) {
-    var row = [flwr.username, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.emailDayNum, flwr.allEmails.toString()];
+    var row = [flwr.username, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.emailDayNum, flwr.allEmails.join(', ')];
     writer.write(row);
   });
   stream.on('close', function() {
@@ -52,13 +52,6 @@ function createAndSendFile(filename, query, res, next) {
   });
   stream.on('error', next);
 }
-// router.get('/downloadFile', function(req, res, next) {
-//   var stream = fs.createReadStream('tmp/userDBQuery.csv', {
-//     bufferSize: 64 * 1024
-//   });
-//   stream.pipe(res);
-// })
-
 
 router.post('/adduser', function(req, res, next) {
   if (req.body.password != 'letMeManage') next(new Error('wrong password'));
@@ -124,24 +117,27 @@ function addFollowers(followUser, nextURL) {
       console.log('done');
     }
     res.collection.forEach(function(follower) {
-      SC.get('/users/' + follower.id + '/web-profiles', function(err, webProfs) {
-        if (webProfs) {
-          var twitter = webProfs.findOne(function(element) {
-            return element.service == 'twitter'
-          });
-          if (twitter) follower.twitterURL = twitter.url;
-          var instagram = webProfs.findOne(function(element) {
-            return element.service == 'instagram'
-          });
-          if (instagram) follower.instagramURL = instagram.url;
-          var facebook = webProfs.findOne(function(element) {
-            return element.service == 'facebook'
-          });
-          if (facebook) follower.facebookURL = facebook.url;
-          var youtube = webProfs.findOne(function(element) {
-            return element.service == 'youtube'
-          });
-          if (youtube) follower.youtubeURL = youtube.url;
+      SC.get('/users/' + follower.id + '/web-profiles', function(err, webProfiles) {
+        follower.websites = ''
+        if (webProfiles) {
+          for (var index in webProfiles) {
+            switch (webProfiles[index].service) {
+              case 'twitter':
+                follower.twitterURL = webProfiles[index].url;
+                break;
+              case 'instagram':
+                follower.instagramURL = webProfiles[index].url;
+                break;
+              case 'facebook':
+                follower.facebookURL = webProfiles[index].url;
+                break;
+              case 'youtube':
+                follower.youtubeURL = webProfiles[index].url;
+                break;
+              case 'personal':
+                follower.websites += webProfiles[index].url + '\n';
+            }
+          }
         }
         if (follower.description) {
           var myArray = follower.description.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);

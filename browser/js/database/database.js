@@ -79,20 +79,11 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   }
 
   $scope.download = function() {
-    // $scope.downloadButtonVisible = false;
-    // $scope.processing = true;
-    // $http.get('/api/database/downloadFile')
-    //   .then(function(res) {
     var anchor = angular.element('<a/>');
     anchor.attr({
       href: $scope.filename,
-      download: 'userDBQuery.csv'
+      download: $scope.filename
     })[0].click();
-    //   $scope.processing = false;
-    // })
-    // .then(null, function(err) {
-    //   alert("ERROR: Unable to download");
-    //   $scope.processing = false;
-    // })
+    $scope.downloadButtonVisible = false
   }
 });
