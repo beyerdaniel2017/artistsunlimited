@@ -22,12 +22,11 @@ router.post('/followers', function(req, res, next) {
   if (req.body.query.followers) query2.followers = req.body.query.followers;
   if (req.body.query.artist) query2.artist = req.body.query.artist;
   if (JSON.stringify(query1) == JSON.stringify({})) {
-    createAndSendFile(query2, res, next);
+    createAndSendFile(filename, query2, res, next);
   } else {
     TrackedUser.findOne(query1).exec()
       .then(function(usr) {
         if (!usr) next(new Error('Followed account not found.'))
-        console.log(usr)
         query2.trackedUsers = {
           $in: [usr._id]
         };
@@ -41,14 +40,13 @@ function createAndSendFile(filename, query, res, next) {
   var writer = csv({
     headers: ["username", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", 'Auto Email Day', 'All Emails']
   });
-  writer.pipe(fs.createWriteStream(filename));
+  writer.pipe(fs.createWriteStream('tmp/' + filename));
   var stream = Follower.find(query).stream();
   stream.on('data', function(flwr) {
     var row = [flwr.username, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.emailDayNum, flwr.allEmails.toString()];
     writer.write(row);
   });
   stream.on('close', function() {
-    console.log('ended');
     writer.end();
     res.send(filename);
   });
