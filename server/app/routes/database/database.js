@@ -15,26 +15,11 @@ var sendEmail = require("../../mandrill/sendEmail.js");
 router.post('/followers', function(req, res, next) {
   var filename = "QueryDB_" + JSON.stringify(req.body.query) + ".csv";
   if (req.body.password != 'letMeManage') next(new Error('wrong password'));
-  var query1 = {};
-  if (req.body.query.genre) query1.genre = req.body.query.genre;
-  if (req.body.query.trackedUsersURL) query1.scURL = req.body.query.trackedUsersURL;
-
-  var query2 = {};
-  if (req.body.query.followers) query2.followers = req.body.query.followers;
-  if (req.body.query.artist) query2.artist = req.body.query.artist;
-  if (JSON.stringify(query1) == JSON.stringify({})) {
-    createAndSendFile(filename, query2, res, next);
-  } else {
-    TrackedUser.findOne(query1).exec()
-      .then(function(usr) {
-        if (!usr) next(new Error('Followed account not found.'))
-        query2.trackedUsers = {
-          $in: [usr._id]
-        };
-        createAndSendFile(filename, query2, res, next);
-      })
-      .then(null, next);
-  }
+  var query = {};
+  if (req.body.query.genre) query.genre = req.body.query.genre;
+  if (req.body.query.followers) query.followers = req.body.query.followers;
+  if (req.body.query.artist) query.artist = req.body.query.artist;
+  createAndSendFile(filename, query, res, next);
 });
 
 function createAndSendFile(filename, query, res, next) {
@@ -42,9 +27,9 @@ function createAndSendFile(filename, query, res, next) {
     headers: ["username", "genre", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", "Websites", 'Auto Email Day', 'All Emails']
   });
   writer.pipe(fs.createWriteStream('tmp/' + filename));
-  var stream = Follower.find(query).populate("trackedUser", "genre").stream();
+  var stream = Follower.find(query).stream();
   stream.on('data', function(flwr) {
-    var row = [flwr.username, flwr.trackedUser.genre, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.websites, flwr.emailDayNum, flwr.allEmails.join(', ')];
+    var row = [flwr.username, flwr.genre, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.websites, flwr.emailDayNum, flwr.allEmails.join(', ')];
     writer.write(row);
   });
   stream.on('close', function() {
@@ -104,7 +89,6 @@ router.post('/adduser', function(req, res, next) {
 });
 
 function addFollowers(followUser, nextURL, email) {
-  console.log(email);
   SC.init({
     id: scConfig.clientID,
     secret: scConfig.clientSecret,
@@ -117,7 +101,7 @@ function addFollowers(followUser, nextURL, email) {
       console.log(err);
       sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'Failed Database Populate', "Database failed to populate followers of " + followUser.username + ". ERROR:" + err.message + ". Please reply to this email to find out why.");
     } else if (res.next_href) {
-      addFollowers(followUser, res.next_href);
+      addFollowers(followUser, res.next_href, email);
     } else {
       console.log('done');
       sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'Successful Database Population', "Database has populated followers of " + followUser.username);
@@ -176,7 +160,7 @@ function addFollowers(followUser, nextURL, email) {
                     youtubeURL: follower.youtubeURL,
                     emailDayNum: Math.floor(Math.random() * 14) + 1,
                     websites: follower.websites,
-                    trackedUser: followUser._id,
+                    genre: followUser.genre,
                     allEmails: myArray
                   });
                 }

@@ -43,11 +43,8 @@ var schema = new mongoose.Schema({
   emailDayNum: {
     type: Number
   },
-  trackedUser: {
-    type: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'TrackedUser'
-    }
+  genre: {
+    type: String
   },
   allEmails: {
     type: [String]
