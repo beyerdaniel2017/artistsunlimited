@@ -9,6 +9,7 @@ var csv = require('csv-write-stream');
 var fs = require('fs');
 var scConfig = global.env.SOUNDCLOUD;
 var SC = require('node-soundcloud');
+var sendEmail = require("../../mandrill/sendEmail.js");
 
 
 router.post('/followers', function(req, res, next) {
@@ -38,12 +39,12 @@ router.post('/followers', function(req, res, next) {
 
 function createAndSendFile(filename, query, res, next) {
   var writer = csv({
-    headers: ["username", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", "Websites", 'Auto Email Day', 'All Emails']
+    headers: ["username", "genre", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", "Websites", 'Auto Email Day', 'All Emails']
   });
   writer.pipe(fs.createWriteStream('tmp/' + filename));
-  var stream = Follower.find(query).stream();
+  var stream = Follower.find(query).populate("trackedUser", "genre").stream();
   stream.on('data', function(flwr) {
-    var row = [flwr.username, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.websites, flwr.emailDayNum, flwr.allEmails.join(', ')];
+    var row = [flwr.username, flwr.trackedUser.genre, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.websites, flwr.emailDayNum, flwr.allEmails.join(', ')];
     writer.write(row);
   });
   stream.on('close', function() {
@@ -82,13 +83,14 @@ router.post('/adduser', function(req, res, next) {
                           scURL: req.body.url,
                           scID: user.id,
                           username: user.username,
-                          followers: user.folowers_count,
-                          description: user.description
+                          followers: user.followers_count,
+                          description: user.description,
+                          genre: req.body.genre
                         });
                         return tUser.save();
                       }
                     }).then(function(followUser) {
-                      addFollowers(followUser, '/users/' + followUser.scID + '/followers');
+                      addFollowers(followUser, '/users/' + followUser.scID + '/followers', req.body.email);
                       res.send(followUser);
                     }).then(null, next);
                 })
@@ -101,7 +103,8 @@ router.post('/adduser', function(req, res, next) {
     .end();
 });
 
-function addFollowers(followUser, nextURL) {
+function addFollowers(followUser, nextURL, email) {
+  console.log(email);
   SC.init({
     id: scConfig.clientID,
     secret: scConfig.clientSecret,
@@ -110,73 +113,95 @@ function addFollowers(followUser, nextURL) {
   SC.get(nextURL, {
     limit: 200
   }, function(err, res) {
-    if (err) console.log(err);
-    else if (res.next_href) {
+    if (err) {
+      console.log(err);
+      sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'Failed Database Populate', "Database failed to populate followers of " + followUser.username + ". ERROR:" + err.message + ". Please reply to this email to find out why.");
+    } else if (res.next_href) {
       addFollowers(followUser, res.next_href);
     } else {
       console.log('done');
+      sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'Successful Database Population', "Database has populated followers of " + followUser.username);
     }
-    res.collection.forEach(function(follower) {
-      SC.get('/users/' + follower.id + '/web-profiles', function(err, webProfiles) {
-        follower.websites = '';
-        if (webProfiles) {
-          for (var index in webProfiles) {
-            switch (webProfiles[index].service) {
-              case 'twitter':
-                follower.twitterURL = webProfiles[index].url;
-                break;
-              case 'instagram':
-                follower.instagramURL = webProfiles[index].url;
-                break;
-              case 'facebook':
-                follower.facebookURL = webProfiles[index].url;
-                break;
-              case 'youtube':
-                follower.youtubeURL = webProfiles[index].url;
-                break;
-              case 'personal':
-                follower.websites += webProfiles[index].url + '\n';
+
+    if (res && res.collection) {
+      res.collection.forEach(function(follower) {
+        SC.get('/users/' + follower.id + '/web-profiles', function(err, webProfiles) {
+          follower.websites = '';
+          if (webProfiles) {
+            for (var index in webProfiles) {
+              switch (webProfiles[index].service) {
+                case 'twitter':
+                  follower.twitterURL = webProfiles[index].url;
+                  break;
+                case 'instagram':
+                  follower.instagramURL = webProfiles[index].url;
+                  break;
+                case 'facebook':
+                  follower.facebookURL = webProfiles[index].url;
+                  break;
+                case 'youtube':
+                  follower.youtubeURL = webProfiles[index].url;
+                  break;
+                case 'personal':
+                  follower.websites += webProfiles[index].url + '\n';
+                  break;
+              }
             }
           }
-        }
-        if (follower.description) {
-          var myArray = follower.description.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
-        } else {
-          var myArray = null;
-        }
-        if (myArray) {
-          var email = myArray[0];
-          Follower.findOne({
-              "scID": follower.id
-            }).exec()
-            .then(function(flwr) {
-              if (flwr) {
-                flwr.trackedUsers.push(followUser._id)
-              } else {
-                var newFollower = new Follower({
-                  artist: follower.track_count > 0,
-                  scID: follower.id,
-                  scURL: follower.permalink_url,
-                  name: follower.full_name,
-                  username: follower.username,
-                  followers: follower.followers_count,
-                  email: email,
-                  description: follower.description,
-                  numTracks: follower.track_count,
-                  facebookURL: follower.facebookURL,
-                  instagramURL: follower.facebookURL,
-                  twitterURL: follower.twitterURL,
-                  youtubeURL: follower.youtubeURL,
-                  emailDayNum: Math.floor(Math.random() * 14) + 1,
-                  websites: follower.websites,
-                  trackedUsers: [followUser._id],
-                  allEmails: myArray
-                });
-              }
-              newFollower.save();
-            });
-        }
-      });
-    })
+          if (follower.description) {
+            var myArray = follower.description.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
+          } else {
+            var myArray = null;
+          }
+          if (myArray) {
+            var email = myArray[0];
+            Follower.findOne({
+                "scID": follower.id
+              }).exec()
+              .then(function(flwr) {
+                if (!flwr) {
+                  var newFollower = new Follower({
+                    artist: follower.track_count > 0,
+                    scID: follower.id,
+                    scURL: follower.permalink_url,
+                    name: follower.full_name,
+                    username: follower.username,
+                    followers: follower.followers_count,
+                    email: email,
+                    description: follower.description,
+                    numTracks: follower.track_count,
+                    facebookURL: follower.facebookURL,
+                    instagramURL: follower.facebookURL,
+                    twitterURL: follower.twitterURL,
+                    youtubeURL: follower.youtubeURL,
+                    emailDayNum: Math.floor(Math.random() * 14) + 1,
+                    websites: follower.websites,
+                    trackedUser: followUser._id,
+                    allEmails: myArray
+                  });
+                }
+                newFollower.save();
+              });
+          }
+        });
+      })
+    }
   });
 }
+
+router.post('/trackedUsers', function(req, res, next) {
+  TrackedUser.find(req.body.query).exec()
+    .then(function(users) {
+      var filename = "TrackedUsers_" + JSON.stringify(req.body.query) + ".csv";
+      var writer = csv({
+        headers: ["username", "URL", "genre", "followers", "description"]
+      });
+      writer.pipe(fs.createWriteStream('tmp/' + filename));
+      users.forEach(function(usr) {
+        var row = [usr.username, usr.scURL, usr.genre, usr.followers, usr.description];
+        writer.write(row);
+      });
+      writer.end();
+      res.send(filename);
+    });
+});

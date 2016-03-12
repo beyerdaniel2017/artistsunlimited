@@ -10,6 +10,7 @@ app.config(function($stateProvider) {
 app.controller('DatabaseController', function($rootScope, $state, $scope, $http, AuthService, SOUNDCLOUD) {
   $scope.addUser = {};
   $scope.query = {};
+  $scope.trdUsrQuery = {};
   $scope.downloadButtonVisible = false;
 
   $scope.login = function() {
@@ -33,7 +34,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
     $http.post('/api/database/adduser', $scope.addUser)
       .then(function(res) {
         console.log(res);
-        alert("Success: Database is being populated.");
+        alert("Success: Database is being populated. You will be emailed when it is complete.");
         $scope.processing = false;
       })
       .catch(function(err) {
@@ -78,12 +79,43 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
       });
   }
 
-  $scope.download = function() {
+  $scope.createTrdUsrQueryDoc = function() {
+    var query = {};
+    var flwrQry = {};
+    if ($scope.trdUsrQuery.followersGT) {
+      flwrQry.$gt = $scope.trdUsrQuery.followersGT;
+      query.followers = flwrQry;
+    }
+    if ($scope.trdUsrQuery.followersLT) {
+      flwrQry.$lt = $scope.trdUsrQuery.followersLT;
+      query.followers = flwrQry;
+    }
+    if ($scope.trdUsrQuery.genre) query.genre = $scope.trdUsrQuery.genre;
+    var body = {
+      query: query,
+      password: $rootScope.password
+    };
+    console.log(query);
+    $scope.processing = true;
+    $http.post('/api/database/trackedUsers', body)
+      .then(function(res) {
+        $scope.trdUsrFilename = res.data;
+        $scope.downloadTrdUsrButtonVisible = true;
+        $scope.processing = false;
+      })
+      .then(null, function(err) {
+        alert("ERROR: Bad Query or No Matches");
+        $scope.processing = false;
+      });
+  }
+
+  $scope.download = function(filename) {
     var anchor = angular.element('<a/>');
     anchor.attr({
-      href: $scope.filename,
-      download: $scope.filename
+      href: filename,
+      download: filename
     })[0].click();
-    $scope.downloadButtonVisible = false
+    $scope.downloadButtonVisible = false;
+    $scope.downloadTrdUsrButtonVisible = false;
   }
 });

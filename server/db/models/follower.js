@@ -43,11 +43,11 @@ var schema = new mongoose.Schema({
   emailDayNum: {
     type: Number
   },
-  trackedUsers: {
-    type: [{
+  trackedUser: {
+    type: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'TrackedUser'
-    }]
+    }
   },
   allEmails: {
     type: [String]

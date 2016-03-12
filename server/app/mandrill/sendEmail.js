@@ -18,6 +18,7 @@ function sendEmail(to_name, to_email, from_name, from_email, subject, message_ht
         "merge": false,
         "tags": []
     };
+    console.log(message);
     var async = false;
     var ip_pool = "Main Pool";
     mandrill_client.messages.send({
