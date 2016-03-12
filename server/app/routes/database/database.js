@@ -12,7 +12,6 @@ var SC = require('node-soundcloud');
 var sendEmail = require("../../mandrill/sendEmail.js");
 
 
-
 router.post('/adduser', function(req, res, next) {
   if (req.body.password != 'letMeManage') next(new Error('wrong password'));
   var getPath = '/resolve.json?url=' + req.body.url + '&client_id=' + scConfig.clientID;
@@ -49,7 +48,7 @@ router.post('/adduser', function(req, res, next) {
                         return tUser.save();
                       }
                     }).then(function(followUser) {
-                      addFollowers(followUser, '/ausers/' + followUser.scID + '/followers', req.body.email);
+                      addFollowers(followUser, '/users/' + followUser.scID + '/followers', req.body.email);
                       res.send(followUser);
                     }).then(null, next);
                 })
@@ -68,6 +67,8 @@ function addFollowers(followUser, nextURL, email) {
     secret: scConfig.clientSecret,
     uri: scConfig.redirectURL
   });
+  console.log(scConfig);
+  console.log(nextURL);
   SC.get(nextURL, {
     limit: 200
   }, function(err, res) {
@@ -86,24 +87,26 @@ function addFollowers(followUser, nextURL, email) {
       res.collection.forEach(function(follower) {
         SC.get('/users/' + follower.id + '/web-profiles', function(err, webProfiles) {
           follower.websites = '';
-          if (webProfiles) {
-            for (var index in webProfiles) {
-              switch (webProfiles[index].service) {
-                case 'twitter':
-                  follower.twitterURL = webProfiles[index].url;
-                  break;
-                case 'instagram':
-                  follower.instagramURL = webProfiles[index].url;
-                  break;
-                case 'facebook':
-                  follower.facebookURL = webProfiles[index].url;
-                  break;
-                case 'youtube':
-                  follower.youtubeURL = webProfiles[index].url;
-                  break;
-                case 'personal':
-                  follower.websites += webProfiles[index].url + '\n';
-                  break;
+          if (!err) {
+            if (webProfiles) {
+              for (var index in webProfiles) {
+                switch (webProfiles[index].service) {
+                  case 'twitter':
+                    follower.twitterURL = webProfiles[index].url;
+                    break;
+                  case 'instagram':
+                    follower.instagramURL = webProfiles[index].url;
+                    break;
+                  case 'facebook':
+                    follower.facebookURL = webProfiles[index].url;
+                    break;
+                  case 'youtube':
+                    follower.youtubeURL = webProfiles[index].url;
+                    break;
+                  case 'personal':
+                    follower.websites += webProfiles[index].url + '\n';
+                    break;
+                }
               }
             }
           }
