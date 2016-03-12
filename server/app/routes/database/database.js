@@ -72,8 +72,9 @@ function addFollowers(followUser, nextURL, email) {
     limit: 200
   }, function(err, res) {
     if (err) {
+      TrackedUser.findByIdAndRemove(followUser._id).exec();
       console.log(err);
-      sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'Failed Database Populate', "Database failed to populate followers of " + followUser.username + ". ERROR:" + err.message + ". Please reply to this email to find out why.");
+      sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'Failed Database Populate', "Database failed to populate followers of " + followUser.username + ". ERROR: " + JSON.stringify(err) + ". Please reply to this email to find out why.");
     } else if (res.next_href) {
       addFollowers(followUser, res.next_href, email);
     } else {
