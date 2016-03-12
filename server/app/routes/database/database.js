@@ -12,32 +12,6 @@ var SC = require('node-soundcloud');
 var sendEmail = require("../../mandrill/sendEmail.js");
 
 
-router.post('/followers', function(req, res, next) {
-  var filename = "QueryDB_" + JSON.stringify(req.body.query) + ".csv";
-  if (req.body.password != 'letMeManage') next(new Error('wrong password'));
-  var query = {};
-  if (req.body.query.genre) query.genre = req.body.query.genre;
-  if (req.body.query.followers) query.followers = req.body.query.followers;
-  if (req.body.query.artist) query.artist = req.body.query.artist;
-  createAndSendFile(filename, query, res, next);
-});
-
-function createAndSendFile(filename, query, res, next) {
-  var writer = csv({
-    headers: ["username", "genre", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", "Websites", 'Auto Email Day', 'All Emails']
-  });
-  writer.pipe(fs.createWriteStream('tmp/' + filename));
-  var stream = Follower.find(query).stream();
-  stream.on('data', function(flwr) {
-    var row = [flwr.username, flwr.genre, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.websites, flwr.emailDayNum, flwr.allEmails.join(', ')];
-    writer.write(row);
-  });
-  stream.on('close', function() {
-    writer.end();
-    res.send(filename);
-  });
-  stream.on('error', next);
-}
 
 router.post('/adduser', function(req, res, next) {
   if (req.body.password != 'letMeManage') next(new Error('wrong password'));
@@ -75,7 +49,7 @@ router.post('/adduser', function(req, res, next) {
                         return tUser.save();
                       }
                     }).then(function(followUser) {
-                      addFollowers(followUser, '/users/' + followUser.scID + '/followers', req.body.email);
+                      addFollowers(followUser, '/ausers/' + followUser.scID + '/followers', req.body.email);
                       res.send(followUser);
                     }).then(null, next);
                 })
@@ -172,6 +146,34 @@ function addFollowers(followUser, nextURL, email) {
     }
   });
 }
+
+router.post('/followers', function(req, res, next) {
+  var filename = "QueryDB_" + JSON.stringify(req.body.query) + ".csv";
+  if (req.body.password != 'letMeManage') next(new Error('wrong password'));
+  var query = {};
+  if (req.body.query.genre) query.genre = req.body.query.genre;
+  if (req.body.query.followers) query.followers = req.body.query.followers;
+  if (req.body.query.artist) query.artist = req.body.query.artist;
+  createAndSendFile(filename, query, res, next);
+});
+
+function createAndSendFile(filename, query, res, next) {
+  var writer = csv({
+    headers: ["username", "genre", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", "Websites", 'Auto Email Day', 'All Emails']
+  });
+  writer.pipe(fs.createWriteStream('tmp/' + filename));
+  var stream = Follower.find(query).stream();
+  stream.on('data', function(flwr) {
+    var row = [flwr.username, flwr.genre, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.websites, flwr.emailDayNum, flwr.allEmails.join(', ')];
+    writer.write(row);
+  });
+  stream.on('close', function() {
+    writer.end();
+    res.send(filename);
+  });
+  stream.on('error', next);
+}
+
 
 router.post('/trackedUsers', function(req, res, next) {
   TrackedUser.find(req.body.query).exec()

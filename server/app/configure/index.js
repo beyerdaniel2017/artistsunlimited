@@ -1,4 +1,6 @@
 'use strict';
+var timeout = require('connect-timeout');
+
 module.exports = function(app) {
 
     // setValue and getValue are merely alias
@@ -9,7 +11,7 @@ module.exports = function(app) {
     app.getValue = function(path) {
         return app.get(path);
     };
-
+    app.use(timeout('30s'));
     require('./app-variables')(app);
     require('./static-middleware')(app);
     require('./parsing-middleware')(app);
