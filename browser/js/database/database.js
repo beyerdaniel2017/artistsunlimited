@@ -44,6 +44,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   }
 
   $scope.createUserQueryDoc = function() {
+    $scope.createUserQueryDoc.blah = "asd"
     var query = {};
     if ($scope.query.artist == "artists") {
       query.artist = true;

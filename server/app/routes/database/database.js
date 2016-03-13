@@ -1,6 +1,7 @@
 'use strict';
 var https = require('https');
 var router = require('express').Router();
+router.use('/autoEmails', require('./autoEmails/autoEmails.js'))
 module.exports = router;
 var mongoose = require('mongoose');
 var Follower = mongoose.model('Follower');
@@ -10,7 +11,6 @@ var fs = require('fs');
 var scConfig = global.env.SOUNDCLOUD;
 var SC = require('node-soundcloud');
 var sendEmail = require("../../mandrill/sendEmail.js");
-
 
 router.post('/adduser', function(req, res, next) {
   if (req.body.password != 'letMeManage') next(new Error('wrong password'));
@@ -75,12 +75,12 @@ function addFollowers(followUser, nextURL, email) {
     if (err) {
       TrackedUser.findByIdAndRemove(followUser._id).exec();
       console.log(err);
-      sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'Failed Database Populate', "Database failed to populate followers of " + followUser.username + ". ERROR: " + JSON.stringify(err) + ". Please reply to this email to find out why.");
+      sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'FAILED Database Populate', "Database failed to populate followers of " + followUser.username + ". ERROR: " + JSON.stringify(err) + ". Please reply to this email to find out why.");
     } else if (res.next_href) {
       addFollowers(followUser, res.next_href, email);
     } else {
       console.log('done');
-      sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'Successful Database Population', "Database has populated followers of " + followUser.username);
+      sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'SUCCESSFUL Database Population', "Database has populated followers of " + followUser.username);
     }
 
     if (res && res.collection) {
@@ -177,7 +177,6 @@ function createAndSendFile(filename, query, res, next) {
   });
   stream.on('error', next);
 }
-
 
 router.post('/trackedUsers', function(req, res, next) {
   TrackedUser.find(req.body.query).exec()

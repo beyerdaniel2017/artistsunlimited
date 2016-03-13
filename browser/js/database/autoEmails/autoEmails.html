@@ -1,0 +1,23 @@
+<div style="text-align:center">
+  <h2>Automatic Emails</h2>
+  <h3>Master Password:</h3>
+  <input type="password" ng-model="password">
+  <br>
+  <button ng-click="login()">Login</button>
+  <br>
+  <div ng-show="loggedIn">
+    <h3>Biweekly Email</h3>
+    <span>Sender's Name:</span><input type="text" ng-model="template.fromName"></input>
+    <span>Sender's Email:</span><input type="text" ng-model="template.fromEmail"></input>
+    <br>
+    <span>Subject:</span><input type="text" ng-model="template.subject"></input>
+    <br>
+    <span>HTML Email:</span><br><textarea ng-model="template.htmlMessage" style="width:600px; height:400px;"></textarea>
+    <br>
+    <button ng-click="save()">Save</button>
+  </div>
+</div>
+
+<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.9); text-align:center; z-index:1" ng-show="processing">
+  <h1 style="font-color:white; margin-top:400px; z-index:2">Processing...</h1>
+</div>

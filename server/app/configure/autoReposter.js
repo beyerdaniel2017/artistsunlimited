@@ -5,9 +5,7 @@ var Event = mongoose.model('Event');
 var SC = require('soundclouder');
 var sendMessage = require('../mandrill/sendEmail.js');
 
-module.exports = function() {
-  doRepost();
-}
+module.exports = doRepost;
 
 //executes every hour
 function doRepost() {

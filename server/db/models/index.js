@@ -8,3 +8,4 @@ require('./event');
 require('./email');
 require('./follower');
 require('./trackedUser');
+require('./emailTemplate.js');
