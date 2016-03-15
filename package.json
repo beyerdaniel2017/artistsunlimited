@@ -5,6 +5,8 @@
   "main": "server/start.js",
   "scripts": {
     "start": "nodemon --watch server -e js,html server/start.js",
+    "foreverstart": "forever start --minUptime 1000 --spinSleepTime 1000 server/start.js",
+    "foreverstop": "forever stop server/start.js",
     "postinstall": "gulp build"
   },
   "engines": {
