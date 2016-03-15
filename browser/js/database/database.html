@@ -1,3 +1,15 @@
+<style>
+  select[multiple]{
+    display:inline;
+    height: 20px;
+  }
+
+  select[multiple]:hover{
+    display:inline;
+    height: 100px;
+  }
+</style>
+
 <div style="text-align:center">
   <h2>Database</h2>
   <h3>Master Password:</h3>
@@ -43,6 +55,23 @@
         <option value="Latin">Latin</option>
         <option value="Vocalists">Vocalists</option>
         <option value="Paid Repost">Paid Repost</option>
+      </select>
+      <span>Columns:</span><select ng-model="query.columns" multiple="true" size="10">
+        <option value="username">username</option>
+        <option value="genre">genre</option>
+        <option value="name">name</option>
+        <option value="scURL">URL</option>
+        <option value="email">email</option>
+        <option value="description">description</option>
+        <option value="followers">followers</option>
+        <option value="numTracks">number of tracks</option>
+        <option value="facebookURL">facebook</option>
+        <option value="instagramURL">instagram</option>
+        <option value="twitterURL">twitter</option>
+        <option value="youtubeURL">youtube</option>
+        <option value="websites">websites</option>
+        <option value="emailDayNum">auto email day</option>
+        <option value="allEmails">all emails</option>
       </select>
       <span>Min Followers:</span><input type="number" ng-model="query.followersGT"/>
       <span>Max Followers:</span><input type="number" ng-model="query.followersLT"/>

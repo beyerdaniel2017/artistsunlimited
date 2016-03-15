@@ -30,10 +30,8 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   $scope.saveAddUser = function() {
     $scope.processing = true;
     $scope.addUser.password = $rootScope.password;
-    console.log($scope.addUser);
     $http.post('/api/database/adduser', $scope.addUser)
       .then(function(res) {
-        console.log(res);
         alert("Success: Database is being populated. You will be emailed when it is complete.");
         $scope.processing = false;
       })
@@ -61,12 +59,12 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
       query.followers = flwrQry;
     }
     if ($scope.query.genre) query.genre = $scope.query.genre;
+    if ($scope.query.columns) query.columns = $scope.query.columns;
     if ($scope.query.trackedUsersURL) query.trackedUsersURL = $scope.query.trackedUsersURL;
     var body = {
       query: query,
       password: $rootScope.password
     };
-    console.log(query);
     $scope.processing = true;
     $http.post('/api/database/followers', body)
       .then(function(res) {
@@ -96,7 +94,6 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
       query: query,
       password: $rootScope.password
     };
-    console.log(query);
     $scope.processing = true;
     $http.post('/api/database/trackedUsers', body)
       .then(function(res) {
