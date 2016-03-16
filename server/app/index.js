@@ -34,6 +34,14 @@ app.get('/unsubscribe/:followerId', function(req, res) {
   unsubscribe(req, res);
 });
 
+app.get('/admin*', function(req, res) {
+  if(!req.isAuthenticated()) {
+    res.sendFile(app.get('loginHTMLPath'));
+  } else {
+    res.sendFile(app.get('indexHTMLPath'));
+  }
+});
+
 app.get('/*', function(req, res) {
   res.sendFile(app.get('indexHTMLPath'));
 });

@@ -8,7 +8,13 @@ router.use('/login', require('./login/login.js'));
 router.use('/events', require('./events/events.js'));
 router.use('/soundcloud', require('./soundC/soundC.js'));
 router.use('/database', require('./database/database.js'));
-
+router.use('/logout', function(req, res){
+	req.logout();
+  return res.status(200).json({
+  	"success": "true",
+  	"message": "Logout Successful"
+  });
+});
 // Make sure this is after all of
 // the registered routes!
 router.use(function(req, res) {

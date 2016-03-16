@@ -1,11 +1,25 @@
 <div style="text-align:center">
-  <h2>Automatic Emails</h2>
+  <!-- <h2>Automatic Emails</h2>
   <h3>Master Password:</h3>
   <input type="password" ng-model="password">
   <br>
   <button ng-click="login()">Login</button>
-  <br>
-  <div ng-show="loggedIn">
+  <br> -->
+  </br>
+  <div>
+    <h2 style="display:inline;text-align:center">Admin</h2>
+    <button style="float:right;margin: 20px 20px 0 0" ng-click="logout()">Logout</button>
+    <div style="clear:both"></div>
+  </div>
+  </br>
+  <div class="nav">
+    <span style="padding: 0 10px"><a ui-sref="submitSong">Home</a></span>
+    <span style="padding: 0 10px"><a ui-sref="admin">Admin</a></span>
+    <span style="padding: 0 10px"><a ui-sref="database">Database</a></span>
+    <span style="padding: 0 10px"><a ui-sref="autoEmails">Auto Emails</a></span>
+  </div>
+  </br>
+  <div>
     <h3>Biweekly Email</h3>
     <span>Artist: </span><input type="checkbox" ng-model="template.isArtist" ng-change="getTemplate()" />
     </br>

@@ -1,15 +1,31 @@
-<div style="text-align:center">
-  <h2>Submissions</h2>
+<div style="text-align:center" ng-init="loadSubmissions()">
+  <!-- <h2>Submissions</h2>
   <h3>Master Password:</h3>
   <input type="password" ng-model="password">
   <br>
   <button ng-click="login()">Login</button>
   <br>
+  <br> -->
+  </br>
+  <div>
+    <h2 style="display:inline;text-align:center">Admin</h2>
+    <button style="float:right;margin: 20px 20px 0 0" ng-click="logout()">Logout</button>
+    <div style="clear:both"></div>
+  </div>
+  </br>
+  <div class="nav">
+    <span style="padding: 0 10px"><a ui-sref="submitSong">Home</a></span>
+    <span style="padding: 0 10px"><a ui-sref="admin">Admin</a></span>
+    <span style="padding: 0 10px"><a ui-sref="database">Database</a></span>
+    <span style="padding: 0 10px"><a ui-sref="autoEmails">Auto Emails</a></span>
+  </div>
+  </br>
+  <!-- <button ng-click="manage()" ng-if="showSubmissions">Manage Channel</button> -->
+  <button ng-click="manage()">Manage Channel</button>
   <br>
-  <button ng-click="manage()" ng-if="showSubmissions">Manage Channel</button>
   <br>
-  <br>
-  <div ng-if="showSubmissions">
+  <!-- <div ng-if="showSubmissions"> -->
+  <div>
     <h3 style="text-align:center">Submissions</h3>
     <div style="width:80%; text-align:center; margin: 10px auto;">
       <div ng-repeat="sub in submissions"  ng-if="sub.invoiceIDS.length == 0" style="padding:10px 150px; margin:10px 10px; background-color: gray; height:300px">
@@ -28,10 +44,8 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
-
 <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.9); text-align:center; z-index:1" ng-show="processing">
   <h1 style="font-color:white; margin-top:400px; z-index:2">Processing...</h1>
 </div>

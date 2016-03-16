@@ -6,17 +6,47 @@ var Channel = mongoose.model('Channel');
 var Submission = mongoose.model('Submission');
 var Event = mongoose.model('Event');
 var SC = require('soundclouder');
+var passport = require('passport');
 
 router.post('/', function(req, res, next) {
-  if (req.body.password == 'letMeManage') {
-    res.send('OK');
-  } else {
-    next(new Error('wrong password'));
-  }
+  // console.log(req.body);
+  // if (req.body.password == 'letMeManage') {
+  //   res.send('OK');
+  // } else {
+  //   next(new Error('wrong password'));
+  // }
+  passport.authenticate('local', function(err, user, info) {
+    if (err) {
+      return res.json({
+        success: false,
+        "message": err
+      });
+    }
+    if (!user) {
+      return res.json({
+        success: false,
+        "message": "Invalid Username or Password"
+      });
+    } else {
+      req.login(user, function(err) {
+        //if(req.body.rememberme && (req.body.rememberme == "1" || req.body.rememberme == 1)){
+        req.session.cookie.expires = false;
+        req.session.name = user.userid;
+        req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
+        req.session.cookie.maxAge = 28 * 24 * 3600000;
+        req.session.cookie.expires = false;
+        return res.json({
+          'success': true,
+          'message': '',
+          'user': user
+        });
+      });
+    }
+  })(req, res);
 });
 
 router.post('/authenticated', function(req, res, next) {
-  if (req.body.password != "letMeManage") next(new Error("Wrong password"));
+  //if (req.body.password != "letMeManage") next(new Error("Wrong password"));
   var scConfig = global.env.SOUNDCLOUD;
   SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
   SC.get('/me', req.body.token, function(err, data) {

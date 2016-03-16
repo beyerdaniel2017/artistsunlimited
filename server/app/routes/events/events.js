@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var Event = mongoose.model('Event');
 
 router.put('/', function(req, res, next) {
-  if (req.body.password != "letMeManage") next(new Error("Wrong password"));
+  // if (req.body.password != "letMeManage") next(new Error("Wrong password"));
   Event.findByIdAndUpdate(req.body._id, req.body, {
       new: true
     }).exec()
@@ -21,7 +21,7 @@ router.put('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  if (req.body.password != "letMeManage") next(new Error("Wrong password"));
+  // if (req.body.password != "letMeManage") next(new Error("Wrong password"));
   var event = new Event(req.body);
   event.save()
     .then(function(ev) {
@@ -32,7 +32,7 @@ router.post('/', function(req, res, next) {
 });
 
 router.delete('/:id/:password', function(req, res, next) {
-  if (req.params.password != "letMeManage") next(new Error("Wrong password"));
+  // if (req.params.password != "letMeManage") next(new Error("Wrong password"));
   Event.findByIdAndRemove(req.params.id).exec()
     .then(function(event) {
       event.day = new Date(event.day);

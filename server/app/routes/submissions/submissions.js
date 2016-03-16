@@ -37,7 +37,7 @@ router.get('/unaccepted', function(req, res, next) {
 
 router.put('/save', function(req, res, next) {
   //send paypal invoice
-  if (req.body.password != "letMeManage") next(new Error("Wrong password"));
+  // if (req.body.password != "letMeManage") next(new Error("Wrong password"));
   Submission.findByIdAndUpdate(req.body._id, req.body, {
       new: true
     }).exec()
@@ -68,7 +68,7 @@ router.put('/save', function(req, res, next) {
 });
 
 router.delete('/decline/:subID/:password', function(req, res, next) {
-  if (req.params.password != "letMeManage") next(new Error("Wrong password"));
+  // if (req.params.password != "letMeManage") next(new Error("Wrong password"));
   Submission.findByIdAndRemove(req.params.subID).exec()
     .then(function(sub) {
       sendEmail(sub.name, sub.email, "Edward Sanchez", "edward@peninsulamgmt.com", "Music Submission", "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting your track <a href='" + sub.trackURL + "'>" + sub.title + "</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.<br><br> We look forward to hearing your future compositions and please remember to submit them at either <a href='http://etiquettenoir.co/'>Etiquette Noir</a> or <a href='http://lesol.co/'>Le Sol</a>.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
@@ -78,7 +78,7 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
 });
 
 router.delete('/ignore/:subID/:password', function(req, res, next) {
-  if (req.params.password != "letMeManage") next(new Error("Wrong password"));
+  // if (req.params.password != "letMeManage") next(new Error("Wrong password"));
   Submission.findByIdAndRemove(req.params.subID).exec()
     .then(function(sub) {
       res.send(sub);

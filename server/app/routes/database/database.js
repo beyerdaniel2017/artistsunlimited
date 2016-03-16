@@ -13,7 +13,7 @@ var SC = require('node-soundcloud');
 var sendEmail = require("../../mandrill/sendEmail.js");
 
 router.post('/adduser', function(req, res, next) {
-  if (req.body.password != 'letMeManage') next(new Error('wrong password'));
+  // if (req.body.password != 'letMeManage') next(new Error('wrong password'));
   var getPath = '/resolve.json?url=' + req.body.url + '&client_id=' + scConfig.clientID;
   https.request({
         host: 'api.soundcloud.com',
@@ -150,7 +150,7 @@ router.post('/followers', function(req, res, next) {
   var queryStr = JSON.stringify(req.body.query);
   queryStr = queryStr.replace(/\//g, '');
   var filename = "QueryDB_" + queryStr + ".csv";
-  if (req.body.password != 'letMeManage') next(new Error('wrong password'));
+  // if (req.body.password != 'letMeManage') next(new Error('wrong password'));
   var query = {};
   if (req.body.query.genre) query.genre = req.body.query.genre;
   if (req.body.query.followers) query.followers = req.body.query.followers;
