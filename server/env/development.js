@@ -1,11 +1,11 @@
 module.exports = {
-  "DATABASE_URI": "mongodb://localhost:27017/songScheduler",
+  "DATABASE_URI": "mongodb://SongSchedulerAdmin:Tricks12345@localhost:27017/songScheduler",
   "SESSION_SECRET": "Optimus Prime is my real dad",
-  "HOST_URI": "http://localhost:1337",
+  "HOST_URI": "http://artistsunlimited.co",
   "SOUNDCLOUD": {
     "clientID": "3947f8d665f6c6c58e865f894798eb3e",
     "clientSecret": "8586b9dbb45ce4c062d23efac6ad2f27",
-    "callbackURL": "http://localhost:1337/callback.html"
+    "callbackURL": "http://artistsunlimited.co/callback.html"
   },
   "TWITTER": {
     "consumerKey": "INSERT_TWITTER_CONSUMER_KEY_HERE",

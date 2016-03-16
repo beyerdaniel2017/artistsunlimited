@@ -7,12 +7,17 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller('DatabaseController', function($rootScope, $state, $scope, $http, AuthService, SOUNDCLOUD) {
+app.controller('DatabaseController', function($rootScope, $state, $scope, $http, AuthService, SOUNDCLOUD, socket) {
   $scope.addUser = {};
   $scope.query = {};
   $scope.trdUsrQuery = {};
   $scope.downloadButtonVisible = false;
+  $scope.statusBarVisible = false;
 
+  $scope.bar = {
+    type: 'success',
+    value: 0
+  };
   $scope.login = function() {
     $scope.processing = true;
     $http.post('/api/login', {
@@ -26,6 +31,14 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
       alert('Wrong Password');
     });
   }
+
+  socket.on('notification', function(data){
+    var percentage = parseInt(Math.floor(data.counter / data.total * 100), 10);
+    $scope.bar.value = percentage;
+    if(percentage === 100) {
+      $scope.statusBarVisible = false;
+    }
+  });
 
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
@@ -44,6 +57,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
       .then(function(res) {
         alert("Success: Database is being populated. You will be emailed when it is complete.");
         $scope.processing = false;
+        $scope.statusBarVisible = true;
       })
       .catch(function(err) {
         alert('Bad submission');

@@ -6,9 +6,32 @@
 
     var app = angular.module('fsaPreBuilt', []);
 
-    app.factory('Socket', function() {
+    app.factory('initSocket', function() {
         if (!window.io) throw new Error('socket.io not found!');
         return window.io(window.location.origin);
+    });
+
+    app.factory('socket', function ($rootScope, initSocket) {
+      return {
+        on: function (eventName, callback) {
+          initSocket.on(eventName, function () {  
+            var args = arguments;
+            $rootScope.$apply(function () {
+              callback.apply(initSocket, args);
+            });
+          });
+        },
+        emit: function (eventName, data, callback) {
+          initSocket.emit(eventName, data, function () {
+            var args = arguments;
+            $rootScope.$apply(function () {
+              if (callback) {
+                callback.apply(initSocket, args);
+              }
+            });
+          })
+        }
+      };
     });
 
     // AUTH_EVENTS is used throughout our app to

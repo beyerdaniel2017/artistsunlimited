@@ -51,6 +51,9 @@
       <span>Your email:</span><input type="text" ng-model="addUser.email"/>
       <button ng-click="saveAddUser()">Submit</button>
     </div>
+    <div style="margin: 0 auto;width:50%" ng-show="statusBarVisible">
+      <uib-progress><uib-bar value="bar.value" type="{{bar.type}}"><span>{{bar.value}}%</span></uib-bar></uib-progress>
+    </div>
     <div style="margin:20px 20px; padding: 10px 10px; background-color:#D3D3D3">
       <h3>Query Followers</h3>
       <span>Artist:</span><select ng-model="query.artist">
