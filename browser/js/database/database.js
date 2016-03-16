@@ -29,7 +29,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
 
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
-      window.location.href('/admin');
+      window.location.href = '/admin';
     }).catch(function(err) {
       $scope.processing = false;
       alert('Wrong Password');
