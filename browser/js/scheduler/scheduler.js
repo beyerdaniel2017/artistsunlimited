@@ -266,8 +266,9 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
       });
     }, 50);
   }
-
-  $scope.loadQueueSongs($scope.channel.queue);
+  if($scope.channel && $scope.channel.queue) {
+    $scope.loadQueueSongs($scope.channel.queue);
+  }
   $scope.loadSubmissions();
 
 });

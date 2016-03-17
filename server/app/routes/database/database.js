@@ -6,6 +6,7 @@ module.exports = router;
 var mongoose = require('mongoose');
 var Follower = mongoose.model('Follower');
 var TrackedUser = mongoose.model('TrackedUser');
+var DownloadUrl = mongoose.model('DownloadUrl');
 var csv = require('csv-write-stream');
 var fs = require('fs');
 var scConfig = global.env.SOUNDCLOUD;
@@ -256,4 +257,16 @@ router.post('/trackedUsers', function(req, res, next) {
       writer.end();
       res.send(filename);
     });
+});
+
+router.post('/downloadurl', function(req, res, next) {
+  
+  var body = req.body;
+
+  var downloadUrl = new DownloadUrl({
+    scUrl: body.soundCloudUrl,
+    downloadUrl: body.downloadUrl
+  });
+  downloadUrl.save();
+  return res.end();
 });

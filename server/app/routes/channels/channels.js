@@ -16,7 +16,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.put('/', function(req, res, next) {
-  if (req.body.password != "letMeManage") next(new Error("Wrong password"));
+  // if (req.body.password != "letMeManage") next(new Error("Wrong password"));
   Channel.findByIdAndUpdate(req.body._id, req.body, {
       new: true
     }).exec()

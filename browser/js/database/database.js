@@ -13,7 +13,10 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   $scope.trdUsrQuery = {};
   $scope.downloadButtonVisible = false;
   $scope.statusBarVisible = false;
-
+  $scope.url = {
+    soundCloudUrl: '',
+    downloadUrl: ''
+  };
   $scope.bar = {
     type: 'success',
     value: 0
@@ -31,14 +34,6 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
       alert('Wrong Password');
     });
   }
-
-  socket.on('notification', function(data){
-    var percentage = parseInt(Math.floor(data.counter / data.total * 100), 10);
-    $scope.bar.value = percentage;
-    if(percentage === 100) {
-      $scope.statusBarVisible = false;
-    }
-  });
 
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
@@ -140,4 +135,33 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
     $scope.downloadButtonVisible = false;
     $scope.downloadTrdUsrButtonVisible = false;
   }
+
+  $scope.saveDownloadUrl = function() {
+    $scope.processing = true;
+    $http.post('/api/database/downloadurl', $scope.url)
+      .then(function(res) {
+        $scope.url = {
+          soundCloudUrl: '',
+          downloadUrl: ''
+        }
+        alert("SUCCESS: Url saved successfully");
+        $scope.processing = false;
+      })
+      .then(null, function(err) {
+        alert("ERROR: Bad Query or No Matches");
+        $scope.processing = false;
+      });
+  }
+
+
+  /* Listen to socket events */
+
+  socket.on('notification', function(data){
+    var percentage = parseInt(Math.floor(data.counter / data.total * 100), 10);
+    $scope.bar.value = percentage;
+    if(percentage === 100) {
+      $scope.statusBarVisible = false;
+      $scope.bar.value = 0;
+    }
+  });
 });

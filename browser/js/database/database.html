@@ -28,6 +28,7 @@
   <div class="nav">
     <span style="padding: 0 10px"><a ui-sref="submitSong">Home</a></span>
     <span style="padding: 0 10px"><a ui-sref="admin">Admin</a></span>
+    <span style="padding: 0 10px"><a ui-sref="scheduler">Scheduler</a></span>
     <span style="padding: 0 10px"><a ui-sref="database">Database</a></span>
     <span style="padding: 0 10px"><a ui-sref="autoEmails">Auto Emails</a></span>
   </div>
@@ -116,6 +117,12 @@
       <span>Max Followers:</span><input type="number" ng-model="trdUsrQuery.followersLT"/>
       <button ng-click="createTrdUsrQueryDoc()">Query Tracked Users</button>
       <button ng-click="download(trdUsrFilename)" style="background-color: red" ng-show="downloadTrdUsrButtonVisible">Download File</button>
+    </div>
+    <div style="margin:20px 20px; padding: 10px 10px; background-color:#D3D3D3">
+      <h3>Add Download Url</h3>
+      <span>Soundcloud Url:</span><input type="text" ng-model="url.soundCloudUrl"/>
+      <span>Download Url:</span><input type="text" ng-model="url.downloadUrl"/>
+      <button ng-click="saveDownloadUrl()">Submit</button>
     </div>
   </div>
 </div>
