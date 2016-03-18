@@ -120,9 +120,12 @@
     </div>
     <div style="margin:20px 20px; padding: 10px 10px; background-color:#D3D3D3">
       <h3>Add Download Url</h3>
-      <span>Soundcloud Url:</span><input type="text" ng-model="url.soundCloudUrl"/>
-      <span>Download Url:</span><input type="text" ng-model="url.downloadUrl"/>
-      <button ng-click="saveDownloadUrl()">Submit</button>
+      <form ng-submit="saveDownloadUrl()">
+        <span>Soundcloud Url:</span><input type="url" ng-model="track.trackUrl" required/>
+        <span>Download Url:</span><input type="url" ng-model="track.downloadUrl" required/>
+        <span>Email:</span><input type="email" ng-model="track.email" required/>
+        <button type="submit">Submit</button>
+      </form>
     </div>
   </div>
 </div>

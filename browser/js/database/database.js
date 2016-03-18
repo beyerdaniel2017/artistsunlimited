@@ -13,9 +13,10 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   $scope.trdUsrQuery = {};
   $scope.downloadButtonVisible = false;
   $scope.statusBarVisible = false;
-  $scope.url = {
-    soundCloudUrl: '',
-    downloadUrl: ''
+  $scope.track = {
+    trackUrl: '',
+    downloadUrl: '',
+    email: ''
   };
   $scope.bar = {
     type: 'success',
@@ -138,17 +139,18 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
 
   $scope.saveDownloadUrl = function() {
     $scope.processing = true;
-    $http.post('/api/database/downloadurl', $scope.url)
+    $http.post('/api/database/downloadurl', $scope.track)
       .then(function(res) {
-        $scope.url = {
-          soundCloudUrl: '',
-          downloadUrl: ''
+        $scope.track = {
+          trackUrl: '',
+          downloadUrl: '',
+          email: ''
         }
         alert("SUCCESS: Url saved successfully");
         $scope.processing = false;
       })
       .then(null, function(err) {
-        alert("ERROR: Bad Query or No Matches");
+        alert("ERROR: Error in saving url");
         $scope.processing = false;
       });
   }

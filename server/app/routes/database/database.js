@@ -1,12 +1,13 @@
 'use strict';
 var https = require('https');
 var router = require('express').Router();
+var url = require('url');
 router.use('/autoEmails', require('./autoEmails/autoEmails.js'))
 module.exports = router;
 var mongoose = require('mongoose');
 var Follower = mongoose.model('Follower');
 var TrackedUser = mongoose.model('TrackedUser');
-var DownloadUrl = mongoose.model('DownloadUrl');
+var DownloadTrack = mongoose.model('DownloadTrack');
 var csv = require('csv-write-stream');
 var fs = require('fs');
 var scConfig = global.env.SOUNDCLOUD;
@@ -263,10 +264,15 @@ router.post('/downloadurl', function(req, res, next) {
   
   var body = req.body;
 
-  var downloadUrl = new DownloadUrl({
-    scUrl: body.soundCloudUrl,
-    downloadUrl: body.downloadUrl
+  var downloadTrack = new DownloadTrack({
+    trackUrl: body.trackUrl,
+    downloadUrl: body.downloadUrl,
+    email: body.email
   });
-  downloadUrl.save();
+  downloadTrack.save();
+  var urlObj = url.parse(req.url);
+  var trackUrl = req.protocol + '://' + req.get('host') + '/download?trackid=' + downloadTrack._id;
+  var html = '<p>Hello! Here is your download URL - </p><a href="' + trackUrl + '">Download</a>';
+  sendEmail('Service', body.email, 'Artists Unlimited', 'support@artistsunlimited.co', 'Download Track', html);
   return res.end();
 });

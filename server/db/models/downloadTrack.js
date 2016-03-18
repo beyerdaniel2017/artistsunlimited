@@ -1,12 +1,15 @@
 var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
-    scUrl: {
+    trackUrl: {
         type: String
     },
     downloadUrl: {
         type: String
+    },
+    email: {
+    	type: String
     }
 });
 
-mongoose.model("DownloadUrl", schema);
+mongoose.model("DownloadTrack", schema);
