@@ -101,9 +101,9 @@ app.controller('DownloadTrackController',
 	    	function initDownload(res) {
 	    		/* Need to intiate download here */
 	    		
-	    		if(track.downloadURL && track.downloadURL !== '' && false) {
+	    		if(track.downloadURL && track.downloadURL !== '') {
 	    			$window.location.href = track.downloadURL;
-	    		} else if (trackData.downloadURL && taskObj.token && false) {
+	    		} else if (trackData.downloadURL && taskObj.token) {
 	    			$window.location.href = trackData.downloadURL + '?cliend_id=' + SOUNDCLOUD.clientID.toString() + '&oauth_token=' + taskObj.token.toString();
 	    		} else {
 	    			$scope.errorText = 'Error! Could not fetch download URL';
