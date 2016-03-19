@@ -1,12 +1,13 @@
 
 
-<div style="text-align:center">
+<div ng-init="getDownloadTrack()" style="text-align:center">
 
-	<h3 ng-init="downloadTrack()">Download Audio</h3>
+	<h3>Download Audio</h3>
 
- 	<div style="width: 80%; position:relative; margin: 0 auto" ng-show="embedTrack">
+ 	<div style="width: 80%; position:relative; margin: 0 auto; height: auto" ng-show="embedTrack">
 		<div id="scPlayer"></div>
-		<button class="btn btn-default pull-right" type="button" style="background-color: #d3d3d3; font-size:1.4em; margin:5px 5px;">Download</button>
+		<button class="btn btn-default pull-right" type="button" ng-click="downloadTrack()" style="background-color: #d3d3d3; font-size:1.4em; margin:5px 5px;">Download</button>
+		<div class="clear"></div>
 	</div>
 
 	<div ng-show="!embedTrack && !processing">
@@ -16,4 +17,8 @@
 	<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.9); text-align:center; z-index:1" ng-show="processing">
 		<h1 style="font-color:white; margin-top:400px; z-index:2">Processing...</h1>
 	</div>
+</div>
+
+<div style="text-align:center">
+	<p>{{errorText}}</p>
 </div>
