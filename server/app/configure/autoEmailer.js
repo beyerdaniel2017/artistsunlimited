@@ -19,7 +19,7 @@ function sendAutoEmails() {
   var day = Math.floor(diff / oneDay);
   var dayNum = (day % 14) + 1;
 
-  EmailTemplate.find({
+  EmailTemplate.findOne({
     purpose: "Biweekly Email"
   }).then(function(template) {
     Follower.find({
@@ -27,7 +27,7 @@ function sendAutoEmails() {
       }).exec()
       .then(function(followers) {
         followers.forEach(function(follower) {
-          var templateObj = objectAssign({}, template[0].toObject());
+          var templateObj = objectAssign({}, template.toObject());
           templateObj.htmlMessage = templateObj.htmlMessage.replace(/{Unsubscribe}/, '<a href="' + env.HOST_URI + '/unsubscribe/' + follower._id + '">' + 'Unsubscribe' + '</a>');
           follower.allEmails.forEach(function(emailAddress) {
             sendEmail(follower.username, emailAddress, templateObj.fromName, templateObj.fromEmail, templateObj.subject, templateObj.htmlMessage);
@@ -36,7 +36,7 @@ function sendAutoEmails() {
       });
 
     if (template.reminderDay == dayNum) {
-      sendEmail(template[0].fromName, template[0].fromEmail, "Email Server", "coayscue@gmail.com", "Reminder to Change Biweekly Email", "Hey " + template[0].fromName + ", <br><br>You haven 't changed the bi-weekly email in 2 weeks. <br><br>Sincerely,<br>Your Biweekly Email Server");
+      sendEmail(template.fromName, template.fromEmail, "Email Server", "coayscue@gmail.com", "Reminder to Change Biweekly Email", "Hey " + template.fromName + ", <br><br>You haven 't changed the bi-weekly email in 2 weeks. <br><br>Sincerely,<br>Your Biweekly Email Server");
     }
   });
 }

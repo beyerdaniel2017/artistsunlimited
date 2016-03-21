@@ -9,70 +9,68 @@ paypal.configure({
   'client_secret': 'ELBPMRDOYTKJ060PVEyTMQwBvH2HwQEFWwSziOKp9hYG48z8UXendg3Us_9rlm3ioUMT3Go79KKd2VWa',
 });
 
-module.exports = function(submission) {
-  submission.channelIDS.forEach(function(id, index) {
-    Channel.findOne({
-        channelID: id
-      }).exec()
-      .then(function(chan) {
-        var invoice_json = {
-          "merchant_info": {
-            "email": "kevinwzimmermann@gmail.com",
-            "first_name": "Kevin",
-            "last_name": "Zimmermann",
-            "business_name": "La Tropicál Distributions",
-            "phone": {
-              "country_code": "001",
-              "national_number": "6179906330"
-            },
-            "address": {
-              "line1": "4585 Ponce De Leon Blvd",
-              "city": "Coral Gables",
-              "state": "FL",
-              "postal_code": "33143",
-              "country_code": "US"
-            }
+module.exports = function(submission, channelID) {
+  var index = submission.channelIDS.indexOf(channelID);
+  Channel.findOne({
+      channelID: channelID
+    }).exec()
+    .then(function(chan) {
+      var invoice_json = {
+        "merchant_info": {
+          "email": "kevinwzimmermann@gmail.com",
+          "first_name": "Kevin",
+          "last_name": "Zimmermann",
+          "business_name": "La Tropicál Distributions",
+          "phone": {
+            "country_code": "001",
+            "national_number": "6179906330"
           },
-          "billing_info": [{
-            "email": submission.email
-          }],
-          "items": [{
-            "name": submission.title + " repost on " + chan.displayName + ".",
-            "quantity": 1,
-            "unit_price": {
-              "currency": "USD",
-              "value": chan.price
-            }
-          }],
-          "note": submission.title + " repost on " + chan.displayName + ".",
-          "payment_term": {
-            "term_type": "NET_45"
-          },
-          "tax_inclusive": false,
-          "total_amount": {
+          "address": {
+            "line1": "4585 Ponce De Leon Blvd",
+            "city": "Coral Gables",
+            "state": "FL",
+            "postal_code": "33143",
+            "country_code": "US"
+          }
+        },
+        "billing_info": [{
+          "email": submission.email
+        }],
+        "items": [{
+          "name": submission.title + " repost on " + chan.displayName + ".",
+          "quantity": 1,
+          "unit_price": {
             "currency": "USD",
             "value": chan.price
           }
-        };
+        }],
+        "note": submission.title + " repost on " + chan.displayName + ".",
+        "payment_term": {
+          "term_type": "NET_45"
+        },
+        "tax_inclusive": false,
+        "total_amount": {
+          "currency": "USD",
+          "value": chan.price
+        }
+      };
 
-        paypal.invoice.create(invoice_json, function(error, invoice) {
-          if (error) {
-            console.log(error);
-          } else {
-            paypal.invoice.send(invoice.id, function(error, rv) {
-              if (error) {
-                console.log(error);
-              } else {
-                submission.invoiceIDS[index] = invoice.id;
-                Submission.findByIdAndUpdate(submission._id, submission).exec()
-                  .then(function(sub) {})
-                  .then(null, console.log);
-              }
-            });
-          }
-        });
-      })
-      .then(null, console.log);
-  });
-
+      paypal.invoice.create(invoice_json, function(error, invoice) {
+        if (error) {
+          console.log(error);
+        } else {
+          paypal.invoice.send(invoice.id, function(error, rv) {
+            if (error) {
+              console.log(error);
+            } else {
+              submission.invoiceIDS[index] = invoice.id;
+              Submission.findByIdAndUpdate(submission._id, submission).exec()
+                .then(function(sub) {})
+                .then(null, console.log);
+            }
+          });
+        }
+      });
+    })
+    .then(null, console.log);
 }

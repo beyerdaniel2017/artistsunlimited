@@ -288,7 +288,7 @@ router.post('/paidrepost', function(req, res, next) {
     .then(resolveData)
     .then(findPaidRepostAccount)
     .then(savePaidRepostAccount)
-    .then(function(){
+    .then(function() {
       return res.end();
     })
     .catch(next);
@@ -308,7 +308,7 @@ router.post('/paidrepost', function(req, res, next) {
         httpRes.on('end', function() {
           try {
             locationData = JSON.parse(location);
-          } catch(err) {
+          } catch (err) {
             console.log('err1', err);
             reject(err);
           }
@@ -334,7 +334,7 @@ router.post('/paidrepost', function(req, res, next) {
         httpRes.on('end', function() {
           try {
             userData = JSON.parse(user);
-          } catch(err) {
+          } catch (err) {
             reject(err);
           }
           userObj = userData; // Setting up global variable userObj for this route to be used in savePaidRepostAccount() function
@@ -348,11 +348,13 @@ router.post('/paidrepost', function(req, res, next) {
   }
 
   function findPaidRepostAccount(user) {
-    return PaidRepostAccount.findOne({ 'scID': user.id }).exec();
+    return PaidRepostAccount.findOne({
+      'scID': user.id
+    }).exec();
   }
 
   function savePaidRepostAccount(paidRepostAccount) {
-    if(paidRepostAccount) {
+    if (paidRepostAccount) {
       return Promise.reject(new Error('Account already exists'));
     }
     var newPaidRepostAccount = new PaidRepostAccount({
