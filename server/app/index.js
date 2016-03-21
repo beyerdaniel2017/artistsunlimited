@@ -2,6 +2,7 @@
 var path = require('path');
 var express = require('express');
 var app = express();
+var unsubscribe = require('./configure/unsubscribe');
 module.exports = app;
 
 // Pass our express application pipeline into the configuration
@@ -27,6 +28,10 @@ app.use(function(req, res, next) {
     next(null);
   }
 
+});
+
+app.get('/unsubscribe/:followerId', function(req, res) {
+  unsubscribe(req, res);
 });
 
 app.get('/*', function(req, res) {

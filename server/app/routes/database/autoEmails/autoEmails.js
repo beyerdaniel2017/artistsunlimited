@@ -12,7 +12,8 @@ router.post('/biweekly', function(req, res, next) {
   var day = Math.floor(diff / oneDay);
   update.reminderDay = (day % 14) + 1;
   EmailTemplate.findOneAndUpdate({
-      purpose: "Biweekly Email"
+      purpose: "Biweekly Email",
+      isArtist: req.body.isArtist
     }, update, {
       upsert: true
     }).exec()
@@ -23,8 +24,13 @@ router.post('/biweekly', function(req, res, next) {
 });
 
 router.get('/biweekly', function(req, res, next) {
+  var isArtist = true;
+  if(req.query.isArtist === "false") {
+    isArtist = false;
+  }
   EmailTemplate.findOne({
-      purpose: "Biweekly Email"
+      purpose: "Biweekly Email",
+      isArtist: isArtist
     }).exec()
     .then(function(template) {
       res.send(template);

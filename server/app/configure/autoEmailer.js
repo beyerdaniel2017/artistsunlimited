@@ -2,7 +2,8 @@ var sendEmail = require('../mandrill/sendEmail.js');
 var mongoose = require('mongoose');
 var Follower = mongoose.model('Follower');
 var EmailTemplate = mongoose.model('EmailTemplate')
-
+var objectAssign = require('object-assign');
+var env = require('./../../env');
 module.exports = sendAutoEmails;
 
 //daily emails
@@ -26,14 +27,16 @@ function sendAutoEmails() {
       }).exec()
       .then(function(followers) {
         followers.forEach(function(follower) {
+          var templateObj = objectAssign({}, template[0].toObject());
+          templateObj.htmlMessage = templateObj.htmlMessage.replace(/{Unsubscribe}/, '<a href="' + env.HOST_URI + '/unsubscribe/' + follower._id + '">' + 'Unsubscribe' + '</a>');
           follower.allEmails.forEach(function(emailAddress) {
-            sendEmail(follower.username, emailAddress, template.fromName, template.fromEmail, template.subject, template.htmlMessage);
+            sendEmail(follower.username, emailAddress, templateObj.fromName, templateObj.fromEmail, templateObj.subject, templateObj.htmlMessage);
           })
         });
       });
 
     if (template.reminderDay == dayNum) {
-      sendEmail(template.fromName, template.fromEmail, "Email Server", "coayscue@gmail.com", "Reminder to Change Biweekly Email", "Hey " + template.fromName + ", <br><br>You haven 't changed the bi-weekly email in 2 weeks. <br><br>Sincerely,<br>Your Biweekly Email Server");
+      sendEmail(template[0].fromName, template[0].fromEmail, "Email Server", "coayscue@gmail.com", "Reminder to Change Biweekly Email", "Hey " + template[0].fromName + ", <br><br>You haven 't changed the bi-weekly email in 2 weeks. <br><br>Sincerely,<br>Your Biweekly Email Server");
     }
   });
 }

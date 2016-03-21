@@ -5,11 +5,9 @@ app.config(function($stateProvider) {
     controller: 'AutoEmailsController',
     resolve: {
       template: function($http) {
-        return $http.get('/api/database/autoEmails/biweekly')
+        return $http.get('/api/database/autoEmails/biweekly?isArtist=true')
           .then(function(res) {
-            console.log(res);
             var template = res.data;
-            console.log(template);
             if (template) {
               return template;
             } else {
@@ -29,13 +27,32 @@ app.config(function($stateProvider) {
 app.controller('AutoEmailsController', function($rootScope, $state, $scope, $http, AuthService, template) {
   $scope.loggedIn = false;
   $scope.template = template;
-  console.log(template);
+
+  $scope.getTemplate = function() {
+    $scope.processing = true;
+    $http.get('/api/database/autoEmails/biweekly?isArtist=' + String($scope.template.isArtist))
+      .then(function(res) {
+        var template = res.data;
+        $scope.processing = false;
+        if (template) {
+          $scope.template = template;
+        } else {
+          $scope.template = {
+            purpose: "Biweekly Email",
+            isArtist: false
+          };
+        }
+      })
+      .then(null, function(err) {
+        alert("ERROR: Something went wrong.");
+      });
+  };
+
+  // console.log(template);
   $scope.save = function() {
     $scope.processing = true;
-    console.log($scope.template.htmlMessage);
     $http.post('/api/database/autoEmails/biweekly', $scope.template)
       .then(function(res) {
-        console.log(res.data);
         alert("Saved biweekly email.")
         $scope.processing = false;
       })

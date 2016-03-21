@@ -7,13 +7,16 @@
   <br>
   <div ng-show="loggedIn">
     <h3>Biweekly Email</h3>
+    <span>Artist: </span><input type="checkbox" ng-model="template.isArtist" ng-change="getTemplate()" />
+    </br>
     <span>Sender's Name:</span><input type="text" ng-model="template.fromName"></input>
+    </br>
     <span>Sender's Email:</span><input type="text" ng-model="template.fromEmail"></input>
-    <br>
+    </br>
     <span>Subject:</span><input type="text" ng-model="template.subject"></input>
-    <br>
+    </br>
     <span>HTML Email:</span><br><textarea ng-model="template.htmlMessage" style="width:600px; height:400px;"></textarea>
-    <br>
+    </br>
     <button ng-click="save()">Save</button>
   </div>
 </div>

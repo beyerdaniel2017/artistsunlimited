@@ -9,6 +9,7 @@
 module.exports = {
     "DATABASE_URI": process.env.MONGOLAB_URI,
     "SESSION_SECRET": process.env.SESSION_SECRET,
+    "HOST_URI": process.env.HOST_URI,
     "SOUNDCLOUD": {
         "clientID": process.env.SOUNDCLOUD_CLIENT_ID,
         "clientSecret": process.env.SOUNDCLOUD_CLIENT_SECRET,

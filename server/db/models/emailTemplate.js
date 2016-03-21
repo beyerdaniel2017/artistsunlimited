@@ -18,7 +18,11 @@ var schema = new mongoose.Schema({
   },
   reminderDay: {
     type: String
+  },
+  isArtist: {
+    type: Boolean,
+    default: true
   }
-})
+});
 
 mongoose.model("EmailTemplate", schema);
