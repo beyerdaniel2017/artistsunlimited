@@ -9,5 +9,5 @@ SC.init({
   uri: redirect_uri
 });
 SC.get('/tracks/' + process.argv[2], function(err, response) {
-  console.log(response.permalink_url);
+  console.log(response);
 });
