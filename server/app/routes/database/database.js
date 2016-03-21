@@ -73,8 +73,7 @@ function addFollowers(followUser, nextURL, email) {
     limit: 200
   }, function(err, res) {
     if (err) {
-      TrackedUser.findByIdAndRemove(followUser._id).exec();
-      sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'FAILED Database Populate', "Database failed to populate followers of " + followUser.username + ". ERROR: " + JSON.stringify(err) + ". Please reply to this email to find out why.");
+      sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'SUCCESSFUL Database Population', "Database has populated followers of " + followUser.username);
     } else if (res.next_href) {
       addFollowers(followUser, res.next_href, email);
     } else {
@@ -84,9 +83,10 @@ function addFollowers(followUser, nextURL, email) {
       var i = -1;
       var collectionLength = res.collection.length
       insertFollowers();
+
       function insertFollowers() {
         i++;
-        if(i < collectionLength) {
+        if (i < collectionLength) {
           var follower = res.collection[i];
           SC.get('/users/' + follower.id + '/web-profiles', function(err, webProfiles) {
             follower.websites = '';
@@ -211,7 +211,7 @@ function createAndSendFile(filename, query, res, next) {
 
   var headers = [];
   for (var prop in headerObj) {
-    if(columns.indexOf(prop) > -1) {
+    if (columns.indexOf(prop) > -1) {
       headers.push(headerObj[prop]);
     }
   }
@@ -227,8 +227,8 @@ function createAndSendFile(filename, query, res, next) {
   // });
   stream.on('data', function(flwr) {
     var row = [];
-    columns.forEach(function(elm){
-      if(elm === 'allEmails') {
+    columns.forEach(function(elm) {
+      if (elm === 'allEmails') {
         row.push(flwr[elm].join(''));
       } else {
         row.push(flwr[elm]);
@@ -261,7 +261,7 @@ router.post('/trackedUsers', function(req, res, next) {
 });
 
 router.post('/downloadurl', function(req, res, next) {
-  
+
   var body = req.body;
 
   var downloadTrack = new DownloadTrack({

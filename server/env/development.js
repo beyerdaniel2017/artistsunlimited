@@ -1,5 +1,5 @@
 module.exports = {
-  "DATABASE_URI": "mongodb://SongSchedulerAdmin:Tricks12345@localhost:27017/songScheduler",
+  "DATABASE_URI": "mongodb://localhost:27017/songScheduler",
   "SESSION_SECRET": "Optimus Prime is my real dad",
   "HOST_URI": "http://localhost:1337",
   "SOUNDCLOUD": {
