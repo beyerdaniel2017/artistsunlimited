@@ -10,3 +10,4 @@ require('./follower');
 require('./trackedUser');
 require('./downloadTrack');
 require('./emailTemplate.js');
+require('./paidRepostAccount.js');

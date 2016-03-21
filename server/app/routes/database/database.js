@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var Follower = mongoose.model('Follower');
 var TrackedUser = mongoose.model('TrackedUser');
 var DownloadTrack = mongoose.model('DownloadTrack');
+var PaidRepostAccount = mongoose.model('PaidRepostAccount');
 var csv = require('csv-write-stream');
 var fs = require('fs');
 var scConfig = global.env.SOUNDCLOUD;
@@ -275,4 +276,95 @@ router.post('/downloadurl', function(req, res, next) {
   var html = '<p>Hello! Here is your download URL - </p><a href="' + trackUrl + '">Download</a>';
   sendEmail('Service', body.email, 'Artists Unlimited', 'support@artistsunlimited.co', 'Download Track', html);
   return res.end();
+});
+
+
+router.post('/paidrepost', function(req, res, next) {
+
+  var body = req.body;
+  var getPath = '/resolve.json?url=' + body.soundCloudUrl + '&client_id=' + scConfig.clientID;
+  var userObj = {};
+  getLocation()
+    .then(resolveData)
+    .then(findPaidRepostAccount)
+    .then(savePaidRepostAccount)
+    .then(function(){
+      return res.end();
+    })
+    .catch(next);
+
+
+  function getLocation() {
+    return new Promise(function(resolve, reject) {
+      var httpReq = https.get({
+        host: 'api.soundcloud.com',
+        path: getPath,
+      }, function(httpRes) {
+        var location = '';
+        var locationData = {};
+        httpRes.on('data', function(locationChunk) {
+          location += locationChunk;
+        });
+        httpRes.on('end', function() {
+          try {
+            locationData = JSON.parse(location);
+          } catch(err) {
+            console.log('err1', err);
+            reject(err);
+          }
+          console.log('locationData', locationData);
+          resolve(locationData.location);
+        });
+      });
+      httpReq.on('error', function(err) {
+        console.log('err2', err);
+        reject(err);
+      });
+    });
+  }
+
+  function resolveData(location) {
+    return new Promise(function(resolve, reject) {
+      var httpReq = https.get(location, function(httpRes) {
+        var user = '';
+        var userData = {};
+        httpRes.on('data', function(userChunk) {
+          user += userChunk;
+        });
+        httpRes.on('end', function() {
+          try {
+            userData = JSON.parse(user);
+          } catch(err) {
+            reject(err);
+          }
+          userObj = userData; // Setting up global variable userObj for this route to be used in savePaidRepostAccount() function
+          resolve(userData);
+        });
+      });
+      httpReq.on('error', function(err) {
+        reject(err);
+      });
+    });
+  }
+
+  function findPaidRepostAccount(user) {
+    return PaidRepostAccount.findOne({ 'scID': user.id }).exec();
+  }
+
+  function savePaidRepostAccount(paidRepostAccount) {
+    if(paidRepostAccount) {
+      return Promise.reject(new Error('Account already exists'));
+    }
+    var newPaidRepostAccount = new PaidRepostAccount({
+      scURL: req.body.url,
+      scID: userObj.id,
+      username: userObj.username,
+      followers: userObj.followers_count,
+      description: userObj.description
+    });
+
+    return newPaidRepostAccount.save();
+  }
+
+
 });

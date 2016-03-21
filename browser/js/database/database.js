@@ -22,6 +22,9 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
     type: 'success',
     value: 0
   };
+  $scope.paidRepost = {
+    soundCloudUrl: ''
+  };
   $scope.login = function() {
     $scope.processing = true;
     $http.post('/api/login', {
@@ -145,7 +148,23 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
           trackUrl: '',
           downloadUrl: '',
           email: ''
-        }
+        };
+        alert("SUCCESS: Url saved successfully");
+        $scope.processing = false;
+      })
+      .then(null, function(err) {
+        alert("ERROR: Error in saving url");
+        $scope.processing = false;
+      });
+  }
+
+  $scope.savePaidRepostChannel = function() {
+    $scope.processing = true;
+    $http.post('/api/database/paidrepost', $scope.paidRepost)
+      .then(function(res) {
+        $scope.paidRepost = {
+          soundCloudUrl: ''
+        };
         alert("SUCCESS: Url saved successfully");
         $scope.processing = false;
       })

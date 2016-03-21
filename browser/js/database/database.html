@@ -121,9 +121,16 @@
     <div style="margin:20px 20px; padding: 10px 10px; background-color:#D3D3D3">
       <h3>Add Download Url</h3>
       <form ng-submit="saveDownloadUrl()">
-        <span>Soundcloud Url:</span><input type="url" ng-model="track.trackUrl" required/>
+        <span>Track Url:</span><input type="url" ng-model="track.trackUrl" required/>
         <span>Download Url:</span><input type="url" ng-model="track.downloadUrl"/>
         <span>Email:</span><input type="email" ng-model="track.email" required/>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <div style="margin:20px 20px; padding: 10px 10px; background-color:#D3D3D3">
+      <h3>Paid Repost Channels</h3>
+      <form ng-submit="savePaidRepostChannel()">
+        <span>Soundcloud Url:</span><input type="url" ng-model="paidRepost.soundCloudUrl" required/>
         <button type="submit">Submit</button>
       </form>
     </div>
