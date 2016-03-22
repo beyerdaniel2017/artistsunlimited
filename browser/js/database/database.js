@@ -65,7 +65,6 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   }
 
   $scope.createUserQueryDoc = function() {
-    $scope.createUserQueryDoc.blah = "asd"
     var query = {};
     if ($scope.query.artist == "artists") {
       query.artist = true;
@@ -82,7 +81,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
       query.followers = flwrQry;
     }
     if ($scope.query.genre) query.genre = $scope.query.genre;
-    if ($scope.query.columns) query.columns = $scope.query.columns;
+    // if ($scope.query.columns) query.columns = $scope.query.columns;
     if ($scope.query.trackedUsersURL) query.trackedUsersURL = $scope.query.trackedUsersURL;
     var body = {
       query: query,
@@ -177,10 +176,10 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
 
   /* Listen to socket events */
 
-  socket.on('notification', function(data){
+  socket.on('notification', function(data) {
     var percentage = parseInt(Math.floor(data.counter / data.total * 100), 10);
     $scope.bar.value = percentage;
-    if(percentage === 100) {
+    if (percentage === 100) {
       $scope.statusBarVisible = false;
       $scope.bar.value = 0;
     }

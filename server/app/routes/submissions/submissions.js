@@ -95,10 +95,10 @@ router.post('/paid', function(req, res, next) {
     }).exec()
     .then(function(sub) {
 
-      var index = sub.channelIDS.indexOf("147045855"); //supportify
+      var index = sub.channelIDS.indexOf(147045855); //supportify
       if (index == -1) {
-        sub.channelIDS.push("147045855");
-        sendInvoice(sub, "147045855");
+        sub.channelIDS.push(147045855);
+        sendInvoice(sub, 147045855);
         supportifyChunk = "Since we’ve approved you for a repost you can also get featured with our partners at <a href='https://soundcloud.com/supportify'>Supportify</a>. If you are interested in being featured there, please pay the invoice for Supportify that we are sending you. "
       }
       submission = sub;

@@ -12,25 +12,22 @@ var fs = require('fs');
 var scConfig = require('./../../env');
 var SC = require('node-soundcloud');
 
-
 module.exports = getPaidRepostAccounts;
 
 function getPaidRepostAccounts() {
   PaidRepostAccount
     .find({}, function(err, paidReposters) {
-      if(!err) {
-        paidReposters.forEach(function(elm){
+      if (!err) {
+        paidReposters.forEach(function(elm) {
           getActivities(elm);
         });
       }
     });
 }
 
-
 function getActivities(paidReposter) {
-
   // Need oauth token for getting activities of the user
-  
+
   var getPath = 'https://api-v2.soundcloud.com/profile/soundcloud:users:' + paidReposter.scID + '?limit=20&offset=0?client_id=' + scConfig.SOUNDCLOUD.clientID;
   var req = https.get(getPath, function(res) {
     var activities = '';
@@ -41,7 +38,7 @@ function getActivities(paidReposter) {
     res.on('end', function() {
       try {
         activitiesData = JSON.parse(activities);
-      } catch(err) {
+      } catch (err) {
         console.log(err);
       }
       scanCollection(activitiesData.collection);
@@ -54,7 +51,7 @@ function getActivities(paidReposter) {
 
 function scanCollection(collection) {
   collection.forEach(function(elm) {
-    if(elm.type === 'track-repost') {
+    if (elm.type === 'track-repost') {
       getUser(activity);
     }
   });
@@ -68,11 +65,11 @@ function getUser(activity) {
     uri: scConfig.redirectURL
   });
   SC.get('/users/' + userId, function(err, res) {
-    if(!err) {
+    if (!err) {
       var userData = {};
       try {
         userData = JSON.parse(res);
-      } catch(err) {
+      } catch (err) {
         console.log(err);
       }
       addFollower(userData);
@@ -85,7 +82,7 @@ function addFollower(user) {
   if (user.description) {
     var emailArray = user.description.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
   }
-  if(emailArray) {
+  if (emailArray) {
     var email = myArray[0];
     SC.get('/users/' + user.id + '/web-profiles', function(err, webProfiles) {
       user.websites = '';
@@ -113,32 +110,32 @@ function addFollower(user) {
         }
       }
       Follower.findOne({
-        "scID": user.id
-      }).exec()
-      .then(function(follower) {
-        if (!follower) {
-          var newFollower = new Follower({
-            artist: user.track_count > 0,
-            scID: user.id,
-            scURL: user.permalink_url,
-            name: user.full_name,
-            username: user.username,
-            followers: user.followers_count,
-            email: email,
-            description: user.description,
-            numTracks: user.track_count,
-            facebookURL: user.facebookURL,
-            instagramURL: user.facebookURL,
-            twitterURL: user.twitterURL,
-            youtubeURL: user.youtubeURL,
-            emailDayNum: Math.floor(Math.random() * 14) + 1,
-            websites: user.websites,
-            genre: user.genre,
-            allEmails: emailArray
-          });
-          newFollower.save();
-        }
-      });
+          "scID": user.id
+        }).exec()
+        .then(function(follower) {
+          if (!follower) {
+            var newFollower = new Follower({
+              artist: user.track_count > 0,
+              scID: user.id,
+              scURL: user.permalink_url,
+              name: user.full_name,
+              username: user.username,
+              followers: user.followers_count,
+              email: email,
+              description: user.description,
+              numTracks: user.track_count,
+              facebookURL: user.facebookURL,
+              instagramURL: user.facebookURL,
+              twitterURL: user.twitterURL,
+              youtubeURL: user.youtubeURL,
+              emailDayNum: Math.floor(Math.random() * 14) + 1,
+              websites: user.websites,
+              genre: user.genre,
+              allEmails: emailArray
+            });
+            newFollower.save();
+          }
+        });
     });
   }
 }
