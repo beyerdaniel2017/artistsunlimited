@@ -64,20 +64,19 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
       });
   }
 
+  $scope.counter = 0;
+
+  $scope.showingElements = [];
+
+  $scope.submissions = [];
+
+
   $scope.loadSubmissions = function() {
     $scope.processing = true;
     $http.get('/api/submissions/unaccepted')
       .then(function(res) {
         $scope.submissions = res.data;
-        setTimeout(function() {
-          $scope.submissions.forEach(function(sub) {
-            SC.oEmbed("http://api.soundcloud.com/tracks/" + sub.trackID, {
-              element: document.getElementById(sub.trackID + "player"),
-              auto_play: false,
-              maxheight: 150
-            });
-          });
-        }, 50);
+        $scope.loadMore();
         return $http.get('/api/channels');
       })
       .then(function(res) {
@@ -89,6 +88,25 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         alert('Error: Could not get channels.')
         console.log(err);
       });
+  }
+
+  $scope.loadMore = function() {
+    var loadElements = [];
+    for (let i = $scope.counter; i < $scope.counter + 25; i++) {
+      var sub = $scope.submissions[i];
+      $scope.showingElements.push(sub);
+      loadElements.push(sub);
+    }
+    setTimeout(function() {
+      loadElements.forEach(function(sub) {
+        SC.oEmbed("http://api.soundcloud.com/tracks/" + sub.trackID, {
+          element: document.getElementById(sub.trackID + "player"),
+          auto_play: false,
+          maxheight: 150
+        });
+      }, 50)
+    });
+    $scope.counter += 25;
   }
 
   $scope.changeBox = function(sub, chan) {
