@@ -37,7 +37,7 @@ router.post('/', function(req, res, next) {
     EmailTemplate
       .findOneAndUpdate({
         _id: update._id
-      }, update)
+      }, { $set: update})
       .exec()
       .then(function(template) {
         return res.send(template);
