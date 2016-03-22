@@ -8,17 +8,18 @@ var fs = require('fs');
 var path = require('path');
 
 var options = {
-  key: fs.readFileSync(path.join(__dirname, './keys/key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, './keys/cert.pem'))
+  key: fs.readFileSync(path.join(__dirname, './keys/domain.key')),
+  cert: fs.readFileSync(path.join(__dirname, './keys/artistsunlimited.co.crt'))
 };
 
 // Create a node server instance! cOoL!
-var server = require('https').createServer(options);
-server = require('http').createServer();
+var secureServer = require('https').createServer(options);
+var server = require('http').createServer();
 
 var createApplication = function() {
   var app = require('./app');
-  server.on('request', app); // Attach the Express application.
+  server.on('request', app);
+  secureServer.on('request', app); // Attach the Express application.
   var io = socketio(server);
   require('./io')(io); // Attach socket.io.
   require('./io/notifications')(io);
@@ -31,7 +32,9 @@ var startServer = function() {
   server.listen(PORT, function() {
     console.log(chalk.blue('Server started on port', chalk.magenta(PORT)));
   });
-
+  secureServer.listen(1443, function() {
+    console.log(chalk.blue('Secure server started on port', chalk.magenta(1443)));
+  });
 };
 
 startDb().then(createApplication).then(startServer).catch(function(err) {
