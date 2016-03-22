@@ -1,0 +1,27 @@
+<div class="text-center">
+  
+  <table>
+    <tr class="text-center">
+      <th>Purpose</th>
+      <th>Reminder Day</th>
+      <th>Subject</th>
+      <th>From Email</th>
+      <th>From Name</th>
+      <th>isArtist</th>
+      <th>Actions</th>
+    </tr>
+    <tr class="text-center" ng-repeat="template in templates">
+      <td>{{template.purpose}}</td>
+      <td>{{template.reminderDay}}</td>
+      <td>{{template.subject}}</td>
+      <td>{{template.fromEmail}}</td>
+      <td>{{template.fromName}}</td>
+      <td>{{template.isArtist}}</td>
+      <td><a href="#" ui-sref="autoEmailsEdit({ templateId: template._id})" >Edit</a></td>
+    </tr>
+  </table>
+
+
+  <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.9); text-align:center; z-index:1" ng-show="processing">
+  <h1 style="font-color:white; margin-top:400px; z-index:2">Processing...</h1>
+</div>

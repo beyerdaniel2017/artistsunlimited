@@ -1,4 +1,4 @@
-<div style="text-align:center">
+<div style="text-align:center" ng-init="getTemplate()">
   <!-- <h2>Automatic Emails</h2>
   <h3>Master Password:</h3>
   <input type="password" ng-model="password">
@@ -21,18 +21,20 @@
   </div>
   </br>
   <div>
-    <h3>Biweekly Email</h3>
-    <span>Artist: </span><input type="checkbox" ng-model="template.isArtist" ng-change="getTemplate()" />
+    <span>Artist: </span><input type="checkbox" ng-model="template.isArtist" required />
     </br>
-    <span>Sender's Name:</span><input type="text" ng-model="template.fromName"></input>
+    <span>Purpose: </span><input type="text" ng-model="template.purpose" required />
     </br>
-    <span>Sender's Email:</span><input type="text" ng-model="template.fromEmail"></input>
+    <span>Sender's Name:</span><input type="text" ng-model="template.fromName" required />
     </br>
-    <span>Subject:</span><input type="text" ng-model="template.subject"></input>
+    <span>Sender's Email:</span><input type="text" ng-model="template.fromEmail" required />
     </br>
-    <span>HTML Email:</span><br><textarea ng-model="template.htmlMessage" style="width:600px; height:400px;"></textarea>
+    <span>Subject:</span><input type="text" ng-model="template.subject" />
     </br>
-    <button ng-click="save()">Save</button>
+    <span>HTML Email:</span><br><textarea ng-model="template.htmlMessage" style="width:600px; height:400px;" required></textarea>
+    </br>
+    <button ng-if="!isStateParams" ng-click="save()">Save</button>
+    <button ng-if="isStateParams" ng-click="save()">Update</button>
   </div>
 </div>
 

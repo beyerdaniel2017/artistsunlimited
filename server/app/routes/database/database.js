@@ -15,6 +15,7 @@ var scConfig = global.env.SOUNDCLOUD;
 var SC = require('node-soundcloud');
 var sendEmail = require("../../mandrill/sendEmail.js");
 var emitter = require('./../../../io/emitter.js');
+var objectAssign = require('object-assign');
 
 router.post('/adduser', function(req, res, next) {
   // if (req.body.password != 'letMeManage') next(new Error('wrong password'));
@@ -176,12 +177,12 @@ router.post('/followers', function(req, res, next) {
   if (req.body.query.genre) query.genre = req.body.query.genre;
   if (req.body.query.followers) query.followers = req.body.query.followers;
   if (req.body.query.artist) query.artist = req.body.query.artist;
-  // if (req.body.query.columns) {
-  //   query.columns = req.body.query.columns;
-  // } else {
-  //   query.columns = [];
-  // }
-  // console.log(query.columns, 'query.columns');
+  if (req.body.query.columns) {
+    query.columns = req.body.query.columns;
+  } else {
+    query.columns = [];
+  }
+  console.log(query.columns, 'query.columns');
   createAndSendFile(filename, query, res, next);
 });
 
@@ -189,54 +190,54 @@ function createAndSendFile(filename, query, res, next) {
   var writer = csv({
     headers: ["username", "genre", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", "Websites", 'Auto Email Day', 'All Emails']
   });
-  // var headerObj = {
-  //   'username': 'username',
-  //   'genre': 'genre',
-  //   'name': 'name',
-  //   'scURL': 'URL',
-  //   'email': 'email',
-  //   'description': 'description',
-  //   'followers': 'followers',
-  //   'numTracks': '# of Tracks',
-  //   'facebookURL': 'Facebook',
-  //   'instagramURL': 'Instagram',
-  //   'twitterURL': 'Twitter',
-  //   'youtubeURL': 'Youtube',
-  //   'websites': 'Websites',
-  //   'emailDayNum': 'Auto Email Day',
-  //   'allEmails': 'All Emails'
-  // };
+  var headerObj = {
+    'username': 'username',
+    'genre': 'genre',
+    'name': 'name',
+    'scURL': 'URL',
+    'email': 'email',
+    'description': 'description',
+    'followers': 'followers',
+    'numTracks': '# of Tracks',
+    'facebookURL': 'Facebook',
+    'instagramURL': 'Instagram',
+    'twitterURL': 'Twitter',
+    'youtubeURL': 'Youtube',
+    'websites': 'Websites',
+    'emailDayNum': 'Auto Email Day',
+    'allEmails': 'All Emails'
+  };
 
-  // var columns = query.columns;
-  // delete query.columns;
+  var columns = query.columns; 
+  delete query.columns;
 
-  // var headers = [];
-  // for (var prop in headerObj) {
-  //   if (columns.indexOf(prop) > -1) {
-  //     headers.push(headerObj[prop]);
-  //   }
-  // }
-  // console.log('headers', headers);
-  // var writer = csv({
-  //   headers: headers
-  // });
+  var headers = [];
+  for (var prop in headerObj) {
+    if (columns.indexOf(prop) > -1) {
+      headers.push(headerObj[prop]);
+    }
+  }
+  var writer = csv({
+    headers: headers
+  });
   writer.pipe(fs.createWriteStream('tmp/' + filename));
   var stream = Follower.find(query).stream();
-  stream.on('data', function(flwr) {
-    var row = [flwr.username, flwr.genre, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.websites, flwr.emailDayNum, flwr.allEmails.join(', ')];
-    writer.write(row);
-  });
   // stream.on('data', function(flwr) {
-  //   var row = [];
-  //   columns.forEach(function(elm) {
-  //     if (elm === 'allEmails') {
-  //       row.push(flwr[elm].join(''));
-  //     } else {
-  //       row.push(flwr[elm]);
-  //     }
-  //   });
+  //   var row = [flwr.username, flwr.genre, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.websites, flwr.emailDayNum, flwr.allEmails.join(', ')];
   //   writer.write(row);
   // });
+  stream.on('data', function(flwr) {
+    var row = [];
+    columns.forEach(function(elm) {
+      if (elm === 'allEmails') {
+        row.push(flwr[elm].join(''));
+      } else {
+        row.push(flwr[elm]);
+      }
+    });
+    console.log(row);
+    writer.write(row);
+  });
   stream.on('close', function() {
     writer.end();
     res.send(filename);

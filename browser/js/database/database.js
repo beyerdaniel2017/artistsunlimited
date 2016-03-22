@@ -6,13 +6,77 @@ app.config(function($stateProvider) {
   });
 });
 
+app.directive('notificationBar', ['socket', function(socket){
+  return {
+    restrict: 'EA',
+    scope: true,
+    template: '<div style="margin: 0 auto;width:50%" ng-show="bar.visible">' + 
+                '<uib-progress><uib-bar value="bar.value" type="{{bar.type}}"><span>{{bar.value}}%</span></uib-bar></uib-progress>' +
+              '</div>',
+    link: function($scope, iElm, iAttrs, controller) {
+      socket.on('notification', function(data) {
+        var percentage = parseInt(Math.floor(data.counter / data.total * 100), 10);
+        $scope.bar.value = percentage;
+        if (percentage === 100) {
+          $scope.bar.visible = false;
+          $scope.bar.value = 0;
+        }
+      });
+    }
+  };
+}]);
 
 app.controller('DatabaseController', function($rootScope, $state, $scope, $http, AuthService, SOUNDCLOUD, socket) {
   $scope.addUser = {};
   $scope.query = {};
   $scope.trdUsrQuery = {};
+  $scope.queryCols = [{
+    name: 'username',
+    value: 'username'
+  }, {
+    name: 'genre',
+    value: 'genre'
+  }, {
+    name: 'name',
+    value: 'name'
+  }, {
+    name: 'URL',
+    value: 'scURL'
+  }, {
+    name: 'email',
+    value: 'email'
+  }, {
+    name: 'description',
+    value: 'description'
+  }, {
+    name: 'followers',
+    value: 'followers'
+  }, {
+    name: 'number of tracks',
+    value: 'numTracks'
+  }, {
+    name: 'facebook',
+    value: 'facebookURL'
+  }, {
+    name: 'instagram',
+    value: 'instagramURL'
+  }, {
+    name: 'twitter',
+    value: 'twitterURL'
+  }, {
+    name: 'youtube',
+    value: 'youtubeURL'
+  }, {
+    name: 'websites',
+    value: 'websites'
+  }, {
+    name: 'auto email day',
+    value: 'emailDayNum'
+  }, {
+    name: 'all emails',
+    value: 'allEmails'
+  }];
   $scope.downloadButtonVisible = false;
-  $scope.statusBarVisible = false;
   $scope.track = {
     trackUrl: '',
     downloadUrl: '',
@@ -20,11 +84,13 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   };
   $scope.bar = {
     type: 'success',
-    value: 0
+    value: 0,
+    visible: false
   };
   $scope.paidRepost = {
     soundCloudUrl: ''
   };
+ 
   $scope.login = function() {
     $scope.processing = true;
     $http.post('/api/login', {
@@ -56,7 +122,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
       .then(function(res) {
         alert("Success: Database is being populated. You will be emailed when it is complete.");
         $scope.processing = false;
-        $scope.statusBarVisible = true;
+        $scope.bar.visible = true;
       })
       .catch(function(err) {
         alert('Bad submission');
@@ -81,7 +147,13 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
       query.followers = flwrQry;
     }
     if ($scope.query.genre) query.genre = $scope.query.genre;
-    // if ($scope.query.columns) query.columns = $scope.query.columns;
+    if ($scope.queryCols) {
+      query.columns = $scope.queryCols.filter(function(elm) {
+          return elm.value !== null;
+      }).map(function(elm) {
+        return elm.value;
+      });
+    }
     if ($scope.query.trackedUsersURL) query.trackedUsersURL = $scope.query.trackedUsersURL;
     var body = {
       query: query,
