@@ -73,6 +73,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
     $http.get('/api/submissions/unaccepted')
       .then(function(res) {
         $scope.submissions = res.data;
+        console.log(res.data);
         $scope.loadMore();
         return $http.get('/api/channels');
       })
@@ -95,6 +96,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
       loadElements.push(sub);
     }
     setTimeout(function() {
+      console.log(loadElements);
       loadElements.forEach(function(sub) {
         SC.oEmbed("http://api.soundcloud.com/tracks/" + sub.trackID, {
           element: document.getElementById(sub.trackID + "player"),
