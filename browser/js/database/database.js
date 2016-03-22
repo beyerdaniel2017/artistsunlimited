@@ -6,13 +6,13 @@ app.config(function($stateProvider) {
   });
 });
 
-app.directive('notificationBar', ['socket', function(socket){
+app.directive('notificationBar', ['socket', function(socket) {
   return {
     restrict: 'EA',
     scope: true,
-    template: '<div style="margin: 0 auto;width:50%" ng-show="bar.visible">' + 
-                '<uib-progress><uib-bar value="bar.value" type="{{bar.type}}"><span>{{bar.value}}%</span></uib-bar></uib-progress>' +
-              '</div>',
+    template: '<div style="margin: 0 auto;width:50%" ng-show="bar.visible">' +
+      '<uib-progress><uib-bar value="bar.value" type="{{bar.type}}"><span>{{bar.value}}%</span></uib-bar></uib-progress>' +
+      '</div>',
     link: function($scope, iElm, iAttrs, controller) {
       socket.on('notification', function(data) {
         var percentage = parseInt(Math.floor(data.counter / data.total * 100), 10);
@@ -90,7 +90,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   $scope.paidRepost = {
     soundCloudUrl: ''
   };
- 
+
   $scope.login = function() {
     $scope.processing = true;
     $http.post('/api/login', {
@@ -149,7 +149,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
     if ($scope.query.genre) query.genre = $scope.query.genre;
     if ($scope.queryCols) {
       query.columns = $scope.queryCols.filter(function(elm) {
-          return elm.value !== null;
+        return elm.value !== null;
       }).map(function(elm) {
         return elm.value;
       });
