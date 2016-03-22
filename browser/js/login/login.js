@@ -8,6 +8,10 @@ app.config(function($stateProvider) {
 
 
 app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, SOUNDCLOUD) {
+  $scope.counter = 0;
+  $scope.showingElements = [];
+  $scope.submissions = [];
+
   $scope.login = function() {
     $scope.processing = true;
     $http.post('/api/login', {
@@ -63,13 +67,6 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         $scope.processing = false;
       });
   }
-
-  $scope.counter = 0;
-
-  $scope.showingElements = [];
-
-  $scope.submissions = [];
-
 
   $scope.loadSubmissions = function() {
     $scope.processing = true;
