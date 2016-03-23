@@ -20,7 +20,7 @@ var createApplication = function() {
   var app = require('./app');
   // server.on('request', app);
   secureServer.on('request', app); // Attach the Express application.
-  var io = socketio(server);
+  var io = socketio(secureServer);
   require('./io')(io); // Attach socket.io.
   require('./io/notifications')(io);
 };
