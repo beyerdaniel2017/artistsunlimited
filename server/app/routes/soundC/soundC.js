@@ -1,5 +1,5 @@
 var SC = require('soundclouder');
-var SCresolve = require('soundcloud-resolve-jsonp/node');
+var SCResolve = require('soundcloud-resolve-jsonp/node');
 
 var HTTPS = require('https');
 var router = require('express').Router();
@@ -7,7 +7,7 @@ module.exports = router;
 var scConfig = global.env.SOUNDCLOUD;
 
 router.post('/soundcloudTrack', function(req, res, next) {
-  SCresolve({
+  SCResolve({
     url: req.body.url,
     client_id: scConfig.clientID
   }, function(err, track) {
