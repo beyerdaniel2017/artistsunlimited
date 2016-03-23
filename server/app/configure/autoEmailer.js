@@ -32,8 +32,8 @@ function sendAutoEmails() {
           var templateObj = objectAssign({}, template.toObject());
           templateObj.htmlMessage = templateObj.htmlMessage.replace(/{Unsubscribe}/, '<a href="' + env.HOST_URI + '/unsubscribe/' + follower._id + '">' + 'Unsubscribe' + '</a>');
           follower.allEmails.forEach(function(emailAddress) {
-            // sendEmail(follower.username, emailAddress, templateObj.fromName, templateObj.fromEmail, templateObj.subject, templateObj.htmlMessage);
-          })
+            sendEmail(follower.username, emailAddress, templateObj.fromName, templateObj.fromEmail, templateObj.subject, templateObj.htmlMessage);
+          });
         });
       });
 
