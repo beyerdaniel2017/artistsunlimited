@@ -51,6 +51,9 @@ router.post('/authenticated', function(req, res, next) {
   var scConfig = global.env.SOUNDCLOUD;
   SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.callbackURL);
   SC.get('/me', req.body.token, function(err, data) {
+    if (err) {
+      next(err);
+    } else {
       var sendObj = {};
       Channel.findOneAndUpdate({
           channelID: data.id
@@ -74,5 +77,6 @@ router.post('/authenticated', function(req, res, next) {
           res.send(sendObj);
         })
         .then(null, next);
-    });
+    }
   });
+});
