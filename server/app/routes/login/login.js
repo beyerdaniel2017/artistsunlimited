@@ -48,7 +48,7 @@ router.post('/', function(req, res, next) {
 router.post('/authenticated', function(req, res, next) {
   //if (req.body.password != "letMeManage") next(new Error("Wrong password"));
   var scConfig = global.env.SOUNDCLOUD;
-  SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
+  SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.callbackURL);
   SC.get('/me', req.body.token, function(err, data) {
     var sendObj = {};
     Channel.findOneAndUpdate({
