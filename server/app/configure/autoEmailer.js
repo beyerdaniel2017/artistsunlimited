@@ -21,12 +21,12 @@ function sendAutoEmails() {
 
   EmailTemplate.findOne({
     purpose: "Biweekly Email",
-    isArtist: true,
-	isSendEmail: true
+    isSendEmail: true
   }).then(function(template) {
-    Follower.find({
-        emailDayNum: dayNum
-      }).exec()
+    if(template){
+      var isArtist = template.isArtist;
+      var filter = {emailDayNum: dayNum, artist: isArtist};
+      Follower.find(filter).exec()
       .then(function(followers) {
         followers.forEach(function(follower) {
           var templateObj = objectAssign({}, template.toObject());
@@ -37,8 +37,9 @@ function sendAutoEmails() {
         });
       });
 
-    if (template.reminderDay == dayNum) {
-      sendEmail(template.fromName, template.fromEmail, "Email Server", "coayscue@gmail.com", "Reminder to Change Biweekly Email", "Hey " + template.fromName + ", <br><br>You haven 't changed the bi-weekly email in 2 weeks. <br><br>Sincerely,<br>Your Biweekly Email Server");
+      if (template.reminderDay == dayNum) {
+        sendEmail(template.fromName, template.fromEmail, "Email Server", "coayscue@gmail.com", "Reminder to Change Biweekly Email", "Hey " + template.fromName + ", <br><br>You haven 't changed the bi-weekly email in 2 weeks. <br><br>Sincerely,<br>Your Biweekly Email Server");
+      }
     }
   });
 }
