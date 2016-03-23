@@ -153,10 +153,4 @@
 
     });
 
-    // run any setup JS
-    app.value("SOUNDCLOUD", {
-        clientID: "3947f8d665f6c6c58e865f894798eb3e",
-        redirectURL: "http://artistsunlimited.co/callback.html"
-    });
-
 })();

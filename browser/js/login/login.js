@@ -7,7 +7,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, SOUNDCLOUD) {
+app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService) {
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.submissions = [];
@@ -38,12 +38,16 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
 
   $scope.manage = function() {
     $scope.processing = true;
-    SC.initialize({
-      client_id: SOUNDCLOUD.clientID,
-      redirect_uri: SOUNDCLOUD.redirectURL,
-      scope: "non-expiring"
-    });
-    SC.connect().then(function(res) {
+    $http.get('api/soundcloud/soundcloudConfig')
+      .then(function(res) {
+        SC.initialize({
+          client_id: res.data.clientID,
+          redirect_uri: res.data.callbackURL,
+          scope: "non-expiring"
+        });
+        return SC.connect();
+      })
+      .then(function(res) {
         $rootScope.accessToken = res.oauth_token;
         $http.post('/api/login/authenticated', {
             token: res.oauth_token,
@@ -90,7 +94,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
 
   $scope.loadMore = function() {
     var loadElements = [];
-    for (let i = $scope.counter; i < $scope.counter + 25; i++) {
+    for (let i = $scope.counter; i < $scope.counter + 15; i++) {
       var sub = $scope.submissions[i];
       $scope.showingElements.push(sub);
       loadElements.push(sub);
@@ -105,7 +109,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         });
       }, 50)
     });
-    $scope.counter += 25;
+    $scope.counter += 15;
   }
 
   $scope.changeBox = function(sub, chan) {

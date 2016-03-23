@@ -26,7 +26,7 @@ app.directive('notificationBar', ['socket', function(socket) {
   };
 }]);
 
-app.controller('DatabaseController', function($rootScope, $state, $scope, $http, AuthService, SOUNDCLOUD, socket) {
+app.controller('DatabaseController', function($rootScope, $state, $scope, $http, AuthService, socket) {
   $scope.addUser = {};
   $scope.query = {};
   $scope.trdUsrQuery = {};
@@ -113,7 +113,6 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
       alert('Wrong Password');
     });
   }
-
 
   $scope.saveAddUser = function() {
     $scope.processing = true;

@@ -3,8 +3,8 @@ module.exports = {
   "SESSION_SECRET": "Optimus Prime is my real dad",
   "HOST_URI": "http://localhost:1337",
   "SOUNDCLOUD": {
-    "clientID": "3947f8d665f6c6c58e865f894798eb3e",
-    "clientSecret": "8586b9dbb45ce4c062d23efac6ad2f27",
+    "clientID": "8002f0f8326d869668523d8e45a53b90",
+    "clientSecret": "7c896a35685064e133b6a01998f62714",
     "callbackURL": "http://localhost:1337/callback.html"
   },
   "TWITTER": {

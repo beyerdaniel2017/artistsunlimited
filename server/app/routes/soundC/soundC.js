@@ -31,3 +31,7 @@ router.post('/soundcloudTrack', function(req, res, next) {
     .on('error', next)
     .end();
 });
+
+router.get('/soundcloudConfig', function(req, res, next) {
+  res.send(scConfig);
+});

@@ -7,7 +7,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller('SchedulerController', function($rootScope, $state, $scope, $http, AuthService, SOUNDCLOUD) {
+app.controller('SchedulerController', function($rootScope, $state, $scope, $http, AuthService) {
 
   $scope.makeEventURL = "";
   $scope.showOverlay = false;
@@ -197,8 +197,17 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
 
   $scope.changeQueueSong = function() {
     $scope.processing = true;
-    var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.newQueueSong + '&client_id=' + SOUNDCLOUD.clientID;
-    $http.get(getPath)
+    $http.get('api/soundcloud/soundcloudConfig')
+      .then(function(res) {
+        SC.initialize({
+          client_id: res.data.clientID,
+          redirect_uri: res.data.callbackURL,
+          scope: "non-expiring"
+        });
+        $scope.clientIDString = res.data.clientID.toString();
+        var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.newQueueSong + '&client_id=' + $scope.clientIDString;
+        return $http.get(getPath)
+      })
       .then(function(res) {
         $scope.processing = false;
         var track = res.data;
@@ -266,7 +275,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
       });
     }, 50);
   }
-  if($scope.channel && $scope.channel.queue) {
+  if ($scope.channel && $scope.channel.queue) {
     $scope.loadQueueSongs($scope.channel.queue);
   }
   $scope.loadSubmissions();

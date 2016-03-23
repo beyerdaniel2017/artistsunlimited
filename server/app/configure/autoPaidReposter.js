@@ -9,7 +9,7 @@ var DownloadTrack = mongoose.model('DownloadTrack');
 var PaidRepostAccount = mongoose.model('PaidRepostAccount');
 var csv = require('csv-write-stream');
 var fs = require('fs');
-var scConfig = require('./../../env');
+var scConfig = require('./../../env').SOUNDCLOUD;
 var SC = require('node-soundcloud');
 
 module.exports = getPaidRepostAccounts;
@@ -28,7 +28,7 @@ function getPaidRepostAccounts() {
 function getActivities(paidReposter) {
   // Need oauth token for getting activities of the user
 
-  var getPath = 'https://api-v2.soundcloud.com/profile/soundcloud:users:' + paidReposter.scID + '?limit=20&offset=0?client_id=' + scConfig.SOUNDCLOUD.clientID;
+  var getPath = 'https://api-v2.soundcloud.com/profile/soundcloud:users:' + paidReposter.scID + '?limit=20&offset=0?client_id=' + scConfig.clientID;
   var req = https.get(getPath, function(res) {
     var activities = '';
     var activitiesData = {};
