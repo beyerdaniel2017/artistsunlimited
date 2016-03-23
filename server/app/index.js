@@ -35,7 +35,7 @@ app.get('/unsubscribe/:followerId', function(req, res) {
 });
 
 app.get('/admin*', function(req, res) {
-  if(!req.isAuthenticated()) {
+  if (!req.isAuthenticated()) {
     res.sendFile(app.get('loginHTMLPath'));
   } else {
     res.sendFile(app.get('indexHTMLPath'));
@@ -50,5 +50,7 @@ app.get('/*', function(req, res) {
 app.use(function(err, req, res, next) {
   console.error(err)
   console.error(err.stack);
+  global.log(err);
+  global.log(err.stack);
   res.status(err.status || 500).send(err.message || 'Internal server error.');
 });

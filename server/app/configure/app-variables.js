@@ -16,6 +16,10 @@ var logMiddleware = function(req, res, next) {
     console.log(util.format(chalk.red('%s: %s %s'), 'REQUEST ', req.method, req.path));
     console.log(util.format(chalk.yellow('%s: %s'), 'QUERY   ', util.inspect(req.query)));
     console.log(util.format(chalk.cyan('%s: %s'), 'BODY    ', util.inspect(req.body)));
+    global.log('------------------------------------------------')
+    global.log('REQUEST ' + JSON.stringify(req.path));
+    global.log('QUERY   ' + JSON.stringify(req.query));
+    global.log('BODY    ' + JSON.stringify(req.query));
     next();
 };
 

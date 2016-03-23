@@ -18,8 +18,6 @@ router.get('/track', function(req, res, next) {
   var downloadTrackId = req.query.trackid;
   DownloadTrack.findById(downloadTrackId).exec()
     .then(function(downloadTrack) {
-      console.log(downloadTrack);
-      global.log(downloadTrack);
       res.send(downloadTrack);
       return res.end();
     })
