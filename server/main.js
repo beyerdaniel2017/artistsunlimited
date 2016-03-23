@@ -28,7 +28,7 @@ var createApplication = function() {
 var startServer = function() {
 
   // var HTTP_PORT = process.env.HTTP_PORT || 1337;
-  var HTTPS_PORT = process.env.HTTPS_PORT || 1337;
+  var HTTPS_PORT = process.env.HTTPS_PORT || 1443;
 
   // server.listen(HTTP_PORT, function() {
   //   console.log(chalk.blue('Server started on port', chalk.magenta(HTTP_PORT)));
