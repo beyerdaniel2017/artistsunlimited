@@ -49,22 +49,18 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
       })
       .then(function(res) {
         $rootScope.accessToken = res.oauth_token;
-        $http.post('/api/login/authenticated', {
-            token: res.oauth_token,
-            password: $rootScope.password,
-          })
-          .then(function(res) {
-            $scope.processing = false;
-            $rootScope.schedulerInfo = res.data;
-            $rootScope.schedulerInfo.events.forEach(function(ev) {
-              ev.day = new Date(ev.day);
-            });
-            $state.go('scheduler');
-          })
-          .then(null, function(err) {
-            $scope.processing = false;
-            alert('Error: Account not manageable.');
-          });
+        return $http.post('/api/login/authenticated', {
+          token: res.oauth_token,
+          password: $rootScope.password,
+        })
+      })
+      .then(function(res) {
+        $scope.processing = false;
+        $rootScope.schedulerInfo = res.data;
+        $rootScope.schedulerInfo.events.forEach(function(ev) {
+          ev.day = new Date(ev.day);
+        });
+        $state.go('scheduler');
       })
       .then(null, function(err) {
         alert('Error: Could not log in');

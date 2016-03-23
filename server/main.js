@@ -13,7 +13,7 @@ var options = {
 };
 
 // Create a node server instance! cOoL!
- var secureServer = require('https').createServer(options);
+var secureServer = require('https').createServer(options);
 //var server = require('http').createServer();
 
 var createApplication = function() {
@@ -28,22 +28,24 @@ var createApplication = function() {
 var startServer = function() {
 
   //var HTTP_PORT = process.env.HTTP_PORT || 1337;
-   var HTTPS_PORT = process.env.HTTPS_PORT || 1443;
-  //server.listen(HTTP_PORT, function() {
-   // console.log(chalk.blue('Server started on port', chalk.magenta(HTTP_PORT)));
-  //});
-   secureServer.listen(HTTPS_PORT, function() {
-     console.log(chalk.blue('Secure server started on port', chalk.magenta(HTTPS_PORT)));
-   });
-};
-var startexpress = function(){
-var expressApp = require('express')();
 
-	expressApp.get('*',function(req,res){  
-    		res.redirect('https://'+req.host+req.url)
-	});
-	expressApp.listen(1337);
+  var HTTPS_PORT = process.env.HTTPS_PORT || 1443;
+  //server.listen(HTTP_PORT, function() {
+  // console.log(chalk.blue('Server started on port', chalk.magenta(HTTP_PORT)));
+  //});
+  secureServer.listen(HTTPS_PORT, function() {
+    console.log(chalk.blue('Secure server started on port', chalk.magenta(HTTPS_PORT)));
+  });
 };
+var startexpress = function() {
+  var expressApp = require('express')();
+
+  expressApp.get('*', function(req, res) {
+    res.redirect('https://' + req.host + req.url)
+  });
+  expressApp.listen(1337);
+};
+
 startDb().then(createApplication).then(startServer).then(startexpress).catch(function(err) {
   console.error(chalk.red(err.stack));
   process.kill(1);
