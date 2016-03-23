@@ -13,13 +13,13 @@ var options = {
 };
 
 // Create a node server instance! cOoL!
-var secureServer = require('https').createServer(options);
+// var secureServer = require('https').createServer(options);
 var server = require('http').createServer();
 
 var createApplication = function() {
   var app = require('./app');
   server.on('request', app);
-  secureServer.on('request', app); // Attach the Express application.
+  // secureServer.on('request', app); // Attach the Express application.
   var io = socketio(server);
   require('./io')(io); // Attach socket.io.
   require('./io/notifications')(io);
@@ -28,14 +28,14 @@ var createApplication = function() {
 var startServer = function() {
 
   var HTTP_PORT = process.env.HTTP_PORT || 1337;
-  var HTTPS_PORT = process.env.HTTPS_PORT || 1443;
+  // var HTTPS_PORT = process.env.HTTPS_PORT || 1443;
 
   server.listen(HTTP_PORT, function() {
     console.log(chalk.blue('Server started on port', chalk.magenta(HTTP_PORT)));
   });
-  secureServer.listen(HTTPS_PORT, function() {
-    console.log(chalk.blue('Secure server started on port', chalk.magenta(HTTPS_PORT)));
-  });
+  // secureServer.listen(HTTPS_PORT, function() {
+  //   console.log(chalk.blue('Secure server started on port', chalk.magenta(HTTPS_PORT)));
+  // });
 };
 
 startDb().then(createApplication).then(startServer).catch(function(err) {
