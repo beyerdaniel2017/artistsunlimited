@@ -7,7 +7,7 @@ var env = require('./../../env');
 module.exports = function() {
   setTimeout(function() {
     sendAutoEmails;
-  }, 28800000);
+  }, 86400000);
 }
 
 //daily emails
