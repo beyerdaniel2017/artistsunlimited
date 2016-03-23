@@ -11,6 +11,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   $scope.submission = {};
 
   $scope.urlChange = function() {
+    $scope.processing = true;
     $http.post('/api/soundcloud/soundcloudTrack', {
         url: $scope.url
       })
@@ -24,13 +25,13 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
           maxheight: 150
         })
         document.getElementById('scPlayer').style.visibility = "visible";
+        $scope.processing = false;
         $scope.notFound = false;
       }).then(null, function(err) {
         $scope.notFound = true;
         $scope.processing = false;
         document.getElementById('scPlayer').style.visibility = "hidden";
       });
-
   }
 
   $scope.submit = function() {

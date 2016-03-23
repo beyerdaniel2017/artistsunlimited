@@ -73,6 +73,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 		/* On click download track button */
 
 		$scope.downloadTrack = function() {
+			$scope.processing = true;
 			$scope.errorText = '';
 			$http.get('api/soundcloud/soundcloudConfig')
 				.then(function(res) {
@@ -109,11 +110,13 @@ app.controller('DownloadTrackController', ['$rootScope',
 					$scope.downloadURLNotFound = true;
 					$scope.$apply();
 				}
+				$scope.processing = false;
 				return;
 			}
 
 			function catchTasksError(err) {
 				alert('Error in processing your request');
+				$scope.processing = false;
 			}
 
 		};
