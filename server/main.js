@@ -30,8 +30,8 @@ var startServer = function() {
   var HTTP_PORT = process.env.HTTP_PORT || 1337;
   var HTTPS_PORT = process.env.HTTPS_PORT || 1443;
 
-  server.listen(PORT, function() {
-    console.log(chalk.blue('Server started on port', chalk.magenta(PORT)));
+  server.listen(HTTP_PORT, function() {
+    console.log(chalk.blue('Server started on port', chalk.magenta(HTTP_PORT)));
   });
   secureServer.listen(HTTPS_PORT, function() {
     console.log(chalk.blue('Secure server started on port', chalk.magenta(HTTPS_PORT)));
