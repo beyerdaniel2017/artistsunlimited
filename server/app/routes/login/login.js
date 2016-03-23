@@ -48,28 +48,9 @@ router.post('/', function(req, res, next) {
 
 router.post('/authenticated', function(req, res, next) {
   //if (req.body.password != "letMeManage") next(new Error("Wrong password"));
-  //  var scConfig = require('./../../../env');
-  // SC.init({
-  //   id: scConfig.SOUNDCLOUD.clientID,
-  //   secret: scConfig.SOUNDCLOUD.clientSecret,
-  //   uri: scConfig.SOUNDCLOUD.callbackURL,
-  //   accessToken: req.body.token
-  // });
-  // var scConfig = global.env.SOUNDCLOUD;
-  // SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.callbackURL);
-  // console.log(scConfig.SOUNDCLOUD.clientID, scConfig.SOUNDCLOUD.clientSecret, scConfig.SOUNDCLOUD.callbackURL);
-  var request = https.get('https://api.soundcloud.com/me?oauth_token=' + req.body.token, function(response) {
-    var resData = '';
-    response.on('data', function(d) {
-      resData += d;
-    });
-
-    response.on('end', function() {
-      try {
-        var data = JSON.parse(resData);
-      } catch (err) {
-        next(err);
-      }
+  var scConfig = global.env.SOUNDCLOUD;
+  SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.callbackURL);
+  SC.get('/me', req.body.token, function(err, data) {
       var sendObj = {};
       Channel.findOneAndUpdate({
           channelID: data.id
@@ -95,6 +76,3 @@ router.post('/authenticated', function(req, res, next) {
         .then(null, next);
     });
   });
-
-  request.on('error', next);
-});
