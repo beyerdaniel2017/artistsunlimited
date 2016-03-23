@@ -16,16 +16,14 @@ var Channel = mongoose.model('Channel');
 
 router.get('/track', function(req, res, next) {
   var downloadTrackId = req.query.trackid;
-  DownloadTrack
-    .find({
-      _id: downloadTrackId
-    })
-    .exec()
+  DownloadTrack.findById(downloadTrackId).exec()
     .then(function(downloadTrack) {
+      console.log(downloadTrack);
+      global.log(downloadTrack);
       res.send(downloadTrack);
       return res.end();
     })
-    .catch(next);
+    .then(null, next);
 });
 
 router.post('/tasks', function(req, res, next) {
@@ -37,7 +35,6 @@ router.post('/tasks', function(req, res, next) {
     accessToken: body.token
   });
   SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.callbackURL);
-
 
   SC.put('/me/favorites/' + body.trackId, function(err, response) {
     if (err) {

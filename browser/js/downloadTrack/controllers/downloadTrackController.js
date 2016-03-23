@@ -36,9 +36,9 @@ app.controller('DownloadTrackController', ['$rootScope',
 
 			function receiveDownloadTrack(result) {
 				track = {
-					trackURL: result.data[0].trackUrl,
-					downloadURL: result.data[0].downloadUrl,
-					email: result.data[0].email
+					trackURL: result.data.trackUrl,
+					downloadURL: result.data.downloadUrl,
+					email: result.data.email
 				};
 
 				return DownloadTrackService.getTrackData(track);
