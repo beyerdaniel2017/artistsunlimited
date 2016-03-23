@@ -10,6 +10,8 @@ var DownloadTrack = mongoose.model('DownloadTrack');
 var scConfig = require('./../../../env').SOUNDCLOUD;
 var sendEmail = require('../../mandrill/sendEmail.js');
 var SC = require('node-soundcloud');
+var SCR = require('soundclouder');
+
 var Channel = mongoose.model('Channel');
 
 router.get('/track', function(req, res, next) {
@@ -31,30 +33,33 @@ router.post('/tasks', function(req, res, next) {
   SC.init({
     id: scConfig.clientID,
     secret: scConfig.clientSecret,
-    uri: scConfig.redirectURL,
+    uri: scConfig.callbackURL,
     accessToken: body.token
   });
+  SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.callbackURL);
 
 
   SC.put('/me/favorites/' + body.trackId, function(err, response) {
     if (err) {
-      return next(err);
+      next(err);
     }
-    Channels.find({})
+    Channel.find({})
       .then(function(channels) {
         channels.forEach(function(chan) {
           SC.put('/me/followings/' + chan.channelID, function(err, response) {
             if (err) {
-              return next(err);
+              next(err);
             }
-            console.log(chan.displayName);
-
           });
         })
       })
-
-    // Need to call repost api but it is returning unauthorized 401
-    res.send();
-    return res.end();
+      .then(null, next);
+    SCR.put('/e1/me/track_reposts/' + body.trackId, body.token, function(err, data) {
+      if (err) {
+        next(err);
+      } else {
+        res.send();
+      }
+    });
   });
 });
