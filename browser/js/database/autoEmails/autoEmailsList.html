@@ -25,6 +25,7 @@
         <th>Subject</th>
         <th>From Email</th>
         <th>From Name</th>
+        <th>isOn</th>
         <th>isArtist</th>
         <th>Actions</th>
       </tr>
@@ -36,6 +37,7 @@
         <td>{{template.subject}}</td>
         <td>{{template.fromEmail}}</td>
         <td>{{template.fromName}}</td>
+        <td>{{template.isSendEmail}}</td>
         <td>{{template.isArtist}}</td>
         <td><a href="#" ui-sref="autoEmailsEdit({ templateId: template._id})" >Edit</a></td>
       </tr>

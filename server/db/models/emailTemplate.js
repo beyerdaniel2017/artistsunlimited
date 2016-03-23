@@ -22,6 +22,10 @@ var schema = new mongoose.Schema({
   isArtist: {
     type: Boolean,
     default: true
+  },
+  isSendEmail: {
+    type: Boolean,
+    default: false
   }
 });
 

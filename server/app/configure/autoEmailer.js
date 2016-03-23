@@ -20,7 +20,9 @@ function sendAutoEmails() {
   var dayNum = (day % 14) + 1;
 
   EmailTemplate.findOne({
-    purpose: "Biweekly Email"
+    purpose: "Biweekly Email",
+    isArtist: true,
+	isSendEmail: true
   }).then(function(template) {
     Follower.find({
         emailDayNum: dayNum
