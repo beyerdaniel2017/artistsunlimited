@@ -11,14 +11,10 @@ var faviconPath = path.join(rootPath, './server/app/views/favicon.ico');
 var env = require(path.join(rootPath, './server/env'));
 
 var logMiddleware = function(req, res, next) {
-    util.log(('---NEW REQUEST---'));
+    util.log('------------------------------------------------');
     console.log(util.format(chalk.red('%s: %s %s'), 'REQUEST ', req.method, req.path));
     console.log(util.format(chalk.yellow('%s: %s'), 'QUERY   ', util.inspect(req.query)));
     console.log(util.format(chalk.cyan('%s: %s'), 'BODY    ', util.inspect(req.body)));
-    global.log('------------------------------------------------')
-    global.log('REQUEST ' + JSON.stringify(req.path));
-    global.log('QUERY   ' + JSON.stringify(req.query));
-    global.log('BODY    ' + JSON.stringify(req.query));
     next();
 };
 

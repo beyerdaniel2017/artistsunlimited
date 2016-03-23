@@ -35,7 +35,6 @@ var startServer = function() {
   //});
   secureServer.listen(HTTPS_PORT, function() {
     console.log(chalk.blue('Secure server started on port', chalk.magenta(HTTPS_PORT)));
-    global.log("Secure server started on port " + HTTPS_PORT);
   });
 };
 var startexpress = function() {

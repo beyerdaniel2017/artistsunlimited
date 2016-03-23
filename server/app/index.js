@@ -50,7 +50,5 @@ app.get('/*', function(req, res) {
 app.use(function(err, req, res, next) {
   console.error(err)
   console.error(err.stack);
-  global.log(err);
-  global.log(err.stack);
   res.status(err.status || 500).send(err.message || 'Internal server error.');
 });
