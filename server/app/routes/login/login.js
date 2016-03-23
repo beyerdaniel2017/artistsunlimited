@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var Channel = mongoose.model('Channel');
 var Submission = mongoose.model('Submission');
 var Event = mongoose.model('Event');
-var SC = require('node-soundcloud');
+var SC = require('soundclouder');
 var passport = require('passport');
 var https = require('https');
 
