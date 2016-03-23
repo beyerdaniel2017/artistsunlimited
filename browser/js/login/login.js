@@ -38,7 +38,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
 
   $scope.manage = function() {
     $scope.processing = true;
-    $http.get('api/soundcloud/soundcloudConfig')
+    $http.get('/api/soundcloud/soundcloudConfig')
       .then(function(res) {
         SC.initialize({
           client_id: res.data.clientID,

@@ -13,31 +13,38 @@ var options = {
 };
 
 // Create a node server instance! cOoL!
-// var secureServer = require('https').createServer(options);
-var server = require('http').createServer();
+ var secureServer = require('https').createServer(options);
+//var server = require('http').createServer();
 
 var createApplication = function() {
   var app = require('./app');
-  server.on('request', app);
-  // secureServer.on('request', app); // Attach the Express application.
-  var io = socketio(server);
+  //server.on('request', app);
+   secureServer.on('request', app); // Attach the Express application.
+  var io = socketio(secureServer);
   require('./io')(io); // Attach socket.io.
   require('./io/notifications')(io);
 };
 
 var startServer = function() {
 
-  var HTTP_PORT = process.env.HTTP_PORT || 1337;
-  // var HTTPS_PORT = process.env.HTTPS_PORT || 1443;
-  server.listen(HTTP_PORT, function() {
-    console.log(chalk.blue('Server started on port', chalk.magenta(HTTP_PORT)));
-  });
-  // secureServer.listen(HTTPS_PORT, function() {
-  //   console.log(chalk.blue('Secure server started on port', chalk.magenta(HTTPS_PORT)));
-  // });
+  //var HTTP_PORT = process.env.HTTP_PORT || 1337;
+   var HTTPS_PORT = process.env.HTTPS_PORT || 443;
+  //server.listen(HTTP_PORT, function() {
+   // console.log(chalk.blue('Server started on port', chalk.magenta(HTTP_PORT)));
+  //});
+   secureServer.listen(HTTPS_PORT, function() {
+     console.log(chalk.blue('Secure server started on port', chalk.magenta(HTTPS_PORT)));
+   });
 };
+var startexpress = function(){
+var expressApp = require('express')();
 
-startDb().then(createApplication).then(startServer).catch(function(err) {
+	expressApp.get('*',function(req,res){  
+    		res.redirect('https://'+req.host+req.url)
+	});
+	expressApp.listen(1337);
+};
+startDb().then(createApplication).then(startServer).then(startexpress).catch(function(err) {
   console.error(chalk.red(err.stack));
   process.kill(1);
 });
