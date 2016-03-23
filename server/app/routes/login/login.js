@@ -5,8 +5,9 @@ var mongoose = require('mongoose');
 var Channel = mongoose.model('Channel');
 var Submission = mongoose.model('Submission');
 var Event = mongoose.model('Event');
-var SC = require('soundclouder');
+var SC = require('node-soundcloud');
 var passport = require('passport');
+var https = require('https');
 
 router.post('/', function(req, res, next) {
   // console.log(req.body);
@@ -47,31 +48,53 @@ router.post('/', function(req, res, next) {
 
 router.post('/authenticated', function(req, res, next) {
   //if (req.body.password != "letMeManage") next(new Error("Wrong password"));
-  var scConfig = global.env.SOUNDCLOUD;
-  SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.callbackURL);
-  SC.get('/me', req.body.token, function(err, data) {
-    var sendObj = {};
-    Channel.findOneAndUpdate({
-        channelID: data.id
-      }, {
-        accessToken: req.body.token
-      }).exec()
-      .then(function(channel) {
-        sendObj.channel = channel;
-        return Event.find({
+  //  var scConfig = require('./../../../env');
+  // SC.init({
+  //   id: scConfig.SOUNDCLOUD.clientID,
+  //   secret: scConfig.SOUNDCLOUD.clientSecret,
+  //   uri: scConfig.SOUNDCLOUD.callbackURL,
+  //   accessToken: req.body.token
+  // });
+  // var scConfig = global.env.SOUNDCLOUD;
+  // SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.callbackURL);
+  // console.log(scConfig.SOUNDCLOUD.clientID, scConfig.SOUNDCLOUD.clientSecret, scConfig.SOUNDCLOUD.callbackURL);
+  var request = https.get('https://api.soundcloud.com/me?oauth_token=' + req.body.token, function(response) {
+    var resData = '';
+    response.on('data', function(d) {
+      resData += d;
+    });
+
+    response.on('end', function() {
+      try {
+        var data = JSON.parse(resData);
+      } catch(err) {
+        next(err);
+      }
+      var sendObj = {};
+      Channel.findOneAndUpdate({
           channelID: data.id
-        }).exec();
-      })
-      .then(function(events) {
-        sendObj.events = events;
-        return Submission.find({
-          channelIDS: data.id
-        }).exec();
-      })
-      .then(function(submissions) {
-        sendObj.submissions = submissions;
-        res.send(sendObj);
-      })
-      .then(null, next);
+        }, {
+          accessToken: req.body.token
+        }).exec()
+        .then(function(channel) {
+          sendObj.channel = channel;
+          return Event.find({
+            channelID: data.id
+          }).exec();
+        })
+        .then(function(events) {
+          sendObj.events = events;
+          return Submission.find({
+            channelIDS: data.id
+          }).exec();
+        })
+        .then(function(submissions) {
+          sendObj.submissions = submissions;
+          res.send(sendObj);
+        })
+        .then(null, next);
+    });
   });
+
+  request.on('error', next);
 });
