@@ -6,8 +6,6 @@ var socketio = require('socket.io');
 var startDb = require('./db');
 var fs = require('fs');
 var path = require('path');
-require('./app/configure/log.js');
-
 
 var options = {
   key: fs.readFileSync(path.join(__dirname, './keys/domain.key')),

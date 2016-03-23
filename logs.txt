@@ -4,6 +4,10 @@ REQUEST "/"
 QUERY   {}
 BODY    {}
 ------------------------------------------------
+REQUEST "/"
+QUERY   {}
+BODY    {}
+------------------------------------------------
 REQUEST "/admin"
 QUERY   {}
 BODY    {}
@@ -16,6 +20,10 @@ REQUEST "/api/channels"
 QUERY   {}
 BODY    {}
 ------------------------------------------------
-REQUEST "/admin/database"
+REQUEST "/api/database/adduser"
 QUERY   {}
 BODY    {}
+Error: connect ECONNREFUSED
+Error: connect ECONNREFUSED
+    at exports._errnoException (util.js:746:11)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1000:19)

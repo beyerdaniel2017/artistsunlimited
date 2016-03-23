@@ -1,5 +1,6 @@
 'use strict';
 var timeout = require('connect-timeout');
+require('./log.js');
 
 module.exports = function(app) {
 
