@@ -7,6 +7,8 @@ var startDb = require('./db');
 var fs = require('fs');
 var path = require('path');
 
+var HTTPS_PORT = (process.env.NODE_ENV === 'production') ? 443 : 1443;
+
 var options = {
   key: fs.readFileSync(path.join(__dirname, './keys/domain.key')),
   cert: fs.readFileSync(path.join(__dirname, './keys/artistsunlimited.co.crt'))
@@ -32,8 +34,8 @@ var startServer = function() {
   server.listen(PORT, function() {
     console.log(chalk.blue('Server started on port', chalk.magenta(PORT)));
   });
-  secureServer.listen(1443, function() {
-    console.log(chalk.blue('Secure server started on port', chalk.magenta(1443)));
+  secureServer.listen(HTTPS_PORT, function() {
+    console.log(chalk.blue('Secure server started on port', chalk.magenta(HTTPS_PORT)));
   });
 };
 
