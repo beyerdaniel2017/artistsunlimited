@@ -4,7 +4,11 @@ var Follower = mongoose.model('Follower');
 var EmailTemplate = mongoose.model('EmailTemplate')
 var objectAssign = require('object-assign');
 var env = require('./../../env');
-module.exports = sendAutoEmails;
+module.exports = function() {
+  setTimeout(function() {
+    sendAutoEmails;
+  }, 28800000);
+}
 
 //daily emails
 function sendAutoEmails() {
@@ -23,19 +27,22 @@ function sendAutoEmails() {
     purpose: "Biweekly Email",
     isSendEmail: true
   }).then(function(template) {
-    if(template){
+    if (template) {
       var isArtist = template.isArtist;
-      var filter = {emailDayNum: dayNum, artist: isArtist};
+      var filter = {
+        emailDayNum: dayNum,
+        artist: isArtist
+      };
       Follower.find(filter).exec()
-      .then(function(followers) {
-        followers.forEach(function(follower) {
-          var templateObj = objectAssign({}, template.toObject());
-          templateObj.htmlMessage = templateObj.htmlMessage.replace(/{Unsubscribe}/, '<a href="' + env.HOST_URI + '/unsubscribe/' + follower._id + '">' + 'Unsubscribe' + '</a>');
-          follower.allEmails.forEach(function(emailAddress) {
-            sendEmail(follower.username, emailAddress, templateObj.fromName, templateObj.fromEmail, templateObj.subject, templateObj.htmlMessage);
+        .then(function(followers) {
+          followers.forEach(function(follower) {
+            var templateObj = objectAssign({}, template.toObject());
+            templateObj.htmlMessage = templateObj.htmlMessage.replace(/{Unsubscribe}/, '<a href="' + env.HOST_URI + '/unsubscribe/' + follower._id + '">' + 'Unsubscribe' + '</a>');
+            follower.allEmails.forEach(function(emailAddress) {
+              sendEmail(follower.username, emailAddress, templateObj.fromName, templateObj.fromEmail, templateObj.subject, templateObj.htmlMessage);
+            });
           });
         });
-      });
 
       if (template.reminderDay == dayNum) {
         sendEmail(template.fromName, template.fromEmail, "Email Server", "coayscue@gmail.com", "Reminder to Change Biweekly Email", "Hey " + template.fromName + ", <br><br>You haven 't changed the bi-weekly email in 2 weeks. <br><br>Sincerely,<br>Your Biweekly Email Server");
