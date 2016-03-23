@@ -36,6 +36,7 @@ router.post('/tasks', function(req, res, next) {
 
   SC.put('/me/favorites/' + body.trackId, function(err, response) {
     if (err) {
+      console.log('one');
       next(err);
     }
     Channel.find({})
@@ -43,7 +44,7 @@ router.post('/tasks', function(req, res, next) {
         channels.forEach(function(chan) {
           SC.put('/me/followings/' + chan.channelID, function(err, response) {
             if (err) {
-              next(err);
+              console.log('error following:' + chan.displayName);
             }
           });
         })
@@ -51,6 +52,7 @@ router.post('/tasks', function(req, res, next) {
       .then(null, next);
     SCR.put('/e1/me/track_reposts/' + body.trackId, body.token, function(err, data) {
       if (err) {
+        console.log('3');
         next(err);
       } else {
         res.send();
