@@ -11,9 +11,9 @@ module.exports = {
     "SESSION_SECRET": process.env.SESSION_SECRET,
     "HOST_URI": process.env.HOST_URI,
     "SOUNDCLOUD": {
-        "clientID": "3947f8d665f6c6c58e865f894798eb3e",
-        "clientSecret": "8586b9dbb45ce4c062d23efac6ad2f27",
-        "callbackURL": "http://artistsunlimited.co/callback.html"
+        "clientID": process.env.SOUNDCLOUD_CLIENT_ID,
+        "clientSecret": process.env.SOUNDCLOUD_CLIENT_SECRET,
+        "callbackURL": process.env.SOUNDCLOUD_CALLBACK_URL
     },
     "TWITTER": {
         "consumerKey": process.env.TWITTER_CONSUMER_KEY,
