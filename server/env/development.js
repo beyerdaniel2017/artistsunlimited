@@ -5,7 +5,7 @@ module.exports = {
   "SOUNDCLOUD": {
     "clientID": "8002f0f8326d869668523d8e45a53b90",
     "clientSecret": "7c896a35685064e133b6a01998f62714",
-    "callbackURL": "https://localhost/callback.html"
+    "callbackURL": "https://localhost:1443/callback.html"
   },
   "TWITTER": {
     "consumerKey": "INSERT_TWITTER_CONSUMER_KEY_HERE",

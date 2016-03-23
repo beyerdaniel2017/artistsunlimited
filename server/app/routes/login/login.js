@@ -67,7 +67,7 @@ router.post('/authenticated', function(req, res, next) {
     response.on('end', function() {
       try {
         var data = JSON.parse(resData);
-      } catch(err) {
+      } catch (err) {
         next(err);
       }
       var sendObj = {};
