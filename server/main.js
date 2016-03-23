@@ -14,7 +14,8 @@ var options = {
 
 // Create a node server instance! cOoL!
 var secureServer = require('https').createServer(options);
-//var server = require('http').createServer();
+secureServer = require('http').createServer();
+// var server = require('http').createServer();
 
 var createApplication = function() {
   var app = require('./app');

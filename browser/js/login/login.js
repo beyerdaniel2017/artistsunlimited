@@ -7,7 +7,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService) {
+app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, oEmbedFactory) {
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.submissions = [];
@@ -98,11 +98,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
     setTimeout(function() {
       console.log(loadElements);
       loadElements.forEach(function(sub) {
-        SC.oEmbed("http://api.soundcloud.com/tracks/" + sub.trackID, {
-          element: document.getElementById(sub.trackID + "player"),
-          auto_play: false,
-          maxheight: 150
-        });
+        oEmbedFactory.embedSong(sub);
       }, 50)
     });
     $scope.counter += 15;
