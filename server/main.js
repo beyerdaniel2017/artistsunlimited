@@ -8,7 +8,7 @@ var fs = require('fs');
 var path = require('path');
 
 var options = {
-  key: fs.readFileSync(path.join(__dirname, './keys/domain2.key')),
+  key: fs.readFileSync(path.join(__dirname, './keys/domain.key')),
   cert: fs.readFileSync(path.join(__dirname, './keys/artistsunlimited.co2.crt'))
 };
 
