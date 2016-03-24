@@ -13,8 +13,6 @@ router.post('/soundcloudTrack', function(req, res, next) {
       url: req.body.url,
       client_id: scConfig.clientID
     }, function(err, track) {
-      console.log(err);
-      console.log(track);
       if (err) {
         reject(err);
       } else {

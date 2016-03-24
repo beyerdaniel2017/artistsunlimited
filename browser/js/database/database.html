@@ -68,8 +68,8 @@
       </select>
       </br>
       <div ng-repeat="col in queryCols" style="display:inline-block">
-        <label>{{col.name}}
-          <input type="checkbox" ng-model="col.value" ng-true-value="'{{col.value}}'" ng-false-value="null"/>
+        <label style="margin:3px 4px">
+          <input type="checkbox" ng-model="col.value" ng-true-value="'{{col.value}}'" ng-false-value="null"/>{{col.name}}
         </label>
       </div>
       </br>

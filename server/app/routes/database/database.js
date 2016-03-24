@@ -182,14 +182,10 @@ router.post('/followers', function(req, res, next) {
   } else {
     query.columns = [];
   }
-  console.log(query.columns, 'query.columns');
   createAndSendFile(filename, query, res, next);
 });
 
 function createAndSendFile(filename, query, res, next) {
-  var writer = csv({
-    headers: ["username", "genre", "name", "URL", "email", "description", "followers", "# of Tracks", "Facebook", "Instagram", "Twitter", "Youtube", "Websites", 'Auto Email Day', 'All Emails']
-  });
   var headerObj = {
     'username': 'username',
     'genre': 'genre',
@@ -207,8 +203,7 @@ function createAndSendFile(filename, query, res, next) {
     'emailDayNum': 'Auto Email Day',
     'allEmails': 'All Emails'
   };
-
-  var columns = query.columns; 
+  var columns = query.columns;
   delete query.columns;
 
   var headers = [];
@@ -222,10 +217,6 @@ function createAndSendFile(filename, query, res, next) {
   });
   writer.pipe(fs.createWriteStream('tmp/' + filename));
   var stream = Follower.find(query).stream();
-  // stream.on('data', function(flwr) {
-  //   var row = [flwr.username, flwr.genre, flwr.name, flwr.scURL, flwr.email, flwr.description, flwr.followers, flwr.numTracks, flwr.facebookURL, flwr.instagramURL, flwr.twitterURL, flwr.youtubeURL, flwr.websites, flwr.emailDayNum, flwr.allEmails.join(', ')];
-  //   writer.write(row);
-  // });
   stream.on('data', function(flwr) {
     var row = [];
     columns.forEach(function(elm) {
@@ -235,7 +226,6 @@ function createAndSendFile(filename, query, res, next) {
         row.push(flwr[elm]);
       }
     });
-    console.log(row);
     writer.write(row);
   });
   stream.on('close', function() {
@@ -310,15 +300,12 @@ router.post('/paidrepost', function(req, res, next) {
           try {
             locationData = JSON.parse(location);
           } catch (err) {
-            console.log('err1', err);
             reject(err);
           }
-          console.log('locationData', locationData);
           resolve(locationData.location);
         });
       });
       httpReq.on('error', function(err) {
-        console.log('err2', err);
         reject(err);
       });
     });
