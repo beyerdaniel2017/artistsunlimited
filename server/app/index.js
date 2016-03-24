@@ -21,13 +21,11 @@ app.use('/api', require('./routes'));
  URLs that bypass express.static because the given file does not exist.
  */
 app.use(function(req, res, next) {
-
   if (path.extname(req.path).length > 0) {
     res.status(404).end();
   } else {
     next(null);
   }
-
 });
 
 app.get('/unsubscribe/:followerId', function(req, res) {
