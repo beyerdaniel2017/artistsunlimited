@@ -43,7 +43,8 @@ var startexpress = function() {
   expressApp.get('*', function(req, res) {
     res.redirect('https://' + req.host + req.url)
   });
-  expressApp.listen(1337);
+  var HTTP_PORT = process.env.HTTP_PORT || 1337;
+  expressApp.listen(HTTP_PORT);
 };
 
 startDb().then(createApplication).then(startServer).then(startexpress).catch(function(err) {
