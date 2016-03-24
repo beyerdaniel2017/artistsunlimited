@@ -21,28 +21,6 @@ router.post('/soundcloudTrack', function(req, res, next) {
       console.log(error)
     }
   });
-  // http.request({
-  //     host: 'pure-beyond-79652.herokuapp.com',
-  //     path: '/api/soundcloud/resolve',
-  //     method: 'POST'
-  //   }, function(response) {
-  //     var str = ''
-  //     response.on('data', function(chunk) {
-  //       str += chunk.toString();
-  //       console.log(chunk);
-  //     });
-  //     response.on('end', function() {
-  //       console.log('ay');
-  //       console.log('here');
-  //       // var obj = JSON.parse(str);
-  //       res.send(str);
-  //     });
-  //     response.on('error', function(err) {
-  //       console.log(err);
-  //     });
-  //   })
-  //   .on('error', next)
-  //   .end();
 
 });
 

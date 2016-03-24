@@ -49,14 +49,15 @@ router.post('/authenticated', function(req, res, next) {
       token: req.body.token
     }
   }, function(error, response, body) {
-    console.log(err, body);
+    console.log(error);
+    console.log(body);
     if (!error && response.statusCode == 200) {
       var data = JSON.parse(body);
       var sendObj = {};
       Channel.findOneAndUpdate({
           channelID: data.id
         }, {
-          accessToken: req.body.body.token
+          accessToken: req.body.token
         }).exec()
         .then(function(channel) {
           sendObj.channel = channel;
@@ -75,9 +76,8 @@ router.post('/authenticated', function(req, res, next) {
           res.send(sendObj);
         })
         .then(null, next);
-      res.send(track);
     } else {
-      next(err);
+      next(error);
     }
   });
 });
