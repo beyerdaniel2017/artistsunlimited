@@ -9,7 +9,7 @@ var path = require('path');
 
 var options = {
   key: fs.readFileSync(path.join(__dirname, './keys/domain.key')),
-  cert: fs.readFileSync(path.join(__dirname, './keys/artistsunlimited.co2.crt'))
+  cert: fs.readFileSync(path.join(__dirname, './keys/artistsunlimited.co.crt'))
 };
 
 // Create a node server instance! cOoL!
