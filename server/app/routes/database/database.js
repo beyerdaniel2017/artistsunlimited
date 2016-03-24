@@ -215,7 +215,9 @@ function createAndSendFile(filename, query, res, next) {
   var writer = csv({
     headers: headers
   });
+  console.log('1');
   writer.pipe(fs.createWriteStream('tmp/' + filename));
+  console.log('2');
   var stream = Follower.find(query).stream();
   stream.on('data', function(flwr) {
     var row = [];
