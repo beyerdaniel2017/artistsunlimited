@@ -7,40 +7,20 @@ var SCResolve = require('soundcloud-resolve-jsonp/node');
 
 
 router.post('/soundcloudTrack', function(req, res, next) {
-  // request.post({
-  //   url: 'http://pure-beyond-79652.herokuapp.com/api/soundcloud/resolve',
-  //   form: {
-  //     url: req.body.url
-  //   }
-  // }, function(error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     var track = JSON.parse(body);
-  //     track.trackURL = req.body.url;
-  //     res.send(track); // Show the HTML for the Google homepage. 
-  //   } else {
-  //     console.log(error)
-  //   }
-  // });
-  (new Promise(function(fulfill, reject) {
-    SCResolve({
-      url: req.body.url,
-      client_id: scConfig.clientID
-    }, function(err, track) {
-      if (err) {
-        reject(err);
-      } else {
-        fulfill(track);
-      }
-    });
-  }))
-  .then(function(track) {
+  request.post({
+    url: 'http://pure-beyond-79652.herokuapp.com/api/soundcloud/resolve',
+    form: {
+      url: req.body.url
+    }
+  }, function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var track = JSON.parse(body);
       track.trackURL = req.body.url;
-      console.log(track);
-      res.send(track);
-    })
-    .then(null, next);
-
-
+      res.send(track); // Show the HTML for the Google homepage. 
+    } else {
+      console.log(error)
+    }
+  });
   // http.request({
   //     host: 'pure-beyond-79652.herokuapp.com',
   //     path: '/api/soundcloud/resolve',

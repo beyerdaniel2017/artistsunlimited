@@ -43,17 +43,14 @@ router.post('/', function(req, res, next) {
 });
 
 router.post('/authenticated', function(req, res, next) {
-  // request.post({
-  //   url: 'http://pure-beyond-79652.herokuapp.com/api/soundcloud/authenticated',
-  //   form: {
-  //     token: req.body.token
-  //   }
-  // }, function(error, response, body) {
-  SC.init(scConfig.SOUNDCLOUD_CLIENT_ID, scConfig.SOUNDCLOUD_CLIENT_SECRET, scConfig.SOUNDCLOUD_CALLBACK_URL);
-  SC.get('/me', req.body.token, function(err, data) {
-    if (err) {
-      next(err);
-    } else {
+  request.post({
+    url: 'http://pure-beyond-79652.herokuapp.com/api/soundcloud/authenticated',
+    form: {
+      token: req.body.token
+    }
+  }, function(error, response, body) {
+    console.log(err, body);
+    if (!error && response.statusCode == 200) {
       var data = JSON.parse(body);
       var sendObj = {};
       Channel.findOneAndUpdate({
@@ -79,12 +76,8 @@ router.post('/authenticated', function(req, res, next) {
         })
         .then(null, next);
       res.send(track);
+    } else {
+      next(err);
     }
   });
-  // if (!error && response.statusCode == 200) {
-  //   // Show the HTML for the Google homepage. 
-  // } else {
-  //   next(err);
-  // }
-  // });
 });
