@@ -5,11 +5,11 @@ var mongoose = require('mongoose');
 var Channel = mongoose.model('Channel');
 var Submission = mongoose.model('Submission');
 var Event = mongoose.model('Event');
-var SC = require('soundclouder');
+var SC = require('node-soundcloud');
 var passport = require('passport');
 var https = require('https');
 var request = require('request');
-var scConfig = global.env.SOUNDCLOUD
+var scConfig = global.env.SOUNDCLOUD;
 
 router.post('/', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
@@ -43,16 +43,16 @@ router.post('/', function(req, res, next) {
 });
 
 router.post('/authenticated', function(req, res, next) {
-  request.post({
-    url: 'http://pure-beyond-79652.herokuapp.com/api/soundcloud/authenticated',
-    form: {
-      token: req.body.token
-    }
-  }, function(error, response, body) {
-    console.log(error);
-    console.log(body);
-    if (!error && response.statusCode == 200) {
-      var data = JSON.parse(body);
+  SC.init({
+    id: scConfig.clientID,
+    secret: scConfig.clientSecret,
+    uri: scConfig.callbackURL,
+    accessToken: req.body.token
+  });
+  SC.get('/me', function(err, data) {
+    if (err) {
+      next(err);
+    } else {
       var sendObj = {};
       Channel.findOneAndUpdate({
           channelID: data.id
@@ -76,8 +76,6 @@ router.post('/authenticated', function(req, res, next) {
           res.send(sendObj);
         })
         .then(null, next);
-    } else {
-      next(error);
     }
   });
 });
