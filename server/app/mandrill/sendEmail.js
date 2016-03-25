@@ -1,5 +1,12 @@
 var mandrill = require('mandrill-api/mandrill');
+var Promise = require('bluebird');
 var mandrill_client = new mandrill.Mandrill('9afIjRP5BCsKXkqqDbPY1Q');
+
+function sendEmail(opts) {
+    return new Promise(function (resolve, reject) {
+        mandrill_client.messages.send(opts, resolve, reject)
+    })
+}
 
 function sendEmail(to_name, to_email, from_name, from_email, subject, message_html) {
     var message = {
