@@ -210,7 +210,30 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
     $scope.downloadTrdUsrButtonVisible = false;
   }
 
+  $scope.downloadUrlChange = function() {
+    if($scope.track.trackUrl !== '') {
+
+      $scope.processing = true;
+      $http.post('/api/soundcloud/soundcloudTrack', {
+          url: $scope.track.trackUrl
+        })
+        .then(function(res) {
+          $scope.track.trackID = res.data.id;
+          $scope.processing = false;
+        }).then(null, function(err) {
+          $scope.track.trackID = null;
+          $scope.notFound = true;
+          $scope.processing = false;
+        });
+    }
+  }
+
   $scope.saveDownloadUrl = function() {
+    if(!$scope.track.trackID) {
+      alert('Track Not Found');
+      return false;
+    }
+    delete $scope.track.trackID;
     $scope.processing = true;
     $http.post('/api/database/downloadurl', $scope.track)
       .then(function(res) {

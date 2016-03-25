@@ -28,6 +28,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
         $scope.processing = false;
         $scope.notFound = false;
       }).then(null, function(err) {
+        $scope.submission.trackID = null;
         $scope.notFound = true;
         $scope.processing = false;
         document.getElementById('scPlayer').style.visibility = "hidden";
@@ -35,7 +36,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.submit = function() {
-    if (!$scope.trackID) {
+    if (!$scope.submission.trackID) {
       alert("Track Not Found");
     } else {
       $scope.processing = true;
