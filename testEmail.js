@@ -13,19 +13,22 @@ function sendEmail(to_name, to_email, from_name, from_email, subject, message_ht
             "email": to_email,
             "name": to_name
         }],
+        /*
+        THESE ALL APPEAR TO BE OPTIONAL
         "important": false,
         "track_opens": false,
         "auto_html": false,
         "preserve_recipients": true,
         "merge": false,
         "tags": []
+        */
     };
-    var async = false;
-    var ip_pool = "Main Pool";
+    // var async = false;   BACKGROUND SENDING ONLY NECESSARY FOR BULK EMAILS (MULTIPLE RECIPIENTS)
+    // var ip_pool = "Main Pool";   I'M 95% SURE YOU AREN'T USING A DEDICATED IP (otherwise, I wouldn't be able to send emails from my IP address)
     mandrill_client.messages.send({
-        "message": message,
+        "message": message/*,
         "async": async,
-        "ip_pool": ip_pool
+        "ip_pool": ip_pool*/
     }, function(result) {
         //promisify 
         return result
@@ -36,4 +39,4 @@ function sendEmail(to_name, to_email, from_name, from_email, subject, message_ht
     });
 }
 
-sendEmail('Christian Ayscue', 'tryenc.com', 'Christian Ayscue', 'coayscue@gmail.com', 'Keep it 100', 'Dear Christian,<br><br>I hope you have a nice day. Keep it 100.<br><br>Best,<br>Christian');
+sendEmail('Christian Ayscue', 'tryenc@gmail.com', 'Christian Ayscue', 'coayscue@gmail.com', 'TEST 3', 'Dear Christian,<br><br>I hope you have a nice day. Keep it 100.<br><br>Best,<br>Christian');
