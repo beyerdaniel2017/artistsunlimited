@@ -264,7 +264,7 @@ router.post('/downloadurl', function(req, res, next) {
   downloadTrack.save();
   var urlObj = url.parse(req.url);
   var trackUrl = req.protocol + '://' + req.get('host') + '/download?trackid=' + downloadTrack._id;
-  var html = '<p>Hello! Here is your download URL - </p><a href="' + trackUrl + '">Download</a>';
+  var html = '<p>Here is your download URL: - </p><span>' + trackUrl + '</span>';
   sendEmail('Service', body.email, 'Artists Unlimited', 'support@artistsunlimited.co', 'Download Track', html);
   return res.end();
 });
