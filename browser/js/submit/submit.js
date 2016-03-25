@@ -35,24 +35,28 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.submit = function() {
-    $scope.processing = true;
-    $http.post('/api/submissions', {
-        email: $scope.submission.email,
-        trackID: $scope.submission.trackID,
-        name: $scope.submission.name,
-        title: $scope.submission.title,
-        trackURL: $scope.submission.trackURL,
-        channelIDS: [],
-        invoiceIDS: []
-      })
-      .then(function(res) {
-        console.log(res.data);
-        window.alert("Your song has been submitted and will be reviewed soon.");
-        location.reload();
-      })
-      .then(null, function(err) {
-        $scope.processing = false;
-        window.alert("Error: Could not submit song.");
-      });
+    if (!$scope.trackID) {
+      alert("Track Not Found");
+    } else {
+      $scope.processing = true;
+      $http.post('/api/submissions', {
+          email: $scope.submission.email,
+          trackID: $scope.submission.trackID,
+          name: $scope.submission.name,
+          title: $scope.submission.title,
+          trackURL: $scope.submission.trackURL,
+          channelIDS: [],
+          invoiceIDS: []
+        })
+        .then(function(res) {
+          console.log(res.data);
+          window.alert("Your song has been submitted and will be reviewed soon.");
+          location.reload();
+        })
+        .then(null, function(err) {
+          $scope.processing = false;
+          window.alert("Error: Could not submit song.");
+        });
+    }
   }
 });
