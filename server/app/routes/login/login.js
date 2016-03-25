@@ -5,17 +5,13 @@ var mongoose = require('mongoose');
 var Channel = mongoose.model('Channel');
 var Submission = mongoose.model('Submission');
 var Event = mongoose.model('Event');
-var SC = require('soundclouder');
+var SC = require('node-soundcloud');
 var passport = require('passport');
 var https = require('https');
+var request = require('request');
+var scConfig = global.env.SOUNDCLOUD;
 
 router.post('/', function(req, res, next) {
-  // console.log(req.body);
-  // if (req.body.password == 'letMeManage') {
-  //   res.send('OK');
-  // } else {
-  //   next(new Error('wrong password'));
-  // }
   passport.authenticate('local', function(err, user, info) {
     if (err) {
       return res.json({
@@ -47,10 +43,16 @@ router.post('/', function(req, res, next) {
 });
 
 router.post('/authenticated', function(req, res, next) {
-  //if (req.body.password != "letMeManage") next(new Error("Wrong password"));
-  var scConfig = global.env.SOUNDCLOUD;
-  SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.callbackURL);
-  SC.get('/me', req.body.token, function(err, data) {
+  SC.init({
+    id: scConfig.clientID,
+    secret: scConfig.clientSecret,
+    uri: scConfig.callbackURL,
+    accessToken: req.body.token
+  });
+  SC.get('/me', function(err, data) {
+    if (err) {
+      next(err);
+    } else {
       var sendObj = {};
       Channel.findOneAndUpdate({
           channelID: data.id
@@ -74,5 +76,6 @@ router.post('/authenticated', function(req, res, next) {
           res.send(sendObj);
         })
         .then(null, next);
-    });
+    }
   });
+});

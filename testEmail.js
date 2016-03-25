@@ -1,6 +1,7 @@
-var mandrill = require('mandrill-api/mandrill');
+'use strict';
+const mandrill = require('mandrill-api/mandrill');
 
-var mandrill_client = new mandrill.Mandrill('9afIjRP5BCsKXkqqDbPY1Q');
+const mandrill_client = new mandrill.Mandrill('9afIjRP5BCsKXkqqDbPY1Q');
 
 function sendEmail(to_name, to_email, from_name, from_email, subject, message_html) {
     var message = {
@@ -35,4 +36,4 @@ function sendEmail(to_name, to_email, from_name, from_email, subject, message_ht
     });
 }
 
-sendEmail('Christian Ayscue', 'coayscue@gmail.com', 'Christian Ayscue', 'coayscue@gmail.com', 'Keep it 100', 'Dear Christian,<br><br>I hope you have a nice day. Keep it 100.<br><br>Best,<br>Christian');
+sendEmail('Christian Ayscue', 'tryenc.com', 'Christian Ayscue', 'coayscue@gmail.com', 'Keep it 100', 'Dear Christian,<br><br>I hope you have a nice day. Keep it 100.<br><br>Best,<br>Christian');

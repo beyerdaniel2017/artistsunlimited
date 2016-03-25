@@ -36,22 +36,23 @@ router.post('/tasks', function(req, res, next) {
 
   SC.put('/me/favorites/' + body.trackId, function(err, response) {
     if (err) {
-      next(err);
+      console.log(err);
     }
-    Channel.find({})
-      .then(function(channels) {
-        channels.forEach(function(chan) {
-          SC.put('/me/followings/' + chan.channelID, function(err, response) {
-            if (err) {
-              next(err);
-            }
-          });
-        })
-      })
-      .then(null, next);
+    // Channel.find({})
+    //   .then(function(channels) {
+    //     channels.forEach(function(chan) {
+    //       SC.put('/me/followings/' + chan.channelID, function(err, response) {
+    //         if (err) {
+    //           console.log('error following:' + chan.displayName);
+    //           console.log(err);
+    //         }
+    //       });
+    //     })
+    //   })
+    //   .then(null, next);
     SCR.put('/e1/me/track_reposts/' + body.trackId, body.token, function(err, data) {
       if (err) {
-        next(err);
+        console.log(err);
       } else {
         res.send();
       }

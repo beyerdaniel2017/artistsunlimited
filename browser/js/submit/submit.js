@@ -11,6 +11,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   $scope.submission = {};
 
   $scope.urlChange = function() {
+    $scope.processing = true;
     $http.post('/api/soundcloud/soundcloudTrack', {
         url: $scope.url
       })
@@ -24,34 +25,39 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
           maxheight: 150
         })
         document.getElementById('scPlayer').style.visibility = "visible";
+        $scope.processing = false;
         $scope.notFound = false;
       }).then(null, function(err) {
+        $scope.submission.trackID = null;
         $scope.notFound = true;
         $scope.processing = false;
         document.getElementById('scPlayer').style.visibility = "hidden";
       });
-
   }
 
   $scope.submit = function() {
-    $scope.processing = true;
-    $http.post('/api/submissions', {
-        email: $scope.submission.email,
-        trackID: $scope.submission.trackID,
-        name: $scope.submission.name,
-        title: $scope.submission.title,
-        trackURL: $scope.submission.trackURL,
-        channelIDS: [],
-        invoiceIDS: []
-      })
-      .then(function(res) {
-        console.log(res.data);
-        window.alert("Your song has been submitted and will be reviewed soon.");
-        location.reload();
-      })
-      .then(null, function(err) {
-        $scope.processing = false;
-        window.alert("Error: Could not submit song.");
-      });
+    if (!$scope.submission.trackID) {
+      alert("Track Not Found");
+    } else {
+      $scope.processing = true;
+      $http.post('/api/submissions', {
+          email: $scope.submission.email,
+          trackID: $scope.submission.trackID,
+          name: $scope.submission.name,
+          title: $scope.submission.title,
+          trackURL: $scope.submission.trackURL,
+          channelIDS: [],
+          invoiceIDS: []
+        })
+        .then(function(res) {
+          console.log(res.data);
+          window.alert("Your song has been submitted and will be reviewed soon.");
+          location.reload();
+        })
+        .then(null, function(err) {
+          $scope.processing = false;
+          window.alert("Error: Could not submit song.");
+        });
+    }
   }
 });

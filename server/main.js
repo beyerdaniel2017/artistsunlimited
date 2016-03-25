@@ -36,7 +36,6 @@ var startServer = function() {
   //});
   secureServer.listen(HTTPS_PORT, function() {
     console.log(chalk.blue('Secure server started on port', chalk.magenta(HTTPS_PORT)));
-    global.log("Secure server started on port " + HTTPS_PORT);
   });
 };
 var startexpress = function() {
@@ -45,7 +44,8 @@ var startexpress = function() {
   expressApp.get('*', function(req, res) {
     res.redirect('https://' + req.host + req.url)
   });
-  expressApp.listen(1337);
+  var HTTP_PORT = process.env.HTTP_PORT || 1337;
+  expressApp.listen(HTTP_PORT);
 };
 
 startDb().then(createApplication).then(startServer).then(startexpress).catch(function(err) {

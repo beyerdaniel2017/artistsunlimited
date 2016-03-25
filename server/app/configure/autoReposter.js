@@ -4,6 +4,7 @@ var Channel = mongoose.model('Channel');
 var Event = mongoose.model('Event');
 var SC = require('soundclouder');
 var sendMessage = require('../mandrill/sendEmail.js');
+var request = require('request');
 
 module.exports = doRepost;
 
@@ -48,6 +49,7 @@ function repostAndRemove(event, channel) {
     var id = event.trackID;
   }
   var scConfig = global.env.SOUNDCLOUD;
+
   SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
   if (id) {
     SC.put('/e1/me/track_reposts/' + id, channel.accessToken, function(err, data) {
