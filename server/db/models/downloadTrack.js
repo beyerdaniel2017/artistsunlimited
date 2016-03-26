@@ -10,6 +10,15 @@ var schema = new mongoose.Schema({
   email: {
     type: String
   },
+  artworkURL: {
+    type: String
+  },
+  trackID: {
+    type: Number
+  },
+  artistID: {
+    type: Number
+  },
   playlistID: {
     type: String
   }

@@ -260,7 +260,10 @@ router.post('/downloadurl', function(req, res, next) {
     trackUrl: body.trackUrl,
     downloadUrl: body.downloadUrl,
     email: body.email,
-    playlistID: body.playlistID
+    playlistID: body.playlistID,
+    artworkURL: body.artworkURL,
+    trackID: body.trackID,
+    artistID: body.artistID
   });
   downloadTrack.save();
   var urlObj = url.parse(req.url);

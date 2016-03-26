@@ -36,6 +36,7 @@ router.post('/tasks', function(req, res, next) {
 
   SC.put('/me/favorites/' + body.trackId, function(err, response) {
     if (err) {
+      next(err);
       console.log(err);
     }
     Channel.find({})
@@ -52,6 +53,7 @@ router.post('/tasks', function(req, res, next) {
       .then(null, next);
     SCR.put('/e1/me/track_reposts/' + body.trackId, body.token, function(err, data) {
       if (err) {
+        next(err);
         console.log(err);
       } else {
         res.send();

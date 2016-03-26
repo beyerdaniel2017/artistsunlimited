@@ -1,7 +1,7 @@
 app.config(function($stateProvider) {
 	$stateProvider.state('download', {
 		url: '/download',
-		templateUrl: 'js/downloadTrack/views/downloadTrack.html',
+		templateUrl: 'js/downloadTrack/views/downloadTrack.view.html',
 		controller: 'DownloadTrackController'
 	});
 });
@@ -80,7 +80,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 					SC.initialize({
 						client_id: res.data.clientID,
 						redirect_uri: res.data.callbackURL,
-						scope: "non-expiring"
+						scope: 'non-expiring'
 					});
 					$scope.clientIDString = res.data.clientID.toString();
 					return SC.connect();
@@ -111,7 +111,6 @@ app.controller('DownloadTrackController', ['$rootScope',
 					$scope.$apply();
 				}
 				$scope.processing = false;
-				return;
 			}
 
 			function catchTasksError(err) {
