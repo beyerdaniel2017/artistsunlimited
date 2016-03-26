@@ -6,6 +6,7 @@ var util = require('util');
 var rootPath = path.join(__dirname, '../../../');
 var indexPath = path.join(rootPath, './server/app/views/index.html');
 var loginPath = path.join(rootPath, './server/app/views/login.html');
+var homePath = path.join(rootPath, './server/app/views/home.html');
 var faviconPath = path.join(rootPath, './server/app/views/favicon.ico');
 
 var env = require(path.join(rootPath, './server/env'));
@@ -25,6 +26,7 @@ module.exports = function(app) {
     app.setValue('projectRoot', rootPath);
     app.setValue('indexHTMLPath', indexPath);
     app.setValue('loginHTMLPath', loginPath);
+    app.setValue('homeHTMLPath', homePath);
     app.setValue('faviconPath', faviconPath);
     app.setValue('log', logMiddleware);
 };

@@ -40,6 +40,10 @@ app.get('/admin*', function(req, res) {
   }
 });
 
+// app.get('/*', function(req, res) {
+//   res.sendFile(app.get('homeHTMLPath'));
+// });
+
 app.get('/*', function(req, res) {
   res.sendFile(app.get('indexHTMLPath'));
 });

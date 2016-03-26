@@ -10,3 +10,219 @@
   }
 }
 
+/**** Bootstrap Modified CSS Start ***/
+.btn {
+	border-radius: 0px;
+}
+.navbar-default {
+	background-color: transparent;
+	border-color: transparent;
+}
+.nav > li > a {
+	padding: 10px 66px;
+}
+.navbar-default .navbar-nav > li > a {
+	color: #fff;
+	font-weight: 600;
+}
+.form-control {
+	border-radius: 0px;
+}
+.navbar-default .navbar-toggle {
+	border-color: transparent;
+	background-color: #F6CFBD;
+}
+.navbar-toggle {
+	border-radius: 0px;
+}
+.navbar-collapse {
+	border-top: 0px solid transparent;
+
+}
+.affix {
+  width: 100%;
+	z-index:1;
+}
+/**** Bootstrap Modified CSS End ***/
+
+/**** Custom CSS Start ***/
+.intro-background {
+	position: relative;
+	background-image: url(../../assets/images/home-background.png);
+	background-position: left -148px;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	background-attachment: fixed;
+}
+.header-section {
+	position: relative;
+	padding: 20% 0;
+	min-height: 655px;
+}
+.header-overlay {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	display: block;
+	/*background-image: url(../../assets/images/header-overlay.png);
+	background-attachment: fixed;
+	background-position: top left;*/
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f9ecb3+0,f4b8b5+100 */
+background: rgb(249,236,179); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(249,236,179,1) 0%, rgba(244,184,181,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top,  rgba(249,236,179,1) 0%,rgba(244,184,181,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom,  rgba(249,236,179,1) 0%,rgba(244,184,181,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9ecb3', endColorstr='#f4b8b5',GradientType=0 ); /* IE6-9 */
+
+}
+.Logo-container {
+	width: 100%;
+	float: left;
+	margin: 0px 0px 40px;
+}
+.text-white {
+	color:#fff;
+}
+.left-l {
+	border-right: 2px solid #fff;
+
+}
+.right-r {
+	padding: 10px;
+}
+.right-r h2 {
+	margin: 0;
+	color: #fff;
+	font-weight: 600;
+}
+/*Btn*/
+.btn-white {
+	color: #333;
+	background-color: #fff;
+	;
+	border-color: #fff;
+}
+.btn-enter{
+	background: #F6CFBD;
+	border: transparent;
+	padding: 14px 50px;
+	color: #fff;
+	font-size: 14px;
+}
+.btn-orange{
+	background:#F5AC47;
+	border: transparent;
+	padding: 14px 50px;
+	color: #fff;
+	font-size: 14px;
+}
+/*Btn*/
+.section-2 {
+	position: relative;
+	min-height: 657px;
+	padding: 50px 0;
+}
+
+.logo {
+	position: absolute;
+	bottom: 50px;
+	left: 102px;
+}
+.right-section {
+	margin: 100px 0;
+}
+.right-section ul {
+	margin:0;
+	padding:0;
+}
+.right-section ul li {
+	list-style: none;
+	font-size: 70px;
+	color: #fff;
+	font-weight: bold;
+	line-height: 70px;
+}
+.white-background{
+	background:#fff;
+}
+.content-container {
+	background: #fff;
+	height: 100%;
+	width: 100%;
+	min-height: 586px;
+	position: relative;
+	padding:10% 5% 5% 5%;
+	margin: 31px 0 0 0;
+}
+.section-3{
+	position:relative;
+	padding:10% 0 0 0;
+}
+.follow-section{
+	position: relative;
+}
+.follow-container {
+	height: 100%;
+	width: 100%;
+	min-height: 572px;
+	position: relative;
+	background: #fff url(../../assets/images/header-overlay.png) no-repeat;
+	padding: 10% 0;
+}
+.follow-box {
+	background: #fff;
+	height: 350px;
+	position: relative;
+	margin: 0 0 20px;
+	overflow: hidden;
+}
+.follow-bottom {
+	padding: 20px 0;
+	background-color: #fff;
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+}
+.avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+}
+a.active-link:visited{
+	color: #FFFFFF;
+}
+.active-link {
+	color: #000000 !important;
+}
+/**** Custom CSS End ***/
+
+/*************** Gap Css Start *************/
+
+.gap-10 {
+	height: 10px;
+	clear: both;
+}
+.gap-15 {
+	height: 15px;
+	clear: both;
+}
+.gap-20 {
+	height: 20px;
+	clear: both;
+}
+.gap-30 {
+	height: 30px;
+	clear: both;
+}
+.gap-40 {
+	height: 40px;
+	clear: both;
+}
+/*************** Gap Css End *************/
+
+/*************** Responsive Css Start *************/
+
+@media only screen and (max-width: 500px) {
+	
+}
+/*************** Responsive Css Start *************/

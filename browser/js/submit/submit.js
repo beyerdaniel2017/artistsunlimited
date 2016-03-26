@@ -1,6 +1,6 @@
 app.config(function($stateProvider) {
   $stateProvider.state('submitSong', {
-    url: '/',
+    url: '/submit',
     templateUrl: 'js/submit/submit.html',
     controller: 'SubmitSongController'
   });
