@@ -15,20 +15,22 @@ function sendEmail(to_name, to_email, from_name, from_email, subject, message_ht
         }]
     };
 
-    function helper(){
-        return new Promise(function (resolve, reject) {
-            m.messages.send({'message': message}, resolve, reject)
+    function helper() {
+        return new Promise(function(resolve, reject) {
+            m.messages.send({
+                'message': message
+            }, resolve, reject)
         })
     }
 
     helper()
-    .then(function(res){
-        return res;
-    })
-    .catch(function(err){
-        console.error('A mandrill error occurred: ' + err.name + ' - ' + err.message);
-    });
-    
+        .then(function(res) {
+            return res;
+        })
+        .catch(function(err) {
+            console.error('A mandrill error occurred: ' + err.name + ' - ' + err.message);
+        });
+
 }
 
 module.exports = sendEmail;
