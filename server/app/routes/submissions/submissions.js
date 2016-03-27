@@ -252,7 +252,7 @@ router.post('/rescheduleRepost', function(req, res, next) {
                         newEve.save()
                           .then(function(eve) {
                             eve.day = new Date(eve.day);
-                            sendEmail(eve.name, eve.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>We are terribly sorry for the inconvenience, but we had to reschedule your repost of <a href='" + event2.trackURL + "'>" + event2.title + "</a> on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + event2.day.toLocaleDateString() + ". We appologize the inconvenience.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
+                            sendEmail(eve.name, eve.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>We are terribly sorry for the inconvenience, but we had to reschedule your repost of <a href='" + event2.trackURL + "'>" + eve.title + "</a> on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". We appologize the inconvenience.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
                             res.send({});
                           })
                           .then(null, next);
@@ -266,9 +266,11 @@ router.post('/rescheduleRepost', function(req, res, next) {
             ev.trackID = eventHolder.trackID;
             ev.email = eventHolder.email;
             ev.name = eventHolder.name;
+            ev.title = eventHolder.title;
+            ev.trackURL = eventHolder.trackURL;
             ev.save().then(function(eve) {
               eve.day = new Date(eve.day);
-              sendEmail(eve.name, eve.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>We are terribly sorry for the inconvenience, but we had to reschedule your repost of <a href='" + event2.trackURL + "'>" + event2.title + "</a> on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + event2.day.toLocaleDateString() + ". If your song has already been reposted, please ignore this email and we hope you enjoyed the results! We appologize the inconvenience.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
+              sendEmail(eve.name, eve.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>We are terribly sorry for the inconvenience, but we had to reschedule your repost of <a href='" + eve.trackURL + "'>" + eve.title + "</a> on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". If your song has already been reposted, please ignore this email and we hope you enjoyed the results! We appologize the inconvenience.<br><br>Goodluck and stay true to the art,<br><br>Kevin Zimmermann and Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/kevinlatropical<br> www.facebook.com/edwardlatropical");
               res.send(ev);
             })
           }

@@ -14,8 +14,9 @@ function sendEmail(to_name, to_email, from_name, from_email, subject, message_ht
             "name": to_name
         }]
     };
+    console.log(message);
 
-    function helper() {
+    function sender() {
         return new Promise(function(resolve, reject) {
             m.messages.send({
                 'message': message
@@ -23,7 +24,7 @@ function sendEmail(to_name, to_email, from_name, from_email, subject, message_ht
         })
     }
 
-    helper()
+    sender()
         .then(function(res) {
             return res;
         })
