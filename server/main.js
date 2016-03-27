@@ -14,12 +14,9 @@ var options = {
 
 // Create a node server instance! cOoL!
 var secureServer = require('https').createServer(options);
-// secureServer = require('http').createServer();
-// var server = require('http').createServer();
 
 var createApplication = function() {
   var app = require('./app');
-  //server.on('request', app);
   secureServer.on('request', app); // Attach the Express application.
   var io = socketio(secureServer);
   require('./io')(io); // Attach socket.io.
