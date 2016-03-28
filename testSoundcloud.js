@@ -36,6 +36,6 @@ var aT = "1-231090-203984864-4391af1070f8c";
 var id = 251831353;
 SCR.init(client_id, client_secret, redirect_uri);
 SCR.put('/e1/me/track_reposts/' + id, aT, function(err, data) {
-  console.log(JSON.stringify(err));
+  console.log();
   console.log(data);
 });

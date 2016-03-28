@@ -121,7 +121,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
       $scope.processing = true;
       $http.put("/api/submissions/save", submi)
         .then(function(sub) {
-          $scope.submissions.splice($scope.submissions.indexOf(submi), 1);
+          $scope.showingElements.splice($scope.showingElements.indexOf(submi), 1);
           window.alert("Saved");
           $scope.processing = false;
         })
@@ -136,8 +136,8 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
     $scope.processing = true;
     $http.delete('/api/submissions/ignore/' + submission._id + '/' + $rootScope.password)
       .then(function(res) {
-        var index = $scope.submissions.indexOf(submission);
-        $scope.submissions.splice(index, 1);
+        var index = $scope.showingElements.indexOf(submission);
+        $scope.showingElements.splice(index, 1);
         window.alert("Ignored");
         $scope.processing = false;
       })
@@ -151,8 +151,8 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
     $scope.processing = true;
     $http.delete('/api/submissions/decline/' + submission._id + '/' + $rootScope.password)
       .then(function(res) {
-        var index = $scope.submissions.indexOf(submission);
-        $scope.submissions.splice(index, 1);
+        var index = $scope.showingElements.indexOf(submission);
+        $scope.showingElements.splice(index, 1);
         window.alert("Declined");
         $scope.processing = false
       })
