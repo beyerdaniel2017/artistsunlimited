@@ -3,9 +3,14 @@ module.exports = {
   "SESSION_SECRET": "Optimus Prime is my real dad",
   "HOST_URI": "https://localhost",
   "SOUNDCLOUD": {
-    "clientID": "8002f0f8326d869668523d8e45a53b90",
-    "clientSecret": "7c896a35685064e133b6a01998f62714",
+    "clientID": "848d1c56c5c438d2a54e0507b3768e2d",
+    "clientSecret": "fd0a0ceea8cb781f8ee28e728b22ebbe",
     "callbackURL": "https://localhost:1443/callback.html"
+  },
+  "PAYPAL": {
+    "clientID": "AQOFIdlz-RFeZbx6i4W5l_PUvhEdn7IRhIt3FSv7YXj5Ga3SNlzXuSHfVAkqX6xkbLVhv0boh9lx3GHi",
+    "clientSecret": "EFGXm6BiNeucSWhFIOcj5yDr9vUqRHKBJuZ1951zFYE2oS71y_yxlH7WRzyLOJ7-SHFun06hg6sRp55w",
+    "mode": "sandbox"
   },
   "TWITTER": {
     "consumerKey": "INSERT_TWITTER_CONSUMER_KEY_HERE",
