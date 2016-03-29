@@ -4,9 +4,9 @@ var SCResolve = require('soundcloud-resolve-jsonp/node');
 var Promise = require('bluebird');
 var HTTPS = require('https');
 
-var client_id = "1e57616d882f00c402ff95abd1f67b39";
-var client_secret = "0934d66f53f5dcd06a1ce9f32e9a6267";
-var redirect_uri = "http://localhost:1337/callback.html";
+var client_id = "e72f5b4e3b48dc9015fe168cc6d66fa8";
+var client_secret = "ee5f5be9ff2d8ec040098ade0b42e1f2";
+var redirect_uri = "https://artistsunlimited.co/callback.html";
 
 // SC.init({
 //   client_id: client_id,
@@ -51,11 +51,21 @@ var redirect_uri = "http://localhost:1337/callback.html";
 //   })
 //   .end();
 
-var aT = "1-183955-147045855-0b443e23cd3ba";
+var aT = ;
 var id = 253638850;
+
+// SC.initialize({
+//   client_id: client_id,
+//   oauth_token: aT,
+//   redirect_uri: redirect_uri
+// });
+
+// SC.get('/tracks/' + id).then(function(data) {
+//     console.log(data);
+//   })
+//   .then(null, console.log);
+
 SCR.init(client_id, client_secret, redirect_uri);
-var log = require("dysf.utils").logger
-log.setLogLevel(5);
 SCR.put('/e1/me/track_reposts/' + id, aT, function(err, data) {
   if (err) {
     throw err;
