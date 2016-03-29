@@ -14,6 +14,11 @@ module.exports = {
         "clientSecret": process.env.SOUNDCLOUD_CLIENT_SECRET,
         "callbackURL": process.env.SOUNDCLOUD_CALLBACK_URL
     },
+    "PAYPAL": {
+        "clientID": process.env.PAYPAL_CLIENT_ID,
+        "clientSecret": process.env.PAYPAL_CLIENT_SECRET,
+        "mode": process.env.PAYPAL_ACCOUNT_MODE
+    },
     "TWITTER": {
         "consumerKey": process.env.TWITTER_CONSUMER_KEY,
         "consumerSecret": process.env.TWITTER_CONSUMER_SECRET,

@@ -8,13 +8,13 @@ var fs = require('fs');
 var path = require('path');
 
 var options = {
-  key: fs.readFileSync(path.join(__dirname, './keys/domain.key')),
-  cert: fs.readFileSync(path.join(__dirname, './keys/artistsunlimited.co.crt'))
+  key: fs.readFileSync(path.join(__dirname, './keys/devkey.key')),
+  cert: fs.readFileSync(path.join(__dirname, './keys/haverfest.com.crt'))
 };
 
 // Create a node server instance! cOoL!
 var secureServer = require('https').createServer(options);
-secureServer = require('http').createServer();
+//secureServer = require('http').createServer();
 // var server = require('http').createServer();
 
 var createApplication = function() {
