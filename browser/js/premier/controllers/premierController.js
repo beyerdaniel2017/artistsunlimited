@@ -35,18 +35,18 @@ app.controller('PremierController', ['$rootScope',
       function receiveResponse(res) {
         if(res.status === 200) {
           $scope.message.visible = true;
-          $scope.message.val = 'File submission successful!';
+          $scope.message.val = 'Thank you! Your message has been sent successfully.';
           $scope.premierObj = {};
           angular.element("input[type='file']").val(null);
           return;
         }
         $scope.message.visible = true;
-        $scope.message.val = 'Error in file submission!';
+        $scope.message.val = 'Error in processing the request. Please try again.';
       }
 
       function catchError() {
         $scope.message.visible = true;
-        $scope.message.val = 'Error in file submission!';
+        $scope.message.val = 'Error in processing the request. Please try again.';
       }
     };
 }]);
