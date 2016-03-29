@@ -27,7 +27,7 @@ app.directive('affixer', function ($window) {
           
         if ($window.pageYOffset > topOffset) {
           $element.css('position', 'fixed');
-          $element.css('top', '0px');
+          $element.css('top', '3.5%');
         } else {
           $element.css('position', '');
           $element.css('top', '');

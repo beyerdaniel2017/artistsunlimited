@@ -49,3 +49,20 @@ app.run(function ($rootScope, AuthService, $state, $uiViewScroll) {
     });
 
 });
+
+
+app.directive('fileread', [function () {
+    return {
+        scope: {
+            fileread: '='
+        },
+        link: function (scope, element, attributes) {
+            element.bind('change', function (changeEvent) {
+                scope.$apply(function () {
+                    console.log(changeEvent.target.files[0]);
+                    scope.fileread = changeEvent.target.files[0];
+                });
+            });
+        }
+    }
+}]);
