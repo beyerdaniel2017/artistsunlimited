@@ -40,7 +40,6 @@
           <div class="content-container">
             <div class="col-md-12">
               <h3 class="text-center">Premier Submission</h3>
-              <p ng-show="message.visible" class="text-center">{{message.val}}</p>
               </br>
               <form role="form" ng-submit="savePremier()">
                 <div class="row">
@@ -69,6 +68,8 @@
                 </br>
                   <div class="text-center">
                     <button class="btn btn-default btn-lg btn-enter">Enter</button>
+                    <br/><br />
+                    <p ng-show="message.visible" class="text-center">{{message.val}}</p>
                   </div>
                 </div>
               </form>
