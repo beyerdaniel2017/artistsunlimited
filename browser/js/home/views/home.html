@@ -1,10 +1,18 @@
 <script>
-$(document).ready(function() {
-    function addActiveClass() {
-      var hash = window.location.hash;
-      $('.nav-links').removeClass('active-link');
-      $(hash).addClass('active-link');
-    }
+(function (){
+
+  function addActiveClass() {
+    $(document).ready(function() {
+      var hash = window.location.hash.replace(/#/g, '');
+      console.log($("section[data-section-name='" + hash + "']"));
+      if(hash !== '') {
+        $('.nav-links').removeClass('active-link');
+        $('#nav-' + hash).addClass('active-link');
+      }
+    });
+  }
+
+  $(document).ready(function() {
     $.scrollify({
       section : ".scroll-section",
       sectionName : "section-name",
@@ -22,6 +30,7 @@ $(document).ready(function() {
       afterRender:function() {},
     });
   });
+}())
 </script>
 <div class="intro-background">
   <div class="header-overlay"></div>
@@ -58,12 +67,12 @@ $(document).ready(function() {
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-              <li><a id="about" class="nav-links" href="javascript:void(0)" onclick="$.scrollify.move('#about');addActiveClass();">About</a></li>
-              <li><a id="services" class="nav-links" href="javascript:void(0)" onclick="$.scrollify.move('#services');addActiveClass();">Services</a></li>
-              <li><a id="artists-tools" class="nav-links" href="javascript:void(0)" onclick="$.scrollify.move('#artists-tools');addActiveClass();">Artist Tools</a></li>
-              <li><a id="faqs" class="nav-links" href="javascript:void(0)" onclick="$.scrollify.move('#faqs');addActiveClass();">FAQs</a></li>
-              <li><a id="apply" class="nav-links" href="javascript:void(0)" onclick="$.scrollify.move('#apply');addActiveClass();">Apply</a></li>
-              <li><a id="contact" class="nav-links" href="javascript:void(0)" onclick="$.scrollify.move('#contact');addActiveClass();">Contact</a></li>
+              <li><a id="nav-about" class="nav-links" href="javascript:void(0)" onclick="$.scrollify.move('#about');addActiveClass();">About</a></li>
+              <li><a id="nav-services" class="nav-links" href="javascript:void(0)" onclick="$.scrollify.move('#services');addActiveClass();">Services</a></li>
+              <li><a id="nav-artists-tools" class="nav-links" href="javascript:void(0)" onclick="$.scrollify.move('#artists-tools');addActiveClass();">Artist Tools</a></li>
+              <li><a id="nav-faqs" class="nav-links" href="javascript:void(0)" onclick="$.scrollify.move('#faqs');addActiveClass();">FAQs</a></li>
+              <li><a id="nav-apply" class="nav-links" href="javascript:void(0)" onclick="$.scrollify.move('#apply');addActiveClass();">Apply</a></li>
+              <li><a id="nav-contact" class="nav-links" href="javascript:void(0)" onclick="$.scrollify.move('#contact');addActiveClass();">Contact</a></li>
             </ul>
             </li>
             </ul>
@@ -77,7 +86,7 @@ $(document).ready(function() {
  
   
   <!--Section : 2-->
-  <section class="scroll-section section-2 " data-section-name="landing">
+  <section class="scroll-section section-2" data-section-name="landing">
     <div class="container">
       <div class="row">
        
@@ -163,7 +172,7 @@ $(document).ready(function() {
   <!--Section : 4--> 
   
   <!--Section : 5-->
-  <section id="artist-tools" class="scroll-section section-3" data-section-name="artists-tools">
+  <section id="artists-tools" class="scroll-section section-3" data-section-name="artists-tools">
     <div class="container">
       <div class="row">
         <div class="col-md-12">
