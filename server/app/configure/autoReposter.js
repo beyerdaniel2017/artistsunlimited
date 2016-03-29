@@ -2,7 +2,9 @@
 var mongoose = require('mongoose');
 var Channel = mongoose.model('Channel');
 var Event = mongoose.model('Event');
-var SC = require('soundclouder');
+var SCR = require('soundclouder');
+var scConfig = global.env.SOUNDCLOUD;
+SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
 var sendMessage = require('../mandrill/sendEmail.js');
 var request = require('request');
 
@@ -48,11 +50,8 @@ function repostAndRemove(event, channel) {
   } else {
     var id = event.trackID;
   }
-  var scConfig = global.env.SOUNDCLOUD;
-
-  SC.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
   if (id) {
-    SC.put('/e1/me/track_reposts/' + id, channel.accessToken, function(err, data) {
+    SCR.put('/e1/me/track_reposts/' + id, channel.accessToken, function(err, data) {
       if (err) {
         sendMessage("CHRISTIAN", "coayscue@gmail.com", "ERROR", "coayscue@gmail.com", "ERROR REPOSTING", "Error: Posting: " + err + "<br><br>Res Data: " + JSON.stringify(data) + "<br><br>  Event: " + JSON.stringify(event));
         sendMessage("VIRENDRA", "virendra.chouhan@linkites.com", "ERROR", "coayscue@gmail.com", "ERROR REPOSTING", "Error: Posting: " + err + "<br><br>Res Data: " + JSON.stringify(data) + "<br><br>  Event: " + JSON.stringify(event));

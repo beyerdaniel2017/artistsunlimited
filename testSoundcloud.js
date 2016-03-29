@@ -51,8 +51,8 @@ var redirect_uri = "https://artistsunlimited.co/callback.html";
 //   })
 //   .end();
 
-var aT = ;
-var id = 253638850;
+var aT = "1-231090-164339022-ae77ca15080b5";
+var id = 247518988;
 
 // SC.initialize({
 //   client_id: client_id,
@@ -66,9 +66,9 @@ var id = 253638850;
 //   .then(null, console.log);
 
 SCR.init(client_id, client_secret, redirect_uri);
-SCR.put('/e1/me/track_reposts/' + id, aT, function(err, data) {
+SCR.get('/e1/me/track_reposts/' + id, aT, function(err, data) {
   if (err) {
-    throw err;
+    console.log(err);
   }
   console.log(data);
 });

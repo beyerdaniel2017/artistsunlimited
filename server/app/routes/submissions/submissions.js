@@ -7,7 +7,9 @@ var Submission = mongoose.model('Submission');
 var Channel = mongoose.model('Channel');
 var Event = mongoose.model('Event');
 var Email = mongoose.model('Email');
-
+var SCR = require('soundclouder');
+var scConfig = global.env.SOUNDCLOUD;
+SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
 
 var sendEmail = require("../../mandrill/sendEmail.js"); //takes: to_name, to_email, from_name, from_email, subject, message_html
 var sendInvoice = require("../../payPal/sendInvoice.js");
@@ -205,6 +207,7 @@ router.post('/rescheduleRepost', function(req, res, next) {
       }).exec()
     })
     .then(function(events) {
+
       events.forEach(function(event) {
         event.day = new Date(event.day);
       });
@@ -222,58 +225,63 @@ router.post('/rescheduleRepost', function(req, res, next) {
           channelID: eventHolder.channelID
         }).exec()
         .then(function(channel) {
-          if (!ev) {
-            Event.find({
-                channelID: eventHolder.channelID
-              }).exec()
-              .then(function(allEvents) {
-                allEvents.forEach(function(event1) {
-                  event1.day = new Date(event1.day);
-                });
-                var searchHours = [27, 30, 33, 35, 37, 39, 41, 43, 46, 48];
-                var continu = true;
-                var ind = 1;
-                while (continu) {
-                  searchHours.forEach(function(hour) {
-                    var actualHour = calcHour(hour, -5);
-                    var desiredDay = new Date();
-                    desiredDay.setDate(desiredDay.getDate() + ind);
-                    desiredDay.setHours(actualHour);
-                    if (continu) {
-                      var event = allEvents.find(function(eve) {
-                        return eve.day.getHours() == actualHour && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
+          SCR.get('/e1/me/track_reposts/' + id, aT, function(err, data) {
+            if (err) {
+              if (!ev) {
+                Event.find({
+                    channelID: eventHolder.channelID
+                  }).exec()
+                  .then(function(allEvents) {
+                    allEvents.forEach(function(event1) {
+                      event1.day = new Date(event1.day);
+                    });
+                    var searchHours = [27, 30, 33, 35, 37, 39, 41, 43, 46, 48];
+                    var continu = true;
+                    var ind = 1;
+                    while (continu) {
+                      searchHours.forEach(function(hour) {
+                        var actualHour = calcHour(hour, -5);
+                        var desiredDay = new Date();
+                        desiredDay.setDate(desiredDay.getDate() + ind);
+                        desiredDay.setHours(actualHour);
+                        if (continu) {
+                          var event = allEvents.find(function(eve) {
+                            return eve.day.getHours() == actualHour && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
+                          });
+                          if (!event) {
+                            continu = false;
+                            eventHolder._id = null;
+                            eventHolder.__v = null;
+                            eventHolder.day = desiredDay;
+                            var newEve = new Event(eventHolder);
+                            newEve.save()
+                              .then(function(eve) {
+                                eve.day = new Date(eve.day);
+                                sendEmail(eve.name, eve.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>We are terribly sorry for the inconvenience, but we had to reschedule your repost of <a href='" + eve.trackURL + "'>" + eve.title + "</a> on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". If your song has already been reposted, please ignore this email and we hope you enjoyed the results! We appologize the inconvenience.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
+                                res.send(err);
+                              })
+                              .then(null, next);
+                          }
+                        }
                       });
-                      if (!event) {
-                        continu = false;
-                        eventHolder._id = null;
-                        eventHolder.__v = null;
-                        eventHolder.day = desiredDay;
-                        var newEve = new Event(eventHolder);
-                        newEve.save()
-                          .then(function(eve) {
-                            eve.day = new Date(eve.day);
-                            sendEmail(eve.name, eve.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>We are terribly sorry for the inconvenience, but we had to reschedule your repost of <a href='" + eve.trackURL + "'>" + eve.title + "</a> on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". If your song has already been reposted, please ignore this email and we hope you enjoyed the results! We appologize the inconvenience.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
-                            res.send(eve);
-                          })
-                          .then(null, next);
-                      }
+                      ind++;
                     }
                   });
-                  ind++;
-                }
-              });
-          } else {
-            ev.trackID = eventHolder.trackID;
-            ev.email = eventHolder.email;
-            ev.name = eventHolder.name;
-            ev.title = eventHolder.title;
-            ev.trackURL = eventHolder.trackURL;
-            ev.save().then(function(eve) {
-              eve.day = new Date(eve.day);
-              sendEmail(eve.name, eve.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>We are terribly sorry for the inconvenience, but we had to reschedule your repost of <a href='" + eve.trackURL + "'>" + eve.title + "</a> on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". If your song has already been reposted, please ignore this email and we hope you enjoyed the results! We appologize the inconvenience.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
-              res.send(eve);
-            })
-          }
+              } else {
+                ev.trackID = eventHolder.trackID;
+                ev.email = eventHolder.email;
+                ev.name = eventHolder.name;
+                ev.title = eventHolder.title;
+                ev.trackURL = eventHolder.trackURL;
+                ev.save().then(function(eve) {
+                  eve.day = new Date(eve.day);
+                  sendEmail(eve.name, eve.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>We are terribly sorry for the inconvenience, but we had to reschedule your repost of <a href='" + eve.trackURL + "'>" + eve.title + "</a> on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". If your song has already been reposted, please ignore this email and we hope you enjoyed the results! We appologize the inconvenience.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
+                  res.send(err);
+                })
+              }
+            }
+            res.send('Song was already reposted');
+          });
         })
     })
     .then(null, next);
