@@ -159,36 +159,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9ecb3', end
 	position:relative;
 	padding:4% 0 0 0;
 }
-.follow-section{
-	position: relative;
-}
-.follow-container {
-	height: 100%;
-	width: 100%;
-	min-height: 572px;
-	position: relative;
-	background: #fff url(../../assets/images/header-overlay.png) no-repeat;
-	padding: 10% 0;
-}
-.follow-box {
-	background: #fff;
-	height: 350px;
-	position: relative;
-	margin: 0 0 20px;
-	overflow: hidden;
-}
-.follow-bottom {
-	padding: 20px 0;
-	background-color: #fff;
-	position: absolute;
-	width: 100%;
-	bottom: 0;
-}
-.avatar {
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-}
+
 .active-link {
 	color: #000000 !important;
 }

@@ -37,21 +37,20 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <div class="follow-container">
-            <div class="col-md-4 col-md-offset-4 text-center">
-              <div class="follow-box">
-              	<div id="scPlayer" >
-                  <img class="img-responsive" src="assets/images/who-we-are.png" /> 
-                </div>
-                <div class="follow-bottom">
-                 <h4>Mixing and Mastering</h4>
-               
-                  <a href="#"><img class="avatar" src="assets/images/who-we-are.png" /></a> la tropical
-                </div>
-                
-                </div>
-               <a class="btn btn-default btn-lg btn-orange" href="#">Connect & Download</a>
-            </div>
+          <div class="follow-container blur-container" ng-style="blurContainerStyle()"></div>
+          <div class="col-md-4 col-md-offset-4 text-center follow-box-container">
+            <div class="follow-box">
+            	<div id="scPlayer" >
+                <img class="img-responsive" ng-src="{{followBoxImageUrl}}" style="width:100%;" /> 
+              </div>
+              <div class="follow-bottom">
+               <h4>{{trackData.trackName}}</h4>
+             
+                <a href="#"><img class="avatar" ng-src="{{followBoxImageUrl}}" /></a> {{trackData.userName}}
+              </div>
+              
+              </div>
+             <a class="btn btn-default btn-lg btn-orange" href="javascript:void(0)" ng-click="downloadTrack()">Connect & Download</a>
           </div>
         </div>
       </div>
