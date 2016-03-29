@@ -18,10 +18,15 @@ app.controller('DownloadTrackController', ['$rootScope',
 		var taskObj = {};
 		var track = {};
 		var trackData = {};
+		$scope.trackData = {
+			trackName: 'Mixing and Mastering',
+			userName: 'la tropical'
+		};
 		$scope.processing = false;
 		$scope.embedTrack = false;
 		$scope.downloadURLNotFound = false;
 		$scope.errorText = '';
+		$scope.followBoxImageUrl = 'assets/images/who-we-are.png';
 
 		/* Default processing on page load */
 
@@ -38,14 +43,24 @@ app.controller('DownloadTrackController', ['$rootScope',
 				track = {
 					trackURL: result.data.trackUrl,
 					downloadURL: result.data.downloadUrl,
+					artworkUrl: result.data.artworkURL,
 					email: result.data.email
 				};
-
+				$scope.blurContainerStyle = function() {
+					return {
+						'background-image': 'url(' + track.artworkUrl + ')',
+						'background-repeat': 'no-repeat',
+						'background-size': 'cover'
+					}
+				}
+				// $('.blur-container').css('background-image', 'url(' + track.artworkUrl + ')');
+				// $('.blur-container').css('background-repeat', 'no-repeat');
+				// $('.blur-container').css('background-size', 'cover');
+				$scope.followBoxImageUrl = track.artworkUrl;
 				return DownloadTrackService.getTrackData(track);
 			}
 
 			function receiveTrackData(result) {
-
 				trackData = {
 					trackID: result.data.id,
 					artistID: result.data.user_id,
@@ -54,11 +69,14 @@ app.controller('DownloadTrackController', ['$rootScope',
 					trackURL: result.data.trackURL
 				};
 
-				SC.oEmbed(trackData.trackURL, {
-					element: document.getElementById('scPlayer'),
-					auto_play: false,
-					maxheight: 150
-				});
+				$scope.trackData.trackName = result.data.title;
+				$scope.trackData.userName = result.data.user.username;
+
+				// SC.oEmbed(trackData.trackURL, {
+				// 	element: document.getElementById('scPlayer'),
+				// 	auto_play: false,
+				// 	maxheight: 150
+				// });
 				$scope.embedTrack = true;
 				$scope.processing = false;
 			}
