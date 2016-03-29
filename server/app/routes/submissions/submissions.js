@@ -207,7 +207,6 @@ router.post('/rescheduleRepost', function(req, res, next) {
       }).exec()
     })
     .then(function(events) {
-
       events.forEach(function(event) {
         event.day = new Date(event.day);
       });
@@ -225,7 +224,7 @@ router.post('/rescheduleRepost', function(req, res, next) {
           channelID: eventHolder.channelID
         }).exec()
         .then(function(channel) {
-          SCR.get('/e1/me/track_reposts/' + id, aT, function(err, data) {
+          SCR.get('/e1/me/track_reposts/' + eventHolder.trackID, channel.accessToken, function(err, data) {
             if (err) {
               if (!ev) {
                 Event.find({
@@ -279,8 +278,9 @@ router.post('/rescheduleRepost', function(req, res, next) {
                   res.send(err);
                 })
               }
+            } else {
+              res.send('Song was already reposted');
             }
-            res.send('Song was already reposted');
           });
         })
     })
