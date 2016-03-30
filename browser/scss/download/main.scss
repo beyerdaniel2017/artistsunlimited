@@ -42,3 +42,20 @@
 	left: 50%;
 	margin-left: -195px;	
 }
+.custom-sc-player {
+	width:360px;
+	height: 360px
+}
+.custom-sc-player-overlay {
+	height: 100%;
+	width: 100%;
+	background: rgba(0,0,0,.5);
+	cursor: pointer;
+}
+.control-icon {
+	font-size: 50px;
+	position: absolute;
+	top: 110px;
+	left: 160px;
+	color: #FFFFFF
+}
