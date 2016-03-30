@@ -12,8 +12,53 @@ app.controller('HomeController', ['$rootScope',
 	'$http',
 	'$location',
 	'$window',
-	function($rootScope, $state, $scope, $http, $location, $window) {
+  'HomeService',
+	function($rootScope, $state, $scope, $http, $location, $window, HomeService) {
 
+    $scope.applicationObj = {};
+    $scope.message = {
+      application: {
+        val: '',
+        visible: false
+      }
+    };
+
+    $scope.saveApplication = function() {
+      
+      $scope.message.application = {
+        val: '',
+        visible: false
+      };
+
+      if($scope.applicationObj.password !== $scope.applicationObj.confirmPassword) {
+        $scope.message.application = {
+          val: 'Password and Confirm password do not match',
+          visible: true
+        };
+
+        return false;
+      }
+      HomeService
+        .saveApplication($scope.applicationObj)
+        .then(saveApplicationResponse)
+        .catch(saveApplicationError)
+
+      function saveApplicationResponse(res) {
+        if(res.status === 200) {
+          $scope.applicationObj = {};
+          $scope.message.application = {
+            val: 'Application submitted successfully!',
+            visible: true
+          };
+        }
+      }
+      function saveApplicationError() {
+        $scope.message.application = {
+          val: 'Error in processing your request',
+          visible: true
+        };
+      }
+    }
 }]);
 
 app.directive('affixer', function ($window) {
