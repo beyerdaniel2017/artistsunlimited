@@ -1,0 +1,96 @@
+<div class="intro-background">
+  <div class="header-overlay"></div>
+  <div class="gap-15"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <nav class="navbar navbar-default"> 
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+            <!-- <a class="navbar-brand" href="#">Brand</a>--> 
+          </div>
+          
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li><a href="#" ui-sref="home({ '#': 'about'})">About</a></li>
+              <li><a href="#" ui-sref="home({ '#': 'services'})">Services</a></li>
+              <li><a href="#" ui-sref="home({ '#': 'artists-tools'})">Artist Tools</a></li>
+              <li><a href="#" ui-sref="home({ '#': 'faqs'})">FAQs</a></li>
+              <li><a href="#" ui-sref="home({ '#': 'apply'})">Apply</a></li>
+              <li><a href="#" ui-sref="home({ '#': 'contact'})">Contact</a></li>
+            </ul>
+            </li>
+            </ul>
+          </div>
+          <!-- /.navbar-collapse --> 
+        </nav>
+        </div>
+      </div>
+    </div>
+
+ 
+  
+  <!--Section : 1-->
+  <section id="about" class="follow-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="content-container">
+            <h2 class="text-center">Submission for Promotion</h2>
+            </br>
+            <div class="row">
+              <div class="col-md-12">
+                <p><span>Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.</span></p>
+                <p><i><span>If we deem that your track fits the goals of our page and meets our high standards for quality, we may decide to repost or otherwise promote it (i.e. via Facebook, Soundcloud and/or Youtube) in which case we will contact you.</span></i><span style="font-weight: bold;"> All we ask is for a small donation. These donations will allow us to continue supporting up and coming artists via releases that don’t tie artists to corporate and unfavorable record deals. Premiere’s are still available for UNRELEASED quality tracks at no cost - so if you have demo’s that you would like us to consider for uploading please send these private demos to unreleased@peninsulamgmt.com.</span></p>
+                <p><span>If you are confident that your music has what it takes to be promoted to an audience of over 150,000 followers, as well as various record labels, talent agencies, and headliner DJs—consider presenting it to us.</span></p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <form role="form" ng-submit="submit()">
+                  </br>
+                  <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3">
+                      <input class="form-control" type="text" placeholder="Song URL" ng-model="url" ng-change="urlChange()"/>
+                    </div>
+                  </div>
+                  </br>
+                  <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3">
+                      <input class="form-control" type="text" placeholder="Name"ng-model="submission.name" />
+                    </div>
+                  </div>
+                  </br>
+                  <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3">
+                      <input class="form-control" placeholder="Email" ng-model="submission.email" />
+                    </div>
+                  </div>
+                  </br>
+                    <div class="text-center">
+                      <button class="btn btn-default btn-lg btn-enter">Enter</button>
+                      <br/><br />
+                      <!-- <p ng-show="message.visible" class="text-center">{{message.val}}</p> -->
+                    </div>
+                  </div>
+                </form>
+                <span ng-if="notFound">Track not found.<br>If a private track, please email it to: edward@peninsulamgmt.com</span>
+                <div id="scPlayer" style="margin:10px 0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--Section : 1--> 
+  
+ 
+</div>
+</div>
+
+<div class="processing-overlay" ng-show="processing">
+  <h1 class="processing-inner">Processing...</h1>
+</div>
