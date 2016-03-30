@@ -37,7 +37,8 @@ router.post('/', function(req, res, next) {
         "content": fileObj.buffer
       }
     ];
-    sendEmail('Edward', 'edward@peninsulamgmt.com', req.body.name, req.body.email, 'Premier Submission', req.body.comment, attachments);  
+    var email_body = "<b>Sender Comment: </b> " + req.body.comment + "<br /><br /><b>Sender Name: </b> " + req.body.name;
+    sendEmail('Edward', 'edward@peninsulamgmt.com', req.body.name, req.body.email, 'Premier Submission', email_body, attachments);  
     res.end();
   });
   req.pipe(busboy);
