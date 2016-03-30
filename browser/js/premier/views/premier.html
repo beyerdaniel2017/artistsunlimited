@@ -33,7 +33,7 @@
  
   
   <!--Section : 1-->
-  <section id="about" class="follow-section" data-section-name="Follow">
+  <section class="follow-section" data-section-name="Follow">
     <div class="container">
       <div class="row">
         <div class="col-md-12">
@@ -80,7 +80,11 @@
     </div>
   </section>
   <!--Section : 1--> 
-  
- 
 </div>
-</div>
+</div><script>
+  $(document).ready(function(){
+    var windowHeight = $(window).height();
+    var navHeight = $('.nav-min-height').height();
+    $('.content-area').css('min-height', (windowHeight - navHeight) + 'px');
+  });
+</script>
