@@ -18,6 +18,21 @@ body {
   padding-top: 0px;
   margin: 0 auto;
 }
+.processing-overlay {
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+	height:100%;
+	background-color: rgba(0,0,0,0.9);
+	text-align:center;
+	z-index:1
+}
+.processing-inner {
+	font-color:white;
+	margin-top:400px;
+	z-index:2
+}
 
 @import 'directives/main';
 @import 'home/main';

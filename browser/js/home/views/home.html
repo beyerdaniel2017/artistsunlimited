@@ -145,7 +145,7 @@
                   magna aliqua.</p>
               </div>
               <div class="col-md-6">
-                <h4><a href="javascript:void(0)" onclick="window.location.href = '/submit'">Repost Submission</a></h4>
+                <h4><a href="javascript:void(0)" ui-sref="submitSong">Repost Submission</a></h4>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                   sed do eiusmod tempor incididunt ut labore et dolore
                   magna aliqua.</p>
@@ -157,7 +157,7 @@
                   magna aliqua.</p>
               </div>
               <div class="col-md-6">
-                <h4><a href="javascript:void(0)" onclick="window.location.href = '/premier'">Premiere Submission*</a></h4>
+                <h4><a href="javascript:void(0)" ui-sref="premier">Premiere Submission*</a></h4>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                   sed do eiusmod tempor incididunt ut labore et dolore
                   magna aliqua.</p>
@@ -277,29 +277,31 @@
               <h5><strong>Join the team!</strong></h5>
             </div>
             <div class="col-md-6">
-              <div class="row">
-                <div class="form-group col-md-6">
-                  <input class="form-control" placeholder="First Name"/>
+              <form role="form" ng-submit="saveApplication()">
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <input class="form-control" type="text" placeholder="First Name" ng-model="applicationObj.firstName"/>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <input class="form-control" type="text" placeholder="Last Name" ng-model="applicationObj.lastName"/>
+                  </div>
                 </div>
-                <div class="form-group col-md-6">
-                  <input class="form-control" placeholder="Last Name"/>
+                <div class="form-group">
+                  <input class="form-control" type="text" placeholder="User Name" ng-model="applicationObj.userName"/>
                 </div>
-              </div>
-              <div class="form-group">
-                <input class="form-control" placeholder="User Name"/>
-              </div>
-              <div class="form-group">
-                <input class="form-control" placeholder="Password"/>
-              </div>
-              <div class="form-group">
-                <input class="form-control" placeholder="Confirm Password"/>
-              </div>
-              <div class="form-group">
-                <input class="form-control" placeholder="Email"/>
-              </div>
-              <div class="form-group text-center">
-                <button class="btn btn-default btn-lg btn-enter">Enter</button>
-              </div>
+                <div class="form-group">
+                  <input class="form-control" type="password" placeholder="Password" ng-model="applicationObj.password"/>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" type="password" placeholder="Confirm Password" ng-model="applicationObj.confirmPassword"/>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" type="email" placeholder="Email" ng-model="applicationObj.email"/>
+                </div>
+                <div class="form-group text-center">
+                  <button class="btn btn-default btn-lg btn-enter">Enter</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

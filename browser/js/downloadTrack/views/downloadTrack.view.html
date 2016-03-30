@@ -37,11 +37,15 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <div class="follow-container blur-container" ng-style="blurContainerStyle()"></div>
+          <div class="follow-container blur-container" ng-style="backgroundStyle()"></div>
           <div class="col-md-4 col-md-offset-4 text-center follow-box-container">
             <div class="follow-box">
-            	<div id="scPlayer" >
-                <img class="img-responsive" ng-src="{{followBoxImageUrl}}" style="width:100%;" /> 
+            	<div class="custom-sc-player" ng-style="backgroundStyle()">
+                <div class="custom-sc-player-overlay" ng-click="togglePlay()">
+                  <span class="glyphicon glyphicon-pause control-icon" ng-if="!toggle"></span>
+                  <span class="glyphicon glyphicon-play control-icon" ng-if="toggle"></span>
+                </div>
+                <!-- <img class="img-responsive" ng-src="{{followBoxImageUrl}}" style="width:100%;" />  -->
               </div>
               <div class="follow-bottom">
                <h4>{{trackData.trackName}}</h4>
@@ -60,4 +64,8 @@
   
  
 </div>
+</div>
+
+<div class="processing-overlay" ng-show="processing">
+  <h1 class="processing-inner">Processing...</h1>
 </div>

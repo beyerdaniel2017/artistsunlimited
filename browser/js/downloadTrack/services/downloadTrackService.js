@@ -14,9 +14,14 @@ app.service('DownloadTrackService', ['$http', function($http){
 		return $http.post('api/download/tasks', data);
 	}
 
+	function getConfig() {
+		return $http.get('/api/soundcloud/soundcloudConfig');
+	}
+
 	return {
 		getDownloadTrack: getDownloadTrack,
 		getTrackData: getTrackData,
-		performTasks: performTasks
+		performTasks: performTasks,
+		getConfig: getConfig
 	};
 }]);

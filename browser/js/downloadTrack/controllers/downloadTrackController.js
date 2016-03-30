@@ -15,13 +15,28 @@ app.controller('DownloadTrackController', ['$rootScope',
 	'DownloadTrackService',
 	function($rootScope, $state, $scope, $http, $location, $window, DownloadTrackService) {
 
+		/* Normal JS vars and functions not bound to scope */
+
 		var taskObj = {};
 		var track = {};
 		var trackData = {};
+		var playerObj = null;
+
+		/* $scope bindings start */
+
 		$scope.trackData = {
 			trackName: 'Mixing and Mastering',
 			userName: 'la tropical'
 		};
+		$scope.toggle = false;
+		$scope.togglePlay = function() {
+			$scope.toggle = !$scope.toggle;
+			if($scope.toggle) {
+				playerObj.pause();
+			} else {
+				playerObj.play();
+			}
+		}
 		$scope.processing = false;
 		$scope.embedTrack = false;
 		$scope.downloadURLNotFound = false;
@@ -31,13 +46,30 @@ app.controller('DownloadTrackController', ['$rootScope',
 		/* Default processing on page load */
 
 		$scope.getDownloadTrack = function() {
+			
 			$scope.processing = true;
 			var trackId = $location.search().trackid;
 			DownloadTrackService
-				.getDownloadTrack(trackId)
+				.getConfig()
+				.then(initSC)
+				.then(fetchDownloadTrack)
 				.then(receiveDownloadTrack)
 				.then(receiveTrackData)
+				.then(initPlay)
 				.catch(catchDownloadTrackError);
+
+			function initSC(res) {
+				return SC.initialize({
+          client_id: res.data.clientID,
+          redirect_uri: res.data.callbackURL,
+          scope: 'non-expiring'
+        });
+			}
+
+			function fetchDownloadTrack() {
+				return DownloadTrackService.getDownloadTrack(trackId);
+			}
+
 
 			function receiveDownloadTrack(result) {
 				track = {
@@ -46,16 +78,13 @@ app.controller('DownloadTrackController', ['$rootScope',
 					artworkUrl: result.data.artworkURL,
 					email: result.data.email
 				};
-				$scope.blurContainerStyle = function() {
+				$scope.backgroundStyle = function() {
 					return {
 						'background-image': 'url(' + track.artworkUrl + ')',
 						'background-repeat': 'no-repeat',
 						'background-size': 'cover'
 					}
 				}
-				// $('.blur-container').css('background-image', 'url(' + track.artworkUrl + ')');
-				// $('.blur-container').css('background-repeat', 'no-repeat');
-				// $('.blur-container').css('background-size', 'cover');
 				$scope.followBoxImageUrl = track.artworkUrl;
 				return DownloadTrackService.getTrackData(track);
 			}
@@ -77,8 +106,16 @@ app.controller('DownloadTrackController', ['$rootScope',
 				// 	auto_play: false,
 				// 	maxheight: 150
 				// });
+
 				$scope.embedTrack = true;
 				$scope.processing = false;
+
+				return SC.stream('/tracks/' + trackData.trackID);
+			}
+
+			function initPlay(player){
+				playerObj = player;
+			  playerObj.play();
 			}
 
 			function catchDownloadTrackError() {
@@ -117,7 +154,6 @@ app.controller('DownloadTrackController', ['$rootScope',
 			}
 
 			function initDownload(res) {
-				/* Need to intiate download here */
 
 				if (track.downloadURL && track.downloadURL !== '') {
 					$window.location.href = track.downloadURL;
