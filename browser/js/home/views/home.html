@@ -280,26 +280,31 @@
               <form role="form" ng-submit="saveApplication()">
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <input class="form-control" type="text" placeholder="First Name" ng-model="applicationObj.firstName"/>
+                    <input class="form-control" type="text" placeholder="First Name" ng-model="applicationObj.firstName" required/>
                   </div>
                   <div class="form-group col-md-6">
                     <input class="form-control" type="text" placeholder="Last Name" ng-model="applicationObj.lastName"/>
                   </div>
                 </div>
                 <div class="form-group">
-                  <input class="form-control" type="text" placeholder="User Name" ng-model="applicationObj.userName"/>
+                  <input class="form-control" type="text" placeholder="User Name" ng-model="applicationObj.userName" required/>
                 </div>
                 <div class="form-group">
-                  <input class="form-control" type="password" placeholder="Password" ng-model="applicationObj.password"/>
+                  <input class="form-control" type="password" placeholder="Password" ng-model="applicationObj.password" required/>
                 </div>
                 <div class="form-group">
-                  <input class="form-control" type="password" placeholder="Confirm Password" ng-model="applicationObj.confirmPassword"/>
+                  <input class="form-control" type="password" placeholder="Confirm Password" ng-model="applicationObj.confirmPassword" required/>
                 </div>
                 <div class="form-group">
-                  <input class="form-control" type="email" placeholder="Email" ng-model="applicationObj.email"/>
+                  <input class="form-control" type="email" placeholder="Email" ng-model="applicationObj.email"required />
                 </div>
                 <div class="form-group text-center">
-                  <button class="btn btn-default btn-lg btn-enter">Enter</button>
+                  <p ng-show="message.application.visible" class="text-center">
+                    {{message.application.val}}
+                    </br>
+                    </br>
+                  </p>
+                  <button class="btn btn-default btn-lg btn-enter" type="submit">Enter</button>
                 </div>
               </form>
             </div>
