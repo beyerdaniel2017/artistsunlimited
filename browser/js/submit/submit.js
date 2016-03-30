@@ -36,7 +36,9 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.submit = function() {
-    if (!$scope.submission.trackID) {
+    if (!$scope.submission.email || !$scope.submission.name) {
+      alert("Please fill in all fields")
+    } else if (!$scope.submission.trackID) {
       alert("Track Not Found");
     } else {
       $scope.processing = true;

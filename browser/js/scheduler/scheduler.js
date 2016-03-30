@@ -21,6 +21,11 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   $scope.calendar = fillDateArrays(info.events);
   $scope.dayIncr = 0;
 
+  $scope.back = function() {
+    window.location.reload();
+
+  }
+
   $scope.saveChannel = function() {
     $scope.processing = true;
     $scope.channel.password = $rootScope.password;

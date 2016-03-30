@@ -91,20 +91,6 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
     soundCloudUrl: ''
   };
 
-  $scope.login = function() {
-    $scope.processing = true;
-    $http.post('/api/login', {
-      password: $scope.password
-    }).then(function() {
-      $rootScope.password = $scope.password;
-      $scope.loggedIn = true;
-      $scope.processing = false;
-    }).catch(function(err) {
-      $scope.processing = false;
-      alert('Wrong Password');
-    });
-  }
-
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
       window.location.href = '/admin';
@@ -211,7 +197,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   }
 
   $scope.downloadUrlChange = function() {
-    if($scope.track.trackUrl !== '') {
+    if ($scope.track.trackUrl !== '') {
 
       $scope.processing = true;
       $http.post('/api/soundcloud/soundcloudTrack', {
@@ -229,7 +215,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   }
 
   $scope.saveDownloadUrl = function() {
-    if(!$scope.track.trackID) {
+    if (!$scope.track.trackID) {
       alert('Track Not Found');
       return false;
     }
