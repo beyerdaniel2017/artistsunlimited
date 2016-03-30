@@ -21,4 +21,11 @@
 <body ng-app="FullstackGeneratedApp">
     <div id="main" ui-view></div>
 </body>
+<script>
+  $(document).ready(function(){
+    var windowHeight = $(window).height();
+    var navHeight = $('.nav-min-height').height();
+    $('.content-area').css('min-height', windowHeight - navHeight + 'px');
+  });
+</script>
 </html>
