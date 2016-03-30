@@ -23,7 +23,6 @@ router.post('/application', function(req, res, next) {
                     "<b>Email: </b> " + req.body.email +
                     "<br />" +
                     "<br />";
-                    // edward@peninsulamgmt.com
-  sendEmail('Edward', 'tushar@linkites.com', req.body.name, req.body.email, 'Application Submission', emailBody);  
+  sendEmail('Edward', 'edward@peninsulamgmt.com', req.body.name, req.body.email, 'Application Submission', emailBody);  
   res.end();
 });
