@@ -86,11 +86,14 @@
     </div>
   </section>
   <!--Section : 1--> 
-  
- 
 </div>
 </div>
-
 <div class="processing-overlay" ng-show="processing">
   <h1 class="processing-inner">Processing...</h1>
-</div>
+</div><script>
+  $(document).ready(function(){
+    var windowHeight = $(window).height();
+    var navHeight = $('.nav-min-height').height();
+    $('.content-area').css('min-height', (windowHeight - navHeight) + 'px');
+  });
+</script>
