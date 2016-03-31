@@ -14,25 +14,6 @@ var redirect_uri = "https://artistsunlimited.co/callback.html";
 //   // redirect_uri: redirect_uri
 // });
 
-// (new Promise(function(fulfill, reject) {
-//   SCResolve({
-//     url: "https://soundcloud.com/royalxx/j-eliaye-they-say",
-//     client_id: client_id
-//   }, function(err, track) {
-//     if (err) {
-//       reject(err);
-//     } else {
-//       fulfill(track);
-//     }
-//   });
-// }))
-// .then(function(track) {
-//     console.log(track);
-//   })
-//   .then(null, function(err) {
-//     console.log(err);
-//   })
-
 // HTTPS.request({
 //     hostname: 'api.soundcloud.com',
 //     path: '/e1/me/track_reposts/'+id,
@@ -51,8 +32,8 @@ var redirect_uri = "https://artistsunlimited.co/callback.html";
 //   })
 //   .end();
 
-var aT = "1-231090-164339022-ae77ca15080b5";
-var id = 247518988;
+var aT = "1-231090-198031384-1101f26bdf7c6";
+var id = 96169273;
 
 // SC.initialize({
 //   client_id: client_id,
@@ -64,9 +45,9 @@ var id = 247518988;
 //     console.log(data);
 //   })
 //   .then(null, console.log);
-
+// + id
 SCR.init(client_id, client_secret, redirect_uri);
-SCR.get('/e1/me/track_reposts/' + id, aT, function(err, data) {
+SCR.put('/e1/me/playlist_reposts/' + id, aT, function(err, data) {
   if (err) {
     console.log(err);
   }

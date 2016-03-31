@@ -259,7 +259,8 @@ router.post('/downloadurl', function(req, res, next) {
   var downloadTrack = new DownloadTrack({
     trackUrl: body.trackUrl,
     downloadUrl: body.downloadUrl,
-    email: body.email
+    email: body.email,
+    playlistID: body.playlistID
   });
   downloadTrack.save();
   var urlObj = url.parse(req.url);

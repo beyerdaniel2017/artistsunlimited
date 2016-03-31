@@ -3,26 +3,26 @@ var paypal = require('paypal-rest-sdk');
 paypal.configure({
   // 'host': 'api.sandbox.paypal.com',
   // 'port': '',
-  'mode': 'live',
-  'client_id': 'AS_XdXBWw77UyF_QkMtq53Dve9CueqCscfdqPH2Rk-ypPe1l3MhBMgZIUfCs9QoL3rR9FhtqVg5XDXVP',
-  'client_secret': 'ELBPMRDOYTKJ060PVEyTMQwBvH2HwQEFWwSziOKp9hYG48z8UXendg3Us_9rlm3ioUMT3Go79KKd2VWa',
+  'mode': 'sandbox',
+  'client_id': 'AQOFIdlz-RFeZbx6i4W5l_PUvhEdn7IRhIt3FSv7YXj5Ga3SNlzXuSHfVAkqX6xkbLVhv0boh9lx3GHi',
+  'client_secret': 'EFGXm6BiNeucSWhFIOcj5yDr9vUqRHKBJuZ1951zFYE2oS71y_yxlH7WRzyLOJ7-SHFun06hg6sRp55w',
 });
 
 var invoice_json = {
   "merchant_info": {
-    "email": "kevinwzimmermann@gmail.com",
-    "first_name": "Kevin",
-    "last_name": "Zimmermann",
-    "business_name": "La Tropicál Distributions",
+    "email": "coayscue-facilitator@gmail.com",
+    "first_name": "Christian",
+    "last_name": "Ayscue",
+    "business_name": "Kiko productions",
     "phone": {
       "country_code": "001",
-      "national_number": "6179906330"
+      "national_number": "4153007010"
     },
     "address": {
-      "line1": "4585 Ponce De Leon Blvd",
-      "city": "Coral Gables",
-      "state": "FL",
-      "postal_code": "33143",
+      "line1": "531 Washington St.",
+      "city": "Santa Clara",
+      "state": "CA",
+      "postal_code": "95050",
       "country_code": "US"
     }
   },
@@ -41,22 +41,6 @@ var invoice_json = {
   "payment_term": {
     "term_type": "NET_45"
   },
-  "shipping_info": {
-    "first_name": "Sally",
-    "last_name": "Patient",
-    "business_name": "Not applicable",
-    "phone": {
-      "country_code": "001",
-      "national_number": "5039871234"
-    },
-    "address": {
-      "line1": "1234 Broad St.",
-      "city": "Portland",
-      "state": "OR",
-      "postal_code": "97216",
-      "country_code": "US"
-    }
-  },
   "tax_inclusive": false,
   "total_amount": {
     "currency": "USD",
@@ -65,91 +49,15 @@ var invoice_json = {
 }
 
 paypal.invoice.create(invoice_json, function(error, invoice) {
+  console.log("Create Invoice Response");
+  console.log(invoice);
+  console.log(error);
   if (error) {
     throw error;
-  } else {
-    console.log("Create Invoice Response");
-    console.log(invoice);
-    console.log(error);
-    paypal.invoice.send(invoice.id, function(error, rv) {
-      console.log(error);
-      console.log(rv);
-    });
   }
+  paypal.invoice.send(invoice.id, function(error, rv) {
+    console.log('send response');
+    console.log(error);
+    console.log(rv);
+  });
 });
-// module.exports = function(name, email, price) {
-// var invoice_json = {
-//   "merchant_info": {
-//     "email": "kevinwzimmermann@gmail.com",
-//     "first_name": "Kevin",
-//     "last_name": "Zimmermann",
-//     "business_name": "La Tropicál Distributions",
-//     "phone": {
-//       "country_code": "001",
-//       "national_number": "6179906330"
-//     },
-//     "address": {
-//       "line1": "4585 Ponce De Leon Blvd",
-//       "city": "Coral Gables",
-//       "state": "FL",
-//       "postal_code": "33143",
-//       "country_code": "US"
-//     }
-//   },
-//   "billing_info": [{
-//     "email": "coayscue@gmail.com"
-//   }],
-//   "items": [{
-//     "name": "Sutures",
-//     "quantity": 1,
-//     "unit_price": {
-//       "currency": "USD",
-//       "value": 0.01
-//     }
-//   }],
-//   "note": "Medical Invoice 16 Jul, 2013 PST",
-//   "payment_term": {
-//     "term_type": "NET_45"
-//   },
-//   "shipping_info": {
-//     "first_name": "Sally",
-//     "last_name": "Patient",
-//     "business_name": "Not applicable",
-//     "phone": {
-//       "country_code": "001",
-//       "national_number": "5039871234"
-//     },
-//     "address": {
-//       "line1": "1234 Broad St.",
-//       "city": "Portland",
-//       "state": "OR",
-//       "postal_code": "97216",
-//       "country_code": "US"
-//     }
-//   },
-//   "tax_inclusive": false,
-//   "total_amount": {
-//     "currency": "USD",
-//     "value": "0.01"
-//   }
-// }
-
-// paypal.invoice.create(invoice_json, function(error, invoice) {
-//   if (error) {
-//     throw error;
-//   } else {
-//     console.log("Create Invoice Response");
-//     console.log(invoice);
-//     paypal.invoice.send(invoice.id, function(error, rv) {
-//       if (error) {
-//         console.log(error.response);
-//         throw error;
-//       } else {
-//         console.log("Send Invoice Response");
-//         console.log(rv);
-//       }
-//     });
-//   }
-// });
-
-// }
