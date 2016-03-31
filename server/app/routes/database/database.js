@@ -260,10 +260,7 @@ router.post('/downloadurl', function(req, res, next) {
     trackUrl: body.trackUrl,
     downloadUrl: body.downloadUrl,
     email: body.email,
-<<<<<<< HEAD
     playlistID: body.playlistID,
-=======
->>>>>>> 31fcac993af4b4a6878c8a20934b88559f55129d
     artworkURL: body.artworkURL,
     trackID: body.trackID,
     artistID: body.artistID

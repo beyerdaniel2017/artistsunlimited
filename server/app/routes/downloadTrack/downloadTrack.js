@@ -34,40 +34,46 @@ router.post('/tasks', function(req, res, next) {
   });
   SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.callbackURL);
 
-  SC.put('/me/favorites/' + body.trackId, function(err, response) {
+
+  SC.put('/me/favorites/' + body.trackID, function(err, response) {
     if (err) {
       next(err);
-      console.log(err);
-    }
-    Channel.find({})
-      .then(function(channels) {
-        channels.forEach(function(chan) {
-          SC.put('/me/followings/' + chan.channelID, function(err, response) {
+    } else {
+      Channel.find({})
+        .then(function(channels) {
+          channels.forEach(function(chan) {
+            SC.put('/me/followings/' + chan.channelID, function(err, response) {
+              if (err) {
+                console.log('error following:' + chan.displayName);
+                console.log(err);
+              }
+            });
+          })
+        })
+        .then(null, next);
+      SC.put('/me/followings/' + body.artistID, function(err, response) {
+        if (err) {
+          console.log('error following artist');
+          console.log(err);
+        } else {
+          SCR.put('/e1/me/track_reposts/' + body.trackID, body.token, function(err, data) {
             if (err) {
-              console.log('error following:' + chan.displayName);
-              console.log(err);
+              console.log('error reposting track');
+              next(err);
+            } else {
+              console.log(body.playlistID);
+              SCR.put('/e1/me/playlist_reposts/' + body.playlistID, body.token, function(err, data) {
+                if (err) {
+                  console.log('error reposting playlist');
+                  next(err);
+                } else {
+                  res.send();
+                }
+              });
             }
           });
-        })
-      })
-      .then(null, next);
-    SCR.put('/e1/me/track_reposts/' + body.trackId, body.token, function(err, data) {
-      if (err) {
-        next(err);
-<<<<<<< HEAD
-        console.log(err);
-      } else {
-        res.send();
-      }
-    });
-    SCR.put('/e1/me/playlist_reposts/' + body.playlistID, body.token, function(err, data) {
-      if (err) {
-=======
->>>>>>> 31fcac993af4b4a6878c8a20934b88559f55129d
-        console.log(err);
-      } else {
-        res.send();
-      }
-    });
+        }
+      });
+    }
   });
 });

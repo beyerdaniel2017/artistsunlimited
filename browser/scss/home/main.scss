@@ -211,225 +211,223 @@ body {
 	}
 }
 
+// <<<<<<< HEAD
+// /**** Bootstrap Modified CSS Start ***/
+// .btn {
+// 	border-radius: 0px;
+// }
+// .navbar-default {
+// 	background-color: transparent;
+// 	border-color: transparent;
+// }
+// .nav > li > a {
+// 	padding: 10px 66px;
+// }
+// .navbar-default .navbar-nav > li > a {
+// 	color: #fff;
+// 	font-weight: 600;
+// }
+// .form-control {
+// 	border-radius: 0px;
+// }
+// .navbar-default .navbar-toggle {
+// 	border-color: transparent;
+// 	background-color: #F6CFBD;
+// }
+// .navbar-toggle {
+// 	border-radius: 0px;
+// }
+// .navbar-collapse {
+// 	border-top: 0px solid transparent;
 
-<<<<<<< HEAD
-/**** Bootstrap Modified CSS Start ***/
-.btn {
-	border-radius: 0px;
-}
-.navbar-default {
-	background-color: transparent;
-	border-color: transparent;
-}
-.nav > li > a {
-	padding: 10px 66px;
-}
-.navbar-default .navbar-nav > li > a {
-	color: #fff;
-	font-weight: 600;
-}
-.form-control {
-	border-radius: 0px;
-}
-.navbar-default .navbar-toggle {
-	border-color: transparent;
-	background-color: #F6CFBD;
-}
-.navbar-toggle {
-	border-radius: 0px;
-}
-.navbar-collapse {
-	border-top: 0px solid transparent;
+// }
+// .affix {
+//   	z-index:1;
+// }
+// /**** Bootstrap Modified CSS End ***/
 
-}
-.affix {
-  	z-index:1;
-}
-/**** Bootstrap Modified CSS End ***/
+// /**** Custom CSS Start ***/
+// .intro-background {
+// 	position: relative;
+// 	min-height: 100%;
+//   background: url(../../assets/images/home-background.png) no-repeat center center fixed;
+//   -webkit-background-size: cover;
+//   -moz-background-size: cover;
+//   -o-background-size: cover;
+//   background-size: cover;
+// }
+// .header-section {
+// 	position: relative;
+// 	padding: 20% 0;
+// 	min-height: 655px;
+// }
+// .header-overlay {
+//   position: absolute;
+//   height: 100%;
+//   width: 100%;
+//   display: block;
+//   background: -moz-linear-gradient(top, rgba(249, 236, 179, 0.8) 0%, rgba(244, 184, 181, 0.8) 100%);
+//   background: -webkit-linear-gradient(top, rgba(249, 236, 179, 0.8) 0%, rgba(244, 184, 181, 0.8) 100%);
+//   background: linear-gradient(to bottom, rgba(249, 236, 179, 0.8) 0%, rgba(244, 184, 181, 0.8) 100%);
+//   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ccf9ecb3', endColorstr='#ccf4b8b5',GradientType=0 );
+// }
+// .header-top {
+// 	top: 53%;
+// 	margin-top: -40px;
+// 	position: absolute;
+// 	left: 50%;
+// 	margin-left: -130px;
+// }
+// .text-white {
+// 	color:#fff;
+// }
+// .left-l {
+// 	border-right: 2px solid #fff;
 
-/**** Custom CSS Start ***/
-.intro-background {
-	position: relative;
-	min-height: 100%;
-  background: url(../../assets/images/home-background.png) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-.header-section {
-	position: relative;
-	padding: 20% 0;
-	min-height: 655px;
-}
-.header-overlay {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  display: block;
-  background: -moz-linear-gradient(top, rgba(249, 236, 179, 0.8) 0%, rgba(244, 184, 181, 0.8) 100%);
-  background: -webkit-linear-gradient(top, rgba(249, 236, 179, 0.8) 0%, rgba(244, 184, 181, 0.8) 100%);
-  background: linear-gradient(to bottom, rgba(249, 236, 179, 0.8) 0%, rgba(244, 184, 181, 0.8) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ccf9ecb3', endColorstr='#ccf4b8b5',GradientType=0 );
-}
-.header-top {
-	top: 53%;
-	margin-top: -40px;
-	position: absolute;
-	left: 50%;
-	margin-left: -130px;
-}
-.text-white {
-	color:#fff;
-}
-.left-l {
-	border-right: 2px solid #fff;
+// }
+// .right-r {
+// 	padding: 10px;
+// }
+// .right-r h2 {
+// 	margin: 0;
+// 	color: #fff;
+// 	font-weight: 600;
+// }
+// /*Btn*/
+// .btn-white {
+// 	color: #333;
+// 	background-color: #fff;
+// 	;
+// 	border-color: #fff;
+// }
+// .btn-enter{
+// 	background: #F6CFBD;
+// 	border: transparent;
+// 	padding: 14px 50px;
+// 	color: #fff;
+// 	font-size: 14px;
+// }
+// .btn-orange{
+// 	background:#F5AC47;
+// 	border: transparent;
+// 	padding: 14px 50px;
+// 	color: #fff;
+// 	font-size: 14px;
+// }
+// /*Btn*/
+// .section-2 {
+// 	position: relative;
+// 	min-height: 657px;
+// 	padding: 50px 0;
+// }
 
-}
-.right-r {
-	padding: 10px;
-}
-.right-r h2 {
-	margin: 0;
-	color: #fff;
-	font-weight: 600;
-}
-/*Btn*/
-.btn-white {
-	color: #333;
-	background-color: #fff;
-	;
-	border-color: #fff;
-}
-.btn-enter{
-	background: #F6CFBD;
-	border: transparent;
-	padding: 14px 50px;
-	color: #fff;
-	font-size: 14px;
-}
-.btn-orange{
-	background:#F5AC47;
-	border: transparent;
-	padding: 14px 50px;
-	color: #fff;
-	font-size: 14px;
-}
-/*Btn*/
-.section-2 {
-	position: relative;
-	min-height: 657px;
-	padding: 50px 0;
-}
+// .logo {
+// 	position: absolute;
+// 	bottom: 50px;
+// 	left: 102px;
+// }
+// .right-section {
+// 	margin: 100px 0;
+// }
+// .right-section ul {
+// 	margin:0;
+// 	padding:0;
+// }
+// .right-section ul li {
+// 	list-style: none;
+// 	font-size: 70px;
+// 	color: #fff;
+// 	font-weight: bold;
+// 	line-height: 70px;
+// }
+// .white-background{
+// 	background:#fff;
+// }
+// .content-container {
+// 	background: #fff;
+// 	height: 100%;
+// 	width: 100%;
+// 	min-height: 586px;
+// 	position: relative;
+// 	padding:10% 5% 5% 5%;
+// 	margin: 30px 0 0 0;
+// }
+// .section-3{
+// 	position:relative;
+// 	padding:4% 0 0 0;
+// }
 
-.logo {
-	position: absolute;
-	bottom: 50px;
-	left: 102px;
-}
-.right-section {
-	margin: 100px 0;
-}
-.right-section ul {
-	margin:0;
-	padding:0;
-}
-.right-section ul li {
-	list-style: none;
-	font-size: 70px;
-	color: #fff;
-	font-weight: bold;
-	line-height: 70px;
-}
-.white-background{
-	background:#fff;
-}
-.content-container {
-	background: #fff;
-	height: 100%;
-	width: 100%;
-	min-height: 586px;
-	position: relative;
-	padding:10% 5% 5% 5%;
-	margin: 30px 0 0 0;
-}
-.section-3{
-	position:relative;
-	padding:4% 0 0 0;
-}
+// .active-link {
+// 	color: #000000 !important;
+// }
+// .nav-links:visited{
+// 	color: #FFFFFF;
+// }
+// .nav-links:focus {
+//    outline: none;
+// }
+// /**** Custom CSS End ***/
 
-.active-link {
-	color: #000000 !important;
-}
-.nav-links:visited{
-	color: #FFFFFF;
-}
-.nav-links:focus {
-   outline: none;
-}
-/**** Custom CSS End ***/
+// /*************** Gap Css Start *************/
 
-/*************** Gap Css Start *************/
+// .gap-10 {
+// 	height: 10px;
+// 	clear: both;
+// }
+// .gap-15 {
+// 	height: 15px;
+// 	clear: both;
+// }
+// .gap-20 {
+// 	height: 20px;
+// 	clear: both;
+// }
+// .gap-30 {
+// 	height: 30px;
+// 	clear: both;
+// }
+// .gap-40 {
+// 	height: 40px;
+// 	clear: both;
+// }
+// /*************** Gap Css End *************/
 
-.gap-10 {
-	height: 10px;
-	clear: both;
-}
-.gap-15 {
-	height: 15px;
-	clear: both;
-}
-.gap-20 {
-	height: 20px;
-	clear: both;
-}
-.gap-30 {
-	height: 30px;
-	clear: both;
-}
-.gap-40 {
-	height: 40px;
-	clear: both;
-}
-/*************** Gap Css End *************/
+// /*************** Responsive Css Start *************/
 
-/*************** Responsive Css Start *************/
-
-@media only screen and (max-width:320px) {
-.section-2 {
-	min-height: 480px;
-}
-.right-section ul li {
-	font-size: 30px;
-	line-height: 40px;
-}
+// @media only screen and (max-width:320px) {
+// .section-2 {
+// 	min-height: 480px;
+// }
+// .right-section ul li {
+// 	font-size: 30px;
+// 	line-height: 40px;
+// }
 
 	
-}
+// }
 
-@media only screen and (max-width:360px) {
-.header-section {
-	padding: 70% 0;
-	min-height: 640px;
-}
-}
-@media only screen and (max-width:767px) {
-.collapse.in {
-	background: #F4B8B4;
-}
+// @media only screen and (max-width:360px) {
+// .header-section {
+// 	padding: 70% 0;
+// 	min-height: 640px;
+// }
+// }
+// @media only screen and (max-width:767px) {
+// .collapse.in {
+// 	background: #F4B8B4;
+// }
 
-}
-@media only screen and (max-width:1024px) {
-.nav > li > a {
-	padding: 10px 50px;
-}
-}
-@media only screen and (max-width:768px) {
-.nav > li > a {
-	padding: 10px 30px;
-}
-}
+// }
+// @media only screen and (max-width:1024px) {
+// .nav > li > a {
+// 	padding: 10px 50px;
+// }
+// }
+// @media only screen and (max-width:768px) {
+// .nav > li > a {
+// 	padding: 10px 30px;
+// }
+// }
 /*************** Responsive Css End *************/
-=======
+
 /* Responsive CSS END */
->>>>>>> 31fcac993af4b4a6878c8a20934b88559f55129d

@@ -9,21 +9,12 @@
 	text-align:center;
 	z-index: 1;
 }
-<<<<<<< HEAD
 
-body, html, #main {
-	height: 100%;
-}
-
-body {
-  background: #fdfdfd;
-=======
 .processing-inner {
 	font-color:white;
 	margin-top:400px;
 	z-index:2;
 	overflow: hidden;
->>>>>>> 31fcac993af4b4a6878c8a20934b88559f55129d
 }
 .no-padding {
 	padding: 0;
@@ -50,10 +41,4 @@ body {
 }
 
 @import 'home/main';
-<<<<<<< HEAD
-@import 'about/main';
-@import 'tutorial/main';
-@import 'login/main';
-=======
->>>>>>> 31fcac993af4b4a6878c8a20934b88559f55129d
 @import 'download/main';
