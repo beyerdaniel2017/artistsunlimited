@@ -28,10 +28,10 @@ app.controller('DownloadTrackController', ['$rootScope',
 			trackName: 'Mixing and Mastering',
 			userName: 'la tropical'
 		};
-		$scope.toggle = false;
+		$scope.toggle = true;
 		$scope.togglePlay = function() {
 			$scope.toggle = !$scope.toggle;
-			if($scope.toggle) {
+			if ($scope.toggle) {
 				playerObj.pause();
 			} else {
 				playerObj.play();
@@ -46,7 +46,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 		/* Default processing on page load */
 
 		$scope.getDownloadTrack = function() {
-			
+
 			$scope.processing = true;
 			var trackId = $location.search().trackid;
 			DownloadTrackService
@@ -60,10 +60,10 @@ app.controller('DownloadTrackController', ['$rootScope',
 
 			function initSC(res) {
 				return SC.initialize({
-          client_id: res.data.clientID,
-          redirect_uri: res.data.callbackURL,
-          scope: 'non-expiring'
-        });
+					client_id: res.data.clientID,
+					redirect_uri: res.data.callbackURL,
+					scope: 'non-expiring'
+				});
 			}
 
 			function fetchDownloadTrack() {
@@ -85,7 +85,6 @@ app.controller('DownloadTrackController', ['$rootScope',
 						'background-size': 'cover'
 					}
 				}
-				$scope.followBoxImageUrl = track.artworkUrl;
 				return DownloadTrackService.getTrackData(track);
 			}
 
@@ -97,6 +96,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 					downloadURL: result.data.download_url,
 					trackURL: result.data.trackURL
 				};
+				$scope.followBoxImageUrl = track.artworkUrl;
 
 				$scope.trackData.trackName = result.data.title;
 				$scope.trackData.userName = result.data.user.username;
@@ -113,9 +113,9 @@ app.controller('DownloadTrackController', ['$rootScope',
 				return SC.stream('/tracks/' + trackData.trackID);
 			}
 
-			function initPlay(player){
+			function initPlay(player) {
 				playerObj = player;
-			  playerObj.play();
+				playerObj.play();
 			}
 
 			function catchDownloadTrackError() {
