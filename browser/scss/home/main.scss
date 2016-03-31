@@ -59,14 +59,25 @@ body {
   text-align:center;
 }
 .nav > li > a {
-  padding: 10px 50px;
+  padding: 10px 45px;
   line-height: 60px;
+}
+.navbar-default .navbar-nav > li > a {
+	color: #686868;
+	font-weight: bold;
+	font-size: 12px;
+	letter-spacing: 4px;
 }
 .form-control {
   border-radius: 0px;
   border-color: #F7EAAD;
 }
-
+.navbar {
+	min-height: 80px;
+}
+.navbar-toggle {
+	margin-top: 22px;
+}
 /* Bootstap Modify CSS End */
 
 .logo img{
@@ -125,7 +136,7 @@ body {
   bottom: 0;
   left: 50%;
   z-index: 11;
-  height: 80px;
+  height: 90px;
   width: 70px;
   margin-left: -35px;
   background: url(../../../assets/images/arrow-down.png) no-repeat 21px 26px;
@@ -148,7 +159,15 @@ body {
 
 }
 .intro-text{
-  
+  	width:170px;
+	margin:0 auto;
+	
+}
+.intro-text h1{
+  	color:#fff;
+	font-weight:bolder;
+	margin:0;
+	
 }
 .intro-social{
   
@@ -163,5 +182,34 @@ body {
   padding: 10px 22px;
   }
 }
+@media screen and (max-width: 1199px) {
+   .nav > li > a {
+	padding: 10px 12px;
+	}
+}
+@media screen and (max-width: 1050px) {
+   .nav > li > a {
+	padding: 10px 26px;
+	}
+}
+@media screen and (max-width: 980px) {
+   .nav > li > a {
+	padding: 10px 12px;
+	}
+}
+@media screen and (max-width: 900px) {
+   .nav > li > a {
+	padding: 10px 12px;
+	}
+}
+@media screen and (max-width: 768px) {
+   .nav > li > a {
+		padding: 10px 12px;
+	}
+	.intro-logo{
+		text-align: right;
+	}
+}
+
 
 /* Responsive CSS END */
