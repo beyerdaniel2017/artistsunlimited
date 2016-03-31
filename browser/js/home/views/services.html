@@ -1,0 +1,110 @@
+
+<!-- Navigation Start -->
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="navbar-inner">
+	  <div class="container">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	     	<a class="navbar-brand logo" href="#" ui-sref="home"><img src="/assets/images/logo.png"></a>
+	    </div>
+
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav text-uppercase ">
+	        <li><a href="#" ui-sref="about">About</a></li>
+          <li><a href="#" ui-sref="services">Services</a></li>
+          <li><a href="#" ui-sref="artistTools">Artist Tools</a></li>
+          <li><a href="#" ui-sref="faqs">FAQs</a></li>
+          <li><a href="#" ui-sref="apply">Apply</a></li>
+          <li><a href="#" ui-sref="contact">Contact</a></li>
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</div>
+</nav>
+<!-- Navigation End -->
+<script>
+  $(document).ready(function(){
+    var windowHeight = $(window).height();
+    var navHeight = $('.navbar').height();
+    console.log(windowHeight, navHeight);
+    $('.content-area').css('min-height', (windowHeight - navHeight - 70) + 'px');
+  });
+</script>
+<!-- Content Start  -->
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="content-area bg-white">
+        <div class="row">
+       		<div class="col-md-12">
+       		 	<h1 class="bold">Services</h1>
+       		 	<div class="internal-content">
+       		 		<div class="row">
+       		 			<div class="col-md-5">
+       		 				<h4 class="bold">Mixing</h4>
+									<p>Mixing is basically tinkering with everything you have
+									recorded to complete your songs. We'll do things like
+									drop in effects, adjust fader, EQ your tracks and so on.
+									Think of mixing as putting the puzzle together. We're
+									putting together the parts of what you have recorded,
+									making sure everything hangs together right, and putting
+									some finishing touches on things. When we're done
+									mixing your songs, you should be pleased with the way
+									the song sounds and feel confident that you don't need to
+									add anything musically.</p>
+       		 			</div>
+       		 			<div class="col-md-2"></div>
+       		 			<div class="col-md-5">
+       		 				<h4 class="bold">Mastering</h4>
+									<p>Mastering is the process of taking a recording and
+									enhancing it to its fullest potential. It’s the fine-tuning that
+									makes your track sound as “big” and as “clear” as
+									possible without compromising the original feel of the
+									song. This also makes the album, as a whole, sound
+									unified.When you send us your audio for mastering
+									services, your tracks will be analyzed by an experienced
+									mastering engineer in one of our acoustically treated
+									mastering studio. After we get an overall impression of
+									the existing sound balance, your project is then profes-
+									sionally mastered using an appropriate chain of top
+									drawer analog and digital mastering tools.</p>
+       		 			</div>
+       		 		</div>
+
+       		 		<div class="row margin-top-5">
+       		 			<div class="col-md-5">
+       		 				<h4 class="bold">Repost Submission</h4>
+									<p>Our mission is to simply bring the best music to the
+									people. We also have a strong commitment to providing
+									feedback and guidance for rising artists. We guarantee
+									that your song will be listened to and critiqued by our
+									dedicated staff if it passes our submission process.
+									Although we cannot guarantee support for your submis-
+									sion on our promotional platforms such as SoundCloud,
+									YouTube, and Facebook, we will make sure to get back to
+									you with a response</p>
+       		 			</div>
+       		 			<div class="col-md-2"></div>
+       		 			<div class="col-md-5">
+       		 				<h4 class="bold">Premiere Submission*</h4>
+									<p>If you are confident that your music has what it takes to
+									be released to an audience of over 1M followers, with
+									exposure to various record labels, talent agencies, and
+									headliner DJs—consider presenting it to us.</p>
+       		 			</div>
+       		 		</div>
+						</div>
+       		</div>
+        </div>
+			</div>
+		</div>	
+	</div>
+</div>				
+<!-- Content End  -->

@@ -1,0 +1,91 @@
+
+<!-- Navigation Start -->
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="navbar-inner">
+	  <div class="container">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand logo" href="#" ui-sref="home"><img src="/assets/images/logo.png"></a>
+	    </div>
+
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav text-uppercase ">
+	        <li><a href="#" ui-sref="about">About</a></li>
+          <li><a href="#" ui-sref="services">Services</a></li>
+          <li><a href="#" ui-sref="artistTools">Artist Tools</a></li>
+          <li><a href="#" ui-sref="faqs">FAQs</a></li>
+          <li><a href="#" ui-sref="apply">Apply</a></li>
+          <li><a href="#" ui-sref="contact">Contact</a></li>
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</div>
+</nav>
+<!-- Navigation End -->
+<script>
+  $(document).ready(function(){
+    var windowHeight = $(window).height();
+    var navHeight = $('.navbar').height();
+    console.log(windowHeight, navHeight);
+    $('.content-area').css('min-height', (windowHeight - navHeight - 70) + 'px');
+  });
+</script>
+<!-- Content Start  -->
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="content-area bg-white">
+        <div class="row">
+       		<div class="col-md-6">
+       		 	<h1 class="bold">Apply</h1>
+       		</div>
+        </div>
+        <div class="row">
+        	<div class="col-md-6 col-md-offset-3">
+        		<h3 class="bold text-center">Join the team!</h3>
+            <form role="form" ng-submit="saveApplication()">
+            	<div class="internal-content">
+	              <div class="row">
+	                <div class="form-group col-md-6">
+	                  <input class="form-control" type="text" placeholder="First Name" ng-model="applicationObj.firstName" required/>
+	                </div>
+	                <div class="form-group col-md-6">
+	                  <input class="form-control" type="text" placeholder="Last Name" ng-model="applicationObj.lastName"/>
+	                </div>
+	              </div>
+	              <div class="form-group">
+	                <input class="form-control" type="text" placeholder="User Name" ng-model="applicationObj.userName" required/>
+	              </div>
+	              <div class="form-group">
+	                <input class="form-control" type="password" placeholder="Password" ng-model="applicationObj.password" required/>
+	              </div>
+	              <div class="form-group">
+	                <input class="form-control" type="password" placeholder="Confirm Password" ng-model="applicationObj.confirmPassword" required/>
+	              </div>
+	              <div class="form-group">
+	                <input class="form-control" type="email" placeholder="Email" ng-model="applicationObj.email"required />
+	              </div>
+	              <div class="form-group text-center">
+	                <p ng-show="message.application.visible" class="text-center">
+	                  {{message.application.val}}
+	                  </br>
+	                  </br>
+	                </p>
+	                <button class="btn btn-default btn-lg btn-enter" type="submit">Enter</button>
+	              </div>
+	            </div>
+            </form>
+	        </div>
+        </div>
+			</div>
+		</div>	
+	</div>
+</div>		
+<!-- Content End  -->

@@ -1,9 +1,40 @@
 app.config(function($stateProvider) {
-	$stateProvider.state('home', {
-		url: '/',
-		templateUrl: 'js/home/views/home.html',
-		controller: 'HomeController'
-	});
+	$stateProvider
+    .state('home', {
+  		url: '/',
+  		templateUrl: 'js/home/views/home.html',
+  		controller: 'HomeController'
+  	})
+    .state('about', {
+      url: '/about',
+      templateUrl: 'js/home/views/about.html',
+      controller: 'HomeController'
+    })
+    .state('services', {
+      url: '/services',
+      templateUrl: 'js/home/views/services.html',
+      controller: 'HomeController'
+    })
+    .state('artistTools', {
+      url: '/artist-tools',
+      templateUrl: 'js/home/views/artist-tools.html',
+      controller: 'HomeController'
+    })
+    .state('faqs', {
+      url: '/faqs',
+      templateUrl: 'js/home/views/faqs.html',
+      controller: 'HomeController'
+    })
+    .state('apply', {
+      url: '/apply',
+      templateUrl: 'js/home/views/apply.html',
+      controller: 'HomeController'
+    })
+    .state('contact', {
+      url: '/contact',
+      templateUrl: 'js/home/views/contact.html',
+      controller: 'HomeController'
+    });
 });
 
 app.controller('HomeController', ['$rootScope',
