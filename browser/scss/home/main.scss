@@ -1,15 +1,218 @@
-#home {
-  fullstack-logo {
-    padding-top: 30px;
-    width: 150px;
-    margin: 0 auto;
-  }
-  h1 {
-    margin-top: 40px;
-    text-align: center;
-  }
+body {
+  background: url(../assets/images/pattern.png) repeat center center fixed, linear-gradient(to bottom, #f7eaad 0%,#f5bbbc 100%);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height:100%;
+  color:#686868;
+  padding-top:150px;
+  background-attachment: fixed;
+}
+#main {
+  height:100%;
+  padding-top: 0px;
+  margin: 0 auto;
 }
 
+/* Custom classes start */
+
+.margin-top-5 {
+  margin-top: 5%;
+}
+.margin-top-10 {
+  margin-top: 10%;
+}
+.margin-top-15 {
+  margin-top: 15%;
+}
+.margin-top-20 {
+  margin-top: 20%;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.bg-white {
+  background:#fff;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+/* Custom classes end */
+
+/* Bootstap Modify CSS start */
+.navbar-default {
+  background-color: #fff;
+  border-color: transparent;
+}
+.navbar-nav,
+.navbar-nav > li {
+  float:none;
+  display:inline-block;
+  vertical-align: top;
+}
+.navbar-inner {
+  text-align:center;
+}
+.nav > li > a {
+  padding: 10px 45px;
+  line-height: 60px;
+}
+.navbar-default .navbar-nav > li > a {
+	color: #686868;
+	font-weight: bold;
+	font-size: 12px;
+	letter-spacing: 4px;
+}
+.form-control {
+  border-radius: 0px;
+  border-color: #F7EAAD;
+}
+.navbar {
+	min-height: 80px;
+}
+.navbar-toggle {
+	margin-top: 22px;
+}
+/* Bootstap Modify CSS End */
+
+.logo img{
+  height:50px;
+}
+.main-container{
+  position:relative;
+  height:100%;
+}
+.content-area {
+  height: auto;
+  padding: 7%
+}
+.internal-content {
+  margin: 8% 0 0 0;
+  font-size:0.9em;
+}
+.btn-enter{
+  background: #F5BBBC;
+  border: transparent;
+  border-radius: 0px;
+  padding: 14px 50px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.no-border {
+  border: 0px;
+  border-radius: 0px;
+}
+
+/* Contact Page Start */
+
+.address-content {
+  margin: 10% 0 0 0;
+}
+.address-line {
+  margin: 10px 0 0 0;
+  display: block
+}
+
+/* Contact Page End */
+
+/* Home Page Start */
+.intro-section{
+  height: 100%;
+  width: 100%;
+  border: 0;
+  padding:8% 0;
+}
+.white-text{
+  color:#fff;
+}
+.arrow-down {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 11;
+  height: 90px;
+  width: 70px;
+  margin-left: -35px;
+  background: url(../../../assets/images/arrow-down.png) no-repeat 21px 26px;
+  background-size: 28px 16px;
+  display: block;
+  -webkit-animation: moveUpDown 2s infinite normal ease-out;
+  animation: moveUpDown 2s infinite normal ease-out;
+}
+@-webkit-keyframes moveUpDown {
+  0% { bottom:0px; }
+  50%{ bottom:20px; }
+  100% { bottom: 0px; }
+}
+@keyframes moveUpDown {
+  0% { bottom:0px; }
+  50%{ bottom:20px; }
+  100% { bottom: 0px; }
+}
+.intro-logo{
+
+}
+.intro-text{
+  	width:170px;
+	margin:0 auto;
+	
+}
+.intro-text h1{
+  	color:#fff;
+	font-weight:bolder;
+	margin:0;
+	
+}
+.intro-social{
+  
+}
+/* Home Page End */
+
+
+/* Responsive CSS START */
+
+@media screen and (max-width: 1024px) {
+   .nav > li > a {
+  padding: 10px 22px;
+  }
+}
+@media screen and (max-width: 1199px) {
+   .nav > li > a {
+	padding: 10px 12px;
+	}
+}
+@media screen and (max-width: 1050px) {
+   .nav > li > a {
+	padding: 10px 26px;
+	}
+}
+@media screen and (max-width: 980px) {
+   .nav > li > a {
+	padding: 10px 12px;
+	}
+}
+@media screen and (max-width: 900px) {
+   .nav > li > a {
+	padding: 10px 12px;
+	}
+}
+@media screen and (max-width: 768px) {
+   .nav > li > a {
+		padding: 10px 12px;
+	}
+	.intro-logo{
+		text-align: right;
+	}
+}
+
+
+<<<<<<< HEAD
 /**** Bootstrap Modified CSS Start ***/
 .btn {
 	border-radius: 0px;
@@ -227,3 +430,6 @@
 }
 }
 /*************** Responsive Css End *************/
+=======
+/* Responsive CSS END */
+>>>>>>> 31fcac993af4b4a6878c8a20934b88559f55129d

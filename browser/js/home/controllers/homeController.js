@@ -1,9 +1,48 @@
 app.config(function($stateProvider) {
+<<<<<<< HEAD
 	$stateProvider.state('home', {
 		url: '/',
 		templateUrl: 'js/home/views/home.html',
 		controller: 'HomeController'
 	});
+=======
+	$stateProvider
+    .state('home', {
+  		url: '/',
+  		templateUrl: 'js/home/views/home.html',
+  		controller: 'HomeController'
+  	})
+    .state('about', {
+      url: '/about',
+      templateUrl: 'js/home/views/about.html',
+      controller: 'HomeController'
+    })
+    .state('services', {
+      url: '/services',
+      templateUrl: 'js/home/views/services.html',
+      controller: 'HomeController'
+    })
+    .state('artistTools', {
+      url: '/artist-tools',
+      templateUrl: 'js/home/views/artist-tools.html',
+      controller: 'HomeController'
+    })
+    .state('faqs', {
+      url: '/faqs',
+      templateUrl: 'js/home/views/faqs.html',
+      controller: 'HomeController'
+    })
+    .state('apply', {
+      url: '/apply',
+      templateUrl: 'js/home/views/apply.html',
+      controller: 'HomeController'
+    })
+    .state('contact', {
+      url: '/contact',
+      templateUrl: 'js/home/views/contact.html',
+      controller: 'HomeController'
+    });
+>>>>>>> 31fcac993af4b4a6878c8a20934b88559f55129d
 });
 
 app.controller('HomeController', ['$rootScope',
@@ -16,6 +55,10 @@ app.controller('HomeController', ['$rootScope',
 	function($rootScope, $state, $scope, $http, $location, $window, HomeService) {
 
     $scope.applicationObj = {};
+<<<<<<< HEAD
+=======
+    $scope.isSent = false;
+>>>>>>> 31fcac993af4b4a6878c8a20934b88559f55129d
     $scope.message = {
       application: {
         val: '',
@@ -23,6 +66,13 @@ app.controller('HomeController', ['$rootScope',
       }
     };
 
+<<<<<<< HEAD
+=======
+    $scope.toggleApplicationSent = function() {
+      $scope.isSent = !$scope.isSent
+    };
+
+>>>>>>> 31fcac993af4b4a6878c8a20934b88559f55129d
     $scope.saveApplication = function() {
       
       $scope.message.application = {
@@ -46,10 +96,14 @@ app.controller('HomeController', ['$rootScope',
       function saveApplicationResponse(res) {
         if(res.status === 200) {
           $scope.applicationObj = {};
+<<<<<<< HEAD
           $scope.message.application = {
             val: 'Application submitted successfully!',
             visible: true
           };
+=======
+          $scope.isSent = true;
+>>>>>>> 31fcac993af4b4a6878c8a20934b88559f55129d
         }
       }
       function saveApplicationError() {

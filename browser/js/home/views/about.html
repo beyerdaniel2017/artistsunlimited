@@ -1,0 +1,76 @@
+
+<!-- Navigation Start -->
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="navbar-inner">
+	  <div class="container">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand logo" href="#" ui-sref="home"><img src="/assets/images/logo.png"></a>
+	    </div>
+
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav text-uppercase ">
+	       	<li class="active"><a href="#" ui-sref="about">About</a></li>
+          <li><a href="#" ui-sref="services">Services</a></li>
+          <li><a href="#" ui-sref="artistTools">Artist Tools</a></li>
+          <li><a href="#" ui-sref="faqs">FAQs</a></li>
+          <li><a href="#" ui-sref="apply">Apply</a></li>
+          <li><a href="#" ui-sref="contact">Contact</a></li>
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</div>
+</nav>
+<!-- Navigation End -->
+<script>
+  $(document).ready(function(){
+    var windowHeight = $(window).height();
+    var navHeight = $('.navbar').height();
+    console.log(windowHeight, navHeight);
+    $('.content-area').css('min-height', (windowHeight - navHeight - 70) + 'px');
+  });
+</script>
+<!-- Content Start  -->
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="content-area bg-white">
+		              <div class="row">
+		             		 <div class="col-md-6">
+		             		 		<h1 class="bold">Who are we?</h1>
+		             		 		<div class="internal-content">
+		             		 		<p>Artists Unlimited is a group of young adults looking to connect
+computer science with the music industry, empowering artists
+with tools and information in hopes of democratizing the music
+industry. With years of experience in the music industry, we are
+trying to enable any artist, big or small, producing from their
+bedroom or from a studio, so that music speaks for itself.</p>
+<p >For anyone that is involved in the music industry, it does not take
+long to see that the PR and A&R team of an artist plays a pivotal
+and crucial role in the success of an act. Having members of an
+artists team who focus on getting the artists heard on all online
+music platforms, making sure social media profiles are buzzing
+with engagement, and essentially ensuring an artist stays relevant
+in the public sphere can be one of the most difficult tasks.</p>
+<p >We hope to create tools, plugins, and applications that will make
+it easier for an artist to be the best they can be online.</p>
+											</div>
+		             		 </div>
+		             		 <div class="col-md-6">
+		             		 <img class="img-responsive" src="/assets/images/who-we-are.png"/>
+		             		 </div>
+
+		              </div>
+
+						</div>
+					</div>	
+				</div>
+			</div>				
+<!-- Content End  -->

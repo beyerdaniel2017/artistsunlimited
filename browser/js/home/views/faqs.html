@@ -1,0 +1,96 @@
+
+<!-- Navigation Start -->
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="navbar-inner">
+	  <div class="container">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand logo" href="#" ui-sref="home"><img src="/assets/images/logo.png"></a>
+	    </div>
+
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav text-uppercase ">
+	        <li><a href="#" ui-sref="about">About</a></li>
+          <li><a href="#" ui-sref="services">Services</a></li>
+          <li><a href="#" ui-sref="artistTools">Artist Tools</a></li>
+          <li class="active"><a href="#" ui-sref="faqs">FAQs</a></li>
+          <li><a href="#" ui-sref="apply">Apply</a></li>
+          <li><a href="#" ui-sref="contact">Contact</a></li>
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</div>
+</nav>
+<!-- Navigation End -->
+<script>
+  $(document).ready(function(){
+    var windowHeight = $(window).height();
+    var navHeight = $('.navbar').height();
+    console.log(windowHeight, navHeight);
+    $('.content-area').css('min-height', (windowHeight - navHeight - 70) + 'px');
+  });
+</script>
+<!-- Content Start  -->
+			<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="content-area bg-white">
+        <div class="row">
+       		<div class="col-md-12">
+       		 	<h1 class="bold">FAQs</h1>
+       		 	<div class="internal-content">
+       		 		<div class="row">
+       		 			<div class="col-md-4">
+       		 				<h4 class="bold">Why is it like this?</h4>
+									<p>Lorem ipsum dolor sit amet, consectetur
+									adipiscing elit, sed do eiusmod tempor incidi-
+									dunt ut labore et dolore magna aliqua.</p>
+       		 			</div>
+       		 			<div class="col-md-4">
+       		 				<h4 class="bold">Why is it like this?</h4>
+									<p>Lorem ipsum dolor sit amet, consectetur
+									adipiscing elit, sed do eiusmod tempor incidi-
+									dunt ut labore et dolore magna aliqua.</p>
+       		 			</div>
+       		 			<div class="col-md-4">
+       		 				<h4 class="bold">Why is it like this?</h4>
+									<p>Lorem ipsum dolor sit amet, consectetur
+									adipiscing elit, sed do eiusmod tempor incidi-
+									dunt ut labore et dolore magna aliqua.</p>
+       		 			</div>
+       		 		</div>
+       		 		<div class="row margin-top-5">
+       		 			<div class="col-md-4">
+       		 				<h4 class="bold">Why is it like this?</h4>
+									<p>Lorem ipsum dolor sit amet, consectetur
+									adipiscing elit, sed do eiusmod tempor incidi-
+									dunt ut labore et dolore magna aliqua.</p>
+       		 			</div>
+       		 			<div class="col-md-4">
+       		 				<h4 class="bold">Why is it like this?</h4>
+									<p>Lorem ipsum dolor sit amet, consectetur
+									adipiscing elit, sed do eiusmod tempor incidi-
+									dunt ut labore et dolore magna aliqua.</p>
+       		 			</div>
+       		 			<div class="col-md-4">
+       		 				<h4 class="bold">Why is it like this?</h4>
+									<p>Lorem ipsum dolor sit amet, consectetur
+									adipiscing elit, sed do eiusmod tempor incidi-
+									dunt ut labore et dolore magna aliqua.</p>
+       		 			</div>
+       		 		</div>
+						</div>
+       		</div>
+        </div>
+			</div>
+		</div>	
+	</div>
+</div>
+<!-- Content End  -->

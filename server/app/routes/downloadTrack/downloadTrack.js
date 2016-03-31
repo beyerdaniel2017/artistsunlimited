@@ -54,6 +54,7 @@ router.post('/tasks', function(req, res, next) {
     SCR.put('/e1/me/track_reposts/' + body.trackId, body.token, function(err, data) {
       if (err) {
         next(err);
+<<<<<<< HEAD
         console.log(err);
       } else {
         res.send();
@@ -61,6 +62,8 @@ router.post('/tasks', function(req, res, next) {
     });
     SCR.put('/e1/me/playlist_reposts/' + body.playlistID, body.token, function(err, data) {
       if (err) {
+=======
+>>>>>>> 31fcac993af4b4a6878c8a20934b88559f55129d
         console.log(err);
       } else {
         res.send();
