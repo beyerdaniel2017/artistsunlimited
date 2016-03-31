@@ -47,11 +47,16 @@ app.controller('HomeController', ['$rootScope',
 	function($rootScope, $state, $scope, $http, $location, $window, HomeService) {
 
     $scope.applicationObj = {};
+    $scope.isSent = false;
     $scope.message = {
       application: {
         val: '',
         visible: false
       }
+    };
+
+    $scope.toggleApplicationSent = function() {
+      $scope.isSent = !$scope.isSent
     };
 
     $scope.saveApplication = function() {
@@ -77,10 +82,7 @@ app.controller('HomeController', ['$rootScope',
       function saveApplicationResponse(res) {
         if(res.status === 200) {
           $scope.applicationObj = {};
-          $scope.message.application = {
-            val: 'Application submitted successfully!',
-            visible: true
-          };
+          $scope.isSent = true;
         }
       }
       function saveApplicationError() {
