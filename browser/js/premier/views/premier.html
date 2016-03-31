@@ -1,45 +1,59 @@
-<div class="intro-background">
-  <div class="header-overlay"></div>
-  <div class="gap-15"></div>
-  <div class="container nav-min-height">
-    <div class="row">
-      <div class="col-md-12">
-        <nav class="navbar navbar-default"> 
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-            <!-- <a class="navbar-brand" href="#">Brand</a>--> 
-          </div>
-          
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-              <li><a href="#" ui-sref="home({ '#': 'about'})">About</a></li>
-              <li><a href="#" ui-sref="home({ '#': 'services'})">Services</a></li>
-              <li><a href="#" ui-sref="home({ '#': 'artists-tools'})">Artist Tools</a></li>
-              <li><a href="#" ui-sref="home({ '#': 'faqs'})">FAQs</a></li>
-              <li><a href="#" ui-sref="home({ '#': 'apply'})">Apply</a></li>
-              <li><a href="#" ui-sref="home({ '#': 'contact'})">Contact</a></li>
-            </ul>
-            </li>
-            </ul>
-          </div>
-          <!-- /.navbar-collapse --> 
-        </nav>
-        </div>
+<!-- Navigation Start -->
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand logo" href="#" ui-sref="home"><img src="/assets/images/logo.png"></a>
       </div>
-    </div>
 
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav text-uppercase ">
+          <li><a href="#" ui-sref="about">About</a></li>
+          <li><a href="#" ui-sref="services">Services</a></li>
+          <li><a href="#" ui-sref="artistTools">Artist Tools</a></li>
+          <li><a href="#" ui-sref="faqs">FAQs</a></li>
+          <li><a href="#" ui-sref="apply">Apply</a></li>
+          <li><a href="#" ui-sref="contact">Contact</a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </div>
+</nav>
+<!-- Navigation End -->
  
   
   <!--Section : 1-->
-  <section class="follow-section" data-section-name="Follow">
+  <!-- <section class="follow-section" data-section-name="Follow">
     <div class="container">
       <div class="row">
         <div class="col-md-12">
           <div class="content-container content-area">
-            <div class="col-md-12">
-              <h3 class="text-center">Premier Submission</h3>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+  <!--Section : 1--> 
+<!-- </div>
+</div> -->
+
+<!-- Content Start  -->
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="content-area bg-white">
+        <div class="row">
+          <div class="col-md-12">
+              <h1 class="text-center bold">Premier Submission</h1>
               </br>
               <form role="form" ng-submit="savePremier()">
                 <div class="row">
@@ -74,14 +88,13 @@
                 </div>
               </form>
             </div>
-          </div>
         </div>
       </div>
-    </div>
-  </section>
-  <!--Section : 1--> 
-</div>
-</div><script>
+    </div>  
+  </div>
+</div>        
+<!-- Content End  -->
+<script>
   $(document).ready(function(){
     var windowHeight = $(window).height();
     var navHeight = $('.nav-min-height').height();
