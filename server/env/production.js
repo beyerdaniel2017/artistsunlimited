@@ -19,6 +19,11 @@ module.exports = {
         "clientSecret": process.env.PAYPAL_CLIENT_SECRET,
         "mode": process.env.PAYPAL_ACCOUNT_MODE
     },
+    "AWS": {
+        "bucketName": process.env.S3_BUCKET_NAME,
+        "accessKeyId": process.env.AWS_ACCESS_KEY_ID,
+        "secretAccessKey": process.env.AWS_SECRET_ACCESS_KEY
+    },
     "TWITTER": {
         "consumerKey": process.env.TWITTER_CONSUMER_KEY,
         "consumerSecret": process.env.TWITTER_CONSUMER_SECRET,

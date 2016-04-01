@@ -21,8 +21,10 @@ app.controller('PremierController', ['$rootScope',
       val: '',
       visible: false
     };
+    $scope.processing = false;
     $scope.savePremier = function() {
-      $scope.message.visbile = false;
+      $scope.processing = true;
+      $scope.message.visible = false;
       var data = new FormData();
       for(var prop in $scope.premierObj) {
         data.append(prop, $scope.premierObj[prop]);
@@ -33,6 +35,7 @@ app.controller('PremierController', ['$rootScope',
         .catch(catchError);
 
       function receiveResponse(res) {
+        $scope.processing = false;
         if(res.status === 200) {
           $scope.message.visible = true;
           $scope.message.val = 'Thank you! Your message has been sent successfully.';
@@ -46,6 +49,7 @@ app.controller('PremierController', ['$rootScope',
 
       function catchError() {
         $scope.message.visible = true;
+        $scope.processing = false;
         $scope.message.val = 'Error in processing the request. Please try again.';
       }
     };

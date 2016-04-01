@@ -15,7 +15,6 @@ function sendEmail(to_name, to_email, from_name, from_email, subject, message_ht
         }],
         "attachments": attachments,
     };
-    console.log(message);
 
     function sender() {
         return new Promise(function(resolve, reject) {

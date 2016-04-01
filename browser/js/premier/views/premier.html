@@ -57,13 +57,13 @@
               <form role="form" ng-submit="savePremier()">
                 <div class="row">
                   <div class="col-sm-6 col-sm-offset-3">
-                    <input class="form-control" type="file" accept="audio/*" fileread="premierObj.file"/>
+                    <input class="form-control" type="file" accept="audio/*" fileread="premierObj.file" required/>
                   </div>
                 </div>
                 </br>
                 <div class="row">
                   <div class="col-sm-6 col-sm-offset-3">
-                    <input class="form-control" type="email" placeholder="Email" ng-model="premierObj.email" />
+                    <input class="form-control" type="email" placeholder="Email" ng-model="premierObj.email" required/>
                   </div>
                 </div>
                 </br>
@@ -93,6 +93,11 @@
   </div>
 </div>        
 <!-- Content End  -->
+
+<div class="processing-overlay" ng-show="processing">
+  <h1 class="processing-inner">Processing...</h1>
+</div>
+
 <script>
   $(document).ready(function(){
     var windowHeight = $(window).height();

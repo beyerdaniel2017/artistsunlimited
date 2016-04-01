@@ -12,6 +12,11 @@ module.exports = {
     "clientSecret": "EFGXm6BiNeucSWhFIOcj5yDr9vUqRHKBJuZ1951zFYE2oS71y_yxlH7WRzyLOJ7-SHFun06hg6sRp55w",
     "mode": "sandbox"
   },
+  "AWS": {
+    "bucketName": "premiersubmissions",
+    "accessKeyId": "AKIAIYT7INNPUXKJSNEA",
+    "secretAccessKey": "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"
+  },
   "TWITTER": {
     "consumerKey": "INSERT_TWITTER_CONSUMER_KEY_HERE",
     "consumerSecret": "INSERT_TWITTER_CONSUMER_SECRET_HERE",
