@@ -109,6 +109,12 @@
         <span>Track Url:</span><input type="url" ng-change="downloadUrlChange()" ng-model="track.trackURL" required/>
         <span>Download Url:</span><input type="url" ng-model="track.downloadURL"/>
         <span>Email:</span><input type="email" ng-model="track.email" required/>
+        <span>Repost:</span><select ng-model="track.playlistID">
+          <option value=""></option>
+          <option value="96169273">Le Cache</option>
+          <option value="204287177">Le Marque</option>
+          <option value="207455121">The Catalogue</option>
+        </select>
         <button type="submit">Submit</button>
       </form>
     </div>

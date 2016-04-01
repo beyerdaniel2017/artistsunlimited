@@ -253,7 +253,6 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
       });
   }
 
-
   /* Listen to socket events */
 
   socket.on('notification', function(data) {
