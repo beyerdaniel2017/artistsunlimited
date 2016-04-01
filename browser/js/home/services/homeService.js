@@ -6,7 +6,12 @@ app.service('HomeService', ['$http', function($http){
 		return $http.post('/api/home/application', data);
 	}
 
+	function saveArtistEmail(data) {
+		return $http.post('/api/home/artistemail', data);
+	}
+
 	return {
-		saveApplication: saveApplication
+		saveApplication: saveApplication,
+		saveArtistEmail: saveArtistEmail
 	};
 }]);

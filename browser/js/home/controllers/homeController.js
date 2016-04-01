@@ -47,15 +47,32 @@ app.controller('HomeController', ['$rootScope',
   function($rootScope, $state, $scope, $http, $location, $window, HomeService) {
 
     $scope.applicationObj = {};
-    $scope.isSent = false;
+    $scope.artist = {};
+    $scope.sent = {
+      application: false,
+      artistEmail: false
+    };
     $scope.message = {
       application: {
         val: '',
         visible: false
+      },
+      artistEmail: {
+        val: '',
+        visible: false
       }
     };
+
+    /* Apply page start */
+
     $scope.toggleApplicationSent = function() {
-      $scope.isSent = !$scope.isSent
+      $scope.message = {
+        application: {
+          val: '',
+          visible: false
+        }
+      };
+      $scope.sent.application = !$scope.sent.application;
     };
 
     $scope.saveApplication = function() {
@@ -65,14 +82,6 @@ app.controller('HomeController', ['$rootScope',
         visible: false
       };
 
-      if ($scope.applicationObj.password !== $scope.applicationObj.confirmPassword) {
-        $scope.message.application = {
-          val: 'Password and Confirm password do not match',
-          visible: true
-        };
-
-        return false;
-      }
       HomeService
         .saveApplication($scope.applicationObj)
         .then(saveApplicationResponse)
@@ -81,17 +90,69 @@ app.controller('HomeController', ['$rootScope',
       function saveApplicationResponse(res) {
         if (res.status === 200) {
           $scope.applicationObj = {};
-          $scope.isSent = true;
+          $scope.sent.application = true;
         }
       }
 
-      function saveApplicationError() {
+      function saveApplicationError(res) {
+        if(res.status === 400) {
+          $scope.message.application = {
+            val: 'Email already exists!',
+            visible: true
+          };
+          return;
+        }
         $scope.message.application = {
           val: 'Error in processing your request',
           visible: true
         };
       }
-    }
+    };
+
+    /* Apply page end */
+
+    /* Artist Tools page start */
+    
+    $scope.toggleArtistEmail = function() {
+      $scope.message = {
+        artistEmail: {
+          val: '',
+          visible: false
+        }
+      };
+      $scope.sent.artistEmail = !$scope.sent.artistEmail;
+    };
+
+    $scope.saveArtistEmail = function() {
+      HomeService
+        .saveArtistEmail($scope.artist)
+        .then(artistEmailResponse)
+        .catch(artistEmailError)
+
+      function artistEmailResponse(res) {
+        if (res.status === 200) {
+          $scope.artist = {};
+          $scope.sent.artistEmail = true;
+        }
+      }
+
+      function artistEmailError(res) {
+        if(res.status === 400) {
+          $scope.message.artistEmail = {
+            val: 'Email already exists!',
+            visible: true
+          };
+          return;
+        }
+
+        $scope.message.artistEmail = {
+          val: 'Error in processing your request',
+          visible: true
+        };
+      }
+    };
+
+    /* Artist Tools page end */
   }
 ]);
 
