@@ -3,12 +3,12 @@ var mongoose = require('mongoose');
 var Submission = mongoose.model('Submission');
 var Channel = mongoose.model('Channel');
 var paypal = require('paypal-rest-sdk');
+var ppConfig = require('./../../env').PAYPAL;
 paypal.configure({
-  'mode': 'live',
-  'client_id': 'AS_XdXBWw77UyF_QkMtq53Dve9CueqCscfdqPH2Rk-ypPe1l3MhBMgZIUfCs9QoL3rR9FhtqVg5XDXVP',
-  'client_secret': 'ELBPMRDOYTKJ060PVEyTMQwBvH2HwQEFWwSziOKp9hYG48z8UXendg3Us_9rlm3ioUMT3Go79KKd2VWa',
+  'mode': ppConfig.mode,
+  'client_id': ppConfig.clientID,
+  'client_secret': ppConfig.clientSecret,
 });
-
 module.exports = function(submission, channelID) {
   var index = submission.channelIDS.indexOf(channelID);
   Channel.findOne({
