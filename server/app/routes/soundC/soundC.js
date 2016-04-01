@@ -6,7 +6,7 @@ var request = require('request');
 var SCResolve = require('soundcloud-resolve-jsonp/node');
 
 
-router.post('/soundcloudTrack', function(req, res, next) {
+router.post('/resolve', function(req, res, next) {
 
   (new Promise(function(fulfill, reject) {
     SCResolve({

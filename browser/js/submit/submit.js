@@ -12,7 +12,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
 
   $scope.urlChange = function() {
     $scope.processing = true;
-    $http.post('/api/soundcloud/soundcloudTrack', {
+    $http.post('/api/soundcloud/resolve', {
         url: $scope.url
       })
       .then(function(res) {

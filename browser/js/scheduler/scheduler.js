@@ -86,7 +86,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
 
   $scope.changeURL = function() {
     $scope.processing = true;
-    $http.post('/api/soundcloud/soundcloudTrack', {
+    $http.post('/api/soundcloud/resolve', {
         url: $scope.makeEventURL
       })
       .then(function(res) {

@@ -48,7 +48,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 		$scope.getDownloadTrack = function() {
 
 			$scope.processing = true;
-			var trackId = $location.search().trackid;
+			var trackID = $location.search().trackid;
 			DownloadTrackService
 				.getConfig()
 				.then(initSC)
@@ -67,16 +67,16 @@ app.controller('DownloadTrackController', ['$rootScope',
 			}
 
 			function fetchDownloadTrack() {
-				return DownloadTrackService.getDownloadTrack(trackId);
+				return DownloadTrackService.getDownloadTrack(trackID);
 			}
-
 
 			function receiveDownloadTrack(result) {
 				track = {
 					trackURL: result.data.trackUrl,
 					downloadURL: result.data.downloadUrl,
 					artworkUrl: result.data.artworkURL,
-					email: result.data.email
+					email: result.data.email,
+					playlistID: result.data.playlistID
 				};
 				$scope.backgroundStyle = function() {
 					return {
@@ -89,23 +89,18 @@ app.controller('DownloadTrackController', ['$rootScope',
 			}
 
 			function receiveTrackData(result) {
+				console.log(result.data);
 				trackData = {
 					trackID: result.data.id,
 					artistID: result.data.user_id,
 					title: result.data.title,
 					downloadURL: result.data.download_url,
-					trackURL: result.data.trackURL
+					trackURL: result.data.objectURL
 				};
-				$scope.followBoxImageUrl = track.artworkUrl;
+				$scope.followBoxImageUrl = result.data.user.avatar_url;
 
 				$scope.trackData.trackName = result.data.title;
 				$scope.trackData.userName = result.data.user.username;
-
-				// SC.oEmbed(trackData.trackURL, {
-				// 	element: document.getElementById('scPlayer'),
-				// 	auto_play: false,
-				// 	maxheight: 150
-				// });
 
 				$scope.embedTrack = true;
 				$scope.processing = false;
@@ -115,7 +110,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 
 			function initPlay(player) {
 				playerObj = player;
-				playerObj.play();
+				// playerObj.play();
 			}
 
 			function catchDownloadTrackError() {
@@ -147,14 +142,14 @@ app.controller('DownloadTrackController', ['$rootScope',
 			function performTasks(res) {
 				taskObj = {
 					token: res.oauth_token,
-					trackId: trackData.trackID,
-					artistId: trackData.artistID
+					trackID: trackData.trackID,
+					artistID: trackData.artistID,
+					playlistID: track.playlistID
 				};
 				return DownloadTrackService.performTasks(taskObj);
 			}
 
 			function initDownload(res) {
-
 				if (track.downloadURL && track.downloadURL !== '') {
 					$window.location.href = track.downloadURL;
 				} else if (trackData.downloadURL && taskObj.token) {

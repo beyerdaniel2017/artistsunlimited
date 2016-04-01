@@ -15,8 +15,7 @@ var SCR = require('soundclouder');
 var Channel = mongoose.model('Channel');
 
 router.get('/track', function(req, res, next) {
-  var downloadTrackId = req.query.trackid;
-  DownloadTrack.findById(downloadTrackId).exec()
+  DownloadTrack.findById(req.query.trackID).exec()
     .then(function(downloadTrack) {
       res.send(downloadTrack);
       return res.end();

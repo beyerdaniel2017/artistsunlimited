@@ -200,7 +200,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
     if ($scope.track.trackUrl !== '') {
 
       $scope.processing = true;
-      $http.post('/api/soundcloud/soundcloudTrack', {
+      $http.post('/api/soundcloud/resolve', {
           url: $scope.track.trackUrl
         })
         .then(function(res) {
