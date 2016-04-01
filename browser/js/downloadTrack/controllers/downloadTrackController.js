@@ -72,15 +72,15 @@ app.controller('DownloadTrackController', ['$rootScope',
 
 			function receiveDownloadTrack(result) {
 				track = {
-					trackURL: result.data.trackUrl,
-					downloadURL: result.data.downloadUrl,
-					artworkUrl: result.data.artworkURL,
+					trackURL: result.data.trackURL,
+					downloadURL: result.data.downloadURL,
+					artworkURL: result.data.artworkURL,
 					email: result.data.email,
 					playlistID: result.data.playlistID
 				};
 				$scope.backgroundStyle = function() {
 					return {
-						'background-image': 'url(' + track.artworkUrl + ')',
+						'background-image': 'url(' + track.artworkURL + ')',
 						'background-repeat': 'no-repeat',
 						'background-size': 'cover'
 					}
@@ -95,7 +95,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 					artistID: result.data.user_id,
 					title: result.data.title,
 					downloadURL: result.data.download_url,
-					trackURL: result.data.objectURL
+					trackURL: result.data.trackURL
 				};
 				$scope.followBoxImageUrl = result.data.user.avatar_url;
 

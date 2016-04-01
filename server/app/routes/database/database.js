@@ -257,8 +257,8 @@ router.post('/downloadurl', function(req, res, next) {
   var body = req.body;
 
   var downloadTrack = new DownloadTrack({
-    trackUrl: body.trackUrl,
-    downloadUrl: body.downloadUrl,
+    trackURL: body.trackURL,
+    downloadURL: body.downloadURL,
     email: body.email,
     playlistID: body.playlistID,
     artworkURL: body.artworkURL,

@@ -1,10 +1,10 @@
 var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
-  trackUrl: {
+  trackURL: {
     type: String
   },
-  downloadUrl: {
+  downloadURL: {
     type: String
   },
   email: {

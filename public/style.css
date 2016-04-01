@@ -261,13 +261,6 @@ body {
   height: 40px;
   border-radius: 50%; }
 
-.blur-container {
-  -webkit-filter: blur(5px);
-  -moz-filter: blur(5px);
-  -o-filter: blur(5px);
-  -ms-filter: blur(5px);
-  filter: blur(5px); }
-
 .follow-box-container {
   position: absolute;
   top: 18%;
@@ -280,9 +273,6 @@ body {
   height: 360px; }
 
 .custom-sc-player-overlay {
-  height: 100%;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.5);
   cursor: pointer; }
 
 .control-icon {

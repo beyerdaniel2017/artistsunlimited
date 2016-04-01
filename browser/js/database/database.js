@@ -197,16 +197,15 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   }
 
   $scope.downloadUrlChange = function() {
-    if ($scope.track.trackUrl !== '') {
-
+    if ($scope.track.trackURL !== '') {
       $scope.processing = true;
       $http.post('/api/soundcloud/resolve', {
-          url: $scope.track.trackUrl
+          url: $scope.track.trackURL
         })
         .then(function(res) {
           $scope.track.trackID = res.data.id;
           $scope.track.artistID = res.data.user_id;
-          $scope.track.artworkURL = res.data.artwork_url;
+          $scope.track.artworkURL = res.data.artwork_url.replace('large.jpg', 't500x500.jpg');
           $scope.processing = false;
         }).then(null, function(err) {
           $scope.track.trackID = null;
@@ -225,8 +224,8 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
     $http.post('/api/database/downloadurl', $scope.track)
       .then(function(res) {
         $scope.track = {
-          trackUrl: '',
-          downloadUrl: '',
+          trackURL: '',
+          downloadURL: '',
           email: ''
         };
         alert("SUCCESS: Url saved successfully");
