@@ -54,12 +54,24 @@ app.run(function ($rootScope, AuthService, $state, $uiViewScroll) {
 app.directive('fileread', [function () {
     return {
         scope: {
-            fileread: '='
+            fileread: '=',
+            message: '='
         },
         link: function (scope, element, attributes) {
             element.bind('change', function (changeEvent) {
                 scope.$apply(function () {
-                    console.log(changeEvent.target.files[0]);
+                    scope.message = {
+                        visible: false,
+                        val: ''
+                    };
+                    if(changeEvent.target.files[0].size > 20*1000*1000) {
+                        scope.message = {
+                            visible: true,
+                            val: 'Error: File size cannot exceed 20 MB'
+                        };
+                        element.val(null);
+                        return;
+                    }
                     scope.fileread = changeEvent.target.files[0];
                 });
             });
