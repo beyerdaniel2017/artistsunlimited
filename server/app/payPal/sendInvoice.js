@@ -9,7 +9,6 @@ paypal.configure({
   'client_id': ppConfig.clientID,
   'client_secret': ppConfig.clientSecret,
 });
-
 module.exports = function(submission, channelID) {
   var index = submission.channelIDS.indexOf(channelID);
   Channel.findOne({
