@@ -64,10 +64,20 @@ app.directive('fileread', [function () {
                         visible: false,
                         val: ''
                     };
+                    
+                    if(changeEvent.target.files[0].type != "audio/mpeg" && changeEvent.target.files[0].type != "audio/mp3") {
+                        scope.message = {
+                            visible: true,
+                            val: 'Error: Please upload mp3 format file.'
+                        };
+                        element.val(null);
+                        return;
+                    }
+                    
                     if(changeEvent.target.files[0].size > 20*1000*1000) {
                         scope.message = {
                             visible: true,
-                            val: 'Error: File size cannot exceed 20 MB'
+                            val: 'Error: Please upload file upto 20 MB size.'
                         };
                         element.val(null);
                         return;
