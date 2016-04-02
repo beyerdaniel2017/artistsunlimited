@@ -6,6 +6,9 @@ var schema = new mongoose.Schema({
     s3URL: {
         type: String
     },
+    genre: {
+        type: String
+    },
     email: {
         type: String
     },

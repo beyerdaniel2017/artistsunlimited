@@ -15,13 +15,26 @@ app.controller('PremierController', ['$rootScope',
   'PremierService',
 	function($rootScope, $state, $scope, $http, $location, $window, PremierService) {
 
-    $scope.premierObj = {};
+    $scope.genreArray = [
+      'Chill/Mainstream',
+      'Hip-Hop',
+      'Trap',
+      'Festival',
+      'Creative',
+      'House',
+      'Indie/Alternative',
+      'Latin',
+      'Vocalists',
+      'Paid Repost'
+    ];
 
+    $scope.premierObj = {};
     $scope.message = {
       val: '',
       visible: false
     };
     $scope.processing = false;
+    
     $scope.savePremier = function() {
       $scope.processing = true;
       $scope.message.visible = false;

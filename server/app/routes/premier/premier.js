@@ -99,6 +99,7 @@ router.post('/', function(req, res, next) {
 
       var newPremierSubmission = new PremierSubmission({
         s3URL: data.Location,
+        genre: body.fields.genre,
         email: body.fields.email,
         name: body.fields.name,
         comment: body.fields.comment
