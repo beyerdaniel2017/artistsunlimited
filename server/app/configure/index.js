@@ -11,7 +11,7 @@ module.exports = function(app) {
     app.getValue = function(path) {
         return app.get(path);
     };
-    app.use(timeout('30s'));
+    app.use(timeout('180s'));
     require('./app-variables')(app);
     require('./static-middleware')(app);
     require('./parsing-middleware')(app);
