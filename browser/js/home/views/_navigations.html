@@ -32,7 +32,11 @@
   $(document).ready(function(){
     var windowHeight = $(window).height();
     var navHeight = $('.navbar').height();
-    $('.content-area').css('min-height', (windowHeight - 120 ) + 'px');
+
+    /* Here 90 is the fixed padding from top that is assigned to body */
+    var marginBottom = 90 - navHeight;
+    $('.content-area').css('min-height', (windowHeight - navHeight - marginBottom * 2) + 'px');
+    $('.content-area').css('margin-bottom', (marginBottom) + 'px');
     var page = window.location.pathname;
     page = page.replace('/','');
     $(".navbar-nav li").each(function(){
