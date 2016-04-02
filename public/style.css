@@ -39,7 +39,7 @@
   overflow: hidden; }
 
 body {
-  background: url(../assets/images/background.png) no-repeat;
+  background: url(../assets/images/Background.png) no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

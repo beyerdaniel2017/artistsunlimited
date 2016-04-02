@@ -8,8 +8,8 @@ var fs = require('fs');
 var path = require('path');
 
 var options = {
-  key: fs.readFileSync(path.join(__dirname, './keys/devkey.key')),
-  cert: fs.readFileSync(path.join(__dirname, './keys/haverfest.com.crt'))
+  key: fs.readFileSync(path.join(__dirname, './keys/domain.key')),
+  cert: fs.readFileSync(path.join(__dirname, './keys/artistsunlimited.co.crt'))
 };
 
 // Create a node server instance! cOoL!
@@ -35,7 +35,7 @@ var startexpress = function() {
   var expressApp = require('express')();
 
   expressApp.get('*', function(req, res) {
-    res.redirect('https://' + req.host + req.url)
+    res.redirect('https://' + req.hostname + req.url)
   });
   var HTTP_PORT = process.env.HTTP_PORT || 1337;
   expressApp.listen(HTTP_PORT);
