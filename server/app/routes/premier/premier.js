@@ -77,7 +77,7 @@ router.post('/', function(req, res, next) {
         Body: body.file.buffer,
         ContentType: body.file.mimetype
       };
-      var s3 = new AWS.S3({params: {Bucket: 'premiersubmissions'}});
+      var s3 = new AWS.S3({params: {Bucket: awsConfig.bucketName}});
       s3.upload(data, function(err, data){
         if (err) {
           reject(err);
