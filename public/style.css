@@ -39,15 +39,16 @@
   overflow: hidden; }
 
 body {
-  background: url(../assets/images/pattern.png) repeat center center fixed, linear-gradient(to bottom, #f7eaad 0%, #f5bbbc 100%);
+  background: url(../assets/images/background.png) no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
   height: 100%;
   color: #686868;
-  padding-top: 150px;
-  background-attachment: fixed; }
+  padding-top: 90px;
+  background-attachment: fixed;
+  font-family: Helvetica, Sans-Serif; }
 
 #main {
   height: 100%;
@@ -93,7 +94,7 @@ body {
 
 .nav > li > a {
   padding: 10px 45px;
-  line-height: 60px; }
+  line-height: 40px; }
 
 .navbar-default .navbar-nav > li > a {
   color: #686868;
@@ -106,14 +107,23 @@ body {
   border-color: #F7EAAD; }
 
 .navbar {
-  min-height: 80px; }
+  min-height: 40px; }
 
 .navbar-toggle {
-  margin-top: 22px; }
+  margin-top: 18px; }
+
+.navbar-brand {
+  padding: 8px 15px; }
+
+.navbar-default .navbar-toggle {
+  border-color: transparent; }
+
+.navbar-fixed-top {
+  border-width: 0; }
 
 /* Bootstap Modify CSS End */
 .logo img {
-  height: 50px; }
+  height: 45px; }
 
 .main-container {
   position: relative;
@@ -121,11 +131,11 @@ body {
 
 .content-area {
   height: auto;
-  padding: 7%; }
+  padding: 8.2%; }
 
 .internal-content {
   margin: 8% 0 0 0;
-  font-size: 0.9em; }
+  font-size: 1em; }
 
 .btn-enter {
   background: #F5BBBC;
@@ -133,7 +143,19 @@ body {
   border-radius: 0px;
   padding: 14px 50px;
   color: #fff;
-  font-size: 14px; }
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 3px; }
+
+.btn-start {
+  background: #fff;
+  border: transparent;
+  border-radius: 0px;
+  padding: 14px 50px;
+  color: #686868;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 3px; }
 
 .no-border {
   border: 0px;
@@ -158,44 +180,30 @@ body {
 .white-text {
   color: #fff; }
 
-.arrow-down {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  z-index: 11;
-  height: 90px;
-  width: 70px;
-  margin-left: -35px;
-  background: url(../../../assets/images/arrow-down.png) no-repeat 21px 26px;
-  background-size: 28px 16px;
-  display: block;
-  -webkit-animation: moveUpDown 2s infinite normal ease-out;
-  animation: moveUpDown 2s infinite normal ease-out; }
+.logo-contatainer {
+  margin: 0px 0px 60px auto;
+  width: 100%;
+  display: block; }
 
-@-webkit-keyframes moveUpDown {
-  0% {
-    bottom: 0px; }
-  50% {
-    bottom: 20px; }
-  100% {
-    bottom: 0px; } }
-
-@keyframes moveUpDown {
-  0% {
-    bottom: 0px; }
-  50% {
-    bottom: 20px; }
-  100% {
-    bottom: 0px; } }
+.intro-logo {
+  border-right: 4px solid white;
+  padding-right: 25px;
+  display: inline-block; }
 
 .intro-text {
-  width: 170px;
-  margin: 0 auto; }
+  text-align: left;
+  float: right;
+  width: 60%; }
 
 .intro-text h1 {
   color: #fff;
   font-weight: bolder;
   margin: 0; }
+
+.v-line {
+  border-right: 4px solid #fff;
+  height: 80px;
+  display: inline-block; }
 
 /* Home Page End */
 /* Responsive CSS START */
@@ -226,7 +234,6 @@ body {
     text-align: right; } }
 
 /*************** Responsive Css End *************/
-/* Responsive CSS END */
 .follow-area {
   height: auto;
   padding: 0; }
@@ -239,27 +246,7 @@ body {
   width: 100%;
   min-height: 595px;
   position: relative;
-  background: #fff url(../../assets/images/header-overlay.png) no-repeat;
   padding: 12% 0; }
-
-.follow-box {
-  background: #fff;
-  height: 400px;
-  position: relative;
-  margin: 0 0 20px;
-  overflow: hidden; }
-
-.follow-bottom {
-  padding: 20px 0;
-  background-color: #fff;
-  position: absolute;
-  width: 100%;
-  bottom: 0; }
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%; }
 
 .follow-box-container {
   position: absolute;
@@ -268,19 +255,36 @@ body {
   margin-left: -195px;
   padding-bottom: 100px; }
 
+.follow-box {
+  background: #fff;
+  position: relative;
+  margin: 0 0 20px;
+  overflow: hidden; }
+
 .custom-sc-player {
   width: 360px;
   height: 360px; }
 
 .custom-sc-player-overlay {
+  height: 100%;
+  width: 100%;
   cursor: pointer; }
+
+.follow-bottom {
+  padding: 10px 10px;
+  background-color: #fff;
+  width: 100%;
+  bottom: 0; }
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; }
 
 .control-icon {
   font-size: 50px;
-  position: absolute;
-  top: 110px;
-  left: 160px;
+  margin: 150px auto;
   color: #FFFFFF; }
 
 .pad-download-agreement {
-  padding: 5% 20px; }
+  padding: 5px 5px; }

@@ -1,4 +1,4 @@
-.follow-area {
+ .follow-area {
 	height: auto;
 	padding: 0;
 }
@@ -10,20 +10,35 @@
 	width: 100%;
 	min-height: 595px;
 	position: relative;
-	background: #fff url(../../assets/images/header-overlay.png) no-repeat;
+	// background: #fff url(../../assets/images/header-overlay.png) no-repeat;
 	padding: 12% 0;
+}
+.follow-box-container {
+	position: absolute;
+	top: 18%;
+	left: 50%;
+	margin-left: -195px;
+	padding-bottom: 100px;
 }
 .follow-box {
 	background: #fff;
-	height: 400px;
+	// height: 400px;
 	position: relative;
 	margin: 0 0 20px;
 	overflow: hidden;
 }
+.custom-sc-player {
+	width:360px;
+	height: 360px;
+}
+.custom-sc-player-overlay {
+	height: 100%;
+	width: 100%;
+	cursor: pointer;
+}
 .follow-bottom {
-	padding: 20px 0;
+	padding: 10px 10px;
 	background-color: #fff;
-	position: absolute;
 	width: 100%;
 	bottom: 0;
 }
@@ -32,38 +47,11 @@
 	height: 40px;
 	border-radius: 50%;
 }
-// .blur-container {
-// 	-webkit-filter: blur(5px); 
-// 	-moz-filter: blur(5px); 
-// 	-o-filter: blur(5px); 
-// 	-ms-filter: blur(5px); 
-// 	filter: blur(5px);	
-// }
-
-.follow-box-container {
-	position: absolute;
-	top: 18%;
-	left: 50%;
-	margin-left: -195px;
-	padding-bottom: 100px;
-}
-.custom-sc-player {
-	width:360px;
-	height: 360px
-}
-.custom-sc-player-overlay {
-	// height: 100%;
-	// width: 100%;
-	// background: rgba(0,0,0,.5);
-	cursor: pointer;
-}
 .control-icon {
 	font-size: 50px;
-	position: absolute;
-	top: 110px;
-	left: 160px;
+	margin: 150px auto;
 	color: #FFFFFF
 }
 .pad-download-agreement {
-	padding: 5% 20px;
+	padding: 5px 5px;
 }

@@ -216,6 +216,10 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   }
 
   $scope.saveDownloadUrl = function() {
+    if (!$scope.track.playlistID || !$scope.track.email || !$scope.track.downloadURL) {
+      alert('Please fill in all fields');
+      return false;
+    }
     if (!$scope.track.trackID) {
       alert('Track Not Found');
       return false;
@@ -226,7 +230,8 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
         $scope.track = {
           trackURL: '',
           downloadURL: '',
-          email: ''
+          email: '',
+          playlistID: ''
         };
         alert("SUCCESS: Url saved successfully");
         $scope.processing = false;

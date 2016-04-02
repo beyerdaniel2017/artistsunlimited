@@ -1,13 +1,15 @@
 body {
-  background: url(../assets/images/pattern.png) repeat center center fixed, linear-gradient(to bottom, #f7eaad 0%,#f5bbbc 100%);
+  background: url(../assets/images/background.png) no-repeat; 
+  // repeat center center fixed, linear-gradient(to bottom, #f7eaad 0%,#f5bbbc 100%);
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
   height:100%;
   color:#686868;
-  padding-top:110px;
+  padding-top:90px;
   background-attachment: fixed;
+  font-family: Helvetica, Sans-Serif;
 }
 #main {
   height:100%;
@@ -102,7 +104,7 @@ body {
 }
 .internal-content {
   margin: 8% 0 0 0;
-  font-size:0.9em;
+  font-size:1em;
 }
 .btn-enter{
   background: #F5BBBC;
