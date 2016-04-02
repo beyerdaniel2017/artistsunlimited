@@ -47,10 +47,19 @@ app.controller('PremierController', ['$rootScope',
         $scope.message.val = 'Error in processing the request. Please try again.';
       }
 
-      function catchError() {
-        $scope.message.visible = true;
+      function catchError(res) {
         $scope.processing = false;
-        $scope.message.val = 'Error in processing the request. Please try again.';
+        if(res.status === 400) {
+          $scope.message = {
+            visible: true,
+            val: res.data
+          };
+          return;
+        }
+        $scope.message = {
+          visible: true,
+          val: 'Error in processing the request. Please try again.'
+        };
       }
     };
 }]);

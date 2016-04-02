@@ -29,7 +29,10 @@ router.post('/', function(req, res, next) {
 
   function parseMultiPart() {
     return new Promise(function(resolve, reject) {
-      var busboy = new Busboy({ headers: req.headers });
+      var busboy = new Busboy({ 
+        headers: req.headers,
+        limits  : { fileSize: 20*1024*1024, files: 1 } 
+      });
       busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
         
         var buffer = new Buffer('');
@@ -38,6 +41,10 @@ router.post('/', function(req, res, next) {
 
         file.on('data', function(data) {
           buffer = Buffer.concat([buffer, data]);
+        });
+
+        file.on('limit', function() {
+          reject('Error: File size cannot be more than 20 MB');
         });
 
         file.on('end', function() {
@@ -120,6 +127,6 @@ router.post('/', function(req, res, next) {
   }
 
   function errorHandler(err) {
-    return res.status(500).send(err);
+    return res.status(400).send(err);
   }
 });
