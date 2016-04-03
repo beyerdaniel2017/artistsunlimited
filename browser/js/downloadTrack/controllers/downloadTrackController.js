@@ -16,10 +16,6 @@ app.controller('DownloadTrackController', ['$rootScope',
 	function($rootScope, $state, $scope, $http, $location, $window, DownloadTrackService) {
 
 		/* Normal JS vars and functions not bound to scope */
-
-		var taskObj = {};
-		var track = {};
-		var trackData = {};
 		var playerObj = null;
 
 		/* $scope bindings start */
@@ -54,7 +50,6 @@ app.controller('DownloadTrackController', ['$rootScope',
 				.then(initSC)
 				.then(fetchDownloadTrack)
 				.then(receiveDownloadTrack)
-				.then(receiveTrackData)
 				.then(initPlay)
 				.catch(catchDownloadTrackError);
 
@@ -71,49 +66,27 @@ app.controller('DownloadTrackController', ['$rootScope',
 			}
 
 			function receiveDownloadTrack(result) {
-				track = {
-					trackURL: result.data.trackURL,
-					downloadURL: result.data.downloadURL,
-					artworkURL: result.data.artworkURL,
-					email: result.data.email,
-					playlistID: result.data.playlistID
-				};
+				$scope.track = result.data;
 				$scope.backgroundStyle = function() {
 					return {
-						'background-image': 'url(' + track.artworkURL + ')',
+						'background-image': 'url(' + $scope.track.trackArtworkURL + ')',
 						'background-repeat': 'no-repeat',
 						'background-size': 'cover'
 					}
 				}
-				return DownloadTrackService.getTrackData(track);
-			}
-
-			function receiveTrackData(result) {
-				console.log(result.data);
-				trackData = {
-					trackID: result.data.id,
-					artistID: result.data.user_id,
-					title: result.data.title,
-					downloadURL: result.data.download_url,
-					trackURL: result.data.trackURL
-				};
-				$scope.followBoxImageUrl = result.data.user.avatar_url;
-
-				$scope.trackData.trackName = result.data.title;
-				$scope.trackData.userName = result.data.user.username;
 
 				$scope.embedTrack = true;
 				$scope.processing = false;
 
-				return SC.stream('/tracks/' + trackData.trackID);
+				return SC.stream('/tracks/' + $scope.track.trackID);
 			}
 
 			function initPlay(player) {
 				playerObj = player;
-				// playerObj.play();
 			}
 
 			function catchDownloadTrackError() {
+				alert('Song Not Found');
 				$scope.processing = false;
 				$scope.embedTrack = false;
 			}
@@ -123,6 +96,10 @@ app.controller('DownloadTrackController', ['$rootScope',
 		/* On click download track button */
 
 		$scope.downloadTrack = function() {
+			if ($scope.track.comment && !$scope.track.commentText) {
+				alert('Please write a comment!');
+				return false;
+			}
 			$scope.processing = true;
 			$scope.errorText = '';
 			$http.get('api/soundcloud/soundcloudConfig')
@@ -140,20 +117,15 @@ app.controller('DownloadTrackController', ['$rootScope',
 				.catch(catchTasksError)
 
 			function performTasks(res) {
-				taskObj = {
-					token: res.oauth_token,
-					trackID: trackData.trackID,
-					artistID: trackData.artistID,
-					playlistID: track.playlistID
-				};
-				return DownloadTrackService.performTasks(taskObj);
+				$scope.track.token = res.oauth_token;
+				return DownloadTrackService.performTasks($scope.track);
 			}
 
 			function initDownload(res) {
-				if (track.downloadURL && track.downloadURL !== '') {
-					$window.location.href = track.downloadURL;
-				} else if (trackData.downloadURL && taskObj.token) {
-					$window.location.href = trackData.downloadURL + '?cliend_id=' + $scope.clientIDString + '&oauth_token=' + taskObj.token.toString();
+				if ($scope.track.downloadURL && $scope.track.downloadURL !== '') {
+					$window.location.href = $scope.track.downloadURL;
+				} else if ($scope.track.downloadURL && $scope.track.token) {
+					$window.location.href = trackData.downloadURL + '?cliend_id=' + $scope.clientIDString + '&oauth_token=' + $scope.track.token.toString();
 				} else {
 					$scope.errorText = 'Error! Could not fetch download URL';
 					$scope.downloadURLNotFound = true;

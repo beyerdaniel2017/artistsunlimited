@@ -131,10 +131,10 @@ body {
 
 .content-area {
   height: auto;
-  padding: 8.2%; }
+  padding: 50px 80px; }
 
 .internal-content {
-  margin: 8% 0 0 0;
+  margin: 10px 0 0 0;
   font-size: 1em; }
 
 .btn-enter {
@@ -287,4 +287,6 @@ body {
   color: #FFFFFF; }
 
 .pad-download-agreement {
-  padding: 5px 5px; }
+  padding: 15px 5px 0 5px;
+  text-align: center;
+  font-size: 0.8em; }

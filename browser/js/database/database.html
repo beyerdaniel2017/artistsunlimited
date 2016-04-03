@@ -28,6 +28,7 @@
     <span style="padding: 0 10px"><a ui-sref="scheduler">Scheduler</a></span>
     <span style="padding: 0 10px"><a ui-sref="database">Database</a></span>
     <span style="padding: 0 10px"><a ui-sref="autoEmailsList">Auto Emails</a></span>
+    <span style="padding: 0 10px"><a ui-sref="downloadGate">DL Gate</a></span>
   </div>
   </br>
   <div>
@@ -102,21 +103,6 @@
       <span>Max Followers:</span><input type="number" ng-model="trdUsrQuery.followersLT"/>
       <button ng-click="createTrdUsrQueryDoc()">Query Tracked Users</button>
       <button ng-click="download(trdUsrFilename)" style="background-color: red" ng-show="downloadTrdUsrButtonVisible">Download File</button>
-    </div>
-    <div style="margin:20px 20px; padding: 10px 10px; background-color:#D3D3D3">
-      <h3>Add Download Url</h3>
-      <form ng-submit="saveDownloadUrl()">
-        <span>Track Url:</span><input type="url" ng-change="downloadUrlChange()" ng-model="track.trackURL" required/>
-        <span>Download Url:</span><input type="url" ng-model="track.downloadURL"/>
-        <span>Email:</span><input type="email" ng-model="track.email" required/>
-        <span>Repost:</span><select ng-model="track.playlistID">
-          <option value=""></option>
-          <option value="96169273">Le Cache</option>
-          <option value="204287177">Le Marque</option>
-          <option value="207455121">The Catalogue</option>
-        </select>
-        <button type="submit">Submit</button>
-      </form>
     </div>
     <div style="margin:20px 20px; padding: 10px 10px; background-color:#D3D3D3">
       <h3>Paid Repost Channels</h3>

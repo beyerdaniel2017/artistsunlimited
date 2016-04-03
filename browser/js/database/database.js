@@ -196,52 +196,6 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
     $scope.downloadTrdUsrButtonVisible = false;
   }
 
-  $scope.downloadUrlChange = function() {
-    if ($scope.track.trackURL !== '') {
-      $scope.processing = true;
-      $http.post('/api/soundcloud/resolve', {
-          url: $scope.track.trackURL
-        })
-        .then(function(res) {
-          $scope.track.trackID = res.data.id;
-          $scope.track.artistID = res.data.user_id;
-          $scope.track.artworkURL = res.data.artwork_url.replace('large.jpg', 't500x500.jpg');
-          $scope.processing = false;
-        }).then(null, function(err) {
-          $scope.track.trackID = null;
-          $scope.notFound = true;
-          $scope.processing = false;
-        });
-    }
-  }
-
-  $scope.saveDownloadUrl = function() {
-    if (!$scope.track.playlistID || !$scope.track.email || !$scope.track.downloadURL) {
-      alert('Please fill in all fields');
-      return false;
-    }
-    if (!$scope.track.trackID) {
-      alert('Track Not Found');
-      return false;
-    }
-    $scope.processing = true;
-    $http.post('/api/database/downloadurl', $scope.track)
-      .then(function(res) {
-        $scope.track = {
-          trackURL: '',
-          downloadURL: '',
-          email: '',
-          playlistID: ''
-        };
-        alert("SUCCESS: Url saved successfully");
-        $scope.processing = false;
-      })
-      .then(null, function(err) {
-        alert("ERROR: Error in saving url");
-        $scope.processing = false;
-      });
-  }
-
   $scope.savePaidRepostChannel = function() {
     $scope.processing = true;
     $http.post('/api/database/paidrepost', $scope.paidRepost)
@@ -259,7 +213,6 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
   }
 
   /* Listen to socket events */
-
   socket.on('notification', function(data) {
     var percentage = parseInt(Math.floor(data.counter / data.total * 100), 10);
     $scope.bar.value = percentage;

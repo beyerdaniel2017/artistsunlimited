@@ -256,17 +256,8 @@ router.post('/downloadurl', function(req, res, next) {
 
   var body = req.body;
 
-  var downloadTrack = new DownloadTrack({
-    trackURL: body.trackURL,
-    downloadURL: body.downloadURL,
-    email: body.email,
-    playlistID: body.playlistID,
-    artworkURL: body.artworkURL,
-    trackID: body.trackID,
-    artistID: body.artistID
-  });
+  var downloadTrack = new DownloadTrack(body);
   downloadTrack.save();
-  var urlObj = url.parse(req.url);
   var trackUrl = req.protocol + '://' + req.get('host') + '/download?trackid=' + downloadTrack._id;
   var html = '<p>Here is your download URL: - </p><span>' + trackUrl + '</span>';
   sendEmail('Service', body.email, 'Artists Unlimited', 'support@artistsunlimited.co', 'Download Track', html);
@@ -359,6 +350,4 @@ router.post('/paidrepost', function(req, res, next) {
 
     return newPaidRepostAccount.save();
   }
-
-
 });

@@ -10,17 +10,38 @@ var schema = new mongoose.Schema({
   email: {
     type: String
   },
-  artworkURL: {
-    type: String
-  },
   trackID: {
     type: Number
   },
-  artistID: {
-    type: Number
-  },
-  playlistID: {
+  trackTitle: {
     type: String
+  },
+  trackArtworkURL: {
+    type: String
+  },
+  artistIDS: {
+    type: [Number]
+  },
+  artistArtworkURL: {
+    type: String
+  },
+  artistUsername: {
+    type: String
+  },
+  playlistIDS: {
+    type: [Number]
+  },
+  like: {
+    type: Boolean
+  },
+  repost: {
+    type: Boolean
+  },
+  comment: {
+    type: Boolean
+  },
+  SMLinks: {
+    type: Object
   }
 });
 

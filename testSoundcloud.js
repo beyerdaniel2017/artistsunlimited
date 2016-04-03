@@ -33,23 +33,35 @@ var redirect_uri = "https://artistsunlimited.co/callback.html";
 //   .end();
 
 var aT = "1-231090-198031384-1101f26bdf7c6";
-var id = 96169273;
+var id = 241853814;
 
-// SC.initialize({
+// SC.init({
 //   client_id: client_id,
 //   oauth_token: aT,
 //   redirect_uri: redirect_uri
 // });
 
-// SC.get('/tracks/' + id).then(function(data) {
-//     console.log(data);
-//   })
-//   .then(null, console.log);
-// + id
+
 SCR.init(client_id, client_secret, redirect_uri);
-SCR.put('/e1/me/playlist_reposts/' + id, aT, function(err, data) {
+SCR.get('/tracks/' + id, aT, function(err, data) {
   if (err) {
     console.log(err);
+  } else {
+    var timestamp = Math.floor((Math.random() * data.duration));
+    SCR.post('/tracks/' + id + '/comments', aT, {
+      'comment[body]': "Groovy track!",
+      'comment[timestamp]': timestamp
+    }, function(err, data) {
+      if (err) {
+        console.log(err)
+      }
+      console.log(data);
+    })
   }
-  console.log(data);
 });
+// SCR.get('/e1/me/track_reposts/' + id, aT, function(err, data) {
+//   if (err) {
+//     console.log(err);
+//   }
+//   console.log(data);
+// });

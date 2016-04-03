@@ -1,35 +1,4 @@
-<!-- Navigation Start -->
-<nav class="navbar navbar-default navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand logo" href="#" ui-sref="home"><img src="/assets/images/logo.png"></a>
-      </div>
-
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav text-uppercase ">
-          <li><a href="#" ui-sref="about">About</a></li>
-          <li><a href="#" ui-sref="services">Services</a></li>
-          <li><a href="#" ui-sref="artistTools">Artist Tools</a></li>
-          <li><a href="#" ui-sref="faqs">FAQs</a></li>
-          <li><a href="#" ui-sref="apply">Apply</a></li>
-          <li><a href="#" ui-sref="contact">Contact</a></li>
-        </ul>
-      </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-  </div>
-</nav>
-<!-- Navigation End -->
-
- 
+<ng-include src="'js/home/views/_navigations.html'"></ng-include>
   <!-- Content Start  -->
 <div class="container" ng-init="getDownloadTrack()">
   <div class="row">
@@ -45,18 +14,26 @@
                     <span class="glyphicon glyphicon-pause control-icon" ng-if="!toggle"></span>
                     <span class="glyphicon glyphicon-play control-icon" ng-if="toggle"></span>
                   </div>
-                  <!-- <img class="img-responsive" ng-src="{{followBoxImageUrl}}" style="width:100%;" />  -->
                 </div>
                 <div class="follow-bottom">
-                 <h4>{{trackData.trackName}}</h4>
-                  <a href="#"><img class="avatar" ng-src="{{followBoxImageUrl}}"/></a> {{trackData.userName}}
+                 <h4>{{track.trackTitle}}</h4>
+                  <a href="#"><img class="avatar" ng-src="{{track.artistArtworkURL}}"/></a> {{track.artistUsername}}
                   <p class="text-justify pad-download-agreement">
-                    By downloading this song you agree to: Like the track compilation,
-                    Repost the track compilation, Follow *nameofartist* and our network
+                    By downloading this song you agree to: <img src="assets/images/favorite_icon.png" style="width:14px; height:12px;"> the track, <img src="assets/images/repost_icon.png" style="width:16px; height:12px;"> the track, and follow {{track.artistUsername}} and our network.
                   </p>
                 </div>  
               </div>
-              <a class="btn btn-default btn-lg no-border" href="javascript:void(0)" ng-click="downloadTrack()">CONNECT & DOWNLOAD</a>
+              <input type="text" ng-model="track.commentText" placeholder="Comment" ng-if="track.comment" style="width:360px; height:30px; margin-bottom:5px">
+              <a class="btn btn-default btn-lg no-border" style="width:360px;" href="javascript:void(0)" ng-click="downloadTrack()">CONNECT & DOWNLOAD</a>
+              <br>
+              <br>
+              <div>
+                <div ng-repeat="(name, url) in track.SMLinks" style="display:inline-block; margin:5px 10px;">
+                  <a href="{{url}}">
+                    <img src="assets/images/{{name}}_icon.png" style="width:40px; height:40px;">
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -1,0 +1,95 @@
+<div style="text-align:center">
+  </br>
+  <div>
+    <h2 style="display:inline;text-align:center">Download Gate</h2>
+    <button style="float:right;margin: 20px 20px 0 0" ng-click="logout()">Logout</button>
+    <div style="clear:both"></div>
+  </div>
+  </br>
+  <div class="nav">
+    <span style="padding: 0 10px"><a ui-sref="submitSong">Home</a></span>
+    <span style="padding: 0 10px"><a ui-sref="admin">Admin</a></span>
+    <span style="padding: 0 10px"><a ui-sref="scheduler">Scheduler</a></span>
+    <span style="padding: 0 10px"><a ui-sref="database">Database</a></span>
+    <span style="padding: 0 10px"><a ui-sref="autoEmailsList">Auto Emails</a></span>
+    <span style="padding: 0 10px"><a ui-sref="downloadGate">DL Gate</a></span>
+  </div>
+  </br>
+  <div>
+    <div style="margin:20px 20px; padding: 10px 10px; background-color:#D3D3D3">
+      <h3>Add Download Url</h3>
+      <form ng-Submit="saveDownloadGate()">
+        <span>Track Url:</span><input type="url" ng-change="trackURLChange()" ng-model="track.trackURL" required/>
+        <img class="avatar" ng-src="{{track.trackArtworkURL}}"/>
+        <span>{{track.trackTitle}}</span>
+        <br>
+        <span>Download Url:</span><input type="url" ng-model="track.downloadURL" required/>
+        <br>
+        <span>Email:</span><input type="email" ng-model="track.email" required/>
+        <br>
+        <div>
+          <h4>Actions</h4>
+          <input type="checkbox" ng-model="track.repost">Repost</input>
+          <input type="checkbox" ng-model="track.like">Like</input>
+          <input type="checkbox" ng-model="track.comment">Comment</input>
+        </div>
+        <div>
+          <h4>Playlists to repost:</h4>
+          <span>Hints: <br>
+          Le Cache: https://soundcloud.com/latropical/sets/the-tropical-cache-1<br>
+          Le Marque: https://soundcloud.com/etiquettenoir/sets/le-marqu<br>
+          The Catalogue: https://soundcloud.com/onlyclassy/sets/the-catalogue</span><br>
+          <button type="button" ng-click="addPlaylist()">Add Playlist</button>
+          <div ng-repeat="playlist in playlists">
+            <input ng-change="playlistURLChange(playlist)" ng-model="playlist.url">
+            <img class="avatar" ng-src="{{playlist.avatar}}"/>
+            <span>{{playlist.title}}</span>
+          </div>
+        </div>
+        <div>
+          <h4>Artists to follow:</h4>
+          <button type="button" ng-click="addArtist()">Add Artist</button>
+          <div ng-repeat="artist in artists">
+            <input ng-change="artistURLChange(artist)" ng-model="artist.url">
+            <img class="avatar" ng-src="{{artist.avatar}}"/>
+            <span>{{artist.username}}</span>
+          </div>
+        </div>
+        <br>
+        <div class="panel-group" style="width:300px; margin: 0 auto;">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a data-toggle="collapse" href="#collapse1">Social Media Links</a>
+              </h4>
+            </div>
+            <div id="collapse1" class="panel-collapse collapse">
+              <div class="panel-body">
+                <span>Facebook:</span>
+                <input type="text" ng-model="track.SMLinks.facebook">
+              </div>
+              <div class="panel-body">
+                <span>Spotify:</span>
+                <input type="text" ng-model="track.SMLinks.spotify">
+              </div>
+              <div class="panel-body">
+                <span>Soundcloud:</span>
+                <input type="text" ng-model="track.SMLinks.soundcloud">
+              </div>
+              <div class="panel-body">
+                <span>Instagram:</span>
+                <input type="text" ng-model="track.SMLinks.instagram">
+              </div>
+              <div class="panel-body">
+                <span>Twitter:</span>
+                <input type="text" ng-model="track.SMLinks.twitter">
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
