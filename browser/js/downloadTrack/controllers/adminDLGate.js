@@ -8,10 +8,41 @@ app.config(function($stateProvider) {
 
 app.controller('AdminDLGateController', function($http, $rootScope, $scope) {
 
-  $scope.artists = [];
+  $scope.artists = [{
+    "id": 86560544,
+    "username": "La Tropical",
+    "url": "https://soundcloud.com/latropical"
+  }, {
+    "id": 206926900,
+    "username": "Red Tag",
+    "url": "https://soundcloud.com/red-tag"
+  }, {
+    "id": 64684860,
+    "username": "Etiquette Noir",
+    "url": "https://soundcloud.com/etiquettenoir"
+  }, {
+    "id": 164339022,
+    "username": "Le Sol",
+    "url": "https://soundcloud.com/lesolmusique"
+  }, {
+    "id": 203522426,
+    "username": "Classy Records",
+    "url": "https://soundcloud.com/onlyclassy"
+  }, {
+    "id": 147045855,
+    "url": "https://soundcloud.com/supportify",
+    "username": "Supportify",
+  }, {
+    "id": 56395358,
+    "url": "https://soundcloud.com/deeperbeat",
+    "username": "DeeperBeet",
+  }];
   $scope.playlists = [];
   $scope.addArtist = function() {
     $scope.artists.push({});
+  }
+  $scope.removeArtist = function(a) {
+    $scope.artists.splice($scope.artists.indexOf(a), 1);
   }
   $scope.artistURLChange = function(a) {
     var artist = $scope.artists[$scope.artists.indexOf(a)];
@@ -35,6 +66,9 @@ app.controller('AdminDLGateController', function($http, $rootScope, $scope) {
 
   $scope.addPlaylist = function() {
     $scope.playlists.push({});
+  }
+  $scope.removePlaylist = function(p) {
+    $scope.playlists.splice($scope.playlists.indexOf(p), 1);
   }
   $scope.playlistURLChange = function(p) {
     var playlist = $scope.playlists[$scope.playlists.indexOf(p)];

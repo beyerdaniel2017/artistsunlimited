@@ -1,31 +1,42 @@
 app.config(function($stateProvider) {
-	$stateProvider.state('premier', {
-		url: '/premier',
-		templateUrl: 'js/premier/views/premier.html',
-		controller: 'PremierController'
-	});
+  $stateProvider.state('premier', {
+    url: '/premier',
+    templateUrl: 'js/premier/views/premier.html',
+    controller: 'PremierController'
+  });
 });
 
 app.controller('PremierController', ['$rootScope',
-	'$state',
-	'$scope',
-	'$http',
-	'$location',
-	'$window',
+  '$state',
+  '$scope',
+  '$http',
+  '$location',
+  '$window',
   'PremierService',
-	function($rootScope, $state, $scope, $http, $location, $window, PremierService) {
+  function($rootScope, $state, $scope, $http, $location, $window, PremierService) {
 
     $scope.genreArray = [
-      'Chill/Mainstream',
-      'Hip-Hop',
-      'Trap',
-      'Festival',
+      'Alternative Rock',
+      'Ambient',
       'Creative',
+      'Chill',
+      'Classical',
+      'Country',
+      'Dance & EDM',
+      'Dancehall',
+      'Deep House',
+      'Disco',
+      'Drum & Bass',
+      'Dubstep',
+      'Electronic',
+      'Festival',
+      'Folk',
+      'Hip-Hop/RNB',
       'House',
       'Indie/Alternative',
       'Latin',
-      'Vocalists',
-      'Paid Repost'
+      'Trap',
+      'Vocalists/Singer-Songwriter'
     ];
 
     $scope.premierObj = {};
@@ -34,12 +45,12 @@ app.controller('PremierController', ['$rootScope',
       visible: false
     };
     $scope.processing = false;
-    
+
     $scope.savePremier = function() {
       $scope.processing = true;
       $scope.message.visible = false;
       var data = new FormData();
-      for(var prop in $scope.premierObj) {
+      for (var prop in $scope.premierObj) {
         data.append(prop, $scope.premierObj[prop]);
       }
       PremierService
@@ -49,7 +60,7 @@ app.controller('PremierController', ['$rootScope',
 
       function receiveResponse(res) {
         $scope.processing = false;
-        if(res.status === 200) {
+        if (res.status === 200) {
           $scope.message.visible = true;
           $scope.message.val = 'Thank you! Your message has been sent successfully.';
           $scope.premierObj = {};
@@ -62,7 +73,7 @@ app.controller('PremierController', ['$rootScope',
 
       function catchError(res) {
         $scope.processing = false;
-        if(res.status === 400) {
+        if (res.status === 400) {
           $scope.message = {
             visible: true,
             val: res.data
@@ -75,5 +86,5 @@ app.controller('PremierController', ['$rootScope',
         };
       }
     };
-}]);
-
+  }
+]);
