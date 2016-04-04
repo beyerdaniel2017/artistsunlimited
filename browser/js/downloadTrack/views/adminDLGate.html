@@ -2,18 +2,10 @@
   </br>
   <div>
     <h2 style="display:inline;text-align:center">Download Gate</h2>
-    <button style="float:right;margin: 20px 20px 0 0" ng-click="logout()">Logout</button>
     <div style="clear:both"></div>
   </div>
   </br>
-  <div class="nav">
-    <span style="padding: 0 10px"><a ui-sref="submitSong">Home</a></span>
-    <span style="padding: 0 10px"><a ui-sref="admin">Admin</a></span>
-    <span style="padding: 0 10px"><a ui-sref="scheduler">Scheduler</a></span>
-    <span style="padding: 0 10px"><a ui-sref="database">Database</a></span>
-    <span style="padding: 0 10px"><a ui-sref="autoEmailsList">Auto Emails</a></span>
-    <span style="padding: 0 10px"><a ui-sref="downloadGate">DL Gate</a></span>
-  </div>
+  <ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
   </br>
   <div>
     <div style="margin:20px 20px; padding: 10px 10px; background-color:#D3D3D3">

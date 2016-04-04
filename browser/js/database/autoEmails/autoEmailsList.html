@@ -9,17 +9,10 @@
   </br>
   <div>
     <h2 style="display:inline;text-align:center">Admin</h2>
-    <button style="float:right;margin: 20px 20px 0 0" ng-click="logout()">Logout</button>
     <div style="clear:both"></div>
   </div>
   </br>
-  <div class="nav">
-    <span style="padding: 0 5px 0 0"><a ui-sref="submitSong">Home</a></span>
-    <span style="padding: 0 10px"><a ui-sref="admin">Admin</a></span>
-    <span style="padding: 0 10px"><a ui-sref="scheduler">Scheduler</a></span>
-    <span style="padding: 0 10px"><a ui-sref="database">Database</a></span>
-    <span style="padding: 0 10px"><a ui-sref="autoEmailsList">Auto Emails</a></span>
-  </div>
+  <ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
   </br>
   <a hred="#" ui-sref="autoEmailsNew">Create New -></a>
   <h2>Email templates</h2>
