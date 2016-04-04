@@ -42,6 +42,9 @@ var schema = new mongoose.Schema({
   },
   SMLinks: {
     type: Object
+  },
+  downloadCount: {
+    type: Number
   }
 });
 

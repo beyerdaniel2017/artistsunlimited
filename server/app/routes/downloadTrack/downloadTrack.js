@@ -17,7 +17,6 @@ var Channel = mongoose.model('Channel');
 router.get('/track', function(req, res, next) {
   DownloadTrack.findById(req.query.trackID).exec()
     .then(function(downloadTrack) {
-      console.log(downloadTrack);
       res.send(downloadTrack);
       return res.end();
     })
@@ -72,4 +71,10 @@ router.post('/tasks', function(req, res, next) {
   SCR.put('/e1/me/track_reposts/' + body.trackID, body.token, function(err, data) {
     if (err) console.log('error reposting the track: ' + JSON.stringify(err));
   });
+  DownloadTrack.findById(body._id).exec()
+    .then(function(t) {
+      if (t.downloadCount) t.downloadCount++;
+      else t.downloadCount = 1;
+      t.save();
+    })
 });

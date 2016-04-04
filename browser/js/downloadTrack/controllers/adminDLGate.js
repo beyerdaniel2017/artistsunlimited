@@ -29,10 +29,6 @@ app.controller('AdminDLGateController', function($http, $rootScope, $scope) {
     "username": "Classy Records",
     "url": "https://soundcloud.com/onlyclassy"
   }, {
-    "id": 147045855,
-    "url": "https://soundcloud.com/supportify",
-    "username": "Supportify",
-  }, {
     "id": 56395358,
     "url": "https://soundcloud.com/deeperbeat",
     "username": "DeeperBeet",
@@ -46,13 +42,11 @@ app.controller('AdminDLGateController', function($http, $rootScope, $scope) {
   }
   $scope.artistURLChange = function(a) {
     var artist = $scope.artists[$scope.artists.indexOf(a)];
-    console.log(artist);
     $scope.processing = true;
     $http.post('/api/soundcloud/resolve', {
         url: artist.url
       })
       .then(function(res) {
-        console.log(res.data);
         artist.avatar = res.data.avatar_url;
         artist.username = res.data.username;
         artist.id = res.data.id;
@@ -72,13 +66,11 @@ app.controller('AdminDLGateController', function($http, $rootScope, $scope) {
   }
   $scope.playlistURLChange = function(p) {
     var playlist = $scope.playlists[$scope.playlists.indexOf(p)];
-    console.log(playlist);
     $scope.processing = true;
     $http.post('/api/soundcloud/resolve', {
         url: playlist.url
       })
       .then(function(res) {
-        console.log(res.data);
         playlist.avatar = res.data.artwork_url;
         playlist.title = res.data.title;
         playlist.id = res.data.id;
@@ -115,7 +107,7 @@ app.controller('AdminDLGateController', function($http, $rootScope, $scope) {
         })
         .then(function(profiles) {
           profiles.forEach(function(prof) {
-            $scope.track.SMLinks[prof.service] = prof.url;
+            if (['twitter', 'youtube', 'facebook', 'spotify', 'soundcloud', 'instagram'].indexOf(prof.service) != -1) $scope.track.SMLinks[prof.service] = prof.url;
           });
           $scope.processing = false;
         })
@@ -146,7 +138,6 @@ app.controller('AdminDLGateController', function($http, $rootScope, $scope) {
     $scope.playlists.forEach(function(p) {
       sendObj.playlistIDS.push(p.id);
     });
-    console.log(sendObj);
     $http.post('/api/database/downloadurl', sendObj)
       .then(function(res) {
         $scope.track = {
