@@ -15,11 +15,6 @@ app.config(function($stateProvider) {
       templateUrl: 'js/home/views/services.html',
       controller: 'HomeController'
     })
-    .state('artistTools', {
-      url: '/artist-tools',
-      templateUrl: 'js/home/views/artist-tools.html',
-      controller: 'HomeController'
-    })
     .state('faqs', {
       url: '/faqs',
       templateUrl: 'js/home/views/faqs.html',

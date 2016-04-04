@@ -32,6 +32,8 @@ router.post('/', function(req, res, next) {
         req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
         req.session.cookie.maxAge = 28 * 24 * 3600000;
         req.session.cookie.expires = false;
+        delete user.password;
+        delete user.salt;
         return res.json({
           'success': true,
           'message': '',

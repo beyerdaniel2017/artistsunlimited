@@ -1,0 +1,115 @@
+<ng-include src="'js/home/views/navigation.html'"></ng-include>
+<!-- Content Start  -->
+<div class="container">
+  <div class="content-area bg-white">
+  	<ng-include src="'js/home/views/artistTools/navigation.html'"></ng-include>
+	  <div class="row">
+	    <!-- Donwload Section Strat -->
+	    <div class="col-md-4">
+	      <div class="track-section text-center">
+	        <img class="img-responsive" src="assets/images/who-we-are.png" />
+	        <div class="track-bottom">
+	          <h4>Panteone / Travel</h4>
+	          <a href="#"><img class="avatar" src="assets/images/who-we-are.png"> La Tropicál</a>
+	          <p class="text-justify pad-download-agreement">By downloading this song you agree to: Like the track compilation, Repost the track compilation, Follow *nameofartist* and our network</p>
+	        </div>
+	      </div>
+	    </div>
+			<form role="form" ng-submit="saveDownloadGate()">
+		    <div class="col-md-4">
+		      <div class="song-container">
+		        <h4>Song</h4>
+		        <div class="song-url">
+		          <input class="form-control" placeholder="Enter Song URL" ng-model="track.trackURL" ng-change="trackURLChange()" required/>
+		          <a class="close-ic" href="#"><img src="assets/images/close.png"></a>
+		        </div>
+		      </div>
+		      <div class="social-container">
+		        <h4>Social Media Links</h4>
+		        <div class="song-url">
+		          <input class="form-control" placeholder="Links" ng-model="track.SMLinks.facebook" />
+		          <span class="facebook"></span>
+		          <a class="close-ic" href="#"><img src="assets/images/close.png"></a>
+		        </div>
+		        <div class="song-url">
+		          <input class="form-control" placeholder="Links" ng-model="track.SMLinks.twitter" />
+		          <span class="twitter"></span>
+		          <a class="close-ic" href="#"><img src="assets/images/close.png"></a>
+		        </div>
+		        <a href="#">+Add Social Media...</a>
+		      </div>
+		    </div>
+		    <div class="col-md-4">
+		      <div class="permanent-links">
+		        <h4>Permanent Links:</h4>
+		        <small>The links you add here will be included in all of your download links by default.</small>
+		        <div class="input-box">
+		          <input class="form-control" placeholder="URL" ng-model="playlist.url" ng-change="playlistURLChange()"/>
+		          <a class="pro-icon" href="#"><img class="profile-icon" src="assets/images/who-we-are.png"></a>
+		          <a class="close-ic" href="#"><img src="assets/images/close.png"></a>
+		        </div>
+
+		        <a href="#">+ Add Artist...</a>
+		      </div>
+		      <div class="artist-follow">
+		        <h4>Artists to Follow</h4>
+		        <div class="input-box">
+		          <input class="form-control" placeholder="URL" ng-model="artist.url" ng-change="artistURLChange()"/>
+		          <a class="pro-icon" href="#"><img class="profile-icon" src="assets/images/who-we-are.png"></a>
+		          <a class="close-ic" href="#"><img src="assets/images/close.png"></a>
+		        </div>
+		        <a href="#">+ Add Artist...</a>
+		      </div>
+
+		      <div class="social-container">
+		        <h4>Social Media Links</h4>
+		        <small class="orange-text">By Downloading you agree to:</small>
+		        <div class="checkbox-container">
+		          <ul>
+		            <li>
+		              <label class="with-square-checkbox">
+		                <input type="checkbox" ng-model="track.like">
+		                <span>Like</span>
+		              </label>
+		            </li>
+		            <li>
+		              <label class="with-square-checkbox">
+		                <input type="checkbox" ng-model="track.repost">
+		                <span>Repost</span>
+		              </label>
+		            </li>
+		            <li>
+		              <label class="with-square-checkbox">
+		                <input type="checkbox" ng-model="track.comment">
+		                <span>Comment</span>
+		              </label>
+		            </li>
+		          </ul>
+		        </div>
+		      </div>
+
+		    </div>
+		    <div class="col-md-12 text-center">
+		      <button href="#" type="submit" class="btn btn-enter">Accept</button>
+		    </div>
+	    <!-- Donwload Section End -->
+
+	    </form>
+	  </div>
+	</div>
+</div>
+<!-- Content End  -->
+
+<div class="processing-overlay" ng-show="processing">
+  <h1 class="processing-inner">Processing...</h1>
+</div>
+
+<script type="text/ng-template" id="downloadURL.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Your Download URL - </h3>
+    {{$parent.modal.downloadURL}}
+  </div>
+  <div class="modal-body">
+		<button class="btn btn-warning" type="button" ng-click="$parent.closeModal()">Close</button>
+  </div>
+</script>
