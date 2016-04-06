@@ -34,17 +34,38 @@
         };
     });
 
+    app.factory('AppConfig', function($http) {
+        var _configParams = null;
+        function fetchConfig() {
+            return $http.get('/api/soundcloud/soundcloudConfig');
+        }
+
+        function setConfig(data) {
+            _configParams = data;
+        }
+
+        function getConfig() {
+            return _configParams;
+        }
+
+        return {
+            fetchConfig: fetchConfig,
+            getConfig: getConfig,
+            setConfig: setConfig
+        };
+    });
+
     // AUTH_EVENTS is used throughout our app to
     // broadcast and listen from and to the $rootScope
     // for important events about authentication flow.
-    app.constant('AUTH_EVENTS', {
-        loginSuccess: 'auth-login-success',
-        loginFailed: 'auth-login-failed',
-        logoutSuccess: 'auth-logout-success',
-        sessionTimeout: 'auth-session-timeout',
-        notAuthenticated: 'auth-not-authenticated',
-        notAuthorized: 'auth-not-authorized'
-    });
+    // app.constant('AUTH_EVENTS', {
+    //     loginSuccess: 'auth-login-success',
+    //     loginFailed: 'auth-login-failed',
+    //     logoutSuccess: 'auth-logout-success',
+    //     sessionTimeout: 'auth-session-timeout',
+    //     notAuthenticated: 'auth-not-authenticated',
+    //     notAuthorized: 'auth-not-authorized'
+    // });
 
     // app.factory('AuthInterceptor', function($rootScope, $q, AUTH_EVENTS) {
     //     var statusDict = {

@@ -1,5 +1,5 @@
-app.service('DownloadTrackService', ['$http', function($http) {
-
+app.service('DownloadTrackService', ['$http', function($http){
+	
 	function getDownloadTrack(data) {
 		return $http.get('/api/download/track?trackID=' + data);
 	}
@@ -14,14 +14,9 @@ app.service('DownloadTrackService', ['$http', function($http) {
 		return $http.post('api/download/tasks', data);
 	}
 
-	function getConfig() {
-		return $http.get('/api/soundcloud/soundcloudConfig');
-	}
-
 	return {
 		getDownloadTrack: getDownloadTrack,
 		getTrackData: getTrackData,
-		performTasks: performTasks,
-		getConfig: getConfig
+		performTasks: performTasks
 	};
 }]);

@@ -12,8 +12,9 @@ app.controller('DownloadTrackController', ['$rootScope',
 	'$http',
 	'$location',
 	'$window',
+	'AppConfig',
 	'DownloadTrackService',
-	function($rootScope, $state, $scope, $http, $location, $window, DownloadTrackService) {
+	function($rootScope, $state, $scope, $http, $location, $window, AppConfig, DownloadTrackService) {
 
 		/* Normal JS vars and functions not bound to scope */
 		var playerObj = null;
@@ -45,8 +46,8 @@ app.controller('DownloadTrackController', ['$rootScope',
 
 			$scope.processing = true;
 			var trackID = $location.search().trackid;
-			DownloadTrackService
-				.getConfig()
+			AppConfig
+				.fetchConfig()
 				.then(initSC)
 				.then(fetchDownloadTrack)
 				.then(receiveDownloadTrack)
@@ -96,22 +97,21 @@ app.controller('DownloadTrackController', ['$rootScope',
 		/* On click download track button */
 
 		$scope.downloadTrack = function() {
+			var appConfig = AppConfig.getConfig();
 			if ($scope.track.comment && !$scope.track.commentText) {
 				alert('Please write a comment!');
 				return false;
 			}
 			$scope.processing = true;
 			$scope.errorText = '';
-			$http.get('api/soundcloud/soundcloudConfig')
-				.then(function(res) {
-					SC.initialize({
-						client_id: res.data.clientID,
-						redirect_uri: res.data.callbackURL,
-						scope: 'non-expiring'
-					});
-					$scope.clientIDString = res.data.clientID.toString();
-					return SC.connect();
-				})
+			SC.initialize({
+				client_id: appConfig.clientID,
+				redirect_uri: appConfig.callbackURL,
+				scope: 'non-expiring'
+			});
+					
+			$scope.clientIDString = appConfig.clientID.toString();
+			SC.connect()
 				.then(performTasks)
 				.then(initDownload)
 				.catch(catchTasksError)

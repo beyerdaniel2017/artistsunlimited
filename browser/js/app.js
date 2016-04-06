@@ -10,11 +10,17 @@ app.config(function ($urlRouterProvider, $locationProvider, $uiViewScrollProvide
 });
 
 // This app.run is for controlling access to specific states.
-app.run(function ($rootScope, AuthService, $state, $uiViewScroll, SessionService) {
+app.run(function ($rootScope, AuthService, $state, $uiViewScroll, SessionService, AppConfig) {
     // The given state requires an authenticated user.
     var destinationStateRequiresAuth = function (state) {
         return state.data && state.data.authenticate;
     };
+
+    AppConfig.fetchConfig().then(function(res) {
+        // console.log(res);
+        AppConfig.setConfig(res.data);
+        // console.log(AppConfig.isConfigParamsvailable);
+    })
 
     // $stateChangeStart is an event fired
     // whenever the process of changing a state begins.
