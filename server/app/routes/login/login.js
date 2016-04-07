@@ -5,7 +5,6 @@ var mongoose = require('mongoose');
 var Channel = mongoose.model('Channel');
 var Submission = mongoose.model('Submission');
 var Event = mongoose.model('Event');
-var User = mongoose.model('User');
 var SC = require('node-soundcloud');
 var passport = require('passport');
 var https = require('https');
@@ -33,8 +32,6 @@ router.post('/', function(req, res, next) {
         req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
         req.session.cookie.maxAge = 28 * 24 * 3600000;
         req.session.cookie.expires = false;
-        delete user.password;
-        delete user.salt;
         return res.json({
           'success': true,
           'message': '',
@@ -79,38 +76,6 @@ router.post('/authenticated', function(req, res, next) {
           res.send(sendObj);
         })
         .then(null, next);
-    }
-  });
-});
-
-router.post('/soundCloudLogin', function(req, res, next) {
-  SC.init({
-    id: scConfig.clientID,
-    secret: scConfig.clientSecret,
-    uri: scConfig.callbackURL,
-    accessToken: req.body.token
-  });
-  SC.get('/me', function(err, data) {
-    if (err) {
-      next(err);
-    } 
-    else 
-    {
-      User.findOneAndUpdate({'soundcloud.id':data.id}, {'soundcloud.id': data.id,'soundcloud.username': data.username,'soundcloud.permalinkURL':data.permalink_url,'soundcloud.avatarURL': data.avatar_url}, {upsert:true, new: true}, function(e,user) {
-          req.login(user, function(err) {
-          req.session.cookie.expires = false;
-          req.session.name = user.userid;
-          req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
-          req.session.cookie.maxAge = 28 * 24 * 3600000;
-          req.session.cookie.expires = true;
-         
-          return res.json({
-            'success': true,
-            'message': 'success',
-            'user': user
-          });
-        });
-      });
     }
   });
 });

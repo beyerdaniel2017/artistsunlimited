@@ -38,6 +38,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
 
   $scope.manage = function() {
     $scope.processing = true;
+    
     SC.connect()
       .then(function(res) {
         $rootScope.accessToken = res.oauth_token;

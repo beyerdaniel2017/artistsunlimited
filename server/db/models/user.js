@@ -15,6 +15,9 @@ var schema = new mongoose.Schema({
     salt: {
         type: String
     },
+    permanentLinks: {
+        type: [String]
+    },
     twitter: {
         id: String,
         username: String,
@@ -26,6 +29,12 @@ var schema = new mongoose.Schema({
     },
     google: {
         id: String
+    },
+    soundcloud: {
+        id: String,
+        username: String,
+        permalinkURL: String,
+        avatarURL: String
     }
 });
 
@@ -47,17 +56,14 @@ var encryptPassword = function (plainText, salt) {
     return hash.digest('hex');
 };
 
-schema.pre('save', function (next) {
 
+schema.pre('save', function (next) {
     if (this.isModified('password')) {
         this.salt = this.constructor.generateSalt();
         this.password = this.constructor.encryptPassword(this.password, this.salt);
     }
-
     next();
-
 });
-
 schema.statics.generateSalt = generateSalt;
 schema.statics.encryptPassword = encryptPassword;
 

@@ -1,0 +1,37 @@
+<ng-include src="'js/home/views/navigation.html'"></ng-include>
+<!-- Content Start  -->
+<div class="container" ng-init="getDownloadList()">
+  <div class="content-area bg-white">
+  	<ng-include src="'js/home/views/artistTools/navigation.html'"></ng-include>
+  	<div class="row">
+	  	<div class="col-md-12 text-center">
+	      <a href="#" class="btn btn-enter" ui-sref="artistTools.downloadGateway.new">Add New</a>
+	    </div>
+	  </div>
+	  <div class="row">
+	    <table class="table">
+		    <thead>
+		      <tr>
+		        <th>Artist Username</th>
+		        <th>Track Title</th>
+		        <th>Download Count</th>
+		        <th>Action</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      <tr ng-repeat="item in downloadGatewayList">
+		        <td>{{item.artistUsername}}</td>
+		        <td>{{item.trackTitle}}</td>
+		        <td>{{item.downloadCount ? item.downloadCount : 0}}</td>
+		        <td><a href="#" ui-sref="artistTools.downloadGateway.edit({ gatewayID: item._id})" ui-sref-opts="{reload: true}">Edit</a></td>
+		      </tr>
+		    </tbody>
+		  </table>
+	  </div>
+	</div>
+</div>
+<!-- Content End  -->
+
+<div class="processing-overlay" ng-show="processing">
+  <h1 class="processing-inner">Processing...</h1>
+</div>

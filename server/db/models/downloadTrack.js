@@ -1,6 +1,10 @@
 var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
+  userid: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User'
+  },
   trackURL: {
     type: String
   },
@@ -19,8 +23,11 @@ var schema = new mongoose.Schema({
   trackArtworkURL: {
     type: String
   },
-  artistIDS: {
-    type: [Number]
+  artists: {
+    type: [mongoose.Schema.Types.Mixed]
+  },
+  permanentLinks: {
+    type: [String]
   },
   artistArtworkURL: {
     type: String
@@ -28,8 +35,8 @@ var schema = new mongoose.Schema({
   artistUsername: {
     type: String
   },
-  playlistIDS: {
-    type: [Number]
+  playlists: {
+    type: [mongoose.Schema.Types.Mixed]
   },
   like: {
     type: Boolean
@@ -41,7 +48,7 @@ var schema = new mongoose.Schema({
     type: Boolean
   },
   SMLinks: {
-    type: Object
+    type: mongoose.Schema.Types.Mixed
   },
   downloadCount: {
     type: Number

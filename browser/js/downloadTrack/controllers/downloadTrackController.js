@@ -45,14 +45,14 @@ app.controller('DownloadTrackController', ['$rootScope',
 
 			$scope.processing = true;
 			var trackID = $location.search().trackid;
-			
 			DownloadTrackService
 				.getDownloadTrack(trackID)
 				.then(receiveDownloadTrack)
 				.then(initPlay)
-				.catch(catchDownloadTrackError);
+				.catch(catchDownloadTrackError);			
 
 			function receiveDownloadTrack(result) {
+				console.log(result);
 				$scope.track = result.data;
 				$scope.backgroundStyle = function() {
 					return {
@@ -101,14 +101,14 @@ app.controller('DownloadTrackController', ['$rootScope',
 			}
 
 			function initDownload(res) {
+				$scope.processing = false;
 				if ($scope.track.downloadURL && $scope.track.downloadURL !== '') {
 					$window.location.href = $scope.track.downloadURL;
 				} else {
 					$scope.errorText = 'Error! Could not fetch download URL';
 					$scope.downloadURLNotFound = true;
-					$scope.$apply();
 				}
-				$scope.processing = false;
+				$scope.$apply();
 			}
 
 			function catchTasksError(err) {

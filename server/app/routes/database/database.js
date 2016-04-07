@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var Follower = mongoose.model('Follower');
 var TrackedUser = mongoose.model('TrackedUser');
 var DownloadTrack = mongoose.model('DownloadTrack');
+var User = mongoose.model('User');
 var PaidRepostAccount = mongoose.model('PaidRepostAccount');
 var csv = require('csv-write-stream');
 var fs = require('fs');
@@ -16,6 +17,9 @@ var SC = require('node-soundcloud');
 var sendEmail = require("../../mandrill/sendEmail.js");
 var emitter = require('./../../../io/emitter.js');
 var objectAssign = require('object-assign');
+var AWS = require('aws-sdk');
+var awsConfig = require('./../../../env').AWS;
+var Busboy = require('busboy');
 
 router.post('/adduser', function(req, res, next) {
   // if (req.body.password != 'letMeManage') next(new Error('wrong password'));
@@ -254,15 +258,185 @@ router.post('/trackedUsers', function(req, res, next) {
 
 router.post('/downloadurl', function(req, res, next) {
 
-  var body = req.body;
+  if(req.user) {
+    parseMultiPart()
+      .then(updateUser)
+      .then(checkIfFile)
+      .then(saveDownloadTrack)
+      .then(sendMail)
+      .then(null, function(err){
+        console.log(err, 'err');
+        next(err);
+      });
+  } else {
+    return res.send('Error in processing your request');
+  }
+  var body = {
+    fields: {},
+    file: null,
+    location: ''
+  };
 
-  var downloadTrack = new DownloadTrack(body);
-  downloadTrack.save();
-  var trackUrl = req.protocol + '://' + req.get('host') + '/download?trackid=' + downloadTrack._id;
-  var html = '<p>Here is your download URL: - </p><span>' + trackUrl + '</span>';
-  sendEmail('Service', body.email, 'Artists Unlimited', 'support@artistsunlimited.co', 'Download Track', html);
-  return res.end(trackUrl);
+  function parseMultiPart() {
+    return new Promise(function(resolve, reject) {
+      var busboy = new Busboy({ 
+        headers: req.headers,
+        limits  : { fileSize: 20*1024*1024, files: 1 } 
+      });
+      busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+        
+        var buffer = new Buffer('');
+        var type = mimetype.split('/')[1];
+        var newfilename = (filename.substr(0, filename.lastIndexOf('.')) || filename) + '_' + Date.now().toString() + '.' + type;
+
+        file.on('data', function(data) {
+          buffer = Buffer.concat([buffer, data]);
+        });
+
+        file.on('limit', function() {
+          reject('Error: File size cannot be more than 20 MB');
+        });
+
+        file.on('end', function() {
+          body.file = {
+            fieldname: fieldname,
+            buffer: buffer,
+            filename: filename,
+            newfilename: newfilename,
+            encoding: encoding,
+            mimetype: mimetype
+          };
+        });
+      });
+      busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
+        body.fields[fieldname] = val;
+      });
+      busboy.on('finish', function() {
+        resolve();
+      });
+
+      busboy.on('error', function(err) {
+        reject(err);
+      });
+      req.pipe(busboy);
+    });
+  }
+
+  function updateUser() {
+    return User.update({ _id: req.user._id}, { $addToSet: {permanentLinks: { $each: JSON.parse(body.fields.permanentLinks) } } }).exec();
+  }
+
+  function checkIfFile() {
+    return new Promise(function(resolve, reject) {
+      if(body.file) {
+        uploadToBucket()
+          .then(function(result){
+            body.location = result.Location;
+            resolve();
+          })
+          .catch(function(err){
+            console.log('check', err);
+            reject(err);
+          });
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  function uploadToBucket() {
+    return new Promise(function(resolve, reject) {
+      AWS.config.update({
+        accessKeyId: awsConfig.accessKeyId,
+        secretAccessKey: awsConfig.secretAccessKey,
+      });
+    
+      var data = {
+        Key: body.file.newfilename, 
+        Body: body.file.buffer,
+        ContentType: body.file.mimetype,
+        ContentDisposition: 'attachment'
+      };
+      var s3 = new AWS.S3({params: {Bucket: awsConfig.bucketName}});
+      s3.upload(data, function(err, data){
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  function saveDownloadTrack() {
+
+    var SMLinks = JSON.parse(body.fields.SMLinks);
+    var artists = JSON.parse(body.fields.artists);
+    var permanentLinks = JSON.parse(body.fields.permanentLinks);
+
+    body.fields.SMLinks = SMLinks;
+    body.fields.artists = artists;
+    body.fields.permanentLinks = permanentLinks;
+    if(body.fields.playlists) {
+      body.fields.playlists = JSON.parse(body.fields.playlists);
+    }
+    body.fields.userid = req.user._id;
+    body.fields.downloadURL = (body.location !== '') ? body.location : body.fields.downloadURL;
+    // console.log(body.fields)
+    if(body.fields._id) {
+      return DownloadTrack.findOneAndUpdate({ _id: body.fields._id }, body.fields, {new : true}); 
+    }
+    var downloadTrack = new DownloadTrack(body.fields);
+    return downloadTrack.save();
+  }
+
+  function sendMail(downloadTrack) {
+    console.log(downloadTrack);
+    var trackUrl = req.protocol + '://' + req.get('host') + '/download?trackid=' + downloadTrack._id;
+    var html = '<p>Here is your download URL: - </p><span>' + trackUrl + '</span>';
+    sendEmail('Service', req.user.email, 'Artists Unlimited', 'support@artistsunlimited.co', 'Download Track', html);
+    return res.end(trackUrl);
+  }
 });
+
+router.get('/downloadurl/admin', function(req, res, next) {
+  DownloadTrack
+    .find({})
+    .exec()
+    .then(function(tracks){
+      res.send(tracks);
+    })
+    .then(null, function(err){
+      next(err);
+    });
+});
+
+router.get('/downloadurl/:id', function(req, res, next) {
+  
+  var downloadTrackID = req.params.id;
+  DownloadTrack
+    .findById(downloadTrackID)
+    .then(function(track){
+      res.send(track);
+    })
+    .then(null, function(err){
+      next(err);
+    });
+});
+
+router.get('/downloadurl', function(req, res, next) {
+  
+  DownloadTrack
+    .find({ userid: req.user._id})
+    .then(function(tracks){
+      res.send(tracks);
+    })
+    .then(null, function(err){
+      next(err);
+    });
+});
+
+
 
 
 router.post('/paidrepost', function(req, res, next) {
@@ -349,5 +523,28 @@ router.post('/paidrepost', function(req, res, next) {
     });
 
     return newPaidRepostAccount.save();
+  }
+});
+
+router.post('/editProfile', function(req, res, next) {
+
+  var body = req.body;
+  var updateObj = {};
+  if(body.name !== '') {
+    updateObj.name = body.name;
+  } else if(body.password !== '') {
+    updateObj.salt = User.generateSalt();
+    updateObj.password = User.encryptPassword(body.password, updateObj.salt);
+  }
+  console.log(updateObj);
+  if(req.user) {
+    User.findOneAndUpdate({ '_id' : req.user._id}, { $set:  updateObj }, { new: true }, function(err, result){
+      console.log(result);
+      if(err) {
+        next(err);
+      } else {
+        return res.send(JSON.stringify(result));
+      }
+    });
   }
 });

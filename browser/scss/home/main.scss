@@ -141,6 +141,21 @@ a:hover, a:focus {
   text-transform:uppercase;
   letter-spacing: 3px;
 }
+.btn-soundcloud {
+  position: relative;
+  color: #FFF;
+  background-color: #F50;
+  border: 0px none;
+  border-radius: 0px;
+  text-align: left;
+  padding-left: 65px;
+  font-size: 14px;
+}
+.btn-soundcloud:hover {
+  color: #FFF;
+  background-color: #C40;
+
+}
 .no-border {
   border: 0px;
   border-radius: 0px;
@@ -232,13 +247,53 @@ a:hover, a:focus {
   top: 0;
   right: 0;
 }
-.twitter{
+.twitter {
   background:#F5D3B5 url("assets/images/twitter_icon.png") no-repeat scroll center center / 30px auto;
    width: 40px;
   height: 34px;
   position: absolute;
   top: 0;
   right: 0;
+}
+.instagram {
+  background:#F5D3B5 url("assets/images/instagram_icon.png") no-repeat scroll center center / 30px auto;
+   width: 40px;
+  height: 34px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.youtube {
+  background:#F5D3B5 url("assets/images/youtube_icon.png") no-repeat scroll center center / 30px auto;
+   width: 40px;
+  height: 34px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.spotify {
+  background:#F5D3B5 url("assets/images/spotify_icon.png") no-repeat scroll center center / 30px auto;
+   width: 40px;
+  height: 34px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.soundcloud {
+  background:#F5D3B5 url("assets/images/soundcloud_icon.png") no-repeat scroll center center / 30px auto;
+   width: 40px;
+  height: 34px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.soundcloud-img img {
+  position: absolute;
+  width: 46px;
+  top: 0px;
+  left: 5px;
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+  padding-right: 6px;
 }
 .permanent-links{
   min-height:150px;
