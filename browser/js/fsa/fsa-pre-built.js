@@ -42,6 +42,11 @@
 
         function setConfig(data) {
             _configParams = data;
+            SC.initialize({
+                client_id: _configParams.clientID,
+                redirect_uri: _configParams.callbackURL,
+                scope: "non-expiring"
+           });
         }
 
         function getConfig() {

@@ -6,9 +6,7 @@ app.config(function($stateProvider) {
   });
 });
 
-app.controller('AdminDLGateController', function($http, $rootScope, $scope, AppConfig) {
-
-  var appConfig = AppConfig.getConfig();
+app.controller('AdminDLGateController', function($http, $rootScope, $scope) {
 
   $scope.artists = [{
     "id": 86560544,
@@ -98,10 +96,6 @@ app.controller('AdminDLGateController', function($http, $rootScope, $scope, AppC
           $scope.track.artistArtworkURL = res.data.user.avatar_url;
           $scope.track.artistUsername = res.data.user.username;
           $scope.track.SMLinks = {};
-          SC.initialize({
-            client_id: appConfig.clientID,
-            redirect_uri: appConfig.callbackURL
-          });
           return SC.get('/users/' + $scope.track.artistID + '/web-profiles');
         })
         .then(function(profiles) {

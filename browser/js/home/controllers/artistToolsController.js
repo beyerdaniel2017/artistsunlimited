@@ -39,9 +39,8 @@ app.controller('ArtistToolsController', ['$rootScope',
   '$location',
   '$window',
   '$uibModal',
-  'AppConfig',
   'SessionService',
-  function($rootScope, $state, $scope, $http, $location, $window, $uibModal, AppConfig, SessionService) {
+  function($rootScope, $state, $scope, $http, $location, $window, $uibModal, SessionService) {
   	
     $scope.track = {};
     $scope.processing = false;
@@ -68,7 +67,6 @@ app.controller('ArtistToolsController', ['$rootScope',
     }
 
     $scope.trackURLChange = function() {
-      var appConfig = AppConfig.getConfig();
       if ($scope.track.trackURL !== '') {
         $scope.processing = true;
         $http.post('/api/soundcloud/resolve', {
@@ -82,10 +80,6 @@ app.controller('ArtistToolsController', ['$rootScope',
             $scope.track.artistArtworkURL = res.data.user.avatar_url;
             $scope.track.artistUsername = res.data.user.username;
             $scope.track.SMLinks = {};
-            SC.initialize({
-              client_id: appConfig.clientID,
-              redirect_uri: appConfig.callbackURL
-            });
             return SC.get('/users/' + $scope.track.artistID + '/web-profiles');
           })
           .then(function(profiles) {

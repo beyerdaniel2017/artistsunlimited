@@ -12,9 +12,8 @@ app.controller('DownloadTrackController', ['$rootScope',
 	'$http',
 	'$location',
 	'$window',
-	'AppConfig',
 	'DownloadTrackService',
-	function($rootScope, $state, $scope, $http, $location, $window, AppConfig, DownloadTrackService) {
+	function($rootScope, $state, $scope, $http, $location, $window, DownloadTrackService) {
 
 		/* Normal JS vars and functions not bound to scope */
 		var playerObj = null;
@@ -46,25 +45,12 @@ app.controller('DownloadTrackController', ['$rootScope',
 
 			$scope.processing = true;
 			var trackID = $location.search().trackid;
-			AppConfig
-				.fetchConfig()
-				.then(initSC)
-				.then(fetchDownloadTrack)
+			
+			DownloadTrackService
+				.getDownloadTrack(trackID)
 				.then(receiveDownloadTrack)
 				.then(initPlay)
 				.catch(catchDownloadTrackError);
-
-			function initSC(res) {
-				return SC.initialize({
-					client_id: res.data.clientID,
-					redirect_uri: res.data.callbackURL,
-					scope: 'non-expiring'
-				});
-			}
-
-			function fetchDownloadTrack() {
-				return DownloadTrackService.getDownloadTrack(trackID);
-			}
 
 			function receiveDownloadTrack(result) {
 				$scope.track = result.data;
@@ -97,20 +83,13 @@ app.controller('DownloadTrackController', ['$rootScope',
 		/* On click download track button */
 
 		$scope.downloadTrack = function() {
-			var appConfig = AppConfig.getConfig();
 			if ($scope.track.comment && !$scope.track.commentText) {
 				alert('Please write a comment!');
 				return false;
 			}
 			$scope.processing = true;
 			$scope.errorText = '';
-			SC.initialize({
-				client_id: appConfig.clientID,
-				redirect_uri: appConfig.callbackURL,
-				scope: 'non-expiring'
-			});
-					
-			$scope.clientIDString = appConfig.clientID.toString();
+
 			SC.connect()
 				.then(performTasks)
 				.then(initDownload)
@@ -124,8 +103,6 @@ app.controller('DownloadTrackController', ['$rootScope',
 			function initDownload(res) {
 				if ($scope.track.downloadURL && $scope.track.downloadURL !== '') {
 					$window.location.href = $scope.track.downloadURL;
-				} else if ($scope.track.downloadURL && $scope.track.token) {
-					$window.location.href = trackData.downloadURL + '?cliend_id=' + $scope.clientIDString + '&oauth_token=' + $scope.track.token.toString();
 				} else {
 					$scope.errorText = 'Error! Could not fetch download URL';
 					$scope.downloadURLNotFound = true;

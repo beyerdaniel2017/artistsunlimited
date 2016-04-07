@@ -7,7 +7,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AppConfig, AuthService, oEmbedFactory) {
+app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, oEmbedFactory) {
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.submissions = [];
@@ -37,14 +37,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.manage = function() {
-    var appConfig = AppConfig.getConfig();
     $scope.processing = true;
-    SC.initialize({
-      client_id: appConfig.clientID,
-      redirect_uri: appConfig.callbackURL,
-      scope: "non-expiring"
-    });
-    
     SC.connect()
       .then(function(res) {
         $rootScope.accessToken = res.oauth_token;
