@@ -1,21 +1,4 @@
-.processing-overlay {
-	position:fixed;
-	top:0;
-	left:0;
-	right:0;
-	width: 100%;
-	height:100%;
-	background-color: rgba(0,0,0,0.9);
-	text-align:center;
-	z-index: 1;
-}
 
-.processing-inner {
-	font-color:white;
-	margin-top:400px;
-	z-index:2;
-	overflow: hidden;
-}
 .no-padding {
 	padding: 0;
 }
@@ -29,7 +12,7 @@
 	right:0;
 	width: 100%;
 	height:100%;
-	background-color: rgba(0,0,0,0.9);
+	background-color: rgba(249, 214, 176, 0.9);
 	text-align:center;
 	z-index: 1;
 }
@@ -39,6 +22,68 @@
 	z-index:2;
 	overflow: hidden;
 }
+
+/******* Preloader Css Start ********/
+
+#preloader {
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background-color: rgba(249, 214, 176, 0.9);
+    z-index:9999; /* makes sure it stays on top */
+}
+.loader-spinner {
+    position: absolute;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    -webkit-animation: spinner 0.5s linear infinite;
+    animation: spinner 0.5s linear infinite;
+    left:50%; /* centers the loading animation horizontally on the screen */
+    top:50%; /* centers the loading animation vertically on the screen */
+    margin:-20px 0 0 -20px; /* is width and height divided by two */
+}
+.loader-spinner > span {
+    position: absolute;
+    display: block;
+    width: 35px;
+    height: 35px;
+    overflow: hidden;
+    top: -3px;
+    left: -3px;
+}
+.loader-spinner > span > span {
+    display: block;
+    width: 50px;
+    height: 50px;
+    border: 3px solid #E87133;
+    border-radius: 50%;
+}
+@-webkit-keyframes spinner {
+	from {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	to {
+	  -webkit-transform: rotate(360deg);
+	  transform: rotate(360deg);
+	}
+}
+@keyframes spinner {
+	from {
+	 -webkit-transform: rotate(0deg);
+	 transform: rotate(0deg);
+	}
+	to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+	}
+}
+/******* Preloader Css End ********/
 
 @import 'home/main';
 @import 'download/main';
