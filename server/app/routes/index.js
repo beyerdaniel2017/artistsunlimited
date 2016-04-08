@@ -12,6 +12,7 @@ router.use('/database', require('./database/database.js'));
 router.use('/download', require('./downloadTrack/downloadTrack.js'));
 router.use('/premier', require('./premier/premier.js'));
 router.use('/home', require('./home/home.js'));
+
 router.use('/logout', function(req, res){
 	req.logout();
   return res.status(200).json({

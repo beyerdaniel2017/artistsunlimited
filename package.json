@@ -69,6 +69,7 @@
     "passport-facebook": "^1.0.3",
     "passport-google-oauth": "^0.1.5",
     "passport-local": "^1.0.0",
+    "passport-soundcloud": "^0.1.2",
     "passport-twitter": "^1.0.2",
     "paypal-rest-sdk": "^1.6.8",
     "promise": "^7.1.1",

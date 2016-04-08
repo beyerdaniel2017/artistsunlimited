@@ -8,6 +8,9 @@ var schema = new mongoose.Schema({
   trackURL: {
     type: String
   },
+  artistURL: {
+    type: String
+  },
   downloadURL: {
     type: String
   },

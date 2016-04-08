@@ -25,13 +25,6 @@ router.post('/', function(req, res, next) {
         "message": "Invalid Username or Password"
       });
     } else {
-      // req.login(user, function(err) {
-      //   //if(req.body.rememberme && (req.body.rememberme == "1" || req.body.rememberme == 1)){
-      //   req.session.cookie.expires = false;
-      //   req.session.name = user.userid;
-      //   req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
-      //   req.session.cookie.maxAge = 28 * 24 * 3600000;
-      //   req.session.cookie.expires = false;
       return res.json({
         'success': true,
         'message': '',

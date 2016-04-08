@@ -16,11 +16,11 @@ module.exports = function(app) {
         if (user) {
           return done(null, false);
         }
-        // done(null, user);
         var newUser = new User({
           name: req.body.name,
           email: req.body.email,
           password: req.body.password,
+          role: 'user'
         });
         return newUser.save();
       })

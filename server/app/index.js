@@ -3,6 +3,7 @@ var path = require('path');
 var express = require('express');
 var app = express();
 var unsubscribe = require('./configure/unsubscribe');
+var passport = require('passport');
 module.exports = app;
 
 // Pass our express application pipeline into the configuration
@@ -33,11 +34,21 @@ app.get('/unsubscribe/:followerId', function(req, res) {
 });
 
 app.get('/admin*', function(req, res) {
-  if (!req.isAuthenticated()) {
-    res.sendFile(app.get('loginHTMLPath'));
-  } else {
+  if (req.isAuthenticated() && req.user.role === 'admin') {
     res.sendFile(app.get('indexHTMLPath'));
+  } else {
+    res.sendFile(app.get('loginHTMLPath'));
   }
+});
+app.get('/auth/soundcloud', 
+  passport.authenticate('soundcloud'), 
+  function(req, res) {
+
+});
+
+app.get('/auth/soundcloud/callback', passport.authenticate('soundcloud', { failureRedirect: '/login' }),
+      function (req, res) {
+          res.redirect('/');
 });
 
 // app.get('/*', function(req, res) {

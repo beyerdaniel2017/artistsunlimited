@@ -12,11 +12,11 @@
 			  		<td>{{profile.name}}</td>
 			  		<td><a href="#" ng-click="openEditProfileModal.editProfile('name')"> Edit</a></td>
 			  	</tr>
-			  	<tr>
+			  	<tr ng-if="profile.loginAgent === 'local'">
 			  		<td class="bold">Email:</td>
 			  		<td>{{profile.email}}</td>
 			  	</tr>
-			  	<tr>
+			  	<tr ng-if="profile.loginAgent === 'local'">
 			  		<td class="bold">Password:</td>
 			  		<td></td>
 			  		<td><a href="#" ng-click="openEditProfileModal.editProfile('password')">Edit</a></td>

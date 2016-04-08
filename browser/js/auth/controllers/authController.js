@@ -12,10 +12,13 @@ app.config(function($stateProvider) {
     });
 });
 
-app.controller('AuthController', function($rootScope, $state, $scope, $http, $uibModal, AuthService, SessionService, socket) {
+app.controller('AuthController', function($rootScope, $state, $scope, $http, $uibModal, $window, AuthService, SessionService, socket) {
   
   $scope.loginObj = {};
-  $scope.message = "";
+  $scope.message = {
+    val: '',
+    visible: false
+  };
   $scope.openModal = {
       signupConfirm: function() {        
         $scope.modalInstance = $uibModal.open({
@@ -27,6 +30,10 @@ app.controller('AuthController', function($rootScope, $state, $scope, $http, $ui
       }
     };
   $scope.login = function() {
+    $scope.message = {
+      val: '',
+      visible: false
+    };
     AuthService
       .login($scope.loginObj)
       .then(handleLoginResponse)
@@ -36,17 +43,33 @@ app.controller('AuthController', function($rootScope, $state, $scope, $http, $ui
       if(res.status === 200 && res.data.success) {
         SessionService.create(res.data.user);
         $state.go('artistTools.downloadGateway.list');
+      } else {
+        $scope.message = {
+          val: res.data.message,
+          visible: true
+        };
       }
     }
 
     function handleLoginError(res) {
+      $scope.message = {
+        val: 'Error in processing your request',
+        visible: true
+      };
     }
   };
 
 
   $scope.signup = function() {
+    $scope.message = {
+      val: '',
+      visible: false
+    };
     if($scope.signupObj.password != $scope.signupObj.confirmPassword){
-      $scope.message = "Password doesn't match with confirm password.";
+      $scope.message = {
+        val: 'Password doesn\'t match with confirm password',
+        visible: true
+      };
       return;
     }
     AuthService
@@ -55,7 +78,6 @@ app.controller('AuthController', function($rootScope, $state, $scope, $http, $ui
       .catch(handleSignupError)
     
     function handleSignupResponse(res) {
-      //$state.go('login');
       $scope.openModal.signupConfirm();
     }
 
@@ -69,7 +91,7 @@ app.controller('AuthController', function($rootScope, $state, $scope, $http, $ui
         $rootScope.accessToken = res.oauth_token;
         return $http.post('/api/login/soundCloudLogin', {
           token: res.oauth_token,
-          password: $rootScope.password
+          password: 'test'
         });
       })
       .then(function (res) {
@@ -81,5 +103,5 @@ app.controller('AuthController', function($rootScope, $state, $scope, $http, $ui
         alert('Error: Could not log in');
         $scope.processing = false;
       });
-  }
+  };
 });

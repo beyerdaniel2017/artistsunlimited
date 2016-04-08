@@ -442,8 +442,12 @@ app.controller('ArtistToolsController', ['$rootScope',
 
     $scope.showProfileInfo = function() {
       $scope.profile = JSON.parse(SessionService.getUser());
-      console.log(typeof $scope.profile)
       $scope.profile.password = '';
+      if($scope.profile.soundcloud) {
+        $scope.profile.loginAgent = 'soundcloud';
+      } else {
+        $scope.profile.loginAgent = 'local';
+      }
     }
 
     $scope.saveProfileInfo = function() {

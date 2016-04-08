@@ -3,6 +3,9 @@ var crypto = require('crypto');
 var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
+    role: {
+        type: String
+    },
     name: {
         type: String
     },
@@ -35,6 +38,14 @@ var schema = new mongoose.Schema({
         username: String,
         permalinkURL: String,
         avatarURL: String
+    },
+    createdOn: {
+        type: Date, 
+        default: Date.now 
+    },
+    updatedOn: {
+        type: Date, 
+        default: Date.now 
     }
 });
 

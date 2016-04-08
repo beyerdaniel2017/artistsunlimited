@@ -13,7 +13,7 @@ var request = require('request');
 var scConfig = global.env.SOUNDCLOUD;
 
 router.post('/', function(req, res, next) {
-  passport.authenticate('local', function(err, user, info) {
+  passport.authenticate('local-login', function(err, user, info) {
     if (err) {
       return res.json({
         success: false,
@@ -84,33 +84,32 @@ router.post('/authenticated', function(req, res, next) {
 });
 
 router.post('/soundCloudLogin', function(req, res, next) {
-  SC.init({
-    id: scConfig.clientID,
-    secret: scConfig.clientSecret,
-    uri: scConfig.callbackURL,
-    accessToken: req.body.token
-  });
-  SC.get('/me', function(err, data) {
+  passport.authenticate('local-soundcloud', function(err, user, info) {
+    console.log(err, user, info)
     if (err) {
-      next(err);
+      return res.json({
+        success: false,
+        "message": err
+      });
     } 
-    else 
-    {
-      User.findOneAndUpdate({'soundcloud.id':data.id}, {'soundcloud.id': data.id,'soundcloud.username': data.username,'soundcloud.permalinkURL':data.permalink_url,'soundcloud.avatarURL': data.avatar_url}, {upsert:true, new: true}, function(e,user) {
+    if (!user) {
+      return res.json({
+        success: false,
+        "message": "Error in processing your request"
+      });
+    } else {
           req.login(user, function(err) {
           req.session.cookie.expires = false;
           req.session.name = user.userid;
           req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
           req.session.cookie.maxAge = 28 * 24 * 3600000;
-          req.session.cookie.expires = true;
-         
+        req.session.cookie.expires = false;
           return res.json({
             'success': true,
-            'message': 'success',
+          'message': '',
             'user': user
           });
         });
-      });
     }
-  });
+  })(req, res);
 });
