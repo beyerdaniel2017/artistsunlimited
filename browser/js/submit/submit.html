@@ -23,7 +23,4 @@
   <div id="scPlayer" style="margin:10px 0"></div>
   <button class="btn btn-default" style="background-color: #d3d3d3; font-size:1.4em; margin:5px 5px;" ng-click="submit()">Submit</button>
 </div>
-
-<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.9); text-align:center; z-index:1" ng-show="processing">
-  <h1 style="font-color:white; margin-top:400px; z-index:2">Processing...</h1>
-</div>
+<ng-include src="'js/home/views/loader.html'"></ng-include>

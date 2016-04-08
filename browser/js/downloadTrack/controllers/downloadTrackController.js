@@ -52,7 +52,6 @@ app.controller('DownloadTrackController', ['$rootScope',
 				.catch(catchDownloadTrackError);			
 
 			function receiveDownloadTrack(result) {
-				console.log(result);
 				$scope.track = result.data;
 				$scope.backgroundStyle = function() {
 					return {

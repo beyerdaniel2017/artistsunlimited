@@ -231,6 +231,7 @@ app.controller('ArtistToolsController', ['$rootScope',
             $scope.track.artistID = res.data.user.id;
             $scope.track.trackArtworkURL = res.data.artwork_url ? res.data.artwork_url.replace('large.jpg', 't500x500.jpg') : '';
             $scope.track.artistArtworkURL = res.data.user.avatar_url ? res.data.user.avatar_url : '';
+            $scope.track.artistURL = res.data.user.permalink_url;
             $scope.track.artistUsername = res.data.user.username;
             $scope.track.SMLinks = [];
             return SC.get('/users/' + $scope.track.artistID + '/web-profiles');

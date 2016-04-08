@@ -73,9 +73,7 @@
   <!--Section : 1--> 
 <!-- </div>
 </div> -->
-<div class="processing-overlay" ng-show="processing">
-  <h1 class="processing-inner">Processing...</h1>
-</div>
+<ng-include src="'js/home/views/loader.html'"></ng-include>
 <script>
   $(document).ready(function(){
     var windowHeight = $(window).height();

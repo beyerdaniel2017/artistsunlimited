@@ -19,21 +19,19 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Artist Username</th>
         <th>Track Title</th>
+        <th>Artist Username</th>
+        <th>Download Count</th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="item in downloadGatewayList">
+        <td><a ng-href="{{item.trackURL}}" target="_blank">{{item.trackTitle}}</a></td>
         <td>{{item.artistUsername}}</td>
-        <td>{{item.trackTitle}}</td>
+        <td>{{item.downloadCount ? item.downloadCount : 0}}</td>
         <td><a href="#" ui-sref="downloadGateEdit({ gatewayID: item._id})">Edit</a></td>
       </tr>
     </tbody>
   </table>
-
-
-  <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.9); text-align:center; z-index:1" ng-show="processing">
-  <h1 style="font-color:white; margin-top:400px; z-index:2">Processing...</h1>
-</div>
+<ng-include src="'js/home/views/loader.html'"></ng-include>
