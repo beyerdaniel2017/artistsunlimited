@@ -27,7 +27,7 @@
     </thead>
     <tbody>
       <tr ng-repeat="item in downloadGatewayList">
-        <td><a ng-href="{{item.trackURL}}" target="_blank">{{item.trackTitle}}</a></td>
+        <td><a ng-href="/download?trackid={{item._id}}" target="_blank">{{item.trackTitle}}</a></td>
         <td>{{item.artistUsername}}</td>
         <td>{{item.downloadCount ? item.downloadCount : 0}}</td>
         <td><a href="#" ui-sref="downloadGateEdit({ gatewayID: item._id})">Edit</a></td>
