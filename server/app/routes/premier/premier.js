@@ -1,4 +1,3 @@
-
 'use strict';
 
 var router = require('express').Router();
@@ -29,12 +28,15 @@ router.post('/', function(req, res, next) {
 
   function parseMultiPart() {
     return new Promise(function(resolve, reject) {
-      var busboy = new Busboy({ 
+      var busboy = new Busboy({
         headers: req.headers,
-        limits  : { fileSize: 20*1024*1024, files: 1 } 
+        limits: {
+          fileSize: 20 * 1024 * 1024,
+          files: 1
+        }
       });
       busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-        
+
         var buffer = new Buffer('');
         var type = mimetype.split('/')[1];
         var newfilename = (filename.substr(0, filename.lastIndexOf('.')) || filename) + '_' + Date.now().toString() + '.' + type;
@@ -78,14 +80,18 @@ router.post('/', function(req, res, next) {
         accessKeyId: awsConfig.accessKeyId,
         secretAccessKey: awsConfig.secretAccessKey,
       });
-    
+
       var data = {
-        Key: body.file.newfilename, 
+        Key: body.file.newfilename,
         Body: body.file.buffer,
         ContentType: body.file.mimetype
       };
-      var s3 = new AWS.S3({params: {Bucket: awsConfig.bucketName}});
-      s3.upload(data, function(err, data){
+      var s3 = new AWS.S3({
+        params: {
+          Bucket: awsConfig.bucketName
+        }
+      });
+      s3.upload(data, function(err, data) {
         if (err) {
           reject(err);
         } else {
@@ -97,14 +103,14 @@ router.post('/', function(req, res, next) {
 
   function saveToDB(data) {
 
-      var newPremierSubmission = new PremierSubmission({
-        s3URL: data.Location,
-        genre: body.fields.genre,
-        email: body.fields.email,
-        name: body.fields.name,
-        comment: body.fields.comment
-      });
-      return newPremierSubmission.save();
+    var newPremierSubmission = new PremierSubmission({
+      s3URL: data.Location,
+      genre: body.fields.genre,
+      email: body.fields.email,
+      name: body.fields.name,
+      comment: body.fields.comment
+    });
+    return newPremierSubmission.save();
   }
 
   function mailData() {
@@ -113,17 +119,17 @@ router.post('/', function(req, res, next) {
       'name': body.file.newfilename,
       'content': body.file.buffer.toString('base64')
     }];
-    var email_body = '<b>Sender Comment: </b> ' + 
-                      body.fields.comment + 
-                      '<br />' + 
-                      '<br />' + 
-                      '<b>Sender Name: </b> ' + 
-                      body.fields.name +
-                      '<br />' + 
-                      '<br />' + 
-                      '<b>Sender Email: </b> ' +
-                      body.fields.email;
-    sendEmail('Edward', 'edward@peninsulamgmt.com', body.fields.name, body.fields.email, 'Premier Submission', email_body, attachments);  
+    var email_body = '<b>Sender Comment: </b> ' +
+      body.fields.comment +
+      '<br />' +
+      '<br />' +
+      '<b>Sender Name: </b> ' +
+      body.fields.name +
+      '<br />' +
+      '<br />' +
+      '<b>Sender Email: </b> ' +
+      body.fields.email;
+    sendEmail('Edward', 'edward@peninsulamgmt.com', body.fields.name, 'coayscue@artistsunlimited.co', 'Premier Submission', email_body, attachments);
     return res.end();
   }
 

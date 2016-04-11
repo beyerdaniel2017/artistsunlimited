@@ -79,11 +79,11 @@ function addFollowers(followUser, nextURL, email) {
     limit: 200
   }, function(err, res) {
     if (err) {
-      sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'SUCCESSFUL Database Population', "Database has populated followers of " + followUser.username);
+      sendEmail('Database User', email, 'Email Database', 'coayscue@artistsunlimited.co', 'SUCCESSFUL Database Population', "Database has populated followers of " + followUser.username);
     } else if (res.next_href) {
       addFollowers(followUser, res.next_href, email);
     } else {
-      sendEmail('Database User', email, 'Email Database', 'coayscue@gmail.com', 'SUCCESSFUL Database Population', "Database has populated followers of " + followUser.username);
+      sendEmail('Database User', email, 'Email Database', 'coayscue@artistsunlimited.co', 'SUCCESSFUL Database Population', "Database has populated followers of " + followUser.username);
     }
     if (res && res.collection) {
       var i = -1;
@@ -394,7 +394,7 @@ router.post('/downloadurl', function(req, res, next) {
     console.log(downloadTrack);
     var trackUrl = req.protocol + '://' + req.get('host') + '/download?trackid=' + downloadTrack._id;
     var html = '<p>Here is your download URL: - </p><span>' + trackUrl + '</span>';
-    sendEmail('Service', req.user.email, 'Artists Unlimited', 'support@artistsunlimited.co', 'Download Track', html);
+    sendEmail('Service', req.user.email, 'Artists Unlimited', 'coayscue@artistsunlimited.co', 'Download Track', html);
     return res.end(trackUrl);
   }
 });

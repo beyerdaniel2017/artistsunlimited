@@ -14,7 +14,7 @@ router.post('/application', function(req, res, next) {
 
   var applicationObj = {
     firstName: req.body.firstName,
-    lastName: req.body.lastName, 
+    lastName: req.body.lastName,
     email: req.body.email
   };
 
@@ -30,22 +30,22 @@ router.post('/application', function(req, res, next) {
 
       var newApplication = new Application({
         'firstName': applicationObj.firstName,
-        'lastName' : applicationObj.lastName,
+        'lastName': applicationObj.lastName,
         'email': applicationObj.email,
       });
       return newApplication.save();
     })
     .then(function(result) {
       var emailBody = '<b>First Name: </b> ' + applicationObj.firstName +
-                      '<br />' +
-                      '<br />' +
-                      '<b>Last Name: </b> ' + applicationObj.lastName +
-                      '<br />' +
-                      '<br />' +
-                      '<b>Email: </b> ' + applicationObj.email +
-                      '<br />' +
-                      '<br />';
-    sendEmail('Edward', 'edward@peninsulamgmt.com', 'Support', 'coayscue@artistsunlimited.co', 'Application Submission', emailBody);
+        '<br />' +
+        '<br />' +
+        '<b>Last Name: </b> ' + applicationObj.lastName +
+        '<br />' +
+        '<br />' +
+        '<b>Email: </b> ' + applicationObj.email +
+        '<br />' +
+        '<br />';
+      sendEmail('Edward', 'edward@peninsulamgmt.com', 'Support', 'coayscue@artistsunlimited.co', 'Application Submission', emailBody);
       res.end();
     })
     .then(null, function(err) {
@@ -74,8 +74,8 @@ router.post('/artistemail', function(req, res, next) {
     })
     .then(function(result) {
       var emailBody = '<b>Email: </b> ' + email +
-                      '<br />' +
-                      '<br />';
+        '<br />' +
+        '<br />';
 
       sendEmail('Edward', 'edward@peninsulamgmt.com', 'Support', 'coayscue@artistsunlimited.co', 'Artist Email Submission', emailBody);
       res.end();
