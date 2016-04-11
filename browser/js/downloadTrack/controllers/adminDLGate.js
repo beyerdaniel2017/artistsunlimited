@@ -23,7 +23,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller('AdminDLGateController',  ['$rootScope',
+app.controller('AdminDLGateController', ['$rootScope',
   '$state',
   '$stateParams',
   '$scope',
@@ -34,161 +34,161 @@ app.controller('AdminDLGateController',  ['$rootScope',
   'SessionService',
   'AdminDLGateService',
   function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, SessionService, AdminDLGateService) {
-  // $scope.artists = [{
-  //   "id": 86560544,
-  //   "username": "La Tropical",
-  //   "url": "https://soundcloud.com/latropical"
-  // }, {
-  //   "id": 206926900,
-  //   "username": "Red Tag",
-  //   "url": "https://soundcloud.com/red-tag"
-  // }, {
-  //   "id": 64684860,
-  //   "username": "Etiquette Noir",
-  //   "url": "https://soundcloud.com/etiquettenoir"
-  // }, {
-  //   "id": 164339022,
-  //   "username": "Le Sol",
-  //   "url": "https://soundcloud.com/lesolmusique"
-  // }, {
-  //   "id": 203522426,
-  //   "username": "Classy Records",
-  //   "url": "https://soundcloud.com/onlyclassy"
-  // }, {
-  //   "id": 56395358,
-  //   "url": "https://soundcloud.com/deeperbeat",
-  //   "username": "DeeperBeet",
-  // }];
-  // $scope.playlists = [];
-  // $scope.addArtist = function() {
-  //   $scope.artists.push({});
-  // }
-  // $scope.removeArtist = function(a) {
-  //   $scope.artists.splice($scope.artists.indexOf(a), 1);
-  // }
-  // $scope.artistURLChange = function(a) {
-  //   var artist = $scope.artists[$scope.artists.indexOf(a)];
-  //   $scope.processing = true;
-  //   $http.post('/api/soundcloud/resolve', {
-  //       url: artist.url
-  //     })
-  //     .then(function(res) {
-  //       artist.avatar = res.data.avatar_url;
-  //       artist.username = res.data.username;
-  //       artist.id = res.data.id;
-  //       $scope.processing = false;
-  //     })
-  //     .then(null, function(err) {
-  //       alert('Artists not found');
-  //       $scope.processing = false;
-  //     })
-  // }
+    // $scope.artists = [{
+    //   "id": 86560544,
+    //   "username": "La Tropical",
+    //   "url": "https://soundcloud.com/latropical"
+    // }, {
+    //   "id": 206926900,
+    //   "username": "Red Tag",
+    //   "url": "https://soundcloud.com/red-tag"
+    // }, {
+    //   "id": 64684860,
+    //   "username": "Etiquette Noir",
+    //   "url": "https://soundcloud.com/etiquettenoir"
+    // }, {
+    //   "id": 164339022,
+    //   "username": "Le Sol",
+    //   "url": "https://soundcloud.com/lesolmusique"
+    // }, {
+    //   "id": 203522426,
+    //   "username": "Classy Records",
+    //   "url": "https://soundcloud.com/onlyclassy"
+    // }, {
+    //   "id": 56395358,
+    //   "url": "https://soundcloud.com/deeperbeat",
+    //   "username": "DeeperBeet",
+    // }];
+    // $scope.playlists = [];
+    // $scope.addArtist = function() {
+    //   $scope.artists.push({});
+    // }
+    // $scope.removeArtist = function(a) {
+    //   $scope.artists.splice($scope.artists.indexOf(a), 1);
+    // }
+    // $scope.artistURLChange = function(a) {
+    //   var artist = $scope.artists[$scope.artists.indexOf(a)];
+    //   $scope.processing = true;
+    //   $http.post('/api/soundcloud/resolve', {
+    //       url: artist.url
+    //     })
+    //     .then(function(res) {
+    //       artist.avatar = res.data.avatar_url;
+    //       artist.username = res.data.username;
+    //       artist.id = res.data.id;
+    //       $scope.processing = false;
+    //     })
+    //     .then(null, function(err) {
+    //       alert('Artists not found');
+    //       $scope.processing = false;
+    //     })
+    // }
 
-  // $scope.addPlaylist = function() {
-  //   $scope.playlists.push({});
-  // }
-  // $scope.removePlaylist = function(p) {
-  //   $scope.playlists.splice($scope.playlists.indexOf(p), 1);
-  // }
-  // $scope.playlistURLChange = function(p) {
-  //   var playlist = $scope.playlists[$scope.playlists.indexOf(p)];
-  //   $scope.processing = true;
-  //   $http.post('/api/soundcloud/resolve', {
-  //       url: playlist.url
-  //     })
-  //     .then(function(res) {
-  //       playlist.avatar = res.data.artwork_url;
-  //       playlist.title = res.data.title;
-  //       playlist.id = res.data.id;
-  //       $scope.processing = false;
-  //     })
-  //     .then(null, function(err) {
-  //       alert('Playlist not found');
-  //       $scope.processing = false;
-  //     })
-  // }
+    // $scope.addPlaylist = function() {
+    //   $scope.playlists.push({});
+    // }
+    // $scope.removePlaylist = function(p) {
+    //   $scope.playlists.splice($scope.playlists.indexOf(p), 1);
+    // }
+    // $scope.playlistURLChange = function(p) {
+    //   var playlist = $scope.playlists[$scope.playlists.indexOf(p)];
+    //   $scope.processing = true;
+    //   $http.post('/api/soundcloud/resolve', {
+    //       url: playlist.url
+    //     })
+    //     .then(function(res) {
+    //       playlist.avatar = res.data.artwork_url;
+    //       playlist.title = res.data.title;
+    //       playlist.id = res.data.id;
+    //       $scope.processing = false;
+    //     })
+    //     .then(null, function(err) {
+    //       alert('Playlist not found');
+    //       $scope.processing = false;
+    //     })
+    // }
 
-  // $scope.trackURLChange = function() {
-  //   if ($scope.track.trackURL !== '') {
-  //     $scope.processing = true;
-  //     $http.post('/api/soundcloud/resolve', {
-  //         url: $scope.track.trackURL
-  //       })
-  //       .then(function(res) {
-  //         $scope.track.trackTitle = res.data.title;
-  //         $scope.track.trackID = res.data.id;
-  //         $scope.track.artistID = res.data.user.id;
-  //         $scope.track.trackArtworkURL = res.data.artwork_url.replace('large.jpg', 't500x500.jpg');
-  //         $scope.track.artistArtworkURL = res.data.user.avatar_url;
-  //         $scope.track.artistUsername = res.data.user.username;
-  //         $scope.track.SMLinks = {};
-  //         return SC.get('/users/' + $scope.track.artistID + '/web-profiles');
-  //       })
-  //       .then(function(profiles) {
-  //         profiles.forEach(function(prof) {
-  //           if (['twitter', 'youtube', 'facebook', 'spotify', 'soundcloud', 'instagram'].indexOf(prof.service) != -1) $scope.track.SMLinks[prof.service] = prof.url;
-  //         });
-  //         $scope.processing = false;
-  //       })
-  //       .then(null, function(err) {
-  //         $scope.track.trackID = null;
-  //         alert('Song not found or forbidden');
-  //         $scope.processing = false;
-  //       });
-  //   }
-  // }
+    // $scope.trackURLChange = function() {
+    //   if ($scope.track.trackURL !== '') {
+    //     $scope.processing = true;
+    //     $http.post('/api/soundcloud/resolve', {
+    //         url: $scope.track.trackURL
+    //       })
+    //       .then(function(res) {
+    //         $scope.track.trackTitle = res.data.title;
+    //         $scope.track.trackID = res.data.id;
+    //         $scope.track.artistID = res.data.user.id;
+    //         $scope.track.trackArtworkURL = res.data.artwork_url.replace('large.jpg', 't500x500.jpg');
+    //         $scope.track.artistArtworkURL = res.data.user.avatar_url;
+    //         $scope.track.artistUsername = res.data.user.username;
+    //         $scope.track.SMLinks = {};
+    //         return SC.get('/users/' + $scope.track.artistID + '/web-profiles');
+    //       })
+    //       .then(function(profiles) {
+    //         profiles.forEach(function(prof) {
+    //           if (['twitter', 'youtube', 'facebook', 'spotify', 'soundcloud', 'instagram'].indexOf(prof.service) != -1) $scope.track.SMLinks[prof.service] = prof.url;
+    //         });
+    //         $scope.processing = false;
+    //       })
+    //       .then(null, function(err) {
+    //         $scope.track.trackID = null;
+    //         alert('Song not found or forbidden');
+    //         $scope.processing = false;
+    //       });
+    //   }
+    // }
 
-  // $scope.saveDownloadGate = function() {
-  //   if (!$scope.track.email || !$scope.track.downloadURL) {
-  //     alert('Please fill in all fields');
-  //     return false;
-  //   }
-  //   if (!$scope.track.trackID) {
-  //     alert('Track Not Found');
-  //     return false;
-  //   }
-  //   $scope.processing = true;
-  //   var sendObj = $scope.track;
-  //   sendObj.artistIDS = [$scope.track.artistID];
-  //   $scope.artists.forEach(function(a) {
-  //     sendObj.artistIDS.push(a.id);
-  //   });
-  //   sendObj.playlistIDS = [];
-  //   $scope.playlists.forEach(function(p) {
-  //     sendObj.playlistIDS.push(p.id);
-  //   });
-  //   $http.post('/api/database/downloadurl', sendObj)
-  //     .then(function(res) {
-  //       $scope.track = {
-  //         trackURL: '',
-  //         downloadURL: '',
-  //         email: ''
-  //       };
-  //       alert("SUCCESS: Url saved successfully");
-  //       $scope.processing = false;
-  //       window.location.reload();
-  //     })
-  //     .then(null, function(err) {
-  //       alert("ERROR: Error in saving url");
-  //       $scope.processing = false;
-  //     });
-  // }
+    // $scope.saveDownloadGate = function() {
+    //   if (!$scope.track.email || !$scope.track.downloadURL) {
+    //     alert('Please fill in all fields');
+    //     return false;
+    //   }
+    //   if (!$scope.track.trackID) {
+    //     alert('Track Not Found');
+    //     return false;
+    //   }
+    //   $scope.processing = true;
+    //   var sendObj = $scope.track;
+    //   sendObj.artistIDS = [$scope.track.artistID];
+    //   $scope.artists.forEach(function(a) {
+    //     sendObj.artistIDS.push(a.id);
+    //   });
+    //   sendObj.playlistIDS = [];
+    //   $scope.playlists.forEach(function(p) {
+    //     sendObj.playlistIDS.push(p.id);
+    //   });
+    //   $http.post('/api/database/downloadurl', sendObj)
+    //     .then(function(res) {
+    //       $scope.track = {
+    //         trackURL: '',
+    //         downloadURL: '',
+    //         email: ''
+    //       };
+    //       alert("SUCCESS: Url saved successfully");
+    //       $scope.processing = false;
+    //       window.location.reload();
+    //     })
+    //     .then(null, function(err) {
+    //       alert("ERROR: Error in saving url");
+    //       $scope.processing = false;
+    //     });
+    // }
 
-  // $scope.getDownloadList = function() {
-  //     $http.get('/api/database/downloadurl')
-  //       .then(handleResponse)
-  //       .catch(handleError);
+    // $scope.getDownloadList = function() {
+    //     $http.get('/api/database/downloadurl')
+    //       .then(handleResponse)
+    //       .catch(handleError);
 
-  //       function handleResponse(res) {
-  //         console.log(res);
-  //         $scope.downloadGatewayList = res.data;
-  //       }
+    //       function handleResponse(res) {
+    //         console.log(res);
+    //         $scope.downloadGatewayList = res.data;
+    //       }
 
-  //       function handleError(res) {
+    //       function handleError(res) {
 
-  //       }
-  //   }
-  /* Init boolean variables for show/hide and other functionalities */
+    //       }
+    //   }
+    /* Init boolean variables for show/hide and other functionalities */
     $scope.processing = false;
     $scope.isTrackAvailable = false;
     $scope.message = {
@@ -222,7 +222,7 @@ app.controller('AdminDLGateController',  ['$rootScope',
         id: ''
       }]
     };
-    
+
     /* Init downloadGateway list */
 
     $scope.downloadGatewayList = [];
@@ -271,10 +271,41 @@ app.controller('AdminDLGateController',  ['$rootScope',
         comment: false,
         repost: false,
         artists: [{
-          url: '',
-          avatar: 'assets/images/who-we-are.png',
-          username: '',
-          id: -1
+          "id": 86560544,
+          "username": "La Tropical",
+          "url": "https://soundcloud.com/latropical"
+        }, {
+          "id": 206926900,
+          "username": "Red Tag",
+          "url": "https://soundcloud.com/red-tag"
+        }, {
+          "id": 64684860,
+          "username": "Etiquette Noir",
+          "url": "https://soundcloud.com/etiquettenoir"
+        }, {
+          "id": 164339022,
+          "username": "Le Sol",
+          "url": "https://soundcloud.com/lesolmusique"
+        }, {
+          "id": 203522426,
+          "username": "Classy Records",
+          "url": "https://soundcloud.com/onlyclassy"
+        }, {
+          "id": 56395358,
+          "url": "https://soundcloud.com/deeperbeat",
+          "username": "DeeperBeet",
+        }, {
+          "id": 209865882,
+          "url": "https://soundcloud.com/a-la-mer",
+          "username": "A La Mer",
+        }, {
+          "id": 61594988,
+          "username": "Royal X",
+          "url": "https://soundcloud.com/royalxx"
+        }, {
+          "channelID": 210908986,
+          "url": "https://soundcloud.com/supportifysupports",
+          "username": "Supportify Supports",
         }],
         playlists: [{
           url: '',
@@ -283,22 +314,12 @@ app.controller('AdminDLGateController',  ['$rootScope',
           id: ''
         }]
       };
-      // $scope.playlists = [{
-      //   url: ''
-      // }];
-      // $scope.artists = [{
-      //   url: '',
-      //   avatar: 'assets/images/who-we-are.png',
-      //   username: '',
-      //   id: -1
-      // }];
-      // $scope.SMLinks = [];
       angular.element("input[type='file']").val(null);
     }
 
     /* Check if stateParams has gatewayID to initiate edit */
     $scope.checkIfEdit = function() {
-      if($stateParams.gatewayID) {
+      if ($stateParams.gatewayID) {
         $scope.getDownloadGateway($stateParams.gatewayID);
         // if(!$stateParams.downloadGateway) {
         //   $scope.getDownloadGateway($stateParams.gatewayID);
@@ -320,36 +341,36 @@ app.controller('AdminDLGateController',  ['$rootScope',
           .then(handleWebProfiles)
           .catch(handleError);
 
-          function handleTrackDataAndGetProfiles(res) {
-            $scope.track.trackTitle = res.data.title;
-            $scope.track.trackID = res.data.id;
-            $scope.track.artistID = res.data.user.id;
-            $scope.track.trackArtworkURL = res.data.artwork_url ? res.data.artwork_url.replace('large.jpg', 't500x500.jpg') : '';
-            $scope.track.artistArtworkURL = res.data.user.avatar_url ? res.data.user.avatar_url : '';
-            $scope.track.artistURL = res.data.user.permalink_url;
-            $scope.track.artistUsername = res.data.user.username;
-            $scope.track.SMLinks = [];
-            return SC.get('/users/' + $scope.track.artistID + '/web-profiles');
-          }
+        function handleTrackDataAndGetProfiles(res) {
+          $scope.track.trackTitle = res.data.title;
+          $scope.track.trackID = res.data.id;
+          $scope.track.artistID = res.data.user.id;
+          $scope.track.trackArtworkURL = res.data.artwork_url ? res.data.artwork_url.replace('large.jpg', 't500x500.jpg') : '';
+          $scope.track.artistArtworkURL = res.data.user.avatar_url ? res.data.user.avatar_url : '';
+          $scope.track.artistURL = res.data.user.permalink_url;
+          $scope.track.artistUsername = res.data.user.username;
+          $scope.track.SMLinks = [];
+          return SC.get('/users/' + $scope.track.artistID + '/web-profiles');
+        }
 
-          function handleWebProfiles(profiles) {
-            profiles.forEach(function(prof) {
-              if (['twitter', 'youtube', 'facebook', 'spotify', 'soundcloud', 'instagram'].indexOf(prof.service) != -1) {
-                $scope.track.SMLinks.push({
-                  key: prof.service,
-                  value: prof.url
-                });
-              }
-            });
-            $scope.isTrackAvailable = true;
-            $scope.processing = false;
-          }
+        function handleWebProfiles(profiles) {
+          profiles.forEach(function(prof) {
+            if (['twitter', 'youtube', 'facebook', 'spotify', 'soundcloud', 'instagram'].indexOf(prof.service) != -1) {
+              $scope.track.SMLinks.push({
+                key: prof.service,
+                value: prof.url
+              });
+            }
+          });
+          $scope.isTrackAvailable = true;
+          $scope.processing = false;
+        }
 
-          function handleError(err) {
-            $scope.track.trackID = null;
-            alert('Song not found or forbidden');
-            $scope.processing = false;
-          }
+        function handleError(err) {
+          $scope.track.trackID = null;
+          alert('Song not found or forbidden');
+          $scope.processing = false;
+        }
       }
     };
 
@@ -407,7 +428,7 @@ app.controller('AdminDLGateController',  ['$rootScope',
     }
 
     $scope.addArtist = function() {
-      if($scope.track.artists.length > 2) {
+      if ($scope.track.artists.length > 2) {
         return false;
       }
 
@@ -443,10 +464,10 @@ app.controller('AdminDLGateController',  ['$rootScope',
 
       var location = getLocation($scope.track.SMLinks[index].value);
       var host = location.hostname.split('.')[0];
-      var findLink = $scope.track.SMLinks.filter(function(item){
+      var findLink = $scope.track.SMLinks.filter(function(item) {
         return item.key === host;
       });
-      if(findLink.length > 0) {
+      if (findLink.length > 0) {
         return false;
       }
       $scope.track.SMLinks[index].key = host;
@@ -457,7 +478,7 @@ app.controller('AdminDLGateController',  ['$rootScope',
     };
 
     $scope.addPermanentLink = function() {
-      if($scope.track.permanentLinks.length > 2) {
+      if ($scope.track.permanentLinks.length > 2) {
         return false;
       }
 
@@ -504,17 +525,17 @@ app.controller('AdminDLGateController',  ['$rootScope',
 
       var artists = $scope.track.artists.filter(function(item) {
         return item.id !== -1;
-      }).map(function(item){
+      }).map(function(item) {
         delete item['$$hashKey'];
         return item;
       });
       sendObj.append('artists', JSON.stringify(artists));
-      
+
       /* playlists */
 
       var playlists = $scope.track.playlists.filter(function(item) {
         return item.id !== -1;
-      }).map(function(item){
+      }).map(function(item) {
         delete item['$$hashKey'];
         return item;
       });
@@ -524,7 +545,7 @@ app.controller('AdminDLGateController',  ['$rootScope',
 
       var permanentLinks = $scope.track.permanentLinks.filter(function(item) {
         return item.url !== '';
-      }).map(function(item){
+      }).map(function(item) {
         return item.url;
       });
       sendObj.append('permanentLinks', JSON.stringify(permanentLinks));
@@ -539,17 +560,19 @@ app.controller('AdminDLGateController',  ['$rootScope',
 
       /* Append data to sendObj end */
 
-       var options = {
+      var options = {
         method: 'POST',
         url: '/api/database/downloadurl',
-        headers: {'Content-Type': undefined },
+        headers: {
+          'Content-Type': undefined
+        },
         transformRequest: angular.identity,
         data: sendObj
       };
       $http(options)
         .then(function(res) {
           $scope.processing = false;
-          if($scope.track._id) {
+          if ($scope.track._id) {
             // $scope.openModal.downloadURL(res.data.trackURL);
             return;
           }
@@ -564,7 +587,7 @@ app.controller('AdminDLGateController',  ['$rootScope',
     };
 
     $scope.logout = function() {
-      $http.post('/api/logout').then(function(){
+      $http.post('/api/logout').then(function() {
         SessionService.deleteUser();
         $state.go('home');
       });
@@ -580,13 +603,13 @@ app.controller('AdminDLGateController',  ['$rootScope',
         .then(handleResponse)
         .catch(handleError);
 
-        function handleResponse(res) {
-          $scope.downloadGatewayList = res.data;
-        }
+      function handleResponse(res) {
+        $scope.downloadGatewayList = res.data;
+      }
 
-        function handleError(res) {
+      function handleError(res) {
 
-        }
+      }
     }
 
     /* Method for getting DownloadGateway in case of edit */
@@ -601,36 +624,36 @@ app.controller('AdminDLGateController',  ['$rootScope',
         .then(handleResponse)
         .catch(handleError);
 
-        function handleResponse(res) {
-          
-          $scope.isTrackAvailable = true;
-          $scope.track = res.data;
+      function handleResponse(res) {
 
-          var SMLinks = res.data.SMLinks ? res.data.SMLinks : {};
-          var permanentLinks = res.data.permanentLinks ? res.data.permanentLinks : [''];
-          var SMLinksArray = [];
-          var permanentLinksArray = [];
+        $scope.isTrackAvailable = true;
+        $scope.track = res.data;
 
-          for(var link in SMLinks) {
-            SMLinksArray.push({
-              key: link,
-              value: SMLinks[link]
-            });
-          }
-          permanentLinks.forEach(function(item){
-            permanentLinksArray.push({
-              url: item
-            })
+        var SMLinks = res.data.SMLinks ? res.data.SMLinks : {};
+        var permanentLinks = res.data.permanentLinks ? res.data.permanentLinks : [''];
+        var SMLinksArray = [];
+        var permanentLinksArray = [];
+
+        for (var link in SMLinks) {
+          SMLinksArray.push({
+            key: link,
+            value: SMLinks[link]
           });
-          $scope.track.SMLinks = SMLinksArray;
-          $scope.track.permanentLinks = permanentLinksArray;
-          console.log($scope.track);
-          $scope.processing = false;
         }
+        permanentLinks.forEach(function(item) {
+          permanentLinksArray.push({
+            url: item
+          })
+        });
+        $scope.track.SMLinks = SMLinksArray;
+        $scope.track.permanentLinks = permanentLinksArray;
+        console.log($scope.track);
+        $scope.processing = false;
+      }
 
-        function handleError(res) {
-          $scope.processing = false;
-        }
+      function handleError(res) {
+        $scope.processing = false;
+      }
     }
   }
 

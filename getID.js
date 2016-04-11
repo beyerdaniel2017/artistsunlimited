@@ -13,7 +13,7 @@ HTTP.request({
   res.on("data", function(chunk) {
     var chunkString = "" + chunk;
     console.log(chunkString);
-    var userID = chunkString.slice(chunkString.indexOf('/users/') + 7, chunkString.indexOf('.json?'));
+    var userID = chunkString.slice(chunkString.indexOf('cloud.com/') + 10, chunkString.indexOf('.json?'));
     console.log(userID);
   });
 }).on('error', function(e) {

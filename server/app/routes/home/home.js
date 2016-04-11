@@ -45,7 +45,7 @@ router.post('/application', function(req, res, next) {
                       '<b>Email: </b> ' + applicationObj.email +
                       '<br />' +
                       '<br />';
-      sendEmail('Edward', 'edward@peninsulamgmt.com', 'Support', 'support@au.com', 'Application Submission', emailBody);
+    sendEmail('Edward', 'edward@peninsulamgmt.com', 'Support', 'coayscue@artistsunlimited.co', 'Application Submission', emailBody);
       res.end();
     })
     .then(null, function(err) {
@@ -77,7 +77,7 @@ router.post('/artistemail', function(req, res, next) {
                       '<br />' +
                       '<br />';
 
-      sendEmail('Edward', 'edward@peninsulamgmt.com', 'Support', 'support@au.com', 'Artist Email Submission', emailBody);
+      sendEmail('Edward', 'edward@peninsulamgmt.com', 'Support', 'coayscue@artistsunlimited.co', 'Artist Email Submission', emailBody);
       res.end();
     })
     .then(null, function(err) {

@@ -17,20 +17,22 @@ function sendEmail(to_name, to_email, from_name, from_email, subject, message_ht
         }]
     };
 
-    function helper(){
-        return new Promise(function (resolve, reject) {
-            m.messages.send({'message': message}, resolve, reject)
+    function helper() {
+        return new Promise(function(resolve, reject) {
+            m.messages.send({
+                'message': message
+            }, resolve, reject)
         })
     }
 
     helper()
-    .then(function(res){
-        return res;
-    })
-    .catch(function(err){
-        console.error('A mandrill error occurred: ' + err.name + ' - ' + err.message);
-    });
-    
+        .then(function(res) {
+            return res;
+        })
+        .catch(function(err) {
+            console.error('A mandrill error occurred: ' + err.name + ' - ' + err.message);
+        });
+
 }
 
-sendEmail('Chris', 'tryenc@gmail.com', 'Christian', 'coayscue@gmail.com', 'Promise Test 4', 'Dear Christian,<br><br>I hope you have a nice day. Keep it 100.<br><br>Best,<br>Christian')
+sendEmail('Chris', 'coayscue@gmail.com', 'Christian', 'coayscue@artistsunlimited.co', 'Promise Test 4', 'Dear Christian,<br><br>I hope you have a nice day. Keep it 100.<br><br>Best,<br>Christian')

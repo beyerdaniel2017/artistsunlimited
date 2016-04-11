@@ -41,7 +41,7 @@ router.post('/tasks', function(req, res, next) {
   }
   if (body.repost) {
     SCR.put('/e1/me/track_reposts/' + body.trackID, body.token, function(err, data) {
-      if (err) console.log('error reposting: ' + JSON.stringify(err));
+      if (err) console.log('error reposting the track2: ' + JSON.stringify(err));
     });
   }
   if (body.comment) {
@@ -58,23 +58,20 @@ router.post('/tasks', function(req, res, next) {
       }
     });
   }
-  if(body.artists) {
+  if (body.artists) {
     body.artists.forEach(function(artist) {
       SC.put('/me/followings/' + artist.id, function(err, response) {
         if (err) console.log('error following: ' + JSON.stringify(err));
       })
     });
   }
-  if(body.playlists) {
+  if (body.playlists) {
     body.playlists.forEach(function(playlist) {
       SCR.put('/e1/me/playlist_reposts/' + playlist.id, body.token, function(err, data) {
         if (err) console.log('error reposting a playlist: ' + JSON.stringify(err))
       });
     });
   }
-  SCR.put('/e1/me/track_reposts/' + body.trackID, body.token, function(err, data) {
-    if (err) console.log('error reposting the track: ' + JSON.stringify(err));
-  });
   DownloadTrack.findById(body._id).exec()
     .then(function(t) {
       if (t.downloadCount) t.downloadCount++;

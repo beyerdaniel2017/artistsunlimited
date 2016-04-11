@@ -1,0 +1,29 @@
+<ng-include src="'js/home/views/navigation.html'"></ng-include>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="content-area bg-white">
+        <div class="row">
+          <div class="col-md-12" style="text-align:center">
+            <h1 class="bold text-center">Payment for Promotion</h1>
+            <h3>Please select all the channels on which you would like to be reposted.</h3>
+            <h4 ng-if="!auDLLink" style="color:green">You are eligible for a 20% discount on reposts if you make your track's download link on Artists Unlimited: <a ui-sref="login">Make Download Link</a></h5>
+            <h4 ng-if="auDLLink" style="color:green">You have a 20% discount for having an Artists Unlimited download link!</h4>
+            <div style="display:flex; flex-wrap: wrap; flex-direction: row; justify-content: space-between;">
+              <div ng-repeat="channel in channels" style="padding: 10px; display:inline-block; text-align:center">
+                <span>{{channel.displayName}}</span>
+                <br>
+                <input type="checkbox" ng-model="selectedChannels[channel.displayName]" ng-change="recalculate()"> ${{channel.price}}.00</input>
+              </div>              
+            </div>
+            <h4 style="text-align:center">Total: ${{total}}.00</h4>
+            <button ng-click="makePayment()" style="background-color: rgba(0,0,0,0); border:none;"><img src="/assets/images/paypal_button.png" style="height:30px;"></button>
+            <div id="scPlayer" style="margin:30px 0"></div> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

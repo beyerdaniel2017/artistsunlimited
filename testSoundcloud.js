@@ -35,11 +35,11 @@ var redirect_uri = "https://artistsunlimited.co/callback.html";
 var aT = "1-231090-198031384-1101f26bdf7c6";
 var id = 241853814;
 
-// SC.init({
-//   client_id: client_id,
-//   oauth_token: aT,
-//   redirect_uri: redirect_uri
-// });
+SC.init({
+  client_id: client_id,
+  oauth_token: aT,
+  redirect_uri: redirect_uri
+});
 
 
 SCR.init(client_id, client_secret, redirect_uri);

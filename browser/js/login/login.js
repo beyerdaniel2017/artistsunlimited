@@ -38,7 +38,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
 
   $scope.manage = function() {
     $scope.processing = true;
-    
+
     SC.connect()
       .then(function(res) {
         $rootScope.accessToken = res.oauth_token;
@@ -85,8 +85,10 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
     var loadElements = [];
     for (let i = $scope.counter; i < $scope.counter + 15; i++) {
       var sub = $scope.submissions[i];
-      $scope.showingElements.push(sub);
-      loadElements.push(sub);
+      if (sub) {
+        $scope.showingElements.push(sub);
+        loadElements.push(sub);
+      }
     }
     setTimeout(function() {
       console.log(loadElements);

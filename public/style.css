@@ -1,20 +1,3 @@
-.processing-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
-  text-align: center;
-  z-index: 1; }
-
-.processing-inner {
-  font-color: white;
-  margin-top: 400px;
-  z-index: 2;
-  overflow: hidden; }
-
 .no-padding {
   padding: 0; }
 
@@ -28,7 +11,7 @@
   right: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(249, 214, 176, 0.9);
   text-align: center;
   z-index: 1; }
 
@@ -38,6 +21,66 @@
   z-index: 2;
   overflow: hidden; }
 
+/******* Preloader Css Start ********/
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(249, 214, 176, 0.9);
+  z-index: 9999;
+  /* makes sure it stays on top */ }
+
+.loader-spinner {
+  position: absolute;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  -webkit-animation: spinner 0.5s linear infinite;
+  animation: spinner 0.5s linear infinite;
+  left: 50%;
+  /* centers the loading animation horizontally on the screen */
+  top: 50%;
+  /* centers the loading animation vertically on the screen */
+  margin: -20px 0 0 -20px;
+  /* is width and height divided by two */ }
+
+.loader-spinner > span {
+  position: absolute;
+  display: block;
+  width: 35px;
+  height: 35px;
+  overflow: hidden;
+  top: -3px;
+  left: -3px; }
+
+.loader-spinner > span > span {
+  display: block;
+  width: 50px;
+  height: 50px;
+  border: 3px solid #E87133;
+  border-radius: 50%; }
+
+@-webkit-keyframes spinner {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+
+@keyframes spinner {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+
+/******* Preloader Css End ********/
 body {
   background: url(assets/images/fade-background.png) no-repeat;
   -webkit-background-size: cover;
@@ -48,7 +91,8 @@ body {
   color: #686868;
   padding-top: 90px;
   background-attachment: fixed;
-  font-family: Helvetica, Sans-Serif; }
+  font-family: Helvetica, Sans-Serif;
+  background-color: #F7EAAD; }
 
 #main {
   height: 100%;
@@ -83,28 +127,35 @@ body {
   background-color: #fff;
   border-color: transparent; }
 
-.navbar-nav,
-.navbar-nav > li {
-  float: none;
-  display: inline-block;
-  vertical-align: top; }
+.navbar-fixed-top {
+  height: 60px;
+  /* Whatever you want. */ }
 
 .navbar-inner {
-  text-align: center; }
+  text-align: center;
+  background: #fff; }
 
-.nav > li > a {
+/*.nav > li > a {
   padding: 10px 45px;
-  line-height: 40px; }
+}*/
+.nav > li > a {
+  padding: 10px 15px;
+  margin: 0 32px; }
 
 .navbar-default .navbar-nav > li > a {
   color: #686868;
   font-weight: bold;
   font-size: 12px;
-  letter-spacing: 4px; }
+  letter-spacing: 4px;
+  margin-top: 10px; }
 
 .form-control {
   border-radius: 0px;
-  border-color: #F7EAAD; }
+  border-color: #F5D3B5;
+  outline: none;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important; }
 
 .navbar {
   min-height: 40px; }
@@ -121,6 +172,14 @@ body {
 .navbar-fixed-top {
   border-width: 0; }
 
+a:hover, a:focus {
+  text-decoration: none; }
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+  color: #000;
+  background-color: transparent;
+  border-bottom: 1px solid #000; }
+
 /* Bootstap Modify CSS End */
 .logo img {
   height: 45px; }
@@ -131,7 +190,7 @@ body {
 
 .content-area {
   height: auto;
-  padding: 50px 80px; }
+  padding: 5% 6%; }
 
 .internal-content {
   margin: 10px 0 0 0;
@@ -156,6 +215,20 @@ body {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 3px; }
+
+.btn-soundcloud {
+  position: relative;
+  color: #FFF;
+  background-color: #F50;
+  border: 0px none;
+  border-radius: 0px;
+  text-align: left;
+  padding-left: 65px;
+  font-size: 14px; }
+
+.btn-soundcloud:hover {
+  color: #FFF;
+  background-color: #C40; }
 
 .no-border {
   border: 0px;
@@ -206,30 +279,200 @@ body {
   display: inline-block; }
 
 /* Home Page End */
+/* Download Gatway CSS Start */
+.track-bottom {
+  padding: 10px; }
+
+.song-container {
+  min-height: 150px; }
+
+.song-url {
+  position: relative;
+  margin-bottom: 10px;
+  width: 95%; }
+
+.song-url .close-ic {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-top: 8px;
+  margin-right: -25px; }
+
+.social-container {
+  min-height: 150px; }
+
+.social-container a {
+  color: #F5D3B5; }
+
+.facebook {
+  background: #F5D3B5 url("assets/images/facebook_icon.png") no-repeat scroll center center/30px auto;
+  width: 40px;
+  height: 34px;
+  position: absolute;
+  top: 0;
+  right: 0; }
+
+.twitter {
+  background: #F5D3B5 url("assets/images/twitter_icon.png") no-repeat scroll center center/30px auto;
+  width: 40px;
+  height: 34px;
+  position: absolute;
+  top: 0;
+  right: 0; }
+
+.instagram {
+  background: #F5D3B5 url("assets/images/instagram_icon.png") no-repeat scroll center center/30px auto;
+  width: 40px;
+  height: 34px;
+  position: absolute;
+  top: 0;
+  right: 0; }
+
+.youtube {
+  background: #F5D3B5 url("assets/images/youtube_icon.png") no-repeat scroll center center/30px auto;
+  width: 40px;
+  height: 34px;
+  position: absolute;
+  top: 0;
+  right: 0; }
+
+.spotify {
+  background: #F5D3B5 url("assets/images/spotify_icon.png") no-repeat scroll center center/30px auto;
+  width: 40px;
+  height: 34px;
+  position: absolute;
+  top: 0;
+  right: 0; }
+
+.soundcloud {
+  background: #F5D3B5 url("assets/images/soundcloud_icon.png") no-repeat scroll center center/30px auto;
+  width: 40px;
+  height: 34px;
+  position: absolute;
+  top: 0;
+  right: 0; }
+
+.soundcloud-img img {
+  position: absolute;
+  width: 46px;
+  top: 0px;
+  left: 5px;
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+  padding-right: 6px; }
+
+.permanent-links {
+  min-height: 150px; }
+
+.permanent-links a {
+  color: #F5D3B5; }
+
+.input-box {
+  position: relative;
+  margin-bottom: 10px;
+  margin-top: 10px; }
+
+.input-box input {
+  width: 85%; }
+
+.input-box .close-ic {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-top: 8px;
+  margin-right: -25px; }
+
+.pro-icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-top: 2px;
+  margin-right: 0; }
+
+.profile-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%; }
+
+.artist-follow {
+  position: relative;
+  min-height: 150px; }
+
+.artist-follow a {
+  color: #F5D3B5; }
+
+.orange-text {
+  color: #F5D3B5; }
+
+.checkbox-container {
+  width: 100%;
+  padding: 10px 0; }
+
+.checkbox-container ul {
+  padding: 0;
+  margin: 0; }
+
+.checkbox-container ul li {
+  list-style-type: none; }
+
+/*** custom checkboxes Start ***/
+label.with-square-checkbox {
+  cursor: pointer;
+  font-weight: 400; }
+
+label.with-square-checkbox span {
+  line-height: 24px; }
+
+label.with-square-checkbox span::before {
+  margin-right: 4px;
+  padding-left: 1px;
+  width: 21px;
+  height: 21px;
+  border: 1px solid #F5D3B5;
+  display: inline-block;
+  line-height: 15px;
+  content: '';
+  float: left; }
+
+label.with-square-checkbox input[type="checkbox"] {
+  display: none; }
+
+label.with-square-checkbox input[type="checkbox"]:checked + span::before {
+  font-family: 'Glyphicons Halflings';
+  content: '\e013';
+  color: #F5D3B5; }
+
+/*** custom checkboxes End***/
+.form-container {
+  min-height: 350px; }
+
+/* Download Gatway CSS End */
 /* Responsive CSS START */
 @media screen and (max-width: 1024px) {
   .nav > li > a {
-    padding: 10px 22px; } }
+    padding: 10px 22px;
+    margin: 0 15px; } }
 
 @media screen and (max-width: 1199px) {
   .nav > li > a {
-    padding: 10px 12px; } }
+    padding: 10px 12px;
+    margin: 0 20px; } }
 
 @media screen and (max-width: 1050px) {
   .nav > li > a {
-    padding: 10px 26px; } }
+    margin: 0 22px; } }
 
 @media screen and (max-width: 980px) {
   .nav > li > a {
-    padding: 10px 12px; } }
+    padding: 10px 12px;
+    margin: 0 10px; } }
 
 @media screen and (max-width: 900px) {
   .nav > li > a {
-    padding: 10px 12px; } }
+    margin: 0; } }
 
 @media screen and (max-width: 768px) {
   .nav > li > a {
-    padding: 10px 12px; }
+    margin: 0; }
   .intro-logo {
     text-align: right; } }
 
