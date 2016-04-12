@@ -8,8 +8,8 @@ module.exports = {
     "callbackURL": "https://localhost:1443/callback.html"
   },
   "PAYPAL": {
-    "clientID": "Ady2wpjPN-tI8v1_BeBDVqgGjeQlMba473emKsaqNOKZNJ_b_L13pGKb89b7uePdLWK8j-IrYIZcG2JU",
-    "clientSecret": "EJyovnzQHfB-lzZEmiLXyR3kwDe3MvZlGeIu23Bz7nHMuRAgLterF-v7A9rScGtR3VP2cCXLAR1uLoGc",
+    "clientID": "AQOFIdlz-RFeZbx6i4W5l_PUvhEdn7IRhIt3FSv7YXj5Ga3SNlzXuSHfVAkqX6xkbLVhv0boh9lx3GHi",
+    "clientSecret": "EFGXm6BiNeucSWhFIOcj5yDr9vUqRHKBJuZ1951zFYE2oS71y_yxlH7WRzyLOJ7-SHFun06hg6sRp55w",
     "mode": "sandbox"
   },
   "AWS": {
@@ -31,5 +31,6 @@ module.exports = {
     "clientID": "INSERT_GOOGLE_CLIENTID_HERE",
     "clientSecret": "INSERT_GOOGLE_CLIENT_SECRET_HERE",
     "callbackURL": "INSERT_GOOGLE_CALLBACK_HERE"
-  }
+  },
+  "ROOTURL": "https://localhost:1443"
 };

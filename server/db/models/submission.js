@@ -30,6 +30,15 @@ var schema = new mongoose.Schema({
   },
   submissionDate: {
     type: Date
+  },
+  payment: {
+    type: Object
+  },
+  paidChannelIDS: {
+    type: [Number]
+  },
+  paid: {
+    type: Boolean
   }
 });
 

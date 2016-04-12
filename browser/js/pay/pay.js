@@ -26,8 +26,9 @@ app.config(function($stateProvider) {
   });
 });
 
-app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track) {
+app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track, $state) {
   $scope.submission = submission;
+  if (submission.paid) $state.go('home');
   $scope.track = track;
   SC.oEmbed(track.uri, {
     element: document.getElementById('scPlayer'),
@@ -35,13 +36,10 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
     maxheight: 150
   });
   $scope.total = 0;
-  console.log(track);
-  $scope.channels = channels;
-  // $scope.channels = channels.filter(function(ch) {
-  //   return (submission.channelIDS.indexOf(ch.channelID) != -1)
-  // });
+  $scope.channels = channels.filter(function(ch) {
+    return (submission.channelIDS.indexOf(ch.channelID) != -1)
+  });
   $scope.auDLLink = ($scope.track.purchase_url.includes("artistsunlimited.co"));
-  console.log($scope.auDLLink);
 
   $scope.selectedChannels = {};
   $scope.channels.forEach(function(ch) {
@@ -63,7 +61,23 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   }
 
   $scope.makePayment = function() {
-
+    $scope.processing = true;
+    var pricingObj = {
+      channels: [],
+      discount: $scope.auDLLink,
+      submission: $scope.submission
+    };
+    for (var key in $scope.selectedChannels) {
+      if ($scope.selectedChannels[key]) {
+        var chan = $scope.channels.find(function(ch) {
+          return ch.displayName == key;
+        })
+        pricingObj.channels.push(chan.channelID);
+      }
+    }
+    $http.post('/api/submissions/getPayment', pricingObj)
+      .then(function(res) {
+        window.location = res.data;
+      })
   }
-
 });

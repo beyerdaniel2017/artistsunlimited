@@ -7,12 +7,14 @@ var Submission = mongoose.model('Submission');
 var Channel = mongoose.model('Channel');
 var Event = mongoose.model('Event');
 var Email = mongoose.model('Email');
+var rootURL = require('../../../env').ROOTURL;
+var Promise = require('promise');
 var SCR = require('soundclouder');
 var scConfig = global.env.SOUNDCLOUD;
 SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
 
 var sendEmail = require("../../mandrill/sendEmail.js"); //takes: to_name, to_email, from_name, from_email, subject, message_html
-var sendInvoice = require("../../payPal/sendInvoice.js");
+var paypalCalls = require("../../payPal/paypalCalls.js");
 
 router.post('/', function(req, res, next) {
   var submission = new Submission(req.body);
@@ -59,10 +61,7 @@ router.put('/save', function(req, res, next) {
             }
             nameString += addString;
           });
-          sub.channelIDS.forEach(function(id) {
-            sendInvoice(sub, id);
-          });
-          sendEmail(sub.name, sub.email, "Edward Sanchez", "coayscue@artistsunlimited.co", "Congratulations on your Submission - " + sub.title, "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting your track <a href='" + sub.trackURL + "'>" + sub.title + "</a> to us! We checked out your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by " + nameString + ". In less than 5 minutes you will receive a series of emails with PayPal links for each channels you were approved for! This is the last step until your track will be reposted and shared by " + nameString + ". After payment you will be assigned a time slot for reposting and we will email you in less than 1 hour letting you know the exact time and day your track will be reposted. To maintain our feed’s integrity, we do not offer more than 1 repost of the approved track on any channel. With that said, if you are interested in more extensive PR packages and campaigns that guarantee anywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be hear to help you with the rest.<br><br>All the best,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
+          sendEmail(sub.name, sub.email, "Edward Sanchez", "coayscue@artistsunlimited.co", "Congratulations on your Submission - " + sub.title, "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting your track <a href='" + sub.trackURL + "'>" + sub.title + "</a> to us! We checked out your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by " + nameString + ". To pay for your reposts click: <a href='" + rootURL + "/pay/" + sub._id + "'>PAY FOR REPOSTS</a>. After payment, you will be assigned a time slot for reposting. To maintain our feed’s integrity, we do not offer more than 1 repost of the approved track on any channel. With that said, if you are interested in more extensive PR packages and campaigns that guarantee anywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be hear to help you with the rest.<br><br>All the best,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
           res.send(sub)
         });
     })
@@ -294,6 +293,163 @@ router.post('/rescheduleRepost', function(req, res, next) {
     })
     .then(null, next);
 });
+
+router.post('/getPayment', function(req, res, next) {
+  var total = 0;
+  Channel.find({
+      channelID: {
+        $in: req.body.channels
+      }
+    }).then(function(channels) {
+      channels.forEach(function(ch) {
+        total += ch.price;
+      });
+      if (req.body.discount) total = Math.floor(total * 0.8);
+      return paypalCalls.makePayment(total, req.body.submission, channels);
+    })
+    .then(function(payment) {
+      var submission = req.body.submission;
+      submission.paidChannelIDS = req.body.channels;
+      submission.paid = false;
+      submission.payment = payment;
+      return Submission.findByIdAndUpdate(req.body.submission._id, submission, {
+        new: true
+      }).exec()
+    }).then(function(submission) {
+      var redirectLink = submission.payment.links.find(function(link) {
+        return link.rel == "approval_url";
+      })
+      res.send(redirectLink.href);
+    })
+    .then(null, next);
+})
+
+router.put('/completedPayment', function(req, res, next) {
+  var responseObj = {
+    events: []
+  };
+  var sub;
+  Submission.findOne({
+      'payment.id': req.body.paymentId
+    })
+    .then(function(submission) {
+      sub = responseObj.submission = submission;
+      var promiseArray = [];
+      submission.paidChannelIDS.forEach(function(chanID) {
+        promiseArray.push(reschedulePaidRepost(chanID, submission));
+      });
+      return Promise.all(promiseArray)
+    })
+    .then(function(events) {
+      responseObj.events = events;
+      sub.paid = true;
+      sub.save();
+      res.send(responseObj);
+    })
+    .then(null, next);
+})
+
+function reschedulePaidRepost(chanID, submission) {
+  return new Promise(function(fulfill, reject) {
+    Event.find({
+        paid: true,
+        trackID: null,
+        channelID: chanID
+      }).exec()
+      .then(function(events) {
+        events.forEach(function(event) {
+          event.day = new Date(event.day);
+        });
+        events.sort(function(a, b) {
+          return a.day.getTime() - b.day.getTime();
+        });
+        var index = 0;
+        var today = new Date();
+        var ev = events[index];
+        while (ev && ev.day.getTime() < today.getTime()) {
+          index++;
+          ev = events[index];
+        }
+        Channel.findOne({
+            channelID: chanID
+          }).exec()
+          .then(function(channel) {
+            if (!ev) {
+              Event.find({
+                  channelID: chanID
+                }).exec()
+                .then(function(allEvents) {
+                  allEvents.forEach(function(event1) {
+                    event1.day = new Date(event1.day);
+                  });
+                  var searchHours = [27, 30, 33, 46, 48];
+                  var continu = true;
+                  var ind = 1;
+                  while (continu) {
+                    searchHours.forEach(function(hour) {
+                      var actualHour = calcHour(hour, -5);
+                      var desiredDay = new Date();
+                      desiredDay.setDate(desiredDay.getDate() + ind);
+                      desiredDay.setHours(actualHour);
+                      if (continu) {
+                        var event = allEvents.find(function(eve) {
+                          return eve.day.getHours() == actualHour && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
+                        });
+                        if (!event) {
+                          continu = false;
+                          var newEve = new Event({
+                            paid: true,
+                            day: desiredDay,
+                            trackID: submission.trackID,
+                            title: submission.title,
+                            trackURL: submission.trackURL,
+                            channelID: chanID,
+                            email: submission.email,
+                            name: submission.name
+                          });
+                          newEve.save()
+                            .then(function(eve) {
+                              eve.day = new Date(eve.day);
+                              eve.channelID = channel.displayName;
+                              fulfill({
+                                channelName: channel.displayName,
+                                date: eve.day
+                              });
+                            })
+                            .then(null, reject);
+                        }
+                      }
+                    });
+                    ind++;
+                  }
+                });
+            } else {
+              ev.trackID = submission.trackID;
+              ev.email = submission.email;
+              ev.name = submission.name;
+              ev.title = submission.title;
+              ev.trackURL = submission.trackURL;
+              ev.save()
+                .then(function(eve) {
+                  eve.day = new Date(eve.day);
+                  Channel.findOne({
+                      channelID: eve.channelID
+                    })
+                    .then(function(ch) {
+                      eve.channelID = ch.displayName;
+                      fulfill({
+                        channelName: ch.displayName,
+                        date: eve.day
+                      });
+                    })
+                    .then(null, reject);
+
+                }).then(null, reject);
+            }
+          }).then(null, reject);
+      }).then(null, reject);
+  })
+}
 
 function calcHour(hour, destOffset) {
   var day = new Date();
