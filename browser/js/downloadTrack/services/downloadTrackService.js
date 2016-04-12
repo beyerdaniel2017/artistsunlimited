@@ -14,9 +14,14 @@ app.service('DownloadTrackService', ['$http', function($http){
 		return $http.post('api/download/tasks', data);
 	}
 
+	function getRecentTracks(data) {
+		return $http.get('/api/download/track/recent?userID=' + data.userID);
+	}
+
 	return {
 		getDownloadTrack: getDownloadTrack,
 		getTrackData: getTrackData,
-		performTasks: performTasks
+		performTasks: performTasks,
+		getRecentTracks: getRecentTracks
 	};
 }]);

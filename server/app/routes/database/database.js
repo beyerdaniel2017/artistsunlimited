@@ -260,7 +260,6 @@ router.post('/downloadurl', function(req, res, next) {
 
   if(req.user) {
     parseMultiPart()
-      .then(updateUser)
       .then(checkIfFile)
       .then(saveDownloadTrack)
       .then(sendMail)
@@ -372,11 +371,9 @@ router.post('/downloadurl', function(req, res, next) {
 
     var SMLinks = JSON.parse(body.fields.SMLinks);
     var artists = JSON.parse(body.fields.artists);
-    var permanentLinks = JSON.parse(body.fields.permanentLinks);
 
     body.fields.SMLinks = SMLinks;
     body.fields.artists = artists;
-    body.fields.permanentLinks = permanentLinks;
     if(body.fields.playlists) {
       body.fields.playlists = JSON.parse(body.fields.playlists);
     }
@@ -391,7 +388,6 @@ router.post('/downloadurl', function(req, res, next) {
   }
 
   function sendMail(downloadTrack) {
-    console.log(downloadTrack);
     var trackUrl = req.protocol + '://' + req.get('host') + '/download?trackid=' + downloadTrack._id;
     var html = '<p>Here is your download URL: - </p><span>' + trackUrl + '</span>';
     sendEmail('Service', req.user.email, 'Artists Unlimited', 'coayscue@artistsunlimited.co', 'Download Track', html);
@@ -405,6 +401,19 @@ router.get('/downloadurl/admin', function(req, res, next) {
     .exec()
     .then(function(tracks){
       res.send(tracks);
+    })
+    .then(null, function(err){
+      next(err);
+    });
+});
+
+router.post('/downloadurl/delete', function(req, res, next) {
+  var body = req.body;
+  DownloadTrack
+    .remove({ _id : body.id })
+    .exec()
+    .then(function(){
+      return res.end();
     })
     .then(null, function(err){
       next(err);
@@ -526,7 +535,7 @@ router.post('/paidrepost', function(req, res, next) {
   }
 });
 
-router.post('/editProfile', function(req, res, next) {
+router.post('/profile/edit', function(req, res, next) {
 
   var body = req.body;
   var updateObj = {};
@@ -536,10 +545,15 @@ router.post('/editProfile', function(req, res, next) {
     updateObj.salt = User.generateSalt();
     updateObj.password = User.encryptPassword(body.password, updateObj.salt);
   }
-  console.log(updateObj);
+
+  try {
+    updateObj.permanentLinks = JSON.parse(body.permanentLinks);
+  } catch(err) {
+    next(err);
+  }
+
   if(req.user) {
     User.findOneAndUpdate({ '_id' : req.user._id}, { $set:  updateObj }, { new: true }, function(err, result){
-      console.log(result);
       if(err) {
         next(err);
       } else {
@@ -547,4 +561,66 @@ router.post('/editProfile', function(req, res, next) {
       }
     });
   }
+});
+
+router.post('/profile/soundcloud', function(req, res, next) {
+
+  var body = req.body;
+
+  if(req.user) {
+    getUserInfo()
+      .then(updateUser)
+      .then(sendResponse)
+      .then(null, handleError);
+  } else {
+    return res.json({
+      "success" : false,
+      "message" : "User is not logged in. Please try again.",
+      "data" : null
+    });
+  }
+  
+
+  function getUserInfo() {
+    return new Promise(function(resolve, reject) {
+      SC.init({
+        id: scConfig.clientID,
+        secret: scConfig.clientSecret,
+        uri: scConfig.callbackURL,
+        accessToken: body.token
+      });
+      SC.get('/me', function(err, data) {
+        if(err) {
+          reject(err);
+        } else {  
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  function updateUser(data) {
+    var updateObj = {
+      'id': data.id,
+      'username': data.username,
+      'permalinkURL': data.permalink_url,
+      'avatarURL': data.avatar_url
+    };
+    return User.findOneAndUpdate({ '_id' : req.user._id}, { $set:  { soundcloud: updateObj }}, { new: true }).exec();
+  }
+
+  function sendResponse(user) {
+    return res.json({
+      "success" : true,
+      "message" : "Sucess",
+      "data" : user
+    });
+  }
+
+  function handleError(err) {
+    next(err);
+  }
+
+  
+ 
 });

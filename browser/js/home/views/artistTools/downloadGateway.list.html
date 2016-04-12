@@ -23,7 +23,10 @@
 		        <td><a ng-href="/download?trackid={{item._id}}" target="_blank">{{item.trackTitle}}</a></td>
 		        <td>{{item.artistUsername}}</td>
 		        <td>{{item.downloadCount ? item.downloadCount : 0}}</td>
-		        <td><a href="#" ui-sref="artistTools.downloadGateway.edit({ gatewayID: item._id})" ui-sref-opts="{reload: true}">Edit</a></td>
+		        <td>
+		        	<a href="#" ui-sref="artistTools.downloadGateway.edit({ gatewayID: item._id})" ui-sref-opts="{reload: true}">Edit</a><span> | </span>
+		        	<a href="#" ng-click="deleteDownloadGateway($index)">Delete</a>
+		        </td>
 		      </tr>
 		    </tbody>
 		  </table>

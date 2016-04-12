@@ -19,7 +19,7 @@ var schema = new mongoose.Schema({
         type: String
     },
     permanentLinks: {
-        type: [String]
+        type: [mongoose.Schema.Types.Mixed]
     },
     twitter: {
         id: String,

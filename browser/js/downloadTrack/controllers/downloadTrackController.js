@@ -12,8 +12,9 @@ app.controller('DownloadTrackController', ['$rootScope',
 	'$http',
 	'$location',
 	'$window',
+	'$q',
 	'DownloadTrackService',
-	function($rootScope, $state, $scope, $http, $location, $window, DownloadTrackService) {
+	function($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService) {
 
 		/* Normal JS vars and functions not bound to scope */
 		var playerObj = null;
@@ -38,6 +39,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 		$scope.downloadURLNotFound = false;
 		$scope.errorText = '';
 		$scope.followBoxImageUrl = 'assets/images/who-we-are.png';
+		$scope.recentTracks = [];
 
 		/* Default processing on page load */
 
@@ -48,6 +50,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 			DownloadTrackService
 				.getDownloadTrack(trackID)
 				.then(receiveDownloadTrack)
+				.then(receiveRecentTracks)
 				.then(initPlay)
 				.catch(catchDownloadTrackError);			
 
@@ -64,6 +67,19 @@ app.controller('DownloadTrackController', ['$rootScope',
 				$scope.embedTrack = true;
 				$scope.processing = false;
 
+				if($scope.track.showDownloadTracks === 'user') {
+					return DownloadTrackService.getRecentTracks	({
+						userID: $scope.track.userid
+					});
+				} else {
+					return $q.resolve('resolve');
+				}
+			}
+
+			function receiveRecentTracks(res) {
+				if((typeof res === 'object') && res.data){
+					$scope.recentTracks = res.data;
+				}
 				return SC.stream('/tracks/' + $scope.track.trackID);
 			}
 

@@ -654,7 +654,32 @@ app.controller('AdminDLGateController', ['$rootScope',
       function handleError(res) {
         $scope.processing = false;
       }
+    };
+
+    $scope.deleteDownloadGateway = function(index) {
+     
+      if(confirm("Do you really want to delete this track?")) {
+        var downloadGateWayID = $scope.downloadGatewayList[index]._id;
+        $scope.processing = true;
+        AdminDLGateService
+          .deleteDownloadGateway({
+            id: downloadGateWayID
+          })
+          .then(handleResponse)
+          .catch(handleError);
+
+          function handleResponse(res) {
+            $scope.processing = false;
+            $scope.downloadGatewayList.splice(index, 1);
     }
+
+          function handleError(res) {
+            $scope.processing = false;
+          }
+      } else {
+        return false
+      }
+    };
   }
 
 ]);

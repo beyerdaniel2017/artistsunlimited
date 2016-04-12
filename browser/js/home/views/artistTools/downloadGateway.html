@@ -1,6 +1,6 @@
 <ng-include src="'js/home/views/navigation.html'"></ng-include>
 <!-- Content Start  -->
-<div class="container" ng-init="checkIfEdit()">
+<div class="container" ng-init="checkIfEdit();getTrackListFromSoundcloud()">
   <div class="content-area bg-white">
   	<ng-include src="'js/home/views/artistTools/navigation.html'"></ng-include>
 	  <div class="row">
@@ -19,6 +19,15 @@
 	    </div>
 			<form role="form" ng-submit="saveDownloadGate()">
 		    <div class="col-md-4">
+		    	<div class="song-container" ng-show="trackList.length > 0">
+		        <h4>Song List</h4>
+		        <div class="song-url">
+		          <select class="form-control" ng-model="trackListObj" ng-options="item.title for item in trackList" ng-change="trackListChange()">
+		          	<option value="" ng-disabled="!!trackListObj">--Select Track--</option>
+		          </select>
+		          <!-- <a class="close-ic" href="#"><img src="assets/images/close.png"></a> -->
+		        </div>
+		      </div>
 		      <div class="song-container">
 		        <h4>Song</h4>
 		        <div class="song-url">
@@ -48,22 +57,36 @@
 		          <input class="form-control" type="file" accept=".mp3" fileread="track.file" message="message"  />
 		        </div>
 		      </div>
-
+		      <div class="social-container">
+		        <h4>Show all download tracks for: </h4>
+		        <div>
+		       <!--  <nz-toggle ng-model="track.showDownloadTracks" tip-false="'None'" tip-true="'This User'">
+						</nz-toggle> -->
+		          <label>
+						    <input type="radio" ng-model="track.showDownloadTracks" ng-value="'user'">
+						    This user
+						  </label><br/>
+						  <label>
+						    <input type="radio" ng-model="track.showDownloadTracks" ng-value="'none'">
+						    None
+						  </label><br/>
+		        </div>
+		      </div>
 		    </div>
 		    <div class="col-md-4">
-		      <div class="permanent-links">
+		      <!-- <div class="permanent-links">
 		        <h4>Permanent Links:</h4>
 		        <small>The links you add here will be included in all of your download links by default.</small>
 		        <div class="input-box" ng-repeat="link in track.permanentLinks">
 		          <input class="form-control" placeholder="URL" ng-model="link.url"/>
-		          <!-- <a class="pro-icon" href="#"><img class="profile-icon" src="assets/images/who-we-are.png"></a> -->
+		          <a class="pro-icon" href="#"><img class="profile-icon" src="assets/images/who-we-are.png"></a>
 		          <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePermanentLink($index)"></a>
 		        </div>
 		        <a href="#" ng-click="addPermanentLink()" >+ Add Artist...</a>
-		      </div>
+		      </div> -->
 		      <div class="artist-follow">
 		        <h4>Artists to Follow</h4>
-		        <div class="input-box" ng-repeat="artist in track.artists">
+		        <div class="input-box" ng-repeat="artist in track.artists" ng-show="!artist.permanentLink">
 		          <input class="form-control" placeholder="URL" ng-model="artist.url" ng-change="artistURLChange($index)"/>
 		          <a class="pro-icon" href="#"><img class="profile-icon" ng-src="{{artist.avatar}}"></a>
 		          <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeArtist($index)"></a>
@@ -98,10 +121,10 @@
 		      </div>
 		    </div>
 		    <div class="col-md-12 text-center">
-		      <button href="#" type="submit" class="btn btn-enter">Accept</button>
+		    	<a href="#" class="btn btn-enter" ui-sref="artistTools.downloadGateway.list">Back</a>
+		      <button type="submit" class="btn btn-enter">Accept</button>
 		    </div>
 	    <!-- Download Section End -->
-
 	    </form>
 	  </div>
 	</div>

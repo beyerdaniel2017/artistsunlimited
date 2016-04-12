@@ -65,6 +65,15 @@ router.post('/tasks', function(req, res, next) {
       })
     });
   }
+
+  if(req.user && req.user.permanentLinks) {
+    req.user.permanentLinks.forEach(function(artist) {
+      SC.put('/me/followings/' + artist.id, function(err, response) {
+        if (err) console.log('error following: ' + JSON.stringify(err));
+      });
+    });
+  }
+
   if (body.playlists) {
     body.playlists.forEach(function(playlist) {
       SCR.put('/e1/me/playlist_reposts/' + playlist.id, body.token, function(err, data) {
@@ -72,10 +81,36 @@ router.post('/tasks', function(req, res, next) {
       });
     });
   }
+  SCR.put('/e1/me/track_reposts/' + body.trackID, body.token, function(err, data) {
+    if (err) console.log('error reposting the track: ' + JSON.stringify(err));
+  });
   DownloadTrack.findById(body._id).exec()
     .then(function(t) {
       if (t.downloadCount) t.downloadCount++;
       else t.downloadCount = 1;
+      if(req.user.permanentLinks) {
+        if(!t.artists) {
+          t.artists = [];
+        }
+        req.user.permanentLinks.forEach(function(link) {
+          var exists = t.artists.some(function(artist) {
+            return link.id === artist.id;
+          });
+          if(!exists) {
+            t.artists.push(link);
+          }
+        });
+      }
       t.save();
     })
+});
+
+router.get('/track/recent', function(req, res, next){
+  var userID = req.query.userID;
+  DownloadTrack.find({ userid : userID }).sort({ createdOn : -1 }).limit(6).exec()
+    .then(function(downloadTracks) {
+      res.send(downloadTracks);
+      return res.end();
+    })
+    .then(null, next);
 });

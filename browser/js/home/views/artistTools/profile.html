@@ -9,14 +9,14 @@
 			  <table cellpadding="10" cellspacing="10" width="40%">
 			  	<tr>
 			  		<td class="bold">Name:</td>
-			  		<td>{{profile.name}}</td>
+			  		<td>{{profile.data.name}}</td>
 			  		<td><a href="#" ng-click="openEditProfileModal.editProfile('name')"> Edit</a></td>
 			  	</tr>
-			  	<tr ng-if="profile.loginAgent === 'local'">
+			  	<tr ng-if="profile.isAvailable.email">
 			  		<td class="bold">Email:</td>
-			  		<td>{{profile.email}}</td>
+			  		<td>{{profile.data.email}}</td>
 			  	</tr>
-			  	<tr ng-if="profile.loginAgent === 'local'">
+			  	<tr ng-if="profile.isAvailable.password">
 			  		<td class="bold">Password:</td>
 			  		<td></td>
 			  		<td><a href="#" ng-click="openEditProfileModal.editProfile('password')">Edit</a></td>
@@ -24,6 +24,59 @@
 			  </table>
      	</div>
 	  </div>
+	  <div class="row" ng-show="!profile.isAvailable.soundcloud">
+	  	<div class="col-sm-4 col-md-offset-1">
+      <hr/>
+        <div class="text-center">
+          <!--  <button class="btn btn-default btn-block btn-lg btn-soundcloud soundcloud-img" ng-click="saveSoundCloudAccountInfo()" type="button"><img src="assets/images/soundcloud_icon.png">Connect with  Soundcloud</button> -->
+           <img src="assets/images/soundcloud-connect-button.png"  ng-click="saveSoundCloudAccountInfo()">
+        </div>
+      </div>
+	  </div>
+	  <div class="row" ng-show="profile.isAvailable.soundcloud">
+	  	<div class="col-sm-8 col-md-offset-1">
+      <hr/>
+      	<h4 class="bold">Soundcloud Info</h4>
+        <table cellpadding="40" cellspacing="20" width="80%">
+			  	<tr>
+			  		<td class="bold">Id:</td>
+			  		<td>{{profile.data.soundcloud.id}}</td>
+			  	</tr>
+			  	<tr>
+			  		<td class="bold">Username:</td>
+			  		<td>{{profile.data.soundcloud.username}}</td>
+			  	</tr>
+			  	<tr>
+			  		<td class="bold">Avatar URL:</td>
+			  		<td>{{profile.data.soundcloud.avatarURL}}</td>
+			  	</tr>
+			  	<tr>
+			  		<td class="bold">Permalink URL:</td>
+			  		<td>{{profile.data.soundcloud.permalinkURL}}</td>
+			  	</tr>
+			  </table>
+      </div>
+	  </div>
+	  <div class="row">
+		  <div class="col-sm-8 col-md-offset-1">
+		  	<hr/>
+			  <div class="permanent-links">
+		      <h4 class="bold">Permanent Links:</h4>
+		      <small>The links you add here will be included in all of your download links by default.</small>
+		      <form role="form" ng-submit="saveProfileInfo()">
+			      <div class="input-box" ng-repeat="link in profile.data.permanentLinks">
+			        <input class="form-control" placeholder="URL" ng-model="link.url" ng-change="permanentLinkURLChange($index)"/>
+			        <a class="pro-icon" href="#"><img class="profile-icon" ng-src="{{item.avatarURL}}"></a>
+			        <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePermanentLink($index)"></a>
+			      </div>
+			      <a href="#" ng-click="addPermanentLink()" >+ Add Artist...</a>
+			      <div class="col-md-12 text-center">
+				      <button type="submit" class="btn btn-enter">Save</button>
+				    </div>
+			    </form>
+		    </div>
+		  </div>
+		</div>
 	</div>
 </div>
 <!-- Content End  -->
@@ -33,10 +86,10 @@
 	<form role="form" ng-submit="$parent.saveProfileInfo()">
 	  <div class="modal-header">
 	   	<div class="form-group" ng-show="$parent.profile.field === 'name'">
-	    	<input type="text"  class="form-control" ng-model="$parent.profile.name" placeholder="Name"  />
+	    	<input type="text"  class="form-control" ng-model="$parent.profile.data.name" placeholder="Name"  />
 	    </div>
 	    <div class="form-group" ng-show="$parent.profile.field === 'password'">
-	    	<input type="text" class="form-control" ng-model="$parent.profile.password" placeholder="Password"  />
+	    	<input type="text" class="form-control" ng-model="$parent.profile.data.password" placeholder="Password"  />
 	    </div>
 	  </div>
 	  <div class="modal-body">
