@@ -55,6 +55,17 @@ var schema = new mongoose.Schema({
   },
   downloadCount: {
     type: Number
+  },
+  showDownloadTracks: {
+    type: String
+  },
+  createdOn: {
+      type: Date, 
+      default: Date.now 
+  },
+  updatedOn: {
+      type: Date, 
+      default: Date.now 
   }
 });
 

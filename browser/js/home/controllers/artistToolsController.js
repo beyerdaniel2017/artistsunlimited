@@ -110,7 +110,8 @@ app.controller('ArtistToolsController', ['$rootScope',
         avatar: 'assets/images/who-we-are.png',
         username: '',
         id: -1
-      }]
+      }],
+      showDownloadTracks: 'user'
     };
     $scope.profile = {};
     
@@ -135,7 +136,7 @@ app.controller('ArtistToolsController', ['$rootScope',
     };
     $scope.closeModal = function() {
       $scope.modalInstance.close();
-    }
+    };
 
     $scope.editProfileModalInstance = {};
     $scope.editProfilemodal = {};
@@ -155,7 +156,7 @@ app.controller('ArtistToolsController', ['$rootScope',
     $scope.closeEditProfileModal = function() {
       $scope.showProfileInfo();
       $scope.editProfileModalInstance.close();
-    }
+    };
 
     /* Init profile */
     $scope.profile = {};
@@ -186,18 +187,9 @@ app.controller('ArtistToolsController', ['$rootScope',
           avatar: 'assets/images/who-we-are.png',
           username: '',
           id: -1
-        }]
+        }],
+        showDownloadTracks: 'user'
       };
-      // $scope.playlists = [{
-      //   url: ''
-      // }];
-      // $scope.artists = [{
-      //   url: '',
-      //   avatar: 'assets/images/who-we-are.png',
-      //   username: '',
-      //   id: -1
-      // }];
-      // $scope.SMLinks = [];
       angular.element("input[type='file']").val(null);
     }
 
@@ -211,7 +203,7 @@ app.controller('ArtistToolsController', ['$rootScope',
         //   $scope.track = $stateParams.downloadGateway;
         // }
       }
-    }
+    };
 
     $scope.trackURLChange = function() {
       if ($scope.track.trackURL !== '') {
@@ -279,7 +271,7 @@ app.controller('ArtistToolsController', ['$rootScope',
 
     $scope.removeArtist = function(index) {
       $scope.track.artists.splice(index, 1);
-    }
+    };
 
     $scope.addArtist = function() {
       if($scope.track.artists.length > 2) {
@@ -292,11 +284,9 @@ app.controller('ArtistToolsController', ['$rootScope',
         username: '',
         id: -1
       });
-    }
+    };
 
     $scope.addSMLink = function() {
-      // externalSMLinks++;
-      // $scope.track.SMLinks['key' + externalSMLinks] = '';
       $scope.track.SMLinks.push({
         key: '',
         value: ''
@@ -339,26 +329,7 @@ app.controller('ArtistToolsController', ['$rootScope',
       $scope.track.permanentLinks.push({
         url: ''
       });
-    }
-
-    // $scope.playlistURLChange = function(p) {
-    //   var playlist = {};
-    //   $scope.processing = true;
-    //   $http.post('/api/soundcloud/resolve', {
-    //       url: $scope.playlist.url
-    //     })
-    //     .then(function(res) {
-    //       playlist.avatar = res.data.artwork_url;
-    //       playlist.title = res.data.title;
-    //       playlist.id = res.data.id;
-    //       $scope.artists.push(playlist);
-    //       $scope.processing = false;
-    //     })
-    //     .then(null, function(err) {
-    //       alert('Playlist not found');
-    //       $scope.processing = false;
-    //     });
-    // };
+    };
 
     $scope.saveDownloadGate = function() {
       if (!$scope.track.trackID) {
@@ -441,14 +412,20 @@ app.controller('ArtistToolsController', ['$rootScope',
     };
 
     $scope.showProfileInfo = function() {
-      $scope.profile = JSON.parse(SessionService.getUser());
-      $scope.profile.password = '';
-      if($scope.profile.soundcloud) {
-        $scope.profile.loginAgent = 'soundcloud';
-      } else {
-        $scope.profile.loginAgent = 'local';
-      }
-    }
+      $scope.profile.data = JSON.parse(SessionService.getUser());
+      $scope.profile.isAvailable = {};
+
+      // if($scope.profile.soundcloud) {
+        $scope.profile.isAvailable.email = $scope.profile.data.email ? true : false;
+        $scope.profile.isAvailable.password = $scope.profile.data.password ? true : false;
+        $scope.profile.isAvailable.soundcloud = $scope.profile.data.soundcloud ? true : false;
+        $scope.profile.data.password = '';
+        // $scope.profile.loginAgent = 'soundcloud';
+        // $scope.profile.isSoundCloudInfoAvailable = true;
+      // }
+        // $scope.profile.loginAgent = 'local';
+        // $scope.profile.isSoundCloudInfoAvailable = false;
+    };
 
     $scope.saveProfileInfo = function() {
       var sendObj = {
@@ -456,9 +433,9 @@ app.controller('ArtistToolsController', ['$rootScope',
         password: ''
       }
       if ($scope.profile.field === 'name') {
-        sendObj.name = $scope.profile.name;
+        sendObj.name = $scope.profile.data.name;
       } else if ($scope.profile.field === 'password') {
-        sendObj.password = $scope.profile.password;
+        sendObj.password = $scope.profile.data.password;
       }
 
       ArtistToolsService
@@ -470,7 +447,34 @@ app.controller('ArtistToolsController', ['$rootScope',
         .catch(function(res) {
 
         });
+    };
+
+    $scope.saveSoundCloudAccountInfo = function() {
+      SC.connect()
+        .then(saveInfo)
+        .then(handleResponse)
+        .catch(handleError);
+
+        function saveInfo(res) {
+          return ArtistToolsService.saveSoundCloudAccountInfo({
+            token: res.oauth_token
+          });
+        }
+
+        function handleResponse(res) {
+          $scope.processing = false;
+          if(res.status === 200 && (res.data.success === true)) {
+            SessionService.create(res.data.data);
+            $scope.profile.data = res.data.data;
+            $scope.profile.isAvailable.soundcloud = true;
+            $scope.$apply();
+          }
     }
+
+        function handleError(err) {
+          $scope.processing = false;
+        }
+    };
 
     $scope.getDownloadList = function() {
       ArtistToolsService
@@ -485,7 +489,7 @@ app.controller('ArtistToolsController', ['$rootScope',
         function handleError(res) {
 
         }
-    }
+    };
 
     /* Method for getting DownloadGateway in case of edit */
 
@@ -520,6 +524,9 @@ app.controller('ArtistToolsController', ['$rootScope',
               url: item
             })
           });
+          if(!$scope.track.showDownloadTracks) {
+            $scope.track.showDownloadTracks = 'user';
+          }
           $scope.track.SMLinks = SMLinksArray;
           $scope.track.permanentLinks = permanentLinksArray;
           $scope.track.playlistIDS = [];  
@@ -530,6 +537,28 @@ app.controller('ArtistToolsController', ['$rootScope',
         function handleError(res) {
           $scope.processing = false;
         }
+    };
+
+    $scope.deleteDownloadGateway = function(index) {
+      if(confirm("Do you really want to delete this track?")) {
+        var downloadGateWayID = $scope.downloadGatewayList[index]._id;
+        $scope.processing = true;
+        ArtistToolsService
+          .deleteDownloadGateway({
+            id: downloadGateWayID
+          })
+          .then(handleResponse)
+          .catch(handleError);
+
+          function handleResponse(res) {
+            $scope.processing = false;
+            $scope.downloadGatewayList.splice(index, 1);
+          }
+
+          function handleError(res) {
+            $scope.processing = false;
     }
+  }
+    };
   }
 ]);

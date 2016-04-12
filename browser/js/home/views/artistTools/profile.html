@@ -9,20 +9,52 @@
 			  <table cellpadding="10" cellspacing="10" width="40%">
 			  	<tr>
 			  		<td class="bold">Name:</td>
-			  		<td>{{profile.name}}</td>
+			  		<td>{{profile.data.name}}</td>
 			  		<td><a href="#" ng-click="openEditProfileModal.editProfile('name')"> Edit</a></td>
 			  	</tr>
-			  	<tr ng-if="profile.loginAgent === 'local'">
+			  	<tr ng-if="profile.isAvailable.email">
 			  		<td class="bold">Email:</td>
-			  		<td>{{profile.email}}</td>
+			  		<td>{{profile.data.email}}</td>
 			  	</tr>
-			  	<tr ng-if="profile.loginAgent === 'local'">
+			  	<tr ng-if="profile.isAvailable.password">
 			  		<td class="bold">Password:</td>
 			  		<td></td>
 			  		<td><a href="#" ng-click="openEditProfileModal.editProfile('password')">Edit</a></td>
 			  	</tr>
 			  </table>
      	</div>
+	  </div>
+	  <div class="row" ng-show="!profile.isAvailable.soundcloud">
+	  	<div class="col-sm-4 col-md-offset-1">
+      <hr/>
+        <div class="text-center">
+           <button class="btn btn-default btn-block btn-lg btn-soundcloud soundcloud-img" ng-click="saveSoundCloudAccountInfo()" type="button"><img src="assets/images/soundcloud_icon.png">Connect with  Soundcloud</button>
+        </div>
+      </div>
+	  </div>
+	  <div class="row" ng-show="profile.isAvailable.soundcloud">
+	  	<div class="col-sm-8 col-md-offset-1">
+      <hr/>
+      	<h4 class="bold">Soundcloud Info</h4>
+        <table cellpadding="40" cellspacing="20" width="80%">
+			  	<tr>
+			  		<td class="bold">Id:</td>
+			  		<td>{{profile.data.soundcloud.id}}</td>
+			  	</tr>
+			  	<tr>
+			  		<td class="bold">Username:</td>
+			  		<td>{{profile.data.soundcloud.username}}</td>
+			  	</tr>
+			  	<tr>
+			  		<td class="bold">Avatar URL:</td>
+			  		<td>{{profile.data.soundcloud.avatarURL}}</td>
+			  	</tr>
+			  	<tr>
+			  		<td class="bold">Permalink URL:</td>
+			  		<td>{{profile.data.soundcloud.permalinkURL}}</td>
+			  	</tr>
+			  </table>
+      </div>
 	  </div>
 	</div>
 </div>
@@ -33,10 +65,10 @@
 	<form role="form" ng-submit="$parent.saveProfileInfo()">
 	  <div class="modal-header">
 	   	<div class="form-group" ng-show="$parent.profile.field === 'name'">
-	    	<input type="text"  class="form-control" ng-model="$parent.profile.name" placeholder="Name"  />
+	    	<input type="text"  class="form-control" ng-model="$parent.profile.data.name" placeholder="Name"  />
 	    </div>
 	    <div class="form-group" ng-show="$parent.profile.field === 'password'">
-	    	<input type="text" class="form-control" ng-model="$parent.profile.password" placeholder="Password"  />
+	    	<input type="text" class="form-control" ng-model="$parent.profile.data.password" placeholder="Password"  />
 	    </div>
 	  </div>
 	  <div class="modal-body">

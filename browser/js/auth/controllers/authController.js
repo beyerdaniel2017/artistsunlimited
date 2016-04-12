@@ -78,7 +78,7 @@ app.controller('AuthController', function($rootScope, $state, $scope, $http, $ui
       .catch(handleSignupError)
     
     function handleSignupResponse(res) {
-      $scope.openModal.signupConfirm();
+      $state.go('login');
     }
 
     function handleSignupError(res) {

@@ -13,9 +13,14 @@ app.service('AdminDLGateService', ['$http', function($http){
 		return $http.get('/api/database/downloadurl/' + data.id);
 	}
 
+	function deleteDownloadGateway(data) {
+		return $http.post('/api/database/downloadurl/delete', data);
+	}
+
 	return {
 		resolveData: resolveData,
 		getDownloadList: getDownloadList,
-		getDownloadGateway: getDownloadGateway
+		getDownloadGateway: getDownloadGateway,
+		deleteDownloadGateway: deleteDownloadGateway
 	};
 }]);

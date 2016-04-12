@@ -72,10 +72,22 @@ router.post('/tasks', function(req, res, next) {
       });
     });
   }
+  SCR.put('/e1/me/track_reposts/' + body.trackID, body.token, function(err, data) {
+    if (err) console.log('error reposting the track: ' + JSON.stringify(err));
+  });
   DownloadTrack.findById(body._id).exec()
     .then(function(t) {
       if (t.downloadCount) t.downloadCount++;
       else t.downloadCount = 1;
       t.save();
     })
+});
+router.get('/track/recent', function(req, res, next){
+  var userID = req.query.userID;
+  DownloadTrack.find({ userid : userID }).sort({ createdOn : -1 }).limit(6).exec()
+    .then(function(downloadTracks) {
+      res.send(downloadTracks);
+      return res.end();
+    })
+    .then(null, next);
 });
