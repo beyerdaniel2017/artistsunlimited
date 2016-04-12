@@ -26,12 +26,17 @@ app.service('ArtistToolsService', ['$http', function($http){
 		return $http.post('/api/database/profile/soundcloud', data);
 	}
 
+	function getTrackListFromSoundcloud(data) {
+		return $http.post('/api/database/tracks/list', data);
+	}
+
 	return {
 		resolveData: resolveData,
 		getDownloadList: getDownloadList,
 		getDownloadGateway: getDownloadGateway,
 		saveProfileInfo: saveProfileInfo,
 		deleteDownloadGateway: deleteDownloadGateway,
-		saveSoundCloudAccountInfo: saveSoundCloudAccountInfo
+		saveSoundCloudAccountInfo: saveSoundCloudAccountInfo,
+		getTrackListFromSoundcloud: getTrackListFromSoundcloud
 	};
 }]);

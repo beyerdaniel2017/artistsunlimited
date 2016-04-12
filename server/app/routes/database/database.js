@@ -260,7 +260,6 @@ router.post('/downloadurl', function(req, res, next) {
 
   if(req.user) {
     parseMultiPart()
-      .then(updateUser)
       .then(checkIfFile)
       .then(saveDownloadTrack)
       .then(sendMail)
@@ -372,11 +371,9 @@ router.post('/downloadurl', function(req, res, next) {
 
     var SMLinks = JSON.parse(body.fields.SMLinks);
     var artists = JSON.parse(body.fields.artists);
-    var permanentLinks = JSON.parse(body.fields.permanentLinks);
 
     body.fields.SMLinks = SMLinks;
     body.fields.artists = artists;
-    body.fields.permanentLinks = permanentLinks;
     if(body.fields.playlists) {
       body.fields.playlists = JSON.parse(body.fields.playlists);
     }
@@ -548,6 +545,13 @@ router.post('/profile/edit', function(req, res, next) {
     updateObj.salt = User.generateSalt();
     updateObj.password = User.encryptPassword(body.password, updateObj.salt);
   }
+
+  try {
+    updateObj.permanentLinks = JSON.parse(body.permanentLinks);
+  } catch(err) {
+    next(err);
+  }
+
   if(req.user) {
     User.findOneAndUpdate({ '_id' : req.user._id}, { $set:  updateObj }, { new: true }, function(err, result){
       if(err) {
@@ -558,6 +562,7 @@ router.post('/profile/edit', function(req, res, next) {
     });
   }
 });
+
 router.post('/profile/soundcloud', function(req, res, next) {
 
   var body = req.body;

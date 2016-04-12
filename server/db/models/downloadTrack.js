@@ -29,9 +29,6 @@ var schema = new mongoose.Schema({
   artists: {
     type: [mongoose.Schema.Types.Mixed]
   },
-  permanentLinks: {
-    type: [String]
-  },
   artistArtworkURL: {
     type: String
   },
