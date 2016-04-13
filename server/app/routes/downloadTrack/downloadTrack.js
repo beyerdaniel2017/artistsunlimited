@@ -112,11 +112,9 @@ router.post('/tasks', function(req, res, next) {
             }
           });
           t.save();
-          return res.end();
         });
       } else {
         t.save();
-        return res.end();
       }
     });
 
