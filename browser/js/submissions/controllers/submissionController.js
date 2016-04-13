@@ -8,8 +8,10 @@ app.config(function($stateProvider) {
 
 
 app.controller('SubmissionController', function($rootScope, $state, $scope, $http, AuthService, oEmbedFactory) {
-
-  $scope.logout = function() {
+   $scope.counter = 0;
+   $scope.showingElements = [];
+   $scope.submissions = [];
+   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
       window.location.href = '/admin';
     }).catch(function(err) {
@@ -42,8 +44,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     var loadElements = [];
     for (let i = $scope.counter; i < $scope.counter + 15; i++) {
       var sub = $scope.submissions[i];
+      if(sub){
       $scope.showingElements.push(sub);
       loadElements.push(sub);
+    }
     }
     setTimeout(function() {
       console.log(loadElements);
