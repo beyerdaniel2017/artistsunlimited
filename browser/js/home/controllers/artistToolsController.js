@@ -85,16 +85,16 @@ app.controller('ArtistToolsController', ['$rootScope',
     /* Init Download Gateway form data */
 
     $scope.track = {
-      artistUsername: 'La Tropicál',
-      trackTitle: 'Panteone / Travel',
-      trackArtworkURL: 'assets/images/who-we-are.png',
+      artistUsername: '',
+      trackTitle: '',
+      trackArtworkURL: '',
       SMLinks: [],
       like: false,
       comment: false,
       repost: false,
       artists: [{
         url: '',
-        avatar: 'assets/images/who-we-are.png',
+        avatar: '',
         username: '',
         id: -1,
         permanentLink: false
@@ -149,7 +149,7 @@ app.controller('ArtistToolsController', ['$rootScope',
     $scope.closeEditProfileModal = function() {
       $scope.showProfileInfo();
       if($scope.editProfileModalInstance.close) {
-      $scope.editProfileModalInstance.close();
+        $scope.editProfileModalInstance.close();
       }
     };
 
@@ -167,16 +167,16 @@ app.controller('ArtistToolsController', ['$rootScope',
       };
 
       $scope.track = {
-        artistUsername: 'La Tropicál',
-        trackTitle: 'Panteone / Travel',
-        trackArtworkURL: 'assets/images/who-we-are.png',
+        artistUsername: '',
+        trackTitle: '',
+        trackArtworkURL: '',
         SMLinks: [],
         like: false,
         comment: false,
         repost: false,
         artists: [{
           url: '',
-          avatar: 'assets/images/who-we-are.png',
+          avatar: '',
           username: '',
           id: -1,
           permanentLink: false
@@ -404,7 +404,7 @@ app.controller('ArtistToolsController', ['$rootScope',
 
       /* Append data to sendObj end */
 
-       var options = { 
+      var options = { 
         method: 'POST',
         url: '/api/database/downloadurl',
         headers: {'Content-Type': undefined },
@@ -441,20 +441,25 @@ app.controller('ArtistToolsController', ['$rootScope',
       if(($scope.profile.data.permanentLinks && $scope.profile.data.permanentLinks.length === 0) || !$scope.profile.data.permanentLinks) {
         $scope.profile.data.permanentLinks = [{
           url: '',
-          avatar: 'assets/images/who-we-are.png',
+          avatar: '',
           username: '',
           id: -1,
           permanentLink: true
         }];
       };
       $scope.profile.isAvailable = {};
-        $scope.profile.isAvailable.email = $scope.profile.data.email ? true : false;
-        $scope.profile.isAvailable.password = $scope.profile.data.password ? true : false;
-        $scope.profile.isAvailable.soundcloud = $scope.profile.data.soundcloud ? true : false;
-        $scope.profile.data.password = '';
+      $scope.profile.isAvailable.email = $scope.profile.data.email ? true : false;
+      $scope.profile.isAvailable.password = $scope.profile.data.password ? true : false;
+      $scope.profile.isAvailable.soundcloud = $scope.profile.data.soundcloud ? true : false;
+      $scope.profile.data.password = '';
     };
 
     $scope.saveProfileInfo = function() {
+
+      $scope.message = {
+        value: '',
+        visible: false
+      };
 
       var permanentLinks = $scope.profile.data.permanentLinks.filter(function(item) {
         return item.id !== -1;
@@ -472,11 +477,21 @@ app.controller('ArtistToolsController', ['$rootScope',
         sendObj.name = $scope.profile.data.name;
       } else if ($scope.profile.field === 'password') {
         sendObj.password = $scope.profile.data.password;
+      } else if ($scope.profile.field === 'email') {
+        sendObj.email = $scope.profile.data.email;
       }
 
       ArtistToolsService
         .saveProfileInfo(sendObj)
         .then(function(res){
+          if(res.data === 'Email Error') {
+            $scope.message = {
+              value: 'Email already exists!',
+              visible: true
+            };
+            console.log($scope.message);
+            return;
+          }
           SessionService.create(res.data);
           $scope.closeEditProfileModal();
         })
@@ -496,7 +511,7 @@ app.controller('ArtistToolsController', ['$rootScope',
 
       $scope.profile.data.permanentLinks.push({
         url: '',
-        avatar: 'assets/images/who-we-are.png',
+        avatar: '',
         username: '',
         id: -1,
         permanentLink: true
@@ -511,9 +526,11 @@ app.controller('ArtistToolsController', ['$rootScope',
           url: $scope.profile.data.permanentLinks[index].url
         })
         .then(function(res) {
+          console.log(res);
           $scope.profile.data.permanentLinks[index].avatar = res.data.avatar_url ? res.data.avatar_url : '';
           $scope.profile.data.permanentLinks[index].username = res.data.permalink;
           $scope.profile.data.permanentLinks[index].id = res.data.id;
+          console.log($scope.profile.data.permanentLinks[index])
           $scope.processing = false;
         })
         .catch(function(err) {
@@ -542,7 +559,7 @@ app.controller('ArtistToolsController', ['$rootScope',
             $scope.profile.isAvailable.soundcloud = true;
             $scope.$apply();
           }
-    }
+        }
 
         function handleError(err) {
           $scope.processing = false;
@@ -602,7 +619,7 @@ app.controller('ArtistToolsController', ['$rootScope',
           }
           $scope.track.SMLinks = SMLinksArray;
           $scope.track.permanentLinks = permanentLinksArray;
-          $scope.track.playlistIDS = [];  
+          $scope.track.playlistIDS = []; 
           // $scope.track.showDownloadTracks = ($scope.track.showDownloadTracks === 'user') ? true : false;
 
           $scope.processing = false;
@@ -631,14 +648,14 @@ app.controller('ArtistToolsController', ['$rootScope',
 
           function handleError(res) {
             $scope.processing = false;
-    }
-  }
+          }
+      }
     };
 
     $scope.getTrackListFromSoundcloud = function() {
       var profile = JSON.parse(SessionService.getUser());
-      $scope.processing = true;
       if(profile.soundcloud) {
+        $scope.processing = true;
         SC.get('/users/' + profile.soundcloud.id + '/tracks')
         .then(function(tracks) {
           $scope.trackList = tracks;

@@ -90,7 +90,7 @@ app.controller('HomeController', ['$rootScope',
       }
 
       function saveApplicationError(res) {
-        if (res.status === 400) {
+        if(res.status === 400) {
           $scope.message.application = {
             val: 'Email already exists!',
             visible: true
@@ -107,7 +107,7 @@ app.controller('HomeController', ['$rootScope',
     /* Apply page end */
 
     /* Artist Tools page start */
-
+    
     $scope.toggleArtistEmail = function() {
       $scope.message = {
         artistEmail: {
@@ -132,7 +132,7 @@ app.controller('HomeController', ['$rootScope',
       }
 
       function artistEmailError(res) {
-        if (res.status === 400) {
+        if(res.status === 400) {
           $scope.message.artistEmail = {
             val: 'Email already exists!',
             visible: true

@@ -15,7 +15,7 @@ app.service('DownloadTrackService', ['$http', function($http){
 	}
 
 	function getRecentTracks(data) {
-		return $http.get('/api/download/track/recent?userID=' + data.userID);
+		return $http.get('/api/download/track/recent?userID=' + data.userID + '&trackID=' + data.trackID);
 	}
 
 	return {

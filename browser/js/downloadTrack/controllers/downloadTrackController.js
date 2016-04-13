@@ -69,7 +69,8 @@ app.controller('DownloadTrackController', ['$rootScope',
 
 				if($scope.track.showDownloadTracks === 'user') {
 					return DownloadTrackService.getRecentTracks	({
-						userID: $scope.track.userid
+						userID: $scope.track.userid,
+						trackID: $scope.track._id
 					});
 				} else {
 					return $q.resolve('resolve');
@@ -129,6 +130,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 			function catchTasksError(err) {
 				alert('Error in processing your request');
 				$scope.processing = false;
+				$scope.$apply();
 			}
 
 		};

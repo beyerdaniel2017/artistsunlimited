@@ -7,10 +7,12 @@ module.exports = router;
 
 var mongoose = require('mongoose');
 var DownloadTrack = mongoose.model('DownloadTrack');
+var User = mongoose.model('User');
 var scConfig = require('./../../../env').SOUNDCLOUD;
 var sendEmail = require('../../mandrill/sendEmail.js');
 var SC = require('node-soundcloud');
 var SCR = require('soundclouder');
+var SCResolve = require('soundcloud-resolve-jsonp/node');
 
 var Channel = mongoose.model('Channel');
 
@@ -36,6 +38,7 @@ router.post('/tasks', function(req, res, next) {
   if (body.like) {
     SC.put('/me/favorites/' + body.trackID, function(err, response) {
       if (err) console.log('error liking: ' + JSON.stringify(err));
+      else res.send({});
     });
   }
   if (body.repost) {
@@ -57,23 +60,43 @@ router.post('/tasks', function(req, res, next) {
       }
     });
   }
-  if (body.artists) {
+  if(body.artists) {
     body.artists.forEach(function(artist) {
-      SC.put('/me/followings/' + artist.id, function(err, response) {
-        if (err) console.log('error following: ' + JSON.stringify(err));
-      })
-    });
-  }
-
-  if (req.user && req.user.permanentLinks) {
-    req.user.permanentLinks.forEach(function(artist) {
       SC.put('/me/followings/' + artist.id, function(err, response) {
         if (err) console.log('error following: ' + JSON.stringify(err));
       });
     });
   }
 
-  if (body.playlists) {
+  // Channel.find({}).exec().then(function(channels){
+  //   channels.forEach(function(channel) {
+  //     if(channel.displayName !== 'Supportify') {
+  //       SC.put('/me/followings/' + channel.channelID, function(err, response) {
+  //         if (err) console.log('error following: ' + JSON.stringify(err));
+  //       });
+  //     }
+  //   });
+  // });
+
+  // if(req.user && req.user.permanentLinks) {
+  //   req.user.permanentLinks.forEach(function(artist) {
+  //     SC.put('/me/followings/' + artist.id, function(err, response) {
+  //       if (err) console.log('error following: ' + JSON.stringify(err));
+  //     });
+  //   });
+  // }
+
+  if(body.userid) {
+    User.findOne({ _id: body.userid }).exec().then(function(user) {
+      user.permanentLinks.forEach(function(artist) {
+        SC.put('/me/followings/' + artist.id, function(err, response) {
+          if (err) console.log('error following: ' + JSON.stringify(err));
+        });
+      });
+    });
+  }
+
+  if(body.playlists) {
     body.playlists.forEach(function(playlist) {
       SCR.put('/e1/me/playlist_reposts/' + playlist.id, body.token, function(err, data) {
         if (err) console.log('error reposting a playlist: ' + JSON.stringify(err))
@@ -87,35 +110,76 @@ router.post('/tasks', function(req, res, next) {
     .then(function(t) {
       if (t.downloadCount) t.downloadCount++;
       else t.downloadCount = 1;
-      if (req.user.permanentLinks) {
-        if (!t.artists) {
-          t.artists = [];
-        }
-        req.user.permanentLinks.forEach(function(link) {
-          var exists = t.artists.some(function(artist) {
-            return link.id === artist.id;
-          });
-          if (!exists) {
-            t.artists.push(link);
-          }
-        });
+
+      if(!t.artists) {
+        t.artists = [];
       }
-      t.save();
-    })
-  setTimeout(function() {
-    res.send({});
-  }, 5000);
+
+      // Channel.find({}).exec().then(function(channels){
+      //   var i = -1;
+      //   function resolveChannel() {
+      //     i++;
+      //     if(i < channels.length) {
+      //       SCResolve({
+      //         url: channels[i].url,
+      //         client_id: scConfig.clientID
+      //       }, function(err, track) {
+      //         if(err || !track) {
+      //           return resolveChannel();
+      //         }
+      //         var exists = t.artists.some(function(artist) {
+      //           return track.id === artist.id;
+      //         });
+      //         if(!exists && channels[i].displayName !== 'Supportify') {
+      //           t.artists.push({
+      //             url: track.permalink_url,
+      //             avatar: track.avatar_url,
+      //             username: track.username,
+      //             id: track.id,
+      //             permanentLink: true
+      //           });
+      //         }
+      //         resolveChannel();
+      //       });
+      //     } else {
+      //       t.save();
+      //       return res.end();
+      //     }
+      //   } 
+      //   resolveChannel();
+      // });
+      if(body.userid) {
+        User.findById(body.userid).exec().then(function(user){
+          user.permanentLinks.forEach(function(link) {
+            SC.put('/me/followings/' + link.id, function(err, response) {
+              if (err) console.log('error following: ' + JSON.stringify(err));
+            });
+            var exists = t.artists.some(function(artist) {
+              return link.id === artist.id;
+            });
+            if(!exists) {
+              t.artists.push(link);
+            }
+          });
+          t.save();
+          return res.end();
+        });
+      } else {
+        t.save();
+        return res.end();
+      }
+    });
 });
 
-router.get('/track/recent', function(req, res, next) {
+router.get('/track/recent', function(req, res, next){
   var userID = req.query.userID;
-  DownloadTrack.find({
-      userid: userID
-    }).sort({
-      createdOn: -1
-    }).limit(6).exec()
+  var trackID = req.query.trackID;
+  DownloadTrack.find({ userid : userID }).sort({ createdOn : -1 }).limit(6).exec()
     .then(function(downloadTracks) {
-      res.send(downloadTracks);
+      var tracks = downloadTracks.filter(function(item) {
+        return item._id.toString() !== trackID;
+      });
+      res.send(tracks);
       return res.end();
     })
     .then(null, next);

@@ -49,7 +49,7 @@
 		        </div> -->
 		        <a href="#" ng-click="addSMLink()">+Add Social Media...</a>
 		      </div>
-		       <div class="social-container">
+		      <div class="social-container">
 		        <h4>Download URL</h4>
 		        <div>
 		          <input class="form-control" type="text" placeholder="Link" ng-model="track.downloadURL" />
@@ -88,7 +88,7 @@
 		        <h4>Artists to Follow</h4>
 		        <div class="input-box" ng-repeat="artist in track.artists" ng-show="!artist.permanentLink">
 		          <input class="form-control" placeholder="URL" ng-model="artist.url" ng-change="artistURLChange($index)"/>
-		          <a class="pro-icon" href="#"><img class="profile-icon" ng-src="{{artist.avatar}}"></a>
+		          <a class="pro-icon" href="#" ng-show="artist.avatar !== ''"><img class="profile-icon" ng-src="{{artist.avatar}}" ></a>
 		          <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeArtist($index)"></a>
 		        </div>
 		        <a href="#" ng-click="addArtist()">+ Add Artist...</a>

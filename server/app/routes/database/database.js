@@ -20,6 +20,9 @@ var objectAssign = require('object-assign');
 var AWS = require('aws-sdk');
 var awsConfig = require('./../../../env').AWS;
 var Busboy = require('busboy');
+var Channel = mongoose.model('Channel');
+var Promise = require('bluebird');
+var SCResolve = require('soundcloud-resolve-jsonp/node');
 
 router.post('/adduser', function(req, res, next) {
   // if (req.body.password != 'letMeManage') next(new Error('wrong password'));
@@ -262,11 +265,13 @@ router.post('/downloadurl', function(req, res, next) {
     parseMultiPart()
       .then(checkIfFile)
       .then(saveDownloadTrack)
-      .then(sendMail)
+      .then(sendMailAndAddPermanentLinksToAdmin)
+      .then(handleResponse)
       .then(null, function(err){
         console.log(err, 'err');
         next(err);
       });
+
   } else {
     return res.send('Error in processing your request');
   }
@@ -321,10 +326,6 @@ router.post('/downloadurl', function(req, res, next) {
     });
   }
 
-  function updateUser() {
-    return User.update({ _id: req.user._id}, { $addToSet: {permanentLinks: { $each: JSON.parse(body.fields.permanentLinks) } } }).exec();
-  }
-
   function checkIfFile() {
     return new Promise(function(resolve, reject) {
       if(body.file) {
@@ -334,7 +335,6 @@ router.post('/downloadurl', function(req, res, next) {
             resolve();
           })
           .catch(function(err){
-            console.log('check', err);
             reject(err);
           });
       } else {
@@ -379,7 +379,6 @@ router.post('/downloadurl', function(req, res, next) {
     }
     body.fields.userid = req.user._id;
     body.fields.downloadURL = (body.location !== '') ? body.location : body.fields.downloadURL;
-    // console.log(body.fields)
     if(body.fields._id) {
       return DownloadTrack.findOneAndUpdate({ _id: body.fields._id }, body.fields, {new : true}); 
     }
@@ -387,12 +386,86 @@ router.post('/downloadurl', function(req, res, next) {
     return downloadTrack.save();
   }
 
-  function sendMail(downloadTrack) {
+  function sendMailAndAddPermanentLinksToAdmin(downloadTrack) {
     var trackUrl = req.protocol + '://' + req.get('host') + '/download?trackid=' + downloadTrack._id;
     var html = '<p>Here is your download URL: - </p><span>' + trackUrl + '</span>';
     sendEmail('Service', req.user.email, 'Artists Unlimited', 'coayscue@artistsunlimited.co', 'Download Track', html);
+    return addPermanentLinksToAdmin(trackUrl);
+  }
+
+  function addPermanentLinksToAdmin(trackUrl) {
+    return new Promise(function(resolve, reject){
+    
+      if(req.user && req.user.role === 'admin') {
+        Channel
+          .find({})
+          .exec()
+          .then(function(channels) {
+            var promises = [];
+            channels.forEach(function(channel) {
+              if(channel.displayName !== 'Supportify') {
+                promises.push(resolveTrack(channel.url));
+              }
+            });
+            var track = null;
+            var permanentLinks = req.user.permanentLinks;
+            Promise.settle(promises).then(function(results) {
+              results.forEach(function(result) {
+                if(result.isFulfilled()) {
+                  track = result.value();
+                  var exists = req.user.permanentLinks.some(function(link) {
+                    return track.id === link.id;
+                  });
+                  if(!exists) {
+                    permanentLinks.push({
+                      url: track.permalink_url,
+                      avatar: track.avatar_url,
+                      username: track.username,
+                      id: track.id,
+                      permanentLink: true
+                    });
+                  }         
+                }
+              });
+              User
+                .update({ _id: req.user._id}, { $addToSet: {permanentLinks: { $each: permanentLinks } } })
+                .exec()
+                .then(function(){
+                  resolve(trackUrl);
+                })
+                .then(null, function(err){
+                  reject(err);
+                });
+            });
+        })
+        .then(null, function(err) {
+          return reject(err);
+        });
+      } else {
+        return resolve(trackUrl);
+      }
+
+    });
+  }
+
+  function resolveTrack(url) {
+    return new Promise(function(resolve, reject){
+      SCResolve({
+        url: url,
+        client_id: scConfig.clientID
+      }, function(err, track) {
+        if(err || !track) {
+          return reject();
+        }
+        return resolve(track);
+      });
+    });
+  }
+
+  function handleResponse(trackUrl) {
     return res.end(trackUrl);
   }
+
 });
 
 router.get('/downloadurl/admin', function(req, res, next) {
@@ -544,6 +617,8 @@ router.post('/profile/edit', function(req, res, next) {
   } else if(body.password !== '') {
     updateObj.salt = User.generateSalt();
     updateObj.password = User.encryptPassword(body.password, updateObj.salt);
+  } else if(body.email !== '') {
+    updateObj.email = body.email;
   }
 
   try {
@@ -553,7 +628,21 @@ router.post('/profile/edit', function(req, res, next) {
   }
 
   if(req.user) {
-    User.findOneAndUpdate({ '_id' : req.user._id}, { $set:  updateObj }, { new: true }, function(err, result){
+    if(updateObj.email) {
+      User.findOne({ 'email' : updateObj.email }, function(err, result){
+        if(err) {
+          next(err);
+        } else if(result) {
+          return res.send('Email Error');
+        } else {
+          updateUser();
+        }
+      });
+    }
+  }
+
+  function updateUser() {
+    User.findOneAndUpdate({ '_id' : req.user._id}, { $set:  updateObj }, { new: true }, function(err, result) {
       if(err) {
         next(err);
       } else {

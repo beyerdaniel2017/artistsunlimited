@@ -65,7 +65,7 @@ app.controller('AuthController', function($rootScope, $state, $scope, $http, $ui
       val: '',
       visible: false
     };
-    if($scope.signupObj.password != $scope.signupObj.confirmPassword){
+    if($scope.signupObj.password != $scope.signupObj.confirmPassword) {
       $scope.message = {
         val: 'Password doesn\'t match with confirm password',
         visible: true

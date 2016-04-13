@@ -58,19 +58,9 @@
 
         </div>
         <div class="col-md-4">
-          <div class="permanent-links">
-            <h4>Permanent Links:</h4>
-            <small>The links you add here will be included in all of your download links by default.</small>
-            <div class="input-box" ng-repeat="link in track.permanentLinks">
-              <input class="form-control" placeholder="URL" ng-model="link.url"/>
-              <!-- <a class="pro-icon" href="#"><img class="profile-icon" src="assets/images/who-we-are.png"></a> -->
-              <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePermanentLink($index)"></a>
-            </div>
-            <a href="#" ng-click="addPermanentLink()" >+ Add Artist...</a>
-          </div>
           <div class="artist-follow">
             <h4>Artists to Follow</h4>
-            <div class="input-box" ng-repeat="artist in track.artists">
+            <div class="input-box" ng-repeat="artist in track.artists" ng-show="!artist.permanentLink">
               <input class="form-control" placeholder="URL" ng-model="artist.url" ng-change="artistURLChange($index)"/>
               <a class="pro-icon" href="#"><img class="profile-icon" ng-src="{{artist.avatar}}"></a>
               <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeArtist($index)"></a>
