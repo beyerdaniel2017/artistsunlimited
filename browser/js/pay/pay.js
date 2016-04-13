@@ -28,6 +28,7 @@ app.config(function($stateProvider) {
 
 app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track, $state) {
   $scope.submission = submission;
+  $scope.auDLLink = false;
   if (submission.paid) $state.go('home');
   $scope.track = track;
   SC.oEmbed(track.uri, {
@@ -39,7 +40,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   $scope.channels = channels.filter(function(ch) {
     return (submission.channelIDS.indexOf(ch.channelID) != -1)
   });
-  $scope.auDLLink = ($scope.track.purchase_url.includes("artistsunlimited.co"));
+  if ($scope.track.purchase_url) $scope.auDLLink = ($scope.track.purchase_url.includes("artistsunlimited.co"));
 
   $scope.selectedChannels = {};
   $scope.channels.forEach(function(ch) {
