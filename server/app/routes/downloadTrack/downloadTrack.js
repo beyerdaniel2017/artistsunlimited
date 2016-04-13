@@ -27,6 +27,7 @@ router.get('/track', function(req, res, next) {
 
 router.post('/tasks', function(req, res, next) {
   var body = req.body;
+  console.log(req.body);
   SC.init({
     id: scConfig.clientID,
     secret: scConfig.clientSecret,
@@ -38,7 +39,6 @@ router.post('/tasks', function(req, res, next) {
   if (body.like) {
     SC.put('/me/favorites/' + body.trackID, function(err, response) {
       if (err) console.log('error liking: ' + JSON.stringify(err));
-      else res.send({});
     });
   }
   if (body.repost) {
@@ -60,7 +60,7 @@ router.post('/tasks', function(req, res, next) {
       }
     });
   }
-  if(body.artists) {
+  if (body.artists) {
     body.artists.forEach(function(artist) {
       SC.put('/me/followings/' + artist.id, function(err, response) {
         if (err) console.log('error following: ' + JSON.stringify(err));
@@ -68,26 +68,10 @@ router.post('/tasks', function(req, res, next) {
     });
   }
 
-  // Channel.find({}).exec().then(function(channels){
-  //   channels.forEach(function(channel) {
-  //     if(channel.displayName !== 'Supportify') {
-  //       SC.put('/me/followings/' + channel.channelID, function(err, response) {
-  //         if (err) console.log('error following: ' + JSON.stringify(err));
-  //       });
-  //     }
-  //   });
-  // });
-
-  // if(req.user && req.user.permanentLinks) {
-  //   req.user.permanentLinks.forEach(function(artist) {
-  //     SC.put('/me/followings/' + artist.id, function(err, response) {
-  //       if (err) console.log('error following: ' + JSON.stringify(err));
-  //     });
-  //   });
-  // }
-
-  if(body.userid) {
-    User.findOne({ _id: body.userid }).exec().then(function(user) {
+  if (body.userid) {
+    User.findOne({
+      _id: body.userid
+    }).exec().then(function(user) {
       user.permanentLinks.forEach(function(artist) {
         SC.put('/me/followings/' + artist.id, function(err, response) {
           if (err) console.log('error following: ' + JSON.stringify(err));
@@ -96,7 +80,7 @@ router.post('/tasks', function(req, res, next) {
     });
   }
 
-  if(body.playlists) {
+  if (body.playlists) {
     body.playlists.forEach(function(playlist) {
       SCR.put('/e1/me/playlist_reposts/' + playlist.id, body.token, function(err, data) {
         if (err) console.log('error reposting a playlist: ' + JSON.stringify(err))
@@ -111,45 +95,11 @@ router.post('/tasks', function(req, res, next) {
       if (t.downloadCount) t.downloadCount++;
       else t.downloadCount = 1;
 
-      if(!t.artists) {
+      if (!t.artists) {
         t.artists = [];
       }
-
-      // Channel.find({}).exec().then(function(channels){
-      //   var i = -1;
-      //   function resolveChannel() {
-      //     i++;
-      //     if(i < channels.length) {
-      //       SCResolve({
-      //         url: channels[i].url,
-      //         client_id: scConfig.clientID
-      //       }, function(err, track) {
-      //         if(err || !track) {
-      //           return resolveChannel();
-      //         }
-      //         var exists = t.artists.some(function(artist) {
-      //           return track.id === artist.id;
-      //         });
-      //         if(!exists && channels[i].displayName !== 'Supportify') {
-      //           t.artists.push({
-      //             url: track.permalink_url,
-      //             avatar: track.avatar_url,
-      //             username: track.username,
-      //             id: track.id,
-      //             permanentLink: true
-      //           });
-      //         }
-      //         resolveChannel();
-      //       });
-      //     } else {
-      //       t.save();
-      //       return res.end();
-      //     }
-      //   } 
-      //   resolveChannel();
-      // });
-      if(body.userid) {
-        User.findById(body.userid).exec().then(function(user){
+      if (body.userid) {
+        User.findById(body.userid).exec().then(function(user) {
           user.permanentLinks.forEach(function(link) {
             SC.put('/me/followings/' + link.id, function(err, response) {
               if (err) console.log('error following: ' + JSON.stringify(err));
@@ -157,7 +107,7 @@ router.post('/tasks', function(req, res, next) {
             var exists = t.artists.some(function(artist) {
               return link.id === artist.id;
             });
-            if(!exists) {
+            if (!exists) {
               t.artists.push(link);
             }
           });
@@ -169,12 +119,20 @@ router.post('/tasks', function(req, res, next) {
         return res.end();
       }
     });
+
+  setTimeout(function() {
+    res.end;
+  }, 4000)
 });
 
-router.get('/track/recent', function(req, res, next){
+router.get('/track/recent', function(req, res, next) {
   var userID = req.query.userID;
   var trackID = req.query.trackID;
-  DownloadTrack.find({ userid : userID }).sort({ createdOn : -1 }).limit(6).exec()
+  DownloadTrack.find({
+      userid: userID
+    }).sort({
+      createdOn: -1
+    }).limit(6).exec()
     .then(function(downloadTracks) {
       var tracks = downloadTracks.filter(function(item) {
         return item._id.toString() !== trackID;
