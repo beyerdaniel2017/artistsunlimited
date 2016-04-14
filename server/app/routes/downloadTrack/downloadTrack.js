@@ -119,7 +119,7 @@ router.post('/tasks', function(req, res, next) {
     });
 
   setTimeout(function() {
-    res.end;
+    res.end();
   }, 4000)
 });
 
