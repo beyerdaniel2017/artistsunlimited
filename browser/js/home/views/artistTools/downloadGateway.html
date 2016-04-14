@@ -19,25 +19,27 @@
 	    </div>
 			<form role="form" ng-submit="saveDownloadGate()">
 		    <div class="col-md-4">
-		    	<div class="song-container" ng-show="trackList.length > 0">
-		        <h4>Song List</h4>
-		        <div class="song-url">
-		          <select class="form-control" ng-model="trackListObj" ng-options="item.title for item in trackList" ng-change="trackListChange()">
-		          	<option value="" ng-disabled="!!trackListObj">--Select Track--</option>
-		          </select>
-		          <!-- <a class="close-ic" href="#"><img src="assets/images/close.png"></a> -->
-		        </div>
-		      </div>
-		      <div class="song-container">
+		    	<div class="song-container">
 		        <h4>Song</h4>
 		        <div class="song-url">
 		          <input class="form-control" placeholder="Enter Song URL" ng-model="track.trackURL" ng-change="trackURLChange()" required/>
 		          <!-- <a class="close-ic" href="#"><img src="assets/images/close.png"></a> -->
 		        </div>
+	          <select class="form-control" ng-model="trackListObj" ng-options="item.title for item in trackList" ng-change="trackListChange()" ng-show="trackList.length > 0">
+	          	<option value="" ng-disabled="!!trackListObj">--Select Track--</option>
+	          </select>
+	          <!-- <a class="close-ic" href="#"><img src="assets/images/close.png"></a> -->
 		      </div>
+		      <!-- <div class="song-container">
+		        <h4>Song</h4>
+		        <div class="song-url">
+		          <input class="form-control" placeholder="Enter Song URL" ng-model="track.trackURL" ng-change="trackURLChange()" required/>
+		          <a class="close-ic" href="#"><img src="assets/images/close.png"></a>
+		        </div>
+		      </div> -->
 		      <div class="social-container">
 		        <h4>Social Media Links</h4>
-		        <div class="song-url" ng-repeat="item in track.SMLinks">
+		        <div class="social-media-links" ng-repeat="item in track.SMLinks">
 		          <input class="form-control" type="text" placeholder="Link" ng-model="item.value" ng-change="SMLinkChange($index)" />
 		          <span class="{{item.key}}"></span>
 		          <a class="close-ic" href="#" ng-click="removeSMLink($index)"><img src="assets/images/close.png"></a>
@@ -122,7 +124,7 @@
 		    </div>
 		    <div class="col-md-12 text-center">
 		    	<a href="#" class="btn btn-enter" ui-sref="artistTools.downloadGateway.list">Back</a>
-		      <button type="submit" class="btn btn-enter">Accept</button>
+		      <button type="submit" class="btn btn-enter">Save</button>
 		    </div>
 	    <!-- Download Section End -->
 	    </form>

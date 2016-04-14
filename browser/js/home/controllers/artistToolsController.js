@@ -314,7 +314,7 @@ app.controller('ArtistToolsController', ['$rootScope',
 
       $scope.track.artists.push({
         url: '',
-        avatar: 'assets/images/who-we-are.png',
+        avatar: '',
         username: '',
         id: -1,
         permanentLink: false
@@ -414,13 +414,14 @@ app.controller('ArtistToolsController', ['$rootScope',
       $http(options)
         .then(function(res) {
           // $scope.track.showDownloadTracks = ($scope.track.showDownloadTracks === 'user') ? true : false;
-          $scope.trackListObj = null;
+          // $scope.trackListObj = null;
           $scope.processing = false;
-          if($scope.track._id) {
-            return;
-          }
-          resetDownloadGateway();
-          $scope.openModal.downloadURL(res.data);
+          $state.go('artistTools.downloadGateway.list');
+          // if($scope.track._id) {
+          //   return;
+          // }
+          // resetDownloadGateway();
+          // $scope.openModal.downloadURL(res.data);
         })
         .then(null, function(err) {
           $scope.processing = false;

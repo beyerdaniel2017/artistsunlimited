@@ -510,6 +510,7 @@ router.get('/downloadurl', function(req, res, next) {
   
   DownloadTrack
     .find({ userid: req.user._id})
+    .sort({ createdOn : -1 })
     .then(function(tracks){
       res.send(tracks);
     })
