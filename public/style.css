@@ -180,6 +180,10 @@ a:hover, a:focus {
   background-color: transparent;
   border-bottom: 1px solid #000; }
 
+.btn-default:hover {
+  background-color: #F7F7F7;
+  border-color: #F7F7F7; }
+
 /* Bootstap Modify CSS End */
 .logo img {
   height: 45px; }
@@ -290,9 +294,9 @@ a:hover, a:focus {
 .song-url {
   position: relative;
   margin-bottom: 10px;
-  width: 95%; }
+  width: 100%; }
 
-.song-url .close-ic {
+.close-ic {
   position: absolute;
   right: 0;
   top: 0;
@@ -304,6 +308,11 @@ a:hover, a:focus {
 
 .social-container a {
   color: #F5D3B5; }
+
+.social-media-links {
+  position: relative;
+  margin-bottom: 10px;
+  width: 95%; }
 
 .facebook {
   background: #F5D3B5 url("assets/images/facebook_icon.png") no-repeat scroll center center/30px auto;
@@ -374,13 +383,6 @@ a:hover, a:focus {
 
 .input-box input {
   width: 85%; }
-
-.input-box .close-ic {
-  position: absolute;
-  right: 0;
-  top: 0;
-  margin-top: 8px;
-  margin-right: -25px; }
 
 .pro-icon {
   position: absolute;

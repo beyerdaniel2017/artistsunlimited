@@ -18,6 +18,9 @@ var schema = new mongoose.Schema({
     },
     queue: {
         type: [Number]
+    },
+    blockRelease: {
+        type: Date
     }
 });
 
