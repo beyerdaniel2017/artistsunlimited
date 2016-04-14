@@ -27,7 +27,6 @@ router.get('/track', function(req, res, next) {
 
 router.post('/tasks', function(req, res, next) {
   var body = req.body;
-  console.log(req.body);
   SC.init({
     id: scConfig.clientID,
     secret: scConfig.clientSecret,
@@ -90,37 +89,119 @@ router.post('/tasks', function(req, res, next) {
   SCR.put('/e1/me/track_reposts/' + body.trackID, body.token, function(err, data) {
     if (err) console.log('error reposting the track: ' + JSON.stringify(err));
   });
-  DownloadTrack.findById(body._id).exec()
-    .then(function(t) {
-      if (t.downloadCount) t.downloadCount++;
-      else t.downloadCount = 1;
 
-      if (!t.artists) {
-        t.artists = [];
-      }
-      if (body.userid) {
-        User.findById(body.userid).exec().then(function(user) {
-          user.permanentLinks.forEach(function(link) {
-            SC.put('/me/followings/' + link.id, function(err, response) {
-              if (err) console.log('error following: ' + JSON.stringify(err));
-            });
-            var exists = t.artists.some(function(artist) {
-              return link.id === artist.id;
-            });
-            if (!exists) {
-              t.artists.push(link);
-            }
+  findDownloadTrackById()
+    .then(findUserByIdSAndSaveTrack)
+    .then(findUser)
+    .then(createUser)
+
+  function findDownloadTrackById() {
+    return DownloadTrack.findById(body._id).exec();
+  }
+
+  function findUserByIdSAndSaveTrack(t) {
+    if (t.downloadCount) t.downloadCount++;
+    else t.downloadCount = 1;
+
+    if (!t.artists) {
+      t.artists = [];
+    }
+    User
+      .findById(body.userid)
+      .exec()
+      .then(function(user) {
+        user.permanentLinks.forEach(function(link) {
+          SC.put('/me/followings/' + link.id, function(err, response) {
+            if (err) console.log('error following: ' + JSON.stringify(err));
           });
-          t.save();
+          var exists = t.artists.some(function(artist) {
+            return link.id === artist.id;
+          });
+          if (!exists) {
+            t.artists.push(link);
+          }
         });
+        return t.save();
+      })
+      .then(null, function(){
+        return Promise.resolve();
+      });
+  }
+
+  function findUser() {
+    return new Promise(function(resolve, reject){
+      if(req.user) {
+        return resolve();
       } else {
-        t.save();
+        SC.get('/me', function(err, data) {
+          if (err) {
+            resolve();
+          }
+          User
+            .findOne({ 'soundcloud.id': data.id })
+            .exec()
+            .then(function (user) {
+              if(user) {
+                resolve();
+              } else {
+                resolve(data);
+              }
+            })
+            .then(null, function(err){
+              resolve();
+            });
+        });
       }
     });
+  }
 
-  setTimeout(function() {
-    res.end();
-  }, 4000)
+  function createUser(data) {
+    if(data) {
+      var newUser = new User({
+        'name': data.username,
+        'soundcloud': {
+          'id': data.id,
+          'username': data.username,
+          'permalinkURL': data.permalink_url,
+          'avatarURL': data.avatar_url
+        }
+      });
+      newUser.save();
+      return res.end();
+    } else {
+      return res.end();
+    }
+  }
+
+  // DownloadTrack.findById(body._id).exec()
+  //   .then(function(t) {
+  //     if (t.downloadCount) t.downloadCount++;
+  //     else t.downloadCount = 1;
+
+  //     if (!t.artists) {
+  //       t.artists = [];
+  //     }
+     
+  //     User.findById(body.userid).exec().then(function(user) {
+  //       user.permanentLinks.forEach(function(link) {
+  //         SC.put('/me/followings/' + link.id, function(err, response) {
+  //           if (err) console.log('error following: ' + JSON.stringify(err));
+  //         });
+  //         var exists = t.artists.some(function(artist) {
+  //           return link.id === artist.id;
+  //         });
+  //         if (!exists) {
+  //           t.artists.push(link);
+  //         }
+  //       });
+
+  //       t.save();
+  //     });
+  //   });
+
+  // setTimeout(function() {
+  //   res.end();
+  // }, 4000)
 });
 
 router.get('/track/recent', function(req, res, next) {
