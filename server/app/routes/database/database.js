@@ -391,14 +391,13 @@ router.post('/downloadurl', function(req, res, next) {
     return new Promise(function(resolve, reject) {
       if(req.user && req.user.soundcloud && (String(body.fields.artistID) === req.user.soundcloud.id) && !body.fields._id) {
         var token = req.user.soundcloud.token;
-        console.log(req.protocol + '://' + req.get('host') + '/download?trackid=' + downloadTrack._id);
         var trackObj = {
           purchase_url: req.protocol + '://' + req.get('host') + '/download?trackid=' + downloadTrack._id,
           purchase_title: 'DOWNLOAD'
         };
-        var regExp = /artistsunlimited.co/gi;
+        var regExp = new RegExp(req.get('host'), 'gi');
         if(!body.fields.description.match(regExp)) {
-          trackObj.description = body.fields.description + ' download gateway provided by <a href="' + req.protocol + '://' + req.get('host') + '">artistsunlimited.co</a>';
+          trackObj.description = body.fields.description + ' download gateway provided by <a href="' + req.protocol + '://' + req.get('host') + '">' + req.get('host') + '</a>';
         }
         request({
           method: 'PUT',
