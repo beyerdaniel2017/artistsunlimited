@@ -28,9 +28,10 @@
 	  <div class="row" ng-show="!profile.isAvailable.soundcloud">
 	  	<div class="col-sm-4 col-md-offset-1">
       <hr/>
-        <div class="text-center">
+        <div>
           <!--  <button class="btn btn-default btn-block btn-lg btn-soundcloud soundcloud-img" ng-click="saveSoundCloudAccountInfo()" type="button"><img src="assets/images/soundcloud_icon.png">Connect with  Soundcloud</button> -->
            <img src="assets/images/soundcloud-connect-button.png"  ng-click="saveSoundCloudAccountInfo()">
+           <p ng-show="message.visible">{{message.value}}</p>
         </div>
       </div>
 	  </div>

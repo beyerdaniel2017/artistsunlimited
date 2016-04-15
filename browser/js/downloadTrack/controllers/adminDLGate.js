@@ -419,7 +419,7 @@ app.controller('AdminDLGateController', ['$rootScope',
     $scope.deleteDownloadGateway = function(index) {
 
       if (confirm("Do you really want to delete this track?")) {
-        var downloadGateWayID = $scope.downloadGatewayList[index]._id;
+      var downloadGateWayID = $scope.downloadGatewayList[index]._id;
         $scope.processing = true;
         AdminDLGateService
           .deleteDownloadGateway({

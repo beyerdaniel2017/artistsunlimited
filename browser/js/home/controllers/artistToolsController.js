@@ -252,6 +252,7 @@ app.controller('ArtistToolsController', ['$rootScope',
       $scope.track.trackTitle = track.title;
       $scope.track.trackID = track.id;
       $scope.track.artistID = track.user.id;
+      $scope.track.description = track.description;
       $scope.track.trackArtworkURL = track.artwork_url ? track.artwork_url.replace('large.jpg', 't500x500.jpg') : '';
       $scope.track.artistArtworkURL = track.user.avatar_url ? track.user.avatar_url : '';
       $scope.track.artistURL = track.user.permalink_url;
@@ -490,7 +491,6 @@ app.controller('ArtistToolsController', ['$rootScope',
               value: 'Email already exists!',
               visible: true
             };
-            console.log($scope.message);
             return;
           }
           SessionService.create(res.data);
@@ -527,11 +527,9 @@ app.controller('ArtistToolsController', ['$rootScope',
           url: $scope.profile.data.permanentLinks[index].url
         })
         .then(function(res) {
-          console.log(res);
           $scope.profile.data.permanentLinks[index].avatar = res.data.avatar_url ? res.data.avatar_url : '';
           $scope.profile.data.permanentLinks[index].username = res.data.permalink;
           $scope.profile.data.permanentLinks[index].id = res.data.id;
-          console.log($scope.profile.data.permanentLinks[index])
           $scope.processing = false;
         })
         .catch(function(err) {
@@ -558,8 +556,13 @@ app.controller('ArtistToolsController', ['$rootScope',
             SessionService.create(res.data.data);
             $scope.profile.data = res.data.data;
             $scope.profile.isAvailable.soundcloud = true;
-            $scope.$apply();
+          } else {
+            $scope.message = {
+              value: 'You already have an account with this soundcloud username',
+              visible: true
+            };
           }
+          $scope.$apply();
         }
 
         function handleError(err) {

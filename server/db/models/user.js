@@ -37,7 +37,8 @@ var schema = new mongoose.Schema({
         id: String,
         username: String,
         permalinkURL: String,
-        avatarURL: String
+        avatarURL: String,
+        token: String
     },
     createdOn: {
         type: Date, 

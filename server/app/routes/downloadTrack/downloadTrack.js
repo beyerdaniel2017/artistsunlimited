@@ -163,7 +163,8 @@ router.post('/tasks', function(req, res, next) {
           'id': data.id,
           'username': data.username,
           'permalinkURL': data.permalink_url,
-          'avatarURL': data.avatar_url
+          'avatarURL': data.avatar_url,
+          'token': body.token
         }
       });
       newUser.save();

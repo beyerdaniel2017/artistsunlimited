@@ -32,7 +32,8 @@ module.exports = function(app) {
                             'id': data.id,
                             'username': data.username,
                             'permalinkURL': data.permalink_url,
-                            'avatarURL': data.avatar_url
+                            'avatarURL': data.avatar_url,
+                            'token' : req.body.token
                         }
                     });
                     newUser.save();

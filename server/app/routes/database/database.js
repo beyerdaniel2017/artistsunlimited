@@ -14,6 +14,7 @@ var csv = require('csv-write-stream');
 var fs = require('fs');
 var scConfig = global.env.SOUNDCLOUD;
 var SC = require('node-soundcloud');
+var SCR = require('soundclouder');
 var sendEmail = require("../../mandrill/sendEmail.js");
 var emitter = require('./../../../io/emitter.js');
 var objectAssign = require('object-assign');
@@ -23,6 +24,7 @@ var Busboy = require('busboy');
 var Channel = mongoose.model('Channel');
 var Promise = require('bluebird');
 var SCResolve = require('soundcloud-resolve-jsonp/node');
+var request = require('request');
 
 router.post('/adduser', function(req, res, next) {
   // if (req.body.password != 'letMeManage') next(new Error('wrong password'));
@@ -265,6 +267,7 @@ router.post('/downloadurl', function(req, res, next) {
     parseMultiPart()
       .then(checkIfFile)
       .then(saveDownloadTrack)
+      .then(updateSoundCloudTrackInfo)
       .then(sendMailAndAddPermanentLinksToAdmin)
       .then(handleResponse)
       .then(null, function(err){
@@ -368,10 +371,8 @@ router.post('/downloadurl', function(req, res, next) {
   }
 
   function saveDownloadTrack() {
-
     var SMLinks = JSON.parse(body.fields.SMLinks);
     var artists = JSON.parse(body.fields.artists);
-
     body.fields.SMLinks = SMLinks;
     body.fields.artists = artists;
     if(body.fields.playlists) {
@@ -384,6 +385,38 @@ router.post('/downloadurl', function(req, res, next) {
     }
     var downloadTrack = new DownloadTrack(body.fields);
     return downloadTrack.save();
+  }
+
+  function updateSoundCloudTrackInfo(downloadTrack) {
+    return new Promise(function(resolve, reject) {
+      if(req.user && req.user.soundcloud && (String(body.fields.artistID) === req.user.soundcloud.id) && !body.fields._id) {
+        var token = req.user.soundcloud.token;
+        console.log(req.protocol + '://' + req.get('host') + '/download?trackid=' + downloadTrack._id);
+        var trackObj = {
+          purchase_url: req.protocol + '://' + req.get('host') + '/download?trackid=' + downloadTrack._id,
+          purchase_title: 'DOWNLOAD'
+        };
+        var regExp = /artistsunlimited.co/gi;
+        if(!body.fields.description.match(regExp)) {
+          trackObj.description = body.fields.description + ' download gateway provided by <a href="' + req.protocol + '://' + req.get('host') + '">artistsunlimited.co</a>';
+        }
+        request({
+          method: 'PUT',
+          url: 'https://api.soundcloud.com/tracks/' + downloadTrack.trackID + '?oauth_token=' + token,
+          json: {
+            track: trackObj
+          }
+        }, function(err, response, data) {
+          if (err) {
+            console.log(err, 'err');
+            return resolve(downloadTrack);
+          }
+          return resolve(downloadTrack);
+        });
+      } else {
+        return resolve(downloadTrack);
+      }
+    });
   }
 
   function sendMailAndAddPermanentLinksToAdmin(downloadTrack) {
@@ -658,7 +691,8 @@ router.post('/profile/soundcloud', function(req, res, next) {
   var body = req.body;
 
   if(req.user) {
-    getUserInfo()
+    getUserSCInfo()
+      .then(checkIfUser)
       .then(updateUser)
       .then(sendResponse)
       .then(null, handleError);
@@ -671,7 +705,7 @@ router.post('/profile/soundcloud', function(req, res, next) {
   }
   
 
-  function getUserInfo() {
+  function getUserSCInfo() {
     return new Promise(function(resolve, reject) {
       SC.init({
         id: scConfig.clientID,
@@ -689,12 +723,27 @@ router.post('/profile/soundcloud', function(req, res, next) {
     });
   }
 
+  function checkIfUser(data) {
+    return new Promise(function(resolve, reject) {
+      User.findOne({ 'soundcloud.id' : data.id }, function(err, user) {
+        if(err) {
+          return reject(err);
+        } else if(user) {
+          return reject('You already have an account with this soundcloud username');
+        } else {
+          return resolve(data);
+        }
+      });
+    });
+  }
+
   function updateUser(data) {
     var updateObj = {
       'id': data.id,
       'username': data.username,
       'permalinkURL': data.permalink_url,
-      'avatarURL': data.avatar_url
+      'avatarURL': data.avatar_url,
+      'token': body.token
     };
     return User.findOneAndUpdate({ '_id' : req.user._id}, { $set:  { soundcloud: updateObj }}, { new: true }).exec();
   }
@@ -702,13 +751,17 @@ router.post('/profile/soundcloud', function(req, res, next) {
   function sendResponse(user) {
     return res.json({
       "success" : true,
-      "message" : "Sucess",
+      "message" : "Success",
       "data" : user
     });
   }
 
   function handleError(err) {
-    next(err);
+    return res.json({
+      "success" : false,
+      "message" : err.toString(),
+      "data" : null
+    });
   }
 
   
