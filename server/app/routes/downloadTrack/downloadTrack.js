@@ -84,6 +84,9 @@ router.post('/tasks', function(req, res, next) {
       SCR.put('/e1/me/playlist_reposts/' + playlist.id, body.token, function(err, data) {
         if (err) console.log('error reposting a playlist: ' + JSON.stringify(err))
       });
+      SCR.put('/e1/me/playlist_likes/' + playlist.id, body.token, function(err, data) {
+        if(err) console.log('error liking a playlist: ' + JSON.stringify(err))
+      });
     });
   }
   SCR.put('/e1/me/track_reposts/' + body.trackID, body.token, function(err, data) {

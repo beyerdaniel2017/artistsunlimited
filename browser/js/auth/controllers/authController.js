@@ -2,6 +2,9 @@ app.config(function($stateProvider) {
   $stateProvider
     .state('login', {
       url: '/login',
+      params: { 
+        submission: null
+      },
       templateUrl: 'js/auth/views/login.html',
       controller: 'AuthController'
     })
@@ -12,8 +15,7 @@ app.config(function($stateProvider) {
     });
 });
 
-app.controller('AuthController', function($rootScope, $state, $scope, $http, $uibModal, $window, AuthService, SessionService, socket) {
-  
+app.controller('AuthController', function($rootScope, $state, $stateParams, $scope, $http, $uibModal, $window, AuthService, SessionService, socket) {
   $scope.loginObj = {};
   $scope.message = {
     val: '',
@@ -59,6 +61,12 @@ app.controller('AuthController', function($rootScope, $state, $scope, $http, $ui
     }
   };
 
+  $scope.checkIfSubmission = function() {
+    if($stateParams.submission) {
+      $scope.soundcloudLogin();
+    }
+  }
+
 
   $scope.signup = function() {
     $scope.message = {
@@ -97,6 +105,10 @@ app.controller('AuthController', function($rootScope, $state, $scope, $http, $ui
       .then(function (res) {
         $scope.processing = false;
         SessionService.create(res.data.user);
+        if($stateParams.submission) {
+          $state.go('artistTools.downloadGateway.new', { 'submission' : $stateParams.submission});
+          return;
+        }
         $state.go('artistTools.downloadGateway.list');
       })
       .then(null, function (err) {

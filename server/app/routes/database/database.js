@@ -397,7 +397,7 @@ router.post('/downloadurl', function(req, res, next) {
         };
         var regExp = new RegExp(req.get('host'), 'gi');
         if(!body.fields.description.match(regExp)) {
-          trackObj.description = body.fields.description + ' download gateway provided by <a href="' + req.protocol + '://' + req.get('host') + '">' + req.get('host') + '</a>';
+          trackObj.description = body.fields.description + '\n\nDownload Gateway provided by <a href="' + req.protocol + '://' + req.get('host') + '">Artists Unlimited</a>';
         }
         request({
           method: 'PUT',

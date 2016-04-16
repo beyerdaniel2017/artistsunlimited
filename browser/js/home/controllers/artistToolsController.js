@@ -33,6 +33,9 @@
     })
     .state('artistTools.downloadGateway.list', {
       url: '/download-gateway',
+      params: { 
+        submission: null
+      },
       views: {
         'gateway': {
           templateUrl: 'js/home/views/artistTools/downloadGateway.list.html',
@@ -51,6 +54,9 @@
     })
     .state('artistTools.downloadGateway.new', {
       url: '/download-gateway/new',
+      params: { 
+        submission: null 
+      },
       views: {
         'gateway': {
           templateUrl: 'js/home/views/artistTools/downloadGateway.html',
@@ -153,6 +159,23 @@ app.controller('ArtistToolsController', ['$rootScope',
       }
     };
 
+    $scope.thankYouModalInstance = {};
+    $scope.thankYouModal = {};
+    $scope.openThankYouModal = {
+      thankYou: function(submissionID) {
+        $scope.thankYouModal.submissionID = submissionID;
+        $scope.modalInstance = $uibModal.open({
+          animation: true,
+          templateUrl: 'thankYou.html',
+          controller: 'ArtistToolsController',
+          scope: $scope
+        });
+      }
+    };
+    $scope.closeThankYouModal = function() {
+      $scope.thankYouModalInstance.close();
+    };
+
     /* Init profile */
     $scope.profile = {};
 
@@ -192,6 +215,18 @@ app.controller('ArtistToolsController', ['$rootScope',
         $scope.getDownloadGateway($stateParams.gatewayID);
       }
     };
+
+    $scope.checkIfSubmission = function() {
+      if($stateParams.submission) {
+        if($state.includes('artistTools.downloadGateway.new')) {
+          $scope.track.trackURL = $rootScope.submission.trackURL;
+          $scope.trackURLChange();
+          return;
+        }
+        $scope.openThankYouModal.thankYou($stateParams.submission._id);
+        $rootScope.submission = null;
+      }
+    }
 
     $scope.trackURLChange = function() {
       if ($scope.track.trackURL !== '') {
@@ -418,6 +453,10 @@ app.controller('ArtistToolsController', ['$rootScope',
           // $scope.track.showDownloadTracks = ($scope.track.showDownloadTracks === 'user') ? true : false;
           // $scope.trackListObj = null;
           $scope.processing = false;
+          if($stateParams.submission) {
+            $state.go('artistTools.downloadGateway.list', { 'submission' : $stateParams.submission });
+            return;
+          }
           $state.go('artistTools.downloadGateway.list');
           // if($scope.track._id) {
           //   return;
@@ -435,7 +474,7 @@ app.controller('ArtistToolsController', ['$rootScope',
     $scope.logout = function() {
       $http.post('/api/logout').then(function(){
         SessionService.deleteUser();
-        $state.go('home');
+        $state.go('login');
       });
     };
 

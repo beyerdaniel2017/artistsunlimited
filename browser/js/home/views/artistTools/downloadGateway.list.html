@@ -1,6 +1,6 @@
 <ng-include src="'js/home/views/navigation.html'"></ng-include>
 <!-- Content Start  -->
-<div class="container" ng-init="getDownloadList()">
+<div class="container" ng-init="getDownloadList();checkIfSubmission()">
   <div class="content-area bg-white">
   	<ng-include src="'js/home/views/artistTools/navigation.html'"></ng-include>
   	<div class="row">
@@ -35,3 +35,14 @@
 </div>
 <!-- Content End  -->
 <ng-include src="'js/home/views/loader.html'"></ng-include>
+
+<script type="text/ng-template" id="thankYou.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Thank You</h3>
+    <p>Thank you for creating a download link! You’re submission now has a 15% discount. Click “Continue” to continue with the checkout.</p>
+  </div>
+  <div class="modal-body">
+		<button class="btn btn-danger" type="button" ng-click="$parent.closeModal()">Close</button>
+		<a class="btn btn-success pull-right" ui-sref="pay({ submissionID: $parent.thankYouModal.submissionID })">Continue</a>
+  </div>
+</script>

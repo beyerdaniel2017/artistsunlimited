@@ -27,7 +27,7 @@ app.config(function($stateProvider) {
 });
 
 app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track, $state) {
-  $scope.submission = submission;
+  $rootScope.submission = submission;
   $scope.auDLLink = false;
   if (submission.paid) $state.go('home');
   $scope.track = track;
@@ -40,12 +40,17 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   $scope.channels = channels.filter(function(ch) {
     return (submission.channelIDS.indexOf(ch.channelID) != -1)
   });
-  if ($scope.track.purchase_url) $scope.auDLLink = ($scope.track.purchase_url.indexOf("artistsunlimited.co") != -1);
+
+  $scope.auDLLink = $scope.track.purchase_url ? ($scope.track.purchase_url.indexOf("artistsunlimited.co") != -1) : false;
 
   $scope.selectedChannels = {};
   $scope.channels.forEach(function(ch) {
     $scope.selectedChannels[ch.displayName] = false;
   });
+
+  $scope.goToLogin = function() {
+    $state.go('login', { 'submission': $rootScope.submission });
+  };
 
   $scope.recalculate = function() {
     $scope.total = 0;
@@ -66,7 +71,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
     var pricingObj = {
       channels: [],
       discount: $scope.auDLLink,
-      submission: $scope.submission
+      submission: $rootScope.submission
     };
     for (var key in $scope.selectedChannels) {
       if ($scope.selectedChannels[key]) {
