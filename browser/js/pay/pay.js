@@ -40,7 +40,8 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   $scope.channels = channels.filter(function(ch) {
     return (submission.channelIDS.indexOf(ch.channelID) != -1)
   });
-  // if ($scope.track.purchase_url) $scope.auDLLink = ($scope.track.purchase_url.indexOf("artistsunlimited.co") != -1);
+
+  $scope.auDLLink = ($scope.track.purchase_url.indexOf("artistsunlimited.co") != -1);
 
   $scope.selectedChannels = {};
   $scope.channels.forEach(function(ch) {
