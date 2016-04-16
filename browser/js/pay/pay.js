@@ -49,7 +49,9 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   });
 
   $scope.goToLogin = function() {
-    $state.go('login', { 'submission': $rootScope.submission });
+    $state.go('login', {
+      'submission': $rootScope.submission
+    });
   };
 
   $scope.recalculate = function() {
@@ -63,7 +65,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
         $scope.total += chan.price;
       }
     }
-    if ($scope.auDLLink) $scope.total = Math.floor(0.8 * $scope.total);
+    if ($scope.auDLLink) $scope.total = Math.floor(0.85 * $scope.total);
   }
 
   $scope.makePayment = function() {
