@@ -307,7 +307,7 @@ router.post('/getPayment', function(req, res, next) {
       channels.forEach(function(ch) {
         total += ch.price;
       });
-      if (req.body.discount) total = Math.floor(total * 0.85);
+      if (req.body.discount) total = Math.floor(total * 0.9);
       return paypalCalls.makePayment(total, req.body.submission, channels);
     })
     .then(function(payment) {

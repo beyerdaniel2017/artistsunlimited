@@ -65,7 +65,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
         $scope.total += chan.price;
       }
     }
-    if ($scope.auDLLink) $scope.total = Math.floor(0.85 * $scope.total);
+    if ($scope.auDLLink) $scope.total = Math.floor(0.9 * $scope.total);
   }
 
   $scope.makePayment = function() {

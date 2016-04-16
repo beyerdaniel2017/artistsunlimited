@@ -407,7 +407,7 @@ router.post('/downloadurl', function(req, res, next) {
           purchase_url: rootURL + '/download?trackid=' + downloadTrack._id,
           purchase_title: '|| D O W N L O A D'
         };
-        trackObj.description = body.fields.description + '\n\nDownload Gateway provided by ' + rootURL;
+        trackObj.description = body.fields.description + '\n\nDownload for ' + downloadTrack.trackTitle + ' provided by ' + rootURL + '.';
 
         console.log(trackObj);
         request({
