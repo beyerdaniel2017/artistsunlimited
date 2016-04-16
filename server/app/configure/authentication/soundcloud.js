@@ -25,7 +25,6 @@ module.exports = function(app) {
             .then(function (user) {
                 if (user) {
                     var updateObj = {
-                        'name' : data.username,
                         'soundcloud' : {
                             'id': data.id,
                             'username': data.username,
