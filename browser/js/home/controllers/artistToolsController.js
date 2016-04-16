@@ -209,6 +209,7 @@ app.controller('ArtistToolsController', ['$rootScope',
             $scope.track.trackTitle = res.data.title;
             $scope.track.trackID = res.data.id;
             $scope.track.artistID = res.data.user.id;
+            $scope.track.description = res.data.description;
             $scope.track.trackArtworkURL = res.data.artwork_url ? res.data.artwork_url.replace('large.jpg', 't500x500.jpg') : '';
             $scope.track.artistArtworkURL = res.data.user.avatar_url ? res.data.user.avatar_url : '';
             $scope.track.artistURL = res.data.user.permalink_url;
