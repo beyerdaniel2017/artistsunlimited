@@ -24,7 +24,24 @@ module.exports = function(app) {
             User.findOne({ 'soundcloud.id': data.id }).exec()
             .then(function (user) {
                 if (user) {
-                    done(null, user);
+                    var updateObj = {
+                        'name' : data.username,
+                        'soundcloud' : {
+                            'id': data.id,
+                            'username': data.username,
+                            'permalinkURL': data.permalink_url,
+                            'avatarURL': data.avatar_url,
+                            'token' : req.body.token
+                        }
+                    };
+                    User.findOneAndUpdate({ _id: user._id }, { $set : updateObj }, { new: true }).exec()
+                    .then(function(user) {
+                        done(null, user);    
+                    })
+                    .then(null, function(err) {
+                        done(err);
+                    });
+                    
                 } else {
                     var newUser = new User({
                         'name': data.username,
