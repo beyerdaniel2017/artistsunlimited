@@ -3,3 +3,6 @@ node_modules
 npm-debug.log
 .DS_Store
 coverage
+nbproject/project.properties
+
+nbproject/project.xml
