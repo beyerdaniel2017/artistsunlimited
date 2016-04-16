@@ -8,8 +8,8 @@
           <div class="col-md-12" style="text-align:center">
             <h1 class="bold text-center">Payment for Promotion</h1>
             <h3>Please select all the channels on which you would like to be reposted.</h3>
-            <h4 ng-if="!auDLLink" style="color:green">You are eligible for a 10% discount on reposts if you <a href="#" ng-click="goToLogin()">make your track's download link on Artists Unlimited</a></h5>
-            <h4 ng-if="auDLLink" style="color:green">You have a 10% discount for having an <a ui-sref="login" target=>Artists Unlimited download link!</a></h4>
+            <h4 ng-if="!auDLLink" style="color:green">You are eligible for a 10% discount on reposts if you <a href="#" ng-click="goToLogin()">make your track's download link on Artists Unlimited</a>.</h5>
+            <h4 ng-if="auDLLink" style="color:green">You have a 10% discount for having an <a ui-sref="login" target=>Artists Unlimited download link!</a><br>For this discount, you agree keep the Artist Unlimited download link.</h4>
             <div style="margin: 30px 0; display:flex; flex-wrap: wrap; flex-direction: row; justify-content: space-around;">
               <div ng-repeat="channel in channels" style="padding: 10px; display:inline-block; text-align:center; font-size:1.2em">
                 <span>{{channel.displayName}}</span>
