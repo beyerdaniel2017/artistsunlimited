@@ -15,9 +15,7 @@ var manDrillEmail = require("./server/app/mandrill/sendEmail");
 //run the query and send an email to every user that was queried
 //mandrill email sending file - //server/app/mandrill/sendEmail.js
 
-
 //to get csv: node sendemailtodb.js {followers:{$gt:50000}, randomDay:1} csv
-
 
 Follower.find({}, function(error, data){
     console.log(data);
