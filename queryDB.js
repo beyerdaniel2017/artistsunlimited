@@ -36,11 +36,12 @@ db.once('open', function() {
     console.log('connected.');
 
     queryDBCSV({
-        // followers: {
-        //     $gt: 100000
-        // }
+        randomDay: {
+            $in: [7, 8]
+        }
     });
 });
+// - 4/17 - [1,2],[3,4],[5,6],[7,8]
 
 
 //to get email: node sendemailtodb.js {followers:{$gt:50000}} email
@@ -92,20 +93,6 @@ function queryDBCSV(query) {
     writer.pipe(fs.createWriteStream('query.csv'));
 
     var num = 0;
-    // SCEmails.find(query).exec()
-    //     .then(function(flwrs) {
-    //         console.log(flwrs.length);
-    //         flwrs.forEach(function(f) {
-    //             var row = [];
-    //             headers.forEach(function(elm) {
-    //                 row.push(f[elm]);
-    //             });
-    //             writer.write(row);
-    //         });
-    //         writer.end();
-    //         process.exit();
-    //     })
-    //     .then(null, console.log);
     var stream = SCEmails.find(query).stream();
     stream.on('data', function(flwr) {
         var row = [];
@@ -121,7 +108,7 @@ function queryDBCSV(query) {
         setTimeout(function() {
             process.exit();
             writer.end();
-        }, 20000);
+        }, 10000);
 
     });
     stream.on('error', function(err) {

@@ -45,7 +45,7 @@ function sendAutoEmails() {
         });
 
       if (template.reminderDay == dayNum) {
-        sendEmail(template.fromName, template.fromEmail, "Email Server", "coayscue@gmail.com", "Reminder to Change Biweekly Email", "Hey " + template.fromName + ", <br><br>You haven 't changed the bi-weekly email in 2 weeks. <br><br>Sincerely,<br>Your Biweekly Email Server");
+        sendEmail(template.fromName, template.fromEmail, "Email Server", "coayscue@artistsunlimited.co", "Reminder to Change Biweekly Email", "Hey " + template.fromName + ", <br><br>You haven 't changed the bi-weekly email in 2 weeks. <br><br>Sincerely,<br>Your Biweekly Email Server");
       }
     }
   });
