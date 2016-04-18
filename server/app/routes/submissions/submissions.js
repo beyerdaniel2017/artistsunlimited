@@ -251,6 +251,9 @@ router.post('/rescheduleRepost', function(req, res, next) {
                       searchHours.forEach(function(hour) {
                         var actualHour = calcHour(hour, -5);
                         var desiredDay = new Date();
+                        var releaseDay = new Date();
+                        if (channel.blockRelease) releaseDay = new Date(channel.blockRelease);
+                        if (releaseDay > desiredDay) desiredDay = releaseDay;
                         desiredDay.setDate(desiredDay.getDate() + ind);
                         desiredDay.setHours(actualHour);
                         if (continu) {

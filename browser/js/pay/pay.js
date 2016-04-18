@@ -52,7 +52,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
     $state.go('login', {
       'submission': $rootScope.submission
     });
-  };
+  }
 
   $scope.recalculate = function() {
     $scope.total = 0;
