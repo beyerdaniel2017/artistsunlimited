@@ -26,7 +26,7 @@ app.config(function($stateProvider) {
   });
 });
 
-app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track, $state) {
+app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track, $state, $uibModal) {
   $rootScope.submission = submission;
   $scope.auDLLink = false;
   if (submission.paid) $state.go('home');
@@ -69,10 +69,24 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   }
 
   $scope.makePayment = function() {
+    if ($scope.total != 0) {
+      $scope.discountModalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'discountModal.html',
+        controller: 'discountModalController',
+        scope: $scope
+      });
+
+    }
+  };
+
+  $scope.continuePay = function(discounted) {
+    $scope.discountModalInstance.close();
+
     $scope.processing = true;
     var pricingObj = {
       channels: [],
-      discount: $scope.auDLLink,
+      discounted: discounted,
       submission: $rootScope.submission
     };
     for (var key in $scope.selectedChannels) {
@@ -89,3 +103,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
       })
   }
 });
+
+app.controller('discountModalController', function($scope) {
+
+})

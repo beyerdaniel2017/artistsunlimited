@@ -61,7 +61,7 @@ router.put('/save', function(req, res, next) {
             }
             nameString += addString;
           });
-          sendEmail(sub.name, sub.email, "Edward Sanchez", "coayscue@artistsunlimited.co", "Congratulations on your Submission - " + sub.title, "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting your track <a href='" + sub.trackURL + "'>" + sub.title + "</a> to us! We checked out your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by a couple channels on our network!<br><br>To complete and choose your promotional package, please navigate to the following link:<br><br> <a href='" + rootURL + "/pay/" + sub._id + "'>Get Reposted!</a><br><br> To maintain our feed’s integrity, we do not offer more than 1 repost of the approved track on any channel. With that said, if you are interested in more extensive PR packages and campaigns that guarantee anywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email at artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.<br><br>All the best,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
+          sendEmail(sub.name, sub.email, "Edward Sanchez", "coayscue@artistsunlimited.com", "Congratulations on your Submission - " + sub.title, "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting your track <a href='" + sub.trackURL + "'>" + sub.title + "</a> to us! We checked out your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by a couple channels on our network!<br><br>To complete and choose your promotional package, please navigate to the following link:<br><br> <a href='" + rootURL + "/pay/" + sub._id + "'>Get Reposted!</a><br><br> To maintain our feed’s integrity, we do not offer more than 1 repost of the approved track on any channel. With that said, if you are interested in more extensive PR packages and campaigns that guarantee anywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email at artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.<br><br>All the best,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
           res.send(sub)
         });
     })
@@ -315,6 +315,7 @@ router.post('/getPayment', function(req, res, next) {
       submission.paidChannelIDS = req.body.channels;
       submission.paid = false;
       submission.payment = payment;
+      submission.discounted = req.body.discounted;
       return Submission.findByIdAndUpdate(req.body.submission._id, submission, {
         new: true
       }).exec()

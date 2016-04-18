@@ -5,7 +5,7 @@ var Event = mongoose.model('Event');
 var SCR = require('soundclouder');
 var scConfig = global.env.SOUNDCLOUD;
 SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
-var sendMessage = require('../mandrill/sendEmail.js');
+var sendEmail = require('../mandrill/sendEmail.js');
 var request = require('request');
 
 module.exports = doRepost;
@@ -53,11 +53,10 @@ function repostAndRemove(event, channel) {
   if (id) {
     SCR.put('/e1/me/track_reposts/' + id, channel.accessToken, function(err, data) {
       if (err) {
-        sendMessage("CHRISTIAN", "coayscue@gmail.com", "ERROR", "coayscue@gmail.com", "ERROR REPOSTING", "Error: Posting: " + err + "<br><br>Res Data: " + JSON.stringify(data) + "<br><br>  Event: " + JSON.stringify(event));
-        sendMessage("VIRENDRA", "virendra.chouhan@linkites.com", "ERROR", "coayscue@gmail.com", "ERROR REPOSTING", "Error: Posting: " + err + "<br><br>Res Data: " + JSON.stringify(data) + "<br><br>  Event: " + JSON.stringify(event));
+        sendEmail("CHRISTIAN", "coayscue@artistsunlimited.co", "ERROR", "coayscue@artistsunlimited.com", "ERROR REPOSTING", "Error: Posting: " + err + "<br><br>Res Data: " + JSON.stringify(data) + "<br><br>  Event: " + JSON.stringify(event));
       } else {
         if (event.email) {
-          sendMessage(event.name, event.email, "Edward Sanchez", "coayscue@artistsunlimited.co", "Music Submission", "Hey " + event.name + ",<br><br>We would just like to let you know the track <a href='" + event.trackURL + "'>" + event.title + "</a> has been reposted on <a href='" + channel.url + "'>" + channel.displayName + "</a>! If you would like to do another round of reposts please resubmit your track to <a href='artistsunlimited.co/submit'>artistsunlimited.co/submit</a>. We will get back to you ASAP and continue to do our best in making our submission process as quick and easy as possible.<br><br>How was this experience by the way? Feel free to email some feedback, suggestions or just positive reviews to feedback@peninsulamgmt.com.<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
+          sendEmail(event.name, event.email, "Edward Sanchez", "coayscue@artistsunlimited.co", "Music Submission", "Hey " + event.name + ",<br><br>We would just like to let you know the track <a href='" + event.trackURL + "'>" + event.title + "</a> has been reposted on <a href='" + channel.url + "'>" + channel.displayName + "</a>! If you would like to do another round of reposts please resubmit your track to <a href='artistsunlimited.co/submit'>artistsunlimited.co/submit</a>. We will get back to you ASAP and continue to do our best in making our submission process as quick and easy as possible.<br><br>How was this experience by the way? Feel free to email some feedback, suggestions or just positive reviews to feedback@peninsulamgmt.com.<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
         }
         event.completed = true;
         Event.findByIdAndUpdate(event._id, event).exec();

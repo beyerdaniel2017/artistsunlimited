@@ -9,7 +9,7 @@
             <h1 class="bold text-center">Payment for Promotion</h1>
             <h3>Please select all the channels on which you would like to be reposted.</h3>
             <h4 ng-if="!auDLLink" style="color:green">You are eligible for a 10% discount on reposts if you <a href="#" ng-click="goToLogin()">make your track's download link on Artists Unlimited</a>.</h5>
-            <h4 ng-if="auDLLink" style="color:green">You have a 10% discount for having an <a ui-sref="login" target=>Artists Unlimited download link!</a><br>For this discount, you agree keep the Artist Unlimited download link.</h4>
+            <h4 ng-if="auDLLink" style="color:green">You have a 10% discount for having an <a ui-sref="login" target=>Artists Unlimited download link!</a></h4>
             <div style="margin: 30px 0; display:flex; flex-wrap: wrap; flex-direction: row; justify-content: space-around;">
               <div ng-repeat="channel in channels" style="padding: 10px; display:inline-block; text-align:center; font-size:1.2em">
                 <span>{{channel.displayName}}</span>
@@ -19,7 +19,6 @@
             </div>
             <h4 style="text-align:center">Total: ${{total}}.00</h4>
             <button ng-click="makePayment()" class="btn btn-enter" style="margin:30px 0">Checkout</button>
-            <!-- <button ng-click="makePayment()" style="background-color: rgba(0,0,0,0); border:none;"><img src="/assets/images/paypal_button.png" style="height:30px;"></button> -->
             <div id="scPlayer" style="margin:30px 0"></div> 
           </div>
         </div>
@@ -29,3 +28,15 @@
 </div>
 
 <ng-include src="'js/home/views/loader.html'"> </ng-include>
+
+<script type="text/ng-template" id="discountModal.html">
+  <div class="modal-header">
+    <h3 class="modal-title" style="text-align:center">Discount Terms</h3>
+    <br>
+    <p style="text-align:center">By accepting the discount, you agree to keep the AU download link or your track will not be reposted and you will not receive a refund. You can choose to accept or decline the discount.
+  </div>
+  <div class="modal-body" style="display:flex; flex-direction: row; justify-content:space-between;">
+    <button class="btn btn-info" ng-click="continuePay(false)">Decline Discount</button>
+    <button class="btn btn-success pull-right" ng-click="continuePay(true)">Accept Discount</button>
+  </div>
+</script>

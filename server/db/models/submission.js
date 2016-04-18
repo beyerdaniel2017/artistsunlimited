@@ -39,6 +39,9 @@ var schema = new mongoose.Schema({
   },
   paid: {
     type: Boolean
+  },
+  discounted: {
+    type: Boolean
   }
 });
 

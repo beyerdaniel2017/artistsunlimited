@@ -8,25 +8,15 @@
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/scemail');
+var fs = require('fs');
+var csv = require('csv-write-stream');
 
-var db = mongoose.connection;
-
-db.on('error', function (err)
-{
-    console.log('connection error', err);
-});
-
-db.once('open', function ()
-{
-    console.log('connected.');
-});
 
 var Schema = mongoose.Schema;
-var SCEmailsSchema = new Schema(
-{
+var SCEmailsSchema = new Schema({
     email: String,
     numTracks: Number,
-    artists: Boolean,
+    artist: Boolean,
     soundcloudID: Number,
     soundcloudURL: String,
     username: String,
@@ -36,42 +26,21 @@ var SCEmailsSchema = new Schema(
 
 var SCEmails = mongoose.model('SCEmails', SCEmailsSchema);
 
-SCEmailsSchema.methods.findScEmails = function (query)
-{
-    SCEmails.findOne(query, function(err, emailData)
-    {
-        if (err) return console.error(err);
-        console.dir(emailData);
+var db = mongoose.connection;
+
+db.on('error', function(err) {
+    console.log('connection error', err);
+});
+
+db.once('open', function() {
+    console.log('connected.');
+
+    queryDBCSV({
+        // followers: {
+        //     $gt: 100000
+        // }
     });
-}
-
-/*
- * To test if database connection and table creation code working.
- * @type Seeder
- * START
- */
-
-//var scEmailSeed = new SCEmails({
-//    email : 'test@gmail.com',
-//    numTracks : 99,
-//    artists : 1,
-//    followers : 10000
-//});
-// 
-//scEmailSeed.save(function (err, data)
-//{
-//    if (err)
-//        console.log(err);
-//    else
-//        console.log('Saved ', data );
-//});
-
-/*
- * END
- */
-
-var csv = require('csv-write-stream');
-var manDrillEmail = require("./server/app/mandrill/sendEmail");
+});
 
 
 //to get email: node sendemailtodb.js {followers:{$gt:50000}} email
@@ -85,38 +54,31 @@ var manDrillEmail = require("./server/app/mandrill/sendEmail");
 //    res.json(data);
 //});
 
-var mongoQuery = process.argv[2];
-var ProcessFlag = process.argv[3];
+// var mongoQuery = process.argv[2];
+// var ProcessFlag = process.argv[3];
 
-if (ProcessFlag == "csv")
-{
-    createAndSendFile();
-    console.log("CSV process");
-}
-else if (ProcessFlag == "email")
-{
-    processSendEmail(mongoQuery);
-    console.log("EMAIL process");
-}
-else
-{
-    console.error("Nothing to process. Bad request");
-}
+// if (ProcessFlag == "csv") {
+//     createAndSendFile(mongoQuery);
+//     console.log("CSV process");
+// } else if (ProcessFlag == "email") {
+//     processSendEmail(mongoQuery);
+//     console.log("EMAIL process");
+// } else {
+//     console.error("Nothing to process. Bad request");
+// }
 
-function processSendEmail(query)
-{
-    console.log(query);
-}
+// function processSendEmail(query) {
+//     console.log(query);
+// }
 
-console.log(mongoQuery);
-console.log(ProcessFlag);
+// console.log(mongoQuery);
+// console.log(ProcessFlag);
 
-function createAndSendFile(query)
-{
+function queryDBCSV(query) {
     var headers = [
         'email',
         'numTracks',
-        'artists',
+        'artist',
         'soundcloudID',
         'soundcloudURL',
         'username',
@@ -127,26 +89,42 @@ function createAndSendFile(query)
     var writer = csv({
         headers: headers
     });
+    writer.pipe(fs.createWriteStream('query.csv'));
 
-    writer.pipe(fs.createWriteStream('queryfile'));
-
-    var stream = Follower.find(query).stream();
-    stream.on('data', function (flwr)
-    {
+    var num = 0;
+    // SCEmails.find(query).exec()
+    //     .then(function(flwrs) {
+    //         console.log(flwrs.length);
+    //         flwrs.forEach(function(f) {
+    //             var row = [];
+    //             headers.forEach(function(elm) {
+    //                 row.push(f[elm]);
+    //             });
+    //             writer.write(row);
+    //         });
+    //         writer.end();
+    //         process.exit();
+    //     })
+    //     .then(null, console.log);
+    var stream = SCEmails.find(query).stream();
+    stream.on('data', function(flwr) {
         var row = [];
-
-        columns.forEach(function (elm)
-        {
-            if (elm === 'allEmails')
-            {
-                row.push(flwr[elm].join(''));
-            }
-            else
-            {
-                row.push(flwr[elm]);
-            }
+        headers.forEach(function(elm) {
+            row.push(flwr[elm]);
         });
+        num++;
         writer.write(row);
     });
-    console.log(process.argv);
+    stream.on('close', function() {
+        console.log(num);
+        console.log('Writing CSV...');
+        setTimeout(function() {
+            process.exit();
+            writer.end();
+        }, 20000);
+
+    });
+    stream.on('error', function(err) {
+        console.log(err);
+    });
 }
