@@ -20,7 +20,6 @@ router.get('/track', function(req, res, next) {
   DownloadTrack.findById(req.query.trackID).exec()
     .then(function(downloadTrack) {
       res.send(downloadTrack);
-      return res.end();
     })
     .then(null, next);
 });
@@ -85,7 +84,7 @@ router.post('/tasks', function(req, res, next) {
         if (err) console.log('error reposting a playlist: ' + JSON.stringify(err))
       });
       SCR.put('/e1/me/playlist_likes/' + playlist.id, body.token, function(err, data) {
-        if(err) console.log('error liking a playlist: ' + JSON.stringify(err))
+        if (err) console.log('error liking a playlist: ' + JSON.stringify(err))
       });
     });
   }
@@ -126,14 +125,14 @@ router.post('/tasks', function(req, res, next) {
         });
         return t.save();
       })
-      .then(null, function(){
+      .then(null, function() {
         return Promise.resolve();
       });
   }
 
   function findUser() {
-    return new Promise(function(resolve, reject){
-      if(req.user) {
+    return new Promise(function(resolve, reject) {
+      if (req.user) {
         return resolve();
       } else {
         SC.get('/me', function(err, data) {
@@ -141,16 +140,18 @@ router.post('/tasks', function(req, res, next) {
             resolve();
           }
           User
-            .findOne({ 'soundcloud.id': data.id })
+            .findOne({
+              'soundcloud.id': data.id
+            })
             .exec()
-            .then(function (user) {
-              if(user) {
+            .then(function(user) {
+              if (user) {
                 resolve();
               } else {
                 resolve(data);
               }
             })
-            .then(null, function(err){
+            .then(null, function(err) {
               resolve();
             });
         });
@@ -159,7 +160,7 @@ router.post('/tasks', function(req, res, next) {
   }
 
   function createUser(data) {
-    if(data) {
+    if (data) {
       var newUser = new User({
         'name': data.username,
         'soundcloud': {
@@ -185,7 +186,7 @@ router.post('/tasks', function(req, res, next) {
   //     if (!t.artists) {
   //       t.artists = [];
   //     }
-     
+
   //     User.findById(body.userid).exec().then(function(user) {
   //       user.permanentLinks.forEach(function(link) {
   //         SC.put('/me/followings/' + link.id, function(err, response) {
