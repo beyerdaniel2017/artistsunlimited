@@ -5,28 +5,35 @@
         <div class="col-md-12">
             <div class="content-area bg-white">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12" >
                         <h1 class="bold">Promotion Marketplace</h1>
-<!--                        <h3>Please select all the channels on which you would like to be reposted.</h3>
+                        <h3>Please select all the channels on which you would like to be reposted.</h3>
                         
                         <h4 ng-if="!auDLLink" style="color:green">
                             You are eligible for a 10% discount on reposts if you <a href="#" ng-click="goToLogin()">make your track's download link on Artists Unlimited</a>.
                         </h4>
                             
-                        <h4 ng-if="auDLLink" style="color:green">You have a 10% discount for having an <a ui-sref="login" target=>Artists Unlimited download link!</a></h4>-->
+                        <h4 ng-if="auDLLink" style="color:green">You have a 10% discount for having an <a ui-sref="login" target=>Artists Unlimited download link!</a></h4>
+
                         
-                        
-                        <div class="col-md-3" ng-repeat="i in [1,2,3,4,5] track by $index" style="margin-top: 70px;">
+                        <div class="col-md-3"  ng-repeat="channel in channels" style="margin-top: 70px; margin-left: 0px; padding-left: -10px;">
                             <p class="text-center">
-                                <strong style="font-size: 18px;">La tropical</strong><br/>
-                                <span class="intro">$100 </span>
+                                <strong style="font-size: 18px;">{{channel.displayName}}</strong><br/>
+                                <span ng-if="!auDLLink" class="intro"> <span style="text-decoration: line-through;"> ${{channel.price}}</span> &nbsp;&nbsp;${{channel.price | calculateDiscount }} </span>
+                                <!-- <span ng-if="auDLLink" class="intro">${{channel.price }}.00 </span> -->
                             </p>
-                            <p><img src="http://www.ebs-blog.ca/wp-content/uploads/2015/02/musical-notes-square-200x200.jpg" class="img-responsive" alt="" style="border: 1px solid orange;" /></p>
+                            <p><img ng-src="{{channel.avatarURL}}" class="img-responsive" alt="" style="border: 1px solid orange;" / height="200px;" width="300px"></p>
                             <p>A Channel with a chill vibe, that emphasizes sunny vibes and tropical house.</p>
 
-                            <button class="btn btn-enter" style="background-color: #F6D6A5;">Add to cart</button>
+                            <button ng-show="channel.addtocart" class="btn btn-enter" style="background-color: #F5BBBC; margin-right: auto;margin-left: auto;" ng-click="addToCart(channel)">
+                                Remove cart
+                            </button>                        
+
+                            <button ng-show="!channel.addtocart" class="btn btn-enter" style="background-color: #F6D6A5; margin-right: auto;margin-left: auto;" ng-click="addToCart(channel)">
+                                Add to cart
+                            </button>
                         </div>
-                        
+                     
                         
 <!--                        <div style="margin: 30px 0; display:flex; flex-wrap: wrap; flex-direction: row; justify-content: space-around;">
                             <div ng-repeat="channel in channels" style="padding: 10px; display:inline-block; text-align:center; font-size:1.2em">
@@ -38,6 +45,10 @@
 
                         <!--<h4 style="text-align:center">Total: ${{total}}.00</h4>-->
                         <div class="clearfix"></div>
+                        <div style="margin: 30px 0px 10px 0px;display: inline-block;width: 100%;">
+                       <!--  <a href="#" style="float: right;" ng-click="makePayment()">Proceed to Checkout</a> -->
+                       <button class="btn btn-enter" style="float: right; background-color: transparent; color: grey; outline: none; box-shadow: none;padding: 10px 0px;margin: 0px;" ng-click="makePayment()">Proceed to Checkout</button>
+                       </div>
                         <!--<button ng-click="makePayment()" class="btn btn-enter" style="margin:30px 0">Checkout</button>-->
 
                         <div id="scPlayer" style="margin:30px 0"></div>

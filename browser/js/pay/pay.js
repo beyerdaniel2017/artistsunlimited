@@ -102,6 +102,14 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
         window.location = res.data;
       })
   }
+  
+  
+  $scope.addToCart = function(channel)
+  {
+      alert("a");
+      console.log(channel);
+  }
+  
 });
 
 app.controller('discountModalController', function($scope) {

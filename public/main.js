@@ -562,6 +562,19 @@ app.factory('oEmbedFactory', function () {
     }
   };
 });
+
+
+/* 
+
+My Work Here
+My Work Here
+My Work Here
+My Work Here
+My Work Here
+
+*/
+
+
 app.config(function ($stateProvider) {
   $stateProvider.state('pay', {
     url: '/pay/:submissionID',
@@ -587,7 +600,46 @@ app.config(function ($stateProvider) {
   });
 });
 
+app.filter('calculateDiscount',function(){
+
+  return function(input) {
+    return parseFloat(input* 0.90).toFixed(2);
+  };
+
+});
+
 app.controller('PayController', function ($scope, $rootScope, $http, channels, submission, track, $state, $uibModal) {
+
+  var cartArray = [];
+  var cartItems = {};
+
+  $scope.cart = [];
+
+  $scope.total = 0;
+
+  $scope.addToCart = function(channel)
+  {
+    console.log($scope.selectedChannels);
+    if(channel.addtocart)
+    {
+      $scope.total = $scope.total - channel.price;
+    }
+    else
+    {
+      $scope.total += channel.price;
+    }
+
+    $scope.selectedChannels[channel.displayName] = ($scope.selectedChannels[channel.displayName] == true) ? false : true;
+
+    channel.addtocart = channel.addtocart ? false : true;
+    console.log($scope.total); 
+  }
+
+  $scope.cardData = function(){
+    console.log('hello');
+  }
+
+
   $rootScope.submission = submission;
   $scope.auDLLink = false;
   if (submission.paid) $state.go('home');
@@ -597,7 +649,7 @@ app.controller('PayController', function ($scope, $rootScope, $http, channels, s
     auto_play: false,
     maxheight: 150
   });
-  $scope.total = 0;
+  
   $scope.channels = channels.filter(function (ch) {
     return submission.channelIDS.indexOf(ch.channelID) != -1;
   });
@@ -630,6 +682,7 @@ app.controller('PayController', function ($scope, $rootScope, $http, channels, s
   };
 
   $scope.makePayment = function () {
+
     if ($scope.total != 0) {
       $scope.discountModalInstance = $uibModal.open({
         animation: true,
@@ -662,6 +715,15 @@ app.controller('PayController', function ($scope, $rootScope, $http, channels, s
     });
   };
 });
+
+/*
+
+TILL HERE
+TILL HERE
+TILL HERE
+TILL HERE
+
+*/
 
 app.controller('discountModalController', function ($scope) {});
 app.config(function ($stateProvider) {
