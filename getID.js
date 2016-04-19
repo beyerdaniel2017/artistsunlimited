@@ -1,22 +1,24 @@
-var SC = require('node-soundcloud');
 var HTTP = require('http');
 var CLIENT_ID = '1e57616d882f00c402ff95abd1f67b39';
 var CLIENT_SECRET = '0934d66f53f5dcd06a1ce9f32e9a6267';
+var redirect_uri = "https://artistsunlimited.co/callback.html";
+var SCResolve = require('soundcloud-resolve-jsonp/node');
+
 process.stdin.resume();
 
-var getPath = '/resolve.json?url=' + process.argv[2] + '&client_id=' + CLIENT_ID;
-console.log(getPath);
-HTTP.request({
-  host: 'api.soundcloud.com',
-  path: getPath,
-}, function(res) {
-  res.on("data", function(chunk) {
-    var chunkString = "" + chunk;
-    console.log(chunkString);
-    var userID = chunkString.slice(chunkString.indexOf('cloud.com/') + 10, chunkString.indexOf('.json?'));
-    console.log(userID);
+(new Promise(function(fulfill, reject) {
+  SCResolve({
+    url: process.argv[2],
+    client_id: CLIENT_ID
+  }, function(err, track) {
+    if (err) {
+      reject(err);
+    } else {
+      fulfill(track);
+    }
   });
-}).on('error', function(e) {
-  console.log('problem with request: ' + e.message);
-  rl.close();
-}).end();
+}))
+.then(function(track) {
+    console.log(track);
+  })
+  .then(null, console.log);
