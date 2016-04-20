@@ -31,7 +31,7 @@ router.post('/', function(req, res, next) {
       var busboy = new Busboy({
         headers: req.headers,
         limits: {
-          fileSize: 20 * 1024 * 1024,
+          fileSize: 100 * 1024 * 1024,
           files: 1
         }
       });
