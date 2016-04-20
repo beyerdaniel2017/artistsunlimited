@@ -312,7 +312,7 @@ router.post('/getPayment', function(req, res, next) {
       channels.forEach(function(ch) {
         total += ch.price;
       });
-      if (req.body.discount) total = Math.floor(total * 0.9);
+      if (req.body.discounted) total = Math.floor(total * 0.9);
       return paypalCalls.makePayment(total, req.body.submission, channels);
     })
     .then(function(payment) {
@@ -343,9 +343,16 @@ router.put('/completedPayment', function(req, res, next) {
     })
     .then(function(submission) {
       sub = responseObj.submission = submission;
+      return paypalCalls.executePayment(submission.payment.id, {
+        payer_id: req.body.PayerID,
+        transactions: submission.payment.transactions
+      });
+    })
+    .then(function(payment){
+      sub.payment = payment;
       var promiseArray = [];
-      submission.paidChannelIDS.forEach(function(chanID) {
-        promiseArray.push(schedulePaidRepost(chanID, submission));
+      sub.paidChannelIDS.forEach(function(chanID) {
+        promiseArray.push(schedulePaidRepost(chanID, sub));
       });
       return Promise.all(promiseArray)
     })
