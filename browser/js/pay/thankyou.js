@@ -18,6 +18,6 @@ app.controller('ThankyouController', function($http, $scope, $location) {
       })
     })
     .then(null, function(err){
-      alert('Already payed');
+      alert('There was an error processing your request');
     })
 });
