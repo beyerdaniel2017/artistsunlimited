@@ -63,6 +63,18 @@
           controller: 'ArtistToolsController'
         } 
       }
+    })
+    .state('artistTools.downloadGateway.preview', {
+      url: '/download-gateway/preview',
+      params: { 
+        submission: null 
+      },
+      views: {
+        'gateway': {
+          templateUrl: 'js/home/views/artistTools/preview.html',
+          controller: 'ArtistToolsPreviewController'
+        } 
+      }
     });
 });
 
@@ -712,5 +724,12 @@ app.controller('ArtistToolsController', ['$rootScope',
         });
       }
     }
+    
+    $scope.$watch('track', function(newVal, oldVal)
+    {
+        if(newVal.trackTitle)
+            window.localStorage.setItem('trackPreviewData',JSON.stringify(newVal));
+    },true);
+    
   }
 ]);

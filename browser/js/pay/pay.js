@@ -26,6 +26,14 @@ app.config(function($stateProvider) {
   });
 });
 
+app.filter('calculateDiscount', function ()
+{
+    return function (input)
+    {
+        return parseFloat(input * 0.90).toFixed(2);
+    };
+});
+
 app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track, $state, $uibModal) {
   $rootScope.submission = submission;
   $scope.auDLLink = false;
@@ -104,11 +112,23 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   }
   
   
-  $scope.addToCart = function(channel)
-  {
-      alert("a");
-      console.log(channel);
-  }
+    $scope.addToCart = function (channel)
+    {
+        console.log($scope.selectedChannels);
+        if (channel.addtocart)
+        {
+            $scope.total = $scope.total - channel.price;
+        }
+        else
+        {
+            $scope.total += channel.price;
+        }
+
+        $scope.selectedChannels[channel.displayName] = $scope.selectedChannels[channel.displayName] == true ? false : true;
+
+        channel.addtocart = channel.addtocart ? false : true;
+        console.log($scope.total);
+    };
   
 });
 
