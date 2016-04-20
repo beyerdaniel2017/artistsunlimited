@@ -17,4 +17,7 @@ app.controller('ThankyouController', function($http, $scope, $location) {
         ev.date = new Date(ev.date);
       })
     })
+    .then(null, function(err){
+      alert('Already payed');
+    })
 });
