@@ -126,7 +126,6 @@ app.controller('ArtistToolsController', ['$rootScope',
     $scope.downloadGatewayList = [];
 
     /* Init track list and trackListObj*/
-
     $scope.trackList = [];
     $scope.trackListObj = null;
 
@@ -724,6 +723,25 @@ app.controller('ArtistToolsController', ['$rootScope',
         });
       }
     }
+
+    $scope.test = function(){
+      debugger;
+      console.log('hello');
+      if($scope.track.trackFile == *.mp3) {
+        angular.element("input[ng-model='track.downloadURL']").val(null);
+      }
+
+    //   angular.forEach(
+    // angular.element("input[type='file']"),
+    // function(inputElem) {
+    //   angular.element(inputElem).val(null);
+    // });
+      }
+
+
+    // if($scope.track.trackFile == *.mp3) {
+    //   $scope.track.downloadURL == '';
+    // }
     
     $scope.$watch('track', function(newVal, oldVal)
     {

@@ -29,7 +29,7 @@
                                 </div>
                                 <div class="follow-bottom">
                                     <h4>{{track.trackTitle}}</h4>
-                                    <a ng-href="{{track.artistURL}}" target="_blank"><img class="avatar" ng-src="{{track.artistArtworkURL}}"/> {{track.artistUsername}}</a>
+                                    <a ng-href="{{track.artistURL}}" target="_blank"><img class="avatar" ng-src="{{track.trackArtworkURL}}"/> {{track.artistUsername}}</a>
                                     <p class="text-justify pad-download-agreement">
                                         By downloading this song you agree to: <img src="assets/images/favorite_icon.png" style="width:14px; height:12px;"> the track, <img src="assets/images/repost_icon.png" style="width:16px; height:12px;"> the track, and follow {{track.artistUsername}},
                                         <span ng-repeat="artist in track.artists">
@@ -37,7 +37,7 @@
                                     </p>
                                 </div>  
                             </div>
-                            <input type="text" ng-model="track.commentText" placeholder="Comment" ng-if="track.comment" style="width:360px; height:30px; margin-bottom:5px">
+                            <input type="text" class="form-control" ng-model="track.commentText" placeholder="Comment" ng-if="track.comment" style="width:360px; height:30px; margin-bottom:5px">
                             <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em;" href="javascript:void(0)">CONNECT & DOWNLOAD</a>
                             <br>
                             <br>
