@@ -202,26 +202,17 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
 
   $scope.changeQueueSong = function() {
     $scope.processing = true;
-    $http.get('api/soundcloud/soundcloudConfig')
-      .then(function(res) {
-        SC.initialize({
-          client_id: res.data.clientID,
-          redirect_uri: res.data.callbackURL,
-          scope: "non-expiring"
-        });
-        $scope.clientIDString = res.data.clientID.toString();
-        var getPath = 'http://api.soundcloud.com/resolve.json?url=' + $scope.newQueueSong + '&client_id=' + $scope.clientIDString;
-        return $http.get(getPath)
+    $http.post('/api/soundcloud/resolve', {
+        url: $scope.newQueueSong
       })
       .then(function(res) {
         $scope.processing = false;
         var track = res.data;
-        // SC.oEmbed(track.uri, {
-        //   element: document.getElementById('newQueuePlayer'),
-        //   auto_play: false,
-        //   maxheight: 150
-        // });
         $scope.newQueueID = track.id;
+      })
+      .then(null, function(err){
+        alert("error getting song");
+        $scope.processing = false;
       });
   }
 
