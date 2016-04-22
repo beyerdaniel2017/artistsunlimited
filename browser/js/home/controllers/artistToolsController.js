@@ -725,9 +725,8 @@ app.controller('ArtistToolsController', ['$rootScope',
     }
 
     $scope.test = function(){
-      debugger;
       console.log('hello');
-      if($scope.track.trackFile == *.mp3) {
+      if($scope.track.trackFile == "*.mp3") {
         angular.element("input[ng-model='track.downloadURL']").val(null);
       }
 

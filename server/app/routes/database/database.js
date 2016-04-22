@@ -27,6 +27,10 @@ var SCResolve = require('soundcloud-resolve-jsonp/node');
 var request = require('request');
 var rootURL = require('./../../../env').ROOTURL;
 
+
+var id3 = require('id3-writer');
+var writer = new id3.Writer();
+
 router.post('/adduser', function(req, res, next) {
   // if (req.body.password != 'letMeManage') next(new Error('wrong password'));
   var getPath = '/resolve.json?url=' + req.body.url + '&client_id=' + scConfig.clientID;
@@ -263,7 +267,6 @@ router.post('/trackedUsers', function(req, res, next) {
 });
 
 router.post('/downloadurl', function(req, res, next) {
-
   if (req.user) {
     parseMultiPart()
       .then(checkIfFile)
@@ -339,6 +342,7 @@ router.post('/downloadurl', function(req, res, next) {
         uploadToBucket()
           .then(function(result) {
             body.location = result.Location;
+            console.log(result.Location);
             resolve();
           })
           .catch(function(err) {
@@ -363,18 +367,78 @@ router.post('/downloadurl', function(req, res, next) {
         ContentType: body.file.mimetype,
         ContentDisposition: 'attachment'
       };
-      var s3 = new AWS.S3({
-        params: {
-          Bucket: awsConfig.bucketName
+      
+//      console.log("==============================================");
+//      console.log(body.fields);
+//      console.log("==============================================");
+//      console.log(body.fields.artistUsername);
+//      console.log("==============================================");
+//      console.log(body.fields.trackArtworkURL);
+//      console.log("==============================================");
+//      
+        var mp3 = new id3.File(body.file);
+        
+        var timestamp = new Date().getTime();
+        
+//        var f = fs.createWriteStream('./temp_'+timestamp+'.jpg');
+
+        var artworkimageURL = "";
+        if(body.fields.trackArtworkURL == "")
+        {
+            artworkimageURL = body.fields.artistArtworkURL;
         }
-      });
-      s3.upload(data, function(err, data) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
+        else
+        {
+            artworkimageURL = body.fields.trackArtworkURL;
         }
-      });
+
+        console.log("==============================================");
+        console.log(artworkimageURL);
+        console.log("==============================================");
+        return false;
+//        https.get(artworkimageURL, function(res)
+//        {	
+//            res.on('data', function (chunk)
+//            {
+//                f.write(chunk);
+//            });
+//
+//            res.on('end',function()
+//            {
+//                f.end();
+//
+//                var coverImage = new id3.Image("./temp"+timestamp+".jpg");
+//                var meta = new id3.Meta({
+//                    artist: body.artistUsername,
+//                    title: body.trackTitle,
+//                    album: 'ArtistsUnlimited.co'
+//                }, [coverImage]);
+//
+//
+//                writer.setFile(mp3).write(meta, function(err)
+//                {
+//                    if (err)
+//                    {
+//                        console.log(err);
+//                    }
+//                    fs.unlink("./temp"+timestamp+".jpg");
+//                });
+//                console.log('complete');
+//            });
+//        });
+
+//      var s3 = new AWS.S3({
+//        params: {
+//          Bucket: awsConfig.bucketName
+//        }
+//      });
+//      s3.upload(data, function(err, data) {
+//        if (err) {
+//          reject(err);
+//        } else {
+//          resolve(data);
+//        }
+//      });
     });
   }
 
