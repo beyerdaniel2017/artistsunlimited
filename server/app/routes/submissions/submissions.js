@@ -62,9 +62,7 @@ router.put('/save', function(req, res, next) {
             nameString += addString;
           });
           sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Congratulations on your Submission - " + sub.title, "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting your track <a href='" + sub.trackURL + "'>" + sub.title + "</a> to us! We checked out your submission and have approved it for 1 or multiple reposts. To get reposted click the link below and select the channel or channels you would like to be reposted on and your repost will automatically be scheduled for you ! You might not have been accepted by all channels, but just know that we approached you for the channel that best fits the style of your music. Since we accepted you for a repost we would love to hear your future tracks before you release them. Perhaps we can assist you via a premiere for a future track.<br><br> <a href='" + rootURL + "/pay/" + sub._id + "'>Get Reposted!</a><br><br>All the best,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
-
-
-          res.send(sub)
+          res.send(sub); 
         });
     })
     .then(null, next);
@@ -89,6 +87,11 @@ router.get('/withID/:subID', function(req, res, next) {
     .then(null, next);
 });
 
+router.post('/youtubeInquiry', function(req, res, next){
+  sendEmail('Zach', 'zacharia@peninsulamgmt.com', "Artists Unlimited", "coayscue@artistsunlimited.co", "Youtube Release", "Submitter's name: " + req.body.name + "<br><br>Email: "+req.body.email+ "<br><br>Song URL: "+ req.body.trackURL );
+  res.end();
+})
+
 router.delete('/ignore/:subID/:password', function(req, res, next) {
   Submission.findByIdAndRemove(req.params.subID).exec()
     .then(function(sub) {
@@ -105,13 +108,11 @@ router.post('/paid', function(req, res, next) {
       invoiceIDS: req.body.resource.invoice.id
     }).exec()
     .then(function(sub) {
-
       var index = sub.channelIDS.indexOf(147045855); //supportify
       if (index == -1) {
         sub.channelIDS.push(147045855);
         sendInvoice(sub, 147045855);
-        supportifyChunk = "Since we’ve approved you for a repost you can also get featured with our partners at <a href='https://soundcloud.com/supportify'>Supportify</a>. If you are interested in being featured there, please pay the invoice for Supportify that we are sending you. "
-      }
+        supportifyChunk = "Since we’ve approved you for a repost you can also get featured with our partners at <a href='https://soundcloud.com/supportify'>Supportify</a>. If you are interested in being featured there, please pay the invoice for Supportify that we are sending you. "}
       submission = sub;
       var index = sub.invoiceIDS.indexOf(req.body.resource.invoice.id);
       chanID = sub.channelIDS[index];

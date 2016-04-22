@@ -115,4 +115,13 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
         window.alert("ERROR: did not Decline");
       });
   }
+
+  $scope.youtube = function(submission){
+    $scope.processing = true;
+    $http.post('/api/submissions/youtubeInquiry', submission)
+    .then(function(res){
+      $scope.processing = false;
+      window.alert('Sent to Zach');
+    })
+  }
 });
