@@ -101,7 +101,10 @@ app.controller('ArtistToolsController', ['$rootScope',
     };
 
     /* Init Download Gateway form data */
-
+    $scope.users = JSON.parse(SessionService.getUser());
+    
+    console.log($scope.users);
+    
     $scope.track = {
       artistUsername: '',
       trackTitle: '',
@@ -356,9 +359,6 @@ app.controller('ArtistToolsController', ['$rootScope',
     };
 
     $scope.addArtist = function() {
-      if($scope.track.artists.length > 2) {
-        return false;
-      }
 
       $scope.track.artists.push({
         url: '',
@@ -724,18 +724,32 @@ app.controller('ArtistToolsController', ['$rootScope',
       }
     }
 
-    $scope.test = function(){
-      console.log('hello');
-      if($scope.track.trackFile == "*.mp3") {
+    $scope.clearOrInput = function(){
+      if(typeof 'file') {
+        console.log('inside')
         angular.element("input[ng-model='track.downloadURL']").val(null);
-      }
+      } 
+    }
+    
+    $scope.clearOrFile = function(){      
+      if($scope.track.downloadURL) {
+        angular.element("input[type='file']").val(null);
+      } 
+    }
+
+    // $scope.testa = function(){
+    //   console.log('hello');
+    //   if($scope.track.trackFile == *.mp3) {
+    //     angular.element("input[ng-model='track.downloadURL']").val(null);
+    //   } 
+    // }
 
     //   angular.forEach(
     // angular.element("input[type='file']"),
     // function(inputElem) {
     //   angular.element(inputElem).val(null);
     // });
-      }
+      
 
 
     // if($scope.track.trackFile == *.mp3) {

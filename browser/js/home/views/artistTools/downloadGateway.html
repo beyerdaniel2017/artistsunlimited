@@ -53,8 +53,7 @@
 		        <a href="#" ng-click="addSMLink()">+Add Social Media...</a>
 		      </div>
 
-
-		     <div class="artist-follow" ng-controller="AdminDLGateController" ng-if="users.role == admin">
+		     <div class="artist-follow" ng-controller="AdminDLGateController" ng-if="users.admin">
 	             <h4>Playlist URLs</h4>
 	             <div class="input-box" ng-repeat="playlist in track.playlists">
 		              <input class="form-control" placeholder="URL" ng-model="playlist.url" ng-change="playlistURLChange($index)"/>
@@ -64,14 +63,16 @@
 	            <a href="#" ng-click="addPlaylist()">+ Add Playlist...</a>
             </div>
 
-
 		      <div class="social-container">
 		        <h4>Download URL</h4>
 		        <div>
-		          <input class="form-control" type="text" placeholder="Link" ng-model="track.downloadURL" />
+		          <input class="form-control" type="text" placeholder="Link" ng-model="track.downloadURL" ng-keyup="clearOrFile()"/>
 		          <div class="text-center">Or</div>
-		          <input class="form-control" type="file" accept=".mp3" fileread="track.file" message="message"  />
+		         <!--  <input class="form-control" type="file" accept=".mp3" message="message" id="upload" ng-click="clearOrInput()"/> -->
+		          <input class="form-control" type="file" accept=".mp3" message="message" id="upload" ng-model="track.file" onchange="angular.element(this).scope().clearOrInput(this)" />
+		          
 		        </div>
+
 		      </div>
 		      <div class="social-container">
 		        <h4>Show all download tracks for: </h4>
@@ -100,6 +101,18 @@
 		        </div>
 		        <a href="#" ng-click="addPermanentLink()" >+ Add Artist...</a>
 		      </div> -->
+
+<!-- 		      <div class="artist-follow" ng-controller="AdminDLGateController">
+	             <h4>Artists to Follow</h4>
+	             <div class="input-box" ng-repeat="artist in track.artists">
+		              <input class="form-control" placeholder="URL" ng-model="artist.url" ng-change="artistURLChange($index)"/>
+		              <a class="pro-icon" href="#"><img class="profile-icon" ng-src="{{playlist.avatar}}"></a>
+		              <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePlaylist($index)"></a>
+	            </div>
+	            <a href="#" ng-click="addPlaylist()">+ Add Playlist...</a>
+            </div> -->
+
+
 		      <div class="artist-follow">
 		        <h4>Artists to Follow</h4>
 		        <div class="input-box" ng-repeat="artist in track.artists" ng-show="!artist.permanentLink">
@@ -107,8 +120,13 @@
 		          <a class="pro-icon" href="#" ng-show="artist.avatar !== ''"><img class="profile-icon" ng-src="{{artist.avatar}}" ></a>
 		          <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeArtist($index)"></a>
 		        </div>
-		        <a href="#" ng-click="addArtist()" ng-hide="track.artists.length>2">+ Add Artist...</a>
+		        <a href="#" ng-click="addArtist()" ng-hide="track.artists.length>2 && !users.admin">+ Add Artist...</a>
 		      </div>
+
+
+
+
+
 		      <div class="social-container">
 		        <h4>Actions</h4>
 		        <small class="orange-text">By Downloading you agree to:</small>
