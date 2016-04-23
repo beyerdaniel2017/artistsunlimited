@@ -63,6 +63,18 @@
           controller: 'ArtistToolsController'
         } 
       }
+    })
+    .state('artistTools.downloadGateway.preview', {
+      url: '/download-gateway/preview',
+      params: { 
+        submission: null 
+      },
+      views: {
+        'gateway': {
+          templateUrl: 'js/home/views/artistTools/preview.html',
+          controller: 'ArtistToolsPreviewController'
+        } 
+      }
     });
 });
 
@@ -114,7 +126,6 @@ app.controller('ArtistToolsController', ['$rootScope',
     $scope.downloadGatewayList = [];
 
     /* Init track list and trackListObj*/
-
     $scope.trackList = [];
     $scope.trackListObj = null;
 
@@ -712,5 +723,30 @@ app.controller('ArtistToolsController', ['$rootScope',
         });
       }
     }
+
+    $scope.test = function(){
+      console.log('hello');
+      if($scope.track.trackFile == "*.mp3") {
+        angular.element("input[ng-model='track.downloadURL']").val(null);
+      }
+
+    //   angular.forEach(
+    // angular.element("input[type='file']"),
+    // function(inputElem) {
+    //   angular.element(inputElem).val(null);
+    // });
+      }
+
+
+    // if($scope.track.trackFile == *.mp3) {
+    //   $scope.track.downloadURL == '';
+    // }
+    
+    $scope.$watch('track', function(newVal, oldVal)
+    {
+        if(newVal.trackTitle)
+            window.localStorage.setItem('trackPreviewData',JSON.stringify(newVal));
+    },true);
+    
   }
 ]);
