@@ -103,8 +103,6 @@
      /* Init Download Gateway form data */
      $scope.users = JSON.parse(SessionService.getUser());
 
-     console.log($scope.users);
-
      $scope.track = {
        artistUsername: '',
        trackTitle: '',
@@ -490,6 +488,7 @@
        $http.post('/api/logout').then(function() {
          SessionService.deleteUser();
          $state.go('login');
+         window.location.href = '/login';
        });
      };
 
@@ -559,11 +558,17 @@
      $scope.removePermanentLink = function(index) {
        $scope.profile.data.permanentLinks.splice(index, 1);
      };
-
+     $scope.hidebutton = false;
      $scope.addPermanentLink = function() {
-       if ($scope.profile.data.permanentLinks.length > 2) {
-         return false;
-       }
+         
+        if($scope.profile.data.permanentLinks.length >= 2 && !$scope.users.admin)
+        {
+           $scope.hidebutton = true;
+        }
+
+        if ($scope.profile.data.permanentLinks.length > 2 && !$scope.users.admin) {
+            return false;
+        }
 
        $scope.profile.data.permanentLinks.push({
          url: '',
