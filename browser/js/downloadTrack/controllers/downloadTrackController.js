@@ -48,14 +48,15 @@ app.controller('DownloadTrackController', ['$rootScope',
 			$scope.processing = true;
 			var trackID = $location.search().trackid;
 			DownloadTrackService
-				.getDownloadTrack(trackID)
+			.getDownloadTrack(trackID)
 				.then(receiveDownloadTrack)
 				.then(receiveRecentTracks)
 				.then(initPlay)
-				.catch(catchDownloadTrackError);			
+				.catch(catchDownloadTrackError);
 
 			function receiveDownloadTrack(result) {
 				$scope.track = result.data;
+				console.log($scope.track);
 				$scope.backgroundStyle = function() {
 					return {
 						'background-image': 'url(' + $scope.track.trackArtworkURL + ')',
@@ -67,8 +68,8 @@ app.controller('DownloadTrackController', ['$rootScope',
 				$scope.embedTrack = true;
 				$scope.processing = false;
 
-				if($scope.track.showDownloadTracks === 'user') {
-					return DownloadTrackService.getRecentTracks	({
+				if ($scope.track.showDownloadTracks === 'user') {
+					return DownloadTrackService.getRecentTracks({
 						userID: $scope.track.userid,
 						trackID: $scope.track._id
 					});
@@ -78,7 +79,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 			}
 
 			function receiveRecentTracks(res) {
-				if((typeof res === 'object') && res.data){
+				if ((typeof res === 'object') && res.data) {
 					$scope.recentTracks = res.data;
 				}
 				return SC.stream('/tracks/' + $scope.track.trackID);

@@ -78,19 +78,23 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
 
   $scope.makePayment = function() {
     if ($scope.total != 0) {
-      $scope.discountModalInstance = $uibModal.open({
-        animation: true,
-        templateUrl: 'discountModal.html',
-        controller: 'discountModalController',
-        scope: $scope
-      });
-
+      if ($scope.auDLLink) {
+        $scope.discountModalInstance = $uibModal.open({
+          animation: true,
+          templateUrl: 'discountModal.html',
+          controller: 'discountModalController',
+          scope: $scope
+        });
+      } else {
+        $scope.continuePay(false);
+      }
     }
   };
 
   $scope.continuePay = function(discounted) {
-    $scope.discountModalInstance.close();
-
+    if ($scope.discountedModal) {
+      $scope.discountModalInstance.close();
+    }
     $scope.processing = true;
     var pricingObj = {
       channels: [],

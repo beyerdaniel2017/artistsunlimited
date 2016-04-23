@@ -61,7 +61,7 @@ router.put('/save', function(req, res, next) {
             }
             nameString += addString;
           });
-          sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Congratulations on your Submission - " + sub.title , '<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:0"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse"><tr><td><table border="0" cellpadding="0" cellspacing="0" width="100%" style="background:url('+ rootURL +'/assets/images/fade-background.png) no-repeat;color:white;background-size:cover;background-position:center;"><tr><td align="left" style="padding:20px" width="50%"><a href="#"><img src="'+ rootURL +'/assets/images/logo-white.png" height="45" style="height:45px" alt="AU"/></a></td><td align="right" style="font-size:22px;color:white;font-weight:bold;padding:20px" width="50%">Artists <br/>Unlimited</td></tr><tr><td colspan="2" align="center" style="padding:40px 0 30px 0;font-size:28px;font-weight:bold;font-family:Arial,sans-serif;color:white"><h2>We loved the track!</h2><p>The team listened to your '+ sub.title +' <br/>and it got accepted</p></td></tr></table></td></tr><tr><td bgcolor="#ffffff" style="padding:40px 30px 40px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="color:#153643;font-family:Arial,sans-serif;font-size:24px">Hey '+ sub.name +'!</td></tr><tr><td style="padding:20px 0 10px 0;color:#153643;font-family:Arial,sans-serif;font-size:16px;line-height:20px">First of all thank you so much for submitting your track Hilversum Drie - radio edit to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready tobe reposted and shared by Le Sol. All you need to do is click the button below.</td></tr><tr><td style="padding:20px 0 10px 0;color:#153643;font-family:Arial,sans-serif;font-size:16px;line-height:20px">To maintain our feed’s integrity, we do not offer more than 1 repost of the approved track per channel.With that said, if you are interested in more extensive PR packages and campaigns that guaranteeanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budgetplease send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to yourproduction and we hope that in the future you submit your music to our network. Keep working hardand putting your heart into your art, we will be hear to help you with the rest.</td></tr><tr><td style="padding:20px 0 0 0;color:#153643;font-family:Arial,sans-serif;font-size:16px;line-height:20px">All the best,<br/><br/>Edward Sanchez<br/>Peninsula MGMT Team</td></tr></table></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="'+ rootURL +'/pay/'+sub._id+'" style="background-color:#f5bbbc;border:transparent;border-radius:0;padding:14px 50px;color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:3px;text-decoration:none;margin:30px 0;" class="btn btn-enter">Get promoted</a></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="'+ rootURL +'/login" style="color:#f5d3b5">Register and use our Artist Tools</a></td></tr><tr><td style="padding:30px 30px 30px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center" width="33%"><a href="http://www.twitter.com/" style="color:#fff"><img src="'+ rootURL +'/assets/images/email-twitter.png" alt="Twitter" width="38" height="38" style="display:block" border="0"/></a></td><td align="center" width="33%"><a href="http://www.facebook.com/edwardlatropical" style="color:#fff"><img src="'+ rootURL +'/assets/images/email-facebook.png" alt="Facebook" width="38" height="38" style="display:block" border="0"/></a></td><td align="center" width="33%"><a href="http://www.twitter.com/" style="color:#fff"><img src="'+ rootURL +'/assets/images/email-soundcloud.png" alt="SoundColud" width="38" height="38" style="display:block" border="0"/></a></td></tr></table></td></tr></table></td></tr></table>');
+          sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Congratulations on your Submission - " + sub.title, '<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:0"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse"><tr><td><table border="0" cellpadding="0" cellspacing="0" width="100%" style="background:url(' + 'https://artistsunlimited.co' + '/assets/images/fade-background.png) no-repeat;color:white;background-size:cover;background-position:center;"><tr><td align="left" style="padding:20px" width="50%"><a href="https://artistsunlimited.co"><img src="' + 'https://artistsunlimited.co' + '/assets/images/logo-white.png" height="45" style="height:45px" alt="AU"/></a></td><td align="right" style="font-size:22px;color:white;font-weight:bold;padding:20px" width="50%">Artists <br/>Unlimited</td></tr><tr><td colspan="2" align="center" style="padding:40px 0 30px 0;font-size:28px;font-weight:bold;font-family:Arial,sans-serif;color:white"><h2>We loved the track!</h2><p>The team listened to your ' + sub.title + ' <br/>and it got accepted for promotion.</p></td></tr></table></td></tr><tr><td bgcolor="#ffffff" style="padding:40px 30px 40px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="color:#153643;font-family:Arial,sans-serif;font-size:24px">Hey ' + sub.name + '!</td></tr><tr><td style="padding:20px 0 10px 0;color:#153643;font-family:Arial,sans-serif;font-size:16px;line-height:20px">First of all thank you so much for submitting your track Hilversum Drie - radio edit to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready tobe reposted and shared by Le Sol. All you need to do is click the button below.</td></tr><tr><td style="padding:20px 0 10px 0;color:#153643;font-family:Arial,sans-serif;font-size:16px;line-height:20px">To maintain our feed’s integrity, we do not offer more than 1 repost of the approved track per channel.With that said, if you are interested in more extensive PR packages and campaigns that guaranteeanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budgetplease send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to yourproduction and we hope that in the future you submit your music to our network. Keep working hardand putting your heart into your art, we will be hear to help you with the rest.</td></tr><tr><td style="padding:20px 0 0 0;color:#153643;font-family:Arial,sans-serif;font-size:16px;line-height:20px">All the best,<br/><br/>Edward Sanchez<br/>Peninsula MGMT Team<br>www.facebook.com/edwardlatropical</td></tr></table></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/pay/' + sub._id + '" style="background-color:#f5bbbc;border:transparent;border-radius:0;padding:14px 50px;color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:3px;text-decoration:none;margin:30px 0;" class="btn btn-enter">Get promoted</a></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/login" style="color:#f5d3b5">Artist Tools</a></td></tr><tr><td style="padding:30px 30px 30px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center" width="33%"><a href="https://twitter.com/latropicalmusic" style="color:#fff"><img src="' + 'https://artistsunlimited.co' + '/assets/images/email-twitter.png" alt="Twitter" width="38" height="38" style="display:block" border="0"/></a></td><td align="center" width="33%"><a href="https://www.facebook.com/latropicalofficial" style="color:#fff"><img src="' + 'https://artistsunlimited.co' + '/assets/images/email-facebook.png" alt="Facebook" width="38" height="38" style="display:block" border="0"/></a></td><td align="center" width="33%"><a href="https://soundcloud.com/latropical" style="color:#fff"><img src="' + 'https://artistsunlimited.co' + '/assets/images/email-soundcloud.png" alt="SoundColud" width="38" height="38" style="display:block" border="0"/></a></td></tr></table></td></tr></table></td></tr></table>');
           res.send(sub);
         });
     })
@@ -87,6 +87,11 @@ router.get('/withID/:subID', function(req, res, next) {
     .then(null, next);
 });
 
+router.post('/youtubeInquiry', function(req, res, next) {
+  sendEmail('Zach', 'zacharia@peninsulamgmt.com', "Artists Unlimited", "coayscue@artistsunlimited.co", "Youtube Release", "Submitter's name: " + req.body.name + "<br><br>Email: " + req.body.email + "<br><br>Song URL: " + req.body.trackURL);
+  res.end();
+})
+
 router.delete('/ignore/:subID/:password', function(req, res, next) {
   Submission.findByIdAndRemove(req.params.subID).exec()
     .then(function(sub) {
@@ -103,7 +108,6 @@ router.post('/paid', function(req, res, next) {
       invoiceIDS: req.body.resource.invoice.id
     }).exec()
     .then(function(sub) {
-
       var index = sub.channelIDS.indexOf(147045855); //supportify
       if (index == -1) {
         sub.channelIDS.push(147045855);
@@ -310,7 +314,7 @@ router.post('/getPayment', function(req, res, next) {
       channels.forEach(function(ch) {
         total += ch.price;
       });
-      if (req.body.discount) total = Math.floor(total * 0.9);
+      if (req.body.discounted) total = Math.floor(total * 0.9);
       return paypalCalls.makePayment(total, req.body.submission, channels);
     })
     .then(function(payment) {
@@ -341,9 +345,16 @@ router.put('/completedPayment', function(req, res, next) {
     })
     .then(function(submission) {
       sub = responseObj.submission = submission;
+      return paypalCalls.executePayment(submission.payment.id, {
+        payer_id: req.body.PayerID,
+        transactions: submission.payment.transactions
+      });
+    })
+    .then(function(payment) {
+      sub.payment = payment;
       var promiseArray = [];
-      submission.paidChannelIDS.forEach(function(chanID) {
-        promiseArray.push(schedulePaidRepost(chanID, submission));
+      sub.paidChannelIDS.forEach(function(chanID) {
+        promiseArray.push(schedulePaidRepost(chanID, sub));
       });
       return Promise.all(promiseArray)
     })

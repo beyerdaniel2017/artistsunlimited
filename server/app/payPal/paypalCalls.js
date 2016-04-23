@@ -55,8 +55,16 @@ module.exports = {
       });
     });
   },
-  getPayment: function(paymentID) {
-
+  executePayment: function(paymentID, paymentJSON) {
+    return new Promise(function(fulfill, reject){
+      paypal.payment.execute(paymentID, paymentJSON, function(error, payment) {
+          if (error) {
+            reject(error);
+          } else {
+            fulfill(payment);
+          }
+      });
+    })
   },
   sendInvoice: function(submission, channelID) {
     var index = submission.channelIDS.indexOf(channelID);

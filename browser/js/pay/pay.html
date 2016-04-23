@@ -5,59 +5,59 @@
         <div class="col-md-12">
             <div class="content-area bg-white">
                 <div class="row">
-                    <div class="col-md-12" >
-                        <h1 class="bold">Promotion Marketplace</h1>
-                        <h3>Please select all the channels on which you would like to be reposted.</h3>
-                        
-                        <h4 ng-if="!auDLLink" style="color:green">
-                            You are eligible for a 10% discount on reposts if you <a href="#" ng-click="goToLogin()">make your track's download link on Artists Unlimited</a>.
-                        </h4>
-                            
-                        <h4 ng-if="auDLLink" style="color:green">You have a 10% discount for having an <a ui-sref="login" target=>Artists Unlimited download link!</a></h4>
+                 <div class="col-md-12" >
+                    <h1 class="bold">Promotion Marketplace</h1>
+                    <h3>Please select all the channels on which you would like to be reposted.</h3>
 
-                        
-                        <div class="col-md-4"  ng-repeat="channel in channels" style="margin-top: 70px; margin-left: 0px; padding-left: -10px;">
-                            <p class="text-center">
-                                <strong style="font-size: 18px;">{{channel.displayName}}</strong><br/>
-                                <span ng-if="auDLLink" class="intro"> <span style="text-decoration: line-through;"> ${{channel.price}}</span> &nbsp;&nbsp;${{channel.price | calculateDiscount }} </span>
-                                <span ng-if="!auDLLink" class="intro">${{channel.price }}.00 </span> 
-                            </p>
-                            <p><img ng-src="{{channel.avatarURL}}" class="img-responsive" alt="" style="border: 1px solid orange;" / height="200px;" width="300px"></p>
-                            <p>A Channel with a chill vibe, that emphasizes sunny vibes and tropical house.</p>
+                    <h4 ng-if="!auDLLink" style="color:green">
+                        You are eligible for a 10% discount on reposts if you <a href="#" ng-click="goToLogin()">make your track's download link on Artists Unlimited</a>.
+                    </h4>
 
-                            <button ng-show="channel.addtocart" class="btn btn-enter" style="background-color: #F5BBBC; margin-right: auto;margin-left: auto;width: 100%;" ng-click="addToCart(channel)">
-                                Remove cart
-                            </button>                        
+                    <h4 ng-if="auDLLink" style="color:green">You have a 10% discount for having an <a ui-sref="login" target=>Artists Unlimited download link!</a></h4>
 
-                            <button ng-show="!channel.addtocart" class="btn btn-enter" style="background-color: #F6D6A5; margin-right: auto;margin-left: auto;width: 100%;" ng-click="addToCart(channel)">
-                                Add to cart
-                            </button>
-                        </div>
-                     
-                        <div class="clearfix"></div>
-                        <div style="margin: 30px 0px 10px 0px;display: inline-block;width: 100%;">
-                     
-                       <button class="btn btn-enter" style="float: right; background-color: transparent; color: grey; outline: none; box-shadow: none;padding: 10px 0px;margin: 0px;" ng-click="makePayment()">Proceed to Checkout</button>
-                       </div>
-                     
-                        <div id="scPlayer" style="margin:30px 0"></div>
+
+                    <div class="col-md-4"  ng-repeat="channel in channels" style="margin-top: 70px; margin-left: 0px; padding-left: -10px;">
+                        <p class="text-center">
+                            <strong style="font-size: 18px;">{{channel.displayName}}</strong><br/>
+                            <span ng-if="auDLLink" class="intro"> <span style="text-decoration: line-through;"> ${{channel.price}}</span> &nbsp;&nbsp;${{channel.price | calculateDiscount }} </span>
+                            <span ng-if="!auDLLink" class="intro">${{channel.price }}.00 </span> 
+                        </p>
+                        <p><img ng-src="{{channel.avatarURL}}" class="img-responsive" alt="" style="border: 1px solid orange;" / height="200px;" width="300px"></p>
+                        <p>A Channel with a chill vibe, that emphasizes sunny vibes and tropical house.</p>
+
+                        <button ng-show="channel.addtocart" class="btn btn-enter" style="background-color: #F5BBBC; margin-right: auto;margin-left: auto;width: 100%;" ng-click="addToCart(channel)">
+                            Remove cart
+                        </button>                        
+
+                        <button ng-show="!channel.addtocart" class="btn btn-enter" style="background-color: #F6D6A5; margin-right: auto;margin-left: auto;width: 100%;" ng-click="addToCart(channel)">
+                            Add to cart
+                        </button>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+                    <div class="clearfix"></div>
+                    <div style="margin: 30px 0px 10px 0px;display: inline-block;width: 100%;">
+
+                       <button class="btn btn-enter" style="float: right; background-color: transparent; color: grey; outline: none; box-shadow: none;padding: 10px 0px;margin: 0px;" ng-click="makePayment()">Proceed to Checkout</button>
+                   </div>
+
+                   <div id="scPlayer" style="margin:30px 0"></div>
+               </div>
+           </div>
+       </div>
+   </div>
+</div>
 </div>
 
 <ng-include src="'js/home/views/loader.html'"> </ng-include>
 
 <script type="text/ng-template" id="discountModal.html">
     <div class="modal-header">
-    <h3 class="modal-title" style="text-align:center">Discount Terms</h3>
-    <br>
-    <p style="text-align:center">By accepting the discount, you agree to keep the AU download link or your track will not be reposted and you will not receive a refund. You can choose to accept or decline the discount.
-    </div>
-    <div class="modal-body" style="display:flex; flex-direction: row; justify-content:space-between;">
-    <button class="btn btn-info" ng-click="continuePay(false)">Decline Discount</button>
-    <button class="btn btn-success pull-right" ng-click="continuePay(true)">Accept Discount</button>
-    </div>
-</script>
+        <h3 class="modal-title" style="text-align:center">Discount Terms</h3>
+        <br>
+        <p style="text-align:center">By accepting the discount, you agree to keep the AU download link or your track will not be reposted and you will not receive a refund. You can choose to accept or decline the discount.
+        </div>
+        <div class="modal-body" style="display:flex; flex-direction: row; justify-content:space-between;">
+            <button class="btn btn-info" ng-click="continuePay(false)">Decline Discount</button>
+            <button class="btn btn-success pull-right" ng-click="continuePay(true)">Accept Discount</button>
+        </div>
+    </script>

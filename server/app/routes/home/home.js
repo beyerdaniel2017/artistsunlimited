@@ -45,7 +45,7 @@ router.post('/application', function(req, res, next) {
         '<b>Email: </b> ' + applicationObj.email +
         '<br />' +
         '<br />';
-      sendEmail('Edward', 'edward@peninsulamgmt.com', 'Support', 'coayscue@artistsunlimited.co', 'Application Submission', emailBody);
+      sendEmail('Edward', 'edward@peninsulamgmt.com', 'Artists Unlimited', 'coayscue@artistsunlimited.co', 'Application Submission', emailBody);
       res.end();
     })
     .then(null, function(err) {
