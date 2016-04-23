@@ -359,7 +359,6 @@
           secretAccessKey: awsConfig.secretAccessKey,
         });
 
-        console.log('getting image');
         var artworkimageURL = "";
         if (body.fields.trackArtworkURL == "") artworkimageURL = body.fields.artistArtworkURL
         else artworkimageURL = body.fields.trackArtworkURL;
@@ -378,7 +377,6 @@
               title: body.fields.trackTitle,
               album: 'ArtistsUnlimited.co'
             }, [coverImage]);
-
 
             writer.setFile(mp3).write(meta, function(err) {
               if (err) {
