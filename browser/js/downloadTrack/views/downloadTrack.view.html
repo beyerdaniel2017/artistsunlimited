@@ -1,17 +1,17 @@
 <ng-include src="'js/home/views/navigation.html'"></ng-include>
-  
-<!-- Sidebar Start -->
- <div class="sidebar-tracks" ng-show="recentTracks.length > 0">
-     <div class="songs-list text-center" ng-repeat="item in recentTracks">
-       <a ng-href="/download?trackid={{item._id}}" target="_blank">
-         <img class="avatar" ng-src="{{item.trackArtworkURL}}"/>
-         {{item.trackTitle}}
-       </a>
-     </div>
- </div>
- <!-- Sidebar End -->
 
- <!-- Content Start  -->
+<!-- Sidebar Start -->
+<div class="sidebar-tracks" ng-show="recentTracks.length > 0">
+ <div class="songs-list text-center" ng-repeat="item in recentTracks">
+   <a ng-href="/download?trackid={{item._id}}" target="_blank">
+     <img class="avatar" ng-src="{{item.trackArtworkURL}}"/>
+     {{item.trackTitle}}
+   </a>
+ </div>
+</div>
+<!-- Sidebar End -->
+
+<!-- Content Start  -->
 <div class="container" ng-init="getDownloadTrack()">
   <div class="row">
     <div class="col-md-12">
@@ -29,30 +29,34 @@
                 </div>
                 <div class="follow-bottom">
                  <h4>{{track.trackTitle}}</h4>
-                  <a ng-href="{{track.artistURL}}" target="_blank"><img class="avatar" ng-src="{{track.artistArtworkURL}}"/> {{track.artistUsername}}</a>
-                  <p class="text-justify pad-download-agreement">
-                    By downloading this song you agree to: <img src="assets/images/favorite_icon.png" style="width:14px; height:12px;"> the track, <img src="assets/images/repost_icon.png" style="width:16px; height:12px;"> the track, and follow {{track.artistUsername}}
-<!--                     <span ng-repeat="artist in track.artists">, {{artist.username}}</span><span ng-if="track.creatorEmail == 'admin@au.com'"> and our network.</span> -->
-                  </p>
-                </div>  
-              </div>
-              <input type="text" ng-model="track.commentText" placeholder="Comment" ng-if="track.comment" style="width:360px; height:30px; margin-bottom:5px">
-              <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em;" href="javascript:void(0)" ng-click="downloadTrack()">CONNECT & DOWNLOAD</a>
-              <br>
-              <br>
-              <div>
-                <div ng-repeat="(name, url) in track.SMLinks" style="display:inline-block; margin:5px 10px;">
-                  <a href="{{url}}" target="_blank">
-                    <img src="assets/images/{{name}}_icon.png" style="width:40px; height:40px;">
-                  </a>
-                </div>
+                 <a ng-href="{{track.artistURL}}" target="_blank"><img class="avatar" ng-src="{{track.artistArtworkURL}}"/> {{track.artistUsername}}</a>
+                 <p class="text-justify pad-download-agreement">
+                  By downloading this song you agree to: <img src="assets/images/favorite_icon.png" style="width:14px; height:12px;"> the track, <img src="assets/images/repost_icon.png" style="width:16px; height:12px;"> the track, and follow {{track.artistUsername}}
+                  <span ng-repeat="artist in track.artists" ng-if="!track.admin">
+                    , {{artist.username}} 
+                  </span>
+                  <span ng-if="track.admin"> and our network</span>
+                  .
+                </p>
+              </div>  
+            </div>
+            <input type="text" ng-model="track.commentText" placeholder="Comment" ng-if="track.comment" style="width:360px; height:30px; margin-bottom:5px">
+            <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em;" href="javascript:void(0)" ng-click="downloadTrack()">CONNECT & DOWNLOAD</a>
+            <br>
+            <br>
+            <div>
+              <div ng-repeat="(name, url) in track.SMLinks" style="display:inline-block; margin:5px 10px;">
+                <a href="{{url}}" target="_blank">
+                  <img src="assets/images/{{name}}_icon.png" style="width:40px; height:40px;">
+                </a>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>  
-  </div>
+    </div>
+  </div>  
+</div>
 </div>        
 
 <ng-include src="'js/home/views/loader.html'"></ng-include>

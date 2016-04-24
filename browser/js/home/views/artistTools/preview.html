@@ -18,7 +18,6 @@
             <div class="content-area follow-area">
                 <div class="row">
                     <div class="col-md-12">
-                        <!-- <div class="follow-container blur-container" ng-style="backgroundStyle()"></div> -->
                         <div class="col-md-4 col-md-offset-4 text-center follow-box-container">
                             <div class="follow-box">
                                 <div class="custom-sc-player" ng-style="backgroundStyle()" style='background-image: url("{{track.trackArtworkURL}}"); background-size: cover; background-repeat: no-repeat;'>
@@ -31,35 +30,38 @@
                                     <h4>{{track.trackTitle}}</h4>
                                     <a ng-href="{{track.artistURL}}" target="_blank"><img class="avatar" ng-src="{{track.artistArtworkURL}}"/> {{track.artistUsername}}</a>
                                     <p class="text-justify pad-download-agreement">
-                                        By downloading this song you agree to: <img src="assets/images/favorite_icon.png" style="width:14px; height:12px;"> the track, <img src="assets/images/repost_icon.png" style="width:16px; height:12px;"> the track, and follow {{track.artistUsername}},
-                                        <span ng-repeat="artist in track.artists">
-                                            {{artist.username}}<span ng-hide="$index + 1 === track.artists.length">,</span></span>
-                                        </p>
-                                    </div>  
-                                </div>
-                                <input type="text" class="form-control" ng-model="track.commentText" placeholder="Comment" ng-if="track.comment" style="width:360px; height:30px; margin-bottom:5px">
-                                <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em;" href="javascript:void(0)">CONNECT & DOWNLOAD</a>
-                                <br>
-                                <br>
-                                <div>
-                                    <div ng-repeat="sml in track.SMLinks" style="display:inline-block; margin:5px 10px;">
-                                        <a href="{{sml.value}}" target="_blank">
-                                            <img src="assets/images/{{sml.key}}_icon.png" style="width:40px; height:40px;">
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <br/>
-                                <br/>
-
-                                <div class="col-md-12 text-center">
-                                    <!--<a href="#" class="btn btn-enter" ng-click="goBack();">Back</a>-->
-                                </div>
-
+                                        By downloading this song you agree to: <img src="assets/images/favorite_icon.png" style="width:14px; height:12px;"> the track, <img src="assets/images/repost_icon.png" style="width:16px; height:12px;"> the track, and follow {{track.artistUsername}}
+                                        <span ng-repeat="artist in track.artists" ng-if="!track.admin">
+                                            , {{artist.username}} 
+                                        </span>
+                                        <span ng-if="track.admin"> and our network</span>
+                                        .
+                                    </p>
+                                </div>  
                             </div>
+                            <input type="text" class="form-control" ng-model="track.commentText" placeholder="Comment" ng-if="track.comment" style="width:360px; height:30px; margin-bottom:5px">
+                            <button class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em;" ng-click="nodl()">CONNECT & DOWNLOAD</button>
+                            <br>
+                            <br>
+                            <div>
+                                <div ng-repeat="sml in track.SMLinks" style="display:inline-block; margin:5px 10px;">
+                                    <a href="{{sml.value}}" target="_blank">
+                                        <img src="assets/images/{{sml.key}}_icon.png" style="width:40px; height:40px;">
+                                    </a>
+                                </div>
+                            </div>
+
+                            <br/>
+                            <br/>
+
+                            <div class="col-md-12 text-center">
+                                <!--<a href="#" class="btn btn-enter" ng-click="goBack();">Back</a>-->
+                            </div>
+
                         </div>
                     </div>
                 </div>
-            </div>  
-        </div>
+            </div>
+        </div>  
     </div>
+</div>

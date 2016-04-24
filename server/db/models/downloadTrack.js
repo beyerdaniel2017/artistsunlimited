@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
   userid: {
-    type: mongoose.Schema.Types.ObjectId, 
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
   trackURL: {
@@ -10,6 +10,9 @@ var schema = new mongoose.Schema({
   },
   artistURL: {
     type: String
+  },
+  artistID: {
+    type: Number
   },
   downloadURL: {
     type: String
@@ -56,13 +59,16 @@ var schema = new mongoose.Schema({
   showDownloadTracks: {
     type: String
   },
+  admin: {
+    type: Boolean
+  },
   createdOn: {
-      type: Date, 
-      default: Date.now 
+    type: Date,
+    default: Date.now
   },
   updatedOn: {
-      type: Date, 
-      default: Date.now 
+    type: Date,
+    default: Date.now
   }
 });
 

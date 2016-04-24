@@ -92,6 +92,11 @@ router.post('/youtubeInquiry', function(req, res, next) {
   res.end();
 })
 
+router.post('/sendMoreInquiry', function(req, res, next) {
+  sendEmail(req.body.name, req.body.email, "Edward Sanchez", "edward@peninsulamgmt.com", 'Loved your submissions', "Hey " + req.body.name + ",<br><br>My name is Edward and I’m one of the managers here at AU. Your name appeared in our system after you submitted your track online. Normally there is not much worth looking into on their but yours has caught my eye.<br><br>I’d love to hear more of your work. We would love to potentially release one of your tracks on our network. Do you have a plan or anything in particular that you were looking for from us?<br><br>Looking forward to hearing from you.<br><br>Cheers<br><br>Edward Sanchez<br>AU Team<br>www.facebook.com/edwardlatropical");
+  res.end();
+})
+
 router.delete('/ignore/:subID/:password', function(req, res, next) {
   Submission.findByIdAndRemove(req.params.subID).exec()
     .then(function(sub) {

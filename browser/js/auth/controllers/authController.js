@@ -2,7 +2,7 @@ app.config(function($stateProvider) {
   $stateProvider
     .state('login', {
       url: '/login',
-      params: { 
+      params: {
         submission: null
       },
       templateUrl: 'js/auth/views/login.html',
@@ -22,15 +22,15 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
     visible: false
   };
   $scope.openModal = {
-      signupConfirm: function() {        
-        $scope.modalInstance = $uibModal.open({
-          animation: true,
-          templateUrl: 'signupComplete.html',
-          controller: 'AuthController',
-          scope: $scope
-        });
-      }
-    };
+    signupConfirm: function() {
+      $scope.modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'signupComplete.html',
+        controller: 'AuthController',
+        scope: $scope
+      });
+    }
+  };
   $scope.login = function() {
     $scope.message = {
       val: '',
@@ -40,11 +40,11 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
       .login($scope.loginObj)
       .then(handleLoginResponse)
       .catch(handleLoginError)
-    
+
     function handleLoginResponse(res) {
-      if(res.status === 200 && res.data.success) {
+      if (res.status === 200 && res.data.success) {
         SessionService.create(res.data.user);
-        $state.go('artistTools.downloadGateway.list');
+        $state.go('artistToolsDownloadGatewayList');
       } else {
         $scope.message = {
           val: res.data.message,
@@ -62,7 +62,7 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
   };
 
   $scope.checkIfSubmission = function() {
-    if($stateParams.submission) {
+    if ($stateParams.submission) {
       $scope.soundcloudLogin();
     }
   }
@@ -73,7 +73,7 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
       val: '',
       visible: false
     };
-    if($scope.signupObj.password != $scope.signupObj.confirmPassword) {
+    if ($scope.signupObj.password != $scope.signupObj.confirmPassword) {
       $scope.message = {
         val: 'Password doesn\'t match with confirm password',
         visible: true
@@ -84,34 +84,37 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
       .signup($scope.signupObj)
       .then(handleSignupResponse)
       .catch(handleSignupError)
-    
+
     function handleSignupResponse(res) {
       $state.go('login');
     }
 
-    function handleSignupError(res) {
-    }
+    function handleSignupError(res) {}
   };
 
   $scope.soundcloudLogin = function() {
     SC.connect()
-      .then(function (res) {
+      .then(function(res) {
         $rootScope.accessToken = res.oauth_token;
         return $http.post('/api/login/soundCloudLogin', {
           token: res.oauth_token,
           password: 'test'
         });
       })
-      .then(function (res) {
+      .then(function(res) {
         $scope.processing = false;
+        console.log($state.get());
         SessionService.create(res.data.user);
-        if($stateParams.submission) {
-          $state.go('artistTools.downloadGateway.new', { 'submission' : $stateParams.submission});
+        if ($stateParams.submission) {
+          $state.go('artistToolsDownloadGatewayNew', {
+            'submission': $stateParams.submission
+          });
           return;
         }
-        $state.go('artistTools.downloadGateway.list');
+        $state.go('artistToolsDownloadGatewayList');
       })
-      .then(null, function (err) {
+      .then(null, function(err) {
+        console.log(err);
         alert('Error: Could not log in');
         $scope.processing = false;
       });

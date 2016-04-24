@@ -5,7 +5,7 @@
   	<ng-include src="'js/home/views/artistTools/navigation.html'"></ng-include>
   	<div class="row">
 	  	<div class="col-md-12 text-center">
-	      <a href="#" class="btn btn-enter" ui-sref="artistTools.downloadGateway.new">Add New</a>
+	      <a href="#" class="btn btn-enter" ui-sref="artistToolsDownloadGatewayNew">Add New</a>
 	    </div>
 	  </div>
 	  <div class="row">
@@ -24,7 +24,7 @@
 		        <td>{{item.artistUsername}}</td>
 		        <td>{{item.downloadCount ? item.downloadCount : 0}}</td>
 		        <td>
-		        	<a href="#" ui-sref="artistTools.downloadGateway.edit({ gatewayID: item._id})" ui-sref-opts="{reload: true}">Edit</a><span> | </span>
+		        	<a href="#" ui-sref="artistToolsDownloadGatewayEdit({ gatewayID: item._id})" ui-sref-opts="{reload: true}">Edit</a><span> | </span>
 		        	<a href="#" ng-click="deleteDownloadGateway($index)">Delete</a>
 		        </td>
 		      </tr>

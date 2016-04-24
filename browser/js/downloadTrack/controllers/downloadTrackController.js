@@ -48,7 +48,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 			$scope.processing = true;
 			var trackID = $location.search().trackid;
 			DownloadTrackService
-			.getDownloadTrack(trackID)
+				.getDownloadTrack(trackID)
 				.then(receiveDownloadTrack)
 				.then(receiveRecentTracks)
 				.then(initPlay)
