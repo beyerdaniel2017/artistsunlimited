@@ -297,7 +297,7 @@
 
           var buffer = new Buffer('');
           var type = mimetype.split('/')[1];
-          var newfilename = (filename.substr(0, filename.lastIndexOf('.')) || filename) + '_' + Date.now().toString() + '.' + type;
+          var newfilename = (filename.substr(0, filename.lastIndexOf('.')) || filename) + '_' + Math.floor(Math.random() * 50) + '.' + type;
           var mp3Stream = fs.createWriteStream('tmp/' + newfilename);
 
           file.pipe(mp3Stream);
