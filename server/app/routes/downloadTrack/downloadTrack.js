@@ -61,23 +61,26 @@ router.post('/tasks', function(req, res, next) {
   if (body.artists) {
     body.artists.forEach(function(artist) {
       SC.put('/me/followings/' + artist.id, function(err, response) {
-        if (err) console.log('error following: ' + JSON.stringify(err));
+        if (err) console.log('error following added artist: ' + JSON.stringify(err));
       });
     });
   }
-
   if (body.userid) {
     User.findOne({
       _id: body.userid
     }).exec().then(function(user) {
       user.permanentLinks.forEach(function(artist) {
         SC.put('/me/followings/' + artist.id, function(err, response) {
-          if (err) console.log('error following: ' + JSON.stringify(err));
+          if (err) console.log('error following a permanet: ' + JSON.stringify(err));
         });
       });
     });
   }
-
+  if (body.artistID) {
+    SC.put('/me/followings/' + body.artistID, function(err, response) {
+      if (err) console.log('error following main artist: ' + JSON.stringify(err));
+    });
+  }
   if (body.playlists) {
     body.playlists.forEach(function(playlist) {
       SCR.put('/e1/me/playlist_reposts/' + playlist.id, body.token, function(err, data) {
@@ -91,123 +94,92 @@ router.post('/tasks', function(req, res, next) {
   SCR.put('/e1/me/track_reposts/' + body.trackID, body.token, function(err, data) {
     if (err) console.log('error reposting the track: ' + JSON.stringify(err));
   });
-
-  findDownloadTrackById()
-    .then(findUserByIdSAndSaveTrack)
-    .then(findUser)
-    .then(createUser)
-
-  function findDownloadTrackById() {
-    return DownloadTrack.findById(body._id).exec();
-  }
-
-  function findUserByIdSAndSaveTrack(t) {
-    if (t.downloadCount) t.downloadCount++;
-    else t.downloadCount = 1;
-
-    if (!t.artists) {
-      t.artists = [];
-    }
-    User
-      .findById(body.userid)
-      .exec()
-      .then(function(user) {
-        user.permanentLinks.forEach(function(link) {
-          SC.put('/me/followings/' + link.id, function(err, response) {
-            if (err) console.log('error following: ' + JSON.stringify(err));
-          });
-          var exists = t.artists.some(function(artist) {
-            return link.id === artist.id;
-          });
-          if (!exists) {
-            t.artists.push(link);
-          }
-        });
-        return t.save();
-      })
-      .then(null, function() {
-        return Promise.resolve();
-      });
-  }
-
-  function findUser() {
-    return new Promise(function(resolve, reject) {
-      if (req.user) {
-        return resolve();
-      } else {
-        SC.get('/me', function(err, data) {
-          if (err) {
-            resolve();
-          }
-          User
-            .findOne({
-              'soundcloud.id': data.id
-            })
-            .exec()
-            .then(function(user) {
-              if (user) {
-                resolve();
-              } else {
-                resolve(data);
-              }
-            })
-            .then(null, function(err) {
-              resolve();
-            });
-        });
-      }
-    });
-  }
-
-  function createUser(data) {
-    if (data) {
-      var newUser = new User({
-        'name': data.username,
-        'soundcloud': {
-          'id': data.id,
-          'username': data.username,
-          'permalinkURL': data.permalink_url,
-          'avatarURL': data.avatar_url,
-          'token': body.token
-        }
-      });
-      newUser.save();
-      return res.end();
-    } else {
-      return res.end();
-    }
-  }
-
-  // DownloadTrack.findById(body._id).exec()
-  //   .then(function(t) {
-  //     if (t.downloadCount) t.downloadCount++;
-  //     else t.downloadCount = 1;
-
-  //     if (!t.artists) {
-  //       t.artists = [];
-  //     }
-
-  //     User.findById(body.userid).exec().then(function(user) {
-  //       user.permanentLinks.forEach(function(link) {
-  //         SC.put('/me/followings/' + link.id, function(err, response) {
-  //           if (err) console.log('error following: ' + JSON.stringify(err));
-  //         });
-  //         var exists = t.artists.some(function(artist) {
-  //           return link.id === artist.id;
-  //         });
-  //         if (!exists) {
-  //           t.artists.push(link);
-  //         }
-  //       });
-
-  //       t.save();
-  //     });
-  //   });
-
-  // setTimeout(function() {
-  //   res.end();
-  // }, 4000)
+  DownloadTrack.findById(body._id).exec()
+    .then(function(t) {
+      if (t.downloadCount) t.downloadCount++;
+      else t.downloadCount = 1;
+      t.save();
+      res.end();
+    })
 });
+
+
+//   function findUserByIdSAndSaveTrack(t) {
+
+
+//     if (!t.artists) {
+//       t.artists = [];
+//     }
+//     User
+//       .findById(body.userid)
+//       .exec()
+//       .then(function(user) {
+//         user.permanentLinks.forEach(function(link) {
+//           SC.put('/me/followings/' + link.id, function(err, response) {
+//             if (err) console.log('error following: ' + JSON.stringify(err));
+//           });
+//           var exists = t.artists.some(function(artist) {
+//             return link.id === artist.id;
+//           });
+//           if (!exists) {
+//             t.artists.push(link);
+//           }
+//         });
+//         return t.save();
+//       })
+//       .then(null, function() {
+//         return Promise.resolve();
+//       });
+//   }
+
+//   function findUser() {
+//     return new Promise(function(resolve, reject) {
+//       if (req.user) {
+//         return resolve();
+//       } else {
+//         SC.get('/me', function(err, data) {
+//           if (err) {
+//             resolve();
+//           }
+//           User
+//             .findOne({
+//               'soundcloud.id': data.id
+//             })
+//             .exec()
+//             .then(function(user) {
+//               if (user) {
+//                 resolve();
+//               } else {
+//                 resolve(data);
+//               }
+//             })
+//             .then(null, function(err) {
+//               resolve();
+//             });
+//         });
+//       }
+//     });
+//   }
+
+//   function createUser(data) {
+//     if (data) {
+//       var newUser = new User({
+//         'name': data.username,
+//         'soundcloud': {
+//           'id': data.id,
+//           'username': data.username,
+//           'permalinkURL': data.permalink_url,
+//           'avatarURL': data.avatar_url,
+//           'token': body.token
+//         }
+//       });
+//       newUser.save();
+//       return res.end();
+//     } else {
+//       return res.end();
+//     }
+//   }
+// });
 
 router.get('/track/recent', function(req, res, next) {
   var userID = req.query.userID;

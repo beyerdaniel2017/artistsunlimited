@@ -1,14 +1,14 @@
 <div>
-  </br>
+  <br>
   <div style="text-align: center">
     <h2 style="display:inline;text-align:center">Download Gate</h2>
     <div style="clear:both"></div>
   </div>
-  </br>
+  <br>
   <div style="text-align: center">
     <ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
   </div>
-  </br>
+  <br>
   <div class="content-area bg-white" ng-init="checkIfEdit()">
     <div class="row">
       <!-- Download Section Start -->
@@ -45,7 +45,7 @@
               <span class="twitter"></span>
               <a class="close-ic" href="#"><img src="assets/images/close.png"></a>
             </div> -->
-            <a href="#" ng-click="addSMLink()">+Add Social Media...</a>
+            <a href="#" ng-click="addSMLink()" style="font-size:1.5em">+</a>
           </div>
            <div class="social-container">
             <h4>Download URL</h4>
@@ -65,7 +65,7 @@
               <a class="pro-icon" href="#"><img class="profile-icon" ng-src="{{artist.avatar}}"></a>
               <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeArtist($index)"></a>
             </div>
-            <a href="#" ng-click="addArtist()">+ Add Artist...</a>
+            <a href="#" ng-click="addArtist()" ng-hide="track.artists.length > 2" style="font-size:1.5em">+</a>
           </div>
           <div class="artist-follow">
             <h4>Playlist URLs</h4>
@@ -74,11 +74,11 @@
               <a class="pro-icon" href="#"><img class="profile-icon" ng-src="{{playlist.avatar}}"></a>
               <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePlaylist($index)"></a>
             </div>
-            <a href="#" ng-click="addPlaylist()">+ Add Playlist...</a>
+            <a href="#" ng-click="addPlaylist()" style="font-size:1.5em">+</a>
           </div>
           <div class="social-container">
-            <h4>Social Media Links</h4>
-            <small class="orange-text">By Downloading you agree to:</small>
+            <h4>Actions</h4>
+            <small class="orange-text">To Download:</small>
             <div class="checkbox-container">
               <ul>
                 <li>
