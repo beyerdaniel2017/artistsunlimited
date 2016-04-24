@@ -28,8 +28,8 @@
   var rootURL = require('./../../../env').ROOTURL;
 
 
-  // var id3 = require('id3-writer');
-  // var writer = new id3.Writer();
+  var id3 = require('id3-writer');
+  var writer = new id3.Writer();
 
   router.post('/adduser', function(req, res, next) {
     // if (req.body.password != 'letMeManage') next(new Error('wrong password'));
@@ -366,41 +366,41 @@
           res.pipe(imageStream);
           res.on('end', function() {
             imageStream.end();
-            // var mp3 = new id3.File('tmp/' + body.file.newfilename);
-            // var coverImage = new id3.Image("tmp/" + body.file.newfilename + ".jpg");
-            // var meta = new id3.Meta({
-            //   artist: body.fields.artistUsername,
-            //   title: body.fields.trackTitle,
-            //   album: 'ArtistsUnlimited.co'
-            // }, [coverImage]);
+            var mp3 = new id3.File('tmp/' + body.file.newfilename);
+            var coverImage = new id3.Image("tmp/" + body.file.newfilename + ".jpg");
+            var meta = new id3.Meta({
+              artist: body.fields.artistUsername,
+              title: body.fields.trackTitle,
+              album: 'ArtistsUnlimited.co'
+            }, [coverImage]);
 
-            // writer.setFile(mp3).write(meta, function(err) {
-            //   if (err) {
-            //     reject(err);
-            //   }
-            //   fs.unlink("tmp/" + body.file.newfilename + ".jpg");
-            //   fs.readFile("tmp/" + body.file.newfilename, function(err, data) {
-            //     var data = {
-            //       Key: body.file.newfilename,
-            //       Body: data,
-            //       ContentType: body.file.mimetype,
-            //       ContentDisposition: 'attachment'
-            //     };
-            //     fs.unlink("tmp/" + body.file.newfilename);
-            var s3 = new AWS.S3({
-              params: {
-                Bucket: awsConfig.bucketName
-              }
-            });
-            s3.upload(data, function(err, data) {
+            writer.setFile(mp3).write(meta, function(err) {
               if (err) {
                 reject(err);
-              } else {
-                resolve(data);
               }
+              fs.unlink("tmp/" + body.file.newfilename + ".jpg");
+              fs.readFile("tmp/" + body.file.newfilename, function(err, data) {
+                var data = {
+                  Key: body.file.newfilename,
+                  Body: data,
+                  ContentType: body.file.mimetype,
+                  ContentDisposition: 'attachment'
+                };
+                fs.unlink("tmp/" + body.file.newfilename);
+                var s3 = new AWS.S3({
+                  params: {
+                    Bucket: awsConfig.bucketName
+                  }
+                });
+                s3.upload(data, function(err, data) {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve(data);
+                  }
+                });
+              })
             });
-            //   })
-            // });
           });
         });
       });
