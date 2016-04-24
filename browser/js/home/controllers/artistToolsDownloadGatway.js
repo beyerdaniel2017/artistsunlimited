@@ -27,13 +27,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
         like: false,
         comment: false,
         repost: false,
-        artists: [{
-            url: '',
-            avatar: '',
-            username: '',
-            id: -1,
-            permanentLink: false
-        }],
+        artists: [],
         showDownloadTracks: 'user',
         admin: $scope.user.admin,
         file: {}
@@ -97,9 +91,8 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
         $scope.track.SMLinks.splice(index, 1);
     };
 
-
     $scope.saveDownloadGate = function() {
-        if (!($scope.track.downloadURL || $scope.track.file)) {
+        if (!($scope.track.downloadURL || $scope.track.file.name)) {
             alert('Enter a download file');
             return false;
         }
@@ -108,7 +101,6 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
             alert('Track Not Found');
             return false;
         }
-        console.log($scope.track);
         $scope.processing = true;
         var sendObj = new FormData();
         for (var prop in $scope.track) {
@@ -129,7 +121,6 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
         if ($scope.track.playlists) {
             sendObj.append('playlists', JSON.stringify($scope.track.playlists));
         }
-        console.log(sendObj);
 
         var options = {
             method: 'POST',
@@ -147,9 +138,9 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
                     $state.go('artistToolsDownloadGatewayList', {
                         'submission': $stateParams.submission
                     });
-                    return;
+                } else {
+                    $state.go('artistToolsDownloadGatewayList');
                 }
-                $state.go('artistToolsDownloadGatewayList');
             })
             .then(null, function(err) {
                 $scope.processing = false;
@@ -392,7 +383,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
             $scope.track.permanentLinks = permanentLinksArray;
             $scope.track.playlistIDS = [];
             // $scope.track.showDownloadTracks = ($scope.track.showDownloadTracks === 'user') ? true : false;
-
+            console.log($scope.track);
             $scope.processing = false;
         }
 

@@ -99,6 +99,7 @@ router.post('/tasks', function(req, res, next) {
       if (t.downloadCount) t.downloadCount++;
       else t.downloadCount = 1;
       t.save();
+      res.end();
     })
 });
 

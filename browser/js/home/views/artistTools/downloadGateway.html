@@ -13,7 +13,7 @@
                         <!-- <a class="close-ic" href="#"><img src="assets/images/close.png"></a> -->
                     </div>
                     <select class="form-control" ng-model="trackListObj" ng-options="item.title for item in trackList" ng-change="trackListChange()" ng-show="trackList.length > 0">
-                        <option value="" ng-disabled="!!trackListObj">--Select Track--</option>
+                        <option value="" ng-disabled="!!trackListObj">-My Songs-</option>
                     </select>
                     <!-- <a class="close-ic" href="#"><img src="assets/images/close.png"></a> -->
                 </div>
@@ -26,10 +26,10 @@
                         <a href="#"><img class="avatar" ng-src="{{track.artistArtworkURL}}">{{' ' + track.artistUsername}}</a>
                         <p class="text-justify pad-download-agreement">
                             By downloading this song you agree to: <img src="assets/images/favorite_icon.png" style="width:14px; height:12px;"> the track, <img src="assets/images/repost_icon.png" style="width:16px; height:12px;"> the track, and follow {{track.artistUsername}}
-                            <span ng-repeat="artist in track.artists" ng-if="!track.admin">
+                            <span ng-repeat="artist in track.artists" ng-show="!track.admin">
                                 , {{artist.username}} 
                             </span>
-                            <span ng-if="track.admin"> and our network</span>
+                            <span ng-show="!!track.admin"> and our network</span>
                             .
                         </p>
                     </div>
@@ -41,8 +41,8 @@
                         <h4>Social Media Links</h4>
                         <div class="social-media-links" ng-repeat="item in track.SMLinks">
                             <input class="form-control" type="text" placeholder="Link" ng-model="item.value" ng-change="SMLinkChange($index)"/>
-                            <span class="{{item.key}}"></span>
-                            <a class="close-ic" href="#" ng-click="removeSMLink($index)"><img src="assets/images/close.png"></a>
+                            <span class="{{item.key}}"></span>                            
+                            <a class="close-ic-rel" href="#" ng-click="removeSMLink($index)"><img src="assets/images/close.png"></a>
                         </div>
                         <a href="#" ng-click="addSMLink()">+ Social Media</a>
                     </div>
@@ -56,12 +56,12 @@
                         <a href="#" ng-click="addPlaylist()">+ Playlist</a>
                     </div>
                     <div class="social-container">
-                        <h4>Download URL</h4>
-                        <div>
+                        <h4>Download File</h4>
+                        <div>                                                   
+                            <input class="form-control" type="file" accept=".mp3" fileread="track.file" message="message" ng-click="clearOrInput()"/>
+                            <div class="text-center">Adds the album artwork, song title, and artist's name to the .mp3 file.</div>
+                            <div class="text-center">Or</div>
                             <input class="form-control" type="text" placeholder="Link" ng-model="track.downloadURL" ng-keyup="clearOrFile()"/>
-                            <div class="text-center">Or</div>                            
-                            <input class="form-control" type="file" accept=".mp3" message="message" id="upload" ng-model="track.file" ng-click="clearOrInput()" />
-                            <span>Note: adds the album artwork, song title, and artist's name to the .mp3 file.</span>
                         </div>
                     </div>
                     <div class="social-container">

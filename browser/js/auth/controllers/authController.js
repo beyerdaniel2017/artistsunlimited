@@ -103,7 +103,6 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
       })
       .then(function(res) {
         $scope.processing = false;
-        console.log($state.get());
         SessionService.create(res.data.user);
         if ($stateParams.submission) {
           $state.go('artistToolsDownloadGatewayNew', {

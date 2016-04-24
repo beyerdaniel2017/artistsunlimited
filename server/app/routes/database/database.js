@@ -272,7 +272,6 @@
         .then(checkIfFile)
         .then(saveDownloadTrack)
         .then(updateSoundCloudTrackInfo)
-        .then(sendMailAndAddPermanentLinksToAdmin)
         .then(handleResponse)
         .then(null, function(err) {
           console.log(err, 'err');
@@ -340,7 +339,6 @@
           uploadToBucket()
             .then(function(result) {
               body.location = result.Location;
-              console.log(result.Location);
               resolve();
             })
             .catch(function(err) {
@@ -369,9 +367,7 @@
           res.on('end', function() {
             imageStream.end();
             var mp3 = new id3.File('tmp/' + body.file.newfilename);
-            console.log(mp3);
             var coverImage = new id3.Image("tmp/" + body.file.newfilename + ".jpg");
-            console.log(body);
             var meta = new id3.Meta({
               artist: body.fields.artistUsername,
               title: body.fields.trackTitle,
@@ -411,12 +407,13 @@
     }
 
     function saveDownloadTrack() {
-      var SMLinks = JSON.parse(body.fields.SMLinks);
-      var artists = JSON.parse(body.fields.artists);
-      body.fields.SMLinks = SMLinks;
-      body.fields.artists = artists;
+      body.fields.SMLinks = JSON.parse(body.fields.SMLinks);
+      body.fields.artists = JSON.parse(body.fields.artists);
       if (body.fields.playlists) {
         body.fields.playlists = JSON.parse(body.fields.playlists);
+      }
+      if (body.fields.admin == 'undefined') {
+        body.fields.admin = false;
       }
       body.fields.userid = req.user._id;
       body.fields.downloadURL = (body.location !== '') ? body.location : body.fields.downloadURL;
@@ -441,7 +438,6 @@
           };
           trackObj.description = body.fields.description + '\n\nDownload for ' + downloadTrack.trackTitle + ' provided by ' + rootURL + '.';
 
-          console.log(trackObj);
           request({
             method: 'PUT',
             url: 'https://api.soundcloud.com/tracks/' + downloadTrack.trackID + '?oauth_token=' + token,
@@ -453,6 +449,7 @@
               console.log(err, 'err');
               return resolve(downloadTrack);
             }
+            console.log('updated track');
             console.log(data);
             return resolve(downloadTrack);
           });
@@ -462,94 +459,9 @@
       });
     }
 
-    function sendMailAndAddPermanentLinksToAdmin(downloadTrack) {
-      var trackUrl = req.protocol + '://' + req.get('host') + '/download?trackid=' + downloadTrack._id;
-      var html = '<p>Here is your download URL: - </p><span>' + trackUrl + '</span>';
-      sendEmail('Service', req.user.email, 'Artists Unlimited', 'coayscue@artistsunlimited.co', 'Download Track', html);
-      return addPermanentLinksToAdmin(trackUrl);
-    }
-
-    function addPermanentLinksToAdmin(trackUrl) {
-      return new Promise(function(resolve, reject) {
-
-        if (req.user && req.user.role === 'admin') {
-          Channel
-            .find({})
-            .exec()
-            .then(function(channels) {
-              var promises = [];
-              channels.forEach(function(channel) {
-                if (channel.displayName !== 'Supportify') {
-                  promises.push(resolveTrack(channel.url));
-                }
-              });
-              var track = null;
-              var permanentLinks = req.user.permanentLinks;
-              Promise.settle(promises).then(function(results) {
-                results.forEach(function(result) {
-                  if (result.isFulfilled()) {
-                    track = result.value();
-                    var exists = req.user.permanentLinks.some(function(link) {
-                      return track.id === link.id;
-                    });
-                    if (!exists) {
-                      permanentLinks.push({
-                        url: track.permalink_url,
-                        avatar: track.avatar_url,
-                        username: track.username,
-                        id: track.id,
-                        permanentLink: true
-                      });
-                    }
-                  }
-                });
-                User
-                  .update({
-                    _id: req.user._id
-                  }, {
-                    $addToSet: {
-                      permanentLinks: {
-                        $each: permanentLinks
-                      }
-                    }
-                  })
-                  .exec()
-                  .then(function() {
-                    resolve(trackUrl);
-                  })
-                  .then(null, function(err) {
-                    reject(err);
-                  });
-              });
-            })
-            .then(null, function(err) {
-              return reject(err);
-            });
-        } else {
-          return resolve(trackUrl);
-        }
-
-      });
-    }
-
-    function resolveTrack(url) {
-      return new Promise(function(resolve, reject) {
-        SCResolve({
-          url: url,
-          client_id: scConfig.clientID
-        }, function(err, track) {
-          if (err || !track) {
-            return reject();
-          }
-          return resolve(track);
-        });
-      });
-    }
-
     function handleResponse(trackUrl) {
-      return res.end(trackUrl);
+      return res.end();
     }
-
   });
 
   router.get('/downloadurl/admin', function(req, res, next) {
