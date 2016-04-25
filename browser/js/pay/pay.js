@@ -46,7 +46,9 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   });
   $scope.total = 0;
   $scope.channels = channels.filter(function(ch) {
+      
     return (submission.channelIDS.indexOf(ch.channelID) != -1)
+    console.log($scope.channels)
   });
 
   $scope.auDLLink = $scope.track.purchase_url ? ($scope.track.purchase_url.indexOf("artistsunlimited.co") != -1) : false;
