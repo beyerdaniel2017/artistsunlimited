@@ -1,7 +1,7 @@
 app.config(function($stateProvider) {
-  $stateProvider.state('premier', {
-    url: '/premier',
-    templateUrl: 'js/premier/views/premier.html',
+  $stateProvider.state('premiere', {
+    url: '/premiere',
+    templateUrl: 'js/premiere/views/premiere.html',
     controller: 'PremierController'
   });
 });
