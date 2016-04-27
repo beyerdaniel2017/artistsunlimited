@@ -515,7 +515,6 @@
   });
 
 
-
   router.post('/paidrepost', function(req, res, next) {
 
     var body = req.body;
@@ -621,38 +620,23 @@
     } catch (err) {
       next(err);
     }
+    console.log(req.user._id);
+    console.log(updateObj);
 
-    if (req.user) {
-      if (updateObj.email) {
-        User.findOne({
-          'email': updateObj.email
-        }, function(err, result) {
-          if (err) {
-            next(err);
-          } else if (result) {
-            return res.send('Email Error');
-          } else {
-            updateUser();
-          }
-        });
-      }
-    }
-
-    function updateUser() {
-      User.findOneAndUpdate({
+    User.findOneAndUpdate({
         '_id': req.user._id
       }, {
         $set: updateObj
       }, {
         new: true
-      }, function(err, result) {
-        if (err) {
-          next(err);
-        } else {
-          return res.send(JSON.stringify(result));
-        }
+      }).exec()
+      .then(function(result) {
+        console.log(result);
+        res.send(result);
+      })
+      .then(null, function(err) {
+        next(err);
       });
-    }
   });
 
   router.post('/profile/soundcloud', function(req, res, next) {

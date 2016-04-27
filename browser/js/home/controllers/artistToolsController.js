@@ -171,9 +171,11 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
         sendObj.email = $scope.profile.data.email;
       }
 
+      $scope.processing = true;
       ArtistToolsService
         .saveProfileInfo(sendObj)
         .then(function(res) {
+          $scope.processing = false;
           if (res.data === 'Email Error') {
             $scope.message = {
               value: 'Email already exists!',
@@ -185,7 +187,8 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
           $scope.closeEditProfileModal();
         })
         .catch(function(res) {
-
+          $scope.processing = false;
+          alert('error saving');
         });
     };
 
