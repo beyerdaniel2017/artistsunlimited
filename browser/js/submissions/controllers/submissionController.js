@@ -8,10 +8,10 @@ app.config(function($stateProvider) {
 
 
 app.controller('SubmissionController', function($rootScope, $state, $scope, $http, AuthService, oEmbedFactory) {
-   $scope.counter = 0;
-   $scope.showingElements = [];
-   $scope.submissions = [];
-   $scope.logout = function() {
+  $scope.counter = 0;
+  $scope.showingElements = [];
+  $scope.submissions = [];
+  $scope.logout = function() {
     $http.get('/api/logout').then(function() {
       window.location.href = '/admin';
     }).catch(function(err) {
@@ -44,10 +44,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     var loadElements = [];
     for (let i = $scope.counter; i < $scope.counter + 15; i++) {
       var sub = $scope.submissions[i];
-      if(sub){
-      $scope.showingElements.push(sub);
-      loadElements.push(sub);
-    }
+      if (sub) {
+        $scope.showingElements.push(sub);
+        loadElements.push(sub);
+      }
     }
     setTimeout(function() {
       console.log(loadElements);
@@ -114,5 +114,23 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
         $scope.processing = false;
         window.alert("ERROR: did not Decline");
       });
+  }
+
+  $scope.youtube = function(submission) {
+    $scope.processing = true;
+    $http.post('/api/submissions/youtubeInquiry', submission)
+      .then(function(res) {
+        $scope.processing = false;
+        window.alert('Sent to Zach');
+      })
+  }
+
+  $scope.sendMore = function(submission) {
+    $scope.processing = true;
+    $http.post('/api/submissions/sendMoreInquiry', submission)
+      .then(function(res) {
+        $scope.processing = false;
+        window.alert('Sent Email');
+      })
   }
 });

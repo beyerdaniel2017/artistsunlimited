@@ -7,8 +7,13 @@
 <div style="text-align:center;">
   <button class="btn btn-default btn-small" ng-click="back()">Log Out</button>
   <h2>{{channel.displayName}}</h2>
+<<<<<<< HEAD
     <span class="label-scheduler">Price: $</span><input class="form-control form-scheduler" type="text" ng-model="channel.price"></input>
   <button class="btn btn-default btn-small" ng-click="saveChannel()">Save</button>
+=======
+  <span>Price: $</span><input type="text" ng-model="channel.price"/>
+  <button ng-click="saveChannel()">Save</button>
+>>>>>>> master
 </div>
 
 <div style="text-align:center; width:70%; margin:10px auto;">
@@ -30,18 +35,6 @@
   </div>
 </div>
 
-<!-- submissions -->
-<!-- <h3 style="text-align:center">Submissions</h3>
-<div style="width:80%; text-align:center; margin: 10px auto;">
-  <div ng-repeat="sub in submissions"  ng-if="!sub.invoiceID" style="padding:10px 0;">
-    <div id="{{sub.trackID}}player" style="display:inline-block; width:80%; background-color:gray; height:150px;"></div>
-    <div style="display:inline-block; width: 19%; height:150px; vertical-align: top;">
-      <button ng-click="decline(sub)" style="width:95%; height: 73px; margin: 0 0 4px 4px; background-color:#ff3333; font-size:2em">Decline</button>
-      <button ng-click="accept(sub)" style="width:95%; height: 73px; margin: 0 0 0 4px; background-color:#67f967 ; font-size:2em">Accept</button>
-    </div>
-  </div>
-</div> -->
-
 <!-- Queue -->
 <h3 style="text-align:center" class="label-scheduler">Queue</h3>
 <div style="width:70%; text-align:center; margin: 10px auto;">
@@ -59,19 +52,16 @@
   <button class="btn btn-default btn-small" ng-click="addSong()">Add</button>
   <!-- <div id="newQueuePlayer" style="width:100%; background-color:gray;"></div> -->
 </div>
- 
- 
-<!-- <h3 style="text-align:center">Waiting For Payment</h3>
-<div style="width:80%; text-align:center; margin: 10px auto;">
-  <div ng-repeat="sub in submissions"  ng-if="sub.invoiceID" style="padding:10px 0;">
-    <div id="{{sub.trackID}}player" style="width:100%; background-color:gray; height:150px;"></div>
-  </div>
-</div> -->
 
 <!-- overlay -->
 <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showOverlay">
+<<<<<<< HEAD
   <div class="label-scheduler label-smaller" style="width: 500px; height:400px; background-color: white; margin: 300px auto; padding: 50px 0;">
     <span>Day: {{makeEvent.day.toLocaleDateString()}}     Time: {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
+=======
+  <div style="width: 500px; height:500px; background-color: white; margin: 300px auto; padding: 50px 0;">
+    <span>Day: {{makeEvent.day.toLocaleDateString()}}     Hour: {{makeEvent.day.getHours()}}</span><br><br>
+>>>>>>> master
     <span>Paid: </span><input type="checkbox" ng-model="makeEvent.paid" ng-change="changePaid()" ng-hide="makeEvent.paid && makeEvent.trackID"/><br><br>
     <div ng-hide="makeEvent.paid">
       <span >URL: </span><input type="text" ng-model="makeEventURL" ng-change="changeURL()"/><br><br>
@@ -79,9 +69,18 @@
     <div id='scPlayer' ng-show="makeEvent.trackID"></div>
     <br>
     <div>
+<<<<<<< HEAD
       <button class="btn btn-default btn-small btn-overlay" ng-click="backEvent()">Back</button>
       <button class="btn btn-default btn-small btn-overlay" ng-click="deleteEvent()" style="margin:0 30px 0 30px;" ng-hide="makeEvent.paid && makeEvent.trackID">Delete</button>
       <button class="btn btn-default btn-small btn-overlay" ng-click="saveEvent()" ng-hide="makeEvent.paid && makeEvent.trackID">Save</button>
+=======
+      <button ng-click="backEvent()">Back</button>
+      <button ng-click="deleteEvent()" style="margin:0 30px 0 30px;" ng-hide="makeEvent.paid && makeEvent.trackID">Delete</button>
+      <button ng-click="saveEvent()" ng-hide="makeEvent.paid && makeEvent.trackID">Save</button>
+      <br><br>
+      <!-- <button ng-click="scEmailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/scemail_icon.png' style="height:30px; width:50px;"></button> -->
+      <button ng-click="emailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/email_icon.png' style="height:30px; width:50px;"></button>
+>>>>>>> master
     </div>
   </div>
 </div>

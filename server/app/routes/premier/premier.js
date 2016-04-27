@@ -129,7 +129,7 @@ router.post('/', function(req, res, next) {
       '<br />' +
       '<b>Sender Email: </b> ' +
       body.fields.email;
-    sendEmail('Edward', 'edward@peninsulamgmt.com', body.fields.name, 'coayscue@artistsunlimited.co', 'Premier Submission', email_body, attachments);
+    sendEmail('Edward', 'edward@peninsulamgmt.com', 'Artists Unlimited', 'coayscue@artistsunlimited.co', 'Premier Submission', email_body, attachments);
     return res.end();
   }
 

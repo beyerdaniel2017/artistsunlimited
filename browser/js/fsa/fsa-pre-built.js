@@ -36,6 +36,7 @@
 
     app.factory('AppConfig', function($http) {
         var _configParams = null;
+
         function fetchConfig() {
             return $http.get('/api/soundcloud/soundcloudConfig');
         }
@@ -43,9 +44,9 @@
         function setConfig(data) {
             _configParams = data;
             SC.initialize({
-              client_id: data.clientID,
-              redirect_uri: data.callbackURL,
-              scope: "non-expiring"
+                client_id: data.clientID,
+                redirect_uri: data.callbackURL,
+                scope: "non-expiring"
             });
         }
 

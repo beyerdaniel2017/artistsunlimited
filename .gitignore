@@ -7,4 +7,10 @@ nbproject/project.properties
 
 nbproject/project.xml
 tmp
-./query.csv
+
+query.csv
+email.html
+
+nbproject/private/private.xml
+
+nbproject/private/private.properties
