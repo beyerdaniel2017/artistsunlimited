@@ -1,6 +1,8 @@
 <ng-include src="'js/home/views/navigation.html'"></ng-include>
 <!-- Content Start  -->
-<div class="container" ng-init="checkIfEdit();getTrackListFromSoundcloud();checkIfSubmission()">
+<div class="container" ng-init="checkIfEdit();
+        getTrackListFromSoundcloud();
+        checkIfSubmission()">
     <div class="content-area bg-white">
         <ng-include src="'js/home/views/artistTools/navigation.html'"></ng-include>
         <div class="row">
@@ -67,73 +69,138 @@
                     <div class="social-container">
                         <h4>Show all download tracks for: </h4>
                         <div>
-                        <label>
-                            <input type="radio" ng-model="track.showDownloadTracks" ng-value="'user'">
-                            This user
-                        </label><br/>
-                        <label>
-                            <input type="radio" ng-model="track.showDownloadTracks" ng-value="'none'">
-                            None
-                        </label><br/>
+                            <label>
+                                <input type="radio" ng-model="track.showDownloadTracks" ng-value="'user'">
+                                This user
+                            </label><br/>
+                            <label>
+                                <input type="radio" ng-model="track.showDownloadTracks" ng-value="'none'">
+                                None
+                            </label><br/>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="artist-follow">
-                    <h4>Artists to Follow</h4>
-                    <div class="input-box" ng-repeat="artist in track.artists" ng-show="!artist.permanentLink">
-                        <input class="form-control" placeholder="URL" ng-model="artist.url" ng-change="artistURLChange($index)"/>
-                        <a class="pro-icon" href="{{artist.url}}" target="_blank" ng-show="artist.avatar !== ''"><img class="profile-icon" ng-src="{{artist.avatar}}" ></a>
-                        <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeArtist($index)"></a>
-                    </div>
-                    <a href="#" ng-click="addArtist()" ng-hide="track.artists.length > 2 && !user.admin">+ Artist</a>
-                </div>
+                <div class="col-md-4">
+                    <div class="social-container">
+                        <h4>Required Steps to download track</h4>
+                        <small class="orange-text">Users must complete each step before they can access this track. Each step can have multiple actions, but only one action per step is required to continue to the next step (unless the entire step is optional).</small>
 
-                <div class="social-container">
-                    <h4>Actions</h4>
-                    <small class="orange-text">To download the user will:</small>
-                    <div class="checkbox-container">
-                        <ul>
-                            <li>
-                                <label class="with-square-checkbox">
-                                    <input type="checkbox" ng-model="track.like">
-                                    <span>Like</span>
-                                </label>
-                            </li>
-                            <li>
-                                <label class="with-square-checkbox">
-                                    <input type="checkbox" ng-model="track.repost">
-                                    <span>Repost</span>
-                                </label>
-                            </li>
-                            <li>
-                                <label class="with-square-checkbox">
-                                    <input type="checkbox" ng-model="track.comment">
-                                    <span>Comment</span>
-                                </label>
-                            </li>
-                        </ul>
+                        <select ng-model="track.socialPlatform">
+                            <option value="">select an option</option>
+                            <option value="facebookLike">Like Facebook page</option>
+                            <option value="facebookShare">Share on Facebook</option>
+                            <option value="twitterFollow">Follow on twitter</option>
+                            <option value="twitterPost">Post tweet to twitter</option>
+                            <option value="instagramFollow">Follow on instagram</option>
+                            <option value="soundCloudFollow">Follow on soundcloud</option>
+                            <option value="soundCloudRepost">Repost on soundcloud</option>
+                            <option value="spotifyFollow">Follow on spotify</option>
+                            <option value="youtubeSubscribe">Subscribe on youtube</option>
+                        </select>
+                        <br/><br/>
+                        <div class="auSocialPlatform">
+
+                            <div id="like_fb" ng-if="track.socialPlatform == 'facebookLike'">
+                                <label>Like Facebook Page :</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">facebook.com/</span>
+                                    <input type="text" class="form-control" input-append="www.facebook.com/" ng-model="track.socialPlatformValue" value="" />
+                                </div>
+                            </div>
+
+                            <div id="post_twi" ng-if="track.socialPlatform == 'twitterPost'">
+                                <label>Text to Tweet :</label>
+                                <div class ='col-sm-19'>
+                                    <input ng-model="track.socialPlatformValue" type="text" class="form-control" placeholder="enter a message to tweet" value="" />
+                                </div>
+                            </div>
+
+                            <div id="follow_twi" ng-if="track.socialPlatform == 'twitterFollow'">
+                                <label>User to Follow :</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">@</span>
+                                    <input type="text" class="form-control" input-prepend="@" ng-model="track.socialPlatformValue" placeholder="diplo" value="" />
+                                </div>
+                            </div>
+                            <div id="follow_insta" ng-if="track.socialPlatform == 'instagramFollow'">
+                                <label>User to Follow :</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">@</span>
+                                    <input type="text" class="form-control" input-prepend="@" ng-model="track.socialPlatformValue" placeholder="skrillex" value=""/>
+                                </div>
+                            </div>
+                            <div id="follow_sc" ng-if="track.socialPlatform == 'soundCloudFollow'">
+                                <label>Username:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">@</span>
+                                    <input type="text" class="form-control" input-prepend="www.soundcloud.com/" ng-model="track.socialPlatformValue" placeholder="octobersveryown" value=''/>
+                                </div>
+                            </div>
+                            <div id="sub_you" ng-if="track.socialPlatform == 'youtubeSubscribe'">
+                                <label>User/Channel URL:</label>
+                                <div class ='col-sm-19'>
+                                    <input type="url" class="form-control" ng-model="track.socialPlatformValue" placeholder="URL to youtube user or channel to subscribe" value="" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <br/><br/>
+                    </div>
+                    <div class="artist-follow">
+                        <h4>Artists to Follow</h4>
+                        <div class="input-box" ng-repeat="artist in track.artists" ng-show="!artist.permanentLink">
+                            <input class="form-control" placeholder="URL" ng-model="artist.url" ng-change="artistURLChange($index)"/>
+                            <a class="pro-icon" href="{{artist.url}}" target="_blank" ng-show="artist.avatar !== ''"><img class="profile-icon" ng-src="{{artist.avatar}}" ></a>
+                            <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeArtist($index)"></a>
+                        </div>
+                        <a href="#" ng-click="addArtist()" ng-hide="track.artists.length > 2 && !user.admin">+ Artist</a>
+                    </div>
+
+                    <div class="social-container">
+                        <h4>Actions</h4>
+                        <small class="orange-text">To download the user will:</small>
+                        <div class="checkbox-container">
+                            <ul>
+                                <li>
+                                    <label class="with-square-checkbox">
+                                        <input type="checkbox" ng-model="track.like">
+                                        <span>Like</span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="with-square-checkbox">
+                                        <input type="checkbox" ng-model="track.repost">
+                                        <span>Repost</span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="with-square-checkbox">
+                                        <input type="checkbox" ng-model="track.comment">
+                                        <span>Comment</span>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-8 text-center" style="margin-top:20px;">
-                <a href="#" class="btn btn-enter" ui-sref="artistToolsDownloadGatewayList">Back</a>
-                <a class="btn btn-enter" href="#" ui-sref="artistToolsDownloadGatewayPreview" target="_blank">Preview</a>
-                <button type="submit" class="btn btn-enter">Save</button>
-            </div>
-            <!-- Download Section End -->
-        </form>
+                <div class="col-md-12 text-center" style="margin-top:20px;">
+                    <a href="#" class="btn btn-enter" ui-sref="artistToolsDownloadGatewayList">Back</a>
+                    <a class="btn btn-enter" href="#" ui-sref="artistToolsDownloadGatewayPreview" target="_blank">Preview</a>
+                    <button type="submit" class="btn btn-enter">Save</button>
+                </div>
+                <!-- Download Section End -->
+            </form>
+        </div>
     </div>
-</div>
 </div>
 <!-- Content End  -->
 <ng-include src="'js/home/views/loader.html'"></ng-include>
 <script type="text/ng-template" id="downloadURL.html">
     <div class="modal-header">
-        <h3 class="modal-title">Your Download URL: </h3>
-        <a href="$parent.modal.downloadURL">{{$parent.modal.downloadURL}}</a>
+    <h3 class="modal-title">Your Download URL: </h3>
+    <a href="$parent.modal.downloadURL">{{$parent.modal.downloadURL}}</a>
     </div>
     <div class="modal-body">
-        <button class="btn btn-warning" type="button" ng-click="$parent.closeModal()">Close</button>
+    <button class="btn btn-warning" type="button" ng-click="$parent.closeModal()">Close</button>
     </div>
 </script>
