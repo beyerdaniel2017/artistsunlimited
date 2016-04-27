@@ -557,3 +557,91 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: left; }
+
+.btn-scheduler {
+  background: transparent;
+  border-color: transparent;
+  border-radius: 0px;
+  text-align: center;
+  padding: 3px;
+  color: #fff;
+  font-size: 1em;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  width: 4.5%;
+  height: 100%; }
+
+.btn-small {
+  background: #F5BBBC;
+  border: 2px solid white;
+  border-radius: 0px;
+  padding: 6px 14px;
+  color: #fff;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  width: 10%; }
+
+.btn-overlay {
+  width: 20%; }
+
+.btn-queue {
+  background: #F5BBBC;
+  border: 2px solid white;
+  border-radius: 0px;
+  text-align: center;
+  padding: 3px;
+  color: #fff;
+  font-size: 1.8em;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  width: 100%;
+  height: 45px;
+  margin: 3px;
+  padding: 4px;
+  line-height: 45px;
+  vertical-align: middle; }
+
+.row-scheduler {
+  width: 100%;
+  height: 20px;
+  border: 1px solid black;
+  cursor: pointer;
+  vertical-align: middle; }
+
+.row-scheduler:hover {
+  background-color: #fff; }
+
+.row-dark {
+  background-color: #cccccc; }
+
+.row-light {
+  background-color: #f2f2f2; }
+
+.cell-date {
+  width: 13%;
+  border: 1px solid black;
+  font-size: 1em;
+  background-color: #f2f2f2;
+  line-height: 35px;
+  vertical-align: middle;
+  color: black; }
+
+.cell-time {
+  width: 100%;
+  height: 20px;
+  border: 1px solid black;
+  vertical-align: middle;
+  color: black; }
+
+.form-scheduler {
+  width: 20%;
+  margin: 10px auto; }
+
+.label-scheduler {
+  text-transform: uppercase;
+  font-size: 1.5em;
+  letter-spacing: 3px; }
+
+.label-smaller {
+  font-size: 1.25em; }

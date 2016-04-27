@@ -26,10 +26,8 @@
   var SCResolve = require('soundcloud-resolve-jsonp/node');
   var request = require('request');
   var rootURL = require('./../../../env').ROOTURL;
+  var nodeID3 = require('node-id3');
 
-
-  var id3 = require('id3-writer');
-  var writer = new id3.Writer();
 
   router.post('/adduser', function(req, res, next) {
     // if (req.body.password != 'letMeManage') next(new Error('wrong password'));
@@ -299,7 +297,7 @@
 
           var buffer = new Buffer('');
           var type = mimetype.split('/')[1];
-          var newfilename = (filename.substr(0, filename.lastIndexOf('.')) || filename) + '_' + Date.now().toString() + '.' + type;
+          var newfilename = (filename.substr(0, filename.lastIndexOf('.')) || filename) + '_' + Math.floor(Math.random() * 50) + '.' + type;
           var mp3Stream = fs.createWriteStream('tmp/' + newfilename);
 
           file.pipe(mp3Stream);
@@ -366,41 +364,36 @@
           res.pipe(imageStream);
           res.on('end', function() {
             imageStream.end();
-            var mp3 = new id3.File('tmp/' + body.file.newfilename);
-            var coverImage = new id3.Image("tmp/" + body.file.newfilename + ".jpg");
-            var meta = new id3.Meta({
-              artist: body.fields.artistUsername,
+            var tags = {
               title: body.fields.trackTitle,
-              album: 'ArtistsUnlimited.co'
-            }, [coverImage]);
+              artist: body.fields.artistUsername,
+              album: 'ArtistsUnlimited.co',
+              image: "tmp/" + body.file.newfilename + ".jpg"
+            }
+            nodeID3.write(tags, 'tmp/' + body.file.newfilename); //Pass tags and filepath
 
-            writer.setFile(mp3).write(meta, function(err) {
-              if (err) {
-                reject(err);
-              }
-              fs.unlink("tmp/" + body.file.newfilename + ".jpg");
-              fs.readFile("tmp/" + body.file.newfilename, function(err, data) {
-                var data = {
-                  Key: body.file.newfilename,
-                  Body: data,
-                  ContentType: body.file.mimetype,
-                  ContentDisposition: 'attachment'
-                };
-                fs.unlink("tmp/" + body.file.newfilename);
-                var s3 = new AWS.S3({
-                  params: {
-                    Bucket: awsConfig.bucketName
-                  }
-                });
-                s3.upload(data, function(err, data) {
-                  if (err) {
-                    reject(err);
-                  } else {
-                    resolve(data);
-                  }
-                });
-              })
-            });
+            fs.unlink("tmp/" + body.file.newfilename + ".jpg");
+            fs.readFile("tmp/" + body.file.newfilename, function(err, data) {
+              var data = {
+                Key: body.file.newfilename,
+                Body: data,
+                ContentType: body.file.mimetype,
+                ContentDisposition: 'attachment'
+              };
+              fs.unlink("tmp/" + body.file.newfilename);
+              var s3 = new AWS.S3({
+                params: {
+                  Bucket: awsConfig.bucketName
+                }
+              });
+              s3.upload(data, function(err, data) {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(data);
+                }
+              });
+            })
           });
         });
       });

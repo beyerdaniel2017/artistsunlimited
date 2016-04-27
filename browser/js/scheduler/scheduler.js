@@ -7,7 +7,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller('SchedulerController', function($rootScope, $state, $scope, $http, AuthService) {
+app.controller('SchedulerController', function($rootScope, $state, $scope, $http, AuthService, $window) {
 
   $scope.makeEventURL = "";
   $scope.showOverlay = false;
@@ -93,6 +93,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
         $scope.makeEvent.trackID = res.data.id;
         $scope.makeEvent.title = res.data.title;
         $scope.makeEvent.trackURL = res.data.trackURL;
+        if (res.data.user) $scope.makeEvent.artistName = res.data.user.username;
         SC.oEmbed($scope.makeEventURL, {
           element: document.getElementById('scPlayer'),
           auto_play: false,
@@ -181,6 +182,15 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
     }
   }
 
+  $scope.emailSlot = function() {
+    var mailto_link = "mailto:coayscue@gmail.com?subject=Repost of " + $scope.makeEvent.title + '&body=Hey ' + $scope.makeEvent.artistName + ',\n\n I am reposting your song ' + $scope.makeEvent.title + ' on ' + $scope.channel.displayName + ' on ' + $scope.makeEvent.day.toLocaleDateString() + '.\n\n Best, \n' + $scope.channel.displayName;
+    location.href = encodeURI(mailto_link);
+  }
+
+  // $scope.scEmailSlot = function() {
+
+  // }
+
   $scope.backEvent = function() {
     $scope.makeEvent = null;
     $scope.showOverlay = false;
@@ -210,7 +220,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
         var track = res.data;
         $scope.newQueueID = track.id;
       })
-      .then(null, function(err){
+      .then(null, function(err) {
         alert("error getting song");
         $scope.processing = false;
       });

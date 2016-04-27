@@ -33,8 +33,8 @@ var fs = require('fs');
 //   })
 //   .end();
 
-var aT = "1-230936-203984864-45b23b349cb44";
-var id = 241853814;
+var aT = "1-231090-86560544-02506b330d4aa4";
+var id = 86560544;
 
 // SC.init({
 //   client_id: client_id,
@@ -42,32 +42,26 @@ var id = 241853814;
 //   oauth_token: aT,
 //   redirect_uri: redirect_uri
 // });
-
-SCR.init(client_id, client_id, redirect_uri);
-// fs.readFile('./hello.m4a', function(err, file) {
-//   if (err) console.log(err);
-//   if (file) {
-//     console.log(file);
-SCR.post('/tracks', aT, {
-    track: {
-      asset_data: fs.createReadStream("./hello.m4a"),
-      title: 'hellomaybe'
-    }
-  },
-  function(err, data) {
-    if (err) {
-      console.log('err');
-      console.log(err);
-    } else {
-      console.log(data);
-    }
-  });
-// }
-// })
-
-// SCR.get('/e1/me/track_reposts/' + id, aT, function(err, data) {
+// SC.get('/users/' + id, function(err, data) {
 //   if (err) {
+//     console.log('err');
 //     console.log(err);
 //   }
 //   console.log(data);
 // });
+
+SCR.init(client_id, client_id, redirect_uri);
+// // fs.readFile('./hello.m4a', function(err, file) {
+// //   if (err) console.log(err);
+// //   if (file) {
+// //     console.log(file);
+// // }
+// // })
+
+SCR.get('/e1/users/' + id + '/conversations', aT, function(err, data) {
+  if (err) {
+    console.log('err');
+    console.log(err);
+  }
+  console.log(data);
+});
