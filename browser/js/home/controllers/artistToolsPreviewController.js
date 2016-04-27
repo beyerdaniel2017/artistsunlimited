@@ -10,6 +10,7 @@ app.config(function($stateProvider) {
         })
 });
 
+
 app.controller("ArtistToolsPreviewController", function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService) {
     var track = JSON.parse(window.localStorage.getItem('trackPreviewData'));
     console.log(track);
