@@ -57,12 +57,12 @@ router.post('/authenticated', function(req, res, next) {
       next(err);
     } else {
       var sendObj = {};
-      console.log(data);
       Channel.findOneAndUpdate({
           channelID: data.id
         }, {
           accessToken: req.body.token,
-          followerCount: data.followers_count
+          followerCount: data.followers_count,
+          price: Math.ceil(data.followers_count / 3000.0)
         }).exec()
         .then(function(channel) {
           sendObj.channel = channel;
