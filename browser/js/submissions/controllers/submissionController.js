@@ -59,6 +59,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.changeBox = function(sub, chan) {
+    sub[chan.displayName] = !sub[chan.displayName];
     var index = sub.channelIDS.indexOf(chan.channelID);
     if (index == -1) {
       sub.channelIDS.push(chan.channelID);
