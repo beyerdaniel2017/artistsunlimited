@@ -100,43 +100,50 @@
                         <br/><br/>
                         <div class="auSocialPlatform">
 
-                            <div id="like_fb" ng-if="track.socialPlatform == 'facebookLike'">
+                            <div ng-if="track.socialPlatform == 'facebookLike'">
                                 <label>Like Facebook Page :</label>
                                 <div class="input-group">
                                     <span class="input-group-addon">facebook.com/</span>
                                     <input type="text" class="form-control" input-append="www.facebook.com/" ng-model="track.socialPlatformValue" value="" />
                                 </div>
                             </div>
+                            
+                            <div ng-if="track.socialPlatform == 'facebookShare'">
+                                <label>Share on Facebook :</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control"  ng-model="track.socialPlatformValue" value="" />
+                                </div>
+                            </div>
 
-                            <div id="post_twi" ng-if="track.socialPlatform == 'twitterPost'">
+                            <div ng-if="track.socialPlatform == 'twitterPost'">
                                 <label>Text to Tweet :</label>
                                 <div class ='col-sm-19'>
                                     <input ng-model="track.socialPlatformValue" type="text" class="form-control" placeholder="enter a message to tweet" value="" />
                                 </div>
                             </div>
 
-                            <div id="follow_twi" ng-if="track.socialPlatform == 'twitterFollow'">
+                            <div ng-if="track.socialPlatform == 'twitterFollow'">
                                 <label>User to Follow :</label>
                                 <div class="input-group">
                                     <span class="input-group-addon">@</span>
                                     <input type="text" class="form-control" input-prepend="@" ng-model="track.socialPlatformValue" placeholder="diplo" value="" />
                                 </div>
                             </div>
-                            <div id="follow_insta" ng-if="track.socialPlatform == 'instagramFollow'">
+                            <div ng-if="track.socialPlatform == 'instagramFollow'">
                                 <label>User to Follow :</label>
                                 <div class="input-group">
                                     <span class="input-group-addon">@</span>
                                     <input type="text" class="form-control" input-prepend="@" ng-model="track.socialPlatformValue" placeholder="skrillex" value=""/>
                                 </div>
                             </div>
-                            <div id="follow_sc" ng-if="track.socialPlatform == 'soundCloudFollow'">
+                            <div ng-if="track.socialPlatform == 'soundCloudFollow'">
                                 <label>Username:</label>
                                 <div class="input-group">
                                     <span class="input-group-addon">@</span>
                                     <input type="text" class="form-control" input-prepend="www.soundcloud.com/" ng-model="track.socialPlatformValue" placeholder="octobersveryown" value=''/>
                                 </div>
                             </div>
-                            <div id="sub_you" ng-if="track.socialPlatform == 'youtubeSubscribe'">
+                            <div ng-if="track.socialPlatform == 'youtubeSubscribe'">
                                 <label>User/Channel URL:</label>
                                 <div class ='col-sm-19'>
                                     <input type="url" class="form-control" ng-model="track.socialPlatformValue" placeholder="URL to youtube user or channel to subscribe" value="" />

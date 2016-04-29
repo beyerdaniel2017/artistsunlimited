@@ -45,7 +45,24 @@
 <!--                        <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em;" href="javascript:void(0)" ng-click="downloadTrack()">CONNECT & DOWNLOAD</a>-->
 
                         
-                            <a ng-if="track.socialPlatform == 'facebookLike'" class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em;" fb-like="track.socialPlatformValue">CONNECT & DOWNLOAD</a>
+                            <div ng-if="track.socialPlatform == 'facebookLike'">
+                                <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="downloadTrackFacebookLike(track.socialPlatformValue)" >CONNECT & DOWNLOAD</a>
+                                
+                                
+                                <p class="text-justify pad-download-agreement">
+                                    For downloading this song you need to like this Facebook page/link.
+                                </p>
+                            </div>
+<div id="container"></div>
+<!--                            <div id="fb-root"></div>
+                            <div class="fb-like" data-href="https://www.facebook.com/thinkwik" data-layout="button" data-action="like" data-show-faces="true" data-share="false"></div>-->
+
+                            <div ng-if="track.socialPlatform == 'facebookShare'">
+                                <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="downloadTrackFacebookShare(track.socialPlatformValue)" >CONNECT & DOWNLOAD</a>
+                                <p class="text-justify pad-download-agreement">
+                                    For downloading this song you need to share on your Facebook.
+                                </p>
+                            </div>
                         <br>
                         <br>
                         <div>
