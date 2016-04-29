@@ -319,7 +319,7 @@ router.post('/getPayment', function(req, res, next) {
       channels.forEach(function(ch) {
         total += ch.price;
       });
-      if (req.body.discounted) total = Math.floor(total * 0.9);
+      if (req.body.discounted) total = parseFloat(total * 0.9).toFixed(2);
       return paypalCalls.makePayment(total, req.body.submission, channels);
     })
     .then(function(payment) {
