@@ -21,6 +21,9 @@ var schema = new mongoose.Schema({
     },
     blockRelease: {
         type: Date
+    },
+    followerCount: {
+        type: Number
     }
 });
 
