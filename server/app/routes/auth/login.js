@@ -62,7 +62,7 @@ router.post('/authenticated', function(req, res, next) {
         }, {
           accessToken: req.body.token,
           followerCount: data.followers_count,
-          price: Math.ceil(data.followers_count / 3000.0)
+          price: parseFloat(data.followers_count / 3000.0).toFixed(2)
         }).exec()
         .then(function(channel) {
           sendObj.channel = channel;
