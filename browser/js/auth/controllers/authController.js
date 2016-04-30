@@ -114,7 +114,7 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
       })
       .then(null, function(err) {
         console.log(err);
-        alert('Error: Could not log in');
+        $.Zebra_Dialog('Error: Could not log in');
         $scope.processing = false;
       });
   };

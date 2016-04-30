@@ -179,7 +179,7 @@ app.controller('AdminDLGateController', ['$rootScope',
 
         function handleError(err) {
           $scope.track.trackID = null;
-          alert('Song not found or forbidden');
+          $.Zebra_Dialog('Song not found or forbidden');
           $scope.processing = false;
         }
       }
@@ -199,7 +199,7 @@ app.controller('AdminDLGateController', ['$rootScope',
           $scope.processing = false;
         })
         .catch(function(err) {
-          alert('Artists not found');
+          $.Zebra_Dialog('Artists not found');
           $scope.processing = false;
         });
     };
@@ -228,7 +228,7 @@ app.controller('AdminDLGateController', ['$rootScope',
           $scope.processing = false;
         })
         .then(null, function(err) {
-          alert('Playlist not found');
+          $.Zebra_Dialog('Playlist not found');
           $scope.processing = false;
         })
     }
@@ -286,7 +286,7 @@ app.controller('AdminDLGateController', ['$rootScope',
 
     $scope.saveDownloadGate = function() {
       if (!$scope.track.trackID) {
-        alert('Track Not Found');
+        $.Zebra_Dialog('Track Not Found');
         return false;
       }
       $scope.processing = true;
@@ -350,7 +350,7 @@ app.controller('AdminDLGateController', ['$rootScope',
         })
         .then(null, function(err) {
           $scope.processing = false;
-          alert("ERROR: Error in saving url");
+          $.Zebra_Dialog("ERROR: Error in saving url");
           $scope.processing = false;
         });
     };
@@ -419,7 +419,7 @@ app.controller('AdminDLGateController', ['$rootScope',
     $scope.deleteDownloadGateway = function(index) {
 
       if (confirm("Do you really want to delete this track?")) {
-      var downloadGateWayID = $scope.downloadGatewayList[index]._id;
+        var downloadGateWayID = $scope.downloadGatewayList[index]._id;
         $scope.processing = true;
         AdminDLGateService
           .deleteDownloadGateway({

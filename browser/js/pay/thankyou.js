@@ -17,7 +17,7 @@ app.controller('ThankyouController', function($http, $scope, $location) {
         ev.date = new Date(ev.date);
       })
     })
-    .then(null, function(err){
-      alert('There was an error processing your request');
+    .then(null, function(err) {
+      $.Zebra_Dialog('There was an error processing your request');
     })
 });

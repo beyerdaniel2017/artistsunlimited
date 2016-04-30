@@ -2,7 +2,7 @@ app.config(function($stateProvider) {
   $stateProvider
     .state('artistTools', {
       url: '/artist-tools',
-      templateUrl: 'js/home/views/artistTools/artistTools.html',
+      templateUrl: 'js/artistTools/ArtistTools/artistTools.html',
       controller: 'ArtistToolsController',
       abstract: true,
       resolve: {
@@ -21,7 +21,7 @@ app.config(function($stateProvider) {
     })
     .state('artistToolsProfile', {
       url: '/profile',
-      templateUrl: 'js/home/views/artistTools/profile.html',
+      templateUrl: 'js/artistTools/ArtistTools/profile.html',
       controller: 'ArtistToolsController'
     })
     .state('artistToolsDownloadGatewayList', {
@@ -29,7 +29,7 @@ app.config(function($stateProvider) {
       params: {
         submission: null
       },
-      templateUrl: 'js/home/views/artistTools/downloadGateway.list.html',
+      templateUrl: 'js/artistTools/ArtistTools/downloadGateway.list.html',
       controller: 'ArtistToolsController'
     })
 
@@ -120,7 +120,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       });
     };
 
-    console.log($stateParams.submission);
     if ($stateParams.submission) {
       $scope.openThankYouModal.thankYou($stateParams.submission._id);
     }
@@ -188,7 +187,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
         })
         .catch(function(res) {
           $scope.processing = false;
-          alert('error saving');
+          $.Zebra_Dialog('error saving');
         });
     };
 
@@ -229,7 +228,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
           $scope.processing = false;
         })
         .catch(function(err) {
-          alert('Artists not found');
+          $.Zebra_Dialog('Artists not found');
           $scope.processing = false;
         });
     };

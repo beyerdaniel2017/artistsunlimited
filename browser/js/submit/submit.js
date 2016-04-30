@@ -37,9 +37,9 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
 
   $scope.submit = function() {
     if (!$scope.submission.email || !$scope.submission.name) {
-      alert("Please fill in all fields")
+      $.Zebra_Dialog("Please fill in all fields")
     } else if (!$scope.submission.trackID) {
-      alert("Track Not Found");
+      $.Zebra_Dialog("Track Not Found");
     } else {
       $scope.processing = true;
       $http.post('/api/submissions', {
@@ -53,12 +53,12 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
         })
         .then(function(res) {
           console.log(res.data);
-          window.alert("Your song has been submitted and will be reviewed soon.");
+          window.$.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
           location.reload();
         })
         .then(null, function(err) {
           $scope.processing = false;
-          window.alert("Error: Could not submit song.");
+          window.$.Zebra_Dialog("Error: Could not submit song.");
         });
     }
   }

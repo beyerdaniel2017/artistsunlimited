@@ -25,7 +25,7 @@ app.config(function($stateProvider) {
     //         }
     //       })
     //       .then(null, function(err) {
-    //         alert("ERROR: Something went wrong.");
+    //         $.Zebra_Dialog("ERROR: Something went wrong.");
     //       })
     //   }
     // }
@@ -37,7 +37,7 @@ app.controller('AutoEmailsController', function($rootScope, $state, $scope, $htt
 
 
   $scope.isStateParams = false;
-  if($stateParams.templateId) {
+  if ($stateParams.templateId) {
     $scope.isStateParams = true;
   }
   // $scope.template = template;
@@ -47,7 +47,7 @@ app.controller('AutoEmailsController', function($rootScope, $state, $scope, $htt
   };
 
   $scope.getTemplate = function() {
-    if($stateParams.templateId) {
+    if ($stateParams.templateId) {
       $scope.processing = true;
       $http.get('/api/database/autoEmails?templateId=' + $stateParams.templateId)
         .then(function(res) {
@@ -60,7 +60,7 @@ app.controller('AutoEmailsController', function($rootScope, $state, $scope, $htt
           }
         })
         .then(null, function(err) {
-          alert("ERROR: Something went wrong.");
+          $.Zebra_Dialog("ERROR: Something went wrong.");
         });
     } else {
       return false;
@@ -72,11 +72,11 @@ app.controller('AutoEmailsController', function($rootScope, $state, $scope, $htt
     $scope.processing = true;
     $http.post('/api/database/autoEmails/', $scope.template)
       .then(function(res) {
-        alert("Saved email template.")
+        $.Zebra_Dialog("Saved email template.")
         $scope.processing = false;
       })
       .then(null, function(err) {
-        alert("ERROR: Message could not save.")
+        $.Zebra_Dialog("ERROR: Message could not save.")
         $scope.processing = false;
       });
   }
@@ -91,7 +91,7 @@ app.controller('AutoEmailsController', function($rootScope, $state, $scope, $htt
   //     $scope.processing = false;
   //   }).catch(function(err) {
   //     $scope.processing = false;
-  //     alert('Wrong Password');
+  //     $.Zebra_Dialog('Wrong Password');
   //   });
   // }
 
@@ -100,7 +100,7 @@ app.controller('AutoEmailsController', function($rootScope, $state, $scope, $htt
       window.location.href = '/admin';
     }).catch(function(err) {
       $scope.processing = false;
-      alert('Wrong Password');
+      $.Zebra_Dialog('Wrong Password');
     });
   }
 

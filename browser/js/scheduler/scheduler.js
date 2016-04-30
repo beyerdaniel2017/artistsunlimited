@@ -31,12 +31,12 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
     $scope.channel.password = $rootScope.password;
     $http.put("/api/channels", $scope.channel)
       .then(function(res) {
-        window.alert("Saved");
+        window.$.Zebra_Dialog("Saved");
         $scope.channel = res.data;
         $scope.processing = false;
       })
       .then(null, function(err) {
-        window.alert("Error: did not save");
+        window.$.Zebra_Dialog("Error: did not save");
         $scope.processing = false;
       });
   }
@@ -120,11 +120,11 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
           calendarDay.events[$scope.makeEvent.day.getHours()] = "-";
           $scope.showOverlay = false;
           $scope.processing = false;
-          window.alert("Deleted");
+          window.$.Zebra_Dialog("Deleted");
         })
         .then(null, function(err) {
           $scope.processing = false;
-          window.alert("ERROR: did not Delete.")
+          window.$.Zebra_Dialog("ERROR: did not Delete.")
         });
     } else {
       var calendarDay = $scope.calendar.find(function(calD) {
@@ -138,7 +138,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
 
   $scope.saveEvent = function() {
     if (!$scope.makeEvent.trackID && !$scope.makeEvent.paid) {
-      window.alert("Enter a track URL");
+      window.$.Zebra_Dialog("Enter a track URL");
     } else {
       if ($scope.newEvent) {
         $scope.makeEvent.password = $rootScope.password;
@@ -153,11 +153,11 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
             calendarDay.events[event.day.getHours()] = event;
             $scope.showOverlay = false;
             $scope.processing = false;
-            window.alert("Saved");
+            window.$.Zebra_Dialog("Saved");
           })
           .then(null, function(err) {
             $scope.processing = false;
-            window.alert("ERROR: did not Save.");
+            window.$.Zebra_Dialog("ERROR: did not Save.");
           });
       } else {
         $scope.newEvent.password = $rootScope.password;
@@ -172,11 +172,11 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
             calendarDay.events[event.getHours()] = event;
             $scope.showOverlay = false;
             $scope.processing = false;
-            window.alert("Saved");
+            window.$.Zebra_Dialog("Saved");
           })
           .then(null, function(err) {
             $scope.processing = false;
-            window.alert("ERROR: did not Save.");
+            window.$.Zebra_Dialog("ERROR: did not Save.");
           });
       }
     }
@@ -221,7 +221,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
         $scope.newQueueID = track.id;
       })
       .then(null, function(err) {
-        alert("error getting song");
+        $.Zebra_Dialog("error getting song");
         $scope.processing = false;
       });
   }

@@ -2,7 +2,7 @@ app.config(function($stateProvider) {
     $stateProvider
         .state('artistToolsDownloadGatewayEdit', {
             url: '/download-gateway/edit/:gatewayID',
-            templateUrl: 'js/home/views/artistTools/downloadGateway.html',
+            templateUrl: 'js/artistTools/downloadGateway/downloadGateway.html',
             controller: 'ArtistToolsDownloadGatewayController'
         })
         .state('artistToolsDownloadGatewayNew', {
@@ -10,7 +10,7 @@ app.config(function($stateProvider) {
             params: {
                 submission: null
             },
-            templateUrl: 'js/home/views/artistTools/downloadGateway.html',
+            templateUrl: 'js/artistTools/downloadGateway/downloadGateway.html',
             controller: 'ArtistToolsDownloadGatewayController'
         })
 });
@@ -18,7 +18,7 @@ app.config(function($stateProvider) {
 app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService) {
     /* Init Download Gateway form data */
     $scope.user = JSON.parse(SessionService.getUser());
-
+    $scope.showTitle = [];
     $scope.track = {
         artistUsername: '',
         trackTitle: '',
@@ -80,25 +80,24 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
 
         function handleError(err) {
             $scope.track.trackID = null;
-            alert('Song not found or forbidden');
+            $.Zebra_Dialog('Song not found or forbidden');
             $scope.processing = false;
             $scope.$apply();
         }
     };
-
 
     $scope.removeSMLink = function(index) {
         $scope.track.SMLinks.splice(index, 1);
     };
 
     $scope.saveDownloadGate = function() {
-        if (!($scope.track.downloadURL || $scope.track.file.name)) {
-            alert('Enter a download file');
+        if (!($scope.track.downloadURL || ($scope.track.file && $scope.track.file.name))) {
+            $.Zebra_Dialog('Enter a download file');
             return false;
         }
 
         if (!$scope.track.trackID) {
-            alert('Track Not Found');
+            $.Zebra_Dialog('Track Not Found');
             return false;
         }
         $scope.processing = true;
@@ -139,12 +138,17 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
                         'submission': $stateParams.submission
                     });
                 } else {
+                    if ($scope.user.soundcloud.id == $scope.track.artistID) {
+                        $.Zebra_Dialog('Download gateway was saved and added to the track.');
+                    } else {
+                        $.Zebra_Dialog('Download gateway saved.');
+                    }
                     $state.go('artistToolsDownloadGatewayList');
                 }
             })
             .then(null, function(err) {
                 $scope.processing = false;
-                alert("ERROR: Error in saving url");
+                $.Zebra_Dialog("ERROR: Error in saving url");
                 $scope.processing = false;
             });
     };
@@ -223,7 +227,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
 
             function handleError(err) {
                 $scope.track.trackID = null;
-                alert('Song not found or forbidden');
+                $.Zebra_Dialog('Song not found or forbidden');
                 $scope.processing = false;
             }
         }
@@ -275,7 +279,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
             $scope.track.artists[index].id = res.data.id;
             $scope.processing = false;
         }).catch(function(err) {
-            alert('Artists not found');
+            $.Zebra_Dialog('Artists not found');
             $scope.processing = false;
         });
     }
@@ -310,7 +314,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
                 $scope.processing = false;
             })
             .then(null, function(err) {
-                alert('Playlist not found');
+                $.Zebra_Dialog('Playlist not found');
                 $scope.processing = false;
             })
     }

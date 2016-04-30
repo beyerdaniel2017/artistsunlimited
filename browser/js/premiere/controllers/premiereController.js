@@ -47,6 +47,7 @@ app.controller('PremierController', ['$rootScope',
     $scope.processing = false;
 
     $scope.savePremier = function() {
+      $.Zebra_Dialog('This may take a little while.')
       $scope.processing = true;
       $scope.message.visible = false;
       var data = new FormData();
@@ -65,10 +66,11 @@ app.controller('PremierController', ['$rootScope',
           $scope.message.val = 'Thank you! Your message has been sent successfully.';
           $scope.premierObj = {};
           angular.element("input[type='file']").val(null);
-          return;
+        } else {
+          $scope.message.visible = true;
+          $.Zebra_Dialog('Error processing. Please try again or send your track to edward@peninsulamgmt.com.')
+          $scope.message.val = 'Error processing. Please try again or send your track to edward@peninsulamgmt.com.';
         }
-        $scope.message.visible = true;
-        $scope.message.val = 'Error in processing the request. Please try again.';
       }
 
       function catchError(res) {
@@ -80,9 +82,10 @@ app.controller('PremierController', ['$rootScope',
           };
           return;
         }
+        $.Zebra_Dialog('Error processing. Please try again or send your track to edward@peninsulamgmt.com.')
         $scope.message = {
           visible: true,
-          val: 'Error in processing the request. Please try again.'
+          val: 'Error in processing the request. Please try again or send the submissions to edward@peninsulamgmt.com.'
         };
       }
     };

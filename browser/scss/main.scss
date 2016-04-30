@@ -34,7 +34,7 @@
     right:0;
     bottom:0;
     background-color: rgba(249, 214, 176, 0.9);
-    z-index:9999; /* makes sure it stays on top */
+    z-index:1; /* makes sure it stays on top */
 }
 .loader-spinner {
     position: absolute;
@@ -71,19 +71,19 @@
 		transform: rotate(0deg);
 	}
 	to {
-	  -webkit-transform: rotate(360deg);
-	  transform: rotate(360deg);
-	}
+       -webkit-transform: rotate(360deg);
+       transform: rotate(360deg);
+   }
 }
 @keyframes spinner {
 	from {
-	 -webkit-transform: rotate(0deg);
-	 transform: rotate(0deg);
-	}
-	to {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+  }
+  to {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
-	}
+}
 }
 /******* Preloader Css End ********/
 

@@ -6,7 +6,7 @@ app.config(function($stateProvider) {
     resolve: {
       templates: function($http) {
         return $http.get('/api/database/autoEmails')
-          .then(function(res) { 
+          .then(function(res) {
             var template = res.data;
             if (template) {
               return template;
@@ -17,7 +17,7 @@ app.config(function($stateProvider) {
             }
           })
           .then(null, function(err) {
-            alert("ERROR: Something went wrong.");
+            $.Zebra_Dialog("ERROR: Something went wrong.");
           })
       }
     }
@@ -44,7 +44,7 @@ app.controller('AutoEmailsListController', function($rootScope, $state, $scope, 
   //       }
   //     })
   //     .then(null, function(err) {
-  //       alert("ERROR: Something went wrong.");
+  //       $.Zebra_Dialog("ERROR: Something went wrong.");
   //     });
   // };
 
@@ -53,11 +53,11 @@ app.controller('AutoEmailsListController', function($rootScope, $state, $scope, 
     $scope.processing = true;
     $http.post('/api/database/autoEmails', $scope.template)
       .then(function(res) {
-        alert("Saved email.");
+        $.Zebra_Dialog("Saved email.");
         $scope.processing = false;
       })
       .then(null, function(err) {
-        alert("ERROR: Message could not save.")
+        $.Zebra_Dialog("ERROR: Message could not save.")
         $scope.processing = false;
       });
   }
@@ -72,7 +72,7 @@ app.controller('AutoEmailsListController', function($rootScope, $state, $scope, 
   //     $scope.processing = false;
   //   }).catch(function(err) {
   //     $scope.processing = false;
-  //     alert('Wrong Password');
+  //     $.Zebra_Dialog('Wrong Password');
   //   });
   // }
 
@@ -81,7 +81,7 @@ app.controller('AutoEmailsListController', function($rootScope, $state, $scope, 
       window.location.href = '/admin';
     }).catch(function(err) {
       $scope.processing = false;
-      alert('Wrong Password');
+      $.Zebra_Dialog('Wrong Password');
     });
   }
 

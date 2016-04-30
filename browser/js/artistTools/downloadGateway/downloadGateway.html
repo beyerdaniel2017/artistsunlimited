@@ -2,7 +2,7 @@
 <!-- Content Start  -->
 <div class="container" ng-init="checkIfEdit();getTrackListFromSoundcloud();checkIfSubmission()">
     <div class="content-area bg-white">
-        <ng-include src="'js/home/views/artistTools/navigation.html'"></ng-include>
+        <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
         <div class="row">
             <!-- Download Section Start -->
             <div class="col-md-4">
@@ -67,64 +67,64 @@
                     <div class="social-container">
                         <h4>Show all download tracks for: </h4>
                         <div>
-                        <label>
-                            <input type="radio" ng-model="track.showDownloadTracks" ng-value="'user'">
-                            This user
-                        </label><br/>
-                        <label>
-                            <input type="radio" ng-model="track.showDownloadTracks" ng-value="'none'">
-                            None
-                        </label><br/>
+                            <label>
+                                <input type="radio" ng-model="track.showDownloadTracks" ng-value="'user'">
+                                This user
+                            </label><br/>
+                            <label>
+                                <input type="radio" ng-model="track.showDownloadTracks" ng-value="'none'">
+                                None
+                            </label><br/>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="artist-follow">
-                    <h4>Artists to Follow</h4>
-                    <div class="input-box" ng-repeat="artist in track.artists" ng-show="!artist.permanentLink">
-                        <input class="form-control" placeholder="URL" ng-model="artist.url" ng-change="artistURLChange($index)"/>
-                        <a class="pro-icon" href="{{artist.url}}" target="_blank" ng-show="artist.avatar !== ''"><img class="profile-icon" ng-src="{{artist.avatar}}" ></a>
-                        <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeArtist($index)"></a>
+                <div class="col-md-4">
+                    <div class="artist-follow">
+                        <h4>Artists to Follow</h4>
+                        <div class="input-box" ng-repeat="artist in track.artists" ng-show="!artist.permanentLink">
+                            <input class="form-control" placeholder="URL" ng-model="artist.url" ng-change="artistURLChange($index)"/>
+                            <a class="pro-icon" href="{{artist.url}}" target="_blank" ng-show="artist.avatar !== ''"><img class="profile-icon" ng-src="{{artist.avatar}}" ></a>
+                            <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeArtist($index)"></a>
+                        </div>
+                        <a href="#" ng-click="addArtist()" ng-hide="track.artists.length > 2 && !user.admin">+ Artist</a>
                     </div>
-                    <a href="#" ng-click="addArtist()" ng-hide="track.artists.length > 2 && !user.admin">+ Artist</a>
-                </div>
 
-                <div class="social-container">
-                    <h4>Actions</h4>
-                    <small class="orange-text">To download the user will:</small>
-                    <div class="checkbox-container">
-                        <ul>
-                            <li>
-                                <label class="with-square-checkbox">
-                                    <input type="checkbox" ng-model="track.like">
-                                    <span>Like</span>
-                                </label>
-                            </li>
-                            <li>
-                                <label class="with-square-checkbox">
-                                    <input type="checkbox" ng-model="track.repost">
-                                    <span>Repost</span>
-                                </label>
-                            </li>
-                            <li>
-                                <label class="with-square-checkbox">
-                                    <input type="checkbox" ng-model="track.comment">
-                                    <span>Comment</span>
-                                </label>
-                            </li>
-                        </ul>
+                    <div class="social-container">
+                        <h4>Actions</h4>
+                        <small class="orange-text">To download the user will:</small>
+                        <div class="checkbox-container">
+                            <ul>
+                                <li>
+                                    <label class="with-square-checkbox">
+                                        <input type="checkbox" ng-model="track.like">
+                                        <span>Like</span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="with-square-checkbox">
+                                        <input type="checkbox" ng-model="track.repost">
+                                        <span>Repost</span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="with-square-checkbox">
+                                        <input type="checkbox" ng-model="track.comment">
+                                        <span>Comment</span>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-8 text-center" style="margin-top:20px;">
-                <a href="#" class="btn btn-enter" ui-sref="artistToolsDownloadGatewayList">Back</a>
-                <a class="btn btn-enter" href="#" ui-sref="artistToolsDownloadGatewayPreview" target="_blank">Preview</a>
-                <button type="submit" class="btn btn-enter">Save</button>
-            </div>
-            <!-- Download Section End -->
-        </form>
+                <div class="col-md-8 text-center" style="margin-top:20px;">
+                    <a href="#" class="btn btn-enter" ui-sref="artistToolsDownloadGatewayList">Back</a>
+                    <a class="btn btn-enter" href="#" ui-sref="artistToolsDownloadGatewayPreview" target="_blank">Preview</a>
+                    <button type="submit" class="btn btn-enter">Save</button>
+                </div>
+                <!-- Download Section End -->
+            </form>
+        </div>
     </div>
-</div>
 </div>
 <!-- Content End  -->
 <ng-include src="'js/home/views/loader.html'"></ng-include>
