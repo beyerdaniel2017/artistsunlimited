@@ -39,7 +39,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     $scope.user = JSON.parse(SessionService.getUser());
 
     /* Init boolean variables for show/hide and other functionalities */
-
     $scope.processing = false;
     $scope.isTrackAvailable = false;
     $scope.message = {

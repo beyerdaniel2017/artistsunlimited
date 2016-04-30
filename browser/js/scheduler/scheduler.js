@@ -80,6 +80,9 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   }
 
   $scope.changePaid = function() {
+    $scope.makeEvent.title = undefined;
+    $scope.makeEvent.trackURL = undefined;
+    $scope.makeEvent.artistName = undefined;
     $scope.makeEvent.trackID = undefined;
     $scope.makeEventURL = undefined;
   }
@@ -112,7 +115,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   $scope.deleteEvent = function() {
     if (!$scope.newEvent) {
       $scope.processing = true;
-      $http.delete('/api/events/' + $scope.makeEvent._id + '/' + $rootScope.password)
+      $http.delete('/api/events/' + $scope.makeEvent._id)
         .then(function(res) {
           var calendarDay = $scope.calendar.find(function(calD) {
             return calD.day.toLocaleDateString() == $scope.makeEvent.day.toLocaleDateString();
@@ -183,7 +186,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   }
 
   $scope.emailSlot = function() {
-    var mailto_link = "mailto:coayscue@gmail.com?subject=Repost of " + $scope.makeEvent.title + '&body=Hey ' + $scope.makeEvent.artistName + ',\n\n I am reposting your song ' + $scope.makeEvent.title + ' on ' + $scope.channel.displayName + ' on ' + $scope.makeEvent.day.toLocaleDateString() + '.\n\n Best, \n' + $scope.channel.displayName;
+    var mailto_link = "mailto:coayscue@gmail.com?subject=Repost of " + $scope.makeEvent.title + '&body=Hey,\n\n I am reposting your song ' + $scope.makeEvent.title + ' on ' + $scope.channel.displayName + ' on ' + $scope.makeEvent.day.toLocaleDateString() + '.\n\n Best, \n' + $scope.channel.displayName;
     location.href = encodeURI(mailto_link);
   }
 
@@ -286,7 +289,13 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   }
   $scope.loadSubmissions();
 
+  $scope.dayOfWeekAsString = function(date) {
+    var dayIndex = date.getDay();
+    return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"][dayIndex];
+  }
 });
+
+
 
 function fillDateArrays(events) {
   var calendar = [];

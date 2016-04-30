@@ -1,6 +1,4 @@
-
-
-app.service('ArtistToolsService', ['$http', function($http){
+app.service('ArtistToolsService', ['$http', function($http) {
 
 	function resolveData(data) {
 		return $http.post('/api/soundcloud/resolve', data);

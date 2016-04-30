@@ -5,7 +5,7 @@ var Event = mongoose.model('Event');
 var SCR = require('soundclouder');
 var scConfig = global.env.SOUNDCLOUD;
 SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
-var sendEmail = require('../mandrill/sendEmail.js');
+var sendEmail = require('../../mandrill/sendEmail.js');
 var request = require('request');
 
 module.exports = doRepost;
@@ -47,6 +47,7 @@ function doRepost() {
 function repostAndRemove(event, channel) {
   if (!event.trackID) {
     var id = channel.queue.splice(0, 1)[0];
+    channel.save();
   } else {
     var id = event.trackID;
   }
@@ -63,5 +64,4 @@ function repostAndRemove(event, channel) {
       }
     });
   }
-
 }
