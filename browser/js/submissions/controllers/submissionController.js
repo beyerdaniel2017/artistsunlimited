@@ -59,7 +59,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.changeBox = function(sub, chan) {
-    sub[chan.displayName] = !sub[chan.displayName];
     var index = sub.channelIDS.indexOf(chan.channelID);
     if (index == -1) {
       sub.channelIDS.push(chan.channelID);
@@ -77,12 +76,12 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       $http.put("/api/submissions/save", submi)
         .then(function(sub) {
           $scope.showingElements.splice($scope.showingElements.indexOf(submi), 1);
-          window.$.Zebra_Dialog("Saved");
+          $.Zebra_Dialog("Saved");
           $scope.processing = false;
         })
         .then(null, function(err) {
           $scope.processing = false;
-          window.$.Zebra_Dialog("ERROR: did not Save")
+          $.Zebra_Dialog("ERROR: did not Save")
         })
     }
   }
@@ -93,12 +92,12 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       .then(function(res) {
         var index = $scope.showingElements.indexOf(submission);
         $scope.showingElements.splice(index, 1);
-        window.$.Zebra_Dialog("Ignored");
+        $.Zebra_Dialog("Ignored");
         $scope.processing = false;
       })
       .then(null, function(err) {
         $scope.processing = false;
-        window.$.Zebra_Dialog("ERROR: did not Ignore");
+        $.Zebra_Dialog("ERROR: did not Ignore");
       });
   }
 
@@ -108,12 +107,12 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       .then(function(res) {
         var index = $scope.showingElements.indexOf(submission);
         $scope.showingElements.splice(index, 1);
-        window.$.Zebra_Dialog("Declined");
+        $.Zebra_Dialog("Declined");
         $scope.processing = false
       })
       .then(null, function(err) {
         $scope.processing = false;
-        window.$.Zebra_Dialog("ERROR: did not Decline");
+        $.Zebra_Dialog("ERROR: did not Decline");
       });
   }
 
@@ -122,7 +121,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $http.post('/api/submissions/youtubeInquiry', submission)
       .then(function(res) {
         $scope.processing = false;
-        window.$.Zebra_Dialog('Sent to Zach');
+        $.Zebra_Dialog('Sent to Zach');
       })
   }
 
@@ -131,7 +130,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $http.post('/api/submissions/sendMoreInquiry', submission)
       .then(function(res) {
         $scope.processing = false;
-        window.$.Zebra_Dialog('Sent Email');
+        $.Zebra_Dialog('Sent Email');
       })
   }
 });

@@ -54,6 +54,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   $scope.channels.forEach(function(ch) {
     $scope.selectedChannels[ch.displayName] = false;
   });
+  console.log($scope.channels);
 
   $scope.goToLogin = function() {
     $state.go('login', {

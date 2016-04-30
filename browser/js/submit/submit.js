@@ -53,12 +53,12 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
         })
         .then(function(res) {
           console.log(res.data);
-          window.$.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
+          $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
           location.reload();
         })
         .then(null, function(err) {
           $scope.processing = false;
-          window.$.Zebra_Dialog("Error: Could not submit song.");
+          $.Zebra_Dialog("Error: Could not submit song.");
         });
     }
   }
