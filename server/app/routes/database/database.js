@@ -603,6 +603,16 @@ router.post('/paidrepost', function(req, res, next) {
   }
 });
 
+router.put('/profile', function(req, res, next) {
+  User.findByIdAndUpdate(req.body._id, req.body, {
+      new: true
+    }).exec()
+    .then(function(user) {
+      res.send(user);
+    })
+    .then(null, next);
+});
+
 router.post('/profile/edit', function(req, res, next) {
 
   var body = req.body;

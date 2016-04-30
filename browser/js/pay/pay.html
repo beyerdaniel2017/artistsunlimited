@@ -18,11 +18,11 @@
 
                     <div class="col-md-4"  ng-repeat="channel in channels" style="margin-top: 70px; margin-left: 0px; padding-left: -10px;">
                         <p class="text-center">
-                            <a href="{{channel.followers}}">
+                            <a href="{{channel.url}}">
                                 <strong style="font-size: 18px;">{{channel.displayName}}</strong><br/>
                             </a>
                             <span ng-if="auDLLink" class="intro"> <span style="text-decoration: line-through;"> ${{channel.price}}</span> &nbsp;&nbsp;${{channel.price | calculateDiscount }} </span>
-                            <span ng-if="!auDLLink" class="intro">${{channel.price }}.00 </span> 
+                            <span ng-if="!auDLLink" class="intro">${{channel.price }}</span> 
                         </p>
                         <p><img ng-src="{{channel.avatarURL}}" class="img-responsive" alt="" style="border: 1px solid orange;" / height="200px;" width="300px"></p>
                         <p>{{channel.description}} Has {{channel.followerCount.toLocaleString()}} followers.</p>

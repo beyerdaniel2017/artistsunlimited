@@ -40,6 +40,10 @@ var schema = new mongoose.Schema({
         avatarURL: String,
         token: String
     },
+    queue: {
+        type: [Number],
+        default: []
+    },
     createdOn: {
         type: Date,
         default: Date.now

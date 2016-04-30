@@ -1,9 +1,9 @@
-var sendEmail = require('../mandrill/sendEmail.js');
+var sendEmail = require('../../mandrill/sendEmail.js');
 var mongoose = require('mongoose');
 var Follower = mongoose.model('Follower');
 var EmailTemplate = mongoose.model('EmailTemplate')
 var objectAssign = require('object-assign');
-var env = require('./../../env');
+var env = require('./../../../env');
 module.exports = function() {
   setTimeout(function() {
     sendAutoEmails;

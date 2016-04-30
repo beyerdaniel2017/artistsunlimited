@@ -52,7 +52,8 @@
 	height:20px;
 	border:1px solid black;
 	cursor:pointer;
-	vertical-align:middle
+	vertical-align:middle;
+	overflow: hidden;
 }
 
 .row-scheduler:hover {
@@ -70,9 +71,9 @@
 .cell-date {
 	width: 13%;
 	border: 1px solid black;
-	font-size: 1em;
+	font-size: 13px;
 	background-color: #f2f2f2;
-	line-height: 35px;
+	line-height: 16px;
 	vertical-align: middle;
 	color: black;
 }

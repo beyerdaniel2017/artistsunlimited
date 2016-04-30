@@ -14,3 +14,4 @@ require('./paidRepostAccount.js');
 require('./artistEmail.js');
 require('./application.js');
 require('./premierSubmission.js');
+require('./repostEvent.js');

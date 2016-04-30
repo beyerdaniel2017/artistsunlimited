@@ -13,7 +13,11 @@
   <div style="width:100%; height:35px; display:flex; flex-direction:row; ">
     <button class="btn btn-default btn-scheduler" ng-click="decrDay()"><img style="width:60%; height:80%; margin-right:-4px;" src="/assets/images/arrow-left.png"/></button>
     <button class="btn btn-default btn-scheduler" ng-click="incrDay()" ><img id="scheduler-btn-back" style="width:60%; height:80%;" src="/assets/images/arrow-right.png"/></button>
-    <div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{calendar[t+dayIncr].day.toLocaleDateString()}}</div>
+    <div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">
+      {{dayOfWeekAsString(calendar[t+dayIncr].day)}}
+      <br>
+      {{calendar[t+dayIncr].day.toLocaleDateString()}}
+    </div>
   </div>
   <div style="width:100%; display:flex; flex-direction:row;">
     <div style="width:9%;">
@@ -21,8 +25,8 @@
     </div>   
     <div ng-repeat="l in [0,1,2,3,4,5,6]" style="width:13%;">
       <div ng-repeat="p in [0,2,4,6,8,10,12,14,16,18,20,22]">
-        <div ng-style="calendar[l+dayIncr].events[p].paid?{'background-color':'yellow'}:calendar[l+dayIncr].events[p].trackID?{'background-color':'#67f967'}:{}" class="row-scheduler row-dark" ng-click="clickedSlot(calendar[l+dayIncr].day,p)">{{calendar[l+dayIncr].events[p].trackID}}</div>
-        <div ng-style="calendar[l+dayIncr].events[p+1].paid?{'background-color':'yellow'}:calendar[l+dayIncr].events[p+1].trackID?{'background-color':'#67f967'}:{}" class="row-scheduler row-light" ng-click="clickedSlot(calendar[l+dayIncr].day,p+1)">{{calendar[l+dayIncr].events[p+1].trackID}}</div>
+        <div ng-style="calendar[l+dayIncr].events[p].paid?{'background-color':'yellow'}:calendar[l+dayIncr].events[p].trackID?{'background-color':'#67f967'}:{}" class="row-scheduler row-dark" ng-click="clickedSlot(calendar[l+dayIncr].day,p)">{{calendar[l+dayIncr].events[p].title}}</div>
+        <div ng-style="calendar[l+dayIncr].events[p+1].paid?{'background-color':'yellow'}:calendar[l+dayIncr].events[p+1].trackID?{'background-color':'#67f967'}:{}" class="row-scheduler row-light" ng-click="clickedSlot(calendar[l+dayIncr].day,p+1)">{{calendar[l+dayIncr].events[p+1].title}}</div>
       </div>
     </div>
   </div>
@@ -48,8 +52,8 @@
 
 <!-- overlay -->
 <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showOverlay">
-  <div class="label-scheduler label-smaller" style="width: 500px; height:400px; background-color: white; margin: 300px auto; padding: 50px 0;">
-    <span>Day: {{makeEvent.day.toLocaleDateString()}}     Time: {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
+  <div class="label-scheduler label-smaller" style="width: 500px; height:500px; background-color: white; margin: 100px auto; padding: 50px 0;">
+    <span>{{makeEvent.day.toLocaleDateString()}}     {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
     <span>Paid: </span><input type="checkbox" ng-model="makeEvent.paid" ng-change="changePaid()" ng-hide="makeEvent.paid && makeEvent.trackID"/><br><br>
     <div ng-hide="makeEvent.paid">
       <span >URL: </span><input type="text" ng-model="makeEventURL" ng-change="changeURL()"/><br><br>
@@ -60,6 +64,7 @@
       <button class="btn btn-default btn-small btn-overlay" ng-click="backEvent()">Back</button>
       <button class="btn btn-default btn-small btn-overlay" ng-click="deleteEvent()" style="margin:0 30px 0 30px;" ng-hide="makeEvent.paid && makeEvent.trackID">Delete</button>
       <button class="btn btn-default btn-small btn-overlay" ng-click="saveEvent()" ng-hide="makeEvent.paid && makeEvent.trackID">Save</button>
+      <br><br>
       <!-- <button ng-click="scEmailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/scemail_icon.png' style="height:30px; width:50px;"></button> -->
       <button ng-click="emailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/email_icon.png' style="height:30px; width:50px;"></button>
     </div>
