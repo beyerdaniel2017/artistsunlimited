@@ -58,6 +58,8 @@ router.put('/repostEvents', function(req, res, next) {
     }).exec()
     .then(function(event) {
       event.trackID = req.body.trackID;
+      event.title = req.body.title;
+      event.trackURL = req.body.trackURL;
       return event.save()
     })
     .then(function(ev) {

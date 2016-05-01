@@ -14,7 +14,6 @@ app.config(function($stateProvider) {
                                     return;
                               })
                   }
-
             }
       });
 });
@@ -115,11 +114,11 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }
 
       $scope.changeQueueSlot = function() {
-            $scope.makeEvent.title = undefined;
-            $scope.makeEvent.trackURL = undefined;
-            $scope.makeEvent.artistName = undefined;
-            $scope.makeEvent.trackID = undefined;
-            $scope.makeEventURL = undefined;
+            $scope.makeEvent.title = null;
+            $scope.makeEvent.trackURL = null;
+            $scope.makeEvent.artistName = null;
+            $scope.makeEvent.trackID = null;
+            $scope.makeEventURL = null;
       }
 
       $scope.changeURL = function() {
@@ -162,7 +161,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                         })
                         .then(null, function(err) {
                               $scope.processing = false;
-                              $.Zebra_Dialog("ERROR: did not Delete.")
+                              $.Zebra_Dialog("ERROR: Did not delete.")
                         });
             } else {
                   var calendarDay = $scope.calendar.find(function(calD) {
@@ -191,14 +190,17 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                                     calendarDay.events[event.day.getHours()] = event;
                                     $scope.showOverlay = false;
                                     $scope.processing = false;
-                                    $.Zebra_Dialog("Saved");
+                                    if (event.queueSlot) {
+                                          $.Zebra_Dialog("Saved. The next available track in your queue will be reposted at this time.");
+                                    } else {
+                                          $.Zebra_Dialog("Saved. The track is now scheduled for reposting.");
+                                    }
                               })
                               .then(null, function(err) {
                                     $scope.processing = false;
-                                    $.Zebra_Dialog("ERROR: did not Save.");
+                                    $.Zebra_Dialog("ERROR: Did not save.");
                               });
                   } else {
-                        $scope.newEvent.password = $rootScope.password;
                         $scope.processing = true;
                         $http.put('/api/events/repostEvents', $scope.makeEvent)
                               .then(function(res) {
@@ -207,14 +209,18 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                                     var calendarDay = $scope.calendar.find(function(calD) {
                                           return calD.day.toLocaleDateString() == event.day.toLocaleDateString();
                                     });
-                                    calendarDay.events[event.getHours()] = event;
+                                    calendarDay.events[event.day.getHours()] = event;
                                     $scope.showOverlay = false;
                                     $scope.processing = false;
-                                    $.Zebra_Dialog("Saved");
+                                    if (event.queueSlot) {
+                                          $.Zebra_Dialog("Saved. The next available track in your queue will be reposted at this time.");
+                                    } else {
+                                          $.Zebra_Dialog("Saved. The track is now scheduled for reposting.");
+                                    }
                               })
                               .then(null, function(err) {
                                     $scope.processing = false;
-                                    $.Zebra_Dialog("ERROR: did not Save.");
+                                    $.Zebra_Dialog("ERROR: Did not save.");
                               });
                   }
             }
