@@ -31,7 +31,7 @@
       <!-- Queue -->
       <h3 style="text-align:center" class="label-scheduler">Queue</h3>
       <div style="width:70%; text-align:center; margin: 10px auto;">
-        <div ng-repeat="song in user.queue track by $index" style="padding:10px 0;">
+        <div ng-repeat="song in user.queue" style="padding:10px 0;">
           <div id="{{song}}player" style="display:inline-block; width:90%; background-color:gray; height:150px;"></div>
           <div style="display:inline-block; width: 9%; height:150px; vertical-align: top;">
             <button ng-click="removeQueueSong(user.queue.indexOf(song))" class="btn btn-default btn-queue" ><img style="width:80%; height:90%;margin-top: -15px;" src="/assets/images/x-white.png"/></button>

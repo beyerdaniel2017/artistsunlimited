@@ -17,7 +17,7 @@ app.config(function($stateProvider) {
 
 app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService) {
     /* Init Download Gateway form data */
-    $scope.user = JSON.parse(SessionService.getUser());
+    $scope.user = SessionService.getUser();
     $scope.showTitle = [];
     $scope.track = {
         artistUsername: '',
@@ -161,7 +161,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     };
 
     $scope.getTrackListFromSoundcloud = function() {
-        var profile = JSON.parse(SessionService.getUser());
+        var profile = SessionService.getUser();
         if (profile.soundcloud) {
             $scope.processing = true;
             SC.get('/users/' + profile.soundcloud.id + '/tracks')

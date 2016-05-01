@@ -5,12 +5,13 @@ app.config(function($stateProvider) {
             controller: 'ATSchedulerController',
             resolve: {
                   events: function($http, SessionService) {
-                        return $http.get('/api/events/forUser/' + JSON.parse(SessionService.getUser()).soundcloud.id)
+                        return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
                               .then(function(res) {
                                     return res.data;
                               })
                               .then(null, function(err) {
                                     $.Zebra_Dialog("error getting your events");
+                                    return;
                               })
                   }
 
@@ -19,8 +20,7 @@ app.config(function($stateProvider) {
 });
 
 app.controller('ATSchedulerController', function($rootScope, $state, $scope, $http, AuthService, $window, events, SessionService) {
-      $scope.user = JSON.parse(SessionService.getUser());
-      console.log($scope.user);
+      $scope.user = SessionService.getUser();
       $scope.makeEventURL = "";
       $scope.showOverlay = false;
       $scope.processiong = false;
@@ -34,14 +34,16 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   $scope.hideall = true;
 
                   var answer = prompt('To use the scheduler, we need your email to alert you when your access token goes bad. What is your email?');
-
+                  if (!answer) {
+                        $state.go('artistToolsDownloadGatewayList');
+                  }
                   var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
                   if (myArray) {
                         $scope.user.email = answer;
                         return $http.put('/api/database/profile', $scope.user)
                               .then(function(res) {
                                     SessionService.create(res.data);
-                                    $scope.user = JSON.parse(SessionService.getUser());
+                                    $scope.user = SessionService.getUser();
                                     $scope.hideall = false;
                               })
                               .then(null, function(err) {
@@ -219,13 +221,9 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }
 
       $scope.emailSlot = function() {
-            var mailto_link = "mailto:coayscue@gmail.com?subject=Repost of " + $scope.makeEvent.title + '&body=Hey,\n\n I am reposting your song ' + $scope.makeEvent.title + ' on ' + $scope.user.soundcloud.username + ' on ' + $scope.makeEvent.day.toLocaleDateString() + '.\n\n Best, \n' + $scope.user.soundcloud.username;
+            var mailto_link = "mailto:?subject=Repost of " + $scope.makeEvent.title + '&body=Hey,\n\n I am reposting your song ' + $scope.makeEvent.title + ' on ' + $scope.user.soundcloud.username + ' on ' + $scope.makeEvent.day.toLocaleDateString() + '.\n\n Best, \n' + $scope.user.soundcloud.username;
             location.href = encodeURI(mailto_link);
       }
-
-      // $scope.scEmailSlot = function() {
-
-      // }
 
       $scope.backEvent = function() {
             $scope.makeEvent = null;
@@ -234,11 +232,10 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
       $scope.removeQueueSong = function(index) {
             $scope.user.queue.splice(index, 1);
-            $scope.saveUser();
+            $scope.saveUser()
       }
 
       $scope.addSong = function() {
-            console.log($scope.user);
             if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
             $scope.user.queue.push($scope.newQueueID);
             $scope.saveUser();

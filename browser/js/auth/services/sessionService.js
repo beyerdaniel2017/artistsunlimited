@@ -1,7 +1,5 @@
+app.factory('SessionService', function($cookies, $http) {
 
-
-app.factory('SessionService', ['$cookies', function($cookies) {
-	
 	function create(data) {
 		$cookies.putObject('user', data);
 	}
@@ -11,12 +9,27 @@ app.factory('SessionService', ['$cookies', function($cookies) {
 	}
 
 	function getUser() {
-		return $cookies.get('user');
+		var user = $cookies.get('user');
+		if (user) {
+			return JSON.parse($cookies.get('user'));
+		}
+	}
+
+	function refreshUser() {
+		var curUser = getUser();
+		console.log(curUser);
+		if (curUser) {
+			$http.get('/api/users/byId/' + curUser._id)
+				.then(function(res) {
+					create(res.data);
+				})
+		}
 	}
 
 	return {
 		create: create,
 		deleteUser: deleteUser,
-		getUser: getUser
+		getUser: getUser,
+		refreshUser: refreshUser
 	};
-}]);
+});

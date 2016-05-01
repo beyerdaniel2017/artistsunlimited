@@ -48,7 +48,6 @@ function doRepost() {
 function repostAndRemove(event, user) {
   if (!event.trackID) {
     var id = user.queue.splice(0, 1)[0];
-    console.log(user);
     user.save();
   } else {
     var id = event.trackID;
