@@ -604,8 +604,9 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 
 .row-scheduler {
   width: 100%;
-  height: 20px;
+  height: 24px;
   border: 1px solid black;
+  border-right: 1px solid black;
   cursor: pointer;
   vertical-align: middle; }
 
@@ -621,7 +622,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .cell-date {
   width: 13%;
   border: 1px solid black;
-  font-size: 1em;
+  font-size: 1.2em;
   background-color: #f2f2f2;
   line-height: 35px;
   vertical-align: middle;
@@ -629,10 +630,11 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 
 .cell-time {
   width: 100%;
-  height: 20px;
+  height: 24px;
   border: 1px solid black;
   vertical-align: middle;
-  color: black; }
+  color: black;
+  font-size: 1.1em; }
 
 .form-scheduler {
   width: 20%;
@@ -645,3 +647,29 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 
 .label-smaller {
   font-size: 1.25em; }
+
+/** REFORRE INTERACTION **/
+.row-small {
+  font-size: 0.9em;
+  height: 4%;
+  vertical-align: middle; }
+
+.label-username {
+  font-size: 1.5em; }
+
+.form-message {
+  display: inline;
+  width: 80%;
+  margin: 0 10px;
+  text-align: right; }
+
+.btn-chat-send {
+  background: #F5BBBC;
+  border-color: transparent;
+  border-radius: 0px;
+  text-align: center;
+  padding: 3px;
+  color: #fff;
+  font-size: 1em;
+  text-transform: uppercase;
+  letter-spacing: 3px; }
