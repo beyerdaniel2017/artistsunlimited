@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var Channel = mongoose.model('Channel');
 var Event = mongoose.model('Event');
 var SCR = require('soundclouder');
-var scConfig = global.env.SOUNDCLOUD;
+var scConfig = require('./../../../env').SOUNDCLOUD;
 SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
 var sendEmail = require('../../mandrill/sendEmail.js');
 var request = require('request');

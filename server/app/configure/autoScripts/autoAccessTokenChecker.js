@@ -3,7 +3,7 @@ var User = mongoose.model('User');
 var RepostEvent = mongoose.model('RepostEvent');
 var sendEmail = require('../../mandrill/sendEmail.js');
 var SCR = require('soundclouder');
-var scConfig = global.env.SOUNDCLOUD;
+var scConfig = require('./../../../env').SOUNDCLOUD;
 SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
 
 module.exports = checkTokens;
@@ -12,7 +12,7 @@ module.exports = checkTokens;
 function checkTokens() {
   setTimeout(function() {
     checkTokens()
-  }, 86400000);
+  }, 7200000);
 
   User.find({}).exec()
     .then(function(users) {
@@ -23,10 +23,9 @@ function checkTokens() {
           }).exec()
           .then(function(events) {
             if (events && events.length > 0) {
-              SCR.get('/me', user.soundcloud.accessToken, function(err, data) {
-                console.log(data);
+              SCR.get('/me', user.soundcloud.token, function(err, data) {
                 if (err) {
-                  sendEmail(user.soundcloud.username, user.email, "Artists Unlimited", "coayscue@artistsunlimited.com", "Access Token Invalid", "Hey " + user.soundcloud.username + ", <br><br>Your access token is invalid, and we see that you have some scheduled reposts coming up. Please log back in to <a href='https://artistsunlimited.co/login'>Artist Tools</a> or your scheduled reposts will not occur.<br><br>Best,<br>Christian Ayscue<br>Artists Unlimited");
+                  sendEmail(user.soundcloud.username, user.email, "Artists Unlimited", "coayscue@artistsunlimited.co", "Invalid Access Token", "Hey " + user.soundcloud.username + ", <br><br>Your soundcloud access token for Artists Unlimited is invalid and you have some scheduled reposts coming up. Please log back in to <a href='https://artistsunlimited.co/login'>Artist Tools</a> to allow us to fulfill your scheduled reposts: <a href='https://artistsunlimited.co/login'>Artist Tools Login</a><br><br>Best,<br>Christian Ayscue<br>Artists Unlimited");
                 }
               })
             }

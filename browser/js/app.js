@@ -1,7 +1,7 @@
 'use strict';
 window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago']);
 
-app.config(function ($urlRouterProvider, $locationProvider, $uiViewScrollProvider) {
+app.config(function($urlRouterProvider, $locationProvider, $uiViewScrollProvider) {
     // This turns off hashbang urls (/#about) and changes it to something normal (/about)
     $locationProvider.html5Mode(true);
     // If we go to a URL that ui-router doesn't have registered, go to the "/" url.
@@ -10,7 +10,7 @@ app.config(function ($urlRouterProvider, $locationProvider, $uiViewScrollProvide
 });
 
 // This app.run is for controlling access to specific states.
-app.run(function ($rootScope, AuthService, $state, $uiViewScroll, SessionService, AppConfig) {
+app.run(function($rootScope, AuthService, $state, $uiViewScroll, SessionService, AppConfig) {
     // The given state requires an authenticated user.
     // var destinationStateRequiresAuth = function (state) {
     //     return state.data && state.data.authenticate;
@@ -24,7 +24,7 @@ app.run(function ($rootScope, AuthService, $state, $uiViewScroll, SessionService
 
     // $stateChangeStart is an event fired
     // whenever the process of changing a state begins.
-    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams) {
         // if(toState = 'artistTools') {
         //     var user = SessionService.getUser();
         //     console.log(user);
@@ -58,24 +58,26 @@ app.run(function ($rootScope, AuthService, $state, $uiViewScroll, SessionService
 
     });
 
+    SessionService.refreshUser();
+
 });
 
 
-app.directive('fileread', [function () {
+app.directive('fileread', [function() {
     return {
         scope: {
             fileread: '=',
             message: '='
         },
-        link: function (scope, element, attributes) {
-            element.bind('change', function (changeEvent) {
-                scope.$apply(function () {
+        link: function(scope, element, attributes) {
+            element.bind('change', function(changeEvent) {
+                scope.$apply(function() {
                     scope.message = {
                         visible: false,
                         val: ''
                     };
-                    
-                    if(changeEvent.target.files[0].type != "audio/mpeg" && changeEvent.target.files[0].type != "audio/mp3") {
+
+                    if (changeEvent.target.files[0].type != "audio/mpeg" && changeEvent.target.files[0].type != "audio/mp3") {
                         scope.message = {
                             visible: true,
                             val: 'Error: Please upload mp3 format file.'
@@ -83,8 +85,8 @@ app.directive('fileread', [function () {
                         element.val(null);
                         return;
                     }
-                    
-                    if(changeEvent.target.files[0].size > 20*1000*1000) {
+
+                    if (changeEvent.target.files[0].size > 20 * 1000 * 1000) {
                         scope.message = {
                             visible: true,
                             val: 'Error: Please upload file upto 20 MB size.'

@@ -363,7 +363,7 @@ app.controller('AdminDLGateController', ['$rootScope',
     };
 
     $scope.showProfileInfo = function() {
-      $scope.profile = JSON.parse(SessionService.getUser());
+      $scope.profile = SessionService.getUser();
     }
 
     $scope.getDownloadList = function() {

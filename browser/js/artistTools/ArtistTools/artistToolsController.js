@@ -36,7 +36,7 @@ app.config(function($stateProvider) {
 });
 
 app.controller('ArtistToolsController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService) {
-    $scope.user = JSON.parse(SessionService.getUser());
+    $scope.user = SessionService.getUser();
 
     /* Init boolean variables for show/hide and other functionalities */
     $scope.processing = false;
@@ -125,7 +125,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
 
 
     $scope.showProfileInfo = function() {
-      $scope.profile.data = JSON.parse(SessionService.getUser());
+      $scope.profile.data = SessionService.getUser();
       if (($scope.profile.data.permanentLinks && $scope.profile.data.permanentLinks.length === 0) || !$scope.profile.data.permanentLinks) {
         $scope.profile.data.permanentLinks = [{
           url: '',
