@@ -44,16 +44,16 @@
 	padding: 4px;
 	line-height: 45px;
 	vertical-align: middle;
-	
 }
 
 .row-scheduler {
 	width:100%;
-	height:20px;
-	border:1px solid black;
+	height:24px;
+	border: 1px solid black;
+	border-right: 1px solid black;
 	cursor:pointer;
 	vertical-align:middle;
-	overflow: hidden;
+	overflow:hidden;
 }
 
 .row-scheduler:hover {
@@ -80,10 +80,11 @@
 
 .cell-time {
 	width:100%;
-	height:20px;
+	height:24px;
 	border:1px solid black;
 	vertical-align: middle;
 	color: black;
+	font-size: 1.1em;
 }
 
 .form-scheduler {
@@ -99,4 +100,42 @@
 
 .label-smaller {
 	font-size: 1.25em;
+}
+
+/** REFORRE INTERACTION **/
+
+.rfr-scheduler-container {
+}
+
+.scheduler-small {
+
+}
+
+.row-small {
+	font-size: 0.9em;
+	height: 4%;
+	vertical-align: middle;
+}
+
+.label-username {
+	font-size: 1.5em;
+}
+
+.form-message {
+	display: inline;
+	width: 80%;
+	margin: 0 10px;
+	text-align: right;
+}
+
+.btn-chat-send {
+	background: #F5BBBC;
+	border-color: transparent;
+	border-radius: 0px;
+	text-align: center;
+	padding: 3px;
+	color: #fff;
+	font-size: 1em;
+	text-transform:uppercase;
+	letter-spacing: 3px;
 }
