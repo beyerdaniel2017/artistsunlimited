@@ -104,7 +104,7 @@ font-size: 1.25em;
 
 /** REFORRE INTERACTION **/
 
-.rfr-scheduler-container {
+.rfr-schedule-container {
 width: 96%;
 height: 60vh;
 min-height: 480px;
@@ -133,37 +133,40 @@ font-size: 1.5em;
 }
 
 .form-message {
-width: 90%;
-margin:auto;
+width: 92.5%;
+height: 100%;
 margin-left: 1%;
 display: inline-block;
+margin: 1%;
+margin-right: 0;
+margin-top: 0;
 }
 
-rfr-chat {
-margin: 0 auto;
+.rfr-chat {
+margin: 1% auto;
 width: 96%;
-height: 38vh;
+height: 37vh;
 position:relative;
 }
 
-rfr-chatbox {
+.rfr-chatbox {
 display: inline-block;
-width: 74%;
 height: 100%;
 background: white;
 border: 1px solid black;
+width: 75%;
 }
 
-convo-display {
+.convo-display {
 overflow-y: scroll;
-height: 75%;
-margin: 2%;
+height: 78%;
+margin: 1%;
 position: relative;
 }
 
-chat-input {
+.chat-input {
 width: 100%;
-height: 100%;
+height: 13%;
 margin:auto;
 }
 
@@ -177,6 +180,10 @@ color: #fff;
 font-size: 1em;
 text-transform:uppercase;
 letter-spacing: 3px;
+height: 100%;
+display: inline-block;
+margin-left:-4px;
+vertical-align: top;
 }
 
 .msg-line {
@@ -232,4 +239,7 @@ width: 100%;
 vertical-align: top;
 padding: 0;
 float: right;
+display: inline-block;
+margin: auto 0.5% auto 0;
+width: 24%;
 }

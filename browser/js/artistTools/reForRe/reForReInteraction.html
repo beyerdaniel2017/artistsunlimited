@@ -5,8 +5,8 @@
 		background: white;
 	}
 </style>
-<div class="rfr-schedule-container" style="width: 96%; height: 60vh; min-height: 480px; margin: auto; margin-top: 5px; display: block;">
-	<div class="scheduler-small" style="width: 49%; height: 100%; text-align: center; margin: auto; display: inline-block;">
+<div class="rfr-schedule-container">
+	<div class="scheduler-small">
 		<div class="label-username bold" style="height: 6%">User A</div>
 		<div style="text-align:center; width:100%; height: 94%; margin: auto;">
 			<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
@@ -25,7 +25,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="scheduler-small" style="width: 49%; height: 100%; text-align: center; margin: auto; margin-left: 1.5%; display: inline-block;">
+	<div class="scheduler-small" style="margin-left: 1.5%">
 		<div class="label-username bold" style="height: 6%">User B</div>
 		<div style="text-align:center; width:100%; height: 94%; margin: auto;">
 			<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
@@ -48,9 +48,9 @@
 
 <!--CHAT-->
 
-<div class="rfr-chat" style="margin: 1% auto; width: 96%; height: 37vh;">
-	<div class="rfr-chatbox" style="display: inline-block; width: 75%; height: 100%; background: white; border: 1px solid black;">
-		<div class="convo-display" style="overflow-y: scroll; height: 78%; margin: 1%; position: relative">
+<div class="rfr-chat">
+	<div class="rfr-chatbox">
+		<div class="convo-display">
 			<!--<div ng-repeat="msg in msgHistory track by $index" class="msg-line">
 				<div class="msg-box" ng-class="{msg-from: msg.from, msg-to: !msg.from}">
 					{{msg.text}}
@@ -85,12 +85,12 @@
 			</div>
 
 		</div>
-		<div class="chat-input" style="width: 100%; height: 13%; margin:auto;">
-			<input class="form-control form-message" style="width: 92.5%; height: 100%; margin: 1%; margin-right: 0; margin-top: 0; display: inline-block"></input>
-			<button class="btn btn-default btn-chat-send" style="height: 100%; display: inline-block; margin-left:-4px; vertical-align: top">Send</button>
+		<div class="chat-input">
+			<input class="form-control form-message"></input>
+			<button class="btn btn-default btn-chat-send">Send</button>
 		</div>
 	</div>
-	<div class="trade-options" style="display: inline-block; margin: auto 0.5% auto 0; width: 24%;">
+	<div class="trade-options">
 		<select class="form-control select-rfr">
 			<option>--Select Option--</option>
 			<option value="oneTime">One Time</option>
