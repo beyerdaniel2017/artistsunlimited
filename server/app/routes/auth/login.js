@@ -60,7 +60,9 @@ router.post('/authenticated', function(req, res, next) {
       Channel.findOneAndUpdate({
           channelID: data.id
         }, {
-          accessToken: req.body.token
+          accessToken: req.body.token,
+          followerCount: data.followers_count,
+          price: parseFloat(data.followers_count / 3000.0).toFixed(2)
         }).exec()
         .then(function(channel) {
           sendObj.channel = channel;
@@ -91,25 +93,25 @@ router.post('/soundCloudLogin', function(req, res, next) {
         success: false,
         "message": err
       });
-    } 
+    }
     if (!user) {
       return res.json({
         success: false,
         "message": "Error in processing your request"
       });
     } else {
-          req.login(user, function(err) {
-          req.session.cookie.expires = false;
-          req.session.name = user.userid;
-          req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
-          req.session.cookie.maxAge = 28 * 24 * 3600000;
+      req.login(user, function(err) {
         req.session.cookie.expires = false;
-          return res.json({
-            'success': true,
+        req.session.name = user.userid;
+        req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
+        req.session.cookie.maxAge = 28 * 24 * 3600000;
+        req.session.cookie.expires = false;
+        return res.json({
+          'success': true,
           'message': '',
-            'user': user
-          });
+          'user': user
         });
+      });
     }
   })(req, res);
 });

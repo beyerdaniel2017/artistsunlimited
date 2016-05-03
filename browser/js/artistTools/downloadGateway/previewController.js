@@ -5,7 +5,7 @@ app.config(function($stateProvider) {
             params: {
                 submission: null
             },
-            templateUrl: 'js/home/views/artistTools/preview.html',
+            templateUrl: 'js/artistTools/downloadGateway/preview.html',
             controller: 'ArtistToolsPreviewController'
         })
 });
@@ -15,7 +15,7 @@ app.controller("ArtistToolsPreviewController", function($rootScope, $state, $sta
     var track = JSON.parse(window.localStorage.getItem('trackPreviewData'));
     console.log(track);
     if (!track.trackTitle) {
-        alert('Track Not Found');
+        $.Zebra_Dialog('Track Not Found');
         $state.go("artistToolsDownloadGatewayList");
         return false;
     }
@@ -37,6 +37,6 @@ app.controller("ArtistToolsPreviewController", function($rootScope, $state, $sta
         }
     }
     $scope.nodl = function() {
-        alert('No download in preview mode.')
+        $.Zebra_Dialog('No download in preview mode.')
     }
 });

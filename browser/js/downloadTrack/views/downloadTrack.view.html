@@ -4,10 +4,10 @@
 <div class="sidebar-tracks" ng-show="recentTracks.length > 0">
  <div class="songs-list text-center" ng-repeat="item in recentTracks">
    <a ng-href="/download?trackid={{item._id}}" target="_blank">
-     <img class="avatar" ng-src="{{item.trackArtworkURL}}"/>
-     {{item.trackTitle}}
-   </a>
- </div>
+    <span ng-show="!!showTitle[item]">{{item.trackTitle}}</span>
+    <img class="avatar" ng-src="{{item.trackArtworkURL}}" ng-mouseleave="showTitle[item] = !showTitle[item]" ng-mouseover="showTitle[item] = !showTitle[item]"/>
+  </a>
+</div>
 </div>
 <!-- Sidebar End -->
 

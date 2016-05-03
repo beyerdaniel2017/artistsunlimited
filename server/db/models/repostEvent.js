@@ -1,17 +1,8 @@
 var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
-  channelID: {
+  userID: {
     type: Number
-  },
-  paid: {
-    type: Boolean
-  },
-  email: {
-    type: String
-  },
-  name: {
-    type: String
   },
   trackID: {
     type: Number
@@ -28,7 +19,10 @@ var schema = new mongoose.Schema({
   completed: {
     type: Boolean,
     default: false
+  },
+  queueSlot: {
+    type: Boolean
   }
 });
 
-mongoose.model("Event", schema);
+mongoose.model("RepostEvent", schema);

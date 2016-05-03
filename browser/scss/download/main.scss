@@ -1,15 +1,15 @@
  .follow-area {
-	height: auto;
-	padding: 0;
-}
-.follow-section{
-	position: relative;
-}
-.follow-container {
-	height: 100%;
-	width: 100%;
-	min-height: 595px;
-	position: relative;
+ 	height: auto;
+ 	padding: 0;
+ }
+ .follow-section{
+ 	position: relative;
+ }
+ .follow-container {
+ 	height: 100%;
+ 	width: 100%;
+ 	min-height: 595px;
+ 	position: relative;
 	// background: #fff url(../../assets/images/header-overlay.png) no-repeat;
 	padding: 12% 0;
 }
@@ -60,7 +60,7 @@
 
 .sidebar-tracks {
 	position: absolute;
-	left: 0;
+	right:0;
 	top: 0;
 	padding: 10px;
 	margin-top: 90px;
@@ -72,10 +72,10 @@
 	font-size:12px;
 }
 .songs-list a {
-	width: 200px;
+	width: 800px;
 	display: inline-block;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	text-align: left;
+	text-align: right;
 }

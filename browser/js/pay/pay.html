@@ -5,7 +5,7 @@
         <div class="col-md-12">
             <div class="content-area bg-white">
                 <div class="row">
-                 <div class="col-md-12" >
+                   <div class="col-md-12" >
                     <h1 class="bold">Promotion Marketplace</h1>
                     <h3>Please select all the channels on which you would like to be reposted.</h3>
 
@@ -18,12 +18,14 @@
 
                     <div class="col-md-4"  ng-repeat="channel in channels" style="margin-top: 70px; margin-left: 0px; padding-left: -10px;">
                         <p class="text-center">
-                            <strong style="font-size: 18px;">{{channel.displayName}}</strong><br/>
+                            <a href="{{channel.url}}">
+                                <strong style="font-size: 18px;">{{channel.displayName}}</strong><br/>
+                            </a>
                             <span ng-if="auDLLink" class="intro"> <span style="text-decoration: line-through;"> ${{channel.price}}</span> &nbsp;&nbsp;${{channel.price | calculateDiscount }} </span>
-                            <span ng-if="!auDLLink" class="intro">${{channel.price }}.00 </span> 
+                            <span ng-if="!auDLLink" class="intro">${{channel.price }}</span> 
                         </p>
                         <p><img ng-src="{{channel.avatarURL}}" class="img-responsive" alt="" style="border: 1px solid orange;" / height="200px;" width="300px"></p>
-                        <p>{{channel.description}}</p>
+                        <p>{{channel.description}} Has {{channel.followerCount.toLocaleString()}} followers.</p>
 
                         <button ng-show="channel.addtocart" class="btn btn-enter" style="background-color: #F5BBBC; margin-right: auto;margin-left: auto;width: 100%;" ng-click="addToCart(channel)">
                             Remove cart
@@ -36,16 +38,15 @@
 
                     <div class="clearfix"></div>
                     <div style="margin: 30px 0px 10px 0px;display: inline-block;width: 100%;">
+                        <button class="btn btn-enter" style="float: right; background-color: transparent; color: grey; outline: none; box-shadow: none;padding: 10px 0px;margin: 0px; font-size:1.3em" ng-click="makePayment()">Checkout</button>
+                        <span style="float: left; background-color: transparent; color: grey; outline: none; box-shadow: none;padding: 10px 0px;margin: 0px; font-size:1.3em">TOTAL: ${{showTotal}}</span></span>
+                    </div>
 
-                       <button class="btn btn-enter" style="float: right; background-color: transparent; color: grey; outline: none; box-shadow: none;padding: 10px 0px;margin: 0px;" ng-click="makePayment()">Proceed to Checkout</button>
-                   </div>
-
-                   <div id="scPlayer" style="margin:30px 0"></div>
-               </div>
-           </div>
-       </div>
-   </div>
-</div>
+                    <div id="scPlayer" style="margin:30px 0"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <ng-include src="'js/home/views/loader.html'"> </ng-include>

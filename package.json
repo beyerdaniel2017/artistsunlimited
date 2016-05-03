@@ -87,7 +87,8 @@
     "soundcloud-resolve": "^1.0.2",
     "soundcloud-resolve-jsonp": "^1.3.0",
     "soundclouder": "^0.8.1",
-    "supertest": "^0.15.0"
+    "supertest": "^0.15.0",
+    "zebra_dialog": "^1.3.12"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

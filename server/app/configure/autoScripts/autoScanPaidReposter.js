@@ -9,7 +9,7 @@ var DownloadTrack = mongoose.model('DownloadTrack');
 var PaidRepostAccount = mongoose.model('PaidRepostAccount');
 var csv = require('csv-write-stream');
 var fs = require('fs');
-var scConfig = require('./../../env').SOUNDCLOUD;
+var scConfig = require('./../../../env').SOUNDCLOUD;
 var SC = require('node-soundcloud');
 
 module.exports = getPaidRepostAccounts;

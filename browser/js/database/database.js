@@ -96,7 +96,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
       window.location.href = '/admin';
     }).catch(function(err) {
       $scope.processing = false;
-      alert('Wrong Password');
+      $.Zebra_Dialog('Wrong Password');
     });
   }
 
@@ -105,12 +105,12 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
     $scope.addUser.password = $rootScope.password;
     $http.post('/api/database/adduser', $scope.addUser)
       .then(function(res) {
-        alert("Success: Database is being populated. You will be emailed when it is complete.");
+        $.Zebra_Dialog("Success: Database is being populated. You will be emailed when it is complete.");
         $scope.processing = false;
         $scope.bar.visible = true;
       })
       .catch(function(err) {
-        alert('Bad submission');
+        $.Zebra_Dialog('Bad submission');
         $scope.processing = false;
       });
   }
@@ -152,7 +152,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
         $scope.processing = false;
       })
       .then(null, function(err) {
-        alert("ERROR: Bad Query or No Matches");
+        $.Zebra_Dialog("ERROR: Bad Query or No Matches");
         $scope.processing = false;
       });
   }
@@ -181,7 +181,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
         $scope.processing = false;
       })
       .then(null, function(err) {
-        alert("ERROR: Bad Query or No Matches");
+        $.Zebra_Dialog("ERROR: Bad Query or No Matches");
         $scope.processing = false;
       });
   }
@@ -203,11 +203,11 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
         $scope.paidRepost = {
           soundCloudUrl: ''
         };
-        alert("SUCCESS: Url saved successfully");
+        $.Zebra_Dialog("SUCCESS: Url saved successfully");
         $scope.processing = false;
       })
       .then(null, function(err) {
-        alert("ERROR: Error in saving url");
+        $.Zebra_Dialog("ERROR: Error in saving url");
         $scope.processing = false;
       });
   }

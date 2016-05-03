@@ -90,7 +90,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 			}
 
 			function catchDownloadTrackError() {
-				alert('Song Not Found');
+				$.Zebra_Dialog('Song Not Found');
 				$scope.processing = false;
 				$scope.embedTrack = false;
 			}
@@ -101,7 +101,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 
 		$scope.downloadTrack = function() {
 			if ($scope.track.comment && !$scope.track.commentText) {
-				alert('Please write a comment!');
+				$.Zebra_Dialog('Please write a comment!');
 				return false;
 			}
 			$scope.processing = true;
@@ -129,7 +129,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 			}
 
 			function catchTasksError(err) {
-				alert('Error in processing your request');
+				$.Zebra_Dialog('Error in processing your request');
 				$scope.processing = false;
 				$scope.$apply();
 			}

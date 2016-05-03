@@ -23,7 +23,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
       $scope.processing = false;
     }).catch(function(err) {
       $scope.processing = false;
-      alert('Wrong Password');
+      $.Zebra_Dialog('Wrong Password');
     });
   }
 
@@ -32,13 +32,13 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
       window.location.href = '/admin';
     }).catch(function(err) {
       $scope.processing = false;
-      alert('Wrong Password');
+      $.Zebra_Dialog('Wrong Password');
     });
   }
 
   $scope.manage = function() {
     $scope.processing = true;
-    
+
     SC.connect()
       .then(function(res) {
         $rootScope.accessToken = res.oauth_token;
@@ -56,7 +56,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         $state.go('scheduler');
       })
       .then(null, function(err) {
-        alert('Error: Could not log in');
+        $.Zebra_Dialog('Error: Could not log in');
         $scope.processing = false;
       });
   }

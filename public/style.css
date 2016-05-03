@@ -29,7 +29,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(249, 214, 176, 0.9);
-  z-index: 9999;
+  z-index: 1;
   /* makes sure it stays on top */ }
 
 .loader-spinner {
@@ -539,7 +539,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 
 .sidebar-tracks {
   position: absolute;
-  left: 0;
+  right: 0;
   top: 0;
   padding: 10px;
   margin-top: 90px;
@@ -551,12 +551,12 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   font-size: 12px; }
 
 .songs-list a {
-  width: 200px;
+  width: 800px;
   display: inline-block;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  text-align: left; }
+  text-align: right; }
 
 .btn-scheduler {
   background: transparent;
@@ -608,7 +608,8 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   border: 1px solid black;
   border-right: 1px solid black;
   cursor: pointer;
-  vertical-align: middle; }
+  vertical-align: middle;
+  overflow: hidden; }
 
 .row-scheduler:hover {
   background-color: #fff; }
@@ -622,9 +623,9 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .cell-date {
   width: 13%;
   border: 1px solid black;
-  font-size: 1.2em;
+  font-size: 13px;
   background-color: #f2f2f2;
-  line-height: 35px;
+  line-height: 16px;
   vertical-align: middle;
   color: black; }
 

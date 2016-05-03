@@ -38,7 +38,7 @@ module.exports = {
         },
         "amount": {
           "currency": "USD",
-          "total": price.toString() + ".00"
+          "total": price.toString()
         },
         "description": nameString
       }]
@@ -56,13 +56,13 @@ module.exports = {
     });
   },
   executePayment: function(paymentID, paymentJSON) {
-    return new Promise(function(fulfill, reject){
+    return new Promise(function(fulfill, reject) {
       paypal.payment.execute(paymentID, paymentJSON, function(error, payment) {
-          if (error) {
-            reject(error);
-          } else {
-            fulfill(payment);
-          }
+        if (error) {
+          reject(error);
+        } else {
+          fulfill(payment);
+        }
       });
     })
   },
