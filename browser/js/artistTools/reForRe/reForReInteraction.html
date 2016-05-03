@@ -2,10 +2,11 @@
 	body {
 		margin: 0;
 		padding: 0;
+		background: white;
 	}
 </style>
-<div class="rfr-schedule-container" style="width: 96%; height: 60vh; margin: auto; margin-top: 5px; display: block;">
-	<div class="scheduler-small" style="width: 49%; height: 100%; text-align: center; margin: auto; display: inline-block;">
+<div class="rfr-schedule-container">
+	<div class="scheduler-small">
 		<div class="label-username bold" style="height: 6%">User A</div>
 		<div style="text-align:center; width:100%; height: 94%; margin: auto;">
 			<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
@@ -24,7 +25,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="scheduler-small" style="width: 49%; height: 100%; text-align: center; margin: auto; margin-left: 1%; display: inline-block;">
+	<div class="scheduler-small" style="margin-left: 1.5%">
 		<div class="label-username bold" style="height: 6%">User B</div>
 		<div style="text-align:center; width:100%; height: 94%; margin: auto;">
 			<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
@@ -47,13 +48,56 @@
 
 <!--CHAT-->
 
-<div class="rfr-chat" style="margin: 0 auto; width: 96%; height: 38vh;">
-	<div class="rfr-chatbox" style="display: inline-block; width: 75%; height: 100%; background: white; border: 1px solid black">
-		<div class="convo-display" style="height: 85%">
+<div class="rfr-chat">
+	<div class="rfr-chatbox">
+		<div class="convo-display">
+			<!--<div ng-repeat="msg in msgHistory track by $index" class="msg-line">
+				<div class="msg-box" ng-class="{msg-from: msg.from, msg-to: !msg.from}">
+					{{msg.text}}
+				</div>
+			</div>-->
+			<div class="msg-line">
+				<div class="msg-box msg-from">Message from me</div>
+			</div>
+			<div class="msg-line">
+				<div class="msg-box msg-to">Message from you</div>
+			</div>
+			<div class="msg-line">
+				<div class="msg-box msg-from">Message from me</div>
+			</div>
+			<div class="msg-line">
+				<div class="msg-box msg-from">Message from me</div>
+			</div>
+			<div class="msg-line">
+				<div class="msg-box msg-to">Message from you</div>
+			</div>
+			<div class="msg-line">
+				<div class="msg-box msg-notif">Notification!</div>
+			</div>
+			<div class="msg-line">
+				<div class="msg-box msg-to">Message from you</div>
+			</div>
+			<div class="msg-line">
+				<div class="msg-box msg-from">Message from me</div>
+			</div>
+			<div class="msg-line">
+				<div class="msg-box msg-to">Message from you</div>
+			</div>
+
 		</div>
-		<div class="chat-input" style="width: 100%; height: 100%; margin:auto">
-			<input class="form-control form-message" style="width: 90%; margin:auto; margin-left: 1%; display: inline-block"></input>
-			<button class="btn btn-default btn-chat-send" style="display: inline-block; margin-left: 1%;">Send</button>
+		<div class="chat-input">
+			<input class="form-control form-message"></input>
+			<button class="btn btn-default btn-chat-send">Send</button>
 		</div>
+	</div>
+	<div class="trade-options">
+		<select class="form-control select-rfr">
+			<option>--Select Option--</option>
+			<option value="oneTime">One Time</option>
+			<option value="weekly">Weekly</option>
+		</select>
+		<!--TODO: give functions to buttons-->
+		<button class="btn btn-default btn-option">Save &amp; Accept</button>
+		<button class="btn btn-default btn-option">Cancel</button>
 	</div>
 </div>
