@@ -363,38 +363,39 @@ router.post('/downloadurl', function(req, res, next) {
       https.get(artworkimageURL, function(res) {
         res.pipe(imageStream);
         res.on('end', function() {
-          imageStream.end();
+          imageStream.on('finish', function() {
 
-          var tags = {
-            title: body.fields.trackTitle,
-            artist: body.fields.artistUsername,
-            album: 'ArtistsUnlimited.co',
-            image: "tmp/" + body.file.newfilename + ".jpg"
-          }
-          nodeID3.write(tags, 'tmp/' + body.file.newfilename); //Pass tags and filepath
+            var tags = {
+              title: body.fields.trackTitle,
+              artist: body.fields.artistUsername,
+              album: 'ArtistsUnlimited.co',
+              image: "tmp/" + body.file.newfilename + ".jpg"
+            }
+            nodeID3.write(tags, 'tmp/' + body.file.newfilename); //Pass tags and filepath
 
-          fs.unlink("tmp/" + body.file.newfilename + ".jpg");
-          fs.readFile("tmp/" + body.file.newfilename, function(err, data) {
-            var data = {
-              Key: body.file.newfilename,
-              Body: data,
-              ContentType: body.file.mimetype,
-              ContentDisposition: 'attachment'
-            };
-            fs.unlink("tmp/" + body.file.newfilename);
-            var s3 = new AWS.S3({
-              params: {
-                Bucket: awsConfig.bucketName
-              }
+            fs.unlink("tmp/" + body.file.newfilename + ".jpg");
+            fs.readFile("tmp/" + body.file.newfilename, function(err, data) {
+              var data = {
+                Key: body.file.newfilename,
+                Body: data,
+                ContentType: body.file.mimetype,
+                ContentDisposition: 'attachment'
+              };
+              fs.unlink("tmp/" + body.file.newfilename);
+              var s3 = new AWS.S3({
+                params: {
+                  Bucket: awsConfig.bucketName
+                }
+              });
+              s3.upload(data, function(err, data) {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(data);
+                }
+              });
             });
-            s3.upload(data, function(err, data) {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(data);
-              }
-            });
-          })
+          });
         });
       });
     });
