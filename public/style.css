@@ -770,4 +770,5 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   float: right;
   display: inline-block;
   margin: auto 0.5% auto 0;
-  width: 24%; }
+  width: 24%;
+  font-size: 1.5em; }
