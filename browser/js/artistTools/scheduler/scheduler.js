@@ -300,7 +300,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
       $scope.dayOfWeekAsString = function(date) {
             var dayIndex = date.getDay();
-            return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"][dayIndex];
+            return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
       }
 });
 

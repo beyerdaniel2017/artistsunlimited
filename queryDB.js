@@ -36,8 +36,9 @@ db.once('open', function() {
     console.log('connected.');
 
     queryDBCSV({
-        randomDay: {
-            $in: [49, 50]
+        followers: {
+            $gt: 20000,
+            $lt: 40000
         }
     });
 });

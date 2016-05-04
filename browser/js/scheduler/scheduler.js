@@ -291,7 +291,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
 
   $scope.dayOfWeekAsString = function(date) {
     var dayIndex = date.getDay();
-    return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"][dayIndex];
+    return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
   }
 });
 

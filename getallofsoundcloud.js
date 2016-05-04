@@ -9,7 +9,7 @@ SC.init({
 
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/scemail');
+mongoose.connect('mongodb://localhost/newEmails');
 
 var db = mongoose.connection;
 
@@ -23,7 +23,10 @@ db.once('open', function() {
 
 var Schema = mongoose.Schema;
 var SCEmailsSchema = new Schema({
-    email: String,
+    email: {
+        type: String,
+        unique: true
+    },
     numTracks: Number,
     artist: Boolean,
     soundcloudID: Number,
@@ -35,38 +38,6 @@ var SCEmailsSchema = new Schema({
 });
 
 var SCEmails = mongoose.model('SCEmails', SCEmailsSchema);
-
-SCEmailsSchema.methods.findScEmails = function(query) {
-    SCEmails.findOne(query, function(err, emailData) {
-        if (err) return console.error(err);
-        console.dir(emailData);
-    });
-}
-
-/*
- * To test if database connection and table creation code working.
- * @type Seeder
- * START
- */
-
-// var scEmailSeed = new SCEmails({
-//     email: 'test@gmail.com',
-//     numTracks: 99,
-//     artist: true,
-//     followers: 10000
-// });
-
-// scEmailSeed.save(function(err, data) {
-//     if (err)
-//         console.log(err);
-//     else
-//         console.log('Saved ', data);
-// });
-
-/*
- * END
- */
-
 
 var pr = (new Promise(function(fulfill, reject) {
     SCResolve({
@@ -103,7 +74,6 @@ function getFollowers(nextURL) {
         limit: 200
     }, function(err, res) {
         totalGain += 200
-            // process.stdout.write("-" + totalGain / 1000 + "k-");
         if (err) {
             console.log(err);
             scanNextBiggestUser();
@@ -118,36 +88,32 @@ function getFollowers(nextURL) {
 
                 if (myArray) {
                     var email = myArray[0];
-                    SCEmails.findOne({
-                        "soundcloudID": follower.id
-                    }).exec().then(function(emailFlwr) {
-                        if (!emailFlwr) {
-                            var newFollower = new SCEmails({
-                                email: email,
-                                numTracks: follower.track_count,
-                                artist: (follower.track_count > 0),
-                                soundcloudID: follower.id,
-                                soundcloudURL: follower.permalink_url,
-                                username: follower.username,
-                                followers: follower.followers_count,
-                                randomDay: Math.floor(Math.random() * 50) + 1,
-                                scanned: false
-                            });
-                            totalEmails++;
-                            newFollower.save();
-                        }
+                    var newFollower = new SCEmails({
+                        email: email,
+                        numTracks: follower.track_count,
+                        artist: (follower.track_count > 0),
+                        soundcloudID: follower.id,
+                        soundcloudURL: follower.permalink_url,
+                        username: follower.username,
+                        followers: follower.followers_count,
+                        randomDay: Math.floor(Math.random() * 50) + 1,
+                        scanned: false
                     });
+                    newFollower.save()
+                        .then(function(user) {
+                            totalEmails++;
+                        });
                 }
             });
-            if (res && res.next_href) {
-                getFollowers(res.next_href);
-            } else {
-                scanNextBiggestUser();
-            }
-
+        }
+        if (res && res.next_href) {
+            getFollowers(res.next_href);
+        } else {
+            scanNextBiggestUser();
         }
     });
 }
+
 
 function scanNextBiggestUser() {
     SCEmails.findOne({
