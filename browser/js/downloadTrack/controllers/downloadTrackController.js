@@ -1,10 +1,29 @@
-app.config(function ($stateProvider) {
+app.config(function ($stateProvider, $authProvider, $httpProvider) {
     $stateProvider.state('download', {
         url: '/download',
         templateUrl: 'js/downloadTrack/views/downloadTrack.view.html',
         controller: 'DownloadTrackController'
     });
-});
+
+    $authProvider.instagram({
+      clientId: 'ae84968993fc4adf9b2cd246b763bf6b'
+    });
+    
+
+    // Instagram
+    $authProvider.instagram({
+          name: 'instagram',
+          url: '/api/download/auth/instagram',
+          authorizationEndpoint: 'https://api.instagram.com/oauth/authorize',
+          redirectUri: 'https://localhost:1443/download',
+          requiredUrlParams: ['scope'],
+          scope: ['basic','relationships','public_content','follower_list'],
+          scopeDelimiter: '+',
+          type: '2.0'
+        });
+
+    })
+
 
 app.controller('DownloadTrackController', ['$rootScope',
     '$state',
@@ -14,7 +33,8 @@ app.controller('DownloadTrackController', ['$rootScope',
     '$window',
     '$q',
     'DownloadTrackService',
-    function ($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService) {
+    '$auth',
+    function ($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService, $auth) {
 
         /* Normal JS vars and functions not bound to scope */
         var playerObj = null;
@@ -40,6 +60,42 @@ app.controller('DownloadTrackController', ['$rootScope',
         $scope.errorText = '';
         $scope.followBoxImageUrl = 'assets/images/who-we-are.png';
         $scope.recentTracks = [];
+
+
+        $scope.initiateDownload = function()
+        {
+            $scope.processing = false;
+            if ($scope.track.downloadURL && $scope.track.downloadURL !== '') {
+                $window.location.href = $scope.track.downloadURL;
+            } else {
+                $scope.errorText = 'Error! Could not fetch download URL';
+                $scope.downloadURLNotFound = true;
+            }
+        }
+
+
+        $scope.authenticateInstagram = function()
+        {
+            $auth.authenticate('instagram').then(function(response)
+            {
+                console.log(response)
+                var userName = $scope.track.socialPlatformValue;
+
+                $http({
+                    method : "POST",
+                    url : '/api/download/instagram/follow_user',
+                    data : {
+                        'access_token' : response.data,
+                        'q' : userName
+                    }
+                }).then(function(user){
+                    if(user.data.succ)
+                    {
+                        $scope.initiateDownload();
+                    }
+                });
+            });
+        }
 
         /* Default processing on page load */
 
@@ -246,3 +302,13 @@ app.controller('DownloadTrackController', ['$rootScope',
 
     }
 ]);
+
+
+
+
+
+
+
+
+
+

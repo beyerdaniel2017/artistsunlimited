@@ -2,7 +2,7 @@
 var https = require('https');
 var router = require('express').Router();
 var Promise = require('bluebird');
-
+var request = require('request');
 module.exports = router;
 
 var mongoose = require('mongoose');
@@ -181,6 +181,8 @@ router.post('/tasks', function(req, res, next) {
 //   }
 // });
 
+
+
 router.get('/track/recent', function(req, res, next) {
   var userID = req.query.userID;
   var trackID = req.query.trackID;
@@ -197,4 +199,61 @@ router.get('/track/recent', function(req, res, next) {
       return res.end();
     })
     .then(null, next);
+});
+
+router.post("/instagram/follow_user",function(req,res,done){
+
+  var access_token = req.body.access_token;
+  var accessTokenUrl = 'https://api.instagram.com/v1/users/search?q='+req.body.q+'&access_token='+access_token+'&count=1';
+
+    var params = {
+      
+    };
+
+    request.get({ url: accessTokenUrl, form: params, json: true }, function(error, response, body) {
+
+      if(body.data.length > 0)
+      {
+
+          request.post({ url: 'https://api.instagram.com/v1/users/'+body.data[0].id+'/relationship?access_token='+access_token, form: { 'action' : 'follow' }, json: true }, function(error, response, body) {
+
+            if(body.data.outgoing_status && body.data.outgoing_status == "requested") {
+              res.json({ 'succ' : true });
+            }
+            else
+            {
+              res.json({ 'succ' : false , 'msg' : 'error following instagram user.'});
+            }
+
+          });
+
+      }
+      else
+      {
+        res.json({ 'succ' : false , 'msg' : 'instagram user not found'});
+      }
+    
+    });
+
+});
+
+router.post('/auth/instagram', function(req, res, done)
+{
+    var accessTokenUrl = 'https://api.instagram.com/oauth/access_token';
+
+    var params = {
+      client_id: req.body.clientId,
+      redirect_uri: req.body.redirectUri,
+      client_secret: '2fb6196d81064e94a8877285779274d6',
+      code: req.body.code,
+      grant_type: 'authorization_code'
+    };
+
+    request.post({ url: accessTokenUrl, form: params, json: true }, function(error, response, body) {
+
+      // console.log(response);
+
+      res.json(response.body.access_token);
+    
+    });
 });

@@ -43,14 +43,14 @@
                             
                         <input type="text" ng-model="track.commentText" placeholder="Comment" ng-if="track.comment" style="width:360px; height:30px; margin-bottom:5px">
 <!--                        <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em;" href="javascript:void(0)" ng-click="downloadTrack()">CONNECT & DOWNLOAD</a>-->
-
+                        <!-- <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="" >CONNECT & DOWNLOAD</a> -->
                         
                             <div ng-if="track.socialPlatform == 'facebookLike'">
                                 <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="downloadTrackFacebookLike(track.socialPlatformValue)" >CONNECT & DOWNLOAD</a>
                                 
                                 
                                 <p class="text-justify pad-download-agreement">
-                                    For downloading this song you need to like this Facebook page/link.
+                                    For downloading this song you need to {{ track.socialPlatformValue }} Facebook page/link.
                                 </p>
                             </div>
 <div id="container"></div>
@@ -60,9 +60,19 @@
                             <div ng-if="track.socialPlatform == 'facebookShare'">
                                 <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="downloadTrackFacebookShare(track.socialPlatformValue)" >CONNECT & DOWNLOAD</a>
                                 <p class="text-justify pad-download-agreement">
-                                    For downloading this song you need to share on your Facebook.
+                                    For downloading this song you need to share {{ track.socialPlatformValue }} on Facebook.
                                 </p>
                             </div>
+
+                            <div ng-if="track.socialPlatform == 'instagramFollow'">
+                                <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #a77658;" ng-click="authenticateInstagram(track)">
+                                    CONNECT & DOWNLOAD
+                                </a>
+                                <p class="text-justify pad-download-agreement">
+                                    For downloading this song you need to follow {{ track.socialPlatformValue }} on instagram.
+                                </p>
+                            </div>
+
                         <br>
                         <br>
                         <div>
