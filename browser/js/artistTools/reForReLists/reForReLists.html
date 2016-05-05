@@ -1,0 +1,22 @@
+<ng-include src="'js/home/views/navigation.html'"></ng-include>
+<!-- Content Start  -->
+<div class="container" ng-init="getDownloadList();checkIfSubmission()">
+	<div class="content-area bg-white">
+		<ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
+		<div class="divider-horizontal"></div>
+		<div class="trades-container">
+			<div id="trades-list">
+				<div ng-repeat="trade in currentTrades" class="trade-box">{{trade.user}}<br>{{trade.ratio}}
+					<button class="btn-manage-trade" ng-click="manageTrade(trade.user)">Manage</button>
+				</div>
+			</div>
+			<button id="trades-list-back" class="btn-trades-list btn-default" ng-click="listLeft()"><img src="assets/images/arrow-left.png"/></button>
+			<button id="trades-list-next" class="btn-trades-list btn-default" ng-click="listRight()"><img src="assets/images/arrow-right.png"/></button>
+		</div>
+		<div class="divider-horizontal"></div>
+		<div class="search-container">
+
+		</div>
+	</div>
+</div>
+<!-- Content End  -->

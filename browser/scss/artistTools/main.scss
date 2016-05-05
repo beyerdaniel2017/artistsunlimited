@@ -244,3 +244,55 @@ margin: auto 0.5% auto 0;
 width: 24%;
 font-size: 1.5em;
 }
+
+/** LISTS PAGE **/
+
+.divider-horizontal {
+margin: 20px auto;
+background: gray;
+height: 1px;
+width: 60%;
+display: block;
+position: relative;
+overflow: hidden;
+}
+
+.trades-container {
+height: 160px;
+padding: 0;
+position: relative;
+}
+
+#trades-list {
+height: 100%;
+margin: 0;
+position: absolute;
+top: 0;
+left: 0;
+padding: 5%;
+}
+
+.btn-trades-list {
+height: 100%;
+width: 50px;
+margin: 0;
+position: absolute;
+top: 0;
+background: transparent;
+border-color: transparent;
+border-radius: 0px;
+border-width: 0px;
+}
+
+.btn-trades-list > img {
+margin: auto;
+width: 90%;
+}
+
+#trades-list-back {
+left: 0;
+}
+
+#trades-list-next {
+right: 0;
+}
