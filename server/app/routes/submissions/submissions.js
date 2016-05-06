@@ -271,8 +271,6 @@ router.post('/rescheduleRepost', function(req, res, next) {
                           });
                           if (!event) {
                             continu = false;
-                            eventHolder._id = null;
-                            eventHolder.__v = null;
                             eventHolder.day = desiredDay;
                             var newEve = new Event(eventHolder);
                             newEve.save()

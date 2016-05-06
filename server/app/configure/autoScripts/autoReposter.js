@@ -63,5 +63,7 @@ function repostAndRemove(event, channel) {
         Event.findByIdAndUpdate(event._id, event).exec();
       }
     });
+  } else {
+    sendEmail("CHRISTIAN", "coayscue@artistsunlimited.co", "ERROR", "coayscue@artistsunlimited.co", "ERROR REPOSTING", "An event with no data tried to be reposted");
   }
 }
