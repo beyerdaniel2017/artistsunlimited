@@ -784,18 +784,71 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   position: relative;
   overflow: hidden; }
 
+.divider-vertical {
+  margin: auto;
+  background: gray;
+  width: 1px;
+  height: 60%;
+  display: block;
+  position: relative;
+  overflow: hidden; }
+
 .trades-container {
   height: 160px;
   padding: 0;
-  position: relative; }
+  position: relative;
+  overflow: hidden; }
 
 #trades-list {
   height: 100%;
   margin: 0;
   position: absolute;
-  top: 0;
-  left: 0;
-  padding: 5%; }
+  top: 0pt;
+  left: 50pt; }
+
+.trade-box {
+  height: 140px;
+  width: 140px;
+  margin: 10px 20px;
+  margin-right: 0px;
+  background: #C9A7CD;
+  color: white;
+  display: inline-block;
+  text-align: center;
+  position: relative;
+  vertical-align: middle; }
+
+.btn-manage-trade {
+  color: #652D91;
+  margin: auto;
+  width: 126px;
+  border-radius: 0px;
+  border-width: 0px;
+  border-color: transparent;
+  background: white;
+  margin-bottom: 0;
+  position: absolute;
+  bottom: 7px;
+  left: 7px;
+  font-size: 1.2em; }
+
+.btn-manage-trade:hover {
+  color: white;
+  background: #652D91; }
+
+.label-box-username {
+  font-size: 1.3em;
+  margin: 6px auto;
+  margin-bottom: 0; }
+
+.label-freq {
+  font-size: 1.8em;
+  margin: 0 auto; }
+
+.label-ratio {
+  font-size: 1.8em;
+  margin: 0 auto;
+  display: box; }
 
 .btn-trades-list {
   height: 100%;
@@ -803,7 +856,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   margin: 0;
   position: absolute;
   top: 0;
-  background: transparent;
+  background: white;
   border-color: transparent;
   border-radius: 0px;
   border-width: 0px; }
@@ -817,3 +870,37 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 
 #trades-list-next {
   right: 0; }
+
+#search-container {
+  width: 100%;
+  position: relative; }
+
+#search-input {
+  width: 100%;
+  position: relative; }
+
+#search-left {
+  position: absolute;
+  left: 0;
+  margin: 0;
+  width: 30%;
+  display: inline-block; }
+
+#search-right {
+  position: absolute;
+  right: 0;
+  margin: 0;
+  width: 60%;
+  display: inline-block; }
+
+#input-username {
+  width: 30%;
+  display: inline-block; }
+
+#select-follower-range {
+  width: 25%;
+  display: inline-block; }
+
+#select-genre-search {
+  width: 25%;
+  display: inline-block; }

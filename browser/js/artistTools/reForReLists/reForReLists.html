@@ -3,19 +3,43 @@
 <div class="container" ng-init="getDownloadList();checkIfSubmission()">
 	<div class="content-area bg-white">
 		<ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
+		<!--
+		<div class="divider-horizontal"></div>
+		<div id="search-inputs">
+			<div id="search-left">
+				<input id="input-username" class="form-control"/>
+			</div>
+			<div id="search-right">
+				<div id="label-optional">-->
+					<!--Optional...--><!--
+				</div>
+				<select id="select-follower-range" class="form-control">-->
+					<!--{<1k, 1k - 5k, 5k - 10k, 10k - 25k, 25k - 100k, 100k+}-->
+				<!--</select>
+				<select id="select-genre-search" class="form-control">-->
+					<!--fill in--><!--
+				</select>
+			</div>
+		</div>-->
+
 		<div class="divider-horizontal"></div>
 		<div class="trades-container">
 			<div id="trades-list">
-				<div ng-repeat="trade in currentTrades" class="trade-box">{{trade.user}}<br>{{trade.ratio}}
-					<button class="btn-manage-trade" ng-click="manageTrade(trade.user)">Manage</button>
+				<div ng-repeat="trade in currentTrades" class="trade-box">
+					<div class="label-box-username">{{trade.user}}</div>
+					<div class="label-freq">{{trade.freq}}</div>
+					<div class="label-ratio">{{trade.ratio}}</div>
+					<button class="btn-manage-trade bold" ng-click="manageTrade(trade.user)">Manage</button>
 				</div>
 			</div>
 			<button id="trades-list-back" class="btn-trades-list btn-default" ng-click="listLeft()"><img src="assets/images/arrow-left.png"/></button>
 			<button id="trades-list-next" class="btn-trades-list btn-default" ng-click="listRight()"><img src="assets/images/arrow-right.png"/></button>
 		</div>
 		<div class="divider-horizontal"></div>
-		<div class="search-container">
-
+		<div id="search-container">
+			<div id="search-results">
+				<!--ng-repeat results-->
+			</div>
 		</div>
 	</div>
 </div>

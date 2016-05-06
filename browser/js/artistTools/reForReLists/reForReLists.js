@@ -13,21 +13,27 @@ app.config(function($stateProvider) {
 
 app.controller("ReForReListsController", function($scope) {
 	$scope.currentTrades = [{
-		user = "Adam",
-		ratio = "2:3"
+		user: "Adam",
+		freq: "Weekly",
+		ratio: "2:3"
 	}, {
-		user = "Matt",
-		ratio = "1:1"
+		user: "Matt",
+		freq: "One time",
+		ratio: "1:1"
 	}];
 
 	$scope.listLeft = function() {
-		var l = document.getElementById('trades-list');
-		l.style.left -= 140;
-	}
+		var l = document.getElementById("trades-list");
+		var cur = parseInt(l.style.left);
+		l.style.left = "1px";
+		l.style.left = (cur - 140) + "px";
+	};
 
 	$scope.listRight = function() {
-		var l = document.getElementById('trades-list');
-		l.style.left += 140;
-	}
+		var l = document.getElementById("trades-list");
+		var cur = parseInt(l.style.left);
+		l.style.left = "1px";
+		l.style.left = (cur + 140) + "px";
+	};
 
 });
