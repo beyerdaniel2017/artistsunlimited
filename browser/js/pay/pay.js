@@ -89,6 +89,8 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
       } else {
         $scope.continuePay(false);
       }
+    } else {
+      $.Zebra_Dialog('Please add a repost to your cart by clicking "Add To Cart".');
     }
   };
 
