@@ -24,19 +24,19 @@
                   </br>
                   <div class="row">
                     <div class="col-sm-6 col-sm-offset-3">
-                      <input class="form-control" type="text" placeholder="Song URL" ng-model="url" ng-change="urlChange()"/>
+                      <input class="form-control" type="text" placeholder="Song URL" ng-model="url" ng-change="urlChange()" required/>
                     </div>
                   </div>
                   </br>
                   <div class="row">
                     <div class="col-sm-6 col-sm-offset-3">
-                      <input class="form-control" type="text" placeholder="Name"ng-model="submission.name" />
+                      <input class="form-control" type="text" placeholder="Name"ng-model="submission.name" required/>
                     </div>
                   </div>
                   </br>
                   <div class="row">
                     <div class="col-sm-6 col-sm-offset-3">
-                      <input class="form-control" placeholder="Email" ng-model="submission.email" />
+                      <input class="form-control" type="email" placeholder="Email" ng-model="submission.email" required/>
                     </div>
                   </div>
                   </br>

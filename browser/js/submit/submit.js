@@ -7,9 +7,7 @@ app.config(function($stateProvider) {
 });
 
 app.controller('SubmitSongController', function($rootScope, $state, $scope, $http) {
-
   $scope.submission = {};
-
   $scope.urlChange = function() {
     $scope.processing = true;
     $http.post('/api/soundcloud/resolve', {
@@ -52,7 +50,6 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
           invoiceIDS: []
         })
         .then(function(res) {
-          console.log(res.data);
           $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
           location.reload();
         })
