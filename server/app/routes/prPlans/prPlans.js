@@ -1,9 +1,6 @@
 'use strict';
-
 var router = require('express').Router();
-
 module.exports = router;
-
 var Busboy = require('busboy');
 var AWS = require('aws-sdk');
 var sendEmail = require("../../mandrill/sendEmail.js");
@@ -80,7 +77,7 @@ router.post('/', function(req, res, next) {
       };
       var s3 = new AWS.S3({
         params: {
-          Bucket: awsConfig.bucketName
+          Bucket: awsConfig.prplanBucketName
         }
       });
       s3.upload(data, function(err, data) {
