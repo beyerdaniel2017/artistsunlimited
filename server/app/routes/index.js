@@ -14,7 +14,7 @@ router.use('/premier', require('./premier/premier.js'));
 router.use('/home', require('./home/home.js'));
 router.use('/users', require('./user/user.js'));
 router.use('/prplan', require('./prPlans/prPlans.js'));
-
+router.use('/mixingmastering', require('./mixingMastering/mixingMastering.js'));
 router.use('/logout', function(req, res) {
   req.logout();
   return res.status(200).json({

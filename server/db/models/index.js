@@ -16,3 +16,4 @@ require('./application.js');
 require('./premierSubmission.js');
 require('./repostEvent.js');
 require('./prPlans.js');
+require('./mixingMastering.js');

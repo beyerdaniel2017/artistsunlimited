@@ -9,13 +9,15 @@ var Event = mongoose.model('Event');
 var Email = mongoose.model('Email');
 var rootURL = require('../../../env').ROOTURL;
 var Promise = require('promise');
-var SCR = require('soundclouder');
 var scConfig = global.env.SOUNDCLOUD;
-SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
-
 var sendEmail = require("../../mandrill/sendEmail.js"); //takes: to_name, to_email, from_name, from_email, subject, message_html
 var paypalCalls = require("../../payPal/paypalCalls.js");
-
+var scWrapper = require("../../SCWrapper/SCWrapper.js");
+scWrapper.init({
+  id: scConfig.clientID,
+  secret: scConfig.clientSecret,
+  uri: scConfig.redirectURL
+});
 router.post('/', function(req, res, next) {
   var submission = new Submission(req.body);
   submission.invoiceIDS = [];
@@ -243,7 +245,9 @@ router.post('/rescheduleRepost', function(req, res, next) {
           channelID: eventHolder.channelID
         }).exec()
         .then(function(channel) {
-          SCR.get('/e1/me/track_reposts/' + eventHolder.trackID, channel.accessToken, function(err, data) {
+          var reqObj = {method: 'GET', path: '/e1/me/track_reposts/' + eventHolder.trackID, qs: {}};
+          scWrapper.setToken(channel.accessToken);
+          scWrapper.request(reqObj, function(err, data){
             if (err) {
               if (!ev) {
                 Event.find({

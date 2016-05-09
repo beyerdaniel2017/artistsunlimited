@@ -21,6 +21,8 @@ module.exports = {
     },
     "AWS": {
         "bucketName": process.env.S3_BUCKET_NAME,
+        "prBucketName": process.env.S3_PRPLAN_BUCKET_NAME,
+        "mixingBucketName": process.env.S3_MIXINGMASTERING_BUCKET_NAME,
         "accessKeyId": process.env.AWS_ACCESS_KEY_ID,
         "secretAccessKey": process.env.AWS_SECRET_ACCESS_KEY
     },
