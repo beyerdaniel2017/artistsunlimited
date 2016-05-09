@@ -13,8 +13,6 @@ var PaidRepostAccount = mongoose.model('PaidRepostAccount');
 var csv = require('csv-write-stream');
 var fs = require('fs');
 var scConfig = global.env.SOUNDCLOUD;
-var SC = require('node-soundcloud');
-var SCR = require('soundclouder');
 var sendEmail = require("../../mandrill/sendEmail.js");
 var emitter = require('./../../../io/emitter.js');
 var objectAssign = require('object-assign');
@@ -27,16 +25,33 @@ var SCResolve = require('soundcloud-resolve-jsonp/node');
 var request = require('request');
 var rootURL = require('./../../../env').ROOTURL;
 var nodeID3 = require('node-id3');
+var scWrapper = require("../../SCWrapper/SCWrapper.js");
 
+scWrapper.init({
+  id: scConfig.clientID,
+  secret: scConfig.clientSecret,
+  uri: scConfig.callbackURL
+});
+
+router.get('/getuserinfo', function(req, res, next) {
+  var reqObj = {method: 'GET', path: '/resolve.json', qs: {url: req.body.url}};
+  scWrapper.request(reqObj, function(err, result){
+    https.get(result.location, function(httpRes2) {
+      var userBody = '';
+      httpRes2.on("data", function(songChunk) {
+        userBody += songChunk;
+      })
+      .on("end", function() {
+        var user = JSON.parse(userBody);
+        console.log('user',user);
+      });      
+    });    
+  });
+});
 
 router.post('/adduser', function(req, res, next) {
-  // if (req.body.password != 'letMeManage') next(new Error('wrong password'));
-  var getPath = '/resolve.json?url=' + req.body.url + '&client_id=' + scConfig.clientID;
-  https.request({
-        host: 'api.soundcloud.com',
-        path: getPath,
-      },
-      function(httpRes) {
+    var reqObj = {method: 'GET', path: '/resolve.json', qs: {url: req.body.url}};
+    scWrapper.request(reqObj, function(err, httpRes){
         httpRes.on("data", function(locationChunk) {
           var locData = JSON.parse(locationChunk.toString());
           https.get(locData.location, function(httpRes2) {
@@ -48,7 +63,8 @@ router.post('/adduser', function(req, res, next) {
                   var user = JSON.parse(userBody);
                   TrackedUser.findOne({
                       "scID": user.id
-                    }).exec()
+                  })
+                  .exec()
                     .then(function(trdUser) {
                       if (trdUser) {
                         throw new Error('already exists');
@@ -78,14 +94,8 @@ router.post('/adduser', function(req, res, next) {
 });
 
 function addFollowers(followUser, nextURL, email) {
-  SC.init({
-    id: scConfig.clientID,
-    secret: scConfig.clientSecret,
-    uri: scConfig.redirectURL
-  });
-  SC.get(nextURL, {
-    limit: 200
-  }, function(err, res) {
+    var reqObj = {method: 'GET', path: nextURL, qs: {limit: 200}};
+    scWrapper.request(reqObj, function(err, res){
     if (err) {
       sendEmail('Database User', email, 'Email Database', 'coayscue@artistsunlimited.co', 'SUCCESSFUL Database Population', "Database has populated followers of " + followUser.username);
     } else if (res.next_href) {
@@ -102,7 +112,8 @@ function addFollowers(followUser, nextURL, email) {
         i++;
         if (i < collectionLength) {
           var follower = res.collection[i];
-          SC.get('/users/' + follower.id + '/web-profiles', function(err, webProfiles) {
+            var reqObj1 = {method: 'GET', path: '/users/' + follower.id + '/web-profiles', qs: {}};
+            scWrapper.request(reqObj1, function(err, webProfiles){
             follower.websites = '';
             if (!err) {
               if (webProfiles) {
@@ -534,10 +545,9 @@ router.post('/paidrepost', function(req, res, next) {
 
   function getLocation() {
     return new Promise(function(resolve, reject) {
-      var httpReq = https.get({
-        host: 'api.soundcloud.com',
-        path: getPath,
-      }, function(httpRes) {
+    var reqObj = {method: 'GET', path: getPath, qs: {}};
+    scWrapper.request(reqObj, function(err, httpRes){
+        /**/
         var location = '';
         var locationData = {};
         httpRes.on('data', function(locationChunk) {
@@ -672,13 +682,10 @@ router.post('/profile/soundcloud', function(req, res, next) {
 
   function getUserSCInfo() {
     return new Promise(function(resolve, reject) {
-      SC.init({
-        id: scConfig.clientID,
-        secret: scConfig.clientSecret,
-        uri: scConfig.callbackURL,
-        accessToken: body.token
-      });
-      SC.get('/me', function(err, data) {
+      scWrapper.setToken(body.token);
+      var reqObj = {method: 'GET', path: '/me', qs: {}};
+    scWrapper.request(reqObj, function(err, data){
+       // SC.get('/me', function(err, data) {
         if (err) {
           reject(err);
         } else {
