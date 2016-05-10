@@ -164,7 +164,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
         var profile = SessionService.getUser();
         if (profile.soundcloud) {
             $scope.processing = true;
-            SC.get('/users/' + profile.soundcloud.id + '/tracks')
+      SC.get('/users/' + profile.soundcloud.id + '/tracks',{filter:'public'})
                 .then(function(tracks) {
                     $scope.trackList = tracks;
                     $scope.processing = false;
