@@ -6,11 +6,11 @@ var Channel = mongoose.model('Channel');
 var Submission = mongoose.model('Submission');
 var Event = mongoose.model('Event');
 var User = mongoose.model('User');
-var SC = require('node-soundcloud');
 var passport = require('passport');
 var https = require('https');
 var request = require('request');
 var scConfig = global.env.SOUNDCLOUD;
+var scWrapper = require("../../SCWrapper/SCWrapper.js");
 
 router.post('/', function(req, res, next) {
   passport.authenticate('local-login', function(err, user, info) {
@@ -46,13 +46,14 @@ router.post('/', function(req, res, next) {
 });
 
 router.post('/authenticated', function(req, res, next) {
-  SC.init({
+  scWrapper.init({
     id: scConfig.clientID,
     secret: scConfig.clientSecret,
-    uri: scConfig.callbackURL,
-    accessToken: req.body.token
+    uri: scConfig.callbackURL
   });
-  SC.get('/me', function(err, data) {
+  var reqObj = {method: 'GET', path: '/me', qs: {}};
+  scWrapper.setToken(req.body.token);
+  scWrapper.request(reqObj, function(err, data){
     if (err) {
       next(err);
     } else {

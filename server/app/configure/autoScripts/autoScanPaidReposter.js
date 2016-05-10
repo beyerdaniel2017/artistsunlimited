@@ -10,10 +10,15 @@ var PaidRepostAccount = mongoose.model('PaidRepostAccount');
 var csv = require('csv-write-stream');
 var fs = require('fs');
 var scConfig = require('./../../../env').SOUNDCLOUD;
-var SC = require('node-soundcloud');
+var scWrapper = require("../../SCWrapper/SCWrapper.js");
+
+scWrapper.init({
+  id: scConfig.clientID,
+  secret: scConfig.clientSecret,
+  uri: scConfig.redirectURL
+});
 
 module.exports = getPaidRepostAccounts;
-
 function getPaidRepostAccounts() {
   PaidRepostAccount
     .find({}, function(err, paidReposters) {
@@ -27,7 +32,6 @@ function getPaidRepostAccounts() {
 
 function getActivities(paidReposter) {
   // Need oauth token for getting activities of the user
-
   var getPath = 'https://api-v2.soundcloud.com/profile/soundcloud:users:' + paidReposter.scID + '?limit=20&offset=0?client_id=' + scConfig.clientID;
   var req = https.get(getPath, function(res) {
     var activities = '';
@@ -59,12 +63,8 @@ function scanCollection(collection) {
 
 function getUser(activity) {
   var userId = activity.track.user_id;
-  SC.init({
-    id: scConfig.clientID,
-    secret: scConfig.clientSecret,
-    uri: scConfig.redirectURL
-  });
-  SC.get('/users/' + userId, function(err, res) {
+  var reqObj = {method: 'GET', path:'/users/' + userId, qs: {}};
+  scWrapper.request(reqObj, function(err, res){
     if (!err) {
       var userData = {};
       try {
@@ -84,7 +84,8 @@ function addFollower(user) {
   }
   if (emailArray) {
     var email = myArray[0];
-    SC.get('/users/' + user.id + '/web-profiles', function(err, webProfiles) {
+    var reqfollow = {method: 'GET', path:'/users/' + user.id + '/web-profiles', qs: {}};
+    scWrapper.request(reqfollow, function(err, webProfiles) {
       user.websites = '';
       if (!err) {
         if (webProfiles) {
@@ -111,7 +112,8 @@ function addFollower(user) {
       }
       Follower.findOne({
           "scID": user.id
-        }).exec()
+      })
+      .exec()
         .then(function(follower) {
           if (!follower) {
             var newFollower = new Follower({

@@ -6,15 +6,15 @@ var AWS = require('aws-sdk');
 var sendEmail = require("../../mandrill/sendEmail.js");
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
-var PrPlans = mongoose.model('PrPlans');
+var MixingMasterings = mongoose.model('MixingMasterings');
 var awsConfig = require('./../../../env').AWS;
 
 router.post('/', function(req, res, next) {
   parseMultiPart()
-    .then(uploadToBucket)
-    .then(saveToDB)
-    .then(mailData)
-    .catch(errorHandler);
+  .then(uploadToBucket)
+  .then(saveToDB)
+  .then(mailData)
+  .catch(errorHandler);
   var body = {
     fields: {},
     file: {}
@@ -77,7 +77,7 @@ router.post('/', function(req, res, next) {
       };
       var s3 = new AWS.S3({
         params: {
-          Bucket: awsConfig.prplanBucketName
+          Bucket: awsConfig.mixingmasteringBucketName
         }
       });
       s3.upload(data, function(err, data) {
@@ -91,14 +91,13 @@ router.post('/', function(req, res, next) {
   }
 
   function saveToDB(data) {
-    var newPrPlans = new PrPlans({
+    var newMixingMasterings = new MixingMasterings({
       s3URL: data.Location,
-      budget: body.fields.budget,
       email: body.fields.email,
       name: body.fields.name,
       comment: body.fields.comment
     });
-    return newPrPlans.save();
+    return newMixingMasterings.save();
   }
 
   function mailData() {
@@ -108,17 +107,15 @@ router.post('/', function(req, res, next) {
       'name': body.file.newfilename,
       'content': body.file.buffer.toString('base64')
     }];
-    var email_body = '<b>Sender Name: </b> ' + body.fields.name +
+    var email_body = 
+    '<b>Sender Name: </b> ' + body.fields.name +
     '<br />' +
     '<br />' +
     '<b>Sender Email: </b> ' + body.fields.email +
     '<br />' +
     '<br />' +
-    '<b>Sender Budget: </b> ' + body.fields.budget +
-    '<br />' +
-    '<br />' +
     '<b>Sender Comment: </b> ' + body.fields.comment;
-    sendEmail('Edward', 'edward@peninsulamgmt.com', 'Artists Unlimited', 'coayscue@artistsunlimited.co', 'PR Plans', email_body, attachments);
+    sendEmail('Edward', 'edward@peninsulamgmt.com', 'Artists Unlimited', 'coayscue@artistsunlimited.co', 'Mixing and Mastering', email_body, attachments);
     return res.end();
   }
   function errorHandler(err) {

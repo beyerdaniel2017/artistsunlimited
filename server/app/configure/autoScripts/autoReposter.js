@@ -2,14 +2,18 @@
 var mongoose = require('mongoose');
 var Channel = mongoose.model('Channel');
 var Event = mongoose.model('Event');
-var SCR = require('soundclouder');
+var scWrapper = require("../../SCWrapper/SCWrapper.js");
 var scConfig = require('./../../../env').SOUNDCLOUD;
-SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
 var sendEmail = require('../../mandrill/sendEmail.js');
 var request = require('request');
 
-module.exports = doRepost;
+scWrapper.init({
+  id: scConfig.clientID,
+  secret: scConfig.clientSecret,
+  uri: scConfig.redirectURL
+});
 
+module.exports = doRepost;
 //executes every hour
 function doRepost() {
   setTimeout(function() {
@@ -24,7 +28,8 @@ function doRepost() {
       channels.forEach(function(chan) {
         Event.find({
             channelID: chan.channelID
-          }).exec()
+      })
+      .exec()
           .then(function(events) {
             events.forEach(function(ev) {
               ev.day = new Date(ev.day);
@@ -52,7 +57,9 @@ function repostAndRemove(event, channel) {
     var id = event.trackID;
   }
   if (id) {
-    SCR.put('/e1/me/track_reposts/' + id, channel.accessToken, function(err, data) {
+    scWrapper.setToken(channel.accessToken);
+    var reqObj = {method: 'PUT', path: '/e1/me/track_reposts/' + id, qs: {}};
+    scWrapper.request(repost, function(err, data){
       if (err) {
         sendEmail("CHRISTIAN", "coayscue@artistsunlimited.co", "ERROR", "coayscue@artistsunlimited.co", "ERROR REPOSTING", "Error: Posting: " + err + "<br><br>Res Data: " + JSON.stringify(data) + "<br><br>  Event: " + JSON.stringify(event));
       } else {
