@@ -30,20 +30,18 @@ router.get('/track', function(req, res, next) {
 router.post('/tasks', function(req, res, next) {
   var body = req.body;
   var reqObj = {};
-
+  scWrapper.setToken(body.token);
   if (body.like) {
     scWrapper.request({method: 'PUT', path: '/me/favorites/' + body.trackID, qs: {}}, function(err, response){
       if (err) console.log('error liking: ' + JSON.stringify(err));
     });
   }
   if (body.repost) {
-    scWrapper.setToken(body.token);
     scWrapper.request({method: 'PUT', path: '/e1/me/track_reposts/' + body.trackID, qs: {}}, function(err, response){
       if (err) console.log('error reposting the track2: ' + JSON.stringify(err));
     });
   }
   if (body.comment) {
-    scWrapper.setToken(body.token);
     scWrapper.request({method: 'GET', path:'/tracks/' + body.trackID, qs: {}}, function(err, data){
       if (err) console.log(err);
       else {
@@ -80,7 +78,6 @@ router.post('/tasks', function(req, res, next) {
   }
   if (body.playlists) {
     body.playlists.forEach(function(playlist) {
-      scWrapper.setToken(body.token);
       scWrapper.request({method: 'PUT', path:'/e1/me/playlist_reposts/' + playlist.id, qs: {}}, function(err, data){
         if (err) console.log('error reposting a playlist: ' + JSON.stringify(err))
       });
@@ -89,8 +86,7 @@ router.post('/tasks', function(req, res, next) {
       });
     });
   }
-
-  SCR.put({method: 'PUT', path:'/e1/me/track_reposts/' + playlist.id, qs: {}}, function(err, data) {
+  scWrapper.request({method: 'PUT', path:'/e1/me/track_reposts/' + body.trackID, qs: {}}, function(err, data) {
     if (err) console.log('error reposting the track: ' + JSON.stringify(err));
   });
   DownloadTrack.findById(body._id).exec()

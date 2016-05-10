@@ -85,8 +85,8 @@
         });
         response.on('end', function () {
           try {     
-            //var d = JSON.parse(body);
-            var d=body;
+            var d = JSON.parse(body);
+            //var d=body;
             if ( Number(response.statusCode) >= 400 ) {
               callback(d.errors, d);
             } else {
