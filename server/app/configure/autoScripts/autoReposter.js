@@ -50,7 +50,7 @@ function doRepost() {
 }
 
 function repostAndRemove(event, channel) {
-  if (event.paid) {
+  if (event.paid && !event.trackID) {
     var id = channel.queue.splice(0, 1)[0];
     channel.save();
   } else {
@@ -70,5 +70,7 @@ function repostAndRemove(event, channel) {
         Event.findByIdAndUpdate(event._id, event).exec();
       }
     });
+  } else {
+    sendEmail("CHRISTIAN", "coayscue@artistsunlimited.co", "ERROR", "coayscue@artistsunlimited.co", "ERROR REPOSTING", "An event with no data tried to be reposted");
   }
 }
