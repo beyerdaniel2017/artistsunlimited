@@ -46,7 +46,6 @@ router.post('/tasks', function(req, res, next) {
       if (err) console.log(err);
       else {
         var timestamp = Math.floor((Math.random() * data.duration));
-        scWrapper.setToken(body.token);
         scWrapper.request({method: 'POST', path:'/tracks/' + body.trackID + '/comments', qs: {'comment[body]': body.commentText, 'comment[timestamp]': timestamp}}, function(err, data){
           if (err) console.log('error commenting: ' + JSON.stringify(err));
         });
