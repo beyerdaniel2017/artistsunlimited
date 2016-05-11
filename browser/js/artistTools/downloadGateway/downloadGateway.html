@@ -46,7 +46,7 @@
                         </div>
                         <a href="#" ng-click="addSMLink()">+ Social Media</a>
                     </div>
-                    <div class="artist-follow">
+                    <div class="artist-follow" ng-if="user.admin">
                         <h4>Playlist URLs</h4>
                         <div class="input-box" ng-repeat="playlist in track.playlists">
                             <input class="form-control" placeholder="URL" ng-model="playlist.url" ng-change="playlistURLChange($index)"/>
