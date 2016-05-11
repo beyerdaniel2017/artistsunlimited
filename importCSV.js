@@ -1,21 +1,25 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/scemail');
+mongoose.connect('mongodb://localhost/newEmails');
 var csv = require('csv-parser')
 var fs = require('fs')
 
 var Schema = mongoose.Schema;
 var SCEmailsSchema = new Schema({
-  email: String,
+  email: {
+    type: String,
+    unique: true
+  },
   numTracks: Number,
   artist: Boolean,
   soundcloudID: Number,
   soundcloudURL: String,
   username: String,
   followers: Number,
-  randomDay: Number
+  randomDay: Number,
+  scanned: Boolean
 });
 
-var SCEmails = mongoose.model('SCEmails', SCEmailsSchema);
+var SCEmails = mongoose.model('scemails_with_members', SCEmailsSchema);
 
 var db = mongoose.connection;
 
@@ -26,23 +30,13 @@ db.on('error', function(err) {
 db.once('open', function() {
   console.log('connected.');
 
-  var found = 0;
-  var unfound = 0;
-
-  fs.createReadStream('members.csv')
+  fs.createReadStream('unsubscribed_export.csv')
     .pipe(csv())
     .on('data', function(data) {
       SCEmails.findOne({
-          "email": data["Email Address"]
-        }).exec()
-        .then(function(flwr) {
-          if (flwr) found++;
-          else unfound++;
-        })
+        email: data["Email Address"]
+      }).then(function(email) {
+        email.remove();
+      });
     })
-
-  setTimeout(function() {
-    console.log('found ' + found);
-    console.log('unfound ' + unfound);
-  }, 600000);
 });
