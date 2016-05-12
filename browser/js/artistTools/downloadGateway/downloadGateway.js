@@ -279,6 +279,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
 
     $scope.artistURLChange = function(index) {
         var artist = {};
+        if($scope.track.artists[index].url != ""){
         $scope.processing = true;
         ArtistToolsService.resolveData({
             url: $scope.track.artists[index].url
@@ -291,6 +292,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
             $.Zebra_Dialog('Artists not found');
             $scope.processing = false;
         });
+       }
     }
 
     $scope.removeArtist = function(index) {
