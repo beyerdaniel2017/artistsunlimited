@@ -418,8 +418,16 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
         $scope.track.downloadURL = "";
     }
 
-    $scope.$watch('track', function(newVal, oldVal) {
-        if (newVal.trackTitle)
-            window.localStorage.setItem('trackPreviewData', JSON.stringify(newVal));
-    }, true);
+  $scope.preview = function(track) {     
+    window.localStorage.setItem('trackPreviewData', JSON.stringify(track));
+    var url = $state.href('artistToolsDownloadGatewayPreview');
+    $window.open(url,'_blank');
+  }
+
+
+  // $scope.$watch('track', function(newVal, oldVal) {
+  //   console.log(newVal);
+  //   if (newVal.trackTitle)
+  //     //window.localStorage.setItem('trackPreviewData', JSON.stringify(newVal));
+  // }, true);
 });
