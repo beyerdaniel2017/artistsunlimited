@@ -88,7 +88,6 @@ router.post('/authenticated', function(req, res, next) {
 
 router.post('/soundCloudLogin', function(req, res, next) {
   passport.authenticate('local-soundcloud', function(err, user, info) {
-    console.log(err, user, info)
     if (err) {
       return res.json({
         success: false,

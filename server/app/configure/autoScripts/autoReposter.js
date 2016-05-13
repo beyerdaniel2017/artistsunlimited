@@ -58,7 +58,7 @@ function repostAndRemove(event, channel) {
   }
   if (id) {
     scWrapper.setToken(channel.accessToken);
-    var reqObj = {method: 'PUT', path: '/e1/me/track_reposts/' + id, qs: {}};
+    var reqObj = {method: 'PUT', path: '/e1/me/track_reposts/' + id, qs: {oauth_token: channel.accessToken}};
     scWrapper.request(reqObj, function(err, data){
       if (err) {
         sendEmail("CHRISTIAN", "coayscue@artistsunlimited.co", "ERROR", "coayscue@artistsunlimited.co", "ERROR REPOSTING", "Error: Posting: " + err + "<br><br>Res Data: " + JSON.stringify(data) + "<br><br>  Event: " + JSON.stringify(event));

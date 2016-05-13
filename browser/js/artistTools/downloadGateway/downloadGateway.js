@@ -405,7 +405,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
             $scope.track.permanentLinks = permanentLinksArray;
             $scope.track.playlistIDS = [];
             // $scope.track.showDownloadTracks = ($scope.track.showDownloadTracks === 'user') ? true : false;
-            console.log($scope.track);
+      //console.log($scope.track);
             $scope.processing = false;
         }
 
