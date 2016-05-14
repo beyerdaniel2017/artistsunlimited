@@ -1,3 +1,4 @@
+
 app.config(function ($stateProvider, $authProvider, $httpProvider) {
     $stateProvider.state('download', {
         url: '/download',
@@ -22,6 +23,14 @@ app.config(function ($stateProvider, $authProvider, $httpProvider) {
           type: '2.0'
         });
 
+    $authProvider.twitter({
+          url: '/api/download/twitter/auth',
+          authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
+          redirectUri: 'https://localhost:1443/download',
+          type: '1.0',
+          popupOptions: { width: 495, height: 645 }
+        });
+
     })
 
 
@@ -33,8 +42,9 @@ app.controller('DownloadTrackController', ['$rootScope',
     '$window',
     '$q',
     'DownloadTrackService',
+    '$sce',
     '$auth',
-    function ($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService, $auth) {
+    function ($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService, $sce, $auth) {
 
         /* Normal JS vars and functions not bound to scope */
         var playerObj = null;
@@ -73,6 +83,7 @@ app.controller('DownloadTrackController', ['$rootScope',
             }
         }
 
+        /* Function for Instagram */
 
         $scope.authenticateInstagram = function()
         {
@@ -94,6 +105,60 @@ app.controller('DownloadTrackController', ['$rootScope',
                         $scope.initiateDownload();
                     }
                 });
+            });
+        }
+
+        /* Function for Twitter */
+
+        $scope.authenticateTwitter = function()
+        {
+            $auth.authenticate('twitter').then(function(response)
+            {
+                console.log(response)
+                var userName = $scope.track.socialPlatformValue;
+
+                if($scope.track.socialPlatform == 'twitterFollow')
+                {
+                    $http({
+                        method : "POST",
+                        url : '/api/download/twitter/auth'
+                    }).then(function(records)
+                    {
+                        console.log(records)
+                    });
+                }
+                else if ($scope.track.socialPlatform == 'twitterPost') {
+                    console.log(response)
+                    var userName = $scope.track.socialPlatformValue;
+                    $http({
+                        method : "POST",
+                        url : '/api/download/twitter/post'
+                    }).then(function(records)
+                    {
+                        console.log(records)
+                    });
+                }
+            });
+        }
+
+        /* Function for Youtube */
+
+        $scope.authenticateYoutube = function(track)
+        {
+            var trackUrl = $scope.track.downloadURL
+
+            $http({
+                method : "GET",
+                url : '/api/download/subscribe',
+                params : {
+                    trackURL : trackUrl,
+                    channelID : $scope.track.socialPlatformValue
+                }
+            }).then(function(response)
+            {
+                console.log(response)
+//                $scope.initiateDownload();
+
             });
         }
 

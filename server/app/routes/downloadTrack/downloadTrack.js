@@ -1,8 +1,18 @@
 'use strict';
+var express = require('express');
 var https = require('https');
+var app = express();
+var path = require("path");
+var bodyParser = require('body-parser');
+var oauth;
+var Youtube = require("youtube-api");
+var Opn = require("opn");
 var router = require('express').Router();
 var Promise = require('bluebird');
 var request = require('request');
+var qs = require('qs');
+var config = require("./../config.js");
+
 module.exports = router;
 
 var mongoose = require('mongoose');
@@ -15,6 +25,7 @@ var SCR = require('soundclouder');
 var SCResolve = require('soundcloud-resolve-jsonp/node');
 
 var Channel = mongoose.model('Channel');
+
 
 router.get('/track', function(req, res, next) {
   DownloadTrack.findById(req.query.trackID).exec()
@@ -256,4 +267,267 @@ router.post('/auth/instagram', function(req, res, done)
       res.json(response.body.access_token);
     
     });
+});
+
+
+// For Twitter API
+
+router.post("/twitter/auth",function(req,res,done){
+
+    console.log('working');
+    var requestTokenUrl = 'https://api.twitter.com/oauth/request_token';
+    var accessTokenUrl = 'https://api.twitter.com/oauth/access_token';
+    var profileUrl = 'https://api.twitter.com/1.1/users/lookup.json?screen_name=';
+    var followUrl = 'https://api.twitter.com/1.1/friendships/create.json?screen_name=';
+    
+    // Part 1 of 2: Initial request from Satellizer.
+    if (!req.body.oauth_token || !req.body.oauth_verifier) {
+      var requestTokenOauth = {
+        consumer_key: 'FZnc1o9Srv8V3VpU46FCctRXx',
+        consumer_secret: 'ufRdSMLtduuDGGAGHVjRYQJrNblXsZvRwvGlQebdBz0W5FWD8U',
+        callback: req.body.redirectUri
+      };
+
+      // Step 1. Obtain request token for the authorization popup.
+      request.post({ url: requestTokenUrl, oauth: requestTokenOauth }, function(err, response, body) {
+        var oauthToken = qs.parse(body);
+
+        // Step 2. Send OAuth token back to open the authorization screen.
+        // res.send(oauthToken);
+        console.log("###########oauthToken##########");
+        console.log(oauthToken);
+        console.log("###########oauthToken##########");
+        res.send(oauthToken);
+      });
+    } else {
+      // Part 2 of 2: Second request after Authorize app is clicked.
+      var accessTokenOauth = {
+        consumer_key: 'FZnc1o9Srv8V3VpU46FCctRXx',
+        consumer_secret: 'ufRdSMLtduuDGGAGHVjRYQJrNblXsZvRwvGlQebdBz0W5FWD8U',
+        token: req.body.oauth_token,
+        verifier: req.body.oauth_verifier
+      };
+
+      request.post({ url: accessTokenUrl, oauth: accessTokenOauth }, function(err, response, accessToken) {
+
+        accessToken = qs.parse(accessToken);
+
+            console.log("###########accessToken##########");
+            console.log(accessToken);
+            console.log("###########accessToken##########");
+            
+            var profileOauthData = {
+              consumer_key: 'FZnc1o9Srv8V3VpU46FCctRXx',
+              consumer_secret: 'ufRdSMLtduuDGGAGHVjRYQJrNblXsZvRwvGlQebdBz0W5FWD8U',
+              oauth_token: accessToken.oauth_token
+            };
+
+              var followReqURL = followUrl + 'dhavalpvrin&follow=true';
+              request.post({
+                url: followReqURL,
+                oauth: profileOauthData
+              }, function(err, response, follow) {
+                  
+                  console.log(follow);
+              });
+
+        });
+     
+    }
+});
+
+
+router.post("/twitter/post",function(req,res,done){
+
+    
+    var requestTokenUrl = 'https://api.twitter.com/oauth/request_token';
+    var accessTokenUrl = 'https://api.twitter.com/oauth/access_token';
+    var profileUrl = 'https://api.twitter.com/1.1/users/lookup.json?screen_name=';      // is this required
+    var tweetUrl = 'https://api.twitter.com/1.1/statuses/update.json?status=';
+    
+    // Part 1 of 2: Initial request from Satellizer.
+    if (!req.body.oauth_token || !req.body.oauth_verifier) {
+      var requestTokenOauth = {
+        consumer_key: 'FZnc1o9Srv8V3VpU46FCctRXx',
+        consumer_secret: 'ufRdSMLtduuDGGAGHVjRYQJrNblXsZvRwvGlQebdBz0W5FWD8U',
+        callback: req.body.redirectUri
+      };
+
+      // Step 1. Obtain request token for the authorization popup.
+      request.post({ url: requestTokenUrl, oauth: requestTokenOauth }, function(err, response, body) {
+        var oauthToken = qs.parse(body);
+
+        // Step 2. Send OAuth token back to open the authorization screen.
+        // res.send(oauthToken);
+        console.log("###########oauthToken##########");
+        console.log(oauthToken);
+        console.log("From post API")
+        console.log("###########oauthToken##########");
+        res.send(oauthToken);
+      });
+    } else {
+      // Part 2 of 2: Second request after Authorize app is clicked.
+      var accessTokenOauth = {
+        consumer_key: 'FZnc1o9Srv8V3VpU46FCctRXx',
+        consumer_secret: 'ufRdSMLtduuDGGAGHVjRYQJrNblXsZvRwvGlQebdBz0W5FWD8U',
+        token: req.body.oauth_token,
+        verifier: req.body.oauth_verifier
+      };
+
+      request.post({ url: accessTokenUrl, oauth: accessTokenOauth }, function(err, response, accessToken) {
+
+        accessToken = qs.parse(accessToken);
+
+            console.log("###########accessToken##########");
+            console.log(accessToken);
+            console.log("###########accessToken##########");
+            
+            var profileOauthData = {
+              consumer_key: 'FZnc1o9Srv8V3VpU46FCctRXx',
+              consumer_secret: 'ufRdSMLtduuDGGAGHVjRYQJrNblXsZvRwvGlQebdBz0W5FWD8U',
+              oauth_token: accessToken.oauth_token
+            };
+
+              var tweetReqURL = tweetUrl + 'Thisisatesttweetdhavalpvrin';
+              request.post({
+                url: tweetReqURL,
+                oauth: profileOauthData
+              }, function(err, response, tweet) {
+                  
+                  console.log(tweet);
+              });
+
+        });
+     
+    }
+});
+
+
+// For Twitter
+
+router.post('/auth/twitter', function(req, res) {
+
+  var requestTokenUrl = 'https://api.twitter.com/oauth/request_token';
+  var accessTokenUrl = 'https://api.twitter.com/oauth/access_token';
+  var profileUrl = 'https://api.twitter.com/1.1/users/show.json?screen_name=';
+
+  if (!req.body.oauth_token || !req.body.oauth_verifier) {
+    var requestTokenOauth = {
+      consumer_key: 'FZnc1o9Srv8V3VpU46FCctRXx',
+      consumer_secret: 'ufRdSMLtduuDGGAGHVjRYQJrNblXsZvRwvGlQebdBz0W5FWD8U',
+      callback: req.body.redirectUri
+    };
+
+    request.post({ url: requestTokenUrl, oauth: requestTokenOauth }, function(err, response, body) {
+      var oauthToken = qs.parse(body);
+
+      res.send(oauthToken);
+
+    });
+
+  } else {
+
+    var accessTokenOauth = {
+      consumer_key: 'FZnc1o9Srv8V3VpU46FCctRXx',
+      consumer_secret: 'ufRdSMLtduuDGGAGHVjRYQJrNblXsZvRwvGlQebdBz0W5FWD8U',
+      token: req.body.oauth_token,
+      verifier: req.body.oauth_verifier
+    };
+
+    request.post({ url: accessTokenUrl, oauth: accessTokenOauth }, function(err, response, accessToken) {
+
+      accessToken = qs.parse(accessToken);
+
+      var profileOauth = {
+        consumer_key: 'FZnc1o9Srv8V3VpU46FCctRXx',
+        consumer_secret: 'ufRdSMLtduuDGGAGHVjRYQJrNblXsZvRwvGlQebdBz0W5FWD8U',
+        oauth_token: accessToken.oauth_token
+      };
+
+      request.post({
+        url: profileUrl + 'dhavalpvrin',
+        oauth: profileOauth,
+        json: true
+      }, function(err, response, profile) {
+
+        });
+    });
+  }
+});
+
+
+// THIS PORTION IS NEWLY ADDED
+
+// For Youtube
+
+
+router.get("/callbacksubscribe", function (req, res, next)
+{
+    oauth.getToken(req.query.code, function (err, tokens)
+    {
+        if (err) {
+
+        }
+        oauth.setCredentials(tokens);
+        /*
+         * Youtube subscribed to channel
+         */
+
+        var options = {
+            uri: 'https://www.googleapis.com/youtube/v3/subscriptions?part=snippet',
+            method: 'POST',
+            json: {
+                "snippet": {
+                    "resourceId": {
+                        "channelId": req.session.channelID,
+                        "kind": "youtube#channel"
+                    }
+                }
+            },
+            headers: {
+                "Authorization": "Bearer " + tokens.access_token
+            }
+        };
+
+        request(options, function (error, response, body)
+        {
+            if (!error && response.statusCode == 200)
+            {
+                res.redirect(req.session.trackURL);
+            }
+
+            if(error) {
+                res.send("You have error in subscribing to user. You will not be redirected to downloading track");
+            }
+        });
+
+        /*
+         * Youtube subscribed to channel
+         */
+
+    });
+
+});
+
+router.get("/subscribe", function (req, res, next)
+{
+    var trackURL = req.query.trackURL;
+    var channelID = req.query.channelID;
+    
+    req.session.trackURL = trackURL;
+    req.session.channelID = channelID;
+    oauth = Youtube.authenticate({
+        type: "oauth"
+        , client_id: config.CLIENT_ID
+        , client_secret: config.CLIENT_SEC
+        , redirect_url: config.REDIRECT_URL_SUBSCRIBE
+    });
+
+
+    Opn(oauth.generateAuthUrl({
+        access_type: "offline"
+        , scope: ["https://www.googleapis.com/auth/youtube.upload", "https://www.googleapis.com/auth/youtubepartner", "https://www.googleapis.com/auth/youtube", "https://www.googleapis.com/auth/youtube.force-ssl"]
+    }));
+
+    res.json({msg : "Redirected to youtube authentication"});
 });
