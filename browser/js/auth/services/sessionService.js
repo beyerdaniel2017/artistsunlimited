@@ -17,7 +17,6 @@ app.factory('SessionService', function($cookies, $http) {
 
 	function refreshUser() {
 		var curUser = getUser();
-		console.log(curUser);
 		if (curUser) {
 			$http.get('/api/users/byId/' + curUser._id)
 				.then(function(res) {

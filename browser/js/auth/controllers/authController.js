@@ -21,6 +21,9 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
     val: '',
     visible: false
   };
+  if (SessionService.getUser()) {
+    $state.go('artistToolsDownloadGatewayList')
+  }
   $scope.openModal = {
     signupConfirm: function() {
       $scope.modalInstance = $uibModal.open({

@@ -7,7 +7,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller('SubmissionController', function($rootScope, $state, $scope, $http, AuthService, oEmbedFactory) {
+app.controller('SubmissionController', function($rootScope, $state, $scope, $http, AuthService) {
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.submissions = [];
@@ -25,7 +25,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $http.get('/api/submissions/unaccepted')
       .then(function(res) {
         $scope.submissions = res.data;
-        console.log(res.data);
         $scope.loadMore();
         return $http.get('/api/channels');
       })
@@ -52,7 +51,11 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     setTimeout(function() {
       console.log(loadElements);
       loadElements.forEach(function(sub) {
-        oEmbedFactory.embedSong(sub);
+        SC.oEmbed(sub.trackURL, {
+          element: document.getElementById(sub.trackID + "player"),
+          auto_play: false,
+          maxheight: 150
+        });
       }, 50)
     });
     $scope.counter += 15;
@@ -68,6 +71,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.save = function(submi) {
+    console.log(submi);
     if (submi.channelIDS.length == 0) {
       $scope.decline(submi);
     } else {

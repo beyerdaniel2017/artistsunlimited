@@ -54,26 +54,11 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   $scope.channels.forEach(function(ch) {
     $scope.selectedChannels[ch.displayName] = false;
   });
-  console.log($scope.channels);
 
   $scope.goToLogin = function() {
     $state.go('login', {
       'submission': $rootScope.submission
     });
-  }
-
-  $scope.recalculate = function() {
-    $scope.total = 0;
-    $scope.totalPayment = 0;
-    for (var key in $scope.selectedChannels) {
-      if ($scope.selectedChannels[key]) {
-        var chan = $scope.channels.find(function(ch) {
-          return ch.displayName == key;
-        })
-        $scope.total += chan.price;
-      }
-    }
-    if ($scope.auDLLink) $scope.total = Math.floor(0.9 * $scope.total);
   }
 
   $scope.makePayment = function() {
@@ -127,7 +112,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
       $scope.total += channel.price;
     }
     if ($scope.auDLLink) $scope.showTotal = parseFloat($scope.total * 0.9).toFixed(2);
-    else $scope.showTotal = $scope.total;
+    else $scope.showTotal = parseFloat($scope.total).toFixed(2);
 
     $scope.selectedChannels[channel.displayName] = $scope.selectedChannels[channel.displayName] == true ? false : true;
 

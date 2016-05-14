@@ -11,10 +11,10 @@ var awsConfig = require('./../../../env').AWS;
 
 router.post('/', function(req, res, next) {
   parseMultiPart()
-  .then(uploadToBucket)
-  .then(saveToDB)
-  .then(mailData)
-  .catch(errorHandler);
+    .then(uploadToBucket)
+    .then(saveToDB)
+    .then(mailData)
+    .catch(errorHandler);
   var body = {
     fields: {},
     file: {}
@@ -64,7 +64,7 @@ router.post('/', function(req, res, next) {
     });
   }
 
-  function uploadToBucket() {  
+  function uploadToBucket() {
     return new Promise(function(resolve, reject) {
       AWS.config.update({
         accessKeyId: awsConfig.accessKeyId,
@@ -83,7 +83,7 @@ router.post('/', function(req, res, next) {
       s3.upload(data, function(err, data) {
         if (err) {
           reject(err);
-        } else {          
+        } else {
           resolve(data);
         }
       });
@@ -107,17 +107,18 @@ router.post('/', function(req, res, next) {
       'name': body.file.newfilename,
       'content': body.file.buffer.toString('base64')
     }];
-    var email_body = 
-    '<b>Sender Name: </b> ' + body.fields.name +
-    '<br />' +
-    '<br />' +
-    '<b>Sender Email: </b> ' + body.fields.email +
-    '<br />' +
-    '<br />' +
-    '<b>Sender Comment: </b> ' + body.fields.comment;
+    var email_body =
+      '<b>Sender Name: </b> ' + body.fields.name +
+      '<br />' +
+      '<br />' +
+      '<b>Sender Email: </b> ' + body.fields.email +
+      '<br />' +
+      '<br />' +
+      '<b>Sender Comment: </b> ' + body.fields.comment;
     sendEmail('Edward', 'edward@peninsulamgmt.com', 'Artists Unlimited', 'coayscue@artistsunlimited.co', 'Mixing and Mastering', email_body, attachments);
     return res.end();
   }
+
   function errorHandler(err) {
     return res.status(400).send(err);
   }

@@ -16,6 +16,9 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
     $state.go('admin');
   }
   $scope.channel = info.channel;
+  if (!$scope.channel) {
+    $state.go('admin');
+  }
   $scope.submissions = info.submissions;
 
   $scope.calendar = fillDateArrays(info.events);

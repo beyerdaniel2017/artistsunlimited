@@ -34,68 +34,86 @@ scWrapper.init({
 });
 
 router.get('/getuserinfo', function(req, res, next) {
-  var reqObj = {method: 'GET', path: '/resolve.json', qs: {url: req.body.url}};
-  scWrapper.request(reqObj, function(err, result){
+  var reqObj = {
+    method: 'GET',
+    path: '/resolve.json',
+    qs: {
+      url: req.body.url
+    }
+  };
+  scWrapper.request(reqObj, function(err, result) {
     https.get(result.location, function(httpRes2) {
       var userBody = '';
       httpRes2.on("data", function(songChunk) {
-        userBody += songChunk;
-      })
-      .on("end", function() {
-        var user = JSON.parse(userBody);
-        console.log('user',user);
-      });      
-    });    
+          userBody += songChunk;
+        })
+        .on("end", function() {
+          var user = JSON.parse(userBody);
+          console.log('user', user);
+        });
+    });
   });
 });
 
 router.post('/adduser', function(req, res, next) {
-    var reqObj = {method: 'GET', path: '/resolve.json', qs: {url: req.body.url}};
-    scWrapper.request(reqObj, function(err, httpRes){
-        httpRes.on("data", function(locationChunk) {
-          var locData = JSON.parse(locationChunk.toString());
-          https.get(locData.location, function(httpRes2) {
-              var userBody = '';
-              httpRes2.on("data", function(songChunk) {
-                  userBody += songChunk;
-                })
-                .on("end", function() {
-                  var user = JSON.parse(userBody);
-                  TrackedUser.findOne({
-                      "scID": user.id
+  var reqObj = {
+    method: 'GET',
+    path: '/resolve.json',
+    qs: {
+      url: req.body.url
+    }
+  };
+  scWrapper.request(reqObj, function(err, httpRes) {
+      httpRes.on("data", function(locationChunk) {
+        var locData = JSON.parse(locationChunk.toString());
+        https.get(locData.location, function(httpRes2) {
+            var userBody = '';
+            httpRes2.on("data", function(songChunk) {
+                userBody += songChunk;
+              })
+              .on("end", function() {
+                var user = JSON.parse(userBody);
+                TrackedUser.findOne({
+                    "scID": user.id
                   })
                   .exec()
-                    .then(function(trdUser) {
-                      if (trdUser) {
-                        throw new Error('already exists');
-                      } else {
-                        var tUser = new TrackedUser({
-                          scURL: req.body.url,
-                          scID: user.id,
-                          username: user.username,
-                          followers: user.followers_count,
-                          description: user.description,
-                          genre: req.body.genre
-                        });
-                        return tUser.save();
-                      }
-                    }).then(function(followUser) {
-                      addFollowers(followUser, '/users/' + followUser.scID + '/followers', req.body.email);
-                      res.send(followUser);
-                    }).then(null, next);
-                })
-            })
-            .on('error', next)
-            .end();
-        })
+                  .then(function(trdUser) {
+                    if (trdUser) {
+                      throw new Error('already exists');
+                    } else {
+                      var tUser = new TrackedUser({
+                        scURL: req.body.url,
+                        scID: user.id,
+                        username: user.username,
+                        followers: user.followers_count,
+                        description: user.description,
+                        genre: req.body.genre
+                      });
+                      return tUser.save();
+                    }
+                  }).then(function(followUser) {
+                    addFollowers(followUser, '/users/' + followUser.scID + '/followers', req.body.email);
+                    res.send(followUser);
+                  }).then(null, next);
+              })
+          })
+          .on('error', next)
+          .end();
       })
+    })
     .on('error', next)
     .end();
 });
 
 function addFollowers(followUser, nextURL, email) {
-    var reqObj = {method: 'GET', path: nextURL, qs: {limit: 200}};
-    scWrapper.request(reqObj, function(err, res){
+  var reqObj = {
+    method: 'GET',
+    path: nextURL,
+    qs: {
+      limit: 200
+    }
+  };
+  scWrapper.request(reqObj, function(err, res) {
     if (err) {
       sendEmail('Database User', email, 'Email Database', 'coayscue@artistsunlimited.co', 'SUCCESSFUL Database Population', "Database has populated followers of " + followUser.username);
     } else if (res.next_href) {
@@ -112,8 +130,12 @@ function addFollowers(followUser, nextURL, email) {
         i++;
         if (i < collectionLength) {
           var follower = res.collection[i];
-            var reqObj1 = {method: 'GET', path: '/users/' + follower.id + '/web-profiles', qs: {}};
-            scWrapper.request(reqObj1, function(err, webProfiles){
+          var reqObj1 = {
+            method: 'GET',
+            path: '/users/' + follower.id + '/web-profiles',
+            qs: {}
+          };
+          scWrapper.request(reqObj1, function(err, webProfiles) {
             follower.websites = '';
             if (!err) {
               if (webProfiles) {
@@ -545,8 +567,12 @@ router.post('/paidrepost', function(req, res, next) {
 
   function getLocation() {
     return new Promise(function(resolve, reject) {
-    var reqObj = {method: 'GET', path: getPath, qs: {}};
-    scWrapper.request(reqObj, function(err, httpRes){
+      var reqObj = {
+        method: 'GET',
+        path: getPath,
+        qs: {}
+      };
+      scWrapper.request(reqObj, function(err, httpRes) {
         /**/
         var location = '';
         var locationData = {};
@@ -683,9 +709,13 @@ router.post('/profile/soundcloud', function(req, res, next) {
   function getUserSCInfo() {
     return new Promise(function(resolve, reject) {
       scWrapper.setToken(body.token);
-      var reqObj = {method: 'GET', path: '/me', qs: {}};
-    scWrapper.request(reqObj, function(err, data){
-       // SC.get('/me', function(err, data) {
+      var reqObj = {
+        method: 'GET',
+        path: '/me',
+        qs: {}
+      };
+      scWrapper.request(reqObj, function(err, data) {
+        // SC.get('/me', function(err, data) {
         if (err) {
           reject(err);
         } else {

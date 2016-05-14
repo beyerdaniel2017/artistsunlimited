@@ -246,8 +246,14 @@ router.post('/rescheduleRepost', function(req, res, next) {
         }).exec()
         .then(function(channel) {
           scWrapper.setToken(channel.accessToken);
-          var reqObj = {method: 'GET', path: '/e1/me/track_reposts/' + eventHolder.trackID, qs: {oauth_token: channel.accessToken}};
-          scWrapper.request(reqObj, function(err, data){
+          var reqObj = {
+            method: 'GET',
+            path: '/e1/me/track_reposts/' + eventHolder.trackID,
+            qs: {
+              oauth_token: channel.accessToken
+            }
+          };
+          scWrapper.request(reqObj, function(err, data) {
             if (err) {
               if (!ev) {
                 Event.find({
@@ -322,6 +328,7 @@ router.post('/getPayment', function(req, res, next) {
         total += ch.price;
       });
       if (req.body.discounted) total = parseFloat(total * 0.9).toFixed(2);
+      else total = parseFloat(total).toFixed(2)
       return paypalCalls.makePayment(total, req.body.submission, channels);
     })
     .then(function(payment) {

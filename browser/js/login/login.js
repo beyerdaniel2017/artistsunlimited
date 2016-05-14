@@ -7,7 +7,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, oEmbedFactory) {
+app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService) {
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.submissions = [];

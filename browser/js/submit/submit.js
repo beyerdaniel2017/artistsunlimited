@@ -14,6 +14,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
         url: $scope.url
       })
       .then(function(res) {
+        if (res.data.kind != "track") throw (new Error(''));
         $scope.submission.trackID = res.data.id;
         $scope.submission.title = res.data.title;
         $scope.submission.trackURL = res.data.trackURL;
@@ -51,7 +52,11 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
         })
         .then(function(res) {
           $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
-          location.reload();
+          $scope.processing = false;
+          $scope.notFound = false;
+          $scope.submission = {};
+          document.getElementById('scPlayer').style.visibility = "hidden";
+          $scope.url = "";
         })
         .then(null, function(err) {
           $scope.processing = false;
