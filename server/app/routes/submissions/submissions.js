@@ -245,8 +245,8 @@ router.post('/rescheduleRepost', function(req, res, next) {
           channelID: eventHolder.channelID
         }).exec()
         .then(function(channel) {
-          var reqObj = {method: 'GET', path: '/e1/me/track_reposts/' + eventHolder.trackID, qs: {}};
           scWrapper.setToken(channel.accessToken);
+          var reqObj = {method: 'GET', path: '/e1/me/track_reposts/' + eventHolder.trackID, qs: {oauth_token: channel.accessToken}};
           scWrapper.request(reqObj, function(err, data){
             if (err) {
               if (!ev) {

@@ -279,6 +279,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
 
     $scope.artistURLChange = function(index) {
         var artist = {};
+        if($scope.track.artists[index].url != ""){
         $scope.processing = true;
         ArtistToolsService.resolveData({
             url: $scope.track.artists[index].url
@@ -291,6 +292,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
             $.Zebra_Dialog('Artists not found');
             $scope.processing = false;
         });
+       }
     }
 
     $scope.removeArtist = function(index) {
@@ -403,7 +405,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
             $scope.track.permanentLinks = permanentLinksArray;
             $scope.track.playlistIDS = [];
             // $scope.track.showDownloadTracks = ($scope.track.showDownloadTracks === 'user') ? true : false;
-            console.log($scope.track);
+      //console.log($scope.track);
             $scope.processing = false;
         }
 
@@ -416,8 +418,16 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
         $scope.track.downloadURL = "";
     }
 
-    $scope.$watch('track', function(newVal, oldVal) {
-        if (newVal.trackTitle)
-            window.localStorage.setItem('trackPreviewData', JSON.stringify(newVal));
-    }, true);
+  $scope.preview = function(track) {     
+    window.localStorage.setItem('trackPreviewData', JSON.stringify(track));
+    var url = $state.href('artistToolsDownloadGatewayPreview');
+    $window.open(url,'_blank');
+  }
+
+
+  // $scope.$watch('track', function(newVal, oldVal) {
+  //   console.log(newVal);
+  //   if (newVal.trackTitle)
+  //     //window.localStorage.setItem('trackPreviewData', JSON.stringify(newVal));
+  // }, true);
 });

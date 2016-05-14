@@ -42,14 +42,12 @@
       if(!data.qs){
         qsObj = {
           client_id : this.clientId,
-          format : 'json',
-          oauth_token: this.accessToken
+          format : 'json'
         };
       }
       else{
         qsObj.client_id = this.clientId;
         qsObj.format = 'json';
-        qsObj.oauth_token = this.accessToken;
       }
       var endpoint = data.path.split('/')[1];
       if (endpoint === 'me') {
