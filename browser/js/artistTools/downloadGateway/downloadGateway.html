@@ -46,7 +46,7 @@
                         </div>
                         <a href="#" ng-click="addSMLink()">+ Social Media</a>
                     </div>
-                    <div class="artist-follow" ng-controller="AdminDLGateController" ng-if="user.admin">
+                    <div class="artist-follow" ng-if="user.admin">
                         <h4>Playlist URLs</h4>
                         <div class="input-box" ng-repeat="playlist in track.playlists">
                             <input class="form-control" placeholder="URL" ng-model="playlist.url" ng-change="playlistURLChange($index)"/>
@@ -118,7 +118,7 @@
                 </div>
                 <div class="col-md-12 text-center" style="margin-top:20px;">
                     <a href="#" class="btn btn-enter" ui-sref="artistToolsDownloadGatewayList">Back</a>
-                    <a class="btn btn-enter" href="#" ui-sref="artistToolsDownloadGatewayPreview" target="_blank">Preview</a>
+                    <a class="btn btn-enter" href="javascript:void(0)" ng-click="preview(track)" target="_blank">Preview</a>
                     <button type="submit" class="btn btn-enter">Save</button>
                 </div>
                 <!-- Download Section End -->

@@ -9,13 +9,15 @@ var Event = mongoose.model('Event');
 var Email = mongoose.model('Email');
 var rootURL = require('../../../env').ROOTURL;
 var Promise = require('promise');
-var SCR = require('soundclouder');
 var scConfig = global.env.SOUNDCLOUD;
-SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
-
 var sendEmail = require("../../mandrill/sendEmail.js"); //takes: to_name, to_email, from_name, from_email, subject, message_html
 var paypalCalls = require("../../payPal/paypalCalls.js");
-
+var scWrapper = require("../../SCWrapper/SCWrapper.js");
+scWrapper.init({
+  id: scConfig.clientID,
+  secret: scConfig.clientSecret,
+  uri: scConfig.redirectURL
+});
 router.post('/', function(req, res, next) {
   var submission = new Submission(req.body);
   submission.invoiceIDS = [];
@@ -72,7 +74,7 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
   // if (req.params.password != "letMeManage") next(new Error("Wrong password"));
   Submission.findByIdAndRemove(req.params.subID).exec()
     .then(function(sub) {
-      sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting your track <a href='" + sub.trackURL + "'>" + sub.title + "</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.<br><br> We look forward to hearing your future compositions and please remember to submit them at either <a href='http://etiquettenoir.co/'>Etiquette Noir</a> or <a href='http://lesol.co/'>Le Sol</a>.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
+      sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting your track <a href='" + sub.trackURL + "'>" + sub.title + "</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.<br><br> We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.co/submit'>Artists Unlimited</a>.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
       res.send(sub);
     })
     .then(null, next);
@@ -243,7 +245,15 @@ router.post('/rescheduleRepost', function(req, res, next) {
           channelID: eventHolder.channelID
         }).exec()
         .then(function(channel) {
-          SCR.get('/e1/me/track_reposts/' + eventHolder.trackID, channel.accessToken, function(err, data) {
+          scWrapper.setToken(channel.accessToken);
+          var reqObj = {
+            method: 'GET',
+            path: '/e1/me/track_reposts/' + eventHolder.trackID,
+            qs: {
+              oauth_token: channel.accessToken
+            }
+          };
+          scWrapper.request(reqObj, function(err, data) {
             if (err) {
               if (!ev) {
                 Event.find({
@@ -271,8 +281,6 @@ router.post('/rescheduleRepost', function(req, res, next) {
                           });
                           if (!event) {
                             continu = false;
-                            eventHolder._id = null;
-                            eventHolder.__v = null;
                             eventHolder.day = desiredDay;
                             var newEve = new Event(eventHolder);
                             newEve.save()
@@ -320,6 +328,7 @@ router.post('/getPayment', function(req, res, next) {
         total += ch.price;
       });
       if (req.body.discounted) total = parseFloat(total * 0.9).toFixed(2);
+      else total = parseFloat(total).toFixed(2)
       return paypalCalls.makePayment(total, req.body.submission, channels);
     })
     .then(function(payment) {

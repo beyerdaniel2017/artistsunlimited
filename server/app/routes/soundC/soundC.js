@@ -1,8 +1,9 @@
 var router = require('express').Router();
 module.exports = router;
 var scConfig = global.env.SOUNDCLOUD;
-var http = require('http');
+var https = require('https');
 var request = require('request');
+var scWrapper = require("../../SCWrapper/SCWrapper.js");
 var SCResolve = require('soundcloud-resolve-jsonp/node');
 
 router.post('/resolve', function(req, res, next) {
@@ -24,7 +25,6 @@ router.post('/resolve', function(req, res, next) {
     })
     .then(null, next);
 });
-
 
 router.get('/soundcloudConfig', function(req, res, next) {
   res.send(scConfig);

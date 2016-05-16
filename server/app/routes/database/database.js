@@ -13,8 +13,6 @@ var PaidRepostAccount = mongoose.model('PaidRepostAccount');
 var csv = require('csv-write-stream');
 var fs = require('fs');
 var scConfig = global.env.SOUNDCLOUD;
-var SC = require('node-soundcloud');
-var SCR = require('soundclouder');
 var sendEmail = require("../../mandrill/sendEmail.js");
 var emitter = require('./../../../io/emitter.js');
 var objectAssign = require('object-assign');
@@ -27,65 +25,95 @@ var SCResolve = require('soundcloud-resolve-jsonp/node');
 var request = require('request');
 var rootURL = require('./../../../env').ROOTURL;
 var nodeID3 = require('node-id3');
+var scWrapper = require("../../SCWrapper/SCWrapper.js");
 
+scWrapper.init({
+  id: scConfig.clientID,
+  secret: scConfig.clientSecret,
+  uri: scConfig.callbackURL
+});
+
+router.get('/getuserinfo', function(req, res, next) {
+  var reqObj = {
+    method: 'GET',
+    path: '/resolve.json',
+    qs: {
+      url: req.body.url
+    }
+  };
+  scWrapper.request(reqObj, function(err, result) {
+    https.get(result.location, function(httpRes2) {
+      var userBody = '';
+      httpRes2.on("data", function(songChunk) {
+          userBody += songChunk;
+        })
+        .on("end", function() {
+          var user = JSON.parse(userBody);
+          console.log('user', user);
+        });
+    });
+  });
+});
 
 router.post('/adduser', function(req, res, next) {
-  // if (req.body.password != 'letMeManage') next(new Error('wrong password'));
-  var getPath = '/resolve.json?url=' + req.body.url + '&client_id=' + scConfig.clientID;
-  https.request({
-        host: 'api.soundcloud.com',
-        path: getPath,
-      },
-      function(httpRes) {
-        httpRes.on("data", function(locationChunk) {
-          var locData = JSON.parse(locationChunk.toString());
-          https.get(locData.location, function(httpRes2) {
-              var userBody = '';
-              httpRes2.on("data", function(songChunk) {
-                  userBody += songChunk;
-                })
-                .on("end", function() {
-                  var user = JSON.parse(userBody);
-                  TrackedUser.findOne({
-                      "scID": user.id
-                    }).exec()
-                    .then(function(trdUser) {
-                      if (trdUser) {
-                        throw new Error('already exists');
-                      } else {
-                        var tUser = new TrackedUser({
-                          scURL: req.body.url,
-                          scID: user.id,
-                          username: user.username,
-                          followers: user.followers_count,
-                          description: user.description,
-                          genre: req.body.genre
-                        });
-                        return tUser.save();
-                      }
-                    }).then(function(followUser) {
-                      addFollowers(followUser, '/users/' + followUser.scID + '/followers', req.body.email);
-                      res.send(followUser);
-                    }).then(null, next);
-                })
-            })
-            .on('error', next)
-            .end();
-        })
+  var reqObj = {
+    method: 'GET',
+    path: '/resolve.json',
+    qs: {
+      url: req.body.url
+    }
+  };
+  scWrapper.request(reqObj, function(err, httpRes) {
+      httpRes.on("data", function(locationChunk) {
+        var locData = JSON.parse(locationChunk.toString());
+        https.get(locData.location, function(httpRes2) {
+            var userBody = '';
+            httpRes2.on("data", function(songChunk) {
+                userBody += songChunk;
+              })
+              .on("end", function() {
+                var user = JSON.parse(userBody);
+                TrackedUser.findOne({
+                    "scID": user.id
+                  })
+                  .exec()
+                  .then(function(trdUser) {
+                    if (trdUser) {
+                      throw new Error('already exists');
+                    } else {
+                      var tUser = new TrackedUser({
+                        scURL: req.body.url,
+                        scID: user.id,
+                        username: user.username,
+                        followers: user.followers_count,
+                        description: user.description,
+                        genre: req.body.genre
+                      });
+                      return tUser.save();
+                    }
+                  }).then(function(followUser) {
+                    addFollowers(followUser, '/users/' + followUser.scID + '/followers', req.body.email);
+                    res.send(followUser);
+                  }).then(null, next);
+              })
+          })
+          .on('error', next)
+          .end();
       })
+    })
     .on('error', next)
     .end();
 });
 
 function addFollowers(followUser, nextURL, email) {
-  SC.init({
-    id: scConfig.clientID,
-    secret: scConfig.clientSecret,
-    uri: scConfig.redirectURL
-  });
-  SC.get(nextURL, {
-    limit: 200
-  }, function(err, res) {
+  var reqObj = {
+    method: 'GET',
+    path: nextURL,
+    qs: {
+      limit: 200
+    }
+  };
+  scWrapper.request(reqObj, function(err, res) {
     if (err) {
       sendEmail('Database User', email, 'Email Database', 'coayscue@artistsunlimited.co', 'SUCCESSFUL Database Population', "Database has populated followers of " + followUser.username);
     } else if (res.next_href) {
@@ -102,7 +130,12 @@ function addFollowers(followUser, nextURL, email) {
         i++;
         if (i < collectionLength) {
           var follower = res.collection[i];
-          SC.get('/users/' + follower.id + '/web-profiles', function(err, webProfiles) {
+          var reqObj1 = {
+            method: 'GET',
+            path: '/users/' + follower.id + '/web-profiles',
+            qs: {}
+          };
+          scWrapper.request(reqObj1, function(err, webProfiles) {
             follower.websites = '';
             if (!err) {
               if (webProfiles) {
@@ -363,38 +396,39 @@ router.post('/downloadurl', function(req, res, next) {
       https.get(artworkimageURL, function(res) {
         res.pipe(imageStream);
         res.on('end', function() {
-          imageStream.end();
+          imageStream.on('finish', function() {
 
-          var tags = {
-            title: body.fields.trackTitle,
-            artist: body.fields.artistUsername,
-            album: 'ArtistsUnlimited.co',
-            image: "tmp/" + body.file.newfilename + ".jpg"
-          }
-          nodeID3.write(tags, 'tmp/' + body.file.newfilename); //Pass tags and filepath
+            var tags = {
+              title: body.fields.trackTitle,
+              artist: body.fields.artistUsername,
+              album: 'ArtistsUnlimited.co',
+              image: "tmp/" + body.file.newfilename + ".jpg"
+            }
+            nodeID3.write(tags, 'tmp/' + body.file.newfilename); //Pass tags and filepath
 
-          fs.unlink("tmp/" + body.file.newfilename + ".jpg");
-          fs.readFile("tmp/" + body.file.newfilename, function(err, data) {
-            var data = {
-              Key: body.file.newfilename,
-              Body: data,
-              ContentType: body.file.mimetype,
-              ContentDisposition: 'attachment'
-            };
-            fs.unlink("tmp/" + body.file.newfilename);
-            var s3 = new AWS.S3({
-              params: {
-                Bucket: awsConfig.bucketName
-              }
+            fs.unlink("tmp/" + body.file.newfilename + ".jpg");
+            fs.readFile("tmp/" + body.file.newfilename, function(err, data) {
+              var data = {
+                Key: body.file.newfilename,
+                Body: data,
+                ContentType: body.file.mimetype,
+                ContentDisposition: 'attachment'
+              };
+              fs.unlink("tmp/" + body.file.newfilename);
+              var s3 = new AWS.S3({
+                params: {
+                  Bucket: awsConfig.bucketName
+                }
+              });
+              s3.upload(data, function(err, data) {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(data);
+                }
+              });
             });
-            s3.upload(data, function(err, data) {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(data);
-              }
-            });
-          })
+          });
         });
       });
     });
@@ -533,10 +567,13 @@ router.post('/paidrepost', function(req, res, next) {
 
   function getLocation() {
     return new Promise(function(resolve, reject) {
-      var httpReq = https.get({
-        host: 'api.soundcloud.com',
+      var reqObj = {
+        method: 'GET',
         path: getPath,
-      }, function(httpRes) {
+        qs: {}
+      };
+      scWrapper.request(reqObj, function(err, httpRes) {
+        /**/
         var location = '';
         var locationData = {};
         httpRes.on('data', function(locationChunk) {
@@ -671,13 +708,14 @@ router.post('/profile/soundcloud', function(req, res, next) {
 
   function getUserSCInfo() {
     return new Promise(function(resolve, reject) {
-      SC.init({
-        id: scConfig.clientID,
-        secret: scConfig.clientSecret,
-        uri: scConfig.callbackURL,
-        accessToken: body.token
-      });
-      SC.get('/me', function(err, data) {
+      scWrapper.setToken(body.token);
+      var reqObj = {
+        method: 'GET',
+        path: '/me',
+        qs: {}
+      };
+      scWrapper.request(reqObj, function(err, data) {
+        // SC.get('/me', function(err, data) {
         if (err) {
           reject(err);
         } else {

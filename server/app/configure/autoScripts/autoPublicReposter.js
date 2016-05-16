@@ -2,14 +2,18 @@
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var RepostEvent = mongoose.model('RepostEvent');
-var SCR = require('soundclouder');
+var scWrapper = require("../../SCWrapper/SCWrapper.js");
 var scConfig = require('./../../../env').SOUNDCLOUD;
-SCR.init(scConfig.clientID, scConfig.clientSecret, scConfig.redirectURL);
 var sendEmail = require('../../mandrill/sendEmail.js');
 var request = require('request');
 
-module.exports = doRepost;
+scWrapper.init({
+  id: scConfig.clientID,
+  secret: scConfig.clientSecret,
+  uri: scConfig.redirectURL
+});
 
+module.exports = doRepost;
 //executes every hour
 function doRepost() {
   setTimeout(function() {
@@ -18,13 +22,13 @@ function doRepost() {
 
   var date = new Date();
   var hour = date.getHours();
-
   User.find({}).exec()
     .then(function(users) {
       users.forEach(function(user) {
         RepostEvent.find({
             userID: user.soundcloud.id
-          }).exec()
+      })
+      .exec()
           .then(function(events) {
             events.forEach(function(ev) {
               ev.day = new Date(ev.day);
@@ -44,7 +48,6 @@ function doRepost() {
     });
 }
 
-
 function repostAndRemove(event, user) {
   if (event.queueSlot) {
     var id = user.queue.splice(0, 1)[0];
@@ -53,10 +56,10 @@ function repostAndRemove(event, user) {
     var id = event.trackID;
   }
   if (id) {
-    SCR.put('/e1/me/track_reposts/' + id, user.soundcloud.token, function(err, data) {
+    scWrapper.setToken(user.soundcloud.token);
+    var reqObj = {method: 'PUT', path: '/e1/me/track_reposts/' + id, qs: {oauth_token: user.soundcloud.token}};
+    scWrapper.request(reqObj, function(err, data){
       if (err) {
-        console.log(err);
-        console.log(data);
         sendEmail(user.soundcloud.username, user.email, "Artists Unlimited", "coayscue@artistsunlimited.co", "ERROR REPOSTING", "Error reposting: " + JSON.stringify(event) + "<br><br>The issue is likely that your access token has expired. Simply log back into <a href='https://artistsunlimited.co/login'>Artist Tools</a> to fix this.");
       } else {
         event.completed = true;

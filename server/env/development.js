@@ -14,6 +14,8 @@ module.exports = {
   },
   "AWS": {
     "bucketName": "premiersubmissions",
+    "prplanBucketName": "prplans",
+    "mixingmasteringBucketName": "mixingmastering",
     "accessKeyId": "AKIAIYT7INNPUXKJSNEA",
     "secretAccessKey": "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"
   },

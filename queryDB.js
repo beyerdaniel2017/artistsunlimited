@@ -7,7 +7,7 @@
 
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/scemail');
+mongoose.connect('mongodb://localhost/newEmails');
 var fs = require('fs');
 var csv = require('csv-write-stream');
 
@@ -24,7 +24,7 @@ var SCEmailsSchema = new Schema({
     randomDay: Number
 });
 
-var SCEmails = mongoose.model('SCEmails', SCEmailsSchema);
+var SCEmails = mongoose.model('scemails_with_members', SCEmailsSchema);
 
 var db = mongoose.connection;
 
@@ -37,14 +37,54 @@ db.once('open', function() {
 
     queryDBCSV({
         randomDay: {
-            $in: [49, 50]
+            $in: [50]
         }
     });
 });
-// - 4/17 - [1,2],[3,4],[5,6],[7,8]
-// - 4/20 - [9,10],[11,12],[13,14],[15,16]
-// - 4/25 - [17,18],[19,20],[21,22],[23,24],[25,26],[27,28],[29,30]
-// - 5/1  - [31,32],[33,34],[35,36],[37,38],[39,40],[41,42],[43,44],[45,46],[47,48],[49,50]
+// - 5/7: all from 
+
+
+function queryDBCSV(query) {
+    var headers = [
+        'email',
+        'numTracks',
+        'artist',
+        'soundcloudID',
+        'soundcloudURL',
+        'username',
+        'followers',
+        'randomDay'
+    ];
+
+    var writer = csv({
+        headers: headers
+    });
+    writer.pipe(fs.createWriteStream('query28.csv'));
+
+    var num = 0;
+    var stream = SCEmails.find(query).stream();
+    stream.on('data', function(flwr) {
+        var row = [];
+        headers.forEach(function(elm) {
+            row.push(flwr[elm]);
+        });
+        num++;
+        writer.write(row);
+    });
+    stream.on('close', function() {
+        console.log(num);
+        console.log('Writing CSV...');
+        setTimeout(function() {
+            process.exit();
+            writer.end();
+        }, 10000);
+
+    });
+    stream.on('error', function(err) {
+        console.log(err);
+    });
+}
+
 
 
 //to get email: node sendemailtodb.js {followers:{$gt:50000}} email
@@ -77,44 +117,3 @@ db.once('open', function() {
 
 // console.log(mongoQuery);
 // console.log(ProcessFlag);
-
-function queryDBCSV(query) {
-    var headers = [
-        'email',
-        'numTracks',
-        'artist',
-        'soundcloudID',
-        'soundcloudURL',
-        'username',
-        'followers',
-        'randomDay'
-    ];
-
-    var writer = csv({
-        headers: headers
-    });
-    writer.pipe(fs.createWriteStream('query.csv'));
-
-    var num = 0;
-    var stream = SCEmails.find(query).stream();
-    stream.on('data', function(flwr) {
-        var row = [];
-        headers.forEach(function(elm) {
-            row.push(flwr[elm]);
-        });
-        num++;
-        writer.write(row);
-    });
-    stream.on('close', function() {
-        console.log(num);
-        console.log('Writing CSV...');
-        setTimeout(function() {
-            process.exit();
-            writer.end();
-        }, 10000);
-
-    });
-    stream.on('error', function(err) {
-        console.log(err);
-    });
-}
