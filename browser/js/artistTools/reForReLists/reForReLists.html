@@ -1,0 +1,60 @@
+<ng-include src="'js/home/views/navigation.html'"></ng-include>
+<!-- Content Start  -->
+<div class="container" ng-init="getDownloadList();checkIfSubmission()">
+	<div class="content-area bg-white">
+		<ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
+		
+		<hr>
+		<h2>Search</h2>
+		<div id="search-inputs">
+			<div id="search-left">
+				<input id="input-username" class="form-control" type="text" name="searchUsername" placeholder="Search by username"/>
+				<button class="btn-default" id="btn-search">Search</button>
+			</div>
+			<div class="vertical-rule"></div>
+			<div id="search-right">
+				<!--<div id="label-optional">
+					<h3>Optional</h3>
+				</div>-->
+				<div id="follower-range">
+					Follower Range:
+					<input id="input-f-min" class="form-control input-follower-range" type="number" name="followerMin" placeholder="0"/>
+					-
+					<input id="input-f-max" class="form-control input-follower-range" type="number" name="followerMax" placeholder="..."/>
+				</div>
+				<button id="btn-optional-apply" class="btn-default">Apply</button>
+			</div>
+		</div>
+
+		<hr>
+
+		<h2>Current Trades</h2>
+		<div class="trades-container">
+			<div id="trades-list">
+				<div ng-repeat="trade in currentTrades" class="trade-box">
+					<div class="label-box-username">{{trade.user}}</div>
+					<div class="label-freq">{{trade.freq}}</div>
+					<div class="label-ratio">{{trade.ratio}}</div>
+					<button class="btn-manage-trade bold" ng-click="manageTrade(trade.user)">Manage</button>
+				</div>
+			</div>
+			<button id="trades-list-back" class="btn-trades-list btn-default" ng-click="listLeft()"><img src="assets/images/arrow-left.png"/></button>
+			<button id="trades-list-next" class="btn-trades-list btn-default" ng-click="listRight()"><img src="assets/images/arrow-right.png"/></button>
+		</div>
+		<hr>
+		<h2>Open a Trade</h2>
+		<div id="search-container">
+			<div id="search-results">
+				<div ng-repeat="user in userSearchResults" class="user-box">
+					<div class="label-result-box">{{user.name}}</div>
+					<div class="label-result-box">{{user.numFollowers}}</div>
+					<div class="label-result-box">{{user.genre}}</div>
+					<button class="btn-open-trade bold" ng-click="openTrade(user)">Open Trade</button>
+				</div>
+			</div>
+			<button id="results-list-back" class="btn-trades-list btn-default" ng-click="resultsLeft()"><img src="assets/images/arrow-left.png"/></button>
+			<button id="results-list-next" class="btn-trades-list btn-default" ng-click="resultsRight()"><img src="assets/images/arrow-right.png"/></button>
+		</div>
+	</div>
+</div>
+<!-- Content End  -->
