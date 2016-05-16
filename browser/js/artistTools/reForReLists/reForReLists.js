@@ -22,6 +22,16 @@ app.controller("ReForReListsController", function($scope) {
 		ratio: "1:1"
 	}];
 
+	$scope.userSearchResults = [{
+		name: "Dom",
+		genre: "Punk",
+		numFollowers: "10 000"
+	}, {
+		name: "Dom",
+		genre: "Punk",
+		numFollowers: "10 000"
+	}];
+
 	$scope.listLeft = function() {
 		var l = document.getElementById("trades-list");
 		var cur = parseInt(l.style.left);
