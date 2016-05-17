@@ -17,4 +17,3 @@ require('./premierSubmission.js');
 require('./repostEvent.js');
 require('./prPlans.js');
 require('./mixingMastering.js');
-require('./trade.js');
