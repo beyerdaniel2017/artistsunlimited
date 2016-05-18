@@ -13,7 +13,7 @@
 				<button class="btn btn-default btn-scheduler" ng-click="decrDay()"><img style="width:60%; height:100%; margin-top:-20%; margin-right:-4px;" src="/assets/images/arrow-left.png"/></button>
 				<button class="btn btn-default btn-scheduler" ng-click="incrDay()" ><img id="scheduler-btn-back" style="width:60%; height:100%; margin-top:-20%" src="/assets/images/arrow-right.png"/></button>
 				<div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]" style="line-height:27px !important">
-					{{calendar[t+dayIncr].day.toLocaleDateString()}}
+					{{calendarp1[t+dayIncr].day.toLocaleDateString()}}
 				</div>
 			</div>
 			<div style="width:100%; height:96%; display:flex; flex-direction:row;">
@@ -21,7 +21,7 @@
 					<div ng-repeat="i in ['12 AM','1 AM','2 AM','3 AM','4 AM','5 AM','6 AM','7 AM','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM']" class="cell-time bold row-small" ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{i}}</div>
 				</div>   
 				<div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
-					<div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="calendar[l+dayIncr].events[p].paid?{'background-color':'yellow'}:calendar[l+dayIncr].events[p].title?{'background-color':'#67f967'}:{}" class="row-scheduler row-small" ng-click="clickedSlot(calendar[l+dayIncr].day,p)"  ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{calendar[l+dayIncr].events[p].title}}
+					<div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="calendarp1[l+dayIncr].events[p].paid?{'background-color':'yellow'}:calendarp1[l+dayIncr].events[p].title?{'background-color':'#000000','color':'#000000'}:{}" class="row-scheduler row-small" ng-click="clickedSlot(calendarp1[l+dayIncr].day,p)"  ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{calendarp1[l+dayIncr].events[p].title}}
 					</div>
 				</div>
 			</div>
@@ -33,14 +33,14 @@
 			<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
 				<button class="btn btn-default btn-scheduler" ng-click="decrDay()"><img style="width:60%; height:100%; margin-top:-20%; margin-right:-4px;" src="/assets/images/arrow-left.png"/></button>
 				<button class="btn btn-default btn-scheduler" ng-click="incrDay()" ><img id="scheduler-btn-back" style="width:60%; height:100%; margin-top:-20%" src="/assets/images/arrow-right.png"/></button>
-				<div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]" style="line-height:27px !important">{{calendar[t+dayIncr].day.toLocaleDateString()}}</div>
+				<div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]" style="line-height:27px !important">{{calendarp2[t+dayIncr].day.toLocaleDateString()}}</div>
 			</div>
 			<div style="width:100%; height:96%; display:flex; flex-direction:row;">
 				<div class="column-time">
 					<div ng-repeat="i in ['12 AM','1 AM','2 AM','3 AM','4 AM','5 AM','6 AM','7 AM','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM']" class="cell-time bold row-small" ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{i}}</div>
 				</div>   
 				<div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
-					<div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="calendar[l+dayIncr].events[p].paid?{'background-color':'yellow'}:calendar[l+dayIncr].events[p].trackID?{'background-color':'#67f967'}:{}" class="row-scheduler row-small" ng-click="clickedSlot(calendar[l+dayIncr].day,p)"  ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{calendar[l+dayIncr].events[p].trackID}}
+					<div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="calendar[l+dayIncr].events[p].paid?{'background-color':'yellow'}:calendar[l+dayIncr].events[p].title?{'background-color':'#67f967'}:{}" class="row-scheduler row-small" ng-click="clickedSlot(calendarp2[l+dayIncr].day,p)"  ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{calendarp2[l+dayIncr].events[p].title}}
 					</div>
 				</div>
 			</div>
@@ -52,10 +52,13 @@
 
 <div class="rfr-chat">
 	<div class="rfr-chatbox">
-		<div class="convo-display">
+		<div class="convo-display" scroll-glue>
 			<div ng-repeat="msg in msgHistory track by $index" class="msg-line">
-			 <time-slot start-date="{{msgHistory[0].date}}" each-date="{{msg.date}}" previous-date="{{msgHistory[$index-1].date}}" ></time-slot> 
-				<div class="msg-box {{msg.senderId==user._id ? 'msg-from' : 'msg-to'}}">
+				<time-slot start-date="{{msgHistory[0].date}}" each-date="{{msg.date}}" previous-date="{{msgHistory[$index-1].date}}" ></time-slot> 
+				<div ng-show="msg.type== 'alert'" class="alert-box">
+					{{msg.text}}
+				</div> 
+				<div ng-show="msg.type== 'message'" class="msg-box {{msg.senderId==user._id ? 'msg-from' : 'msg-to'}}">
 					{{msg.text}}
 				</div>
 			</div>

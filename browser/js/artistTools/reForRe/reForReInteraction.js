@@ -8,15 +8,12 @@ app.config(function($stateProvider) {
         trade: function($http, $stateParams) {
           return $http.get('/api/trades/byID/' + $stateParams.tradeID)
             .then(function(res) {
-              console.log(res.data);
               return res.data;
             })
         },
         usersEvents: function($http, SessionService) {
           return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
             .then(function(res) {
-              console.log('userEvents: ');
-              console.log(res.data);
               return res.data;
             })
             .then(null, function(err) {
@@ -28,9 +25,6 @@ app.config(function($stateProvider) {
           var otherUser = (SessionService.getUser()._id == trade.p1.user._id) ? trade.p2.user : trade.p1.user;
           return $http.get('/api/events/forUser/' + otherUser.soundcloud.id)
             .then(function(res) {
-              console.log('othersEvents: ');
-
-              console.log(res.data);
               return res.data;
             })
             .then(null, function(err) {
@@ -101,14 +95,19 @@ app.directive('timeSlot', function(moment) {
 
 app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, usersEvents, othersEvents, trade, SessionService, socket, $stateParams) {
   $scope.user = SessionService.getUser();
+  $scope.msgHistory=[];
   $scope.makeEventURL = "";
   $scope.showOverlay = false;
   $scope.processiong = false;
   usersEvents.forEach(function(ev) {
     ev.day = new Date(ev.day);
   });
+  othersEvents.forEach(function(ev) {
+    ev.day = new Date(ev.day);
+  });
   $scope.hideall = false;
-  $scope.calendar = fillDateArrays(usersEvents);
+  $scope.calendarp1 = fillDateArrays(usersEvents);
+  $scope.calendarp2 = fillDateArrays(othersEvents);
   $scope.dayIncr = 0;
   $scope.incrDay = function() {
     if ($scope.dayIncr < 14) $scope.dayIncr++;
@@ -123,30 +122,28 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     if (today.toLocaleDateString() == day.toLocaleDateString() && today.getHours() > hour) return;
     $scope.showOverlay = true;
     var calDay = {};
-    var calendarDay = $scope.calendar.find(function(calD) {
+    var calendarDay = $scope.calendarp1.find(function(calD) {
       return calD.day.toLocaleDateString() == day.toLocaleDateString();
     });
-
-    $scope.makeEventURL = undefined;
-    $scope.makeEvent = calendarDay.usersEvents[hour];
-    if ($scope.makeEvent == "-") {
       var makeDay = new Date(day);
-      makeDay.setHours(hour);
-      $scope.makeEvent = {
-        userID: $scope.user.soundcloud.id,
-        day: makeDay,
-        queueSlot: false
-      };
-      $scope.newEvent = true;
-    } else {
-      $scope.makeEventURL = 'https://api.soundcloud.com/tracks/' + $scope.makeEvent.trackID;
-      SC.oEmbed('https://api.soundcloud.com/tracks/' + $scope.makeEvent.trackID, {
-        element: document.getElementById('scPlayer'),
-        auto_play: false,
-        maxheight: 150
+    makeDay.setHours(hour,0,0,0);
+    $.Zebra_Dialog("Are you sure? You want to make "+moment(makeDay).format('LLL') + " a traded slot?",{
+        'type': 'confirmation',
+        'buttons':  [
+          {caption: 'Yes', callback: function() { 
+            socket.emit('send:message', {
+              message: $scope.user.name + " created a trade slot at "+moment(makeDay).format('LLL'),
+              type: 'alert',
+              id: $scope.user._id,
+              tradeID: $stateParams.tradeID
       });
-      $scope.newEvent = false;
+          }},
+          {caption: 'No', callback: function() { 
+            console.log('No was clicked');
+          }}
+        ]
     }
+    );
   }
 
   $scope.backEvent = function() {
@@ -165,27 +162,32 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   });
 
   socket.on('send:message', function(message) {
+    if(message.tradeID == $stateParams.tradeID){
     $scope.msgHistory.push(message);
     $scope.message = message.message;
+    }
   });
 
 
   socket.on('get:message', function(data) {
     if (data[0] != '') {
-      $scope.msgHistory = [];
+      if(data[0]._id == $stateParams.tradeID){
       $scope.msgHistory = data[0] ? data[0].messages : [];
+    }
     }
   });
 
   $scope.sendMessage = function() {
     socket.emit('send:message', {
       message: $scope.message,
-      id: $scope.user._id
+      type: 'message',
+      id:$scope.user._id,
+      tradeID: $stateParams.tradeID
     });
     $scope.message = '';
   };
 
   $scope.getMessage = function() {
-    socket.emit('get:message');
+    socket.emit('get:message', $stateParams.tradeID);
   }
 });
