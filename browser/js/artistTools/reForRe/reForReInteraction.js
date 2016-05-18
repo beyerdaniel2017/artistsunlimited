@@ -42,6 +42,63 @@ app.config(function($stateProvider) {
     })
 });
 
+app.directive('timeSlot', function(moment) {
+  return {
+    restrict: 'E',
+    scope: {
+      startDate: "@",
+      eachDate: '@',
+      previousDate: '@'
+    },
+    link: function(scope, element, attrs) {
+      Date.prototype.addHours = function(h) {
+        this.setHours(this.getHours() + h);
+        return this;
+      };
+
+      var dateObj = {
+        startDate: new Date(scope.startDate),
+        eachDate: new Date(scope.eachDate),
+        previousDate: (scope.previousDate) ? new Date(scope.previousDate) : null
+      };
+      var prevDate = (dateObj.previousDate) ? dateObj.previousDate.toLocaleString().split(',')[0] : null;
+      var eacDate = (dateObj.eachDate) ? dateObj.eachDate.toLocaleString().split(',')[0] : null;
+      var prvHours = (dateObj.previousDate) ? dateObj.previousDate.getHours() : 0;
+      var echHours = (dateObj.eachDate) ? dateObj.eachDate.getHours() : 0;
+      if (!prevDate) {
+        scope.slot = isTodayDate(dateObj.previousDate, dateObj.eachDate) + ' ' + formatAMPM(dateObj.eachDate);
+      } else if ((prevDate != eacDate) && (prvHours != echHours)) {
+        scope.slot = isTodayDate(dateObj.previousDate, dateObj.eachDate) + ' ' + formatAMPM(dateObj.eachDate);
+      } else if ((prevDate == eacDate) && (prvHours != echHours)) {
+        scope.slot = isTodayDate(dateObj.previousDate, dateObj.eachDate) + ' ' + formatAMPM(dateObj.eachDate);
+      } else if ((prevDate != eacDate) && (prvHours == echHours)) {
+        scope.slot = isTodayDate(dateObj.previousDate, dateObj.eachDate) + ' ' + formatAMPM(dateObj.eachDate);
+      }
+    },
+    replace: 'true',
+    template: '<p class="time">{{slot}}</p>'
+  };
+
+  function isTodayDate(prevDate, eacDate) {
+    if ((moment().format('MM-DD-YYYY') == moment(prevDate).format('MM-DD-YYYY')) || (moment().format('MM-DD-YYYY') == moment(eacDate).format('MM-DD-YYYY'))) {
+      return 'Today, ';
+    } else {
+      return moment(eacDate).format('MMMM DD YYYY, ');
+    }
+  }
+
+  function formatAMPM(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+  }
+});
+
 app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, usersEvents, othersEvents, trade, SessionService, socket, $stateParams) {
   $scope.user = SessionService.getUser();
   $scope.makeEventURL = "";
@@ -112,9 +169,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     $scope.message = message.message;
   });
 
+
   socket.on('get:message', function(data) {
-    $scope.msgHistory = [];
-    $scope.msgHistory = data[0] ? data[0].messages : [];
+    if (data[0] != '') {
+      $scope.msgHistory = [];
+      $scope.msgHistory = data[0] ? data[0].messages : [];
+    }
   });
 
   $scope.sendMessage = function() {
