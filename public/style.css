@@ -589,16 +589,12 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   text-overflow: ellipsis;
   text-align: right; }
 
+/* SCHEDULER */
 .btn-scheduler {
   background: transparent;
   border-color: transparent;
   border-radius: 0px;
-  text-align: center;
   padding: 3px;
-  color: #fff;
-  font-size: 1em;
-  text-transform: uppercase;
-  letter-spacing: 3px;
   width: 4.5%;
   height: 100%; }
 
@@ -659,6 +655,14 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   line-height: 16px;
   vertical-align: middle;
   color: black; }
+
+.column-day {
+  width: 13%;
+  height: 100%; }
+
+.column-time {
+  width: 9%;
+  height: 100%; }
 
 .cell-time {
   width: 100%;
@@ -725,7 +729,8 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   height: 100%;
   background: white;
   border: 1px solid black;
-  width: 75%; }
+  width: 75%;
+  position: relative; }
 
 .convo-display {
   overflow-y: scroll;
@@ -734,6 +739,9 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   position: relative; }
 
 .chat-input {
+  position: absolute;
+  left: 1%;
+  bottom: 1%;
   width: 100%;
   height: 13%;
   margin: auto; }
@@ -789,10 +797,12 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   text-transform: uppercase;
   letter-spacing: 3px;
   width: 100%;
-  margin: 5px; }
+  margin: 10px;
+  margin-top: 0; }
 
 .select-rfr {
-  margin: 0 0 5px 5px;
+  margin: 0;
+  margin-left: 10px;
   width: 100%; }
 
 .trade-options {
@@ -804,13 +814,43 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   width: 24%;
   font-size: 1.5em; }
 
+@media screen and (max-width: 436px) {
+  .rfr-schedule-container {
+    height: 180vh; }
+  .scheduler-small {
+    width: 100%;
+    height: 50%; }
+  .btn-scheduler {
+    width: 6.25%; }
+  .cell-date {
+    width: 12.5%; }
+  .column-day {
+    width: 12.5%; }
+  .column-time {
+    width: 12.5%; }
+  .rfr-chat {
+    margin-top: 0; }
+  .rfr-chatbox {
+    width: 100%; }
+  .trade-options {
+    float: none;
+    width: 100%;
+    margin: auto;
+    margin-top: 10px; }
+  .btn-option {
+    margin-left: 0; }
+  .select-rfr {
+    margin-left: 0; }
+  .form-message {
+    width: 83%; } }
+
 /** LISTS PAGE **/
 hr {
   border-color: gray; }
 
 h2, h3 {
   margin: 15px auto;
-  leter-spacing: 3px;
+  letter-spacing: 3px;
   text-transform: uppercase;
   text-align: center; }
 
@@ -1016,3 +1056,7 @@ h2, h3 {
 .btn-open-trade:hover {
   color: white;
   background: #652D91; }
+
+@media screen and (max-width: 436px) {
+  .vertical-rule {
+    display: none; } }
