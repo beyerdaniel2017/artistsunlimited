@@ -8,21 +8,20 @@
 		<h2>Search</h2>
 		<div id="search-inputs">
 			<div id="search-left">
-				<input id="input-username" class="form-control" type="text" name="searchUsername" placeholder="Search by soundcloud URL" ng-model="searchURL"/>
-				<button class="btn-default" id="btn-search" ng-click="sendSearch()">Search</button>
+				URL: 
+				<input id="input-username" class="form-control" type="text" name="searchUsername" placeholder="Search by URL"/>
 			</div>
-			<div class="vertical-rule"></div>
 			<div id="search-right">
 				<!--<div id="label-optional">
 					<h3>Optional</h3>
 				</div>-->
 				<div id="follower-range">
-					Follower Range:
+					Followers:
 					<input id="input-f-min" class="form-control input-follower-range" type="number" name="followerMin" placeholder="0"/>
 					-
 					<input id="input-f-max" class="form-control input-follower-range" type="number" name="followerMax" placeholder="..."/>
 				</div>
-				<button id="btn-optional-apply" class="btn-default">Apply</button>
+				<button class="btn-default" id="btn-search">Search</button>
 			</div>
 		</div>
 

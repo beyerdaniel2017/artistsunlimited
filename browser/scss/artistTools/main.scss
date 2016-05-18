@@ -1,496 +1,581 @@
+$break-small: 436px;
+
+/* SCHEDULER */
+
 .btn-scheduler {
-background: transparent;
-border-color: transparent;
-border-radius: 0px;
-text-align: center;
-padding: 3px;
-color: #fff;
-font-size: 1em;
-text-transform:uppercase;
-letter-spacing: 3px;
-width: 4.5%;
-height: 100%
+	background: transparent;
+	border-color: transparent;
+	border-radius: 0px;
+	padding: 3px;
+	width: 4.5%;
+	height: 100%
 }
 
 .btn-small {
-background: #F5BBBC;
-border: 2px solid white;
-border-radius: 0px;
-padding: 6px 14px;
-color: #fff;
-font-size: 12px;
-text-transform:uppercase;
-letter-spacing: 3px;
-width: 10%;
+	background: #F5BBBC;
+	border: 2px solid white;
+	border-radius: 0px;
+	padding: 6px 14px;
+	color: #fff;
+	font-size: 12px;
+	text-transform:uppercase;
+	letter-spacing: 3px;
+	width: 10%;
 }
 
 .btn-overlay {
-width: 20%
+	width: 20%
 }
 
 .btn-queue {
-background: #F5BBBC;
-border: 2px solid white;
-border-radius: 0px;
-text-align: center;
-padding: 3px;
-color: #fff;
-font-size: 1.8em;
-text-transform:uppercase;
-letter-spacing: 3px;
-width: 100%;
-height: 45px;
-margin: 3px;
-padding: 4px;
-line-height: 45px;
-vertical-align: middle;
+	background: #F5BBBC;
+	border: 2px solid white;
+	border-radius: 0px;
+	text-align: center;
+	padding: 3px;
+	color: #fff;
+	font-size: 1.8em;
+	text-transform:uppercase;
+	letter-spacing: 3px;
+	width: 100%;
+	height: 45px;
+	margin: 3px;
+	padding: 4px;
+	line-height: 45px;
+	vertical-align: middle;
 }
 
 .row-scheduler {
-width:100%;
-height:24px;
-border: 1px solid black;
-border-right: 1px solid black;
-cursor:pointer;
-vertical-align:middle;
-overflow:hidden;
+	width:100%;
+	height:24px;
+	border: 1px solid black;
+	border-right: 1px solid black;
+	cursor:pointer;
+	vertical-align:middle;
+	overflow:hidden;
 }
 
 .row-scheduler:hover {
-background-color: #fff;
+	background-color: #fff;
 }
 
 .row-dark {
-background-color: #cccccc;
+	background-color: #cccccc;
 }
 
 .row-light {
-background-color: #f2f2f2;
+	background-color: #f2f2f2;
 }
 
 .cell-date {
-width: 13%;
-border: 1px solid black;
-font-size: 13px;
-background-color: #f2f2f2;
-line-height: 16px;
-vertical-align: middle;
-color: black;
+	width: 13%;
+	border: 1px solid black;
+	font-size: 13px;
+	background-color: #f2f2f2;
+	line-height: 16px;
+	vertical-align: middle;
+	color: black;
+}
+
+.column-day {
+	width: 13%;
+	height: 100%;
+}
+
+.column-time {
+	width: 9%;
+	height: 100%;
 }
 
 .cell-time {
-width:100%;
-height:24px;
-border:1px solid black;
-vertical-align: middle;
-color: black;
-font-size: 1.1em;
+	width:100%;
+	height:24px;
+	border:1px solid black;
+	vertical-align: middle;
+	color: black;
+	font-size: 1.1em;
 }
 
 .form-scheduler {
-width: 20%;
-margin: 10px auto;
+	width: 20%;
+	margin: 10px auto;
 }
 
 .label-scheduler {
-text-transform: uppercase;
-font-size: 1.5em;
-letter-spacing: 3px;
+	text-transform: uppercase;
+	font-size: 1.5em;
+	letter-spacing: 3px;
 }
 
 .label-smaller {
-font-size: 1.25em;
+	font-size: 1.25em;
 }
 
 /** REFORRE INTERACTION **/
 
 .rfr-schedule-container {
-width: 96%;
-height: 60vh;
-min-height: 480px;
-margin: auto;
-margin-top: 5px;
-display: block;
+	width: 96%;
+	height: 60vh;
+	min-height: 480px;
+	margin: auto;
+	margin-top: 5px;
+	display: block;
 }
 
 .scheduler-small {
-width: 49%;
-height: 100%;
-text-align: center;
-margin: auto;
-display: inline-block;
+	width: 49%;
+	height: 100%;
+	text-align: center;
+	margin: auto;
+	display: inline-block;
 }
 
 .row-small {
-font-size: 0.9em;
-height: 4%;
-vertical-align: middle;
+	font-size: 0.9em;
+	height: 4%;
+	vertical-align: middle;
 }
 
 .label-username {
-height:6%;
-font-size: 1.5em;
+	height:6%;
+	font-size: 1.5em;
 }
 
 .form-message {
-width: 92.5%;
-height: 100%;
-margin-left: 1%;
-display: inline-block;
-margin: 1%;
-margin-right: 0;
-margin-top: 0;
+	width: 92.5%;
+	height: 100%;
+	margin-left: 1%;
+	display: inline-block;
+	margin: 1%;
+	margin-right: 0;
+	margin-top: 0;
 }
 
 .rfr-chat {
-margin: 1% auto;
-width: 96%;
-height: 37vh;
-position:relative;
+	margin: 1% auto;
+	width: 96%;
+	height: 37vh;
+	position: relative;
 }
 
 .rfr-chatbox {
-display: inline-block;
-height: 100%;
-background: white;
-border: 1px solid black;
-width: 75%;
+	display: inline-block;
+	height: 100%;
+	background: white;
+	border: 1px solid black;
+	width: 75%;
+	position: relative;
 }
 
 .convo-display {
-overflow-y: scroll;
-height: 78%;
-margin: 1%;
-position: relative;
+	overflow-y: scroll;
+	height: 78%;
+	margin: 1%;
+	position: relative;
 }
 
 .chat-input {
-width: 100%;
-height: 13%;
-margin:auto;
+	position: absolute;
+	left: 1%;
+	bottom: 1%;
+	width: 100%;
+	height: 13%;
+	margin:auto;
 }
 
 .btn-chat-send {
-background: #F5BBBC;
-border-color: transparent;
-border-radius: 0px;
-text-align: center;
-padding: 3px;
-color: #fff;
-font-size: 1em;
-text-transform:uppercase;
-letter-spacing: 3px;
-height: 100%;
-display: inline-block;
-margin-left:-4px;
-vertical-align: top;
+	background: #F5BBBC;
+	border-color: transparent;
+	border-radius: 0px;
+	text-align: center;
+	padding: 3px;
+	color: #fff;
+	font-size: 1em;
+	text-transform:uppercase;
+	letter-spacing: 3px;
+	height: 100%;
+	display: inline-block;
+	margin-left:-4px;
+	vertical-align: top;
 }
 
 .msg-line {
-display: inline-block;
-width: 98%;
-background: transparent;
-margin: 0.4% 1% 0.4% 0;
-padding: 0px;
+	display: inline-block;
+	width: 98%;
+	background: transparent;
+	margin: 0.4% 1% 0.4% 0;
+	padding: 0px;
 }
 
 .msg-box {
-padding: 2px 6px;
-color: black;
+	padding: 2px 6px;
+	color: black;
 }
 
 .msg-from {
-background: #F5BBBC;
-text-align: right;
-float:right;
+	background: #F5BBBC;
+	text-align: right;
+	float:right;
 }
 
 .msg-to {
-background: #E6E6E6;
-float:left;
+	background: #E6E6E6;
+	float:left;
 }
 
 .msg-notif {
-width: 100%;
-text-align: center;
-color: red;
+	width: 100%;
+	text-align: center;
+	color: red;
 }
 
 .btn-option {
-background: #F5BBBC;
-border-color: transparent;
-border-radius: 0px;
-text-align: center;
-padding: 3px;
-color: #fff;
-font-size: 1.5em;
-text-transform:uppercase;
-letter-spacing: 3px;
-width: 100%;
-margin: 5px;
+	background: #F5BBBC;
+	border-color: transparent;
+	border-radius: 0px;
+	text-align: center;
+	padding: 3px;
+	color: #fff;
+	font-size: 1.5em;
+	text-transform:uppercase;
+	letter-spacing: 3px;
+	width: 100%;
+	margin: 10px;
+	margin-top: 0;
 }
 
 .select-rfr{
-margin: 0 0 5px 5px;
-width: 100%;
+	margin: 0;
+	margin-left: 10px;
+	width: 100%;
 }
 
 .trade-options {
-vertical-align: top;
-padding: 0;
-float: right;
-display: inline-block;
-margin: auto 0.5% auto 0;
-width: 24%;
-font-size: 1.5em;
+	vertical-align: top;
+	padding: 0;
+	float: right;
+	display: inline-block;
+	margin: auto 0.5% auto 0;
+	width: 24%;
+	font-size: 1.5em;
+}
+
+@media screen and (max-width: $break-small) {
+
+	.rfr-schedule-container {
+		height: 180vh;
+	}
+
+	.scheduler-small {
+		width: 100%;
+		height: 50%;
+	}
+
+	.btn-scheduler {
+		width: 6.25%;
+	}
+
+	.cell-date {
+		width: 12.5%;
+	}
+
+	.column-day {
+		width: 12.5%;
+	}
+
+	.column-time {
+		width: 12.5%;
+	}
+
+	.rfr-chat {
+		margin-top: 0;
+	}
+
+	.rfr-chatbox {
+		width: 100%;
+	}
+
+	.trade-options {
+		float: none;
+		width: 100%;
+		margin: auto;
+		margin-top: 10px;
+		padding-bottom: 10px;
+	}
+
+	.btn-option {
+		margin-left: 0;
+	}
+
+	.select-rfr {
+		margin-left: 0;
+	}
+
+	.form-message {
+		width: 75%;
+	}
+
 }
 
 /** LISTS PAGE **/
 
 hr {
-border-color: gray;
+	border-color: gray;
+	margin-bottom: 0;
+	margin-top: 10px;
 }
 
 h2, h3 {
-margin:  15px auto;
-leter-spacing: 3px;
-text-transform: uppercase;
-text-align: center;
-}
-
-.vertical-rule {
-margin: auto 10px;
-max-height: 200px;
-height: 100px;
-background: gray;
-width: 1px;
-display: inline-block;
-vertical-align: center;
+	margin:  15px auto;
+	letter-spacing: 3px;
+	text-transform: uppercase;
+	text-align: center;
 }
 
 .trades-container {
-height: 160px;
-padding: 0;
-position: relative;
-overflow: hidden;
+	height: 160px;
+	padding: 0;
+	position: relative;
+	overflow: hidden;
 }
 
 #trades-list {
-height: 100%;
-margin: 0;
-position: absolute;
-bottom:0;
-left: 50pt;
+	height: 100%;
+	margin: 0;
+	position: absolute;
+	bottom:0;
+	left: 50pt;
 }
 
 .trade-box {
-height: 140px;
-width: 140px;
-margin: 10px 20px;
-margin-right: 0px;
-background: #C9A7CD;
-color: white;
-display: inline-block;
-text-align: center;
-position: relative;
-vertical-align: middle;
+	height: 140px;
+	min-width: 140px;
+	margin: 10px 20px;
+	margin-right: 0px;
+	background: #C9A7CD;
+	color: white;
+	display: inline-block;
+	text-align: center;
+	position: relative;
+	vertical-align: middle;
+	padding: 5px;
 }
 
 .btn-manage-trade {
-color: #652D91;
-margin: auto;
-width: 126px;
-border-radius: 0px;
-border-width: 0px;
-border-color: transparent;
-background: white;
-margin-bottom: 0;
-position: absolute;
-bottom: 7px;
-left: 7px;
-font-size: 1.2em;
+	color: #652D91;
+	margin: auto;
+	width: 95%;
+	border-radius: 0px;
+	border-width: 0px;
+	border-color: transparent;
+	background: white;
+	vertical-align: bottom;
+	font-size: 1.2em;
 }
 
 .btn-manage-trade:hover {
-color: white;
-background: #652D91;
+	color: white;
+	background: #652D91;
 }
 
 .label-box-username {
-font-size: 1.3em;
-margin: 6px auto;
-margin-bottom: 0;
+	font-size: 1.7em;
+	margin: auto;
 }
 
 .label-freq {
-font-size: 1.8em;
-margin: 0 auto;
+	font-size: 1.8em;
+	margin: 0 auto;
 }
 
 .label-ratio {
-font-size: 1.8em;
-margin: 0 auto;
-display: box;
+	font-size: 1.8em;
+	margin: 0 auto;
+	display: box;
 }
 
 .btn-trades-list {
-height: 100%;
-width: 50px;
-margin: 0;
-position: absolute;
-top: 0;
-background: white;
-border-color: transparent;
-border-radius: 0px;
-border-width: 0px;
+	height: 100%;
+	width: 50px;
+	margin: 0;
+	position: absolute;
+	top: 0;
+	background: white;
+	border-color: transparent;
+	border-radius: 0px;
+	border-width: 0px;
 }
 
 .btn-trades-list > img {
-margin: auto;
-width: 90%;
+	margin: auto;
+	width: 90%;
 }
 
 #trades-list-back {
-left: 0;
+	left: 0;
 }
 
 #trades-list-next {
-right: 0;
+	right: 0;
 }
 
 #search-container {
-width: 100%;
-position: relative;
+	width: 100%;
+	position: relative;
 }
 
 #search-inputs {
-width: 100%;
-height: initial;
-position: relative;
+	width: 100%;
+	height: initial;
+	position: relative;
 }
 
 #search-left {
-margin: 0;
-width: 40%;
-display: inline-block;
-vertical-align: top;
+	margin: 0;
+	width: 40%;
+	display: inline-block;
+	vertical-align: top;
 }
 
 #search-right {
-margin: 0;
-width: 55%;
-display: inline-block;
-vertical-align: top;
+	margin: 0;
+	width: 55%;
+	display: inline-block;
+	vertical-align: top;
 }
 
 #input-username {
-width: 100%;
-margin: auto;
-display: inline-block;
-text-align: center;
+	width: 80%;
+	margin: auto;
+	margin-left: 10px;
+	display: inline-block;
+	text-align: center;
 }
 
 #btn-search {
-background: #F5BBBC;
-border-color: transparent;
-border-radius: 0px;
-padding: 6px 14px;
-margin: 20px auto;
-color: #fff;
-font-size: 12px;
-text-transform:uppercase;
-letter-spacing: 3px;
-display: block;
+	background: #F5BBBC;
+	border-color: transparent;
+	border-radius: 0px;
+	padding: 6px 14px;
+	color: #fff;
+	font-size: 12px;
+	text-transform:uppercase;
+	letter-spacing: 3px;
+	display: inline-block;
+	position: absolute;
+	right: 0;
 }
 
 #select-genre-search {
-width: 25%;
-display: inline-block;
-margin-left: 10px;
+	width: 25%;
+	display: inline-block;
+	margin-left: 10px;
 }
 
 .input-follower-range {
-width: 30%;
-display: inline-block;
-margin: 10px;
-margin-top: 0;
-text-align: center;
+	width: 30%;
+	display: inline-block;
+	margin: 10px;
+	margin-top: 0;
+	text-align: center;
 }
 
 #follower-range {
-width: 80%;
+	width: 80%;
+	display: inline-block;
 }
 
 #genre-select {
 }
 
-#btn-optional-apply {
-background: #F5BBBC;
-border-radius: 0px;
-border-color: transparent;
-padding: 6px 14px;
-color: #fff;
-font-size: 12px;
-text-transform: uppercase;
-letter-spacing: 3px;
-width: initial;
-margin:  10px auto;
-display: block;
-}
-
 #search-container {
-height: 160px;
-padding: 0;
-position: relative;
-overflow: hidden;
+	height: 120px;
+	padding: 0;
+	position: relative;
+	overflow: hidden;
 }
 
 #search-results {
-height: 100%;
-margin: 0;
-position: absolute;
-bottom:0;
-left: 50pt;
+	height: 100%;
+	margin: 0;
+	position: absolute;
+	bottom:0;
+	left: 50pt;
 }
 
 #results-list-back {
-left: 0;
+	left: 0;
 }
 
 #results-list-next {
-right: 0;
+	right: 0;
 }
 
 .user-box {
-height: 140px;
-width: 300px;
-margin: 10px 20px;
-margin-right: 0px;
-background: #C9A7CD;
-color: white;
-display: inline-block;
-text-align: center;
-position: relative;
+	height: 100px;
+	min-width: 200px;
+	margin: 10px 20px;
+	margin-right: 0px;
+	background: #C9A7CD;
+	color: white;
+	display: inline-block;
+	text-align: center;
+	position: relative;
+	padding: 5px;
 }
 
 .label-result-box {
-font-size: 1.6em;
-margin: 2px auto;
+	font-size: 1.6em;
+	margin: auto;
 }
 
 .btn-open-trade {
-color: #652D91;
-margin: 2% auto;
-width: 95%;
-border-radius: 0px;
-border-width: 0px;
-border-color: transparent;
-background: white;
-vertical-align: bottom;
-font-size: 1.2em;
+	color: #652D91;
+	margin: auto;
+	width: 95%;
+	border-radius: 0px;
+	border-width: 0px;
+	border-color: transparent;
+	background: white;
+	vertical-align: bottom;
+	font-size: 1.2em;
 }
 
 .btn-open-trade:hover {
-color: white;
-background: #652D91;
+	color: white;
+	background: #652D91;
+}
+
+@media screen and (max-width: 436px) {
+
+	#search-left {
+		width: 100%;
+	}
+
+	#search-right {
+		width: 100%;
+	}
+
+	#follower-range {
+		width: 100%;
+		margin: auto;
+	}
+
+	.input-follower-range {
+		width: 20%;
+	}
+
+	.user-box {
+		width: 140px;
+	}
+
+	.btn-open-trade {
+		margin:0;
+		margin-bottom: 0;
+		position: absolute;
+		bottom: 7px;
+		left: 7px;
+		width: 126px;
+	}
+
 }
