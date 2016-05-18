@@ -79,6 +79,13 @@
   color: #FFF;
   border-radius: 0px; }
 
+.time {
+  text-align: center; }
+
+.msg-box {
+  border-radius: 4px;
+  padding: 2px 14px; }
+
 .ZebraDialog .ZebraDialog_Information {
   background-image: url("../assets/images/zebra_dialog_icon.png"); }
 
@@ -836,32 +843,26 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
     float: none;
     width: 100%;
     margin: auto;
-    margin-top: 10px; }
+    margin-top: 10px;
+    padding-bottom: 10px; }
   .btn-option {
     margin-left: 0; }
   .select-rfr {
     margin-left: 0; }
   .form-message {
-    width: 83%; } }
+    width: 75%; } }
 
 /** LISTS PAGE **/
 hr {
-  border-color: gray; }
+  border-color: gray;
+  margin-bottom: 0;
+  margin-top: 10px; }
 
 h2, h3 {
   margin: 15px auto;
   letter-spacing: 3px;
   text-transform: uppercase;
   text-align: center; }
-
-.vertical-rule {
-  margin: auto 10px;
-  max-height: 200px;
-  height: 100px;
-  background: gray;
-  width: 1px;
-  display: inline-block;
-  vertical-align: center; }
 
 .trades-container {
   height: 160px;
@@ -878,7 +879,7 @@ h2, h3 {
 
 .trade-box {
   height: 140px;
-  width: 140px;
+  min-width: 140px;
   margin: 10px 20px;
   margin-right: 0px;
   background: #C9A7CD;
@@ -886,20 +887,18 @@ h2, h3 {
   display: inline-block;
   text-align: center;
   position: relative;
-  vertical-align: middle; }
+  vertical-align: middle;
+  padding: 5px; }
 
 .btn-manage-trade {
   color: #652D91;
   margin: auto;
-  width: 126px;
+  width: 95%;
   border-radius: 0px;
   border-width: 0px;
   border-color: transparent;
   background: white;
-  margin-bottom: 0;
-  position: absolute;
-  bottom: 7px;
-  left: 7px;
+  vertical-align: bottom;
   font-size: 1.2em; }
 
 .btn-manage-trade:hover {
@@ -907,9 +906,8 @@ h2, h3 {
   background: #652D91; }
 
 .label-box-username {
-  font-size: 1.3em;
-  margin: 6px auto;
-  margin-bottom: 0; }
+  font-size: 1.7em;
+  margin: auto; }
 
 .label-freq {
   font-size: 1.8em;
@@ -963,8 +961,9 @@ h2, h3 {
   vertical-align: top; }
 
 #input-username {
-  width: 100%;
+  width: 80%;
   margin: auto;
+  margin-left: 10px;
   display: inline-block;
   text-align: center; }
 
@@ -973,12 +972,13 @@ h2, h3 {
   border-color: transparent;
   border-radius: 0px;
   padding: 6px 14px;
-  margin: 20px auto;
   color: #fff;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 3px;
-  display: block; }
+  display: inline-block;
+  position: absolute;
+  right: 0; }
 
 #select-genre-search {
   width: 25%;
@@ -993,23 +993,11 @@ h2, h3 {
   text-align: center; }
 
 #follower-range {
-  width: 80%; }
-
-#btn-optional-apply {
-  background: #F5BBBC;
-  border-radius: 0px;
-  border-color: transparent;
-  padding: 6px 14px;
-  color: #fff;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  width: initial;
-  margin: 10px auto;
-  display: block; }
+  width: 80%;
+  display: inline-block; }
 
 #search-container {
-  height: 160px;
+  height: 120px;
   padding: 0;
   position: relative;
   overflow: hidden; }
@@ -1028,23 +1016,24 @@ h2, h3 {
   right: 0; }
 
 .user-box {
-  height: 140px;
-  width: 300px;
+  height: 100px;
+  min-width: 200px;
   margin: 10px 20px;
   margin-right: 0px;
   background: #C9A7CD;
   color: white;
   display: inline-block;
   text-align: center;
-  position: relative; }
+  position: relative;
+  padding: 5px; }
 
 .label-result-box {
   font-size: 1.6em;
-  margin: 2px auto; }
+  margin: auto; }
 
 .btn-open-trade {
   color: #652D91;
-  margin: 2% auto;
+  margin: auto;
   width: 95%;
   border-radius: 0px;
   border-width: 0px;
@@ -1058,5 +1047,21 @@ h2, h3 {
   background: #652D91; }
 
 @media screen and (max-width: 436px) {
-  .vertical-rule {
-    display: none; } }
+  #search-left {
+    width: 100%; }
+  #search-right {
+    width: 100%; }
+  #follower-range {
+    width: 100%;
+    margin: auto; }
+  .input-follower-range {
+    width: 20%; }
+  .user-box {
+    width: 140px; }
+  .btn-open-trade {
+    margin: 0;
+    margin-bottom: 0;
+    position: absolute;
+    bottom: 7px;
+    left: 7px;
+    width: 126px; } }

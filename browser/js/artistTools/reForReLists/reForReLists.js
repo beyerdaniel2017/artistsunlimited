@@ -17,7 +17,7 @@ app.controller("ReForReListsController", function($scope) {
 		freq: "Weekly",
 		ratio: "2:3"
 	}, {
-		user: "Matt",
+		user: "Smitty Werbenjagermanjensen",
 		freq: "One time",
 		ratio: "1:1"
 	}];
@@ -27,7 +27,7 @@ app.controller("ReForReListsController", function($scope) {
 		genre: "Punk",
 		numFollowers: "10 000"
 	}, {
-		name: "Dom",
+		name: "Dom Long name resize box",
 		genre: "Punk",
 		numFollowers: "10 000"
 	}];

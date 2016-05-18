@@ -1,6 +1,5 @@
 $break-small: 436px;
 
-
 /* SCHEDULER */
 
 .btn-scheduler {
@@ -301,6 +300,7 @@ $break-small: 436px;
 		width: 100%;
 		margin: auto;
 		margin-top: 10px;
+		padding-bottom: 10px;
 	}
 
 	.btn-option {
@@ -312,7 +312,7 @@ $break-small: 436px;
 	}
 
 	.form-message {
-		width: 83%;
+		width: 75%;
 	}
 
 }
@@ -321,6 +321,8 @@ $break-small: 436px;
 
 hr {
 	border-color: gray;
+	margin-bottom: 0;
+	margin-top: 10px;
 }
 
 h2, h3 {
@@ -328,16 +330,6 @@ h2, h3 {
 	letter-spacing: 3px;
 	text-transform: uppercase;
 	text-align: center;
-}
-
-.vertical-rule {
-	margin: auto 10px;
-	max-height: 200px;
-	height: 100px;
-	background: gray;
-	width: 1px;
-	display: inline-block;
-	vertical-align: center;
 }
 
 .trades-container {
@@ -357,7 +349,7 @@ h2, h3 {
 
 .trade-box {
 	height: 140px;
-	width: 140px;
+	min-width: 140px;
 	margin: 10px 20px;
 	margin-right: 0px;
 	background: #C9A7CD;
@@ -366,20 +358,18 @@ h2, h3 {
 	text-align: center;
 	position: relative;
 	vertical-align: middle;
+	padding: 5px;
 }
 
 .btn-manage-trade {
 	color: #652D91;
 	margin: auto;
-	width: 126px;
+	width: 95%;
 	border-radius: 0px;
 	border-width: 0px;
 	border-color: transparent;
 	background: white;
-	margin-bottom: 0;
-	position: absolute;
-	bottom: 7px;
-	left: 7px;
+	vertical-align: bottom;
 	font-size: 1.2em;
 }
 
@@ -389,9 +379,8 @@ h2, h3 {
 }
 
 .label-box-username {
-	font-size: 1.3em;
-	margin: 6px auto;
-	margin-bottom: 0;
+	font-size: 1.7em;
+	margin: auto;
 }
 
 .label-freq {
@@ -456,8 +445,9 @@ h2, h3 {
 }
 
 #input-username {
-	width: 100%;
+	width: 80%;
 	margin: auto;
+	margin-left: 10px;
 	display: inline-block;
 	text-align: center;
 }
@@ -467,12 +457,13 @@ h2, h3 {
 	border-color: transparent;
 	border-radius: 0px;
 	padding: 6px 14px;
-	margin: 20px auto;
 	color: #fff;
 	font-size: 12px;
 	text-transform:uppercase;
 	letter-spacing: 3px;
-	display: block;
+	display: inline-block;
+	position: absolute;
+	right: 0;
 }
 
 #select-genre-search {
@@ -491,27 +482,14 @@ h2, h3 {
 
 #follower-range {
 	width: 80%;
+	display: inline-block;
 }
 
 #genre-select {
 }
 
-#btn-optional-apply {
-	background: #F5BBBC;
-	border-radius: 0px;
-	border-color: transparent;
-	padding: 6px 14px;
-	color: #fff;
-	font-size: 12px;
-	text-transform: uppercase;
-	letter-spacing: 3px;
-	width: initial;
-	margin:  10px auto;
-	display: block;
-}
-
 #search-container {
-	height: 160px;
+	height: 120px;
 	padding: 0;
 	position: relative;
 	overflow: hidden;
@@ -534,8 +512,8 @@ h2, h3 {
 }
 
 .user-box {
-	height: 140px;
-	width: 300px;
+	height: 100px;
+	min-width: 200px;
 	margin: 10px 20px;
 	margin-right: 0px;
 	background: #C9A7CD;
@@ -543,16 +521,17 @@ h2, h3 {
 	display: inline-block;
 	text-align: center;
 	position: relative;
+	padding: 5px;
 }
 
 .label-result-box {
 	font-size: 1.6em;
-	margin: 2px auto;
+	margin: auto;
 }
 
 .btn-open-trade {
 	color: #652D91;
-	margin: 2% auto;
+	margin: auto;
 	width: 95%;
 	border-radius: 0px;
 	border-width: 0px;
@@ -568,7 +547,35 @@ h2, h3 {
 }
 
 @media screen and (max-width: 436px) {
-	.vertical-rule {
-		display: none;
+
+	#search-left {
+		width: 100%;
 	}
+
+	#search-right {
+		width: 100%;
+	}
+
+	#follower-range {
+		width: 100%;
+		margin: auto;
+	}
+
+	.input-follower-range {
+		width: 20%;
+	}
+
+	.user-box {
+		width: 140px;
+	}
+
+	.btn-open-trade {
+		margin:0;
+		margin-bottom: 0;
+		position: absolute;
+		bottom: 7px;
+		left: 7px;
+		width: 126px;
+	}
+
 }

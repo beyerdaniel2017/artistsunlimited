@@ -8,21 +8,20 @@
 		<h2>Search</h2>
 		<div id="search-inputs">
 			<div id="search-left">
-				<input id="input-username" class="form-control" type="text" name="searchUsername" placeholder="Search by username"/>
-				<button class="btn-default" id="btn-search">Search</button>
+				URL: 
+				<input id="input-username" class="form-control" type="text" name="searchUsername" placeholder="Search by URL"/>
 			</div>
-			<div class="vertical-rule"></div>
 			<div id="search-right">
 				<!--<div id="label-optional">
 					<h3>Optional</h3>
 				</div>-->
 				<div id="follower-range">
-					Follower Range:
+					Followers:
 					<input id="input-f-min" class="form-control input-follower-range" type="number" name="followerMin" placeholder="0"/>
 					-
 					<input id="input-f-max" class="form-control input-follower-range" type="number" name="followerMax" placeholder="..."/>
 				</div>
-				<button id="btn-optional-apply" class="btn-default">Apply</button>
+				<button class="btn-default" id="btn-search">Search</button>
 			</div>
 		</div>
 
@@ -47,8 +46,7 @@
 			<div id="search-results">
 				<div ng-repeat="user in userSearchResults" class="user-box">
 					<div class="label-result-box">{{user.name}}</div>
-					<div class="label-result-box">{{user.numFollowers}}</div>
-					<div class="label-result-box">{{user.genre}}</div>
+					<div class="label-result-box">Followers: {{user.numFollowers}}</div>
 					<button class="btn-open-trade bold" ng-click="openTrade(user)">Open Trade</button>
 				</div>
 			</div>
