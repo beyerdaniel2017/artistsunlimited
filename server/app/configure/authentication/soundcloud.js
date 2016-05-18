@@ -7,57 +7,70 @@ var User = mongoose.model('User');
 var scConfig = global.env.SOUNDCLOUD;
 var scWrapper = require("../../SCWrapper/SCWrapper.js");
 scWrapper.init({
-            id: scConfig.clientID,
-            secret: scConfig.clientSecret,
-  uri: scConfig.callbackURL
-        });
+    id: scConfig.clientID,
+    secret: scConfig.clientSecret,
+    uri: scConfig.callbackURL
+});
 
 module.exports = function(app) {
-  var strategyFn = function(req, email, password, done) {
-    scWrapper.setToken(req.body.token);
-    var reqObj = {method: 'GET', path:'/me', qs: {}};
-    scWrapper.request(reqObj, function(err, data){
+    var strategyFn = function(req, email, password, done) {
+        scWrapper.setToken(req.body.token);
+        var reqObj = {
+            method: 'GET',
+            path: '/me',
+            qs: {}
+        };
+        scWrapper.request(reqObj, function(err, data) {
             if (err) {
-              return done(err, false);
-            }   
-            User.findOne({ 'soundcloud.id': data.id }).exec()
-            .then(function (user) {
-                if (user) {
-                    var updateObj = {
-                        'soundcloud' : {
-                            'id': data.id,
-                            'username': data.username,
-                            'permalinkURL': data.permalink_url,
-                            'avatarURL': data.avatar_url,
-                            'token' : req.body.token
-                        }
-                    };
-          User.findOneAndUpdate({ _id: user._id }, { $set : updateObj }, { new: true })
-          .exec()
-                    .then(function(user) {
-                        done(null, user);    
-                    })
-                    .then(null, function(err) {
-                        done(err);
-                    });
-        } 
-        else {
-                    var newUser = new User({
-                        'name': data.username,
-                        'soundcloud': {
-                            'id': data.id,
-                            'username': data.username,
-                            'permalinkURL': data.permalink_url,
-                            'avatarURL': data.avatar_url,
-                            'token' : req.body.token
-                        }
-                    });
-                    newUser.save();
-                    return done(null, newUser);
-                }
-            }, function(err) {
-                done(err);
-            });
+                return done(err, false);
+            }
+            User.findOne({
+                    'soundcloud.id': data.id
+                }).exec()
+                .then(function(user) {
+                    if (user) {
+                        var updateObj = {
+                            'soundcloud': {
+                                'id': data.id,
+                                'username': data.username,
+                                'permalinkURL': data.permalink_url,
+                                'avatarURL': data.avatar_url,
+                                'token': req.body.token,
+                                'followers': req.body.followers_count
+                            }
+                        };
+                        User.findOneAndUpdate({
+                                _id: user._id
+                            }, {
+                                $set: updateObj
+                            }, {
+                                new: true
+                            })
+                            .exec()
+                            .then(function(user) {
+                                done(null, user);
+                            })
+                            .then(null, function(err) {
+                                done(err);
+                            });
+                    } else {
+                        var newUser = new User({
+                            'name': data.username,
+                            'soundcloud': {
+                                'id': data.id,
+                                'username': data.username,
+                                'permalinkURL': data.permalink_url,
+                                'avatarURL': data.avatar_url,
+                                'token': req.body.token,
+                                'followers': req.body.followers_count
+                            }
+                        });
+                        newUser.save();
+                        return done(null, newUser);
+                    }
+                }, function(err) {
+                    done(err);
+                });
         });
     };
 

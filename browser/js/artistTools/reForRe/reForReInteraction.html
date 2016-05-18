@@ -13,8 +13,8 @@
 				<button class="btn btn-default btn-scheduler" ng-click="decrDay()"><img style="width:60%; height:100%; margin-top:-20%; margin-right:-4px;" src="/assets/images/arrow-left.png"/></button>
 				<button class="btn btn-default btn-scheduler" ng-click="incrDay()" ><img id="scheduler-btn-back" style="width:60%; height:100%; margin-top:-20%" src="/assets/images/arrow-right.png"/></button>
 				<div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]" style="line-height:27px !important">
-            		{{calendar[t+dayIncr].day.toLocaleDateString()}}
-            	</div>
+					{{calendar[t+dayIncr].day.toLocaleDateString()}}
+				</div>
 			</div>
 			<div style="width:100%; height:96%; display:flex; flex-direction:row;">
 				<div style="width:9%; height: 100%;">
@@ -61,9 +61,9 @@
 
 		</div>
 		<div class="chat-input">
-		<form name="chat" ng-submit="sendMessage()" >
-			<input type="text"class="form-control form-message" ng-model="message"></input>
-			<button type="submit" class="btn btn-default btn-chat-send" ng-disabled="!message">Send</button>
+			<form name="chat" ng-submit="sendMessage()" >
+				<input type="text"class="form-control form-message" ng-model="message"></input>
+				<button type="submit" class="btn btn-default btn-chat-send" ng-disabled="!message">Send</button>
 			</form>
 		</div>
 	</div>
