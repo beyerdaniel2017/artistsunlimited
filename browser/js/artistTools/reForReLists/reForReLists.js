@@ -67,7 +67,9 @@ app.controller("ReForReListsController", function($scope, currentTrades, $http, 
 		var trade = {
 			messages: [{
 				date: new Date(),
-				text: SessionService.getUser().soundcloud.username + ' opened a trade.'
+				senderId: SessionService.getUser()._id,
+				text: SessionService.getUser().soundcloud.username + ' opened a trade.',
+				type: 'message'
 			}],
 			tradeType: 'one-time',
 			p1: {

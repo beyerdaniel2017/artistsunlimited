@@ -36,7 +36,7 @@ module.exports = function(app) {
                                 'permalinkURL': data.permalink_url,
                                 'avatarURL': data.avatar_url,
                                 'token': req.body.token,
-                                'followers': req.body.followers_count
+                                'followers': data.followers_count
                             }
                         };
                         User.findOneAndUpdate({
@@ -62,7 +62,7 @@ module.exports = function(app) {
                                 'permalinkURL': data.permalink_url,
                                 'avatarURL': data.avatar_url,
                                 'token': req.body.token,
-                                'followers': req.body.followers_count
+                                'followers': data.followers_count
                             }
                         });
                         newUser.save();

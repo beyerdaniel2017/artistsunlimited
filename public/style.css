@@ -79,6 +79,13 @@
   color: #FFF;
   border-radius: 0px; }
 
+.time {
+  text-align: center; }
+
+.msg-box {
+  border-radius: 4px;
+  padding: 2px 14px; }
+
 .ZebraDialog .ZebraDialog_Information {
   background-image: url("../assets/images/zebra_dialog_icon.png"); }
 
