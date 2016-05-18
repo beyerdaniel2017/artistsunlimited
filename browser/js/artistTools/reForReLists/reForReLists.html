@@ -47,7 +47,7 @@
 			<div id="search-results">
 				<div ng-if="searchUser" class="user-box"> <!-- ng-repeat="user in otherUsers" -->
 					<div class="label-result-box">{{searchUser.name}}</div>
-					<div class="label-result-box">{{searchUser.followers}} followers</div>
+					<div class="label-result-box">{{searchUser.soundcloud.followers | number:0}} followers</div>
 					<button class="btn-open-trade bold" ng-click="openTrade(searchUser)">Open Trade</button>
 				</div>
 			</div>
