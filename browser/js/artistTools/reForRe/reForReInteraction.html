@@ -54,11 +54,11 @@
 	<div class="rfr-chatbox">
 		<div class="convo-display">
 			<div ng-repeat="msg in msgHistory track by $index" class="msg-line">
+			 <time-slot start-date="{{msgHistory[0].date}}" each-date="{{msg.date}}" previous-date="{{msgHistory[$index-1].date}}" ></time-slot> 
 				<div class="msg-box {{msg.senderId==user._id ? 'msg-from' : 'msg-to'}}">
 					{{msg.text}}
 				</div>
 			</div>
-
 		</div>
 		<div class="chat-input">
 			<form name="chat" ng-submit="sendMessage()" >
