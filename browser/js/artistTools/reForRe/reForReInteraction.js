@@ -36,6 +36,137 @@ app.config(function($stateProvider) {
     })
 });
 
+app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, usersEvents, othersEvents, trade, SessionService, socket, $stateParams) {
+  console.log(trade);
+  $scope.user = SessionService.getUser();
+  $scope.msgHistory = [];
+  $scope.makeEventURL = "";
+  $scope.showOverlay = false;
+  $scope.processiong = false;
+
+  usersEvents.forEach(function(ev) {
+    ev.day = new Date(ev.day);
+  });
+  othersEvents.forEach(function(ev) {
+    ev.day = new Date(ev.day);
+  });
+  $scope.hideall = false;
+  $scope.calendarp1 = fillDateArrays(usersEvents);
+  $scope.calendarp2 = fillDateArrays(othersEvents);
+  $scope.p1dayIncr = 0;
+  $scope.p2dayIncr = 0;
+  $scope.incr = function(inc) {
+    console.log(inc);
+    if (inc < 14) inc++;
+  }
+  $scope.decr = function(inc) {
+    if (inc > 0) inc--;
+  }
+
+  $scope.clickedSlot = function(day, hour) {
+    var today = new Date();
+    if (today.toLocaleDateString() == day.toLocaleDateString() && today.getHours() > hour) return;
+    $scope.showOverlay = true;
+    var calDay = {};
+    var calendarDay = $scope.calendarp1.find(function(calD) {
+      return calD.day.toLocaleDateString() == day.toLocaleDateString();
+    });
+    var makeDay = new Date(day);
+    makeDay.setHours(hour, 0, 0, 0);
+    $.Zebra_Dialog("Are you sure? You want to make " + moment(makeDay).format('LLL') + " a traded slot?", {
+      'type': 'confirmation',
+      'buttons': [{
+        caption: 'Yes',
+        callback: function() {
+          socket.emit('send:message', {
+            message: $scope.user.name + " created a trade slot at " + moment(makeDay).format('LLL'),
+            type: 'alert',
+            id: $scope.user._id,
+            tradeID: $stateParams.tradeID
+          });
+        }
+      }, {
+        caption: 'No',
+        callback: function() {
+          console.log('No was clicked');
+        }
+      }]
+    });
+  }
+
+  $scope.backEvent = function() {
+    $scope.makeEvent = null;
+    $scope.showOverlay = false;
+  }
+
+  $scope.dayOfWeekAsString = function(date) {
+    var dayIndex = date.getDay();
+    return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
+  }
+
+
+
+  socket.on('init', function(data) {
+    $scope.name = data.name;
+    $scope.users = data.users;
+  });
+
+  socket.on('send:message', function(message) {
+    if (message.tradeID == $stateParams.tradeID) {
+      $scope.msgHistory.push(message);
+      $scope.message = message.message;
+    }
+  });
+
+  socket.on('get:message', function(data) {
+    if (data[0] != '') {
+      if (data[0]._id == $stateParams.tradeID) {
+        $scope.msgHistory = data[0] ? data[0].messages : [];
+      }
+    }
+  });
+
+  $scope.sendMessage = function() {
+    socket.emit('send:message', {
+      message: $scope.message,
+      type: 'message',
+      id: $scope.user._id,
+      tradeID: $stateParams.tradeID
+    });
+    $scope.message = '';
+  };
+
+  $scope.getMessage = function() {
+    socket.emit('get:message', $stateParams.tradeID);
+  }
+});
+
+function fillDateArrays(events) {
+  var calendar = [];
+  var today = new Date();
+  for (var i = 0; i < 21; i++) {
+    var calDay = {};
+    calDay.day = new Date()
+    calDay.day.setDate(today.getDate() + i);
+    var dayEvents = events.filter(function(ev) {
+      return (ev.day.toLocaleDateString() == calDay.day.toLocaleDateString());
+    });
+    var eventArray = [];
+    for (var j = 0; j < 24; j++) {
+      eventArray[j] = {
+        type: "empty"
+      };
+    }
+    dayEvents.forEach(function(ev) {
+      eventArray[ev.day.getHours()] = ev;
+    });
+    calDay.events = eventArray;
+    calendar.push(calDay);
+  }
+  return calendar;
+}
+
+
 app.directive('timeSlot', function(moment) {
   return {
     restrict: 'E',
@@ -90,104 +221,5 @@ app.directive('timeSlot', function(moment) {
     minutes = minutes < 10 ? '0' + minutes : minutes;
     var strTime = hours + ':' + minutes + ' ' + ampm;
     return strTime;
-  }
-});
-
-app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, usersEvents, othersEvents, trade, SessionService, socket, $stateParams) {
-  $scope.user = SessionService.getUser();
-  $scope.msgHistory=[];
-  $scope.makeEventURL = "";
-  $scope.showOverlay = false;
-  $scope.processiong = false;
-  usersEvents.forEach(function(ev) {
-    ev.day = new Date(ev.day);
-  });
-  othersEvents.forEach(function(ev) {
-    ev.day = new Date(ev.day);
-  });
-  $scope.hideall = false;
-  $scope.calendarp1 = fillDateArrays(usersEvents);
-  $scope.calendarp2 = fillDateArrays(othersEvents);
-  $scope.dayIncr = 0;
-  $scope.incrDay = function() {
-    if ($scope.dayIncr < 14) $scope.dayIncr++;
-  }
-
-  $scope.decrDay = function() {
-    if ($scope.dayIncr > 0) $scope.dayIncr--;
-  }
-
-  $scope.clickedSlot = function(day, hour) {
-    var today = new Date();
-    if (today.toLocaleDateString() == day.toLocaleDateString() && today.getHours() > hour) return;
-    $scope.showOverlay = true;
-    var calDay = {};
-    var calendarDay = $scope.calendarp1.find(function(calD) {
-      return calD.day.toLocaleDateString() == day.toLocaleDateString();
-    });
-      var makeDay = new Date(day);
-    makeDay.setHours(hour,0,0,0);
-    $.Zebra_Dialog("Are you sure? You want to make "+moment(makeDay).format('LLL') + " a traded slot?",{
-        'type': 'confirmation',
-        'buttons':  [
-          {caption: 'Yes', callback: function() { 
-            socket.emit('send:message', {
-              message: $scope.user.name + " created a trade slot at "+moment(makeDay).format('LLL'),
-              type: 'alert',
-              id: $scope.user._id,
-              tradeID: $stateParams.tradeID
-      });
-          }},
-          {caption: 'No', callback: function() { 
-            console.log('No was clicked');
-          }}
-        ]
-    }
-    );
-  }
-
-  $scope.backEvent = function() {
-    $scope.makeEvent = null;
-    $scope.showOverlay = false;
-  }
-
-  $scope.dayOfWeekAsString = function(date) {
-    var dayIndex = date.getDay();
-    return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
-  }
-
-  socket.on('init', function(data) {
-    $scope.name = data.name;
-    $scope.users = data.users;
-  });
-
-  socket.on('send:message', function(message) {
-    if(message.tradeID == $stateParams.tradeID){
-    $scope.msgHistory.push(message);
-    $scope.message = message.message;
-    }
-  });
-
-
-  socket.on('get:message', function(data) {
-    if (data[0] != '') {
-      if(data[0]._id == $stateParams.tradeID){
-      $scope.msgHistory = data[0] ? data[0].messages : [];
-    }
-    }
-  });
-
-  $scope.sendMessage = function() {
-    socket.emit('send:message', {
-      message: $scope.message,
-      type: 'message',
-      id:$scope.user._id,
-      tradeID: $stateParams.tradeID
-    });
-    $scope.message = '';
-  };
-
-  $scope.getMessage = function() {
-    socket.emit('get:message', $stateParams.tradeID);
   }
 });

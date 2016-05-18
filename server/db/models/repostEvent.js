@@ -20,8 +20,9 @@ var schema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  queueSlot: {
-    type: Boolean
+  type: {
+    type: String,
+    default: 'track'
   }
 });
 
