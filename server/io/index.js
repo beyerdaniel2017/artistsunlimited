@@ -1,8 +1,7 @@
 'use strict';
+module.exports = function(io) {
 
-module.exports = function (io) {
+  /*Include trade*/
+  require('./trade/trade.js')(io);
 
-		/*Include trade*/
-		require('./trade/trade.js')(io);
-	
 };

@@ -34,7 +34,7 @@
 					<div class="label-box-username">{{trade.user}}</div>
 					<div class="label-freq">{{trade.freq}}</div>
 					<div class="label-ratio">{{trade.ratio}}</div>
-					<button class="btn-manage-trade bold" ng-click="manageTrade(trade.user)">Manage</button>
+					<button class="btn-manage-trade bold" ui-sref="reForReInteraction(trade)">Manage</button>
 				</div>
 			</div>
 			<button id="trades-list-back" class="btn-trades-list btn-default" ng-click="listLeft()"><img src="assets/images/arrow-left.png"/></button>
@@ -44,10 +44,10 @@
 		<h2>Open a Trade</h2>
 		<div id="search-container">
 			<div id="search-results">
-				<div ng-repeat="user in userSearchResults" class="user-box">
-					<div class="label-result-box">{{user.name}}</div>
-					<div class="label-result-box">Followers: {{user.numFollowers}}</div>
-					<button class="btn-open-trade bold" ng-click="openTrade(user)">Open Trade</button>
+				<div ng-if="searchUser" class="user-box"> <!-- ng-repeat="user in otherUsers" -->
+					<div class="label-result-box">{{searchUser.name}}</div>
+					<div class="label-result-box">{{searchUser.followers}} followers</div>
+					<button class="btn-open-trade bold" ng-click="openTrade(searchUser)">Open Trade</button>
 				</div>
 			</div>
 			<button id="results-list-back" class="btn-trades-list btn-default" ng-click="resultsLeft()"><img src="assets/images/arrow-left.png"/></button>
@@ -55,4 +55,4 @@
 		</div>
 	</div>
 </div>
-<!-- Content End  -->
+<ng-include src="'js/home/views/loader.html'"></ng-include>

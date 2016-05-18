@@ -38,7 +38,8 @@ var schema = new mongoose.Schema({
         username: String,
         permalinkURL: String,
         avatarURL: String,
-        token: String
+        token: String,
+        followers: Number
     },
     queue: {
         type: [Number],

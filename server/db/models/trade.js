@@ -1,7 +1,36 @@
 'use strict';
-var crypto = require('crypto');
 var mongoose = require('mongoose');
+
 var schema = new mongoose.Schema({
- 	messages: []    
+  messages: [],
+  tradeType: {
+    type: String,
+    default: 'one-time'
+  },
+  p1: {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    alert: String,
+    slots: [Object],
+    accepted: {
+      type: Boolean,
+      default: false
+    }
+  },
+  p2: {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    alert: String,
+    slots: [Object],
+    accepted: {
+      type: Boolean,
+      default: false
+    }
+  },
 });
+
 mongoose.model('Trade', schema);
