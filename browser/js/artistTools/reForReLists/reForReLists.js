@@ -68,7 +68,7 @@ app.controller("ReForReListsController", function($scope, currentTrades, $http, 
 				date: new Date(),
 				senderId: SessionService.getUser()._id,
 				text: SessionService.getUser().soundcloud.username + ' opened a trade.',
-				type: 'message'
+				type: 'alert'
 			}],
 			tradeType: 'one-time',
 			p1: {

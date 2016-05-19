@@ -93,13 +93,13 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             });
             $scope.makeEventURL = undefined;
             $scope.makeEvent = calendarDay.events[hour];
-            if ($scope.makeEvent == "-") {
+            if ($scope.makeEvent.type == "empty") {
                   var makeDay = new Date(day);
                   makeDay.setHours(hour);
                   $scope.makeEvent = {
                         userID: $scope.user.soundcloud.id,
                         day: makeDay,
-                        queueSlot: false
+                        type: "track"
                   };
                   $scope.newEvent = true;
             } else {
@@ -154,7 +154,9 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                               var calendarDay = $scope.calendar.find(function(calD) {
                                     return calD.day.toLocaleDateString() == $scope.makeEvent.day.toLocaleDateString();
                               });
-                              calendarDay.events[$scope.makeEvent.day.getHours()] = "-";
+                              calendarDay.events[$scope.makeEvent.day.getHours()] = {
+                                    type: "empty"
+                              };
                               $scope.showOverlay = false;
                               $scope.processing = false;
                               $.Zebra_Dialog("Deleted");
@@ -167,14 +169,16 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   var calendarDay = $scope.calendar.find(function(calD) {
                         return calD.day.toLocaleDateString() == $scope.makeEvent.day.toLocaleDateString();
                   });
-                  calendarDay.events[$scope.makeEvent.getHours()] = "-";
+                  calendarDay.events[$scope.makeEvent.day.getHours()] = {
+                        type: "empty"
+                  };
                   var events
                   $scope.showOverlay = false;
             }
       }
 
       $scope.saveEvent = function() {
-            if (!$scope.makeEvent.trackID && !$scope.makeEvent.queueSlot) {
+            if (!$scope.makeEvent.trackID && ($scope.makeEvent.type == "track")) {
                   $.Zebra_Dialog("Enter a track URL");
             } else {
                   if ($scope.newEvent) {
@@ -190,8 +194,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                                     calendarDay.events[event.day.getHours()] = event;
                                     $scope.showOverlay = false;
                                     $scope.processing = false;
-                                    if (event.queueSlot) {
-                                          $.Zebra_Dialog("Saved. The next available track in your queue will be reposted at this time.");
+                                    if (event.type == "queue") {
+                                          $.Zebra_Dialog("Saved. The next track in your queue will be reposted at this time.");
                                     } else {
                                           $.Zebra_Dialog("Saved. The track is now scheduled for reposting.");
                                     }
@@ -212,8 +216,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                                     calendarDay.events[event.day.getHours()] = event;
                                     $scope.showOverlay = false;
                                     $scope.processing = false;
-                                    if (event.queueSlot) {
-                                          $.Zebra_Dialog("Saved. The next available track in your queue will be reposted at this time.");
+                                    if (event.type = "queue") {
+                                          $.Zebra_Dialog("Saved. The next track in your queue will be reposted at this time.");
                                     } else {
                                           $.Zebra_Dialog("Saved. The track is now scheduled for reposting.");
                                     }
@@ -318,7 +322,9 @@ function fillDateArrays(events) {
             });
             var eventArray = [];
             for (var j = 0; j < 24; j++) {
-                  eventArray[j] = "-";
+                  eventArray[j] = {
+                        type: "empty"
+                  };
             }
             dayEvents.forEach(function(ev) {
                   eventArray[ev.day.getHours()] = ev;
