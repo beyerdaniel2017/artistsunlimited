@@ -46,14 +46,21 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.hideall = false;
   $scope.p1dayIncr = 0;
   $scope.p2dayIncr = 0;
-  $scope.incr = function(inc) {
-    if (inc < 14) inc++;
+
+  $scope.incrp1 = function(inc) {
+    if ($scope.p1dayIncr < 14) $scope.p1dayIncr++;
   }
-  $scope.decr = function(inc) {
-    if (inc > 0) inc--;
+  $scope.decrp1 = function(inc) {
+    if ($scope.p1dayIncr > 0) $scope.p1dayIncr--;
+  }
+  $scope.incrp2 = function(inc) {
+    if ($scope.p2dayIncr < 14) $scope.p2dayIncr++;
+  }
+  $scope.decrp2 = function(inc) {
+    if ($scope.p2dayIncr > 0) $scope.p2dayIncr--;
   }
 
-  $scope.clickedSlot = function(day, hour, calendar, person, eventtype) {
+  $scope.clickedSlot = function(day, dayOffset, hour, calendar, person, eventtype) {
     var today = new Date();
     if (today.toLocaleDateString() == day.toLocaleDateString() && today.getHours() > hour) return;
 
@@ -63,8 +70,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     var makeDay = new Date(day);
     makeDay.setHours(hour, 0, 0, 0);
 
-    if(eventtype == "trade"){
-      $.Zebra_Dialog("Are you sure? You want to remove trade slot at "+moment(makeDay).format('LLL'),{
+    if (eventtype == "trade") {
+      $.Zebra_Dialog("Are you sure? You want to remove trade slot at " + moment(makeDay).format('LLL'), {
         'type': 'confirmation',
         'buttons': [{
           caption: 'Yes',
@@ -73,12 +80,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
               var calEvent = {
                 type: "empty"
               };
-              var a = moment(makeDay);
-              var b = moment(today);
-              calendar[a.diff(b, 'days')].events[hour] = calEvent;
+              calendar[dayOffset].events[hour] = calEvent;
               if (person == $scope.trade.p1) {
-                angular.forEach($scope.trade.p1.slots, function(slot, index){
-                  if(moment(slot.day).format('LLL') === moment(makeDay).format('LLL')){
+                angular.forEach($scope.trade.p1.slots, function(slot, index) {
+                  if (moment(slot.day).format('LLL') === moment(makeDay).format('LLL')) {
                     $scope.trade.p1.slots.splice(index, 1);
                   }
                 });
@@ -86,8 +91,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
                   .then(resolve)
                   .then(null, reject)
               } else {
-                angular.forEach($scope.trade.p2.slots, function(slot, index){
-                  if(moment(slot.day).format('LLL') === moment(makeDay).format('LLL')){
+                angular.forEach($scope.trade.p2.slots, function(slot, index) {
+                  if (moment(slot.day).format('LLL') === moment(makeDay).format('LLL')) {
                     $scope.trade.p2.slots.splice(index, 1);
                   }
                 });
@@ -97,17 +102,17 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
               }
             });
             saveTrade.then(function(res) {
-              $scope.trade = res.data;
-              socket.emit('send:message', {
-                message: "REMOVED SLOT from " + person.user.soundcloud.username + " for " + moment(makeDay).format('LLL'),
-                type: 'alert',
-                id: $scope.user._id,
-                tradeID: $stateParams.tradeID
-              });
-            })
-            .then(null, function(err) {
-              $.Zebra_Dialog('Error with request');
-            })
+                $scope.trade = res.data;
+                socket.emit('send:message', {
+                  message: "REMOVED SLOT from " + person.user.soundcloud.username + " for " + moment(makeDay).format('LLL'),
+                  type: 'alert',
+                  id: $scope.user._id,
+                  tradeID: $stateParams.tradeID
+                });
+              })
+              .then(null, function(err) {
+                $.Zebra_Dialog('Error with request');
+              })
           }
         }, {
           caption: 'No',
@@ -116,57 +121,56 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
           }
         }]
       });
+    } else if (eventtype == "empty") {
+      $.Zebra_Dialog("Are you sure? You want to make " + moment(makeDay).format('LLL') + " a traded slot?", {
+        'type': 'confirmation',
+        'buttons': [{
+          caption: 'Yes',
+          callback: function() {
+            var saveTrade = new Promise(function(resolve, reject) {
+              var calEvent = {
+                type: "trade",
+                day: makeDay,
+                userID: person.user.soundcloud.id
+              };
+              calendar[dayOffset].events[hour] = calEvent;
+              if (person == $scope.trade.p1) {
+                $scope.trade.p1.slots.push(calEvent);
+                console.log(trade.p1.slots);
+                $http.put('/api/trades', $scope.trade)
+                  .then(resolve)
+                  .then(null, reject)
+              } else {
+                $scope.trade.p2.slots.push(calEvent);
+                $http.put('/api/trades', $scope.trade)
+                  .then(resolve)
+                  .then(null, reject)
+              }
+            });
+            saveTrade.then(function(res) {
+                $scope.trade = res.data;
+                socket.emit('send:message', {
+                  message: "ADDED SLOT to " + person.user.soundcloud.username + " for " + moment(makeDay).format('LLL'),
+                  type: 'alert',
+                  id: $scope.user._id,
+                  tradeID: $stateParams.tradeID
+                });
+              })
+              .then(null, function(err) {
+                console.log(err);
+                $.Zebra_Dialog('Error with request');
+              })
+          }
+        }, {
+          caption: 'No',
+          callback: function() {
+            console.log('No was clicked');
+          }
+        }]
+      });
+    } else {
+      $.Zebra_Dialog('Cannot manage this time slot.');
     }
-    else if(eventtype == "empty"){
-    $.Zebra_Dialog("Are you sure? You want to make " + moment(makeDay).format('LLL') + " a traded slot?", {
-      'type': 'confirmation',
-      'buttons': [{
-        caption: 'Yes',
-        callback: function() {
-          var saveTrade = new Promise(function(resolve, reject) {
-            var calEvent = {
-              type: "trade",
-              day: makeDay,
-              userID: person.user.soundcloud.id
-            };
-            var a = moment(makeDay);
-            var b = moment(today);
-            calendar[a.diff(b, 'days')].events[hour] = calEvent;
-            if (person == $scope.trade.p1) {
-              $scope.trade.p1.slots.push(calEvent);
-              console.log(trade.p1.slots);
-              $http.put('/api/trades', $scope.trade)
-                .then(resolve)
-                .then(null, reject)
-            } else {
-              $scope.trade.p2.slots.push(calEvent);
-              $http.put('/api/trades', $scope.trade)
-                .then(resolve)
-                .then(null, reject)
-            }
-          });
-          saveTrade.then(function(res) {
-              $scope.trade = res.data;
-              socket.emit('send:message', {
-                message: "ADDED SLOT to " + person.user.soundcloud.username + " for " + moment(makeDay).format('LLL'),
-                type: 'alert',
-                id: $scope.user._id,
-                tradeID: $stateParams.tradeID
-              });
-            })
-            .then(null, function(err) {
-              console.log(err);
-              $.Zebra_Dialog('Error with request');
-            })
-        }
-      }, {
-        caption: 'No',
-        callback: function() {
-          console.log('No was clicked');
-        }
-      }]
-    });
-  }
   }
 
   $scope.backEvent = function() {
@@ -253,6 +257,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.calendarp1 = $scope.fillDateArrays(usersEvents, trade.p1.slots);
   $scope.calendarp2 = $scope.fillDateArrays(othersEvents, trade.p2.slots);
 });
+
+
 
 app.directive('timeSlot', function(moment) {
   return {
