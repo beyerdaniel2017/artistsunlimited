@@ -155,13 +155,13 @@ $break-small-landscape: 774px;
 }
 
 .form-message {
-	width: 92.5%;
+	width: 95%;
 	height: 100%;
-	margin-left: 1%;
 	display: inline-block;
-	margin: 1%;
-	margin-right: 0;
-	margin-top: 0;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	border-width: 1px 0 0 0;
 }
 
 .rfr-chat {
@@ -182,9 +182,11 @@ $break-small-landscape: 774px;
 
 .convo-display {
 	overflow-y: scroll;
-	height: 78%;
+	overflow-x: hidden;
+	height: 87%;
 	margin: 0;
 	position: relative;
+	padding: 15px 0 15px 0;
 }
 
 .chat-input {
@@ -215,14 +217,17 @@ $break-small-landscape: 774px;
 .msg-line {
 	display: inline-block;
 	width: 98%;
+	height: auto;
 	background: transparent;
-	margin: 0.4% 1% 0.4% 0;
+	margin: -4px;
+	margin-right: 1%;
 	padding: 0px;
 }
 
 .msg-box {
 	padding: 2px 6px;
 	color: black;
+	max-width: 95%;
 }
 
 .msg-from {
