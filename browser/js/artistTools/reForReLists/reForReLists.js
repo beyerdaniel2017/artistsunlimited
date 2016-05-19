@@ -24,6 +24,7 @@ app.config(function($stateProvider) {
 								return 1;
 							}
 						})
+								return trades;
 					})
 				} else {
 					return [];
@@ -35,10 +36,12 @@ app.config(function($stateProvider) {
 
 app.controller("ReForReListsController", function($scope, currentTrades, $http, SessionService, $state) {
 	$scope.currentTrades = currentTrades;
-
+	$scope.currentTradesCopy = currentTrades;
 	$scope.otherUsers = [];
 	$scope.searchUser = undefined;
 	$scope.searchURL = "";
+	$scope.minfollowers = 0;
+	$scope.maxfollowers = 100000000;
 	$scope.search = {
 		// followers: {
 		// 	$lt: SessionService.getUser().soundcloud.followers * 2,
@@ -49,7 +52,9 @@ app.controller("ReForReListsController", function($scope, currentTrades, $http, 
 	$scope.sendSearch = function() {
 		$scope.processing = true;
 		$http.post('/api/users/bySCURL/', {
-			url: $scope.searchURL
+			url: $scope.searchURL,
+			minFollower: $scope.minfollowers,
+			maxFollower: $scope.maxfollowers
 		})
 		.then(function(res) {
 			$scope.processing = false;
@@ -59,7 +64,26 @@ app.controller("ReForReListsController", function($scope, currentTrades, $http, 
 			$scope.processing = false;
 			$scope.searchUser = undefined;
 			$.Zebra_Dialog("Did not find user.");
-		})
+		});
+
+		var cTrades = [];
+		if(!$scope.minfollowers) $scope.maxfollowers = 0;
+		if(!$scope.maxfollowers) $scope.maxfollowers = 100000000;
+		angular.forEach($scope.currentTradesCopy, function(trade){
+			if($scope.searchURL != "" && parseInt($scope.maxfollowers) > 0){
+				if((trade.other.user.soundcloud.permalinkURL == $scope.searchURL)){
+					if(trade.other.user.soundcloud.followers > $scope.minfollowers && trade.other.user.soundcloud.followers <= $scope.maxfollowers){
+						cTrades.push(trade);
+					}
+				}
+			}
+			else if(parseInt($scope.maxfollowers) > 0){
+				if(trade.other.user.soundcloud.followers > $scope.minfollowers && trade.other.user.soundcloud.followers <= $scope.maxfollowers){
+					cTrades.push(trade);
+				}
+			}	
+		});
+		$scope.currentTrades = cTrades;
 	}
 
 	$scope.openTrade = function(user) {

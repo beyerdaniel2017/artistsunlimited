@@ -1,15 +1,14 @@
 <ng-include src="'js/home/views/navigation.html'"></ng-include>
 <!-- Content Start  -->
-<div class="container" ng-init="getDownloadList();checkIfSubmission()">
+<div class="container">
 	<div class="content-area bg-white">
 		<ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-		
 		<hr>
 		<h2>Search</h2>
 		<div id="search-inputs">
 			<div id="search-left">
 				URL: 
-				<input id="input-username" class="form-control" type="text" name="searchUsername" ng-model='searchURL' placeholder="Search by URL"/>
+				<input id="input-username" class="form-control" type="text" name="searchUsername" ng-model="searchURL" placeholder="Search by URL"/>
 			</div>
 			<div id="search-right">
 				<!--<div id="label-optional">
@@ -17,11 +16,11 @@
 				</div>-->
 				<div id="follower-range">
 					Followers:
-					<input id="input-f-min" class="form-control input-follower-range" type="number" name="followerMin" placeholder="0"/>
+					<input id="input-f-min" class="form-control input-follower-range" type="number" ng-model="minfollowers" name="followerMin" placeholder="0"/>
 					-
-					<input id="input-f-max" class="form-control input-follower-range" type="number" name="followerMax" placeholder="..."/>
+					<input id="input-f-max" class="form-control input-follower-range" type="number" ng-model="maxfollowers" name="followerMax" placeholder="..."/>
 				</div>
-				<button class="btn-default" id="btn-search" ng-click='sendSearch()'>Search</button>
+				<button class="btn-default" id="btn-search" ng-click="sendSearch();">Search</button>
 			</div>
 		</div>
 		<hr>
@@ -30,10 +29,11 @@
 		<div class="trades-container">
 			<div id="trades-list">
 				<div ng-repeat="trade in currentTrades" class="trade-box">
-					<div class="label-box-username">{{trade.user}}</div>
-					<div class="label-freq">{{trade.freq}}</div>
-					<div class="label-ratio">{{trade.ratio}}</div>
-					<button class="btn-manage-trade bold" ui-sref="reForReInteraction(trade)">Manage</button>
+					<div class="label-box-username">{{trade.user.user.name}}</div>
+					<div class="label-freq">{{trade.tradeType}}</div>
+					<div class="label-ratio"></div>
+					<button class="btn-manage-trade bold" ui-sref="reForReInteraction({
+					tradeID: trade._id})">Manage</button>
 				</div>
 			</div>
 			<button id="trades-list-back" class="btn-trades-list btn-default" ng-click="listLeft()"><img src="assets/images/arrow-left.png"/></button>
