@@ -87,8 +87,12 @@
     text-align:center;
 }
 .msg-box{
-        border-radius: 4px;
+    border-radius: 0px;
         padding:2px 14px;
+}
+.alert-box{
+    text-align:center;
+    color: #ff3300
 }
 .ZebraDialog .ZebraDialog_Information { background-image: url('../assets/images/zebra_dialog_icon.png') }
 

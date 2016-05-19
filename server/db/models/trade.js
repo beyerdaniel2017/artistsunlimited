@@ -13,7 +13,7 @@ var schema = new mongoose.Schema({
       ref: 'User'
     },
     alert: String,
-    slots: [Object],
+    slots: [],
     accepted: {
       type: Boolean,
       default: false
@@ -25,7 +25,7 @@ var schema = new mongoose.Schema({
       ref: 'User'
     },
     alert: String,
-    slots: [Object],
+    slots: [],
     accepted: {
       type: Boolean,
       default: false
