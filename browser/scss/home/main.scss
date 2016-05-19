@@ -1,219 +1,219 @@
 body {
-background: url(assets/images/fade-background.png) no-repeat; 
-// repeat center center fixed, linear-gradient(to bottom, #f7eaad 0%,#f5bbbc 100%);
--webkit-background-size: cover;
--moz-background-size: cover;
--o-background-size: cover;
-background-size: cover;
-height:100%;
-color:#686868;
-padding-top:90px;
-background-attachment: fixed;
-font-family: Helvetica, Sans-Serif;
-background-color:#F7EAAD;
+	background: url(assets/images/fade-background.png) no-repeat; 
+	// repeat center center fixed, linear-gradient(to bottom, #f7eaad 0%,#f5bbbc 100%);
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	height:100%;
+	color:#686868;
+	padding-top:90px;
+	background-attachment: fixed;
+	font-family: Helvetica, Sans-Serif;
+	background-color:#F7EAAD;
 }
 #main {
-height:100%;
-padding-top: 0px;
-margin: 0 auto;
+	height:100%;
+	padding-top: 0px;
+	margin: 0 auto;
 }
 
 /* Custom classes start */
 
 .margin-top-5 {
-margin-top: 5%;
+	margin-top: 5%;
 }
 .margin-top-10 {
-margin-top: 10%;
+	margin-top: 10%;
 }
 .margin-top-15 {
-margin-top: 15%;
+	margin-top: 15%;
 }
 .margin-top-20 {
-margin-top: 20%;
+	margin-top: 20%;
 }
 
 .text-justify {
-text-align: justify;
+	text-align: justify;
 }
 
 .bg-white {
-background:#fff;
+	background:#fff;
 }
 
 .bold {
-font-weight: bold;
+	font-weight: bold;
 }
 
 /* Custom classes end */
 
 /* Bootstap Modify CSS start */
 .navbar-default {
-background-color: #fff;
-border-color: transparent;
+	background-color: #fff;
+	border-color: transparent;
 }
 .navbar-fixed-top {
-height: 60px; /* Whatever you want. */
+	height: 60px; /* Whatever you want. */
 }
 .navbar-inner {
-text-align:center;
-background: #fff;
+	text-align:center;
+	background: #fff;
 }
 /*.nav > li > a {
 padding: 10px 45px;
 }*/
 .nav > li > a {
-padding: 10px 15px;
-margin: 0 32px;
+	padding: 10px 15px;
+	margin: 0 32px;
 }
 .navbar-default .navbar-nav > li > a {
-color: #686868;
-font-weight: bold;
-font-size: 12px;
-letter-spacing: 4px;
-margin-top: 10px;
+	color: #686868;
+	font-weight: bold;
+	font-size: 12px;
+	letter-spacing: 4px;
+	margin-top: 10px;
 }
 .form-control {
-border-radius: 0px;
-border-color: #F5D3B5;
-outline: none;
--webkit-box-shadow: none !important;
--moz-box-shadow: none !important;
-box-shadow: none !important;
+	border-radius: 0px;
+	border-color: #F5D3B5;
+	outline: none;
+	-webkit-box-shadow: none !important;
+	-moz-box-shadow: none !important;
+	box-shadow: none !important;
 }
 .navbar {
-min-height: 40px;
+	min-height: 40px;
 }
 .navbar-toggle {
-margin-top: 18px;
+	margin-top: 18px;
 }
 .navbar-brand {
-padding: 8px 15px;
+	padding: 8px 15px;
 }
 .navbar-default .navbar-toggle {
-border-color: transparent;
+	border-color: transparent;
 }
 .navbar-fixed-top {
-border-width: 0;
+	border-width: 0;
 }
 a:hover, a:focus {
-text-decoration: none;
+	text-decoration: none;
 }
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
-color: #000;
-background-color: transparent;
-border-bottom: 1px solid #000;
+	color: #000;
+	background-color: transparent;
+	border-bottom: 1px solid #000;
 }
 .btn-default:hover {
-background-color: #F7F7F7;
-border-color: #F7F7F7;
+	background-color: #F7F7F7;
+	border-color: #F7F7F7;
 }
 /* Bootstap Modify CSS End */
 
 .logo img{
-height:45px;
+	height:45px;
 }
 .main-container{
-position:relative;
-height:100%;
+	position:relative;
+	height:100%;
 }
 .content-area {
-height: auto;
-padding: 5% 6%;
-padding-top: 1%;
+	height: auto;
+	padding: 5% 6%;
+	padding-top: 1%;
 }
 .internal-content {
-margin: 10px 0 0 0;
-font-size:1em;
+	margin: 10px 0 0 0;
+	font-size:1em;
 }
 .btn-enter{
-background: #F5BBBC;
-border: transparent;
-border-radius: 0px;
-padding: 14px 50px;
-color: #fff;
-font-size: 12px;
-text-transform:uppercase;
-letter-spacing: 3px;
-margin: 0 10px;
+	background: #F5BBBC;
+	border: transparent;
+	border-radius: 0px;
+	padding: 14px 50px;
+	color: #fff;
+	font-size: 12px;
+	text-transform:uppercase;
+	letter-spacing: 3px;
+	margin: 0 10px;
 }
 .btn-start{
-background: #fff;
-border: transparent;
-border-radius: 0px;
-padding: 14px 50px;
-color: #686868;
-font-size: 12px;
-text-transform:uppercase;
-letter-spacing: 3px;
+	background: #fff;
+	border: transparent;
+	border-radius: 0px;
+	padding: 14px 50px;
+	color: #686868;
+	font-size: 12px;
+	text-transform:uppercase;
+	letter-spacing: 3px;
 }
 .btn-soundcloud {
-position: relative;
-color: #FFF;
-background-color: #F50;
-border: 0px none;
-border-radius: 0px;
-text-align: left;
-padding-left: 65px;
-font-size: 14px;
+	position: relative;
+	color: #FFF;
+	background-color: #F50;
+	border: 0px none;
+	border-radius: 0px;
+	text-align: left;
+	padding-left: 65px;
+	font-size: 14px;
 }
 .btn-soundcloud:hover {
-color: #FFF;
-background-color: #C40;
+	color: #FFF;
+	background-color: #C40;
 
 }
 .no-border {
-border: 0px;
-border-radius: 0px;
+	border: 0px;
+	border-radius: 0px;
 }
 
 /* Contact Page Start */
 
 .address-content {
-margin: 10% 0 0 0;
+	margin: 10% 0 0 0;
 }
 .address-line {
-margin: 10px 0 0 0;
-display: block
+	margin: 10px 0 0 0;
+	display: block
 }
 
 /* Contact Page End */
 
 /* Home Page Start */
 .intro-section{
-height: 100%;
-width: 100%;
-border: 0;
-padding:8% 0;
+	height: 100%;
+	width: 100%;
+	border: 0;
+	padding:8% 0;
 }
 .white-text{
-color:#fff;
+	color:#fff;
 }
 .logo-contatainer{
-margin: 0px 0px 60px auto;
-width: 100%;
-display: block;
+	margin: 0px 0px 60px auto;
+	width: 100%;
+	display: block;
 }
 .intro-logo {
-border-right: 4px solid white;
-padding-right: 25px;
-display: inline-block;
+	border-right: 4px solid white;
+	padding-right: 25px;
+	display: inline-block;
 }
 .intro-text {
-text-align: left;
-float: right;
-width: 60%;
+	text-align: left;
+	float: right;
+	width: 60%;
 }
 .intro-text h1{
-color:#fff;
-font-weight:bolder;
-margin:0;
+	color:#fff;
+	font-weight:bolder;
+	margin:0;
 
 }
 .v-line{
-border-right: 4px solid #fff;
-height: 80px;
-display: inline-block;
+	border-right: 4px solid #fff;
+	height: 80px;
+	display: inline-block;
 }
 .intro-social{
 
@@ -222,168 +222,168 @@ display: inline-block;
 
 /* Download Gatway CSS Start */
 .track-bottom{
-padding:10px;
+	padding:10px;
 }
 .song-container{
-min-height:150px;
+	min-height:150px;
 }
 .song-url {
-position: relative;
-margin-bottom: 10px;
-width:100%;
+	position: relative;
+	margin-bottom: 10px;
+	width:100%;
 }
 .close-ic {
-display:inline-block;
-margin-left:5px;
-margin-top:8px;
+	display:inline-block;
+	margin-left:5px;
+	margin-top:8px;
 }
 .close-ic-rel{
-position:absolute;
-top:7px; 
-right:-25px;
+	position:absolute;
+	top:7px; 
+	right:-25px;
 }
 .social-container{
-min-height:150px;
+	min-height:150px;
 }
 .social-container a{
-color: #F5D3B5;
+	color: #F5D3B5;
 }
 .social-media-links {
-position: relative;
-margin-bottom: 10px;
-width:90%;
+	position: relative;
+	margin-bottom: 10px;
+	width:90%;
 }
 .facebook {
-background: #F5D3B5 url("assets/images/facebook_icon.png") no-repeat scroll center center/30px auto;
-width: 40px;
-height: 34px;
-position: absolute;
-top: 0;
-right: 0;
+	background: #F5D3B5 url("assets/images/facebook_icon.png") no-repeat scroll center center/30px auto;
+	width: 40px;
+	height: 34px;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 .twitter {
-background:#F5D3B5 url("assets/images/twitter_icon.png") no-repeat scroll center center / 30px auto;
-width: 40px;
-height: 34px;
-position: absolute;
-top: 0;
-right: 0;
+	background:#F5D3B5 url("assets/images/twitter_icon.png") no-repeat scroll center center / 30px auto;
+	width: 40px;
+	height: 34px;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 .instagram {
-background:#F5D3B5 url("assets/images/instagram_icon.png") no-repeat scroll center center / 30px auto;
-width: 40px;
-height: 34px;
-position: absolute;
-top: 0;
-right: 0;
+	background:#F5D3B5 url("assets/images/instagram_icon.png") no-repeat scroll center center / 30px auto;
+	width: 40px;
+	height: 34px;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 .youtube {
-background:#F5D3B5 url("assets/images/youtube_icon.png") no-repeat scroll center center / 30px auto;
-width: 40px;
-height: 34px;
-position: absolute;
-top: 0;
-right: 0;
+	background:#F5D3B5 url("assets/images/youtube_icon.png") no-repeat scroll center center / 30px auto;
+	width: 40px;
+	height: 34px;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 .spotify {
-background:#F5D3B5 url("assets/images/spotify_icon.png") no-repeat scroll center center / 30px auto;
-width: 40px;
-height: 34px;
-position: absolute;
-top: 0;
-right: 0;
+	background:#F5D3B5 url("assets/images/spotify_icon.png") no-repeat scroll center center / 30px auto;
+	width: 40px;
+	height: 34px;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 .soundcloud {
-background:#F5D3B5 url("assets/images/soundcloud_icon.png") no-repeat scroll center center / 30px auto;
-width: 40px;
-height: 34px;
-position: absolute;
-top: 0;
-right: 0;
+	background:#F5D3B5 url("assets/images/soundcloud_icon.png") no-repeat scroll center center / 30px auto;
+	width: 40px;
+	height: 34px;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 .soundcloud-img img {
-position: absolute;
-width: 46px;
-top: 0px;
-left: 5px;
-border-right: 1px solid rgba(0, 0, 0, 0.2);
-padding-right: 6px;
+	position: absolute;
+	width: 46px;
+	top: 0px;
+	left: 5px;
+	border-right: 1px solid rgba(0, 0, 0, 0.2);
+	padding-right: 6px;
 }
 .permanent-links{
-min-height:150px;
+	min-height:150px;
 }
 .permanent-links a{
-color: #F5D3B5;
+	color: #F5D3B5;
 }
 .input-box {
-// position: relative;
-margin-bottom: 10px;
-margin-top: 10px;
+	// position: relative;
+	margin-bottom: 10px;
+	margin-top: 10px;
 }
 .input-box input{
-display:inline-block;
-width:80%;  
+	display:inline-block;
+	width:80%;  
 }
 .pro-icon {
-margin-top: 2px;
-margin-left:5px
+	margin-top: 2px;
+	margin-left:5px
 }
 .profile-icon{
-width: 30px;
-height: 30px;
-border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
 }
 .artist-follow{
-position:relative;
-min-height:150px;
+	position:relative;
+	min-height:150px;
 }
 .artist-follow a{
-color: #F5D3B5;
+	color: #F5D3B5;
 }
 .orange-text{
-color: #F5D3B5;
+	color: #F5D3B5;
 }
 .checkbox-container {
-width: 100%;
-padding: 10px 0;
+	width: 100%;
+	padding: 10px 0;
 }
 .checkbox-container ul{
-padding:0;
-margin:0; 
+	padding:0;
+	margin:0; 
 } 
 .checkbox-container ul li{
-list-style-type: none;
+	list-style-type: none;
 }
 /*** custom checkboxes Start ***/
 label.with-square-checkbox {
-cursor: pointer;
-font-weight:400;
+	cursor: pointer;
+	font-weight:400;
 }
 label.with-square-checkbox span {
-line-height: 24px;
+	line-height: 24px;
 }
 label.with-square-checkbox span::before {
-margin-right: 4px;
-padding-left: 1px;
-width: 21px;
-height: 21px;
-border: 1px solid #F5D3B5;
-display: inline-block;
-line-height: 15px;
-content: '';
-float: left;
+	margin-right: 4px;
+	padding-left: 1px;
+	width: 21px;
+	height: 21px;
+	border: 1px solid #F5D3B5;
+	display: inline-block;
+	line-height: 15px;
+	content: '';
+	float: left;
 }
 label.with-square-checkbox input[type="checkbox"] {
-display: none;
+	display: none;
 }
 label.with-square-checkbox input[type="checkbox"]:checked + span::before {
-font-family: 'Glyphicons Halflings';
-content: '\e013';
-color: #F5D3B5;
+	font-family: 'Glyphicons Halflings';
+	content: '\e013';
+	color: #F5D3B5;
 }
 /*** custom checkboxes End***/
 .form-container{
-min-height:350px;
+	min-height:350px;
 }
 
 
@@ -393,39 +393,42 @@ min-height:350px;
 /* Responsive CSS START */
 
 @media screen and (max-width: 1024px) {
-.nav > li > a {
-padding: 10px 22px;
-margin: 0 15px;
-}
+	.nav > li > a {
+		padding: 10px 22px;
+		margin: 0 15px;
+	}
 }
 @media screen and (max-width: 1199px) {
-.nav > li > a {
-padding: 10px 12px;
-margin: 0 20px;
-}
+	.nav > li > a {
+		padding: 10px 12px;
+		margin: 0 20px;
+	}
 }
 @media screen and (max-width: 1050px) {
-.nav > li > a {
-margin: 0 22px;
-}
+	.nav > li > a {
+		margin: 0 22px;
+	}
 }
 @media screen and (max-width: 980px) {
-.nav > li > a {
-padding: 10px 12px;
-margin: 0 10px;
-}
+	.nav > li > a {
+		padding: 10px 12px;
+		margin: 0 10px;
+	}
 }
 @media screen and (max-width: 900px) {
-.nav > li > a {
-margin: 0;
-}
+	.nav > li > a {
+		margin: 0;
+	}
 }
 @media screen and (max-width: 768px) {
-.nav > li > a {
-margin: 0;
-}
-.intro-logo{
-text-align: right;
-}
+	.nav > li > a {
+		margin: 0;
+	}
+	.intro-logo{
+		text-align: right;
+	}
+	.content-area {
+		padding: 1% 2% 5% 2%;
+	}
 }
 /*************** Responsive Css End *************/
