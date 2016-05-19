@@ -9,7 +9,7 @@
 		<div id="search-inputs">
 			<div id="search-left">
 				URL: 
-				<input id="input-username" class="form-control" type="text" name="searchUsername" placeholder="Search by URL"/>
+				<input id="input-username" class="form-control" type="text" name="searchUsername" ng-model='searchURL' placeholder="Search by URL"/>
 			</div>
 			<div id="search-right">
 				<!--<div id="label-optional">
@@ -21,7 +21,7 @@
 					-
 					<input id="input-f-max" class="form-control input-follower-range" type="number" name="followerMax" placeholder="..."/>
 				</div>
-				<button class="btn-default" id="btn-search">Search</button>
+				<button class="btn-default" id="btn-search" ng-click='sendSearch()'>Search</button>
 			</div>
 		</div>
 

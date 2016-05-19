@@ -515,7 +515,9 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   .nav > li > a {
     margin: 0; }
   .intro-logo {
-    text-align: right; } }
+    text-align: right; }
+  .content-area {
+    padding: 1% 2% 5% 2%; } }
 
 /*************** Responsive Css End *************/
 .follow-area {
@@ -597,6 +599,11 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   text-align: right; }
 
 /* SCHEDULER */
+#scheduler-container {
+  text-align: center;
+  width: 80%;
+  margin: 10px auto; }
+
 .btn-scheduler {
   background: transparent;
   border-color: transparent;
@@ -691,6 +698,10 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .label-smaller {
   font-size: 1.25em; }
 
+@media screen and (max-width: 774px) {
+  #scheduler-container {
+    width: 90%; } }
+
 /** REFORRE INTERACTION **/
 .rfr-schedule-container {
   width: 96%;
@@ -742,13 +753,12 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .convo-display {
   overflow-y: scroll;
   height: 78%;
-  margin: 1%;
+  margin: 0;
   position: relative; }
 
 .chat-input {
   position: absolute;
-  left: 1%;
-  bottom: 1%;
+  bottom: 0;
   width: 100%;
   height: 13%;
   margin: auto; }
@@ -765,8 +775,9 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   letter-spacing: 3px;
   height: 100%;
   display: inline-block;
-  margin-left: -4px;
-  vertical-align: top; }
+  position: absolute;
+  right: 0;
+  bottom: 0; }
 
 .msg-line {
   display: inline-block;
@@ -821,7 +832,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   width: 24%;
   font-size: 1.5em; }
 
-@media screen and (max-width: 436px) {
+@media screen and (max-width: 774px) {
   .rfr-schedule-container {
     height: 180vh; }
   .scheduler-small {
@@ -875,7 +886,9 @@ h2, h3 {
   margin: 0;
   position: absolute;
   bottom: 0;
-  left: 50pt; }
+  left: 50pt;
+  display: flex;
+  flex-direction: row; }
 
 .trade-box {
   height: 140px;
@@ -1050,10 +1063,12 @@ h2, h3 {
   #search-left {
     width: 100%; }
   #search-right {
-    width: 100%; }
-  #follower-range {
     width: 100%;
     margin: auto; }
+  #follower-range {
+    width: 100%;
+    margin: auto;
+    margin-top: 10px; }
   .input-follower-range {
     width: 20%; }
   .user-box {
@@ -1064,4 +1079,14 @@ h2, h3 {
     position: absolute;
     bottom: 7px;
     left: 7px;
-    width: 126px; } }
+    width: 126px; }
+  #btn-search {
+    position: relative;
+    margin: auto;
+    display: block; }
+  .trades-container {
+    overflow-x: scroll; }
+  #search-container {
+    overflow-x: scroll; }
+  .btn-trades-list {
+    display: none; } }

@@ -1,45 +1,45 @@
 app.config(function($stateProvider) {
   $stateProvider
-    .state('reForReInteraction', {
-      url: '/artistTools/reForReInteraction/:tradeID',
-      templateUrl: 'js/artistTools/reForRe/reForReInteraction.html',
-      controller: 'ReForReInteractionController',
-      resolve: {
-        trade: function($http, $stateParams) {
-          return $http.get('/api/trades/byID/' + $stateParams.tradeID)
-            .then(function(res) {
-              console.log(res.data);
-              return res.data;
-            })
-        },
-        usersEvents: function($http, SessionService) {
-          return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
-            .then(function(res) {
-              console.log('userEvents: ');
-              console.log(res.data);
-              return res.data;
-            })
-            .then(null, function(err) {
-              $.Zebra_Dialog("error getting your events");
-              return;
-            })
-        },
-        othersEvents: function($http, $stateParams, trade, SessionService) {
-          var otherUser = (SessionService.getUser()._id == trade.p1.user._id) ? trade.p2.user : trade.p1.user;
-          return $http.get('/api/events/forUser/' + otherUser.soundcloud.id)
-            .then(function(res) {
-              console.log('othersEvents: ');
+  .state('reForReInteraction', {
+    url: '/artistTools/reForReInteraction/:tradeID',
+    templateUrl: 'js/artistTools/reForRe/reForReInteraction.html',
+    controller: 'ReForReInteractionController',
+    resolve: {
+      trade: function($http, $stateParams) {
+        return $http.get('/api/trades/byID/' + $stateParams.tradeID)
+        .then(function(res) {
+          console.log(res.data);
+          return res.data;
+        })
+      },
+      usersEvents: function($http, SessionService) {
+        return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
+        .then(function(res) {
+          console.log('userEvents: ');
+          console.log(res.data);
+          return res.data;
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("error getting your events");
+          return;
+        })
+      },
+      othersEvents: function($http, $stateParams, trade, SessionService) {
+        var otherUser = (SessionService.getUser()._id == trade.p1.user._id) ? trade.p2.user : trade.p1.user;
+        return $http.get('/api/events/forUser/' + otherUser.soundcloud.id)
+        .then(function(res) {
+          console.log('othersEvents: ');
 
-              console.log(res.data);
-              return res.data;
-            })
-            .then(null, function(err) {
-              $.Zebra_Dialog("error getting other's events events");
-              return;
-            })
-        }
+          console.log(res.data);
+          return res.data;
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("error getting other's events events");
+          return;
+        })
       }
-    })
+    }
+  })
 });
 
 app.directive('timeSlot', function(moment) {
