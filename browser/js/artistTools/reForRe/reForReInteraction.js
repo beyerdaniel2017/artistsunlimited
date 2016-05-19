@@ -71,7 +71,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     makeDay.setHours(hour, 0, 0, 0);
 
     if (eventtype == "trade") {
-      $.Zebra_Dialog("Are you sure? You want to remove trade slot at " + moment(makeDay).format('LLL'), {
+      $.Zebra_Dialog("REMOVE trade slot at " + moment(makeDay).format('LLL') + ' ?', {
         'type': 'confirmation',
         'buttons': [{
           caption: 'Yes',
@@ -122,7 +122,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         }]
       });
     } else if (eventtype == "empty") {
-      $.Zebra_Dialog("Are you sure? You want to make " + moment(makeDay).format('LLL') + " a traded slot?", {
+      $.Zebra_Dialog("Make " + moment(makeDay).format('LLL') + " a traded slot?", {
         'type': 'confirmation',
         'buttons': [{
           caption: 'Yes',
