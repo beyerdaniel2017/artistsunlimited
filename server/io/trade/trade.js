@@ -10,7 +10,7 @@ var trade = mongoose.model('Trade');
 	   		date:new Date(),
           	text:msg.message,
       	type: msg.type
-	   	}}},{upsert:true},function(error,data){
+	   	}}, $set: {'p1.alert': msg.trade.p1.alert, 'p2.alert': msg.trade.p2.alert}},{upsert:true},function(error,data){
 	   		io.emit('send:message', {
 	   		senderId:msg.id,
 	   		date:new Date(),

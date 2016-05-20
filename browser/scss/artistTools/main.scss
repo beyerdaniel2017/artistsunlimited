@@ -373,6 +373,17 @@ h2, h3 {
 	text-align: center;
 }
 
+.notification-bubble {
+    right: -8px;
+    top: -10px;
+    position: absolute;
+    border-radius: 5px;
+    width: 10%;
+    padding-top: 2px;
+    background: #ff3300;
+    text-align: center;
+}
+
 .trades-container {
 	height: 130px;
 	padding: 0;
