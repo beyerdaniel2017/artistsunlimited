@@ -37,6 +37,16 @@ router.put('/', function(req, res, next) {
     .then(null, next);
 })
 
+router.put('/accept', function(req, res, next) {
+  Trade.findByIdAndUpdate(req.body._id, req.body, {
+      new: true
+    }).populate('p1.user').populate('p2.user').exec()
+    .then(function(trade) {
+      res.send(trade);
+    })
+    .then(null, next);
+})
+
 router.get('/byID/:tradeID', function(req, res, next) {
   Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user').exec()
     .then(function(trade) {

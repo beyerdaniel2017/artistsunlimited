@@ -64,6 +64,11 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.clickedSlot = function(day, dayOffset, hour, calendar, person, eventtype) {
+    var p = SessionService.getUser()._id == $scope.trade.p1.user._id ? $scope.trade.p1 : $scope.trade.p2;
+    if (p.accepted) {
+      $.Zebra_Dialog("You can't make changes to this trade because you already accepted it. You will be able to make changes if the other person makes a change.");
+      return;
+    }
     var today = new Date();
     if (today.toLocaleDateString() == day.toLocaleDateString() && today.getHours() > hour) return;
 
@@ -173,6 +178,54 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     } else {
       $.Zebra_Dialog('Cannot manage this time slot.');
     }
+  }
+
+  $scope.email = function() {
+    var otherUser = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p2.user : $scope.trade.p1.user;
+    var mailto_link = "mailto:" + otherUser.email + "?subject=Repost for repost with " + $scope.user.soundcloud.username + '&body=Hey ' + otherUser.soundcloud.username + ',\n\n Repost for repost? I scheduled a trade here! -> www.artistsunlimited.co/login\n\nBest,\n' + $scope.user.soundcloud.username;
+    location.href = encodeURI(mailto_link);
+  }
+
+  $scope.accept = function() {
+    if ($scope.trade.p1.user._id == SessionService.getUser()._id) {
+      $scope.trade.p1.accepted = true;
+      var accString = $scope.trade.p2.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
+    } else {
+      $scope.trade.p2.accepted = true;
+      var accString = $scope.trade.p1.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
+    }
+    $.Zebra_Dialog(accString, {
+      'type': 'confirmation',
+      'buttons': [{
+        caption: 'Accept',
+        callback: function() {
+          if ($scope.trade.p1.user._id == SessionService.getUser()._id) {
+            $scope.trade.p1.accepted = true;
+          } else {
+            $scope.trade.p2.accepted = true;
+          }
+          $http.put('/api/trades/accept', $scope.trade)
+            .then(function(res) {
+              $scope.trade = res.data;
+              $scope.processing = false;
+              socket.emit('send:message', {
+                message: $scope.user.soundcloud.username + " accepted the trade",
+                type: 'alert',
+                id: $scope.user._id,
+                tradeID: $stateParams.tradeID
+              });
+            })
+            .then(null, function(err) {
+              $.Zebra_Dialog('Error accepting');
+            })
+        }
+      }, {
+        caption: 'Cancel',
+        callback: function() {
+          console.log('No was clicked');
+        }
+      }]
+    });
   }
 
   $scope.backEvent = function() {
@@ -331,7 +384,7 @@ app.directive('timeSlot', function(moment) {
       }
     },
     replace: 'true',
-    template: '<p class="time">{{slot}}</p>'
+    template: '<p class="time" >{{slot}}</p>'
   };
 
   function isTodayDate(prevDate, eacDate) {
