@@ -38,7 +38,7 @@ app.controller("ReForReListsController", function($scope, currentTrades, $http, 
 	$scope.currentTrades = currentTrades;
 	$scope.currentTradesCopy = currentTrades;
 	$scope.otherUsers = [];
-	$scope.searchUser = undefined;
+	$scope.searchUser = [];
 	$scope.searchURL = "";
 	$scope.minfollowers = 0;
 	$scope.maxfollowers = 100000000;
@@ -58,11 +58,11 @@ app.controller("ReForReListsController", function($scope, currentTrades, $http, 
 		})
 		.then(function(res) {
 			$scope.processing = false;
-			$scope.searchUser = res.data[0];
+			$scope.searchUser = res.data;
 		})
 		.then(null, function(err) {
 			$scope.processing = false;
-			$scope.searchUser = undefined;
+			$scope.searchUser = [];
 			$.Zebra_Dialog("Did not find user.");
 		});
 
