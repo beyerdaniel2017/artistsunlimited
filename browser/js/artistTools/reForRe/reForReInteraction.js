@@ -8,11 +8,12 @@ app.config(function($stateProvider) {
         trade: function($http, $stateParams) {
           return $http.get('/api/trades/byID/' + $stateParams.tradeID)
             .then(function(res) {
+              console.log(res.data);
               return res.data;
             })
         },
-        usersEvents: function($http, SessionService) {
-          return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
+        p1Events: function($http, trade) {
+          return $http.get('/api/events/forUser/' + trade.p1.user.soundcloud.id)
             .then(function(res) {
               return res.data;
             })
@@ -21,9 +22,8 @@ app.config(function($stateProvider) {
               return;
             })
         },
-        othersEvents: function($http, $stateParams, trade, SessionService) {
-          var otherUser = (SessionService.getUser()._id == trade.p1.user._id) ? trade.p2.user : trade.p1.user;
-          return $http.get('/api/events/forUser/' + otherUser.soundcloud.id)
+        p2Events: function($http, trade) {
+          return $http.get('/api/events/forUser/' + trade.p2.user.soundcloud.id)
             .then(function(res) {
               return res.data;
             })
@@ -36,7 +36,10 @@ app.config(function($stateProvider) {
     })
 });
 
-app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, usersEvents, othersEvents, trade, SessionService, socket, $stateParams) {
+
+
+app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, p1Events, p2Events, trade, SessionService, socket, $stateParams) {
+
   $scope.trade = trade;
   $scope.user = SessionService.getUser();
   $scope.msgHistory = [];
@@ -136,7 +139,6 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
               calendar[dayOffset].events[hour] = calEvent;
               if (person == $scope.trade.p1) {
                 $scope.trade.p1.slots.push(calEvent);
-                console.log(trade.p1.slots);
                 $http.put('/api/trades', $scope.trade)
                   .then(resolve)
                   .then(null, reject)
@@ -245,17 +247,52 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     }
     return calendar;
   }
-  $scope.setEventDays = function(arr) {
-    arr.forEach(function(ev) {
-      ev.day = new Date(ev.day);
+
+  $scope.fillCalendar = function() {
+    function setEventDays(arr) {
+      arr.forEach(function(ev) {
+        ev.day = new Date(ev.day);
+      })
+    }
+    setEventDays(p1Events);
+    setEventDays(p2Events);
+    setEventDays($scope.trade.p1.slots);
+    setEventDays($scope.trade.p2.slots);
+
+    var op1Length = $scope.trade.p1.slots.length;
+    p1Events.forEach(function(event) {
+      $scope.trade.p1.slots = $scope.trade.p1.slots.filter(function(slot) {
+        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours())
+      })
     })
+    var op2Length = $scope.trade.p2.slots.length;
+    p2Events.forEach(function(event) {
+      $scope.trade.p2.slots = $scope.trade.p2.slots.filter(function(slot) {
+        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours())
+      })
+    })
+
+    if (op1Length != $scope.trade.p1.slots.length || op2Length != $scope.trade.p2.slots.length) {
+      $http.put('/api/trades', $scope.trade)
+        .then(function(res) {
+          $scope.trade = res.data;
+          $scope.fillCalendar();
+          socket.emit('send:message', {
+            message: "OVERLAPPED SLOTS REMOVED: " + (op1Length - $scope.trade.p1.slots.length) + " from " + $scope.trade.p1.user.soundcloud.username + " and " + (op2Length - $scope.trade.p2.slots.length) + " from " + $scope.trade.p2.user.soundcloud.username,
+            type: 'alert',
+            id: $scope.user._id,
+            tradeID: $stateParams.tradeID
+          });
+        })
+        .then(null, function(err) {
+          window.location.reload()
+        })
+    } else {
+      $scope.calendarp1 = $scope.fillDateArrays(p1Events, $scope.trade.p1.slots);
+      $scope.calendarp2 = $scope.fillDateArrays(p2Events, $scope.trade.p2.slots);
+    }
   }
-  $scope.setEventDays(usersEvents);
-  $scope.setEventDays(othersEvents);
-  $scope.setEventDays(trade.p1.slots);
-  $scope.setEventDays(trade.p2.slots);
-  $scope.calendarp1 = $scope.fillDateArrays(usersEvents, trade.p1.slots);
-  $scope.calendarp2 = $scope.fillDateArrays(othersEvents, trade.p2.slots);
+  $scope.fillCalendar();
 });
 
 

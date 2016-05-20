@@ -23,19 +23,23 @@ function checkTokens() {
         RepostEvent.find({
             userID: user.soundcloud.id,
             completed: false
-      })
-      .exec()
+          })
+          .exec()
           .then(function(events) {
             if (events && events.length > 0) {
-          scWrapper.setToken(user.soundcloud.token);
-          var reqObj = {method: 'GET', path: '/me', qs: {}};
-          scWrapper.request(reqObj, function(err, data){
+              scWrapper.setToken(user.soundcloud.token);
+              var reqObj = {
+                method: 'GET',
+                path: '/me',
+                qs: {}
+              };
+              scWrapper.request(reqObj, function(err, data) {
                 if (err) {
                   sendEmail(user.soundcloud.username, user.email, "Artists Unlimited", "coayscue@artistsunlimited.co", "Invalid Access Token", "Hey " + user.soundcloud.username + ", <br><br>Your soundcloud access token for Artists Unlimited is invalid and you have some scheduled reposts coming up. Please log back in to <a href='https://artistsunlimited.co/login'>Artist Tools</a> to allow us to fulfill your scheduled reposts: <a href='https://artistsunlimited.co/login'>Artist Tools Login</a><br><br>Best,<br>Christian Ayscue<br>Artists Unlimited");
                 }
-          });
+              });
             }
           })
+      });
     });
-  });
 }
