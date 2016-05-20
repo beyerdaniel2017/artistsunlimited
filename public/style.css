@@ -904,8 +904,18 @@ h2, h3 {
   text-transform: uppercase;
   text-align: center; }
 
+.notification-bubble {
+  right: -8px;
+  top: -10px;
+  position: absolute;
+  border-radius: 5px;
+  width: 10%;
+  padding-top: 2px;
+  background: #ff3300;
+  text-align: center; }
+
 .trades-container {
-  height: 160px;
+  height: 130px;
   padding: 0;
   position: relative;
   overflow: hidden; }
@@ -920,8 +930,8 @@ h2, h3 {
   flex-direction: row; }
 
 .trade-box {
-  height: 140px;
-  min-width: 140px;
+  height: 100px;
+  min-width: 200px;
   margin: 10px 20px;
   margin-right: 0px;
   background: #C9A7CD;
@@ -929,7 +939,6 @@ h2, h3 {
   display: inline-block;
   text-align: center;
   position: relative;
-  vertical-align: middle;
   padding: 5px; }
 
 .btn-manage-trade {
@@ -948,12 +957,12 @@ h2, h3 {
   background: #652D91; }
 
 .label-box-username {
-  font-size: 1.7em;
+  font-size: 1.6em;
   margin: auto; }
 
 .label-freq {
-  font-size: 1.8em;
-  margin: 0 auto; }
+  font-size: 1.6em;
+  margin: auto; }
 
 .label-ratio {
   font-size: 1.8em;
