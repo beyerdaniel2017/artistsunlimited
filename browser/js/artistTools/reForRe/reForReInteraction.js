@@ -82,6 +82,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
                     $scope.trade.p1.slots.splice(index, 1);
                   }
                 });
+                if($scope.trade.p1.user._id == $scope.user._id){
+                  $scope.trade.p2.alert = "change";
+                }
+                else if($scope.trade.p2.user._id == $scope.user._id){
+                  $scope.trade.p1.alert = "change";
+                }
                 $http.put('/api/trades', $scope.trade)
                 .then(resolve)
                 .then(null, reject)
@@ -91,6 +97,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
                     $scope.trade.p2.slots.splice(index, 1);
                   }
                 });
+                if($scope.trade.p1.user._id == $scope.user._id){
+                  $scope.trade.p2.alert = "change";
+                }
+                else if($scope.trade.p2.user._id == $scope.user._id){
+                  $scope.trade.p1.alert = "change";
+                }
                 $http.put('/api/trades', $scope.trade)
                 .then(resolve)
                 .then(null, reject)
@@ -133,12 +145,23 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
               calendar[a.diff(b, 'days')].events[hour] = calEvent;
               if (person == $scope.trade.p1) {
                 $scope.trade.p1.slots.push(calEvent);
-                console.log(trade.p1.slots);
+                if($scope.trade.p1.user._id == $scope.user._id){
+                  $scope.trade.p2.alert = "change";
+                }
+                else if($scope.trade.p2.user._id == $scope.user._id){
+                  $scope.trade.p1.alert = "change";
+                }
                 $http.put('/api/trades', $scope.trade)
                 .then(resolve)
                 .then(null, reject)
               } else {
                 $scope.trade.p2.slots.push(calEvent);
+                if($scope.trade.p1.user._id == $scope.user._id){
+                  $scope.trade.p2.alert = "change";
+                }
+                else if($scope.trade.p2.user._id == $scope.user._id){
+                  $scope.trade.p1.alert = "change";
+                }                
                 $http.put('/api/trades', $scope.trade)
                 .then(resolve)
                 .then(null, reject)
@@ -199,11 +222,18 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   });
 
   $scope.sendMessage = function() {
+    if($scope.trade.p1.user._id == $scope.user._id){
+      $scope.trade.p2.alert = "change";
+    }
+    else if($scope.trade.p2.user._id == $scope.user._id){
+      $scope.trade.p1.alert = "change";
+    }    
     socket.emit('send:message', {
       message: $scope.message,
       type: 'message',
       id: $scope.user._id,
-      tradeID: $stateParams.tradeID
+      tradeID: $stateParams.tradeID,
+      trade: $scope.trade
     });
     $scope.message = '';
   };
@@ -245,12 +275,22 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       ev.day = new Date(ev.day);
     })
   }
+  $scope.updateAlert = function() {
+    if($scope.trade.p1.user._id == $scope.user._id){
+      $scope.trade.p1.alert = "none";
+    }
+    else if($scope.trade.p2.user._id == $scope.user._id){
+      $scope.trade.p2.alert = "none";
+    }                
+    $http.put('/api/trades', $scope.trade);
+  }
   $scope.setEventDays(usersEvents);
   $scope.setEventDays(othersEvents);
   $scope.setEventDays(trade.p1.slots);
   $scope.setEventDays(trade.p2.slots);
   $scope.calendarp1 = $scope.fillDateArrays(usersEvents, trade.p1.slots);
   $scope.calendarp2 = $scope.fillDateArrays(othersEvents, trade.p2.slots);
+  $scope.updateAlert();
 });
 
 app.directive('timeSlot', function(moment) {
