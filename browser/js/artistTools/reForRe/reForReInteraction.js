@@ -287,7 +287,7 @@ app.directive('timeSlot', function(moment) {
       }
     },
     replace: 'true',
-    template: '<p class="time">{{slot}}</p>'
+    template: '<p class="time" >{{slot}}</p>'
   };
 
   function isTodayDate(prevDate, eacDate) {
