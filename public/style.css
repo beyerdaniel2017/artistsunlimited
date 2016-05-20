@@ -713,7 +713,8 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   min-height: 480px;
   margin: auto;
   margin-top: 5px;
-  display: block; }
+  display: block;
+  position: relative; }
 
 .scheduler-small {
   width: 49%;
@@ -721,6 +722,14 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   text-align: center;
   margin: auto;
   display: inline-block; }
+
+#scheduler-right {
+  position: absolute;
+  right: 0; }
+  @media screen and (max-width: 436px) {
+    #scheduler-right {
+      margin-left: 0;
+      position: initial; } }
 
 .row-small {
   font-size: 0.9em;
@@ -738,7 +747,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   position: absolute;
   left: 0;
   bottom: 0;
-  border-width: 1px 0 0 0; }
+  border-width: 0; }
 
 .rfr-chat {
   margin: 1% auto;
@@ -750,7 +759,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   display: inline-block;
   height: 100%;
   background: white;
-  border: 1px solid black;
+  border: 2px solid black;
   width: 75%;
   position: relative; }
 
@@ -762,12 +771,17 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   position: relative;
   padding: 15px 0 15px 0; }
 
+.msg-line > p {
+  margin: 0; }
+
 .chat-input {
   position: absolute;
   bottom: 0;
+  left: 0;
   width: 100%;
   height: 13%;
-  margin: auto; }
+  margin: auto;
+  border: 2px solid #F5BBBC; }
 
 .btn-chat-send {
   background: #F5BBBC;
@@ -785,19 +799,25 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   right: 0;
   bottom: 0; }
 
+.time {
+  margin-top: 4px; }
+
 .msg-line {
   display: inline-block;
-  width: 98%;
+  width: 100%;
   height: auto;
   background: transparent;
-  margin: -4px;
-  margin-right: 1%;
-  padding: 0px; }
+  padding: 0 8px;
+  margin: 4px 0; }
 
 .msg-box {
   padding: 2px 6px;
   color: black;
-  max-width: 95%; }
+  width: auto;
+  display: inline-block;
+  max-width: 95%;
+  margin: 0;
+  vertical-align: middle; }
 
 .msg-from {
   background: #F5BBBC;
