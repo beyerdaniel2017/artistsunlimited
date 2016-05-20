@@ -1,7 +1,7 @@
 app.config(function($stateProvider) {
     $stateProvider
         .state('artistToolsDownloadGatewayPreview', {
-            url: '/download-gateway/preview',
+            url: '/artistTools/downloadGateway/preview',
             params: {
                 submission: null
             },

@@ -23,6 +23,10 @@ var schema = new mongoose.Schema({
   type: {
     type: String,
     default: 'track'
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }
 });
 

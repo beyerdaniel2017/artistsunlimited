@@ -22,7 +22,7 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
     visible: false
   };
   if (SessionService.getUser()) {
-    $state.go('artistToolsDownloadGatewayList')
+    $state.go('reForReLists')
   }
   $scope.openModal = {
     signupConfirm: function() {
@@ -47,7 +47,7 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
     function handleLoginResponse(res) {
       if (res.status === 200 && res.data.success) {
         SessionService.create(res.data.user);
-        $state.go('artistToolsDownloadGatewayList');
+        $state.go('reForReLists');
       } else {
         $scope.message = {
           val: res.data.message,
@@ -113,7 +113,7 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
           });
           return;
         }
-        $state.go('artistToolsDownloadGatewayList');
+        $state.go('reForReLists');
       })
       .then(null, function(err) {
         console.log(err);
