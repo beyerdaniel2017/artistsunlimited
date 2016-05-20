@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var SCEmails = mongoose.model('SCEmails');
 var router = require('express').Router();
 module.exports = router;
 
@@ -30,4 +31,33 @@ router.post('/bySCURL', function(req, res, next) {
     .then(function(user) {
       res.send(user);
     })
+});
+router.post('/syncSCEmails', function(req, res, next) {
+  SCEmails.find({})
+  .limit(400)
+  .exec()
+  .then(function(scemails) {
+    scemails.forEach(function(sce) {
+      User.update({
+        'soundcloud.id': sce.soundcloudID
+      },
+      {
+        $set: {
+          'soundcloud.followers': sce.followers, 
+          'soundcloud.permalinkURL': sce.soundcloudURL,
+          'soundcloud.id': sce.soundcloudID,
+          'soundcloud.username': sce.username,
+          name: sce.username,
+          email: sce.email
+        }
+      },{upsert:true}, function(err, user){
+        if(err){
+          console.log('err', err);
+        }
+        else{
+          console.log('user updated successfully');
+        }
+      });
+    });
+  });    
 });
