@@ -29,9 +29,8 @@
 		<div class="trades-container">
 			<div id="trades-list">
 				<div ng-repeat="trade in currentTrades" class="trade-box">
-					<div class="label-box-username">{{trade.user.user.name}}</div>
-					<div class="label-freq">{{trade.tradeType}}</div>
-					<div class="label-ratio"></div>
+					<div class="label-box-username">{{trade.other.user.name}}</div>
+					<div class="label-freq">{{trade.other.slots.length}}:{{trade.user.slots.length}}</div>
 					<button class="btn-manage-trade bold" ui-sref="reForReInteraction({
 					tradeID: trade._id})">Manage</button>
 				</div>

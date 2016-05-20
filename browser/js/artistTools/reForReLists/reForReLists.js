@@ -67,11 +67,11 @@ app.controller("ReForReListsController", function($scope, currentTrades, $http, 
 		});
 
 		var cTrades = [];
-		if(!$scope.minfollowers) $scope.maxfollowers = 0;
-		if(!$scope.maxfollowers) $scope.maxfollowers = 100000000;
 		angular.forEach($scope.currentTradesCopy, function(trade){
 			if($scope.searchURL != "" && parseInt($scope.maxfollowers) > 0){
-				if((trade.other.user.soundcloud.permalinkURL == $scope.searchURL)){
+				var url = $scope.searchURL;
+				url = url.toString().replace('http://','').replace('https://','');
+				if((trade.other.user.soundcloud.permalinkURL.indexOf(url) != -1)){
 					if(trade.other.user.soundcloud.followers > $scope.minfollowers && trade.other.user.soundcloud.followers <= $scope.maxfollowers){
 						cTrades.push(trade);
 					}

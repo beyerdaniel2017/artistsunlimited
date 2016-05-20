@@ -16,7 +16,8 @@ router.post('/bySCURL', function(req, res, next) {
   var url = (req.body.url != "") ? req.body.url : undefined;
   var searchObj = {};
   if(url != undefined){
-    searchObj['soundcloud.permalinkURL'] = new RegExp(req.body.url.substring(10, req.body.url.length));
+    url = url.toString().replace('http://','').replace('https://','');
+    searchObj['soundcloud.permalinkURL'] = new RegExp(url);
   }
   if(maxFollowers > 0){
     searchObj['soundcloud.followers'] = {
