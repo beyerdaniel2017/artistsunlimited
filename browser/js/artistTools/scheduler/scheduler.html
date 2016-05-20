@@ -5,7 +5,7 @@
     <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
     <div class="row">
       <h3 style="text-align:center;">{{user.displayName}}</h3>
-      <div style="text-align:center; width:80%; margin:10px auto;">
+      <div id="scheduler-container">
         <div style="width:100%; height:35px; display:flex; flex-direction:row; ">
           <button class="btn btn-default btn-scheduler" ng-click="decrDay()"><img style="width:60%; height:80%; margin-right:-4px;" src="/assets/images/arrow-left.png"/></button>
           <button class="btn btn-default btn-scheduler" ng-click="incrDay()" ><img id="scheduler-btn-back" style="width:60%; height:80%;" src="/assets/images/arrow-right.png"/></button>
@@ -16,10 +16,10 @@
           </div>
         </div>
         <div style="width:100%; display:flex; flex-direction:row;">
-          <div style="width:9%;">
+          <div class="column-time">
             <div ng-repeat="i in ['12 AM','1 AM','2 AM','3 AM','4 AM','5 AM','6 AM','7 AM','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM']" class="cell-time bold" ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{i}}</div>
           </div>   
-          <div ng-repeat="l in [0,1,2,3,4,5,6]" style="width:13%;">
+          <div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
             <div ng-repeat="p in [0,2,4,6,8,10,12,14,16,18,20,22]">
               <div ng-style="(calendar[l+dayIncr].events[p].type == 'queue')?{'background-color':'yellow'}:(calendar[l+dayIncr].events[p].type == 'track')?{'background-color':'#67f967'}:{}" class="row-scheduler row-dark" ng-click="clickedSlot(calendar[l+dayIncr].day,p)">{{calendar[l+dayIncr].events[p].title}}</div>
               <div ng-style="calendar[l+dayIncr].events[p+1].type=='queue'?{'background-color':'yellow'}:(calendar[l+dayIncr].events[p+1].type=='track')?{'background-color':'#67f967'}:{}" class="row-scheduler row-light" ng-click="clickedSlot(calendar[l+dayIncr].day,p+1)">{{calendar[l+dayIncr].events[p+1].title}}</div>
