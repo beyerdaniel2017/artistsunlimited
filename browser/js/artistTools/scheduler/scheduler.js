@@ -1,6 +1,6 @@
 app.config(function($stateProvider) {
       $stateProvider.state('artistToolsScheduler', {
-            url: '/artisttools/scheduler',
+            url: '/artistTools/scheduler',
             templateUrl: 'js/artistTools/scheduler/scheduler.html',
             controller: 'ATSchedulerController',
             resolve: {

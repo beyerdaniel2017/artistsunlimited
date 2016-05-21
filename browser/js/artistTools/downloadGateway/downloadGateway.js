@@ -1,12 +1,12 @@
 app.config(function($stateProvider) {
     $stateProvider
         .state('artistToolsDownloadGatewayEdit', {
-            url: '/download-gateway/edit/:gatewayID',
+            url: '/artistTools/downloadGateway/edit/:gatewayID',
             templateUrl: 'js/artistTools/downloadGateway/downloadGateway.html',
             controller: 'ArtistToolsDownloadGatewayController'
         })
         .state('artistToolsDownloadGatewayNew', {
-            url: '/download-gateway/new',
+            url: '/artistTools/downloadGateway/new',
             params: {
                 submission: null
             },
@@ -15,7 +15,7 @@ app.config(function($stateProvider) {
         })
 });
 
-app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService,AdminDLGateService) {
+app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService, AdminDLGateService) {
     /* Init Download Gateway form data */
     $scope.user = SessionService.getUser();
     $scope.showTitle = [];
@@ -28,7 +28,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
         comment: false,
         repost: false,
         artists: [],
-    playlists:[],
+        playlists: [],
         showDownloadTracks: 'user',
         admin: $scope.user.admin,
         file: {}
@@ -111,14 +111,14 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
         }).map(function(item) {
             delete item['$$hashKey'];
             return item;
-    });
+        });
 
-   var playlists = $scope.track.playlists.filter(function(item) {
-      return item.id !== -1;
-    }).map(function(item) {
-      delete item['$$hashKey'];
-      return item;
-    });
+        var playlists = $scope.track.playlists.filter(function(item) {
+            return item.id !== -1;
+        }).map(function(item) {
+            delete item['$$hashKey'];
+            return item;
+        });
 
         sendObj.append('artists', JSON.stringify(artists));
         var SMLinks = {};
@@ -173,7 +173,9 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
         var profile = SessionService.getUser();
         if (profile.soundcloud) {
             $scope.processing = true;
-      SC.get('/users/' + profile.soundcloud.id + '/tracks',{filter:'public'})
+            SC.get('/users/' + profile.soundcloud.id + '/tracks', {
+                    filter: 'public'
+                })
                 .then(function(tracks) {
                     $scope.trackList = tracks;
                     $scope.processing = false;
@@ -279,20 +281,20 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
 
     $scope.artistURLChange = function(index) {
         var artist = {};
-        if($scope.track.artists[index].url != ""){
-        $scope.processing = true;
-        ArtistToolsService.resolveData({
-            url: $scope.track.artists[index].url
-        }).then(function(res) {
-            $scope.track.artists[index].avatar = res.data.avatar_url ? res.data.avatar_url : '';
-            $scope.track.artists[index].username = res.data.username;
-            $scope.track.artists[index].id = res.data.id;
-            $scope.processing = false;
-        }).catch(function(err) {
-            $.Zebra_Dialog('Artists not found');
-            $scope.processing = false;
-        });
-       }
+        if ($scope.track.artists[index].url != "") {
+            $scope.processing = true;
+            ArtistToolsService.resolveData({
+                url: $scope.track.artists[index].url
+            }).then(function(res) {
+                $scope.track.artists[index].avatar = res.data.avatar_url ? res.data.avatar_url : '';
+                $scope.track.artists[index].username = res.data.username;
+                $scope.track.artists[index].id = res.data.id;
+                $scope.processing = false;
+            }).catch(function(err) {
+                $.Zebra_Dialog('Artists not found');
+                $scope.processing = false;
+            });
+        }
     }
 
     $scope.removeArtist = function(index) {
@@ -308,13 +310,13 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
             permanentLink: false
         });
     }
- $scope.addPlaylist = function() {
-      $scope.track.playlists.push({
-        url: '',
-        avatar: '',
-        title: '',
-        id: ''
-      });
+    $scope.addPlaylist = function() {
+        $scope.track.playlists.push({
+            url: '',
+            avatar: '',
+            title: '',
+            id: ''
+        });
     }
     $scope.removePlaylist = function(index) {
         $scope.track.playlists.splice(index, 1);
@@ -405,7 +407,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
             $scope.track.permanentLinks = permanentLinksArray;
             $scope.track.playlistIDS = [];
             // $scope.track.showDownloadTracks = ($scope.track.showDownloadTracks === 'user') ? true : false;
-      //console.log($scope.track);
+            //console.log($scope.track);
             $scope.processing = false;
         }
 
@@ -418,16 +420,16 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
         $scope.track.downloadURL = "";
     }
 
-  $scope.preview = function(track) {     
-    window.localStorage.setItem('trackPreviewData', JSON.stringify(track));
-    var url = $state.href('artistToolsDownloadGatewayPreview');
-    $window.open(url,'_blank');
-  }
+    $scope.preview = function(track) {
+        window.localStorage.setItem('trackPreviewData', JSON.stringify(track));
+        var url = $state.href('artistToolsDownloadGatewayPreview');
+        $window.open(url, '_blank');
+    }
 
 
-  // $scope.$watch('track', function(newVal, oldVal) {
-  //   console.log(newVal);
-  //   if (newVal.trackTitle)
-  //     //window.localStorage.setItem('trackPreviewData', JSON.stringify(newVal));
-  // }, true);
+    // $scope.$watch('track', function(newVal, oldVal) {
+    //   console.log(newVal);
+    //   if (newVal.trackTitle)
+    //     //window.localStorage.setItem('trackPreviewData', JSON.stringify(newVal));
+    // }, true);
 });

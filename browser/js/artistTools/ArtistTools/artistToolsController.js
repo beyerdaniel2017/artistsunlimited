@@ -1,7 +1,7 @@
 app.config(function($stateProvider) {
   $stateProvider
     .state('artistTools', {
-      url: '/artist-tools',
+      url: '/artistTools',
       templateUrl: 'js/artistTools/ArtistTools/artistTools.html',
       controller: 'ArtistToolsController',
       abstract: true,
@@ -20,12 +20,12 @@ app.config(function($stateProvider) {
       }
     })
     .state('artistToolsProfile', {
-      url: '/profile',
+      url: '/artistTools/profile',
       templateUrl: 'js/artistTools/ArtistTools/profile.html',
       controller: 'ArtistToolsController'
     })
     .state('artistToolsDownloadGatewayList', {
-      url: '/download-gateway',
+      url: '/artistTools/downloadGateway',
       params: {
         submission: null
       },

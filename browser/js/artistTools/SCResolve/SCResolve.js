@@ -1,7 +1,7 @@
 app.config(function($stateProvider) {
     $stateProvider
         .state('SCResolve', {
-            url: '/scresolve',
+            url: '/artistTools/scresolve',
             templateUrl: 'js/artistTools/SCResolve/SCResolve.html',
             controller: 'SCResolveController'
         })

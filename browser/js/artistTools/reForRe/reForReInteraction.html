@@ -1,83 +1,83 @@
 <style>
 	body {
 		margin: 0;
-		padding: 0;
-		background: white;
+		padding: 20px 20px;
 	}
 </style>
-<div class="rfr-schedule-container" ng-init="getMessage()">
-	<div class="scheduler-small">
-		<div class="label-username bold" style="height: 6%">{{trade.p1.user.soundcloud.username}} - {{trade.p1.user.soundcloud.followers | number:0}} flwrs  <span style="color:#FFC04C">({{trade.p1.slots.length}} slots)</span> </div>
-		<div style="text-align:center; width:100%; height: 94%; margin: auto;">
-			<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
-				<button class="btn btn-default btn-scheduler" ng-click="decr(p1dayIncr)"><img style="width:60%; height:100%; margin-top:-20%; margin-right:-4px;" src="/assets/images/arrow-left.png"/></button>
-				<button class="btn btn-default btn-scheduler" ng-click="incr(p1dayIncr)" ><img id="scheduler-btn-back" style="width:60%; height:100%; margin-top:-20%" src="/assets/images/arrow-right.png"/></button>
-				<div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]" style="line-height:27px !important">
-					{{calendarp1[t+dayIncr].day.toLocaleDateString()}}
+<div style="background:white; padding: 10px 0;">
+	<div class="rfr-schedule-container" ng-init="getMessage()">
+		<div class="scheduler-small">
+			<div class="label-username bold" style="height: 6%"><a target="_blank" href="{{trade.p1.user.soundcloud.permalinkURL}}">{{trade.p1.user.soundcloud.username}}</a> - {{trade.p1.user.soundcloud.followers | number:0}} flwrs  <span style="color:#F5BBBC">( {{trade.p1.slots.length}} slots )</span> </div>
+			<div style="text-align:center; width:100%; height: 94%; margin: auto;">
+				<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
+					<button class="btn btn-default btn-scheduler" ng-click="decrp1()"><img style="width:60%; height:100%; margin-top:-20%; margin-right:-4px;" src="/assets/images/arrow-left.png"/></button>
+					<button class="btn btn-default btn-scheduler" ng-click="incrp1()" ><img id="scheduler-btn-back" style="width:60%; height:100%; margin-top:-20%" src="/assets/images/arrow-right.png"/></button>
+					<div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]" style="line-height:27px !important">
+						{{calendarp1[t+dayIncr].day.toLocaleDateString()}}
+					</div>
+				</div>
+				<div style="width:100%; height:96%; display:flex; flex-direction:row;">
+					<div class="column-time">
+						<div ng-repeat="i in ['12 AM','1 AM','2 AM','3 AM','4 AM','5 AM','6 AM','7 AM','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM']" class="cell-time bold row-small" ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{i}}</div>
+					</div>   
+					<div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
+						<div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendarp1[l+p1dayIncr].events[p])" class="row-scheduler row-small" ng-click="clickedSlot(calendarp1[l+p1dayIncr].day, l+p1dayIncr, p, calendarp1, trade.p1, calendarp1[l+p1dayIncr].events[p])"  ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{calendarp1[l+p1dayIncr].events[p].title}}
+						</div>
+					</div>
 				</div>
 			</div>
-			<div style="width:100%; height:96%; display:flex; flex-direction:row;">
-				<div class="column-time">
-					<div ng-repeat="i in ['12 AM','1 AM','2 AM','3 AM','4 AM','5 AM','6 AM','7 AM','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM']" class="cell-time bold row-small" ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{i}}</div>
-				</div>   
-				<div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
-					<div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="(calendarp1[l+p1dayIncr].events[p].type=='empty')?{}:calendarp1[l+p1dayIncr].events[p].type=='trade'?{'background-color': '#FFC04C'}:{'background-color': '#000000', 'color': '#000000'}" class="row-scheduler row-small" ng-click="clickedSlot(calendarp1[l+p1dayIncr].day, p, calendarp1, trade.p1, calendarp1[l+p1dayIncr].events[p].type)"  ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{calendarp1[l+dayIncr].events[p].title}}
+		</div>
+		<div class="scheduler-small" id="scheduler-right">
+			<div class="label-username bold" style="height: 6%"><a target="_blank" href="{{trade.p2.user.soundcloud.permalinkURL}}">{{trade.p2.user.soundcloud.username}}</a> - {{trade.p2.user.soundcloud.followers | number:0}} flwrs  <span style="color:#F5BBBC">( {{trade.p2.slots.length}} slots )</span></div>
+			<div style="text-align:center; width:100%; height: 94%; margin: auto;">
+				<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
+					<button class="btn btn-default btn-scheduler" ng-click="decrp2()"><img style="width:60%; height:100%; margin-top:-20%; margin-right:-4px;" src="/assets/images/arrow-left.png"/></button>
+					<button class="btn btn-default btn-scheduler" ng-click="incrp2()" ><img id="scheduler-btn-back" style="width:60%; height:100%; margin-top:-20%" src="/assets/images/arrow-right.png"/></button>
+					<div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]" style="line-height:27px !important">{{calendarp2[t+dayIncr].day.toLocaleDateString()}}</div>
+				</div>
+				<div style="width:100%; height:96%; display:flex; flex-direction:row;">
+					<div class="column-time">
+						<div ng-repeat="i in ['12 AM','1 AM','2 AM','3 AM','4 AM','5 AM','6 AM','7 AM','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM']" class="cell-time bold row-small" ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{i}}</div>
+					</div>   
+					<div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
+						<div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendarp2[l+p2dayIncr].events[p])" class="row-scheduler row-small" ng-click="clickedSlot(calendarp2[l+p2dayIncr].day, l+p2dayIncr, p, calendarp2, trade.p2, calendarp2[l+p2dayIncr].events[p])"  ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{calendarp2[l+p2dayIncr].events[p].title}}
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="scheduler-small" id="scheduler-right">
-		<div class="label-username bold" style="height: 6%">{{trade.p2.user.soundcloud.username}} - {{trade.p2.user.soundcloud.followers | number:0}} flwrs  <span style="color:#FFC04C">({{trade.p1.slots.length}} slots)</span></div>
-		<div style="text-align:center; width:100%; height: 94%; margin: auto;">
-			<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
-				<button class="btn btn-default btn-scheduler" ng-click="decr(p2dayIncr)"><img style="width:60%; height:100%; margin-top:-20%; margin-right:-4px;" src="/assets/images/arrow-left.png"/></button>
-				<button class="btn btn-default btn-scheduler" ng-click="incr(p2dayIncr)" ><img id="scheduler-btn-back" style="width:60%; height:100%; margin-top:-20%" src="/assets/images/arrow-right.png"/></button>
-				<div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]" style="line-height:27px !important">{{calendarp2[t+dayIncr].day.toLocaleDateString()}}</div>
-			</div>
-			<div style="width:100%; height:96%; display:flex; flex-direction:row;">
-				<div class="column-time">
-					<div ng-repeat="i in ['12 AM','1 AM','2 AM','3 AM','4 AM','5 AM','6 AM','7 AM','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM']" class="cell-time bold row-small" ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{i}}</div>
-				</div>   
-				<div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
-					<div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="(calendarp2[l+p2dayIncr].events[p].type=='empty')?{}:calendarp2[l+p2dayIncr].events[p].type=='trade'?{'background-color': '#FFC04C'}:{'background-color': '#000000', 'color': '#000000'}" class="row-scheduler row-small" ng-click="clickedSlot(calendarp2[l+p2dayIncr].day, p, calendarp2, trade.p2, calendarp2[l+p2dayIncr].events[p].type)"  ng-class-odd="'row-dark'" ng-class-even="'row-light'">{{calendarp2[l+dayIncr].events[p].title}}
+
+	<!--CHAT-->
+
+	<div class="rfr-chat">
+		<div class="rfr-chatbox">
+			<div class="convo-display" scroll-glue>
+				<div ng-repeat="msg in msgHistory track by $index" class="msg-line">
+					<time-slot start-date="{{msgHistory[0].date}}" each-date="{{msg.date}}" previous-date="{{msgHistory[$index-1].date}}" ></time-slot> 
+					<div ng-show="msg.type== 'alert'" class="alert-box">
+						{{msg.text}}
+					</div> 
+					<div ng-show="msg.type== 'message'" class="msg-box {{msg.senderId==user._id ? 'msg-from' : 'msg-to'}}">
+						{{msg.text}}
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-</div>
-
-<!--CHAT-->
-
-<div class="rfr-chat">
-	<div class="rfr-chatbox">
-		<div class="convo-display" scroll-glue>
-			<div ng-repeat="msg in msgHistory track by $index" class="msg-line">
-				<time-slot start-date="{{msgHistory[0].date}}" each-date="{{msg.date}}" previous-date="{{msgHistory[$index-1].date}}" ></time-slot> 
-				<div ng-show="msg.type== 'alert'" class="alert-box">
-					{{msg.text}}
-				</div> 
-				<div ng-show="msg.type== 'message'" class="msg-box {{msg.senderId==user._id ? 'msg-from' : 'msg-to'}}">
-					{{msg.text}}
-				</div>
+			<div class="chat-input">
+				<form name="chat" ng-submit="emitMessage(message, 'message')" >
+					<input type="text"class="form-control form-message" ng-model="message"></input>
+					<button type="submit" class="btn btn-default btn-chat-send" ng-disabled="!message">Send</button>
+				</form>
 			</div>
 		</div>
-		<div class="chat-input">
-			<form name="chat" ng-submit="sendMessage()" >
-				<input type="text"class="form-control form-message" ng-model="message"></input>
-				<button type="submit" class="btn btn-default btn-chat-send" ng-disabled="!message">Send</button>
-			</form>
-		</div>
-	</div>
-	<div class="trade-options">
-		<!--TODO: give functions to buttons-->
-		<button class="btn btn-default btn-option">Accept Trade</button>
-		<button class="btn btn-default btn-option">Cancel</button>
-		<select class="form-control select-rfr">
+		<div class="trade-options">
+			<button class="btn btn-default btn-option" ng-style="user.accepted?{'background-color':'gray'}:{}" ng-click="accept()">Accept Trade</button>
+			<button class="btn btn-default btn-option" ui-sref="reForReLists">Exit</button>
+			<button class="btn btn-default btn-option" ng-click="email()">Email</button>
+		<!-- <select class="form-control select-rfr">
 			<option>--Select Option--</option>
 			<option value="oneTime">One Time</option>
 			<option value="weekly">Weekly</option>
-		</select>
+		</select> -->
 	</div>
 </div>
