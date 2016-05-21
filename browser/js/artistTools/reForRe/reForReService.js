@@ -1,6 +1,6 @@
 'use strict';
 app.factory('socket', function ($rootScope) {
-  var socket = io.connect();
+  var socket;
   return {
     on: function (eventName, callback) {      
       socket.on(eventName, function () {  
@@ -29,6 +29,12 @@ app.factory('socket', function ($rootScope) {
           }
         });
       })
+    },
+    connect: function(){
+      socket = io.connect();
+    },
+    disconnect: function () {
+      socket.disconnect();
     }
   };
 });

@@ -15,14 +15,14 @@ router.post('/bySCURL', function(req, res, next) {
   var minFollowers = (req.body.minFollower ? parseInt(req.body.minFollower) : 0);
   var maxFollowers = (req.body.maxFollower ? parseInt(req.body.maxFollower) : 100000000);
   var url = (req.body.url != "") ? req.body.url : undefined;
-  var searchObj = {};
+  var searchObj = {_id : {$ne: req.user._id}};
   if(url != undefined){
     url = url.toString().replace('http://','').replace('https://','');
     searchObj['soundcloud.permalinkURL'] = new RegExp(url);
   }
   if(maxFollowers > 0){
     searchObj['soundcloud.followers'] = {
-      $gt: minFollowers,
+      $gte: minFollowers,
       $lte: maxFollowers,
     }
   }

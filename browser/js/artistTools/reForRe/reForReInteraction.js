@@ -31,14 +31,15 @@ app.config(function($stateProvider) {
               return;
             })
         }
+    },
+    onExit: function(socket) {
+      socket.disconnect();
       }
     })
 });
 
-
-
 app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, p1Events, p2Events, trade, SessionService, socket, $stateParams) {
-
+  socket.connect();
   $scope.trade = trade;
   $scope.user = SessionService.getUser();
   var person = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1 : $scope.trade.p2;
@@ -93,7 +94,6 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     $scope.makeEvent = null;
     $scope.showOverlay = false;
   }
-
 
   $scope.saveEvent = function() {
     $scope.processing = true;

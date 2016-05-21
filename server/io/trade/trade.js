@@ -38,6 +38,10 @@ module.exports = function(io) {
 			}, function(err, data) {
 				io.emit('get:message', data);
 			});
+
+	   	socket.on('disconnect', function(){
+		    console.log('user disconnected');
+	  	});    
 		});
 	});
 };
