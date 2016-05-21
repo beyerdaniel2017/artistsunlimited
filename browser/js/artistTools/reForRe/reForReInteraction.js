@@ -53,30 +53,85 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.p2dayIncr = 0;
 
   $scope.incrp1 = function(inc) {
-    if ($scope.p1dayIncr < 14) $scope.p1dayIncr++;
+    if ($scope.p1dayIncr < 21) $scope.p1dayIncr++;
   }
   $scope.decrp1 = function(inc) {
     if ($scope.p1dayIncr > 0) $scope.p1dayIncr--;
   }
   $scope.incrp2 = function(inc) {
-    if ($scope.p2dayIncr < 14) $scope.p2dayIncr++;
+    if ($scope.p2dayIncr < 21) $scope.p2dayIncr++;
   }
   $scope.decrp2 = function(inc) {
     if ($scope.p2dayIncr > 0) $scope.p2dayIncr--;
   }
 
+  $scope.changeURL = function() {
+    $scope.processing = true;
+    $http.post('/api/soundcloud/resolve', {
+        url: $scope.makeEventURL
+      })
+      .then(function(res) {
+        $scope.makeEvent.trackID = res.data.id;
+        $scope.makeEvent.title = res.data.title;
+        $scope.makeEvent.trackURL = res.data.trackURL;
+        if (res.data.user) $scope.makeEvent.artistName = res.data.user.username;
+        SC.oEmbed($scope.makeEventURL, {
+          element: document.getElementById('scPlayer'),
+          auto_play: false,
+          maxheight: 150
+        })
+        document.getElementById('scPlayer').style.visibility = "visible";
+        $scope.notFound = false;
+        $scope.processing = false;
+      }).then(null, function(err) {
+        document.getElementById('scPlayer').style.visibility = "hidden";
+        $scope.notFound = true;
+        $scope.processing = false;
+      });
+  }
+
+  $scope.backEvent = function() {
+    $scope.makeEvent = null;
+    $scope.showOverlay = false;
+  }
+
+
+  $scope.saveEvent = function() {
+    $scope.processing = true;
+    $http.put('/api/events/repostEvents', $scope.makeEvent)
+      .then(function(res) {
+        $scope.makeEvent = res.data;
+        $scope.processing = false;
+        $scope.showOverlay = false;
+      })
+      .then(null, function(err) {
+        $.Zebra_Dialog('Error saving');
+      })
+  }
+
+  $scope.emailSlot = function() {
+    var mailto_link = "mailto:?subject=Repost of " + $scope.makeEvent.title + '&body=Hey,\n\n I am reposting your song ' + $scope.makeEvent.title + ' on ' + $scope.makeEventAccount.username + ' on ' + $scope.makeEvent.day.toLocaleDateString() + '.\n\n Best, \n' + $scope.user.soundcloud.username;
+    location.href = encodeURI(mailto_link);
+  }
+
   $scope.clickedSlot = function(day, dayOffset, hour, calendar, person, event) {
-    console.log(event);
     var p = SessionService.getUser()._id == $scope.trade.p1.user._id ? $scope.trade.p1 : $scope.trade.p2;
     if (event.type == 'traded' && event.owner == $scope.user._id) {
-      $.Zebra_Dialog("Change it!");
+      $scope.makeEventAccount = person.user.soundcloud;
+      $scope.showOverlay = true;
+      $scope.makeEvent = event;
+      $scope.makeEventURL = $scope.makeEvent.trackURL;
+      SC.oEmbed($scope.makeEvent.trackURL, {
+        element: document.getElementById('scPlayer'),
+        auto_play: false,
+        maxheight: 150
+      });
     } else if (p.accepted) {
       $.Zebra_Dialog("You can't make changes to this trade because you already accepted it. You will be able to make changes if the other person makes a change.");
       return;
     }
     var today = new Date();
     if (today.toLocaleDateString() == day.toLocaleDateString() && today.getHours() > hour) return;
-
     var calendarDay = calendar.find(function(calD) {
       return calD.day.toLocaleDateString() == day.toLocaleDateString();
     });
@@ -281,7 +336,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.fillDateArrays = function(events, slots) {
     var calendar = [];
     var today = new Date();
-    for (var i = 0; i < 21; i++) {
+    for (var i = 0; i < 29; i++) {
       var calDay = {};
       calDay.day = new Date()
       calDay.day.setDate(today.getDate() + i);
@@ -412,6 +467,11 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         }
       }
     }
+  }
+
+  $scope.dayOfWeekAsString = function(date) {
+    var dayIndex = date.getDay();
+    return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
   }
 });
 
