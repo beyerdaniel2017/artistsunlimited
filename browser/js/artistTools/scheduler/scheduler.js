@@ -57,14 +57,12 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }
       promptForEmail();
 
-      $scope.calendar = $scope.fillDateArrays(events);
       $scope.dayIncr = 0;
 
       $scope.saveUser = function() {
             $scope.processing = true;
             $http.put("/api/database/profile", $scope.user)
                   .then(function(res) {
-                        $.Zebra_Dialog("Saved");
                         SessionService.create(res.data);
                         $scope.user = SessionService.getUser();
                         $scope.processing = false;
@@ -165,7 +163,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                               };
                               $scope.showOverlay = false;
                               $scope.processing = false;
-                              $.Zebra_Dialog("Deleted");
                         })
                         .then(null, function(err) {
                               $scope.processing = false;
@@ -200,11 +197,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                                     calendarDay.events[event.day.getHours()] = event;
                                     $scope.showOverlay = false;
                                     $scope.processing = false;
-                                    if (event.type == "queue") {
-                                          $.Zebra_Dialog("Saved. The next track in your queue will be reposted at this time.");
-                                    } else {
-                                          $.Zebra_Dialog("Saved. The track is now scheduled for reposting.");
-                                    }
                               })
                               .then(null, function(err) {
                                     $scope.processing = false;
@@ -222,11 +214,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                                     calendarDay.events[event.day.getHours()] = event;
                                     $scope.showOverlay = false;
                                     $scope.processing = false;
-                                    if (event.type = "queue") {
-                                          $.Zebra_Dialog("Saved. The next track in your queue will be reposted at this time.");
-                                    } else {
-                                          $.Zebra_Dialog("Saved. The track is now scheduled for reposting.");
-                                    }
                               })
                               .then(null, function(err) {
                                     $scope.processing = false;
@@ -326,7 +313,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   }
             } else if (event.type == 'traded') {
                   return {
-                        'background-color': '#FFC966'
+                        'background-color': '#ADD8E6'
                   }
             }
       }
@@ -355,4 +342,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             }
             return calendar;
       };
+      $scope.calendar = $scope.fillDateArrays(events);
+
 });

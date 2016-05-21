@@ -753,12 +753,12 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .rfr-chat {
   margin: 1% auto;
   width: 96%;
-  height: 37vh;
+  height: 220px;
   position: relative; }
 
 .rfr-chatbox {
   display: inline-block;
-  height: 100%;
+  height: 220px;
   background: white;
   border: 2px solid black;
   width: 75%;
@@ -780,7 +780,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 13%;
+  height: 30px;
   margin: auto;
   border: 2px solid #F5BBBC; }
 
@@ -1102,7 +1102,7 @@ h2, h3 {
   background: #652D91; }
 
 .slide-box {
-  margin: 0 10px 0 10px; }
+  margin: 10px 10px; }
 
 .slick-list, .slick-slider {
   margin: 0 4px; }

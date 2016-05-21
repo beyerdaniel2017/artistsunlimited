@@ -13,9 +13,13 @@
 				success: function(data) {
 					if (data.success) {
 						window.location.href = "/scheduler";
+					} else {
+						console.log(data);
 					}
 				},
-				error: function(error) {}
+				error: function(error) {
+					console.log(error);
+				}
 			});
 		});
 	});
