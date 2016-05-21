@@ -1081,6 +1081,9 @@ h2, h3 {
 
 .label-result-box {
   font-size: 1.6em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   margin: auto; }
 
 .btn-open-trade {
