@@ -76,7 +76,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }
 
       $scope.incrDay = function() {
-            if ($scope.dayIncr < 14) $scope.dayIncr++;
+            if ($scope.dayIncr < 21) $scope.dayIncr++;
       }
 
       $scope.decrDay = function() {
@@ -93,6 +93,12 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             });
             $scope.makeEventURL = undefined;
             $scope.makeEvent = calendarDay.events[hour];
+            if ($scope.makeEvent.type == 'traded') {
+                  $scope.showOverlay = false;
+                  $scope.makeEvent = undefined;
+                  $.Zebra_Dialog("Cannot manage a traded slot.");
+                  return;
+            }
             if ($scope.makeEvent.type == "empty") {
                   var makeDay = new Date(day);
                   makeDay.setHours(hour);
@@ -306,6 +312,24 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             var dayIndex = date.getDay();
             return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
       }
+
+      $scope.getStyle = function(event) {
+            if (event.type == 'empty') {
+                  return {}
+            } else if (event.type == 'track') {
+                  return {
+                        'background-color': '#67f967'
+                  }
+            } else if (event.type == 'queue') {
+                  return {
+                        'background-color': 'yellow'
+                  }
+            } else if (event.type == 'traded') {
+                  return {
+                        'background-color': '#FFC966'
+                  }
+            }
+      }
 });
 
 
@@ -313,7 +337,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 function fillDateArrays(events) {
       var calendar = [];
       var today = new Date();
-      for (var i = 0; i < 21; i++) {
+      for (var i = 0; i < 29; i++) {
             var calDay = {};
             calDay.day = new Date()
             calDay.day.setDate(today.getDate() + i);

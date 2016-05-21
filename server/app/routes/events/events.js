@@ -54,7 +54,8 @@ router.get('/forUser/:id', function(req, res, next) {
 
 router.put('/repostEvents', function(req, res, next) {
   RepostEvent.findByIdAndUpdate(req.body._id, req.body, {
-      new: true
+      new: true,
+      upsert: true
     }).exec()
     .then(function(event) {
       event.trackID = req.body.trackID;
