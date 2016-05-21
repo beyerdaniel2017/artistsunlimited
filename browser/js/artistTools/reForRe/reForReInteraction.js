@@ -31,9 +31,9 @@ app.config(function($stateProvider) {
               return;
             })
         }
-    },
-    onExit: function(socket) {
-      socket.disconnect();
+      },
+      onExit: function(socket) {
+        socket.disconnect();
       }
     })
 });
@@ -244,12 +244,9 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       $.Zebra_Dialog('Already accepted.');
       return;
     }
-    $scope.user.accepted = true;
-    if ($scope.trade.p1.user._id == SessionService.getUser()._id) {
-      $scope.trade.p1.accepted = true;
+    if ($scope.trade.p1.user._id == $scope.user._id) {
       var accString = $scope.trade.p2.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
     } else {
-      $scope.trade.p2.accepted = true;
       var accString = $scope.trade.p1.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
     }
     $.Zebra_Dialog(accString, {
@@ -257,6 +254,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       'buttons': [{
         caption: 'Accept',
         callback: function() {
+          $scope.user.accepted = true;
           if ($scope.trade.p1.user._id == SessionService.getUser()._id) {
             $scope.trade.p1.accepted = true;
           } else {
@@ -448,7 +446,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       return {}
     } else if (event.type == 'trade') {
       return {
-        'background-color': '#F5BBBC'
+        'background-color': '#ADD8E6'
       }
     } else if (event.type == 'track' || event.type == 'queue') {
       return {
