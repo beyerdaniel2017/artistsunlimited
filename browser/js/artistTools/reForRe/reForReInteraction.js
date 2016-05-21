@@ -8,7 +8,6 @@ app.config(function($stateProvider) {
         trade: function($http, $stateParams) {
           return $http.get('/api/trades/byID/' + $stateParams.tradeID)
             .then(function(res) {
-              console.log(res.data);
               return res.data;
             })
         },
@@ -66,7 +65,6 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.clickedSlot = function(day, dayOffset, hour, calendar, person, event) {
-    console.log(event);
     var p = SessionService.getUser()._id == $scope.trade.p1.user._id ? $scope.trade.p1 : $scope.trade.p2;
     if (event.type == 'traded' && event.owner == $scope.user._id) {
       $.Zebra_Dialog("Change it!");
@@ -247,6 +245,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     if (message.tradeID == $stateParams.tradeID) {
       $scope.msgHistory.push(message);
       $scope.message = message.message;
+      $scope.trade.messages.push(message);
     }
   });
 
