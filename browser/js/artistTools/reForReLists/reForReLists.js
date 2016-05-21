@@ -29,16 +29,33 @@ app.config(function($stateProvider) {
 					} else {
 						return [];
 					}
+			},
+			openTrades: function($http, SessionService) {
+				var user = SessionService.getUser();
+				if (user) {
+					var minFollower = ((user.soundcloud.followers && user.soundcloud.followers > 0) ? parseInt(user.soundcloud.followers/2) : 0);
+					var maxFollower = ((user.soundcloud.followers && user.soundcloud.followers > 0) ? parseInt(user.soundcloud.followers * 2) : 1000);
+					return $http.post('/api/users/bySCURL/', {
+						url: '',
+						minFollower: minFollower,
+						maxFollower: maxFollower
+					})
+					.then(function(res) {
+						return res.data;
+					})
+				} else {
+					return [];
 				}
 			}
-		});
+		}
+	})
 });
 
-app.controller("ReForReListsController", function($scope, currentTrades, $http, SessionService, $state) {
+app.controller("ReForReListsController", function($scope, currentTrades, openTrades, $http, SessionService, $state, $timeout) {
 	$scope.currentTrades = currentTrades;
 	$scope.currentTradesCopy = currentTrades;
 	$scope.otherUsers = [];
-	$scope.searchUser = [];
+	$scope.searchUser = openTrades;
 	$scope.searchURL = "";
 	$scope.minfollowers = 0;
 	$scope.maxfollowers = 100000000;
@@ -51,6 +68,7 @@ app.controller("ReForReListsController", function($scope, currentTrades, $http, 
 
 	$scope.sendSearch = function() {
 		$scope.processing = true;
+		$scope.searchUser = null;
 		$http.post('/api/users/bySCURL/', {
 				url: $scope.searchURL,
 				minFollower: $scope.minfollowers,
@@ -83,6 +101,26 @@ app.controller("ReForReListsController", function($scope, currentTrades, $http, 
 			}
 		});
 		$scope.currentTrades = cTrades;
+		$timeout(function() {
+			$(".open").slick('unslick'); 
+			$(".current").slick('unslick'); 
+			$(".current").slick({
+        dots: false,
+        infinite: true,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        arrows: true,
+        variableWidth: false
+      });
+			$(".open").slick({
+        dots: false,
+        infinite: true,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        arrows: true,
+        variableWidth: false
+      });
+	    },500);
 	}
 
 	$scope.openTrade = function(user) {
