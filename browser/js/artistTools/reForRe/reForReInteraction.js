@@ -8,7 +8,6 @@ app.config(function($stateProvider) {
         trade: function($http, $stateParams) {
           return $http.get('/api/trades/byID/' + $stateParams.tradeID)
             .then(function(res) {
-              console.log(res.data);
               return res.data;
             })
         },
@@ -302,6 +301,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     if (message.tradeID == $stateParams.tradeID) {
       $scope.msgHistory.push(message);
       $scope.message = message.message;
+      $scope.trade.messages.push(message);
     }
   });
 
