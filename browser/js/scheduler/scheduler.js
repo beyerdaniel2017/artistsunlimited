@@ -320,5 +320,4 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
     return calendar;
   }
   $scope.calendar = $scope.fillDateArrays(info.events);
-
 });
