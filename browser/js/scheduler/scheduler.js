@@ -21,7 +21,6 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   }
   $scope.submissions = info.submissions;
 
-  $scope.calendar = fillDateArrays(info.events);
   $scope.dayIncr = 0;
 
   $scope.back = function() {
@@ -62,6 +61,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
     });
     $scope.makeEventURL = undefined;
     $scope.makeEvent = calendarDay.events[hour];
+    console.log($scope.makeEvent);
     if ($scope.makeEvent == "-") {
       var makeDay = new Date(day);
       makeDay.setHours(hour);
@@ -72,8 +72,8 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
       };
       $scope.newEvent = true;
     } else {
-      $scope.makeEventURL = 'https://api.soundcloud.com/tracks/' + $scope.makeEvent.trackID;
-      SC.oEmbed('https://api.soundcloud.com/tracks/' + $scope.makeEvent.trackID, {
+      $scope.makeEventURL = $scope.makeEvent.trackURL;
+      SC.oEmbed($scope.makeEventURL, {
         element: document.getElementById('scPlayer'),
         auto_play: false,
         maxheight: 150
@@ -296,29 +296,29 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
     var dayIndex = date.getDay();
     return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
   }
-});
 
-
-
-function fillDateArrays(events) {
-  var calendar = [];
-  var today = new Date();
-  for (var i = 0; i < 21; i++) {
-    var calDay = {};
-    calDay.day = new Date()
-    calDay.day.setDate(today.getDate() + i);
-    var dayEvents = events.filter(function(ev) {
-      return (ev.day.toLocaleDateString() == calDay.day.toLocaleDateString());
-    });
-    var eventArray = [];
-    for (var j = 0; j < 24; j++) {
-      eventArray[j] = "-";
+  $scope.fillDateArrays = function(events) {
+    var calendar = [];
+    var today = new Date();
+    for (var i = 0; i < 21; i++) {
+      var calDay = {};
+      calDay.day = new Date()
+      calDay.day.setDate(today.getDate() + i);
+      var dayEvents = events.filter(function(ev) {
+        return (ev.day.toLocaleDateString() == calDay.day.toLocaleDateString());
+      });
+      var eventArray = [];
+      for (var j = 0; j < 24; j++) {
+        eventArray[j] = "-";
+      }
+      dayEvents.forEach(function(ev) {
+        eventArray[ev.day.getHours()] = ev;
+      });
+      calDay.events = eventArray;
+      calendar.push(calDay);
     }
-    dayEvents.forEach(function(ev) {
-      eventArray[ev.day.getHours()] = ev;
-    });
-    calDay.events = eventArray;
-    calendar.push(calDay);
+    return calendar;
   }
-  return calendar;
-}
+  $scope.calendar = $scope.fillDateArrays(info.events);
+
+});

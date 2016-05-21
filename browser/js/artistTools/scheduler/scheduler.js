@@ -57,7 +57,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }
       promptForEmail();
 
-      $scope.calendar = fillDateArrays(events);
+      $scope.calendar = $scope.fillDateArrays(events);
       $scope.dayIncr = 0;
 
       $scope.saveUser = function() {
@@ -330,31 +330,29 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   }
             }
       }
-});
 
-
-
-function fillDateArrays(events) {
-      var calendar = [];
-      var today = new Date();
-      for (var i = 0; i < 29; i++) {
-            var calDay = {};
-            calDay.day = new Date()
-            calDay.day.setDate(today.getDate() + i);
-            var dayEvents = events.filter(function(ev) {
-                  return (ev.day.toLocaleDateString() == calDay.day.toLocaleDateString());
-            });
-            var eventArray = [];
-            for (var j = 0; j < 24; j++) {
-                  eventArray[j] = {
-                        type: "empty"
-                  };
+      $scope.fillDateArrays = function(events) {
+            var calendar = [];
+            var today = new Date();
+            for (var i = 0; i < 29; i++) {
+                  var calDay = {};
+                  calDay.day = new Date()
+                  calDay.day.setDate(today.getDate() + i);
+                  var dayEvents = events.filter(function(ev) {
+                        return (ev.day.toLocaleDateString() == calDay.day.toLocaleDateString());
+                  });
+                  var eventArray = [];
+                  for (var j = 0; j < 24; j++) {
+                        eventArray[j] = {
+                              type: "empty"
+                        };
+                  }
+                  dayEvents.forEach(function(ev) {
+                        eventArray[ev.day.getHours()] = ev;
+                  });
+                  calDay.events = eventArray;
+                  calendar.push(calDay);
             }
-            dayEvents.forEach(function(ev) {
-                  eventArray[ev.day.getHours()] = ev;
-            });
-            calDay.events = eventArray;
-            calendar.push(calDay);
-      }
-      return calendar;
-};
+            return calendar;
+      };
+});
