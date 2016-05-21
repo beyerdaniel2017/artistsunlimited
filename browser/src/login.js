@@ -1,5 +1,4 @@
-
-(function(window, $){
+(function(window, $) {
 
 	'use strict';
 
@@ -7,17 +6,16 @@
 		$('#login-form').submit(function(event) {
 			event.preventDefault();
 			$.ajax({
-	  		url : '/api/login',
-	  		type : 'POST',
-	  		data : $('#login-form').serialize(),
-	  		cache : false,
-	  		success : function(data) {
-	  			if(data.success) {
-	  				window.location.href="/admin";
-	  			}
-	  		},
-	  	  error : function(error) {
-	  	  }
+				url: '/api/login',
+				type: 'POST',
+				data: $('#login-form').serialize(),
+				cache: false,
+				success: function(data) {
+					if (data.success) {
+						window.location.href = "/scheduler";
+					}
+				},
+				error: function(error) {}
 			});
 		});
 	});
