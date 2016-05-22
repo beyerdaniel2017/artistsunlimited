@@ -7,7 +7,7 @@
 <div style="background:white; padding: 10px 0;">
 	<div class="rfr-schedule-container" ng-init="getMessage()">
 		<div class="scheduler-small">
-			<div class="label-username bold" style="height: 6%"><a target="_blank" href="{{trade.p1.user.soundcloud.permalinkURL}}">{{trade.p1.user.soundcloud.username}}</a> - {{trade.p1.user.soundcloud.followers | number:0}} flwrs  <span style="color:#F5BBBC">( {{trade.p1.slots.length}} slots )</span> </div>
+			<div class="label-username bold" style="height: 6%"><a target="_blank" href="{{trade.p1.user.soundcloud.permalinkURL}}">{{trade.p1.user.soundcloud.username}}</a> - {{trade.p1.user.soundcloud.followers | number:0}} followers  <span style="color:#ADD8E6">( {{trade.p1.slots.length}} slots )</span> </div>
 			<div style="text-align:center; width:100%; height: 94%; margin: auto;">
 				<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
 					<button class="btn btn-default btn-scheduler" ng-click="decrp1()"><img style="width:60%; height:100%; margin-top:-20%; margin-right:-4px;" src="/assets/images/arrow-left.png"/></button>
@@ -28,7 +28,7 @@
 			</div>
 		</div>
 		<div class="scheduler-small" id="scheduler-right">
-			<div class="label-username bold" style="height: 6%"><a target="_blank" href="{{trade.p2.user.soundcloud.permalinkURL}}">{{trade.p2.user.soundcloud.username}}</a> - {{trade.p2.user.soundcloud.followers | number:0}} flwrs  <span style="color:#F5BBBC">( {{trade.p2.slots.length}} slots )</span></div>
+			<div class="label-username bold" style="height: 6%"><a target="_blank" href="{{trade.p2.user.soundcloud.permalinkURL}}">{{trade.p2.user.soundcloud.username}}</a> - {{trade.p2.user.soundcloud.followers | number:0}} followers  <span style="color:#ADD8E6">( {{trade.p2.slots.length}} slots )</span></div>
 			<div style="text-align:center; width:100%; height: 94%; margin: auto;">
 				<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
 					<button class="btn btn-default btn-scheduler" ng-click="decrp2()"><img style="width:60%; height:100%; margin-top:-20%; margin-right:-4px;" src="/assets/images/arrow-left.png"/></button>
@@ -75,7 +75,8 @@
 			</div>
 		</div>
 		<div class="trade-options">
-			<button class="btn btn-default btn-option" ng-style="user.accepted?{'background-color':'gray'}:{}" ng-click="accept()">Accept Trade</button>
+			<span style="text-align:center; margin:10px; margin-top:0px; width:100%; display:inline-block;" ng-if="user.accepted">You accepted this trade. Waiting for the other user to take action.</span>
+			<button ng-if="!user.accepted" class="btn btn-default btn-option" ng-style="user.accepted?{'background-color':'gray'}:{}" ng-click="accept()">Accept Trade</button>
 			<button class="btn btn-default btn-option" ui-sref="reForReLists">Exit</button>
 			<button class="btn btn-default btn-option" ng-click="email()">Email</button>
 		<!-- <select class="form-control select-rfr">
@@ -103,3 +104,5 @@
 		</div>
 	</div>
 </div>
+<!-- loader -->
+<ng-include src="'js/home/views/loader.html'"></ng-include><script type="text/javascript">

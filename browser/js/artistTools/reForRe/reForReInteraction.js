@@ -39,6 +39,7 @@ app.config(function($stateProvider) {
 });
 
 app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, p1Events, p2Events, trade, SessionService, socket, $stateParams) {
+  $scope.processing = false;
   socket.connect();
   $scope.trade = trade;
   $scope.user = SessionService.getUser();
@@ -148,6 +149,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
                 type: "empty"
               };
               calendar[dayOffset].events[hour] = calEvent;
+              $scope.processing = true;
               if (person == $scope.trade.p1) {
                 angular.forEach($scope.trade.p1.slots, function(slot, index) {
                   if (moment(slot.day).format('LLL') === moment(makeDay).format('LLL')) {
@@ -171,10 +173,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
               }
             });
             saveTrade.then(function(res) {
+                $scope.processing = false;
                 $scope.trade = res.data;
                 $scope.emitMessage("REMOVED SLOT from " + person.user.soundcloud.username + " for " + moment(makeDay).format('LLL'), 'alert');
               })
               .then(null, function(err) {
+                $scope.processing = false;
                 $.Zebra_Dialog('Error with request');
               })
           }
@@ -198,6 +202,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
                 userID: person.user.soundcloud.id
               };
               calendar[dayOffset].events[hour] = calEvent;
+              $scope.processing = true;
               if (person == $scope.trade.p1) {
                 $scope.trade.p1.slots.push(calEvent);
                 $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
@@ -213,10 +218,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
               }
             });
             saveTrade.then(function(res) {
+                $scope.processing = false;
                 $scope.trade = res.data;
                 $scope.emitMessage("ADDED SLOT to " + person.user.soundcloud.username + " for " + moment(makeDay).format('LLL'), 'alert');
               })
               .then(null, function(err) {
+                $scope.processing = false;
                 console.log(err);
                 $.Zebra_Dialog('Error with request');
               })
@@ -240,10 +247,6 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.accept = function() {
-    if ($scope.user.accepted) {
-      $.Zebra_Dialog('Already accepted.');
-      return;
-    }
     if ($scope.trade.p1.user._id == $scope.user._id) {
       var accString = $scope.trade.p2.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
     } else {
@@ -260,14 +263,16 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
           } else {
             $scope.trade.p2.accepted = true;
           }
+          $scope.processing = true;
           $http.put('/api/trades', $scope.trade)
             .then(function(res) {
-              $scope.trade = res.data;
               $scope.processing = false;
+              $scope.trade = res.data;
               $scope.emitMessage('---- ' + $scope.user.soundcloud.username + " accepted the trade ----", 'alert');
               if ($scope.trade.p1.accepted && $scope.trade.p2.accepted) $scope.completeTrade();
             })
             .then(null, function(err) {
+              $scope.processing = false;
               $.Zebra_Dialog('Error accepting');
             })
         }
@@ -290,6 +295,16 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
   }
 
+  $scope.refreshTrade = function() {
+    $http.get('/api/trades/byID/' + $stateParams.tradeID)
+      .then(function(res) {
+        $scope.trade = res.data;
+        var person = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1 : $scope.trade.p2;
+        $scope.user.accepted = person.accepted;
+        $scope.fillCalendar();
+      })
+  }
+
   socket.on('init', function(data) {
     $scope.name = data.name;
     $scope.users = data.users;
@@ -299,14 +314,16 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     if (message.tradeID == $stateParams.tradeID) {
       $scope.msgHistory.push(message);
       $scope.message = message.message;
-      $scope.trade.messages.push(message);
+      if (message.type == "alert") {
+        $scope.refreshTrade();
+      }
     }
   });
 
   socket.on('get:message', function(data) {
-    if (data[0] != '') {
-      if (data[0]._id == $stateParams.tradeID) {
-        $scope.msgHistory = data[0] ? data[0].messages : [];
+    if (data != '') {
+      if (data._id == $stateParams.tradeID) {
+        $scope.msgHistory = data ? data.messages : [];
       }
     }
   });
@@ -386,8 +403,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
 
     if (op1Length != $scope.trade.p1.slots.length || op2Length != $scope.trade.p2.slots.length) {
       $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
+      $scope.processing = true;
       $http.put('/api/trades', $scope.trade)
         .then(function(res) {
+          $scope.processing = false;
           $scope.trade = res.data;
           $scope.fillCalendar();
           $scope.emitMessage("OVERLAPPED SLOTS REMOVED: " + (op1Length - $scope.trade.p1.slots.length) + " from " + $scope.trade.p1.user.soundcloud.username + " and " + (op2Length - $scope.trade.p2.slots.length) + " from " + $scope.trade.p2.user.soundcloud.username, 'alert');
@@ -435,10 +454,15 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     })
     $scope.trade.p1.slots = [];
     $scope.trade.p2.slots = [];
-    $http.put('/api/trades', $scope.trade)
-      .then(function(res) {
-        window.location.reload();
-      })
+    $scope.processing = true;
+    setTimeout(function() {
+      $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
+      $http.put('/api/trades', $scope.trade)
+        .then(function(res) {
+          $scope.emitMessage("TRADE COMPLETED", "alert");
+          window.location.reload();
+        })
+    }, 2000)
   }
 
   $scope.getStyle = function(event) {

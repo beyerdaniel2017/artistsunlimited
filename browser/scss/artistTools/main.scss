@@ -177,13 +177,13 @@ $break-small-landscape: 774px;
 .rfr-chat {
 	margin: 1% auto;
 	width: 96%;
-	height: 37vh;
+	height: 220px;
 	position: relative;
 }
 
 .rfr-chatbox {
 	display: inline-block;
-	height: 100%;
+	height: 220px;
 	background: white;
 	border: 2px solid black;
 	width: 75%;
@@ -208,7 +208,7 @@ $break-small-landscape: 774px;
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	height: 13%;
+	height: 30px;
 	margin:auto;
 	border: 2px solid #F5BBBC;
 }
@@ -374,14 +374,14 @@ h2, h3 {
 }
 
 .notification-bubble {
-  right: -8px;
-  top: -10px;
-  position: absolute;
-  border-radius: 5px;
-  width: 10%;
-  padding-top: 2px;
-  background: #ff3300;
-  text-align: center;
+	right: -8px;
+	top: -10px;
+	position: absolute;
+	border-radius: 5px;
+	width: 10%;
+	padding-top: 2px;
+	background: #ff3300;
+	text-align: center;
 }
 
 .trades-container {
@@ -579,10 +579,10 @@ h2, h3 {
 
 .label-result-box {
 	font-size: 1.6em;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  margin: auto;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	margin: auto;
 }
 
 .btn-open-trade {
@@ -603,7 +603,7 @@ h2, h3 {
 }
 
 .slide-box{
-	margin:0 10px 0 10px;
+	margin:10px 10px;
 }
 
 .slick-list,.slick-slider{
@@ -612,13 +612,13 @@ h2, h3 {
 
 
 .artist-nav{
-  margin-bottom: 0px;border-bottom-right-radius: 0px;
-  border-bottom-left-radius: 0;
+	margin-bottom: 0px;border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0;
 }
 
 .artist-nav .navbar-nav > li > a{
- margin-top: 15px;
- padding: 10px 15px;
+	margin-top: 15px;
+	padding: 10px 15px;
 }
 
 
@@ -675,41 +675,41 @@ h2, h3 {
 	}
 
 }.slick-prev {
-  font-size: 0;
-  line-height: 0;
-  position: absolute;
-  top: 50%;
-  display: block;
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  -webkit-transform: translate(0, -50%);
-  -ms-transform: translate(0, -50%);
-  transform: translate(0, -50%);
-  cursor: pointer;
-  color: transparent;
-  border: none;
-  outline: none;
-  background: transparent;
+	font-size: 0;
+	line-height: 0;
+	position: absolute;
+	top: 50%;
+	display: block;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	-webkit-transform: translate(0, -50%);
+	-ms-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+	cursor: pointer;
+	color: transparent;
+	border: none;
+	outline: none;
+	background: transparent;
 }
 
 .slick-next {
-  font-size: 0;
-  line-height: 0;
-  position: absolute;
-  top: 50%;
-  display: block;
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  -webkit-transform: translate(0, -50%);
-  -ms-transform: translate(0, -50%);
-  transform: translate(0, -50%);
-  cursor: pointer;
-  color: transparent;
-  border: none;
-  outline: none;
-  background: transparent;
+	font-size: 0;
+	line-height: 0;
+	position: absolute;
+	top: 50%;
+	display: block;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	-webkit-transform: translate(0, -50%);
+	-ms-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+	cursor: pointer;
+	color: transparent;
+	border: none;
+	outline: none;
+	background: transparent;
 }
 
 /*Slick Slider--START*/
@@ -717,39 +717,39 @@ h2, h3 {
 /* Slider */
 .slick-loading .slick-list
 {
-  background: #fff url('./ajax-loader.gif') center center no-repeat;
+	background: #fff url('./ajax-loader.gif') center center no-repeat;
 }
 
 /* Icons */
 @font-face
 {
-  font-family: 'slick';
-  font-weight: normal;
-  font-style: normal;
+	font-family: 'slick';
+	font-weight: normal;
+	font-style: normal;
 
-  src: url('./fonts/slick.eot');
-  src: url('./fonts/slick.eot?#iefix') format('embedded-opentype'), url('./fonts/slick.woff') format('woff'), url('./fonts/slick.ttf') format('truetype'), url('./fonts/slick.svg#slick') format('svg');
+	src: url('./fonts/slick.eot');
+	src: url('./fonts/slick.eot?#iefix') format('embedded-opentype'), url('./fonts/slick.woff') format('woff'), url('./fonts/slick.ttf') format('truetype'), url('./fonts/slick.svg#slick') format('svg');
 }
 /* Arrows */
 .slick-prev,
 .slick-next
 {
-  font-size: 0;
-  line-height: 0;
+	font-size: 0;
+	line-height: 0;
 
-  position: absolute;
-  top: 50%;
+	position: absolute;
+	top: 50%;
 
-  display: block;
+	display: block;
 
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  -webkit-transform: translate(0, -50%);
-  -ms-transform: translate(0, -50%);
-  transform: translate(0, -50%);
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	-webkit-transform: translate(0, -50%);
+	-ms-transform: translate(0, -50%);
+	transform: translate(0, -50%);
 
-  cursor: pointer;
+	cursor: pointer;
 
     /*color: #F7DFAD;*/
     border: none;
@@ -761,166 +761,166 @@ h2, h3 {
   .slick-next:hover,
   .slick-next:focus
   {
-    color: #F5BBBC;
-    outline: none;
+  	color: #F5BBBC;
+  	outline: none;
 
-    background: transparent;
+  	background: transparent;
   }
   .slick-prev:hover:before,
   .slick-prev:focus:before,
   .slick-next:hover:before,
   .slick-next:focus:before
   {
-    opacity: 1;
+  	opacity: 1;
   }
   .slick-prev.slick-disabled:before,
   .slick-next.slick-disabled:before
   {
-    opacity: .25;
+  	opacity: .25;
   }
 
   .slick-prev:before,
   .slick-next:before
   {
-    font-family: 'slick';
-    font-size: 20px;
-    line-height: 1;
+  	font-family: 'slick';
+  	font-size: 20px;
+  	line-height: 1;
 
-    opacity: .75;
-    color: #F5BBBC;
+  	opacity: .75;
+  	color: #F5BBBC;
 
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
   }
 
   .marg-top {
-   margin-top : 20px;
- }
+  	margin-top : 20px;
+  }
 
- .slick-prev
- {
-  left: -15px !important;
-}
-[dir='rtl'] .slick-prev
-{
-  right: -25px;
-  left: auto;
-}
-.slick-prev:before
-{
-  content: '←';
-}
-[dir='rtl'] .slick-prev:before
-{
-  content: '→';
-}
+  .slick-prev
+  {
+  	left: -15px !important;
+  }
+  [dir='rtl'] .slick-prev
+  {
+  	right: -25px;
+  	left: auto;
+  }
+  .slick-prev:before
+  {
+  	content: '←';
+  }
+  [dir='rtl'] .slick-prev:before
+  {
+  	content: '→';
+  }
 
-.slick-next
-{
-  right: -15px !important;
-}
-[dir='rtl'] .slick-next
-{
-  right: auto;
-  left: -25px;
-}
-.slick-next:before
-{
-  content: '→';
-}
-[dir='rtl'] .slick-next:before
-{
-  content: '←';
-}
+  .slick-next
+  {
+  	right: -15px !important;
+  }
+  [dir='rtl'] .slick-next
+  {
+  	right: auto;
+  	left: -25px;
+  }
+  .slick-next:before
+  {
+  	content: '→';
+  }
+  [dir='rtl'] .slick-next:before
+  {
+  	content: '←';
+  }
 
 /* Dots */
 .slick-dotted.slick-slider
 {
-  margin-bottom: 30px;
+	margin-bottom: 30px;
 }
 
 .slick-dots
 {
-  position: absolute;
-  bottom: -25px;
+	position: absolute;
+	bottom: -25px;
 
-  display: block;
+	display: block;
 
-  width: 100%;
-  padding: 0;
-  margin: 0;
+	width: 100%;
+	padding: 0;
+	margin: 0;
 
-  list-style: none;
+	list-style: none;
 
-  text-align: center;
+	text-align: center;
 }
 .slick-dots li
 {
-  position: relative;
+	position: relative;
 
-  display: inline-block;
+	display: inline-block;
 
-  width: 20px;
-  height: 20px;
-  margin: 0 5px;
-  padding: 0;
+	width: 20px;
+	height: 20px;
+	margin: 0 5px;
+	padding: 0;
 
-  cursor: pointer;
+	cursor: pointer;
 }
 .slick-dots li button
 {
-  font-size: 0;
-  line-height: 0;
+	font-size: 0;
+	line-height: 0;
 
-  display: block;
+	display: block;
 
-  width: 20px;
-  height: 20px;
-  padding: 5px;
+	width: 20px;
+	height: 20px;
+	padding: 5px;
 
-  cursor: pointer;
+	cursor: pointer;
 
-  color: transparent;
-  border: 0;
-  outline: none;
-  background: transparent;
+	color: transparent;
+	border: 0;
+	outline: none;
+	background: transparent;
 }
 .slick-dots li button:hover,
 .slick-dots li button:focus
 {
-  outline: none;
+	outline: none;
 }
 .slick-dots li button:hover:before,
 .slick-dots li button:focus:before
 {
-  opacity: 1;
+	opacity: 1;
 }
 .slick-dots li button:before
 {
-  font-family: 'slick';
-  font-size: 6px;
-  line-height: 20px;
+	font-family: 'slick';
+	font-size: 6px;
+	line-height: 20px;
 
-  position: absolute;
-  top: 0;
-  left: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
 
-  width: 20px;
-  height: 20px;
+	width: 20px;
+	height: 20px;
 
-  content: '•';
-  text-align: center;
+	content: '•';
+	text-align: center;
 
-  opacity: .25;
-  color: black;
+	opacity: .25;
+	color: black;
 
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 .slick-dots li.slick-active button:before
 {
-  opacity: .75;
-  color: black;
+	opacity: .75;
+	color: black;
 }
 
 /*Slick Slider--END*/
