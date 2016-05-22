@@ -767,7 +767,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .convo-display {
   overflow-y: scroll;
   overflow-x: hidden;
-  height: 87%;
+  height: 190px;
   margin: 0;
   position: relative;
   padding: 15px 0 15px 0; }

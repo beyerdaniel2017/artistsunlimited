@@ -13,9 +13,9 @@ scWrapper.init({
   uri: scConfig.redirectURL
 });
 
-module.exports = doRepost;
+module.exports = doUnrepost;
 //executes every hour
-function doRepost() {
+function doUnrepost() {
   setTimeout(function() {
     doRepost();
   }, 1800000);
@@ -30,15 +30,15 @@ function doRepost() {
       users.forEach(function(user) {
         RepostEvent.findOne({
             userID: user.soundcloud.id,
-            completed: false,
-            day: {
+            completed: true,
+            unrepostDate: {
               $gt: lowerDate,
               $lt: upperDate
             }
           })
           .exec()
           .then(function(event) {
-            if (event) repostAndRemove(event, user);
+            if (event) unrepostEvent(event, user);
           })
           .then(null, function(err) {
             console.log(err);
@@ -50,29 +50,14 @@ function doRepost() {
     });
 }
 
-function repostAndRemove(event, user) {
-  if (event.type == 'queue') {
-    var id = user.queue.splice(0, 1)[0];
-    user.save();
-  } else {
-    var id = event.trackID;
-  }
-  if (id) {
-    scWrapper.setToken(user.soundcloud.token);
-    var reqObj = {
-      method: 'PUT',
-      path: '/e1/me/track_reposts/' + id,
-      qs: {
-        oauth_token: user.soundcloud.token
-      }
-    };
-    scWrapper.request(reqObj, function(err, data) {
-      if (err) {
-        sendEmail(user.soundcloud.username, user.email, "Artists Unlimited", "coayscue@artistsunlimited.co", "ERROR REPOSTING", "Error reposting: " + JSON.stringify(event) + "<br><br>The issue is likely that your access token has expired. Simply log back into <a href='https://artistsunlimited.co/login'>Artist Tools</a> to fix this.");
-      } else {
-        event.completed = true;
-        event.save();
-      }
-    });
-  }
+function unrepostEvent(event, user) {
+  scWrapper.setToken(user.soundcloud.token);
+  var reqObj = {
+    method: 'DELETE',
+    path: '/e1/me/track_reposts/' + event.trackID,
+    qs: {
+      oauth_token: user.soundcloud.token
+    }
+  };
+  scWrapper.request(reqObj, function(err, data) {});
 }

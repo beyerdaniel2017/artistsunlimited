@@ -79,6 +79,9 @@
 			<button ng-if="!user.accepted" class="btn btn-default btn-option" ng-style="user.accepted?{'background-color':'gray'}:{}" ng-click="accept()">Accept Trade</button>
 			<button class="btn btn-default btn-option" ui-sref="reForReLists">Exit</button>
 			<button class="btn btn-default btn-option" ng-click="email()">Email</button>
+			<div style="text-align:center; margin:10px; margin-top:0px; width:100%; display:inline-block;">
+				<input type="checkbox" ng-model="trade.unrepost" ng-change="toggleUnrepost()">Unrepost after 24h
+			</div>
 		<!-- <select class="form-control select-rfr">
 			<option>--Select Option--</option>
 			<option value="oneTime">One Time</option>
@@ -86,7 +89,6 @@
 		</select> -->
 	</div>
 </div>
-
 <!-- overlay -->
 <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center; z-index: 10000" ng-show="showOverlay">
 	<div class="label-scheduler label-smaller" style="width: 500px; height:500px; background-color: white; margin: 100px auto; padding: 50px 0; max-width:95%">
