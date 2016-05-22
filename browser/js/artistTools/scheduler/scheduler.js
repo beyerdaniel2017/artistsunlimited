@@ -313,7 +313,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   }
             } else if (event.type == 'traded') {
                   return {
-                        'background-color': '#ADD8E6'
+                        'background-color': '#FFC966'
                   }
             }
       }

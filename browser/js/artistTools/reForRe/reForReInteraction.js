@@ -316,6 +316,9 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       $scope.message = message.message;
       if (message.type == "alert") {
         $scope.refreshTrade();
+        if (message.text == "TRADE COMPLETED") {
+          window.location.reload();
+        }
       }
     }
   });
@@ -327,6 +330,15 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       }
     }
   });
+
+  $scope.toggleUnrepost = function() {
+    console.log('here');
+    $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
+    $http.put('/api/trades', $scope.trade)
+      .then(function(res) {
+        $scope.emitMessage($scope.user.soundcloud.username + " toggled unrepost", "alert");
+      })
+  }
 
   $scope.emitMessage = function(message, type) {
     if ($scope.trade.p1.user._id == $scope.user._id) {
@@ -431,15 +443,27 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
   $scope.updateAlerts();
 
+  $scope.calcUnrepostDate = function(slot) {
+    slot.day = new Date(slot.day);
+    if ($scope.trade.unrepost) {
+      var day = new Date();
+      var randHour = Math.floor((Math.random() * 12)) + 24;
+      day.setTime(slot.day.getTime() + randHour * 60 * 60 * 1000);
+      return day;
+    } else {
+      return new Date(0);
+    }
+  }
 
   $scope.completeTrade = function() {
     $scope.processing = true;
-    angular.forEach($scope.trade.p1.slots, function(slot) {
+    $scope.trade.p1.slots.forEach(function(slot) {
       var event = {
         type: 'traded',
         owner: $scope.trade.p2.user._id,
         userID: slot.userID,
-        day: slot.day
+        day: slot.day,
+        unrepostDate: $scope.calcUnrepostDate(slot)
       }
       $http.post('/api/events/repostEvents', event);
     })
@@ -448,15 +472,16 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         type: 'traded',
         owner: $scope.trade.p1.user._id,
         userID: slot.userID,
-        day: slot.day
+        day: slot.day,
+        unrepostDate: $scope.calcUnrepostDate(slot)
       }
       $http.post('/api/events/repostEvents', event);
     })
-    $scope.trade.p1.slots = [];
-    $scope.trade.p2.slots = [];
     $scope.processing = true;
     setTimeout(function() {
       $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
+      $scope.trade.p1.slots = [];
+      $scope.trade.p2.slots = [];
       $http.put('/api/trades', $scope.trade)
         .then(function(res) {
           $scope.emitMessage("TRADE COMPLETED", "alert");

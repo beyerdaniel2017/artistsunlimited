@@ -31,6 +31,10 @@ var schema = new mongoose.Schema({
       default: false
     }
   },
+  unrepost: {
+    type: Boolean,
+    default: true
+  }
 });
 
 mongoose.model('Trade', schema);
