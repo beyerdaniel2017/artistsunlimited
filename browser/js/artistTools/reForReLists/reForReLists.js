@@ -123,7 +123,7 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
         arrows: true,
         variableWidth: false
       });
-	    },500);
+    },1000);
 	}
 
 	$scope.openTrade = function(user) {
