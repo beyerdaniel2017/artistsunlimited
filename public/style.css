@@ -123,6 +123,10 @@
     transform: rotate(360deg); } }
 
 /******* Preloader Css End ********/
+@font-face {
+  font-family: 'TypoRoundFont';
+  src: url("/Typo_Round_Regular_Demo.otf"); }
+
 body {
   background: url(assets/images/fade-background.png) no-repeat;
   -webkit-background-size: cover;
@@ -133,7 +137,7 @@ body {
   color: #686868;
   padding-top: 90px;
   background-attachment: fixed;
-  font-family: Helvetica, Sans-Serif;
+  font-family: 'TypoRoundFont', Sans-Serif;
   background-color: #F7EAAD; }
 
 #main {
@@ -192,9 +196,10 @@ padding: 10px 45px;
   margin-top: 10px; }
 
 .form-control {
-  border-radius: 0px;
+  border-radius: 8px;
   border-color: #F5D3B5;
   outline: none;
+  -webkit-border-radius: 8px;
   -webkit-box-shadow: none !important;
   -moz-box-shadow: none !important;
   box-shadow: none !important; }
@@ -237,7 +242,8 @@ a:hover, a:focus {
 .content-area {
   height: auto;
   padding: 5% 6%;
-  padding-top: 1%; }
+  padding-top: 1%;
+  border-radius: 8px; }
 
 .internal-content {
   margin: 10px 0 0 0;
@@ -246,7 +252,7 @@ a:hover, a:focus {
 .btn-enter {
   background: #F5BBBC;
   border: transparent;
-  border-radius: 0px;
+  border-radius: 8px;
   padding: 14px 50px;
   color: #fff;
   font-size: 12px;
@@ -257,7 +263,7 @@ a:hover, a:focus {
 .btn-start {
   background: #fff;
   border: transparent;
-  border-radius: 0px;
+  border-radius: 8px;
   padding: 14px 50px;
   color: #686868;
   font-size: 12px;
@@ -269,7 +275,7 @@ a:hover, a:focus {
   color: #FFF;
   background-color: #F50;
   border: 0px none;
-  border-radius: 0px;
+  border-radius: 8px;
   text-align: left;
   padding-left: 65px;
   font-size: 14px; }
@@ -617,10 +623,15 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   width: 4.5%;
   height: 100%; }
 
+.btn-scheduler > img {
+  width: 90%;
+  height: 100%;
+  margin-top: -20%; }
+
 .btn-small {
   background: #F5BBBC;
   border: 2px solid white;
-  border-radius: 0px;
+  border-radius: 8px;
   padding: 6px 14px;
   color: #fff;
   font-size: 12px;
@@ -634,19 +645,26 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .btn-queue {
   background: #F5BBBC;
   border: 2px solid white;
-  border-radius: 0px;
+  border-radius: 8px;
   text-align: center;
   padding: 3px;
   color: #fff;
   font-size: 1.8em;
   text-transform: uppercase;
   letter-spacing: 3px;
-  width: 100%;
+  width: 70px;
   height: 45px;
   margin: 3px;
   padding: 4px;
   line-height: 45px;
   vertical-align: middle; }
+
+.btn-queue > img {
+  width: 90%;
+  height: 90%;
+  margin: auto;
+  margin-top: -15px;
+  vertical-align: center; }
 
 .row-scheduler {
   width: 100%;
@@ -761,13 +779,16 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   height: 220px;
   background: white;
   border: 2px solid black;
+  border-radius: 8px;
+  padding: 4px;
   width: 75%;
-  position: relative; }
+  position: relative;
+  overflow: hidden; }
 
 .convo-display {
   overflow-y: scroll;
   overflow-x: hidden;
-  height: 190px;
+  height: 178px;
   margin: 0;
   position: relative;
   padding: 15px 0 15px 0; }
@@ -782,18 +803,19 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   width: 100%;
   height: 30px;
   margin: auto;
-  border: 2px solid #F5BBBC; }
+  border: 2px solid #F5BBBC;
+  border-width: 2px 0 0 0; }
 
 .btn-chat-send {
   background: #F5BBBC;
   border-color: transparent;
-  border-radius: 0px;
+  border-radius: 0;
   text-align: center;
   padding: 3px;
   color: #fff;
   font-size: 1em;
   text-transform: uppercase;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
   height: 100%;
   display: inline-block;
   position: absolute;
@@ -814,6 +836,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .msg-box {
   padding: 2px 6px;
   color: black;
+  border-radius: 6px;
   width: auto;
   display: inline-block;
   max-width: 95%;
@@ -837,7 +860,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .btn-option {
   background: #F5BBBC;
   border-color: transparent;
-  border-radius: 0px;
+  border-radius: 8px;
   text-align: center;
   padding: 3px;
   color: #fff;
@@ -940,13 +963,14 @@ h2, h3 {
   display: inline-block;
   text-align: center;
   position: relative;
-  padding: 5px; }
+  padding: 5px;
+  border-radius: 8px; }
 
 .btn-manage-trade {
   color: #652D91;
   margin: auto;
   width: 95%;
-  border-radius: 0px;
+  border-radius: 8px;
   border-width: 0px;
   border-color: transparent;
   background: white;
@@ -969,27 +993,6 @@ h2, h3 {
   font-size: 1.8em;
   margin: 0 auto;
   display: box; }
-
-.btn-trades-list {
-  height: 100%;
-  width: 50px;
-  margin: 0;
-  position: absolute;
-  top: 0;
-  background: white;
-  border-color: transparent;
-  border-radius: 0px;
-  border-width: 0px; }
-
-.btn-trades-list > img {
-  margin: auto;
-  width: 90%; }
-
-#trades-list-back {
-  left: 0; }
-
-#trades-list-next {
-  right: 0; }
 
 #search-container {
   width: 100%;
@@ -1022,7 +1025,7 @@ h2, h3 {
 #btn-search {
   background: #F5BBBC;
   border-color: transparent;
-  border-radius: 0px;
+  border-radius: 8px;
   padding: 6px 14px;
   color: #fff;
   font-size: 12px;
@@ -1077,7 +1080,8 @@ h2, h3 {
   display: inline-block;
   text-align: center;
   position: relative;
-  padding: 5px; }
+  padding: 5px;
+  border-radius: 8px; }
 
 .label-result-box {
   font-size: 1.6em;
