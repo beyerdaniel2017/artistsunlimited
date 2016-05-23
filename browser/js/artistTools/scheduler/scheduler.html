@@ -51,11 +51,11 @@
       <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showOverlay">
         <div class="label-scheduler label-smaller" style="width: 500px; height:500px; background-color: white; margin: 250px auto; padding: 50px 0;">
           <span>{{makeEvent.day.toLocaleDateString()}}     {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
-          <input type="checkbox" ng-model="makeEvent.type" ng-true-value="'queue'" ng-false-value="'track'" ng-change="changeQueueSlot()"/><span> Queue Slot</span><br><br>
-          <input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()"/><span> Unrepost after 24h</span><br><br>
           <div ng-hide="(makeEvent.type == 'queue')">
-            <span >URL: </span><input type="text" ng-model="makeEventURL" ng-change="changeURL()"/><br><br>
+            <span >URL: </span><input type="text" ng-model="makeEventURL" ng-change="changeURL()"/><br>
           </div>
+          <input type="checkbox" ng-model="makeEvent.type" ng-true-value="'queue'" ng-false-value="'track'" ng-change="changeQueueSlot()"/><span> Queue Slot</span><br>
+          <input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()"/><span> Unrepost after 24h</span><br><br>
           <div id='scPlayer' ng-show="makeEvent.trackID"></div>
           <br>
           <div>
