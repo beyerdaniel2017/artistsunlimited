@@ -1,16 +1,16 @@
 <ng-include src="'js/home/views/navigation.html'"></ng-include>
 <!-- Content Start  -->
 <div class="container" ng-cloak>
-  <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-  <div class="content-area bg-white">
-    <hr>
-    <h2>Search</h2>
-    <div id="search-inputs">
-     <div id="search-left">
-       URL: 
-       <input id="input-username" class="form-control" type="text" name="searchUsername" ng-model="searchURL" placeholder="Artist Soundcloud URL"/>
-     </div>
-     <div id="search-right">
+	<ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
+	<div class="content-area bg-white">
+		<hr>
+		<h3>Search</h3>
+		<div id="search-inputs">
+			<div id="search-left">
+				URL: 
+				<input id="input-username" class="form-control" type="text" name="searchUsername" ng-model="searchURL" placeholder="Artist Soundcloud URL"/>
+			</div>
+			<div id="search-right">
 				<!--<div id="label-optional">
 					<h3>Optional</h3>
 				</div>-->
@@ -23,50 +23,50 @@
 			</div>
 		</div>
 		<hr>
-		<h2>Current Trades</h2>
-    <section class="current">
-     <div ng-repeat="trade in currentTrades" class="trade-box slide-box">
-       <div class="notification-bubble" ng-show="trade.user.alert == 'change'">!</div>
-       <div class="label-result-box" title="{{trade.other.user.name}}">{{trade.other.user.name.length < 17 ? trade.other.user.name : trade.other.user.name.substring(0,17)}}</div>
-       <div class="label-freq" ng-if="trade.other.accepted&&trade.user.accepted">Traded</div>
-       <div class="label-freq" ng-if="!(trade.other.accepted&&trade.user.accepted)">{{trade.other.slots.length}}:{{trade.user.slots.length}}</div>
-       <button class="btn-manage-trade bold" ui-sref="reForReInteraction({
-       tradeID: trade._id})">Manage</button>
-     </div>
-   </section>
-   <hr class="marg-top">
-   <h2>Open a Trade</h2>
-   <section class="open">
-     <div ng-repeat="user in searchUser" class="user-box slide-box">
-      <div class="label-result-box" title="{{user.name}}">{{user.name.length < 17 ? user.name : user.name.substring(0,17)}}</div>
-      <div class="label-result-box">{{user.soundcloud.followers | number:0}} followers</div>
-      <button class="btn-open-trade bold" ng-click="openTrade(user)">Open Trade</button>
-    </div>
-  </section>
-</div>
+		<h3>Current Trades</h3>
+		<section class="current">
+			<div ng-repeat="trade in currentTrades" class="trade-box slide-box">
+				<div class="notification-bubble" ng-show="trade.user.alert == 'change'">!</div>
+				<div class="label-result-box" title="{{trade.other.user.name}}">{{trade.other.user.name.length < 17 ? trade.other.user.name : trade.other.user.name.substring(0,17)}}</div>
+				<div class="label-freq" ng-if="trade.other.accepted&&trade.user.accepted">Traded</div>
+				<div class="label-freq" ng-if="!(trade.other.accepted&&trade.user.accepted)">{{trade.other.slots.length}}:{{trade.user.slots.length}}</div>
+				<button class="btn-manage-trade bold" ui-sref="reForReInteraction({
+				tradeID: trade._id})">Manage</button>
+			</div>
+		</section>
+		<hr class="marg-top">
+		<h3>Open a Trade</h3>
+		<section class="open">
+			<div ng-repeat="user in searchUser" class="user-box slide-box">
+				<div class="label-result-box" title="{{user.name}}">{{user.name.length < 17 ? user.name : user.name.substring(0,17)}}</div>
+				<div class="label-result-box">{{user.soundcloud.followers | number:0}} followers</div>
+				<button class="btn-open-trade bold" ng-click="openTrade(user)">Open Trade</button>
+			</div>
+		</section>
+	</div>
 </div>
 <ng-include src="'js/home/views/loader.html'"></ng-include><script type="text/javascript">
 $(document).ready(function() {
-  setTimeout(function() {
-    $(".current").slick({
-      dots: false,
-      infinite: true,
-      slidesToShow: 4,
-      slidesToScroll: 1,
-      arrows: true,
-      variableWidth: false
-    });
-  }, 0);
+	setTimeout(function() {
+		$(".current").slick({
+			dots: false,
+			infinite: true,
+			slidesToShow: 4,
+			slidesToScroll: 1,
+			arrows: true,
+			variableWidth: false
+		});
+	}, 0);
 
-  setTimeout(function() {
-    $(".open").slick({
-      dots: false,
-      infinite: true,
-      slidesToShow: 4,
-      slidesToScroll: 1,
-      arrows: true,
-      variableWidth: false
-    });
-  }, 200);
+	setTimeout(function() {
+		$(".open").slick({
+			dots: false,
+			infinite: true,
+			slidesToShow: 4,
+			slidesToScroll: 1,
+			arrows: true,
+			variableWidth: false
+		});
+	}, 200);
 });
 </script>
