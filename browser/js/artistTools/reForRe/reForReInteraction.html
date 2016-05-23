@@ -80,7 +80,7 @@
 			<button class="btn btn-default btn-option" ui-sref="reForReLists">Exit</button>
 			<button class="btn btn-default btn-option" ng-click="email()">Email</button>
 			<div style="text-align:center; margin:10px; margin-top:0px; width:100%; display:inline-block;">
-				<input type="checkbox" ng-model="trade.unrepost" ng-change="toggleUnrepost()">Unrepost after 24h
+				<input type="checkbox" ng-model="trade.unrepost" ng-change="toggleUnrepost()"> Unrepost in 24h
 			</div>
 		<!-- <select class="form-control select-rfr">
 			<option>--Select Option--</option>
@@ -90,7 +90,7 @@
 	</div>
 </div>
 <!-- overlay -->
-<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center; z-index: 10000" ng-show="showOverlay">
+<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showOverlay">
 	<div class="label-scheduler label-smaller" style="width: 500px; height:500px; background-color: white; margin: 100px auto; padding: 50px 0; max-width:95%">
 		<span>{{makeEvent.day.toLocaleDateString()}}     {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
 		<div>

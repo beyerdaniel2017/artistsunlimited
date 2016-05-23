@@ -17,7 +17,7 @@ module.exports = doUnrepost;
 //executes every hour
 function doUnrepost() {
   setTimeout(function() {
-    doRepost();
+    doUnrepost();
   }, 1800000);
 
   var lowerDate = new Date();
