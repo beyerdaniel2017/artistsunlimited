@@ -70,11 +70,17 @@ router.post('/bySCURL', function(req, res, next) {
 });
 
 router.post('/syncSCEmails', function(req, res, next) {
+  var sCount = 0;
+  var page = 0;
+  var lCount = 10000;
+  var processEmails = function(skipCount, limitCount){
   SCEmails.find({})
-    .limit(400)
+    .skip(skipCount)
+    .limit(limitCount)
     .exec()
     .then(function(scemails) {
-      scemails.forEach(function(sce) {
+      if(scemails.length > 0){
+        scemails.forEach(function(sce, index) {
         User.update({
           'soundcloud.id': sce.soundcloudID
         }, {
@@ -89,12 +95,16 @@ router.post('/syncSCEmails', function(req, res, next) {
         }, {
           upsert: true
         }, function(err, user) {
-          if (err) {
-            console.log('err', err);
-          } else {
-            console.log('user updated successfully');
+              if(index == (scemails.length - 1)){
+                page++;
+                sCount = (page*lCount);
+                console.log(page + "===" + sCount + "===" + lCount)
+                processEmails(sCount, lCount)
           }
         });
       });
+      }
     });
+  } 
+  processEmails(sCount, lCount);     
 });
