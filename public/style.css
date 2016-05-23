@@ -1099,7 +1099,8 @@ h2, h3 {
   border-color: transparent;
   background: white;
   vertical-align: bottom;
-  font-size: 1.2em; }
+  font-size: 1.2em;
+  border-radius: 8px; }
 
 .btn-open-trade:hover {
   color: white;
