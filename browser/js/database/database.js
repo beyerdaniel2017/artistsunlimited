@@ -26,7 +26,10 @@ app.directive('notificationBar', ['socket', function(socket) {
   };
 }]);
 
-app.controller('DatabaseController', function($rootScope, $state, $scope, $http, AuthService, socket) {
+app.controller('DatabaseController', function($rootScope, $state, $scope, $http, AuthService, SessionService, socket) {
+  if (!SessionService.getUser()) {
+    $state.go('admin');
+  }
   $scope.addUser = {};
   $scope.query = {};
   $scope.trdUsrQuery = {};
@@ -93,6 +96,7 @@ app.controller('DatabaseController', function($rootScope, $state, $scope, $http,
 
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
+      SessionService.deleteUser();
       window.location.href = '/admin';
     }).catch(function(err) {
       $scope.processing = false;
