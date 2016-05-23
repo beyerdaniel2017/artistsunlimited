@@ -19,6 +19,9 @@ app.config(function($stateProvider) {
 });
 
 app.controller('ATSchedulerController', function($rootScope, $state, $scope, $http, AuthService, $window, events, SessionService) {
+  if (!SessionService.getUser()) {
+    $state.go('login');
+  }
       $scope.user = SessionService.getUser();
       $scope.makeEventURL = "";
       $scope.showOverlay = false;

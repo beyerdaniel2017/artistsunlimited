@@ -1,14 +1,15 @@
 app.config(function($stateProvider) {
   $stateProvider.state('scheduler', {
-    url: '/scheduler',
+    url: '/admin/scheduler',
     templateUrl: 'js/scheduler/scheduler.html',
     controller: 'SchedulerController'
   });
 });
 
-
-app.controller('SchedulerController', function($rootScope, $state, $scope, $http, AuthService, $window) {
-
+app.controller('SchedulerController', function($rootScope, $state, $scope, $http, AuthService, SessionService, $window) {
+  if (!SessionService.getUser()) {
+    $state.go('admin');
+  }
   $scope.makeEventURL = "";
   $scope.showOverlay = false;
   var info = $rootScope.schedulerInfo;
@@ -18,6 +19,15 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   $scope.channel = info.channel;
   if (!$scope.channel) {
     $state.go('admin');
+  }
+
+  $scope.logout = function() {
+    $http.get('/api/logout').then(function() {
+      SessionService.deleteUser();
+      window.location.href = '/admin';
+    }).catch(function(err) {
+      $scope.processing = false;
+    });
   }
   $scope.submissions = info.submissions;
 

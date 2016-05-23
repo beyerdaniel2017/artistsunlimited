@@ -52,6 +52,9 @@ app.config(function($stateProvider) {
 });
 
 app.controller("ReForReListsController", function($scope, currentTrades, openTrades, $http, SessionService, $state, $timeout) {
+	if (!SessionService.getUser()) {
+      $state.go('login');
+    }
 	$scope.currentTrades = currentTrades;
 	$scope.currentTradesCopy = currentTrades;
 	$scope.otherUsers = [];

@@ -39,6 +39,9 @@ app.config(function($stateProvider) {
 });
 
 app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, p1Events, p2Events, trade, SessionService, socket, $stateParams) {
+  if (!SessionService.getUser()) {
+    $state.go('login');
+  }
   $scope.processing = false;
   socket.connect();
   $scope.trade = trade;

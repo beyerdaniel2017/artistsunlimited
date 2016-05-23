@@ -34,6 +34,9 @@ app.controller('AdminDLGateController', ['$rootScope',
   'SessionService',
   'AdminDLGateService',
   function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, SessionService, AdminDLGateService) {
+    if (!SessionService.getUser()) {
+      $state.go('admin');
+    }
     /* Init boolean variables for show/hide and other functionalities */
     $scope.processing = false;
     $scope.isTrackAvailable = false;
@@ -358,7 +361,7 @@ app.controller('AdminDLGateController', ['$rootScope',
     $scope.logout = function() {
       $http.post('/api/logout').then(function() {
         SessionService.deleteUser();
-        $state.go('home');
+        $state.go('admin');
       });
     };
 
