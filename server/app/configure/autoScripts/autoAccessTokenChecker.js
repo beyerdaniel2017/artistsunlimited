@@ -15,7 +15,7 @@ module.exports = checkTokens;
 function checkTokens() {
   setTimeout(function() {
     checkTokens()
-  }, 7200000);
+  }, 3600000);
 
   User.find({}).exec()
     .then(function(users) {

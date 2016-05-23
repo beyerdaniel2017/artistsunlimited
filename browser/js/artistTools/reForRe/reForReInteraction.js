@@ -92,21 +92,59 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.backEvent = function() {
-    $scope.makeEvent = null;
+    $scope.makeEvent = undefined;
     $scope.showOverlay = false;
   }
 
-  $scope.saveEvent = function() {
-    $scope.processing = true;
-    $http.put('/api/events/repostEvents', $scope.makeEvent)
+  $scope.findUnrepostOverlap = function() {
+    var events = ($scope.user._id == $scope.trade.p1._id) ? p1Events : p2Events;
+    var blockEvents = events.filter(function(event) {
+      event.day = new Date(event.day);
+      event.unrepostDate = new Date(event.unrepostDate);
+      return ($scope.makeEvent.trackID == event.trackID && event.unrepostDate.getTime() > $scope.makeEvent.day.getTime() - 24 * 3600000 && event.day.getTime() < $scope.makeEvent.unrepostDate.getTime() + 24 * 3600000);
+    })
+    return blockEvents.length > 0;
+  }
+
+
+  $scope.refreshCalendar = function() {
+    return $http.get('/api/events/forUser/' + $scope.trade.p1.user.soundcloud.id)
       .then(function(res) {
-        $scope.makeEvent = res.data;
+        p1Events = res.data;
+        return $http.get('/api/events/forUser/' + $scope.trade.p2.user.soundcloud.id)
+      })
+      .then(function(res) {
+        p2Events = res.data;
+        return $http.get('/api/trades/byID/' + $stateParams.tradeID)
+      })
+      .then(function(res) {
+        $scope.trade = res.data;
+        var person = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1 : $scope.trade.p2;
+        $scope.user.accepted = person.accepted;
+        $scope.fillCalendar();
         $scope.processing = false;
-        $scope.showOverlay = false;
       })
-      .then(null, function(err) {
-        $.Zebra_Dialog('Error saving');
-      })
+  }
+
+  $scope.saveEvent = function() {
+    console.log($scope.makeEvent);
+    if (!$scope.findUnrepostOverlap()) {
+      $scope.processing = true;
+      console.log(1);
+      $http.put('/api/events/repostEvents', $scope.makeEvent)
+        .then(function(res) {
+          return $scope.refreshCalendar();
+        })
+        .then(function(res) {
+          $scope.showOverlay = false;
+        })
+        .then(null, function(err) {
+          $scope.processing = false;
+          $.Zebra_Dialog('Error saving');
+        })
+    } else {
+      $.Zebra_Dialog('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
+    }
   }
 
   $scope.emailSlot = function() {
@@ -115,11 +153,13 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.clickedSlot = function(day, dayOffset, hour, calendar, person, event) {
-    var p = SessionService.getUser()._id == $scope.trade.p1.user._id ? $scope.trade.p1 : $scope.trade.p2;
+    var p = $scope.user._id == $scope.trade.p1.user._id ? $scope.trade.p1 : $scope.trade.p2;
     if (event.type == 'traded' && event.owner == $scope.user._id) {
       $scope.makeEventAccount = person.user.soundcloud;
       $scope.showOverlay = true;
-      $scope.makeEvent = event;
+      $scope.makeEvent = JSON.parse(JSON.stringify(event));
+      $scope.makeEvent.day = new Date($scope.makeEvent.day);
+      $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
       $scope.makeEventURL = $scope.makeEvent.trackURL;
       SC.oEmbed($scope.makeEvent.trackURL, {
         element: document.getElementById('scPlayer'),
@@ -258,7 +298,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         caption: 'Accept',
         callback: function() {
           $scope.user.accepted = true;
-          if ($scope.trade.p1.user._id == SessionService.getUser()._id) {
+          if ($scope.trade.p1.user._id == $scope.user._id) {
             $scope.trade.p1.accepted = true;
           } else {
             $scope.trade.p2.accepted = true;
@@ -295,16 +335,6 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
   }
 
-  $scope.refreshTrade = function() {
-    $http.get('/api/trades/byID/' + $stateParams.tradeID)
-      .then(function(res) {
-        $scope.trade = res.data;
-        var person = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1 : $scope.trade.p2;
-        $scope.user.accepted = person.accepted;
-        $scope.fillCalendar();
-      })
-  }
-
   socket.on('init', function(data) {
     $scope.name = data.name;
     $scope.users = data.users;
@@ -315,10 +345,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       $scope.msgHistory.push(message);
       $scope.message = message.message;
       if (message.type == "alert") {
-        $scope.refreshTrade();
-        if (message.text == "TRADE COMPLETED") {
-          window.location.reload();
-        }
+        $scope.refreshCalendar();
       }
     }
   });
@@ -447,8 +474,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     slot.day = new Date(slot.day);
     if ($scope.trade.unrepost) {
       var day = new Date();
-      var randHour = Math.floor((Math.random() * 12)) + 24;
-      day.setTime(slot.day.getTime() + randHour * 60 * 60 * 1000);
+      day.setTime(slot.day.getTime() + 24 * 60 * 60 * 1000);
       return day;
     } else {
       return new Date(0);
@@ -485,7 +511,6 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       $http.put('/api/trades', $scope.trade)
         .then(function(res) {
           $scope.emitMessage("TRADE COMPLETED", "alert");
-          window.location.reload();
         })
     }, 2000)
   }
@@ -574,7 +599,7 @@ app.directive('timeSlot', function(moment) {
     var minutes = date.getMinutes();
     var ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
+    hours = hours ? hours : 12;
     minutes = minutes < 10 ? '0' + minutes : minutes;
     var strTime = hours + ':' + minutes + ' ' + ampm;
     return strTime;

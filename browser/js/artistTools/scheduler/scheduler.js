@@ -90,7 +90,9 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   return calD.day.toLocaleDateString() == day.toLocaleDateString();
             });
             $scope.makeEventURL = undefined;
-            $scope.makeEvent = calendarDay.events[hour];
+            $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
+            $scope.makeEvent.day = new Date($scope.makeEvent.day);
+            $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
             if ($scope.makeEvent.type == 'traded') {
                   $scope.showOverlay = false;
                   $scope.makeEvent = undefined;
@@ -107,7 +109,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   };
                   $scope.newEvent = true;
             } else {
-                  $scope.makeEventURL = 'https://api.soundcloud.com/tracks/' + $scope.makeEvent.trackID;
+                  $scope.makeEventURL = $scope.makeEvent.trackURL;
                   SC.oEmbed('https://api.soundcloud.com/tracks/' + $scope.makeEvent.trackID, {
                         element: document.getElementById('scPlayer'),
                         auto_play: false,
@@ -180,46 +182,36 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             }
       }
 
+      $scope.setCalendarEvent = function(event) {
+            event.day = new Date(event.day);
+            var calendarDay = $scope.calendar.find(function(calD) {
+                  return calD.day.toLocaleDateString() == event.day.toLocaleDateString();
+            });
+            calendarDay.events[event.day.getHours()] = event;
+      }
+
       $scope.saveEvent = function() {
             if (!$scope.makeEvent.trackID && ($scope.makeEvent.type == "track")) {
                   $.Zebra_Dialog("Enter a track URL");
             } else {
+                  $scope.processing = true;
                   if ($scope.newEvent) {
-                        $scope.makeEvent.password = $rootScope.password;
-                        $scope.processing = true;
-                        $http.post('/api/events/repostEvents', $scope.makeEvent)
-                              .then(function(res) {
-                                    var event = res.data;
-                                    event.day = new Date(event.day);
-                                    var calendarDay = $scope.calendar.find(function(calD) {
-                                          return calD.day.toLocaleDateString() == event.day.toLocaleDateString();
-                                    });
-                                    calendarDay.events[event.day.getHours()] = event;
-                                    $scope.showOverlay = false;
-                                    $scope.processing = false;
-                              })
-                              .then(null, function(err) {
-                                    $scope.processing = false;
-                                    $.Zebra_Dialog("ERROR: Did not save.");
-                              });
+                        var req = $http.post('/api/events/repostEvents', $scope.makeEvent)
+
                   } else {
-                        $scope.processing = true;
-                        $http.put('/api/events/repostEvents', $scope.makeEvent)
-                              .then(function(res) {
-                                    var event = res.data;
-                                    event.day = new Date(event.day);
-                                    var calendarDay = $scope.calendar.find(function(calD) {
-                                          return calD.day.toLocaleDateString() == event.day.toLocaleDateString();
-                                    });
-                                    calendarDay.events[event.day.getHours()] = event;
-                                    $scope.showOverlay = false;
-                                    $scope.processing = false;
-                              })
-                              .then(null, function(err) {
-                                    $scope.processing = false;
-                                    $.Zebra_Dialog("ERROR: Did not save.");
-                              });
+                        var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
                   }
+                  req
+                        .then(function(res) {
+                              var event = res.data;
+                              $scope.setCalendarEvent(event);
+                              $scope.showOverlay = false;
+                              $scope.processing = false;
+                        })
+                        .then(null, function(err) {
+                              $scope.processing = false;
+                              $.Zebra_Dialog("ERROR: Did not save.");
+                        });
             }
       }
 

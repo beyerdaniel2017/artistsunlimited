@@ -29,7 +29,8 @@ var schema = new mongoose.Schema({
     ref: 'User'
   },
   unrepostDate: {
-    type: Date
+    type: Date,
+    default: new Date(0)
   }
 });
 
