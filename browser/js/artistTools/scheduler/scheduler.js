@@ -91,8 +91,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             });
             $scope.makeEventURL = undefined;
             $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
-            $scope.makeEvent.day = new Date($scope.makeEvent.day);
-            $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
             if ($scope.makeEvent.type == 'traded') {
                   $scope.showOverlay = false;
                   $scope.makeEvent = undefined;
@@ -109,6 +107,13 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   };
                   $scope.newEvent = true;
             } else {
+                  $scope.makeEvent.day = new Date($scope.makeEvent.day);
+                  if ($scope.makeEvent.unrepostDate) {
+                        $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
+                  } else {
+                        $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
+                  }
+                  $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
                   $scope.makeEventURL = $scope.makeEvent.trackURL;
                   SC.oEmbed('https://api.soundcloud.com/tracks/' + $scope.makeEvent.trackID, {
                         element: document.getElementById('scPlayer'),
@@ -188,6 +193,15 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   return calD.day.toLocaleDateString() == event.day.toLocaleDateString();
             });
             calendarDay.events[event.day.getHours()] = event;
+      }
+
+      $scope.changeUnreposted = function() {
+            if ($scope.makeEvent.unrepost) {
+                  $scope.makeEvent.day = new Date($scope.makeEvent.day);
+                  $scope.makeEvent.unrepostDate = new Date($scope.makeEventURL.day.getTime() + 24 * 60 * 60 * 1000);
+            } else {
+                  $scope.makeEvent.unrepostDate = new Date(0);
+            }
       }
 
       $scope.saveEvent = function() {
