@@ -183,35 +183,27 @@ router.post('/linkDLTracks', function(req, res, next) {
   DownloadTrack.find({}).exec()
     .then(function(tracks) {
       tracks.forEach(function(track) {
-        SCEmails.findOne({
-            soundcloudID: track.artistID
-          }).exec()
-          .then(function(sce) {
-            console.log(sce);
-            User.findOneAndUpdate({
-              'soundcloud.id': sce.soundcloudID
-            }, {
-              $set: {
-                'soundcloud.followers': sce.followers,
-                'soundcloud.permalinkURL': sce.soundcloudURL,
-                'soundcloud.id': sce.soundcloudID,
-                'soundcloud.username': sce.username,
-                name: sce.username,
-                email: sce.email,
-                queue: []
-              }
-            }, {
-              new: true,
-              upsert: true
-            }, function(err, user) {
-              console.log("------------")
-              console.log(sce);
-              console.log(user);
-              console.log(track);
-              track.userid = user._id;
-              track.save();
-            });
-          })
+        User.findOneAndUpdate({
+          'soundcloud.id': track.artistID
+        }, {
+          $set: {
+            'soundcloud.permalinkURL': track.artistURL,
+            'soundcloud.id': track.artistID,
+            'soundcloud.username': track.artistUsername,
+            name: track.artistUsername,
+            queue: []
+          }
+        }, {
+          new: true,
+          upsert: true
+        }, function(err, user) {
+          console.log("------------")
+          track.userid = user._id;
+          track.save();
+          console.log(user);
+          console.log(track);
+
+        });
       })
     })
 })
