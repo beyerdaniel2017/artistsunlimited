@@ -954,7 +954,7 @@ h2, h3 {
   flex-direction: row; }
 
 .trade-box {
-  height: 100px;
+  height: 165px;
   min-width: 200px;
   margin: 10px 20px;
   margin-right: 0px;
@@ -1152,6 +1152,9 @@ h2, h3 {
     overflow-x: scroll; }
   .btn-trades-list {
     display: none; } }
+
+.slick-slider {
+  height: 175px !important; }
 
 .slick-prev {
   font-size: 0;
