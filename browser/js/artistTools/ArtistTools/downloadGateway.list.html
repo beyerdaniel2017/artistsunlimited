@@ -1,9 +1,9 @@
 <ng-include src="'js/home/views/navigation.html'"></ng-include>
 <!-- Content Start  -->
 <div class="container" ng-init="getDownloadList();checkIfSubmission()">
-  <div class="content-area bg-white">
   	<ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-  	<div class="row">
+  <div class="content-area bg-white">
+        <div class="row extrapadding">
       <div class="col-md-12 text-center">
        <a href="#" class="btn btn-enter" ui-sref="artistToolsDownloadGatewayNew">Add New</a>
      </div>
@@ -35,7 +35,6 @@
 </div>
 <!-- Content End  -->
 <ng-include src="'js/home/views/loader.html'"></ng-include>
-
 <script type="text/ng-template" id="thankYou.html">
   <div class="modal-header">
     <h3 class="modal-title" style="text-align:center">Thank You</h3>

@@ -131,6 +131,9 @@ $break-small-landscape: 774px;
 .label-smaller {
 	font-size: 1.25em;
 }
+.extrapadding{
+	padding : 20px 0;
+}
 
 @media screen and (max-width: $break-small-landscape) {
 	#scheduler-container {
