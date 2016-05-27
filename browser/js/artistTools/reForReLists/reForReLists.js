@@ -23,7 +23,7 @@ app.config(function($stateProvider) {
 									} else {
 										return 1;
 									}
-								})
+						});
 								return trades;
 							})
 					} else {
@@ -38,7 +38,8 @@ app.config(function($stateProvider) {
 					return $http.post('/api/users/bySCURL/', {
 						url: '',
 						minFollower: minFollower,
-						maxFollower: maxFollower
+            maxFollower: maxFollower,
+            recordRange: { skip: 0, limit: 12 }
 					})
 					.then(function(res) {
 						return res.data;
@@ -55,6 +56,7 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
 	if (!SessionService.getUser()) {
       $state.go('login');
     }
+	$scope.user = SessionService.getUser();
 	$scope.currentTrades = currentTrades;
 	$scope.currentTradesCopy = currentTrades;
 	$scope.otherUsers = [];
@@ -62,6 +64,11 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
 	$scope.searchURL = "";
 	$scope.minfollowers = 0;
 	$scope.maxfollowers = 100000000;
+	$scope.sortby = "";
+  var searchTradeRange = {
+    skip: 0,
+    limit: 12
+  }
 	$scope.search = {
 		// followers: {
 		// 	$lt: SessionService.getUser().soundcloud.followers * 2,
@@ -71,60 +78,72 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
 
 	$scope.sendSearch = function() {
 		$scope.processing = true;
-		$scope.searchUser = null;
+		//$scope.searchUser = null;
+		
 		$http.post('/api/users/bySCURL/', {
 				url: $scope.searchURL,
 				minFollower: $scope.minfollowers,
-				maxFollower: $scope.maxfollowers
+      maxFollower: $scope.maxfollowers,
+			recordRange: searchTradeRange
 			})
 			.then(function(res) {
 				$scope.processing = false;
-				$scope.searchUser = res.data;
+      if (res.data.length > 0) {
+        angular.forEach(res.data, function(d) {
+          $scope.searchUser.push(d);
+        });
+      }
+			//$scope.searchUser = res.data;
 			})
 			.then(null, function(err) {
 				$scope.processing = false;
 				$scope.searchUser = [];
 				$.Zebra_Dialog("Did not find user.");
 			});
+	}
 
+	$scope.searchCurrentTrade = function() {
 		var cTrades = [];
 		angular.forEach($scope.currentTradesCopy, function(trade) {
-			if ($scope.searchURL != "" && parseInt($scope.maxfollowers) > 0) {
+      if ($scope.searchURL != "") {
 				var url = $scope.searchURL;
 				url = url.toString().replace('http://', '').replace('https://', '');
 				if ((trade.other.user.soundcloud.permalinkURL.indexOf(url) != -1)) {
-					if (trade.other.user.soundcloud.followers > $scope.minfollowers && trade.other.user.soundcloud.followers <= $scope.maxfollowers) {
 						cTrades.push(trade);
 					}
-				}
 			} else if (parseInt($scope.maxfollowers) > 0) {
-				if (trade.other.user.soundcloud.followers > $scope.minfollowers && trade.other.user.soundcloud.followers <= $scope.maxfollowers) {
+        if (trade.other.user.soundcloud.followers >= $scope.minfollowers && trade.other.user.soundcloud.followers <= $scope.maxfollowers) {
 					cTrades.push(trade);
 				}
 			}
 		});
 		$scope.currentTrades = cTrades;
-		$timeout(function() {
-			$(".open").slick('unslick'); 
-			$(".current").slick('unslick'); 
-			$(".current").slick({
-        dots: false,
-        infinite: true,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        arrows: true,
-        variableWidth: false
-      });
-			$(".open").slick({
-        dots: false,
-        infinite: true,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        arrows: true,
-        variableWidth: false
-      });
-    },1000);
 	}
+
+	$scope.sortResult = function() {
+		var sortby = $scope.sortby;
+		if(sortby == "followers"){
+			$scope.currentTrades.sort(function(a, b) { return b.other.user.soundcloud.followers - a.other.user.soundcloud.followers; })
+		}
+		else{
+			$scope.currentTrades.sort(function(a, b) { var A = a.other.alert.toLowerCase();
+     	var B = b.other.alert.toLowerCase();
+	     if (A < B){
+        return -1;
+	     }else if (A > B){
+	       return  1;
+	     }else{
+	       return 0;
+	     }
+      });
+	}
+	}
+
+  $scope.loadMore = function() {
+    searchTradeRange.skip += 12;
+    searchTradeRange.limit += 12;
+    $scope.sendSearch();
+  };
 
 	$scope.openTrade = function(user) {
 		var trade = {
@@ -161,4 +180,22 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
 				$.Zebra_Dialog("Error in creating trade");
 			});
 	}
+
+	$scope.logout = function() {
+    $http.post('/api/logout').then(function() {
+      SessionService.deleteUser();
+      $state.go('login');
+    });
+  };
+});
+
+app.directive('whenScrolled', function() {
+  return function(scope, elm, attr) {
+    var raw = elm[0];
+    elm.bind('scroll', function() {
+      if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+        scope.$apply(attr.whenScrolled);
+      }
+    });
+  };
 });

@@ -1,8 +1,12 @@
-<ng-include src="'js/home/views/navigation.html'"></ng-include>
+<ng-include src="'js/artistTools/ArtistTools/header-navigation.html'"></ng-include>
 <!-- Content Start  -->
-<div class="container">
+<div class="container-fluid padding0">
     <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-  <div class="content-area bg-white">
+ <div class="col-md-10 padding0">  
+        <div class="right-side"> 
+        <div class="row left-right0">
+          <div class="col-md-12 col-sm-10 col-xs-12 pull-right">     
+            <div class="page-content"><!--page-contant Start-->
     <div class="row">
       <h3 style="text-align:center;">{{user.displayName}}</h3>
       <div id="scheduler-container">
@@ -71,6 +75,12 @@
       <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
       </div>
     </div>
+
+             </div>
+          </div>
   </div>
 </div>
+    </div>
+</div>
+
 <ng-include src="'js/home/views/loader.html'"></ng-include>
