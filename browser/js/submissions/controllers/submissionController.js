@@ -1,18 +1,21 @@
 app.config(function($stateProvider) {
   $stateProvider.state('submissions', {
-    url: '/submissions',
+    url: '/admin/submissions',
     templateUrl: 'js/submissions/views/submissions.html',
     controller: 'SubmissionController'
   });
 });
 
-
-app.controller('SubmissionController', function($rootScope, $state, $scope, $http, AuthService) {
+app.controller('SubmissionController', function($rootScope, $state, $scope, $http, AuthService, SessionService) {
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.submissions = [];
+  if (!SessionService.getUser()) {
+    $state.go('admin');
+  }
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
+      SessionService.deleteUser();
       window.location.href = '/admin';
     }).catch(function(err) {
       $scope.processing = false;

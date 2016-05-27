@@ -950,7 +950,7 @@ h2, h3 {
   flex-direction: row; }
 
 .trade-box {
-  height: 100px;
+  height: 165px;
   min-width: 200px;
   margin: 10px 20px;
   margin-right: 0px;
@@ -1095,7 +1095,8 @@ h2, h3 {
   border-color: transparent;
   background: white;
   vertical-align: bottom;
-  font-size: 1.2em; }
+  font-size: 1.2em;
+  border-radius: 8px; }
 
 .btn-open-trade:hover {
   color: white;
@@ -1147,6 +1148,9 @@ h2, h3 {
     overflow-x: scroll; }
   .btn-trades-list {
     display: none; } }
+
+.slick-slider {
+  height: 175px !important; }
 
 .slick-prev {
   font-size: 0;

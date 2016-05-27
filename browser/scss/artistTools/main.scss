@@ -421,7 +421,7 @@ h2, h3 {
 }
 
 .trade-box {
-	height: 100px;
+	height: 165px;
 	min-width: 200px;
 	margin: 10px 20px;
 	margin-right: 0px;
@@ -591,6 +591,7 @@ h2, h3 {
 	background: white;
 	vertical-align: bottom;
 	font-size: 1.2em;
+	border-radius: 8px;
 }
 
 .btn-open-trade:hover {
@@ -670,43 +671,48 @@ h2, h3 {
 		display: none;
 	}
 
-	}.slick-prev {
-		font-size: 0;
-		line-height: 0;
-		position: absolute;
-		top: 50%;
-		display: block;
-		width: 20px;
-		height: 20px;
-		padding: 0;
-		-webkit-transform: translate(0, -50%);
-		-ms-transform: translate(0, -50%);
-		transform: translate(0, -50%);
-		cursor: pointer;
-		color: transparent;
-		border: none;
-		outline: none;
-		background: transparent;
-	}
+}
 
-	.slick-next {
-		font-size: 0;
-		line-height: 0;
-		position: absolute;
-		top: 50%;
-		display: block;
-		width: 20px;
-		height: 20px;
-		padding: 0;
-		-webkit-transform: translate(0, -50%);
-		-ms-transform: translate(0, -50%);
-		transform: translate(0, -50%);
-		cursor: pointer;
-		color: transparent;
-		border: none;
-		outline: none;
-		background: transparent;
-	}
+.slick-slider{
+	height:175px !important;
+}
+.slick-prev {
+	font-size: 0;
+	line-height: 0;
+	position: absolute;
+	top: 50%;
+	display: block;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	-webkit-transform: translate(0, -50%);
+	-ms-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+	cursor: pointer;
+	color: transparent;
+	border: none;
+	outline: none;
+	background: transparent;
+}
+
+.slick-next {
+	font-size: 0;
+	line-height: 0;
+	position: absolute;
+	top: 50%;
+	display: block;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	-webkit-transform: translate(0, -50%);
+	-ms-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+	cursor: pointer;
+	color: transparent;
+	border: none;
+	outline: none;
+	background: transparent;
+}
 
 	/*Slick Slider--START*/
 	@charset 'UTF-8';

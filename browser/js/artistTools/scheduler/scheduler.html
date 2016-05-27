@@ -44,7 +44,6 @@
         </div>
 
         <!-- overlay -->
-
         <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showOverlay">
           <div class="label-scheduler label-smaller" style="width: 500px; height:500px; background-color: white; margin: 250px auto; padding: 50px 0;">
             <span>{{makeEvent.day.toLocaleDateString()}}     {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
@@ -62,12 +61,11 @@
               <br><br>
               <button ng-click="emailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/email_icon.png' style="height:30px; width:50px;"></button>
             </div>
+            <!-- hideall -->
           </div>
-          <!-- hideall -->
-        </div>
-        <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
+          <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <ng-include src="'js/home/views/loader.html'"></ng-include>
+    <ng-include src="'js/home/views/loader.html'"></ng-include>

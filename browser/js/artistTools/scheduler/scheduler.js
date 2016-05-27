@@ -19,6 +19,9 @@ app.config(function($stateProvider) {
 });
 
 app.controller('ATSchedulerController', function($rootScope, $state, $scope, $http, AuthService, $window, events, SessionService) {
+      if (!SessionService.getUser()) {
+            $state.go('login');
+      }
       $scope.user = SessionService.getUser();
       $scope.makeEventURL = "";
       $scope.showOverlay = false;
@@ -26,6 +29,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       events.forEach(function(ev) {
             ev.day = new Date(ev.day);
       });
+      $scope.events = events;
+
       $scope.hideall = false;
 
       function promptForEmail() {
@@ -91,8 +96,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             });
             $scope.makeEventURL = undefined;
             $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
-            $scope.makeEvent.day = new Date($scope.makeEvent.day);
-            $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
             if ($scope.makeEvent.type == 'traded') {
                   $scope.showOverlay = false;
                   $scope.makeEvent = undefined;
@@ -107,8 +110,13 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                         day: makeDay,
                         type: "track"
                   };
+                  $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
+                  $scope.makeEvent.unrepost = true;
                   $scope.newEvent = true;
             } else {
+                  $scope.makeEvent.day = new Date($scope.makeEvent.day);
+                  $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
+                  $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
                   $scope.makeEventURL = $scope.makeEvent.trackURL;
                   SC.oEmbed('https://api.soundcloud.com/tracks/' + $scope.makeEvent.trackID, {
                         element: document.getElementById('scPlayer'),
@@ -157,12 +165,9 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   $scope.processing = true;
                   $http.delete('/api/events/repostEvents/' + $scope.makeEvent._id)
                         .then(function(res) {
-                              var calendarDay = $scope.calendar.find(function(calD) {
-                                    return calD.day.toLocaleDateString() == $scope.makeEvent.day.toLocaleDateString();
-                              });
-                              calendarDay.events[$scope.makeEvent.day.getHours()] = {
-                                    type: "empty"
-                              };
+                              return $scope.refreshEvents();
+                        })
+                        .then(function(res) {
                               $scope.showOverlay = false;
                               $scope.processing = false;
                         })
@@ -190,28 +195,56 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             calendarDay.events[event.day.getHours()] = event;
       }
 
-      $scope.saveEvent = function() {
-            if (!$scope.makeEvent.trackID && ($scope.makeEvent.type == "track")) {
-                  $.Zebra_Dialog("Enter a track URL");
+      $scope.changeUnrepost = function() {
+            if ($scope.makeEvent.unrepost) {
+                  $scope.makeEvent.day = new Date($scope.makeEvent.day);
+                  $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
             } else {
-                  $scope.processing = true;
-                  if ($scope.newEvent) {
-                        var req = $http.post('/api/events/repostEvents', $scope.makeEvent)
+                  $scope.makeEvent.unrepostDate = new Date(0);
+            }
 
+      }
+
+      $scope.findUnrepostOverlap = function() {
+            var blockEvents = $scope.events.filter(function(event) {
+                  event.day = new Date(event.day);
+                  event.unrepostDate = new Date(event.unrepostDate);
+                  return ($scope.makeEvent.trackID == event.trackID && event.unrepostDate.getTime() > $scope.makeEvent.day.getTime() - 24 * 3600000 && event.day.getTime() < $scope.makeEvent.unrepostDate.getTime() + 24 * 3600000);
+            })
+            return blockEvents.length > 0;
+      }
+
+      $scope.refreshCalendar
+
+      $scope.saveEvent = function() {
+            if (!$scope.findUnrepostOverlap()) {
+                  if (!$scope.makeEvent.trackID && ($scope.makeEvent.type == "track")) {
+                        $.Zebra_Dialog("Enter a track URL");
                   } else {
-                        var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
+                        console.log($scope.makeEvent);
+                        $scope.processing = true;
+                        if ($scope.newEvent) {
+                              var req = $http.post('/api/events/repostEvents', $scope.makeEvent)
+
+                        } else {
+                              var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
+                        }
+                        req
+                              .then(function(res) {
+                                    return $scope.refreshEvents();
+
+                              })
+                              .then(function(res) {
+                                    $scope.showOverlay = false;
+                                    $scope.processing = false;
+                              })
+                              .then(null, function(err) {
+                                    $scope.processing = false;
+                                    $.Zebra_Dialog("ERROR: Did not save.");
+                              });
                   }
-                  req
-                        .then(function(res) {
-                              var event = res.data;
-                              $scope.setCalendarEvent(event);
-                              $scope.showOverlay = false;
-                              $scope.processing = false;
-                        })
-                        .then(null, function(err) {
-                              $scope.processing = false;
-                              $.Zebra_Dialog("ERROR: Did not save.");
-                        });
+            } else {
+                  $.Zebra_Dialog('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
             }
       }
 
@@ -305,9 +338,21 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   }
             } else if (event.type == 'traded') {
                   return {
-                        'background-color': '#FFC966'
+                        'background-color': '#FFDA97'
                   }
             }
+      }
+
+      $scope.refreshEvents = function() {
+            return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
+                  .then(function(res) {
+                        var events = res.data
+                        events.forEach(function(ev) {
+                              ev.day = new Date(ev.day);
+                        });
+                        $scope.events = events;
+                        $scope.calendar = $scope.fillDateArrays(events);
+                  })
       }
 
       $scope.fillDateArrays = function(events) {

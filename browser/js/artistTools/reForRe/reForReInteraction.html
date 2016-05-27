@@ -91,14 +91,16 @@
 <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showOverlay">
 	<div class="label-scheduler label-smaller" style="width: 500px; height:500px; background-color: white; margin: 100px auto; padding: 50px 0; max-width:95%">
 		<span>{{makeEvent.day.toLocaleDateString()}}     {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
-		<div>
-			<span >URL: </span><input type="text" ng-model="makeEventURL" ng-change="changeURL()"/><br><br>
+		<div ng-if=" makeEvent.type=='trade' && makeEvent.person.user._id != user._id || makeEvent.type=='traded'">
+			<span >URL: </span><input type="text" ng-model="makeEvent.URL" ng-change="changeURL()"/><br><br>
 		</div>
 		<div id='scPlayer' ng-show="makeEvent.trackID"></div>
 		<br>
 		<div>
-			<button class="btn btn-default btn-small btn-overlay" ng-click="backEvent()">Back</button>
-			<button class="btn btn-default btn-small btn-overlay" ng-click="saveEvent()">Save</button>
+			<button class="btn btn-default btn-small btn-overlay" ng-click="backEvent()" >Back</button>
+			<button class="btn btn-default btn-small btn-overlay" ng-click="deleteEvent()" ng-if="makeEvent.type=='trade'">Delete</button>
+			<button class="btn btn-default btn-small btn-overlay" ng-click="saveEvent()" ng-if="makeEvent.type=='trade' || makeEvent.owner == user._id">Save</button>
+
 			<br><br>
 			<button ng-click="emailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/email_icon.png' style="height:30px; width:50px;"></button>
 		</div>

@@ -6,29 +6,45 @@ app.config(function($stateProvider) {
   });
 });
 
-
-app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService) {
+app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, SessionService) {
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.submissions = [];
-
+  $scope.loginObj = {};
+  $scope.isLoggedIn = SessionService.getUser() ? true : false; 
   $scope.login = function() {
-    $scope.processing = true;
-    $http.post('/api/login', {
-      password: $scope.password
-    }).then(function() {
-      $rootScope.password = $scope.password;
-      $scope.showSubmissions = true;
-      $scope.loadSubmissions();
-      $scope.processing = false;
-    }).catch(function(err) {
-      $scope.processing = false;
-      $.Zebra_Dialog('Wrong Password');
-    });
+    $scope.message = {
+      val: '',
+      visible: false
+    };
+    AuthService
+      .login($scope.loginObj)
+      .then(handleLoginResponse)
+      .catch(handleLoginError)
+
+    function handleLoginResponse(res) {
+      if (res.status === 200 && res.data.success) {
+        SessionService.create(res.data.user);
+        $state.go('submissions');
+      } else {
+        $scope.message = {
+          val: res.data.message,
+          visible: true
+        };
+      }
   }
+
+    function handleLoginError(res) {
+      $scope.message = {
+        val: 'Error in processing your request',
+        visible: true
+      };
+    }
+  };
 
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
+      SessionService.deleteUser();
       window.location.href = '/admin';
     }).catch(function(err) {
       $scope.processing = false;
@@ -38,7 +54,6 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
 
   $scope.manage = function() {
     $scope.processing = true;
-
     SC.connect()
       .then(function(res) {
         $rootScope.accessToken = res.oauth_token;

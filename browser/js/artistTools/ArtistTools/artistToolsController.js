@@ -37,7 +37,9 @@ app.config(function($stateProvider) {
 
 app.controller('ArtistToolsController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService) {
     $scope.user = SessionService.getUser();
-
+    if (!SessionService.getUser()) {
+      $state.go('login');
+    }
     /* Init boolean variables for show/hide and other functionalities */
     $scope.processing = false;
     $scope.isTrackAvailable = false;
