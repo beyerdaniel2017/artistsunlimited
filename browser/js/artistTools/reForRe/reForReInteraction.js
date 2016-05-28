@@ -123,6 +123,9 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         $scope.fillCalendar();
         $scope.processing = false;
       })
+      .then(function(err) {
+        $.Zebra_Dialog('Error getting data.');
+      })
   }
 
   $scope.backEvent = function() {
