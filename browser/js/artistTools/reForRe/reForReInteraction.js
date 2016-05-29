@@ -486,16 +486,20 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       event.owner = $scope.trade.p1.user._id
       $http.post('/api/events/repostEvents', event);
     })
-    setTimeout(function() {
-      $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
-      $scope.trade.p1.slots = $scope.trade.p2.slots = [];
-      $http.put('/api/trades', $scope.trade)
-        .then(function(res) {
-          $scope.processing = false;
-          $scope.emitMessage("TRADE COMPLETED", 'alert');
-        })
-        .then(null, console.log);
-    }, 2000)
+    $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
+    $scope.trade.p1.slots = $scope.trade.p2.slots = [];
+    $http.put('/api/trades', $scope.trade)
+      .then(function(res) {
+        setTimeout(function() {
+          $scope.emitMessage('---- ' + $scope.user.soundcloud.username + " accepted the trade ----", 'alert');
+          setTimeout(function() {
+            $scope.processing = false;
+            $scope.emitMessage("TRADE COMPLETED", 'alert');
+          }, 500)
+        }, 1500)
+
+      })
+      .then(null, console.log);
   }
 
   $scope.getStyle = function(event) {
