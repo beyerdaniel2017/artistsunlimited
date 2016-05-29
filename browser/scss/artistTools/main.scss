@@ -890,6 +890,7 @@ h2, h3 {
     text-align: center;
     margin: 20px auto;
 }
+
 /*left-menu css start*/
 .left-side{
     background-color: #fff;
@@ -931,6 +932,9 @@ h2, h3 {
  }
 .logout{
 }
+.left-menu-active {
+    	border-right: 4px solid #959595 !important;
+    }
 .logout li{
    list-style: outside none none;
 	position: absolute;
