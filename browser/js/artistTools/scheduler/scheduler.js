@@ -19,9 +19,9 @@ app.config(function($stateProvider) {
 });
 
 app.controller('ATSchedulerController', function($rootScope, $state, $scope, $http, AuthService, $window, events, SessionService) {
-  if (!SessionService.getUser()) {
-    $state.go('login');
-  }
+      if (!SessionService.getUser()) {
+            $state.go('login');
+      }
       $scope.user = SessionService.getUser();
       $scope.makeEventURL = "";
       $scope.showOverlay = false;
@@ -209,6 +209,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             var blockEvents = $scope.events.filter(function(event) {
                   event.day = new Date(event.day);
                   event.unrepostDate = new Date(event.unrepostDate);
+                  if (moment($scope.makeEvent.day).format('LLL') == moment(event.day).format('LLL') && $scope.makeEvent.trackID == event.trackID) return false;
                   return ($scope.makeEvent.trackID == event.trackID && event.unrepostDate.getTime() > $scope.makeEvent.day.getTime() - 24 * 3600000 && event.day.getTime() < $scope.makeEvent.unrepostDate.getTime() + 24 * 3600000);
             })
             return blockEvents.length > 0;
@@ -338,7 +339,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   }
             } else if (event.type == 'traded') {
                   return {
-                        'background-color': '#FFC966'
+                        'background-color': '#FFDA97'
                   }
             }
       }
