@@ -609,6 +609,11 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   text-overflow: ellipsis;
   text-align: right; }
 
+button:focus,
+button:after,
+button:active:after {
+  outline: none; }
+
 /* SCHEDULER */
 #scheduler-container {
   text-align: center;
@@ -716,6 +721,23 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .label-smaller {
   font-size: 1.25em; }
 
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5000px;
+  background-color: rgba(0, 0, 0, 0.85);
+  text-align: center; }
+
+.slot-box {
+  width: 500px;
+  height: 500px;
+  background-color: white;
+  margin: 250px auto;
+  padding: 50px 0;
+  border-radius: 12px; }
+
 @media screen and (max-width: 774px) {
   #scheduler-container {
     width: 90%; } }
@@ -751,7 +773,9 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 
 .label-username {
   height: 6%;
-  font-size: 1.5em; }
+  font-size: 1.5em;
+  vertical-align: middle;
+  text-align: center; }
 
 .form-message {
   width: 95%;
@@ -774,7 +798,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   background: white;
   border: 1px solid #dddddd;
   border-radius: 8px;
-  padding: 4px;
+  padding: 0 4px;
   width: 75%;
   position: relative;
   overflow: hidden; }
@@ -782,7 +806,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .convo-display {
   overflow-y: scroll;
   overflow-x: hidden;
-  height: 178px;
+  height: 190px;
   margin: 0;
   position: relative;
   padding: 15px 0 15px 0; }
@@ -888,14 +912,25 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   .scheduler-small {
     width: 100%;
     height: 50%; }
-  .btn-scheduler {
-    width: 6.25%; }
-  .cell-date {
-    width: 12.5%; }
-  .column-day {
-    width: 12.5%; }
-  .column-time {
-    width: 12.5%; }
+  /**
+
+	.btn-scheduler {
+		width: 6.25%;
+	}
+
+	.cell-date {
+		width: 12.5%;
+	}
+
+	.column-day {
+		width: 12.5%;
+	}
+
+	.column-time {
+		width: 12.5%;
+	}
+
+	**/
   .rfr-chat {
     margin-top: 0; }
   .rfr-chatbox {
@@ -951,7 +986,7 @@ h2, h3 {
   flex-direction: row; }
 
 .trade-box {
-  height: 100px;
+  height: 165px;
   min-width: 200px;
   margin: 10px 20px;
   margin-right: 0px;
@@ -1096,7 +1131,8 @@ h2, h3 {
   border-color: transparent;
   background: white;
   vertical-align: bottom;
-  font-size: 1.2em; }
+  font-size: 1.2em;
+  border-radius: 8px; }
 
 .btn-open-trade:hover {
   color: white;
@@ -1148,6 +1184,9 @@ h2, h3 {
     overflow-x: scroll; }
   .btn-trades-list {
     display: none; } }
+
+.slick-slider {
+  height: 175px !important; }
 
 .slick-prev {
   font-size: 0;

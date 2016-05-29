@@ -19,7 +19,7 @@
 					<input id="input-f-min" class="form-control input-follower-range" type="number" ng-model="minfollowers" name="followerMin" placeholder="0"/> -
 					<input id="input-f-max" class="form-control input-follower-range" type="number" ng-model="maxfollowers" name="followerMax" placeholder="..."/>
 				</div>
-				<button class="btn-default" id="btn-search" ng-click="sendSearch();">Search</button>
+				<button class="btn btn-default" id="btn-search" ng-click="sendSearch();">Search</button>
 			</div>
 		</div>
 		<hr>
@@ -28,6 +28,7 @@
 			<div ng-repeat="trade in currentTrades" class="trade-box slide-box">
 				<div class="notification-bubble" ng-show="trade.user.alert == 'change'">!</div>
 				<div class="label-result-box" title="{{trade.other.user.name}}">{{trade.other.user.name.length < 17 ? trade.other.user.name : trade.other.user.name.substring(0,17)}}</div>
+				<div class="label-result-box">{{((trade.other.user.soundcloud.followers && trade.other.user.soundcloud.followers > 0) ? trade.other.user.soundcloud.followers : 0 ) | number:0}} followers</div>
 				<div class="label-freq" ng-if="trade.other.accepted&&trade.user.accepted">Traded</div>
 				<div class="label-freq" ng-if="!(trade.other.accepted&&trade.user.accepted)">{{trade.other.slots.length}}:{{trade.user.slots.length}}</div>
 				<button class="btn-manage-trade bold" ui-sref="reForReInteraction({
@@ -39,34 +40,35 @@
 		<section class="open">
 			<div ng-repeat="user in searchUser" class="user-box slide-box">
 				<div class="label-result-box" title="{{user.name}}">{{user.name.length < 17 ? user.name : user.name.substring(0,17)}}</div>
-				<div class="label-result-box">{{user.soundcloud.followers | number:0}} followers</div>
+				<div class="label-result-box">{{((user.soundcloud.followers && user.soundcloud.followers > 0) ? user.soundcloud.followers : 0 ) | number:0}} followers</div>
 				<button class="btn-open-trade bold" ng-click="openTrade(user)">Open Trade</button>
 			</div>
 		</section>
 	</div>
 </div>
-<ng-include src="'js/home/views/loader.html'"></ng-include><script type="text/javascript">
-$(document).ready(function() {
-	setTimeout(function() {
-		$(".current").slick({
-			dots: false,
-			infinite: true,
-			slidesToShow: 4,
-			slidesToScroll: 1,
-			arrows: true,
-			variableWidth: false
-		});
-	}, 0);
+<ng-include src="'js/home/views/loader.html'"></ng-include>
+<script type="text/javascript">
+	$(document).ready(function() {
+		setTimeout(function() {
+			$(".current").slick({
+				dots: false,
+				infinite: true,
+				slidesToShow: 4,
+				slidesToScroll: 1,
+				arrows: true,
+				variableWidth: false
+			});
+		}, 0);
 
-	setTimeout(function() {
-		$(".open").slick({
-			dots: false,
-			infinite: true,
-			slidesToShow: 4,
-			slidesToScroll: 1,
-			arrows: true,
-			variableWidth: false
-		});
-	}, 200);
-});
+		setTimeout(function() {
+			$(".open").slick({
+				dots: false,
+				infinite: true,
+				slidesToShow: 4,
+				slidesToScroll: 1,
+				arrows: true,
+				variableWidth: false
+			});
+		}, 200);
+	});
 </script>

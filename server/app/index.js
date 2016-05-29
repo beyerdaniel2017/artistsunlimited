@@ -33,13 +33,14 @@ app.get('/unsubscribe/:followerId', function(req, res) {
   unsubscribe(req, res);
 });
 
-app.get('/admin*', function(req, res) {
-  if (req.isAuthenticated() && req.user.role === 'admin') {
-    res.sendFile(app.get('indexHTMLPath'));
-  } else {
-    res.sendFile(app.get('loginHTMLPath'));
-  }
-});
+// app.get('/admin*', function(req, res) {
+//   if (req.isAuthenticated() && req.user.role === 'admin') {
+//     res.sendFile(app.get('indexHTMLPath'));
+//   } else {
+//     res.sendFile(app.get('loginHTMLPath'));
+//   }
+// });
+
 app.get('/auth/soundcloud', 
   passport.authenticate('soundcloud'), 
   function(req, res) {
