@@ -209,6 +209,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             var blockEvents = $scope.events.filter(function(event) {
                   event.day = new Date(event.day);
                   event.unrepostDate = new Date(event.unrepostDate);
+                  if (moment($scope.makeEvent.day).format('LLL') == moment(event.day).format('LLL') && $scope.makeEvent.trackID == event.trackID) return false;
                   return ($scope.makeEvent.trackID == event.trackID && event.unrepostDate.getTime() > $scope.makeEvent.day.getTime() - 24 * 3600000 && event.day.getTime() < $scope.makeEvent.unrepostDate.getTime() + 24 * 3600000);
             })
             return blockEvents.length > 0;

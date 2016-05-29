@@ -72,14 +72,14 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.changeURL = function() {
     $scope.processing = true;
     $http.post('/api/soundcloud/resolve', {
-        url: $scope.makeEventURL
+        url: $scope.makeEvent.URL
       })
       .then(function(res) {
         $scope.makeEvent.trackID = res.data.id;
         $scope.makeEvent.title = res.data.title;
         $scope.makeEvent.trackURL = res.data.trackURL;
         if (res.data.user) $scope.makeEvent.artistName = res.data.user.username;
-        SC.oEmbed($scope.makeEventURL, {
+        SC.oEmbed($scope.makeEvent.URL, {
           element: document.getElementById('scPlayer'),
           auto_play: false,
           maxheight: 150
@@ -96,13 +96,24 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
 
 
   $scope.unrepostOverlap = function() {
-    var events = ($scope.user._id == $scope.trade.p1._id) ? p1Events : p2Events;
+    if (!$scope.makeEvent.trackID) return false;
+    var events = ($scope.makeEvent.person.user._id == $scope.trade.p1.user._id) ? p1Events : p2Events;
+    var slots = $scope.makeEvent.person.slots;
     var blockEvents = events.filter(function(event) {
       event.day = new Date(event.day);
       event.unrepostDate = new Date(event.unrepostDate);
+      if (moment($scope.makeEvent.day).format('LLL') == moment(event.day).format('LLL') && $scope.makeEvent.trackID == event.trackID) return false;
       return ($scope.makeEvent.trackID == event.trackID && event.unrepostDate.getTime() > $scope.makeEvent.day.getTime() - 24 * 3600000 && event.day.getTime() < $scope.makeEvent.unrepostDate.getTime() + 24 * 3600000);
     })
-    return blockEvents.length > 0;
+    var blockEvents2 = slots.filter(function(slot) {
+      slot.day = new Date(slot.day);
+      slot.unrepostDate = new Date(slot.unrepostDate);
+      if (moment($scope.makeEvent.day).format('LLL') == moment(slot.day).format('LLL') && $scope.makeEvent.trackID == slot.trackID) return false;
+      return ($scope.makeEvent.trackID == slot.trackID && slot.unrepostDate.getTime() > $scope.makeEvent.day.getTime() - 24 * 3600000 && slot.day.getTime() < $scope.makeEvent.unrepostDate.getTime() + 24 * 3600000);
+    })
+    console.log(blockEvents);
+    console.log(blockEvents2);
+    return blockEvents.length > 0 || blockEvents2.length > 0;
   }
 
 
@@ -123,7 +134,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         $scope.fillCalendar();
         $scope.processing = false;
       })
-      .then(function(err) {
+      .then(null, function(err) {
         $.Zebra_Dialog('Error getting data.');
       })
   }
@@ -134,20 +145,22 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.deleteEvent = function() {
-    $scope.makeEvent.person.slots.filter(function(slot, index) {
-      return !(moment(slot.day).format('LLL') === moment(makeDay).format('LLL'));
+    $scope.makeEvent.person.slots = $scope.makeEvent.person.slots.filter(function(slot, index) {
+      return !(moment(slot.day).format('LLL') == moment($scope.makeEvent.day).format('LLL'));
     });
     $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
     $scope.processing = true;
     $http.put('/api/trades', $scope.trade)
       .then(function(res) {
+        $scope.showOverlay = false;
         $scope.processing = false;
         $scope.trade = res.data;
-        $scope.emitMessage("REMOVED SLOT from " + $scope.makeEvent.person.user.soundcloud.username + " for " + moment(makeDay).format('LLL'), 'alert');
+        $scope.emitMessage("REMOVED SLOT from " + $scope.makeEvent.person.user.soundcloud.username + " for " + moment($scope.makeEvent.day).format('LLL'), 'alert');
       })
       .then(null, function(err) {
+        $scope.showOverlay = false;
         $scope.processing = false;
-        $.Zebra_Dialog('Error with request');
+        $.Zebra_Dialog('Error deleting.');
       })
   }
 
@@ -155,20 +168,43 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     console.log($scope.makeEvent);
     if (!$scope.unrepostOverlap()) {
       $scope.processing = true;
-      console.log(1);
-      $http.put('/api/events/repostEvents', $scope.makeEvent)
-        .then(function(res) {
-          return $scope.refreshCalendar();
+      if ($scope.makeEvent.type == 'traded') {
+        var req = new Promise(function(resolve, reject) {
+          if ($scope.makeEvent._id) $http.put('/api/events/repostEvents', $scope.makeEvent).then(resolve, reject);
+          else $http.post('/api/events/repostEvents', $scope.makeEvent).then(resolve, reject);
         })
-        .then(function(res) {
-          $scope.showOverlay = false;
-        })
-        .then(null, function(err) {
-          $scope.processing = false;
-          $.Zebra_Dialog('Error saving');
-        })
+        req
+          .then(function(res) {
+            $scope.processing = false;
+            $scope.showOverlay = false;
+            $scope.refreshCalendar();
+          })
+          .then(null, function(err) {
+            $scope.processing = false;
+            $.Zebra_Dialog('Error saving.');
+          })
+      } else if ($scope.makeEvent.type == 'trade') {
+        $scope.makeEvent.person.slots = $scope.makeEvent.person.slots.filter(function(slot, index) {
+          return !(moment(slot.day).format('LLL') === moment($scope.makeEvent.day).format('LLL'));
+        });
+        $scope.makeEvent.person.slots.push($scope.makeEvent);
+        var alertMessage = "CHANGED SLOT on " + $scope.makeEvent.person.user.soundcloud.username + " on " + moment($scope.makeEvent.day).format('LLL')
+        $scope.makeEvent.person = undefined;
+        $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
+        $http.put('/api/trades', $scope.trade)
+          .then(function(res) {
+            $scope.processing = false;
+            $scope.showOverlay = false;
+            $scope.trade = res.data;
+            $scope.emitMessage(alertMessage, 'alert');
+          })
+          .then(null, function(err) {
+            $scope.processing = false;
+            $.Zebra_Dialog('Error with request');
+          })
+      }
     } else {
-      $.Zebra_Dialog('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
+      $.Zebra_Dialog('Issue! This repost will cause the to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
     }
   }
 
@@ -181,12 +217,16 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     $scope.showOverlay = true;
     $scope.makeEvent = JSON.parse(JSON.stringify(event));
     $scope.makeEvent.day = new Date($scope.makeEvent.day);
-    if ($scope.makeEvent.unrepostDate) {
+    if ($scope.makeEvent.unrepostDate) $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
+    if ($scope.makeEvent.unrepostDate > new Date()) {
       $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
+      $scope.makeEvent.unrepost = true;
+    } else {
+      $scope.makeEvent.unrepostDate = new Date(0);
+      $scope.makeEvent.unrepost = false;
     }
     $scope.makeEvent.person = person;
     $scope.makeEvent.URL = $scope.makeEvent.trackURL;
-    $scope.makeEvent.editable = (!(event.trackID && event.type == 'traded') && !(person.user._id == $scope.user._id));
     SC.oEmbed($scope.makeEvent.trackURL, {
       element: document.getElementById('scPlayer'),
       auto_play: false,
@@ -194,7 +234,20 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     });
   }
 
+  $scope.changeUnrepost = function() {
+    if ($scope.makeEvent.unrepost) {
+      $scope.makeEvent.day = new Date($scope.makeEvent.day);
+      $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
+    } else {
+      $scope.makeEvent.unrepostDate = new Date(0);
+    }
+  }
+
   $scope.clickedSlot = function(day, dayOffset, hour, calendar, person, event) {
+    if ($scope.user.accepted) {
+      $.Zebra_Dialog("You can't make changes to this trade because you already accepted it. You will be able to make changes if the other person makes a change.");
+      return;
+    }
     var makeDay = new Date(day);
     makeDay.setHours(hour, 30, 0, 0);
 
@@ -206,162 +259,29 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         break;
 
       case 'empty':
-        if (person.acceted) {
-          $.Zebra_Dialog("You can't make changes to this trade because you already accepted it. You will be able to make changes if the other person makes a change.");
-          return;
-        }
+
         var calEvent = {
           type: "trade",
           day: makeDay,
-          userID: person.user.soundcloud.id
+          userID: person.user.soundcloud.id,
+          unrepostDate: new Date(makeDay.getTime() + 24 * 60 * 60 * 1000)
         };
         $scope.setUpAndOpenMakeEvent(calEvent, person);
         break;
 
       case 'trade':
-        if (person.acceted) {
-          $.Zebra_Dialog("You can't make changes to this trade because you already accepted it. You will be able to make changes if the other person makes a change.");
-          return;
-        }
         $scope.setUpAndOpenMakeEvent(event, person);
         break;
 
       case 'traded':
         if (event.owner == $scope.user._id) {
           $scope.setUpAndOpenMakeEvent(event, person);
+          console.log(event);
         } else {
           $.Zebra_Dialog('Cannot manage this time slot.');
           return;
         }
         break;
-    }
-
-    if (event.type == 'traded' && event.owner == $scope.user._id) {
-      $scope.makeEventAccount = person.user.soundcloud;
-      $scope.showOverlay = true;
-      $scope.makeEvent = JSON.parse(JSON.stringify(event));
-      $scope.makeEvent.day = new Date($scope.makeEvent.day);
-      $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
-      $scope.makeEventURL = $scope.makeEvent.trackURL;
-      SC.oEmbed($scope.makeEvent.trackURL, {
-        element: document.getElementById('scPlayer'),
-        auto_play: false,
-        maxheight: 150
-      });
-    } else if (p.accepted) {
-      $.Zebra_Dialog("You can't make changes to this trade because you already accepted it. You will be able to make changes if the other person makes a change.");
-      return;
-    } else {
-      $.Zebra_Dialog('Cannot manage this time slot.');
-    }
-    // var today = new Date();
-    // if (today.toLocaleDateString() == day.toLocaleDateString() && today.getHours() > hour) return;
-    // var calendarDay = calendar.find(function(calD) {
-    //   return calD.day.toLocaleDateString() == day.toLocaleDateString();
-    // });
-    var makeDay = new Date(day);
-    makeDay.setHours(hour, 30, 0, 0);
-
-    if (event.type == "trade") {
-
-      $.Zebra_Dialog("REMOVE trade slot at " + moment(makeDay).format('LLL') + ' ?', {
-        'type': 'confirmation',
-        'buttons': [{
-          caption: 'Yes',
-          callback: function() {
-            var saveTrade = new Promise(function(resolve, reject) {
-              // var calEvent = {
-              //   type: "empty"
-              // };
-              // calendar[dayOffset].events[hour] = calEvent;
-              // $scope.processing = true;
-              if (person == $scope.trade.p1) {
-                angular.forEach($scope.trade.p1.slots, function(slot, index) {
-                  if (moment(slot.day).format('LLL') === moment(makeDay).format('LLL')) {
-                    $scope.trade.p1.slots.splice(index, 1);
-                  }
-                });
-                $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
-                $http.put('/api/trades', $scope.trade)
-                  .then(resolve)
-                  .then(null, reject)
-              } else {
-                angular.forEach($scope.trade.p2.slots, function(slot, index) {
-                  if (moment(slot.day).format('LLL') === moment(makeDay).format('LLL')) {
-                    $scope.trade.p2.slots.splice(index, 1);
-                  }
-                });
-                $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
-                $http.put('/api/trades', $scope.trade)
-                  .then(resolve)
-                  .then(null, reject)
-              }
-            });
-            saveTrade.then(function(res) {
-                $scope.processing = false;
-                $scope.trade = res.data;
-                $scope.emitMessage("REMOVED SLOT from " + person.user.soundcloud.username + " for " + moment(makeDay).format('LLL'), 'alert');
-              })
-              .then(null, function(err) {
-                $scope.processing = false;
-                $.Zebra_Dialog('Error with request');
-              })
-          }
-        }, {
-          caption: 'No',
-          callback: function() {
-            console.log('No was clicked');
-          }
-        }]
-      });
-    } else if (event.type == "empty") {
-      $.Zebra_Dialog("Make " + moment(makeDay).format('LLL') + " a traded slot?", {
-        'type': 'confirmation',
-        'buttons': [{
-          caption: 'Yes',
-          callback: function() {
-            var saveTrade = new Promise(function(resolve, reject) {
-              var calEvent = {
-                type: "trade",
-                day: makeDay,
-                userID: person.user.soundcloud.id
-              };
-              calendar[dayOffset].events[hour] = calEvent;
-              $scope.processing = true;
-              if (person == $scope.trade.p1) {
-                $scope.trade.p1.slots.push(calEvent);
-                $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
-                $http.put('/api/trades', $scope.trade)
-                  .then(resolve)
-                  .then(null, reject)
-              } else {
-                $scope.trade.p2.slots.push(calEvent);
-                $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
-                $http.put('/api/trades', $scope.trade)
-                  .then(resolve)
-                  .then(null, reject)
-              }
-            });
-            saveTrade.then(function(res) {
-                $scope.processing = false;
-                $scope.trade = res.data;
-                $scope.emitMessage("ADDED SLOT to " + person.user.soundcloud.username + " for " + moment(makeDay).format('LLL'), 'alert');
-              })
-              .then(null, function(err) {
-                $scope.processing = false;
-                console.log(err);
-                $.Zebra_Dialog('Error with request');
-              })
-          }
-        }, {
-          caption: 'No',
-          callback: function() {
-            console.log('No was clicked');
-          }
-        }]
-      });
-    } else if (event.type == 'queue' || event.type == 'track') {
-
     }
   }
 
@@ -393,8 +313,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
             .then(function(res) {
               $scope.processing = false;
               $scope.trade = res.data;
-              $scope.emitMessage('---- ' + $scope.user.soundcloud.username + " accepted the trade ----", 'alert');
               if ($scope.trade.p1.accepted && $scope.trade.p2.accepted) $scope.completeTrade();
+              else $scope.emitMessage('---- ' + $scope.user.soundcloud.username + " accepted the trade ----", 'alert');
             })
             .then(null, function(err) {
               $scope.processing = false;
@@ -437,15 +357,6 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       }
     }
   });
-
-  $scope.toggleUnrepost = function() {
-    console.log('here');
-    $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
-    $http.put('/api/trades', $scope.trade)
-      .then(function(res) {
-        $scope.emitMessage($scope.user.soundcloud.username + " toggled unrepost", "alert");
-      })
-  }
 
   $scope.emitMessage = function(message, type) {
     if ($scope.trade.p1.user._id == $scope.user._id) {
@@ -554,7 +465,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     slot.day = new Date(slot.day);
     if ($scope.trade.unrepost) {
       var day = new Date();
-      day.setTime(slot.day.getTime() + 24 * 60 * 60 * 1000);
+      day.setTime(slot.day.getTime() + 24 * 3600000);
       return day;
     } else {
       return new Date(0);
@@ -564,34 +475,26 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.completeTrade = function() {
     $scope.processing = true;
     $scope.trade.p1.slots.forEach(function(slot) {
-      var event = {
-        type: 'traded',
-        owner: $scope.trade.p2.user._id,
-        userID: slot.userID,
-        day: slot.day,
-        unrepostDate: $scope.calcUnrepostDate(slot)
-      }
+      var event = slot;
+      event.type = 'traded';
+      event.owner = $scope.trade.p2.user._id
       $http.post('/api/events/repostEvents', event);
     })
     $scope.trade.p2.slots.forEach(function(slot) {
-      var event = {
-        type: 'traded',
-        owner: $scope.trade.p1.user._id,
-        userID: slot.userID,
-        day: slot.day,
-        unrepostDate: $scope.calcUnrepostDate(slot)
-      }
+      var event = slot;
+      event.type = 'traded';
+      event.owner = $scope.trade.p1.user._id
       $http.post('/api/events/repostEvents', event);
     })
-    $scope.processing = true;
     setTimeout(function() {
       $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
-      $scope.trade.p1.slots = [];
-      $scope.trade.p2.slots = [];
+      $scope.trade.p1.slots = $scope.trade.p2.slots = [];
       $http.put('/api/trades', $scope.trade)
         .then(function(res) {
-          $scope.emitMessage("TRADE COMPLETED", "alert");
+          $scope.processing = false;
+          $scope.emitMessage("TRADE COMPLETED", 'alert');
         })
+        .then(null, console.log);
     }, 2000)
   }
 
@@ -625,8 +528,18 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     var dayIndex = date.getDay();
     return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
   }
-});
 
+
+  $scope.unrepostSymbol = function(event) {
+    if (!event.unrepostDate) return;
+    event.unrepostDate = new Date(event.unrepostDate);
+    return event.unrepostDate > new Date();
+  }
+
+  $scope.showBoxInfo = function(event) {
+    return (event.type == 'trade' || event.type == 'traded' && event.owner == $scope.user._id)
+  }
+});
 
 
 app.directive('timeSlot', function(moment) {
