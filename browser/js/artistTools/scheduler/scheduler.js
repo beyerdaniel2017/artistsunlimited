@@ -6,13 +6,13 @@ app.config(function($stateProvider) {
             resolve: {
                   events: function($http, SessionService) {
                         return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
-                        .then(function(res) {
-                              return res.data;
-                        })
-                        .then(null, function(err) {
-                              $.Zebra_Dialog("error getting your events");
-                              return;
-                        })
+                              .then(function(res) {
+                                    return res.data;
+                              })
+                              .then(null, function(err) {
+                                    $.Zebra_Dialog("error getting your events");
+                                    return;
+                              })
                   }
             }
       });
@@ -45,15 +45,15 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   if (myArray) {
                         $scope.user.email = answer;
                         return $http.put('/api/database/profile', $scope.user)
-                        .then(function(res) {
-                              SessionService.create(res.data);
-                              $scope.user = SessionService.getUser();
-                              $scope.hideall = false;
-                        })
-                        .then(null, function(err) {
-                              $.Zebra_Dialog("Error saving.")
-                              promptForEmail();
-                        })
+                              .then(function(res) {
+                                    SessionService.create(res.data);
+                                    $scope.user = SessionService.getUser();
+                                    $scope.hideall = false;
+                              })
+                              .then(null, function(err) {
+                                    $.Zebra_Dialog("Error saving.")
+                                    promptForEmail();
+                              })
                   } else {
                         promptForEmail();
                   }
@@ -67,15 +67,15 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       $scope.saveUser = function() {
             $scope.processing = true;
             $http.put("/api/database/profile", $scope.user)
-            .then(function(res) {
-                  SessionService.create(res.data);
-                  $scope.user = SessionService.getUser();
-                  $scope.processing = false;
-            })
-            .then(null, function(err) {
-                  $.Zebra_Dialog("Error: did not save");
-                  $scope.processing = false;
-            });
+                  .then(function(res) {
+                        SessionService.create(res.data);
+                        $scope.user = SessionService.getUser();
+                        $scope.processing = false;
+                  })
+                  .then(null, function(err) {
+                        $.Zebra_Dialog("Error: did not save");
+                        $scope.processing = false;
+                  });
       }
 
       $scope.incrDay = function() {
@@ -138,43 +138,43 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       $scope.changeURL = function() {
             $scope.processing = true;
             $http.post('/api/soundcloud/resolve', {
-                  url: $scope.makeEventURL
-            })
-            .then(function(res) {
-                  $scope.makeEvent.trackID = res.data.id;
-                  $scope.makeEvent.title = res.data.title;
-                  $scope.makeEvent.trackURL = res.data.trackURL;
-                  if (res.data.user) $scope.makeEvent.artistName = res.data.user.username;
-                  SC.oEmbed($scope.makeEventURL, {
-                        element: document.getElementById('scPlayer'),
-                        auto_play: false,
-                        maxheight: 150
+                        url: $scope.makeEventURL
                   })
-                  document.getElementById('scPlayer').style.visibility = "visible";
-                  $scope.notFound = false;
-                  $scope.processing = false;
-            }).then(null, function(err) {
-                  document.getElementById('scPlayer').style.visibility = "hidden";
-                  $scope.notFound = true;
-                  $scope.processing = false;
-            });
+                  .then(function(res) {
+                        $scope.makeEvent.trackID = res.data.id;
+                        $scope.makeEvent.title = res.data.title;
+                        $scope.makeEvent.trackURL = res.data.trackURL;
+                        if (res.data.user) $scope.makeEvent.artistName = res.data.user.username;
+                        SC.oEmbed($scope.makeEventURL, {
+                              element: document.getElementById('scPlayer'),
+                              auto_play: false,
+                              maxheight: 150
+                        })
+                        document.getElementById('scPlayer').style.visibility = "visible";
+                        $scope.notFound = false;
+                        $scope.processing = false;
+                  }).then(null, function(err) {
+                        document.getElementById('scPlayer').style.visibility = "hidden";
+                        $scope.notFound = true;
+                        $scope.processing = false;
+                  });
       }
 
       $scope.deleteEvent = function() {
             if (!$scope.newEvent) {
                   $scope.processing = true;
                   $http.delete('/api/events/repostEvents/' + $scope.makeEvent._id)
-                  .then(function(res) {
-                        return $scope.refreshEvents();
-                  })
-                  .then(function(res) {
-                        $scope.showOverlay = false;
-                        $scope.processing = false;
-                  })
-                  .then(null, function(err) {
-                        $scope.processing = false;
-                        $.Zebra_Dialog("ERROR: Did not delete.")
-                  });
+                        .then(function(res) {
+                              return $scope.refreshEvents();
+                        })
+                        .then(function(res) {
+                              $scope.showOverlay = false;
+                              $scope.processing = false;
+                        })
+                        .then(null, function(err) {
+                              $scope.processing = false;
+                              $.Zebra_Dialog("ERROR: Did not delete.")
+                        });
             } else {
                   var calendarDay = $scope.calendar.find(function(calD) {
                         return calD.day.toLocaleDateString() == $scope.makeEvent.day.toLocaleDateString();
@@ -206,6 +206,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }
 
       $scope.findUnrepostOverlap = function() {
+            if (!$scope.makeEvent.trackID) return false;
             var blockEvents = $scope.events.filter(function(event) {
                   event.day = new Date(event.day);
                   event.unrepostDate = new Date(event.unrepostDate);
@@ -231,18 +232,18 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                               var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
                         }
                         req
-                        .then(function(res) {
-                              return $scope.refreshEvents();
+                              .then(function(res) {
+                                    return $scope.refreshEvents();
 
-                        })
-                        .then(function(res) {
-                              $scope.showOverlay = false;
-                              $scope.processing = false;
-                        })
-                        .then(null, function(err) {
-                              $scope.processing = false;
-                              $.Zebra_Dialog("ERROR: Did not save.");
-                        });
+                              })
+                              .then(function(res) {
+                                    $scope.showOverlay = false;
+                                    $scope.processing = false;
+                              })
+                              .then(null, function(err) {
+                                    $scope.processing = false;
+                                    $.Zebra_Dialog("ERROR: Did not save.");
+                              });
                   }
             } else {
                   $.Zebra_Dialog('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
@@ -269,23 +270,25 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             $scope.user.queue.push($scope.newQueueID);
             $scope.saveUser();
             $scope.newQueueSong = undefined;
+            $scope.newQueue = undefined;
             $scope.loadQueueSongs([$scope.newQueueID]);
       }
 
       $scope.changeQueueSong = function() {
             $scope.processing = true;
             $http.post('/api/soundcloud/resolve', {
-                  url: $scope.newQueueSong
-            })
-            .then(function(res) {
-                  $scope.processing = false;
-                  var track = res.data;
-                  $scope.newQueueID = track.id;
-            })
-            .then(null, function(err) {
-                  $.Zebra_Dialog("error getting song");
-                  $scope.processing = false;
-            });
+                        url: $scope.newQueueSong
+                  })
+                  .then(function(res) {
+                        $scope.processing = false;
+                        var track = res.data;
+                        $scope.newQueue = track;
+                        $scope.newQueueID = track.id;
+                  })
+                  .then(null, function(err) {
+                        $.Zebra_Dialog("Song not found.");
+                        $scope.processing = false;
+                  });
       }
 
       $scope.moveUp = function(index) {
@@ -349,14 +352,14 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
       $scope.refreshEvents = function() {
             return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
-            .then(function(res) {
-                  var events = res.data
-                  events.forEach(function(ev) {
-                        ev.day = new Date(ev.day);
-                  });
-                  $scope.events = events;
-                  $scope.calendar = $scope.fillDateArrays(events);
-            })
+                  .then(function(res) {
+                        var events = res.data
+                        events.forEach(function(ev) {
+                              ev.day = new Date(ev.day);
+                        });
+                        $scope.events = events;
+                        $scope.calendar = $scope.fillDateArrays(events);
+                  })
       }
 
       $scope.fillDateArrays = function(events) {
