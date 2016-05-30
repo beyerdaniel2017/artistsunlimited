@@ -227,10 +227,11 @@ button:active:after{
 	background: white;
 	border: 1px solid $light-gray;
 	border-radius: 8px;
-	padding: 0 4px;
+	padding: 0 0;
 	width: 75%;
 	position: relative;
 	overflow: hidden;
+	-webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
 }
 
 .convo-display {
