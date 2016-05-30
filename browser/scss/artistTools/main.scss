@@ -1,5 +1,8 @@
 $break-small: 436px;
 $break-small-landscape: 774px;
+$light-gray: #dddddd;
+$mid-gray: #b3b3b3;
+$aurange: #F5BBBC;
 
 /* SCHEDULER */
 
@@ -19,7 +22,6 @@ $break-small-landscape: 774px;
 }
 
 .btn-scheduler > img {
-	width:90%;
 	height:100%;
 	margin-top:-20%;
 }
@@ -41,15 +43,10 @@ $break-small-landscape: 774px;
 }
 
 .btn-queue {
-	background: #F5BBBC;
-	border: 2px solid white;
-	border-radius: 8px;
+	background: white;
+	border: none;
 	text-align: center;
 	padding: 3px;
-	color: #fff;
-	font-size: 1.8em;
-	text-transform:uppercase;
-	letter-spacing: 3px;
 	width: 70px;
 	height: 45px;
 	margin: 3px;
@@ -59,8 +56,7 @@ $break-small-landscape: 774px;
 }
 
 .btn-queue > img {
-	width: 90%;
-	height: 90%;
+	height: 70%;
 	margin: auto;
 	margin-top: -15px;
 	vertical-align: center;
@@ -69,15 +65,15 @@ $break-small-landscape: 774px;
 .row-scheduler {
 	width:100%;
 	height:24px;
-	border: 1px solid black;
-	border-right: 1px solid black;
+	border: solid $light-gray;
+	border-width: 0 1px 1px 0;
 	cursor:pointer;
 	vertical-align:middle;
 	overflow:hidden;
 }
 
 .row-scheduler:hover {
-	background-color: #fff;
+	background-color: #f2f2f2;
 }
 
 .row-dark {
@@ -90,12 +86,12 @@ $break-small-landscape: 774px;
 
 .cell-date {
 	width: 13%;
-	border: 1px solid black;
+	border: solid $light-gray;
+	border-width: 0 0 1px 0;
+	color: $mid-gray;
 	font-size: 13px;
-	background-color: #f2f2f2;
 	line-height: 16px;
 	vertical-align: middle;
-	color: black;
 }
 
 .column-day {
@@ -104,16 +100,17 @@ $break-small-landscape: 774px;
 }
 
 .column-time {
-	width: 9%;
+	width: 4.5%;
 	height: 100%;
 }
 
 .cell-time {
 	width:100%;
 	height:24px;
-	border:1px solid black;
+	border: solid $light-gray;
+	border-width: 0 1px 0 0;
 	vertical-align: middle;
-	color: black;
+	color: $mid-gray;
 	font-size: 1.1em;
 }
 
@@ -144,11 +141,10 @@ $break-small-landscape: 774px;
 /** REFORRE INTERACTION **/
 
 .rfr-schedule-container {
-	width: 96%;
+	width: 98%;
 	height: 60vh;
 	min-height: 480px;
 	margin: auto;
-	margin-top: 5px;
 	display: block;
 	position:relative;
 }
@@ -202,7 +198,7 @@ $break-small-landscape: 774px;
 	display: inline-block;
 	height: 220px;
 	background: white;
-	border: 2px solid black;
+	border: 1px solid $light-gray;
 	border-radius: 8px;
 	padding: 4px;
 	width: 75%;
@@ -230,25 +226,29 @@ $break-small-landscape: 774px;
 	width: 100%;
 	height: 30px;
 	margin:auto;
-	border: 2px solid #F5BBBC;
-	border-width: 2px 0 0 0;
+	border: 1px solid $light-gray;
+	border-width: 1px 0 0 0;
 }
 
 .btn-chat-send {
-	background: #F5BBBC;
-	border-color: transparent;
+	background: white;
+	border-left: 1px solid $light-gray;
+	border-width: 0 0 0 1px;
 	border-radius: 0;
-	text-align: center;
-	padding: 3px;
-	color: #fff;
-	font-size: 1em;
-	text-transform:uppercase;
-	letter-spacing: 2px;
+	padding: 0;
+	color: $light-gray;
 	height: 100%;
+	width: 64px;
 	display: inline-block;
 	position: absolute;
 	right: 0;
 	bottom: 0;
+}
+
+.btn-chat-send > img {
+	height: 70%;
+	margin: auto;
+	vertical-align: center;
 }
 
 .time {
@@ -265,9 +265,9 @@ $break-small-landscape: 774px;
 }
 
 .msg-box {
-	padding: 2px 6px;
+	padding: 4px 12px;
 	color: black;
-	border-radius: 6px;
+	border-radius: 1em;
 	width: auto;
 	display: inline-block;
 	max-width: 95%;
