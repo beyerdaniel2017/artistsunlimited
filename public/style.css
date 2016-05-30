@@ -1398,6 +1398,9 @@ h2, h3 {
 .left-menus ul li:hover, .left-menus ul li:active, .left-menus ul li:focus {
   border-right: 4px solid #959595; }
 
+.left-menu-active {
+  border-right: 4px solid #959595 !important; }
+
 .logout li {
   list-style: outside none none;
   position: absolute;

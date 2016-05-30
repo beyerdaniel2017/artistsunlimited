@@ -1,9 +1,15 @@
-<ng-include src="'js/home/views/navigation.html'"></ng-include>
+<ng-include src="'js/artistTools/ArtistTools/header-navigation.html'"></ng-include>
 <!-- Content Start  -->
-<div class="container" ng-init="checkIfEdit();getTrackListFromSoundcloud();checkIfSubmission()">
-    <div class="content-area bg-white">
+<div class="container-fluid padding0" ng-init="checkIfEdit();getTrackListFromSoundcloud();checkIfSubmission()">
+   <!--  <div class="content-area bg-white"> -->
         <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-        <div class="row">
+        <div class="col-md-10 padding0">
+    <div class="right-side">
+      <div class="row left-right0">
+        <div class="col-md-12 col-sm-10 col-xs-12 pull-right">
+          <div class="page-content">
+           <div class="col-md-11 col-md-offset-1">
+        <div class="row extrapadding">
             <!-- Download Section Start -->
             <div class="col-md-4">
                 <div class="song-container">
@@ -125,6 +131,12 @@
             </form>
         </div>
     </div>
+</div>
+        </div>
+        </div>
+        </div>
+        </div>
+    
 </div>
 <!-- Content End  -->
 <ng-include src="'js/home/views/loader.html'"></ng-include>
