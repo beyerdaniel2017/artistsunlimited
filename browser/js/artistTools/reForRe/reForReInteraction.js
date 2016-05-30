@@ -418,16 +418,19 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     setEventDays($scope.trade.p1.slots);
     setEventDays($scope.trade.p2.slots);
 
+    var now = new Date()
+    now.setHours(now.getHours, 30, 0, 0);
+
     var op1Length = $scope.trade.p1.slots.length;
     p1Events.forEach(function(event) {
       $scope.trade.p1.slots = $scope.trade.p1.slots.filter(function(slot) {
-        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours())
+        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours()) && !(slot.day < now);
       })
     })
     var op2Length = $scope.trade.p2.slots.length;
     p2Events.forEach(function(event) {
       $scope.trade.p2.slots = $scope.trade.p2.slots.filter(function(slot) {
-        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours())
+        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours()) && !(slot.day < now);
       })
     })
 
