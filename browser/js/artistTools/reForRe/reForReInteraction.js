@@ -6,6 +6,7 @@ app.config(function($stateProvider) {
       controller: 'ReForReInteractionController',
       resolve: {
         trade: function($http, $stateParams) {
+          console.log($stateParams);
           return $http.get('/api/trades/byID/' + $stateParams.tradeID)
             .then(function(res) {
               return res.data;
@@ -30,6 +31,27 @@ app.config(function($stateProvider) {
               $.Zebra_Dialog("error getting other's events events");
               return;
             })
+        },
+        currentTrades: function($http, SessionService) {
+          var user = SessionService.getUser();
+          return $http.get('/api/trades/withUser/' + user._id)
+            .then(function(res) {
+              var trades = res.data;
+              trades.forEach(function(trade) {
+                trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
+                trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
+              });
+              trades.sort(function(a, b) {
+                if (a.user.alert == "change") {
+                  return -1;
+                } else if (a.user.alert == "placement") {
+                  return -1
+                } else {
+                  return 1;
+                }
+              })
+              return trades;
+            })
         }
       },
       onExit: function(socket) {
@@ -38,7 +60,7 @@ app.config(function($stateProvider) {
     })
 });
 
-app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, p1Events, p2Events, trade, SessionService, socket, $stateParams) {
+app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, p1Events, p2Events, trade, SessionService, socket, $stateParams, currentTrades) {
   if (!SessionService.getUser()) {
     $state.go('login');
   }
@@ -55,6 +77,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.hideall = false;
   $scope.p1dayIncr = 0;
   $scope.p2dayIncr = 0;
+  $scope.currentTrades = currentTrades;
+  $scope.curTrade = JSON.stringify(currentTrades.find(function(trade) {
+    return $scope.trade._id == trade._id;
+  }));
 
   $scope.incrp1 = function(inc) {
     if ($scope.p1dayIncr < 21) $scope.p1dayIncr++;
@@ -137,6 +163,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       .then(null, function(err) {
         $.Zebra_Dialog('Error getting data.');
       })
+  }
+
+  $scope.changeTrade = function() {
+    $state.go('reForReInteraction', {
+      tradeID: JSON.parse($scope.curTrade)._id
+    })
   }
 
   $scope.backEvent = function() {
@@ -250,6 +282,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     }
     var makeDay = new Date(day);
     makeDay.setHours(hour, 30, 0, 0);
+    if (makeDay < new Date()) {
+      $.Zebra_Dialog('Timeslot has passed.');
+      return;
+    }
 
     switch (event.type) {
       case 'queue':
@@ -418,16 +454,19 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     setEventDays($scope.trade.p1.slots);
     setEventDays($scope.trade.p2.slots);
 
+    var now = new Date()
+    now.setHours(now.getHours(), 30, 0, 0);
+
     var op1Length = $scope.trade.p1.slots.length;
     p1Events.forEach(function(event) {
       $scope.trade.p1.slots = $scope.trade.p1.slots.filter(function(slot) {
-        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours())
+        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours()) && !(slot.day < now);
       })
     })
     var op2Length = $scope.trade.p2.slots.length;
     p2Events.forEach(function(event) {
       $scope.trade.p2.slots = $scope.trade.p2.slots.filter(function(slot) {
-        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours())
+        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours()) && !(slot.day < now);
       })
     })
 
@@ -543,6 +582,11 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.showBoxInfo = function(event) {
     return (event.type == 'trade' || event.type == 'traded' && event.owner == $scope.user._id)
   }
+
+  $scope.followerShow = function() {
+    return (screen.width > '436');
+  }
+
 });
 
 
@@ -601,4 +645,5 @@ app.directive('timeSlot', function(moment) {
     var strTime = hours + ':' + minutes + ' ' + ampm;
     return strTime;
   }
+
 });

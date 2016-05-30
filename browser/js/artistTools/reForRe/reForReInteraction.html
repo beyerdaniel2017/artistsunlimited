@@ -7,12 +7,12 @@
 <div class="content-area bg-white" style="padding: 1% 2%">
 	<div class="rfr-schedule-container" ng-init="getMessage()">
 		<div class="scheduler-small">
-			<div class="label-username" style="height: 6%"><a target="_blank" href="{{trade.p1.user.soundcloud.permalinkURL}}">{{trade.p1.user.soundcloud.username}}</a> - {{trade.p1.user.soundcloud.followers | number:0}} followers  <span style="color:#ADD8E6">( {{trade.p1.slots.length}} slots )</span> </div>
+			<div class="label-username"><a target="_blank" href="{{trade.p1.user.soundcloud.permalinkURL}}">{{trade.p1.user.soundcloud.username}}</a> <span style="color:#ADD8E6">( {{trade.p1.slots.length}} slots )</span><span ng-if="followerShow()"> - {{trade.p1.user.soundcloud.followers | number:0}} followers </span></div>
 			<div style="text-align:center; width:100%; height: 94%; margin: auto;">
 				<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
 					<button class="btn btn-default btn-scheduler" ng-click="decrp1()"><img style="margin-right:-4px;" src="/assets/images/arrow-left.png"/></button>
 					<div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]" style="line-height:27px !important">
-						{{dayOfWeekAsString(calendarp1[t+p1dayIncr].day).substring(0,3)}} <!--{{calendarp1[t+p1dayIncr].day.getMonth()+1}}/{{calendarp1[t+p1dayIncr].day.getDate()}}-->
+						{{dayOfWeekAsString(calendarp1[t+p1dayIncr].day).substring(0,3)}} {{calendarp1[t+p1dayIncr].day.getMonth()+1}}/{{calendarp1[t+p1dayIncr].day.getDate()}}
 					</div>
 					<button class="btn btn-default btn-scheduler" ng-click="incrp1()" ><img src="/assets/images/arrow-right.png"/></button>
 				</div>
@@ -32,12 +32,12 @@
 			</div>
 		</div>
 		<div class="scheduler-small" id="scheduler-right">
-			<div class="label-username" style="height: 6%"><a target="_blank" href="{{trade.p2.user.soundcloud.permalinkURL}}">{{trade.p2.user.soundcloud.username}}</a> - {{trade.p2.user.soundcloud.followers | number:0}} followers  <span style="color:#ADD8E6">( {{trade.p2.slots.length}} slots )</span></div>
-			<div style="text-align:center; width:100%; height: 94%; margin: auto;">
+			<div class="label-username"><a target="_blank" href="{{trade.p2.user.soundcloud.permalinkURL}}">{{trade.p2.user.soundcloud.username}}</a> <span style="color:#ADD8E6">( {{trade.p2.slots.length}} slots )</span><span ng-if="followerShow()"> - {{trade.p2.user.soundcloud.followers | number:0}} followers </span> </div>
+			<div style="text-align:center; width:100%; height: 94%; margin: auto; @media screen and (max-width: 436px) {height: 88%};">
 				<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
 					<button class="btn btn-default btn-scheduler" ng-click="decrp2()"><img style="margin-right:-4px;" src="/assets/images/arrow-left.png"/></button>
 					<div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]" style="line-height:27px !important">
-						{{dayOfWeekAsString(calendarp2[t+p2dayIncr].day).substring(0,3)}}
+						{{dayOfWeekAsString(calendarp2[t+p2dayIncr].day).substring(0,3)}} {{calendarp2[t+p2dayIncr].day.getMonth()+1}}/{{calendarp2[t+p2dayIncr].day.getDate()}}
 					</div>
 					<button class="btn btn-default btn-scheduler" ng-click="incrp2()" ><img src="/assets/images/arrow-right.png"/></button>
 				</div>
@@ -85,6 +85,9 @@
 			<button ng-if="!user.accepted" class="btn btn-default btn-option" ng-style="user.accepted?{'background-color':'gray'}:{}" ng-click="accept()">Accept</button>
 			<button class="btn btn-default btn-option" ui-sref="reForReLists">Exit</button>
 			<button class="btn btn-default btn-option" ng-click="email()">Email</button>
+			<select class='form-control select-rfr' name='curTrade' ng-model='curTrade'  ng-change="changeTrade()">
+				<option ng-repeat="trade in currentTrades" value="{{trade}}">{{trade.other.user.soundcloud.username}}</option>
+			</select>
 		<!-- <select class="form-control select-rfr">
 			<option>--Select Option--</option>
 			<option value="oneTime">One Time</option>
@@ -94,21 +97,22 @@
 </div>
 <!-- overlay -->
 <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showOverlay">
-	<div class="label-scheduler label-smaller" style="width: 500px; height:500px; background-color: white; margin: 100px auto; padding: 50px 0; max-width:95%">
+	<div class="label-scheduler label-smaller" style="width: 500px; background-color: white; margin: 100px auto; padding: 50px 0; max-width:95%;  border-radius:8px; text-align:center;">
 		<span style="font-size:1.25em">{{makeEvent.day.toLocaleDateString()}}     {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
 		<div ng-if=" makeEvent.type=='trade' && makeEvent.person.user._id != user._id || makeEvent.type=='traded'">
-			<input type="text" placeholder="Soundcloud Url" ng-model="makeEvent.URL" ng-change="changeURL()"/><br><span style="font-size:.8em;" ng-if="makeEvent.type=='trade'">(can leave blank)</span><br><br>
+			<input class="form-control" style="width:200px; max-width:90%; margin:0 auto;" type="text" placeholder="Soundcloud Url" ng-model="makeEvent.URL" ng-change="changeURL()"/>
+			<span style="font-size:.8em;" ng-if="makeEvent.type=='trade'">(can leave blank)</span><br><br>
 		</div>
 		<input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()" ng-disabled="makeEvent.type == 'traded'"/><span class="label-smaller" style="font-size:0.8em;"> Unrepost after 24h</span><br><br>
-		<div id='scPlayer' ng-show="makeEvent.trackID"></div>
+		<div id='scPlayer' class="player" ng-show="makeEvent.trackID"></div>
 		<br>
 		<div>
 			<button class="btn btn-default btn-small btn-overlay" ng-click="backEvent()" >Back</button>
 			<button class="btn btn-default btn-small btn-overlay" ng-click="deleteEvent()" ng-if="makeEvent.type=='trade'">Delete</button>
 			<button class="btn btn-default btn-small btn-overlay" ng-click="saveEvent()" ng-if="makeEvent.type=='trade' || makeEvent.owner == user._id">Save</button>
-
+			
 			<br><br>
-			<button ng-click="emailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/email_icon.png' style="height:30px; width:50px;"></button>
+			<!-- <button ng-click="emailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/email_icon.png' style="height:30px; width:50px;"></button> -->
 		</div>
 	</div>
 </div>

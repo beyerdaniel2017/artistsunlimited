@@ -493,6 +493,14 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   content: '\e013';
   color: #F5D3B5; }
 
+.player {
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  margin: 0 auto;
+  overflow: none;
+  -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC); }
+
 /*** custom checkboxes End***/
 .form-container {
   min-height: 350px; }
@@ -609,6 +617,11 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   text-overflow: ellipsis;
   text-align: right; }
 
+button:focus,
+button:after,
+button:active:after {
+  outline: none; }
+
 /* SCHEDULER */
 #scheduler-container {
   text-align: center;
@@ -648,7 +661,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   padding: 3px;
   width: 70px;
   height: 45px;
-  margin: 3px;
+  margin: 50px auto;
   padding: 4px;
   line-height: 45px;
   vertical-align: middle; }
@@ -663,7 +676,8 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   width: 100%;
   height: 24px;
   border: solid #dddddd;
-  border-width: 0 1px 1px 0;
+  border-width: 1px;
+  border-radius: 5px;
   cursor: pointer;
   vertical-align: middle;
   overflow: hidden; }
@@ -679,8 +693,8 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 
 .cell-date {
   width: 13%;
-  border: solid #dddddd;
-  border-width: 0 0 1px 0;
+  /*border: solid $light-gray;
+	border-width: 0 0 1px 0;*/
   color: #b3b3b3;
   font-size: 13px;
   line-height: 16px;
@@ -697,8 +711,8 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .cell-time {
   width: 100%;
   height: 24px;
-  border: solid #dddddd;
-  border-width: 0 1px 0 0;
+  /*border: solid $light-gray;
+	border-width: 0 1px 0 0;*/
   vertical-align: middle;
   color: #b3b3b3;
   font-size: 1.1em; }
@@ -714,6 +728,22 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 
 .label-smaller {
   font-size: 1.25em; }
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5000px;
+  background-color: rgba(0, 0, 0, 0.85);
+  text-align: center; }
+
+.slot-box {
+  width: 500px;
+  background-color: white;
+  margin: 250px auto;
+  padding: 50px 0;
+  border-radius: 12px; }
 
 @media screen and (max-width: 774px) {
   #scheduler-container {
@@ -750,7 +780,9 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 
 .label-username {
   height: 6%;
-  font-size: 1.5em; }
+  font-size: 1.5em;
+  vertical-align: middle;
+  text-align: center; }
 
 .form-message {
   width: 95%;
@@ -773,15 +805,16 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   background: white;
   border: 1px solid #dddddd;
   border-radius: 8px;
-  padding: 4px;
+  padding: 0 0;
   width: 75%;
   position: relative;
-  overflow: hidden; }
+  overflow: hidden;
+  -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC); }
 
 .convo-display {
   overflow-y: scroll;
   overflow-x: hidden;
-  height: 178px;
+  height: 190px;
   margin: 0;
   position: relative;
   padding: 15px 0 15px 0; }
@@ -887,14 +920,25 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   .scheduler-small {
     width: 100%;
     height: 50%; }
-  .btn-scheduler {
-    width: 6.25%; }
-  .cell-date {
-    width: 12.5%; }
-  .column-day {
-    width: 12.5%; }
-  .column-time {
-    width: 12.5%; }
+  /**
+
+	.btn-scheduler {
+		width: 6.25%;
+	}
+
+	.cell-date {
+		width: 12.5%;
+	}
+
+	.column-day {
+		width: 12.5%;
+	}
+
+	.column-time {
+		width: 12.5%;
+	}
+
+	**/
   .rfr-chat {
     margin-top: 0; }
   .rfr-chatbox {

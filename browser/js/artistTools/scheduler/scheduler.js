@@ -206,6 +206,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }
 
       $scope.findUnrepostOverlap = function() {
+            if (!$scope.makeEvent.trackID) return false;
             var blockEvents = $scope.events.filter(function(event) {
                   event.day = new Date(event.day);
                   event.unrepostDate = new Date(event.unrepostDate);
@@ -269,6 +270,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             $scope.user.queue.push($scope.newQueueID);
             $scope.saveUser();
             $scope.newQueueSong = undefined;
+            $scope.newQueue = undefined;
             $scope.loadQueueSongs([$scope.newQueueID]);
       }
 
@@ -280,10 +282,11 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                   .then(function(res) {
                         $scope.processing = false;
                         var track = res.data;
+                        $scope.newQueue = track;
                         $scope.newQueueID = track.id;
                   })
                   .then(null, function(err) {
-                        $.Zebra_Dialog("error getting song");
+                        $.Zebra_Dialog("Song not found.");
                         $scope.processing = false;
                   });
       }
@@ -323,7 +326,10 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
       $scope.dayOfWeekAsString = function(date) {
             var dayIndex = date.getDay();
-            return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
+            if (screen.width > '744') {
+                  return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
+            }
+            return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dayIndex];
       }
 
       $scope.getStyle = function(event) {
