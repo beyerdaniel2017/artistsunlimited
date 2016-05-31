@@ -81,40 +81,37 @@
 			</div>
 		</div>
 		<div class="trade-options">
+			<select class='form-control select-rfr' name='curTrade' ng-model='curTrade'  ng-change="changeTrade()">
+				<option ng-repeat="trade in currentTrades" value="{{trade}}">{{trade.other.user.soundcloud.username}}</option>
+			</select>
 			<span style="text-align:center; margin:10px; margin-top:0px; width:100%; display:inline-block;" ng-if="user.accepted">You accepted this trade. Waiting for the other user to take action.</span>
 			<button ng-if="!user.accepted" class="btn btn-default btn-option" ng-style="user.accepted?{'background-color':'gray'}:{}" ng-click="accept()">Accept</button>
 			<button class="btn btn-default btn-option" ui-sref="reForReLists">Exit</button>
 			<button class="btn btn-default btn-option" ng-click="email()">Email</button>
-			<select class='form-control select-rfr' name='curTrade' ng-model='curTrade'  ng-change="changeTrade()">
-				<option ng-repeat="trade in currentTrades" value="{{trade}}">{{trade.other.user.soundcloud.username}}</option>
-			</select>
-		<!-- <select class="form-control select-rfr">
-			<option>--Select Option--</option>
-			<option value="oneTime">One Time</option>
-			<option value="weekly">Weekly</option>
-		</select> -->
-	</div>
-</div>
-<!-- overlay -->
-<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showOverlay">
-	<div class="label-scheduler label-smaller" style="width: 500px; background-color: white; margin: 100px auto; padding: 50px 0; max-width:95%;  border-radius:8px; text-align:center;">
-		<span style="font-size:1.25em">{{makeEvent.day.toLocaleDateString()}}     {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
-		<div ng-if=" makeEvent.type=='trade' && makeEvent.person.user._id != user._id || makeEvent.type=='traded'">
-			<input class="form-control" style="width:200px; max-width:90%; margin:0 auto;" type="text" placeholder="Soundcloud Url" ng-model="makeEvent.URL" ng-change="changeURL()"/>
-			<span style="font-size:.8em;" ng-if="makeEvent.type=='trade'">(can leave blank)</span><br><br>
-		</div>
-		<input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()" ng-disabled="makeEvent.type == 'traded'"/><span class="label-smaller" style="font-size:0.8em;"> Unrepost after 24h</span><br><br>
-		<div id='scPlayer' class="player" ng-show="makeEvent.trackID"></div>
-		<br>
-		<div>
-			<button class="btn btn-default btn-small btn-overlay" ng-click="backEvent()" >Back</button>
-			<button class="btn btn-default btn-small btn-overlay" ng-click="deleteEvent()" ng-if="makeEvent.type=='trade'">Delete</button>
-			<button class="btn btn-default btn-small btn-overlay" ng-click="saveEvent()" ng-if="makeEvent.type=='trade' || makeEvent.owner == user._id">Save</button>
-			
-			<br><br>
-			<!-- <button ng-click="emailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/email_icon.png' style="height:30px; width:50px;"></button> -->
 		</div>
 	</div>
-</div>
-<!-- loader -->
-<ng-include src="'js/home/views/loader.html'"></ng-include><script type="text/javascript">
+	<!-- overlay -->
+	<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showOverlay">
+		<div class="label-scheduler label-smaller" style="width: 500px; background-color: white; margin: 100px auto; padding: 50px 0; max-width:95%;  border-radius:8px; text-align:center;">
+			<span style="font-size:1.25em">{{makeEvent.day.toLocaleDateString()}}     {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
+			<div ng-if=" makeEvent.type=='trade' && makeEvent.person.user._id != user._id || makeEvent.type=='traded'">
+				<input class="form-control" style="width:200px; max-width:90%; margin:0 auto;" type="text" placeholder="Soundcloud Url" ng-model="makeEvent.URL" ng-change="changeURL()"/>
+				<span style="font-size:.8em;" ng-if="makeEvent.type=='trade'">(can leave blank)</span><br><br>
+			</div>
+			<input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()" ng-disabled="makeEvent.type == 'traded'"/><span class="label-smaller" style="font-size:0.8em;"> Unrepost after 24h</span><br><br>
+			<div id='scPlayer' class="player" ng-show="makeEvent.trackID"></div>
+			<br>
+			<div>
+				<button class="btn btn-default btn-small btn-overlay" ng-click="backEvent()" >Back</button>
+				<button class="btn btn-default btn-small btn-overlay" ng-click="deleteEvent()" ng-if="makeEvent.type=='trade'">Delete</button>
+				<button class="btn btn-default btn-small btn-overlay" ng-click="saveEvent()" ng-if="makeEvent.type=='trade' || makeEvent.owner == user._id">Save</button>
+
+				<br><br>
+				<!-- <button ng-click="emailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/email_icon.png' style="height:30px; width:50px;"></button> -->
+			</div>
+		</div>
+	</div>
+	<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
+	</div>
+	<!-- loader -->
+	<ng-include src="'js/home/views/loader.html'"></ng-include><script type="text/javascript">
