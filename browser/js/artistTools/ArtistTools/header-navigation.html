@@ -1,7 +1,10 @@
 <div class="page-header navbar-fixed-top"><!--page-header start-->
+  <div class="container-fluid">
+    <div class="row">
   <div class="col-md-4 col-sm-6 col-xs-4">
     <div id="logo">
-      <a href="#" ui-sref="services"><img class="img-responsive" src="assets/images/logo.png"></a>
+      <a href="#" ui-sref="services"><img src="assets/images/logo.png" height="40" />
+      </a>
     </div><!--logo end-->
   </div>
   <div class="col-md-8 col-sm-6 col-xs-8">
@@ -12,9 +15,17 @@
         </li>
         <li><a href="#" ui-sref="services"><img class="img-responsive" src="assets/images/home.png"></a>
         </li> 
+        <li > 
+              <a class="menu-bar" href="#menu-toggle" id="menu-toggle">
+                <img src="assets/images/bar-icon.png"/>
+              </a>  
+         </li>  
          <li class="logout" id="logout"><a href="javascript:void(0)" ng-click="logout()">Logout</a> 
         </li>      
       </ul>     
     </div>
   </div>
-</div><!--page-header End-->
+    </div>
+    <!--page-header End-->
+  </div>
+</div>

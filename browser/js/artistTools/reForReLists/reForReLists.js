@@ -75,7 +75,6 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
 	$scope.minManageTradefollowers = 0;
 	$scope.maxManageTradefollowers = 100000000;
 	
-
 	$scope.searchByFollowers = function() {
 		$scope.searchURL = "";
 		$scope.sendSearch();

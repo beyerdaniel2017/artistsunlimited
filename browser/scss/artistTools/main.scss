@@ -903,6 +903,7 @@ right: 0;
 	clear: both;
     left: 0px;
     position:fixed;*/
+	overflow-y: auto
 }
 .left-side::before {
 	position: absolute;
@@ -1420,10 +1421,11 @@ color: #303030;
 .nav-tabs .nav > li{
 	width:100%;
 }
-.left-side{
-	position: relative !important;
-	width: 92%;
-margin: 0 auto;
+.tropical {
+	padding: 0;
+}
+.left-menus ul li {
+	padding: 0px 10px;
 }
 }
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
@@ -1534,6 +1536,14 @@ margin: 0 auto;
 	border-radius: 0;
 }
 
+.inner-head .menu-bar{
+     display:none ;
+}
+@media(max-width:767px) {
+	 .inner-head .menu-bar{
+     display:block;
+    }
+}
 /************ SIDEBAR START START *****************/
 /*!
  * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
@@ -1667,5 +1677,6 @@ margin: 0 auto;
         position: relative;
         margin-right: 0;
     }
+  
 }
 /************ SIDEBAR START END*****************/
