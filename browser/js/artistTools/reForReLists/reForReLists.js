@@ -235,12 +235,6 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
 		});
 	}
 
-	$scope.logout = function() {
-    $http.post('/api/logout').then(function() {
-      SessionService.deleteUser();
-      $state.go('login');
-    });
-  };
   $scope.sortResult($scope.sortby);
 });
 

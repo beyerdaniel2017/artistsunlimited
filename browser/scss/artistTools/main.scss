@@ -399,7 +399,7 @@ h2, h3 {
 }
 
 .notification-bubble {
-    right: 33px;
+    right: 38px;
     top: -8px;
     position: absolute;
     border-radius: 5px;
@@ -1081,6 +1081,7 @@ font-weight: normal;
 width: 100%;
 margin: 0px;
 outline:0;
+	border-radius: 0 !important;
 }
  .nav-tabs .nav > li > a:hover{
  	color: #8C8989;
@@ -1246,7 +1247,7 @@ input[type=range]:focus::-ms-fill-upper {
 /*Genres css End*/
 
 .scroll-bar1{ 
-height:472px;
+	height:500px;
 margin-top: 0;
     overflow-x: hidden;
 overflow-y: auto;
@@ -1552,7 +1553,6 @@ margin: 0 auto;
 }
 
 #sidebar-wrapper {
-    z-index: 1000;
     position: fixed;
     left: 240px;
     width: 0;

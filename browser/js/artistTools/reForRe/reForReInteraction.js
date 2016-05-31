@@ -344,6 +344,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     if(message.tradeID == $stateParams.tradeID){
       $scope.msgHistory.push(message);
       $scope.message = message.message;
+      $scope.trade.messages.push(message);
       if (message.type == "alert") {
         $scope.refreshCalendar();
       }
