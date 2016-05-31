@@ -901,8 +901,7 @@ button:active:after {
   margin-top: 0; }
 
 .select-rfr {
-  margin: 0;
-  margin-left: 10px;
+  margin: 0 10px 10px 10px;
   width: 100%; }
 
 .trade-options {

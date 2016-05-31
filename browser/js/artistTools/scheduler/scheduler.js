@@ -33,35 +33,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
       $scope.hideall = false;
 
-      function promptForEmail() {
-            if (!$scope.user.email) {
-                  $scope.hideall = true;
-
-                  var answer = prompt('To use the scheduler, we need your email to alert you when your access token goes bad. What is your email?');
-                  if (!answer) {
-                        $state.go('artistToolsDownloadGatewayList');
-                  }
-                  var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
-                  if (myArray) {
-                        $scope.user.email = answer;
-                        return $http.put('/api/database/profile', $scope.user)
-                              .then(function(res) {
-                                    SessionService.create(res.data);
-                                    $scope.user = SessionService.getUser();
-                                    $scope.hideall = false;
-                              })
-                              .then(null, function(err) {
-                                    $.Zebra_Dialog("Error saving.")
-                                    promptForEmail();
-                              })
-                  } else {
-                        promptForEmail();
-                  }
-
-            }
-      }
-      promptForEmail();
-
       $scope.dayIncr = 0;
 
       $scope.saveUser = function() {
@@ -215,8 +186,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             })
             return blockEvents.length > 0;
       }
-
-      $scope.refreshCalendar
 
       $scope.saveEvent = function() {
             if (!$scope.findUnrepostOverlap()) {
@@ -388,4 +357,33 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       };
       $scope.calendar = $scope.fillDateArrays(events);
 
+
+      function promptForEmail() {
+            if (!$scope.user.email) {
+                  $scope.hideall = true;
+
+                  var answer = prompt('Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.');
+                  if (!answer) {
+                        $state.go('artistToolsDownloadGatewayList');
+                  }
+                  var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
+                  if (myArray) {
+                        $scope.user.email = answer;
+                        return $http.put('/api/database/profile', $scope.user)
+                              .then(function(res) {
+                                    SessionService.create(res.data);
+                                    $scope.user = SessionService.getUser();
+                                    $scope.hideall = false;
+                              })
+                              .then(null, function(err) {
+                                    $.Zebra_Dialog("Error saving.")
+                                    promptForEmail();
+                              })
+                  } else {
+                        promptForEmail();
+                  }
+
+            }
+      }
+      promptForEmail();
 });
