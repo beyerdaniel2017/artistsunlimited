@@ -75,13 +75,6 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
 	$scope.minManageTradefollowers = 0;
 	$scope.maxManageTradefollowers = 100000000;
 	
-	$scope.helpModal = function() {
-    var displayText = "";
-    displayText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. <a href='mailto:someone@example.com' target='_top'>Send Mail</a>";
-    $.Zebra_Dialog(displayText, {
-      width: 600
-    });
-  };
 
 	$scope.searchByFollowers = function() {
 		$scope.searchURL = "";
@@ -119,7 +112,6 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
 	$scope.searchCurrentTrade = function() {
   	var cTrades = [];
   	$scope.currentTrades = [];
-  	console.log($scope.minManageTradefollowers, $scope.maxManageTradefollowers);
   	angular.forEach($scope.currentTradesCopy, function(trade) {
   		if ($scope.searchURL != "") {
     		var url = $scope.searchURL;
@@ -127,14 +119,15 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
         if ((trade.other.user.soundcloud.permalinkURL.indexOf(url) != -1)) {
           cTrades.push(trade);
         }
-  		} else if (parseInt($scope.maxManageTradefollowers) > 0) {
+	  		} 
+	  		else if (parseInt($scope.maxManageTradefollowers) > 0) {
         if (trade.other.user.soundcloud.followers >= $scope.minManageTradefollowers && trade.other.user.soundcloud.followers <= $scope.maxManageTradefollowers) {
           cTrades.push(trade);
         }	
   		}
   	});
-  	console.log('cTrades',cTrades);
   	$scope.currentTrades = cTrades;
+	  	$scope.$apply();
 	}
 
 	$scope.sortResult = function(sortby) {
@@ -234,7 +227,6 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
 			$.Zebra_Dialog("Error in creating trade");
 		});
 	}
-
   $scope.sortResult($scope.sortby);
 });
 
