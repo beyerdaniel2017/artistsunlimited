@@ -1,9 +1,11 @@
 <ng-include src="'js/artistTools/ArtistTools/header-navigation.html'"></ng-include>
 <!-- Content Start  -->
 
-<div class="container-fluid height-100pr padding0">
+<div id="wrapper">
   <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-  <div class="col-md-10 height-100pr">
+  <div class="container-fluid height-100pr">
+    <div class="row">
+      <div class="col-md-12 ">
     <div class="page-content right-side"><!--page-contant Start-->
             <div class="row">
       <h3 style="text-align:center;">{{user.displayName}}</h3>
@@ -75,4 +77,6 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
 <ng-include src="'js/home/views/loader.html'"></ng-include>
