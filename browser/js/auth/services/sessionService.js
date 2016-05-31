@@ -1,17 +1,17 @@
-app.factory('SessionService', function($cookies, $http) {
+app.factory('SessionService', function($cookies, $http, $window) {
 
 	function create(data) {
-		$cookies.putObject('user', data);
+		$window.localStorage.setItem('user', JSON.stringify(data));
 	}
 
 	function deleteUser() {
-		$cookies.remove('user');
+		$window.localStorage.removeItem('user');
 	}
 
 	function getUser() {
-		var user = $cookies.get('user');
+		var user = JSON.parse($window.localStorage.getItem('user'));
 		if (user) {
-			return JSON.parse($cookies.get('user'));
+			return user;
 		}
 	}
 
