@@ -1,36 +1,36 @@
 app.config(function($stateProvider) {
 	$stateProvider
-		.state('reForReLists', {
-			url: '/artistTools/reForReLists',
-			templateUrl: 'js/artistTools/reForReLists/reForReLists.html',
-			controller: 'ReForReListsController',
-			resolve: {
-				currentTrades: function($http, SessionService) {
-					var user = SessionService.getUser();
-					if (user) {
-						return $http.get('/api/trades/withUser/' + user._id)
-							.then(function(res) {
-								var trades = res.data;
-								trades.forEach(function(trade) {
-									trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
-									trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
-								});
-								trades.sort(function(a, b) {
-									if (a.user.alert == "change") {
-										return -1;
-									} else if (a.user.alert == "placement") {
-										return -1
-									} else {
-										return 1;
-									}
+	.state('reForReLists', {
+		url: '/artistTools/reForReLists',
+		templateUrl: 'js/artistTools/reForReLists/reForReLists.html',
+		controller: 'ReForReListsController',
+		resolve: {
+			currentTrades: function($http, SessionService) {
+				var user = SessionService.getUser();
+				if (user) {
+    			return $http.get('/api/trades/withUser/' + user._id)
+					.then(function(res) {
+						var trades = res.data;
+						trades.forEach(function(trade) {
+							trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
+							trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
 						});
-								return trades;
-							})
-					} else {
-						return [];
-					}
+						trades.sort(function(a, b) {
+							if (a.user.alert == "change") {
+								return -1;
+							} else if (a.user.alert == "placement") {
+								return -1
+							} else {
+								return 1;
+							}
+						});
+						return trades;
+					})
+				} else {
+					return [];
+				}
 			},
-			openTrades: function($http, SessionService) {
+      		openTrades:function($http, SessionService) {
 				var user = SessionService.getUser();
 				if (user) {
 					var minFollower = ((user.soundcloud.followers && user.soundcloud.followers > 0) ? parseInt(user.soundcloud.followers/2) : 0);
@@ -38,14 +38,14 @@ app.config(function($stateProvider) {
 					return $http.post('/api/users/bySCURL/', {
 						url: '',
 						minFollower: minFollower,
-            maxFollower: maxFollower,
-            recordRange: { skip: 0, limit: 12 }
+      			maxFollower: maxFollower,
+    				recordRange: { skip: 0, limit: 12 }
 					})
 					.then(function(res) {
-						return res.data;
-					})
-				} else {
-					return [];
+            			return res.data;
+						})
+					} else {
+						return [];
 				}
 			}
 		}
@@ -54,97 +54,151 @@ app.config(function($stateProvider) {
 
 app.controller("ReForReListsController", function($scope, currentTrades, openTrades, $http, SessionService, $state, $timeout) {
 	if (!SessionService.getUser()) {
-      $state.go('login');
-    }
+    $state.go('login');
+	}
 	$scope.user = SessionService.getUser();
 	$scope.currentTrades = currentTrades;
 	$scope.currentTradesCopy = currentTrades;
 	$scope.otherUsers = [];
 	$scope.searchUser = openTrades;
+
 	$scope.searchURL = "";
-	$scope.minfollowers = 0;
-	$scope.maxfollowers = 100000000;
-	$scope.sortby = "";
-  var searchTradeRange = {
+	$scope.minSearchTradefollowers = (($scope.user.soundcloud.followers && $scope.user.soundcloud.followers > 0) ? parseInt($scope.user.soundcloud.followers/2) : 0);
+	$scope.maxSearchTradefollowers = (($scope.user.soundcloud.followers && $scope.user.soundcloud.followers > 0) ? parseInt($scope.user.soundcloud.followers * 2) : 100000000);
+	
+	$scope.sortby = "Recent Alert";
+	$scope.sort_order = "ascending";
+	var searchTradeRange = {
     skip: 0,
     limit: 12
-  }
-	$scope.search = {
-		// followers: {
-		// 	$lt: SessionService.getUser().soundcloud.followers * 2,
-		// 	$gt: SessionService.getUser().soundcloud.followers / 2
-		// }
+	}
+	$scope.minManageTradefollowers = 0;
+	$scope.maxManageTradefollowers = 100000000;
+	
+	$scope.helpModal = function() {
+    var displayText = "";
+    displayText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. <a href='mailto:someone@example.com' target='_top'>Send Mail</a>";
+    $.Zebra_Dialog(displayText, {
+      width: 600
+    });
+  };
+
+	$scope.searchByFollowers = function() {
+		$scope.searchURL = "";
+		$scope.sendSearch();
 	}
 
 	$scope.sendSearch = function() {
 		$scope.processing = true;
-		//$scope.searchUser = null;
+		$scope.searchUser = [];
 		
 		$http.post('/api/users/bySCURL/', {
-				url: $scope.searchURL,
-				minFollower: $scope.minfollowers,
-      maxFollower: $scope.maxfollowers,
-			recordRange: searchTradeRange
-			})
-			.then(function(res) {
-				$scope.processing = false;
-      if (res.data.length > 0) {
-        angular.forEach(res.data, function(d) {
-          $scope.searchUser.push(d);
-        });
-      }
-			//$scope.searchUser = res.data;
-			})
-			.then(null, function(err) {
-				$scope.processing = false;
-				$scope.searchUser = [];
-				$.Zebra_Dialog("Did not find user.");
-			});
+			url: $scope.searchURL,
+			minFollower: $scope.minSearchTradefollowers,
+      maxFollower: $scope.maxSearchTradefollowers,
+			recordRange: { skip: 0, limit: 12 }
+		})
+		.then(function(res) {
+			$scope.processing = false;
+			$scope.searchUser = res.data;
+		})
+    .then(undefined, function(err) {
+     	$scope.success=false;
+     	$scope.processing = false;
+     	$scope.searchUser = [];
+     	$.Zebra_Dialog("Please enter Artist url.");
+     })
+		.then(null, function(err) {
+      $scope.success=false;
+			$scope.processing = false;
+			$scope.searchUser = [];
+			$.Zebra_Dialog("Did not find user.");
+		});
 	}
 
 	$scope.searchCurrentTrade = function() {
-		var cTrades = [];
-		angular.forEach($scope.currentTradesCopy, function(trade) {
-      if ($scope.searchURL != "") {
-				var url = $scope.searchURL;
-				url = url.toString().replace('http://', '').replace('https://', '');
-				if ((trade.other.user.soundcloud.permalinkURL.indexOf(url) != -1)) {
-						cTrades.push(trade);
-					}
-			} else if (parseInt($scope.maxfollowers) > 0) {
-        if (trade.other.user.soundcloud.followers >= $scope.minfollowers && trade.other.user.soundcloud.followers <= $scope.maxfollowers) {
-					cTrades.push(trade);
-				}
-			}
-		});
-		$scope.currentTrades = cTrades;
+  	var cTrades = [];
+  	$scope.currentTrades = [];
+  	console.log($scope.minManageTradefollowers, $scope.maxManageTradefollowers);
+  	angular.forEach($scope.currentTradesCopy, function(trade) {
+  		if ($scope.searchURL != "") {
+    		var url = $scope.searchURL;
+    		url = url.toString().replace('http://', '').replace('https://', '');
+        if ((trade.other.user.soundcloud.permalinkURL.indexOf(url) != -1)) {
+          cTrades.push(trade);
+        }
+  		} else if (parseInt($scope.maxManageTradefollowers) > 0) {
+        if (trade.other.user.soundcloud.followers >= $scope.minManageTradefollowers && trade.other.user.soundcloud.followers <= $scope.maxManageTradefollowers) {
+          cTrades.push(trade);
+        }	
+  		}
+  	});
+  	console.log('cTrades',cTrades);
+  	$scope.currentTrades = cTrades;
 	}
 
-	$scope.sortResult = function() {
-		var sortby = $scope.sortby;
-		if(sortby == "followers"){
-			$scope.currentTrades.sort(function(a, b) { return b.other.user.soundcloud.followers - a.other.user.soundcloud.followers; })
+	$scope.sortResult = function(sortby) {
+		$scope.sortby = sortby;
+		var sort_order = $scope.sort_order;
+		if(sortby == "Followers"){
+			if(sort_order == "ascending"){
+				$scope.currentTrades.sort(function(a, b) { return b.other.user.soundcloud.followers - a.other.user.soundcloud.followers; })
+				$scope.sort_order = "descending";
+			}
+			else{
+				$scope.currentTrades.sort(function(a, b) { return a.other.user.soundcloud.followers - b.other.user.soundcloud.followers; })
+				$scope.sort_order = "ascending";
+			}
 		}
 		else{
-			$scope.currentTrades.sort(function(a, b) { var A = a.other.alert.toLowerCase();
-     	var B = b.other.alert.toLowerCase();
-	     if (A < B){
-        return -1;
-	     }else if (A > B){
-	       return  1;
-	     }else{
-	       return 0;
-	     }
-      });
-	}
+			if(sort_order == "ascending"){
+				$scope.currentTrades.sort(function(a, b) { var A = a.other.alert.toLowerCase();
+		     	var B = b.other.alert.toLowerCase();
+		     	return A < B;
+	    	});
+	    	$scope.sort_order = "descending";
+	    }
+	    else{
+	    	$scope.currentTrades.sort(function(a, b) { var A = a.other.alert.toLowerCase();
+		     	var B = b.other.alert.toLowerCase();
+			     return A > B;
+	    	});
+	    	$scope.sort_order = "ascending";
+	    }
+		}
 	}
 
   $scope.loadMore = function() {
     searchTradeRange.skip += 12;
-    searchTradeRange.limit += 12;
-    $scope.sendSearch();
+    searchTradeRange.limit = 12;
+    $http.post('/api/users/bySCURL/', {
+			url: $scope.searchURL,
+			minFollower: $scope.minSearchTradefollowers,
+      maxFollower: $scope.maxSearchTradefollowers,
+			recordRange: searchTradeRange
+		})
+		.then(function(res) {
+			$scope.processing = false;
+    	if (res.data.length > 0) {
+      	angular.forEach(res.data, function(d) {
+      		$scope.searchUser.push(d);
+      	});
+    	}
+		})
+    .then(undefined, function(err) {
+     	$scope.success=false;
+     	$scope.processing = false;
+     	$scope.searchUser = [];
+     	$.Zebra_Dialog("Please enter Artist url.");
+     })
+		.then(null, function(err) {
+      $scope.success=false;
+			$scope.processing = false;
+			$scope.searchUser = [];
+			$.Zebra_Dialog("Did not find user.");
+		});
   };
-
+	
 	$scope.openTrade = function(user) {
 		var trade = {
 			messages: [{
@@ -169,16 +223,16 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
 		}
 		$scope.processing = true;
 		$http.post('/api/trades/new', trade)
-			.then(function(res) {
-				$scope.processing = false;
-				$state.go('reForReInteraction', {
-					tradeID: res.data._id
-				})
+		.then(function(res) {
+			$scope.processing = false;
+			$state.go('reForReInteraction', {
+				tradeID: res.data._id
 			})
-			.then(null, function(err) {
-				$scope.processing = false;
-				$.Zebra_Dialog("Error in creating trade");
-			});
+		})
+		.then(null, function(err) {
+			$scope.processing = false;
+			$.Zebra_Dialog("Error in creating trade");
+		});
 	}
 
 	$scope.logout = function() {
@@ -187,6 +241,7 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
       $state.go('login');
     });
   };
+  $scope.sortResult($scope.sortby);
 });
 
 app.directive('whenScrolled', function() {

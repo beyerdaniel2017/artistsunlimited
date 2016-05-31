@@ -100,6 +100,12 @@ router.post('/bySCURL', function(req, res, next) {
             }
           };
           scWrapper.request(reqObj, function(err, result) {
+          if(err){
+            return res.json({
+               "success": false,
+               message: "Error in processing your request"
+            });
+          };
             https.get(result.location, function(httpRes2) {
               var userBody = '';
               httpRes2.on("data", function(songChunk) {

@@ -1,11 +1,8 @@
 <ng-include src="'js/artistTools/ArtistTools/header-navigation.html'"></ng-include>
-<div class="container-fluid padding0">
-	<ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-<div class="col-md-10 padding0">  
-	<div class="right-side"> 
-    <div class="row left-right0">
-      <div class="col-md-12 col-sm-10 col-xs-12 pull-right">     
-        <div class="page-content"><!--page-contant Start-->
+<div class="container-fluid height-100pr padding0">
+<ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
+<div class="col-md-10 height-100pr">  
+	      <div class="page-content right-side"><!--page-contant Start-->
           <div class="row  nav-tabs margin0"> 
             <ul class="nav nav-pills">
               <li class="active">  <a data-toggle="tab" href="#SearchTrade"><img src="assets/images/search.png">SEARCH TRADES</a></li>
@@ -21,16 +18,16 @@
                           <div class="icon-addon addon-md">
                             <input type="text" placeholder="Search by URL" class="form-control" id="txtSearchByURL" ng-model="searchURL" >
                             <label for="txtSearchByURL" class="glyphicon glyphicon-search" rel="tooltip" title="Search by URL" ng-disable="!applicationObj.firstName" ng-click="sendSearch()"></label>
-			</div>
+                          </div>                                    
                         </div><!--search-trad End-->
-				</div>
-                      <div class="col-md-7 col-sm-6 col-xs-12">
+                      </div>
+                      <div class="col-md-6 col-sm-6 col-xs-12">
                         <div class="range-main">
                           <p>Followers</p>
-                          <div range-slider min="0" max="10000000" model-min="minfollowers" model-max="maxfollowers" attach-handle-values="true" on-handle-up='sendSearch()'></div>
-                          <span class="pull-left">{{minfollowers}}</span> 
-                          <span class="pull-right">{{maxfollowers}}</span>
-			</div>
+                          <div range-slider min="0" max="10000000" model-min="minSearchTradefollowers" model-max="maxSearchTradefollowers" attach-handle-values="true" on-handle-up='searchByFollowers()'></div>
+                          <span class="pull-left">{{minSearchTradefollowers}}</span> 
+                          <span class="pull-right">{{maxSearchTradefollowers}}</span>
+                        </div>                                               
                       </div><!--search-trad End-->
                     </div>                 
               		  <div class="scroll-bar1 border-top" when-scrolled="loadMore()">
@@ -59,24 +56,25 @@
                           </div>
                         </div>
                       </div><!--search-trad End-->
-                      <div class="col-md-6">
+                      <div class="col-md-5">
                         <div class="range-main">
                           <div class="slidethamb-box">
                             <p>Followers</p>
-                            <div range-slider min="0" max="10000000" model-min="minfollowers" model-max="maxfollowers" attach-handle-values="true" on-handle-up='searchCurrentTrade()'></div>
-                            <span class="pull-left">{{minfollowers}}</span> 
-                            <span class="pull-right">{{maxfollowers}}</span>  
+                            <div range-slider min="0" max="10000000" model-min="minManageTradefollowers" model-max="maxManageTradefollowers" attach-handle-values="true" on-handle-up='searchCurrentTrade()'></div>
+                            <span class="pull-left">{{minManageTradefollowers}}</span> 
+                            <span class="pull-right">{{maxManageTradefollowers}}</span>  
                           </div>
                         </div><!--search-trad End-->
-		</div>
-                      <div class="col-md-2">
-  			                <span class="sort-select pull-left">
-  			                <select class="form-control selectWidth" placeholder="Sort By" ng-model="sortby" ng-change="sortResult()">
-                            <option value="">Sort By</option>
-                            <option value="alert">Recent Alert</option>
-                            <option value="followers">Followers</option>
-                          </select>
-  			                </span>
+          				    </div> 
+                      <div class="col-md-2" style="float:right;">
+                         <div class="dropdown">
+                          <button class="btn dropdown-toggle sort-select {{sort_order}}" type="button" data-toggle="dropdown" style="width:130px;">{{sortby}}
+                         </button>
+                          <ul class="dropdown-menu">
+                            <li><a href="#" ng-click="sortResult('Recent Alert')">Recent Alert</a></li>
+                            <li><a href="#" ng-click="sortResult('Followers')">Followers</a></li>
+                          </ul>
+                        </div>
 			            	  </div>
           				  </div>
                     <div class="scroll-bar1 border-top">
@@ -85,7 +83,7 @@
                           <div class="col-md-12" style="padding:10px;">
                             <div class="col-md-6">
                             <div class="manage-trade-thumb">
-				<div class="notification-bubble" ng-show="trade.user.alert == 'change'">!</div>
+                              <div class="notification-bubble" ng-show="trade.user.alert == 'change'">!</div>
                               <img class="img-responsive" src="{{trade.other.user.soundcloud.avatarURL.replace('large', 't500x500') || 'http://i1.sndcdn.com/avatars-000223629160-q12lyq-t500x500.jpg'}}" style="width:190px;"/>
                               <button class="manage-btn" ui-sref="reForReInteraction({tradeID: trade._id})">MANAGE</button>
                                </div>
@@ -106,8 +104,5 @@
             </div>
           </div>
         </div>
-			</div>
-			</div>
-	</div>
-</div>
+      </div>
 <ng-include src="'js/home/views/loader.html'"></ng-include>
