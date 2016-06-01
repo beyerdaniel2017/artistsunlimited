@@ -30,34 +30,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     ev.day = new Date(ev.day);
   });
   $scope.events = events;
-
-  // <<<<<<< HEAD
-  //   $scope.hideall = false;
-
-  //   function promptForEmail() {
-  //     if (!$scope.user.email) {
-  //       $scope.hideall = true;
-
-  //       var answer = prompt('To use the scheduler, we need your email to alert you when your access token goes bad. What is your email?');
-  //       if (!answer) {
-  //         $state.go('artistToolsDownloadGatewayList');
-  //       }
-  //       var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
-  //       if (myArray) {
-  //         $scope.user.email = answer;
-  //         return $http.put('/api/database/profile', $scope.user)
-  //         .then(function(res) {
-  //           SessionService.create(res.data);
-  //           $scope.user = SessionService.getUser();
-  //           $scope.hideall = false;
-  //         })
-  //         .then(null, function(err) {
-  //           $.Zebra_Dialog("Error saving.")
-  //           promptForEmail();
-  //         })
-  //       } else {
-  //         promptForEmail();
-  // =======
   $scope.hideall = false;
 
   $scope.dayIncr = 0;
@@ -74,13 +46,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         $.Zebra_Dialog("Error: did not save");
         $scope.processing = false;
       });
-    // >>>>>>> master
   }
-
-  //   }
-  // }
-  // promptForEmail();
-
   $scope.dayIncr = 0;
 
 
@@ -267,85 +233,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       $.Zebra_Dialog('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
     }
   }
-
-  // <<<<<<< HEAD
-  //     $scope.emailSlot = function() {
-  //       var mailto_link = "mailto:?subject=Repost of " + $scope.makeEvent.title + '&body=Hey,\n\n I am reposting your song ' + $scope.makeEvent.title + ' on ' + $scope.user.soundcloud.username + ' on ' + $scope.makeEvent.day.toLocaleDateString() + '.\n\n Best, \n' + $scope.user.soundcloud.username;
-  //       location.href = encodeURI(mailto_link);
-  //     }
-
-  //     $scope.backEvent = function() {
-  //       $scope.makeEvent = null;
-  //       $scope.showOverlay = false;
-  //     }
-
-  //     $scope.removeQueueSong = function(index) {
-  //       $scope.user.queue.splice(index, 1);
-  //       $scope.saveUser()
-  //     }
-
-  //     $scope.addSong = function() {
-  //       if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
-  //       $scope.user.queue.push($scope.newQueueID);
-  //       $scope.saveUser();
-  //       $scope.newQueueSong = undefined;
-  //       $scope.loadQueueSongs([$scope.newQueueID]);
-  //     }
-
-  //     $scope.changeQueueSong = function() {
-  //       $scope.processing = true;
-  //       $http.post('/api/soundcloud/resolve', {
-  //         url: $scope.newQueueSong
-  //       })
-  //       .then(function(res) {
-  //         $scope.processing = false;
-  //         var track = res.data;
-  //         $scope.newQueueID = track.id;
-  //       })
-  //       .then(null, function(err) {
-  //         $.Zebra_Dialog("error getting song");
-  //         $scope.processing = false;
-  //       });
-  //     }
-
-  //     $scope.moveUp = function(index) {
-  //       if (index == 0) return;
-  //       var s = $scope.user.queue[index];
-  //       $scope.user.queue[index] = $scope.user.queue[index - 1];
-  //       $scope.user.queue[index - 1] = s;
-  //       $scope.saveUser();
-  //       $scope.loadQueueSongs([$scope.user.queue[index], $scope.user.queue[index - 1]]);
-  //     }
-
-  //     $scope.moveDown = function(index) {
-  //       if (index == $scope.user.queue.length - 1) return;
-  //       var s = $scope.user.queue[index];
-  //       $scope.user.queue[index] = $scope.user.queue[index + 1];
-  //       $scope.user.queue[index + 1] = s;
-  //       $scope.saveUser();
-  //       $scope.loadQueueSongs([$scope.user.queue[index], $scope.user.queue[index + 1]]);
-  //     }
-
-  //     $scope.loadQueueSongs = function(queue) {
-  //       setTimeout(function() {
-  //         queue.forEach(function(songID) {
-  //           SC.oEmbed("http://api.soundcloud.com/tracks/" + songID, {
-  //             element: document.getElementById(songID + "player"),
-  //             auto_play: false,
-  //             maxheight: 150
-  //           });
-  //         });
-  //       }, 50);
-  //     }
-  //     if ($scope.user && $scope.user.queue) {
-  //       $scope.loadQueueSongs($scope.user.queue);
-  //     }
-
-  //     $scope.dayOfWeekAsString = function(date) {
-  //       var dayIndex = date.getDay();
-  //       return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
-  //     }
-  // =======
   $scope.emailSlot = function() {
     var mailto_link = "mailto:?subject=Repost of " + $scope.makeEvent.title + '&body=Hey,\n\n I am reposting your song ' + $scope.makeEvent.title + ' on ' + $scope.user.soundcloud.username + ' on ' + $scope.makeEvent.day.toLocaleDateString() + '.\n\n Best, \n' + $scope.user.soundcloud.username;
     location.href = encodeURI(mailto_link);
@@ -421,13 +308,18 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.dayOfWeekAsString = function(date) {
-      var dayIndex = date.getDay();
-      if (screen.width > '744') {
-        return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
-      }
-      return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dayIndex];
+    var dayIndex = date.getDay();
+    if (screen.width > '744') {
+      return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
     }
-    // >>>>>>> master
+    return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dayIndex];
+  }
+
+  $scope.unrepostSymbol = function(event) {
+    if (!event.unrepostDate) return;
+    event.unrepostDate = new Date(event.unrepostDate);
+    return event.unrepostDate > new Date();
+  }
 
   $scope.getStyle = function(event) {
     if (event.type == 'empty') {

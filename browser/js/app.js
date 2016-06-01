@@ -114,13 +114,12 @@ app.directive('fileread', [function() {
 }]);
 
 app.service('mainService', function($http, SessionService) {
-    this.openHelpModal = function() {
-        var displayText = "Hey! Thanks for using artist tools! Please submit any questions you have by clicking 'Support' <br><br><a href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Support</a>";
-        $.Zebra_Dialog(displayText, {
-            width: 600
-        });
-    }
-
+    // this.openHelpModal = function() {
+    //     var displayText = "Hey! Thanks for using artist tools! Please submit any questions you have by clicking 'Support' <br><br><a href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Support</a>";
+    //     $.Zebra_Dialog(displayText, {
+    //         width: 600
+    //     });
+    // }
     this.logout = function() {
         $http.post('/api/logout').then(function() {
             SessionService.deleteUser();

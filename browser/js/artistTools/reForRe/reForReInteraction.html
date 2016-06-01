@@ -6,6 +6,7 @@
 </style>
 <div class="content-area bg-white" style="padding: 1% 2%">
 	<div class="rfr-schedule-container" ng-init="getMessage()">
+		<!-- schedule 1 -->
 		<div class="scheduler-small">
 			<div class="label-username"><a target="_blank" href="{{trade.p1.user.soundcloud.permalinkURL}}">{{trade.p1.user.soundcloud.username}}</a> <span style="color:#ADD8E6">( {{trade.p1.slots.length}} slots )</span><span ng-if="followerShow()"> - {{trade.p1.user.soundcloud.followers | number:0}} followers </span></div>
 			<div style="text-align:center; width:100%; height: 94%; margin: auto;">
@@ -24,13 +25,14 @@
 						<div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendarp1[l+p1dayIncr].events[p])" class="row-scheduler row-small" ng-click="clickedSlot(calendarp1[l+p1dayIncr].day, l+p1dayIncr, p, calendarp1, trade.p1, calendarp1[l+p1dayIncr].events[p])" style="position:relative;">
 							<div ng-if="showBoxInfo(calendarp1[l+p1dayIncr].events[p])">
 								<span>{{calendarp1[l+p1dayIncr].events[p].title}}</span>
-								<img ng-if="unrepostSymbol(calendarp1[l+p1dayIncr].events[p])" style="width:14px; height:14px; position:absolute; top:1px; right:1px; background-color: rgba(255,255,255,0.6); border-radius:4px; padding:2px 2px;" src="assets/images/Layer 2.png"></img>
+								<img ng-if="unrepostSymbol(calendarp1[l+p1dayIncr].events[p])" class='unrepost-symbol' src="assets/images/unrepost_symbol.png"></img>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<!-- schedule 2 -->
 		<div class="scheduler-small" id="scheduler-right">
 			<div class="label-username"><a target="_blank" href="{{trade.p2.user.soundcloud.permalinkURL}}">{{trade.p2.user.soundcloud.username}}</a> <span style="color:#ADD8E6">( {{trade.p2.slots.length}} slots )</span><span ng-if="followerShow()"> - {{trade.p2.user.soundcloud.followers | number:0}} followers </span> </div>
 			<div style="text-align:center; width:100%; height: 94%; margin: auto; @media screen and (max-width: 436px) {height: 88%};">
@@ -49,7 +51,7 @@
 						<div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendarp2[l+p2dayIncr].events[p])" class="row-scheduler row-small" ng-click="clickedSlot(calendarp2[l+p2dayIncr].day, l+p2dayIncr, p, calendarp2, trade.p2, calendarp2[l+p2dayIncr].events[p])" style="position:relative;">
 							<div ng-if="showBoxInfo(calendarp2[l+p2dayIncr].events[p])">
 								<span>{{calendarp2[l+p2dayIncr].events[p].title}}</span>
-								<img ng-if="unrepostSymbol(calendarp2[l+p2dayIncr].events[p])" style="width:14px; height:14px; position:absolute; top:1px; right:1px; background-color: rgba(255,255,255,0.6); border-radius:4px; padding:2px 2px;" src="assets/images/Layer 2.png"></img>
+								<img ng-if="unrepostSymbol(calendarp2[l+p2dayIncr].events[p])" class='unrepost-symbol' src="assets/images/unrepost_symbol.png"></img>
 							</div>
 						</div>
 					</div>
@@ -90,6 +92,7 @@
 			<button class="btn btn-default btn-option" ng-click="email()">Email</button>
 		</div>
 	</div>
+
 	<!-- overlay -->
 	<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showOverlay">
 		<div class="label-scheduler label-smaller" style="width: 500px; background-color: white; margin: 100px auto; padding: 50px 0; max-width:95%;  border-radius:8px; text-align:center;">
