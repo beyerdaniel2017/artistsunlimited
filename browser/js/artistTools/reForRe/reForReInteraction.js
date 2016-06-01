@@ -1,60 +1,142 @@
 app.config(function($stateProvider) {
-	$stateProvider
-	.state('reForReInteraction', {
-    url: '/artistTools/reForReInteraction/:tradeID',
-		templateUrl: 'js/artistTools/reForRe/reForReInteraction.html',
-		controller: 'ReForReInteractionController',
-    resolve: {
-      trade: function($http, $stateParams) {
-        return $http.get('/api/trades/byID/' + $stateParams.tradeID)
-        .then(function(res) {
-          return res.data;
-        })
-      },
-      p1Events: function($http, trade) {
-        return $http.get('/api/events/forUser/' + trade.p1.user.soundcloud.id)
-        .then(function(res) {
-          return res.data;
-        })
-        .then(null, function(err) {
-          $.Zebra_Dialog("error getting your events");
-          return;
-        })
-      },
-      p2Events: function($http, trade) {
+  $stateProvider
+    .state('reForReInteraction', {
+      url: '/artistTools/reForReInteraction/:tradeID',
+      templateUrl: 'js/artistTools/reForRe/reForReInteraction.html',
+      controller: 'ReForReInteractionController',
+      resolve: {
+        trade: function($http, $stateParams) {
+          console.log($stateParams);
+          return $http.get('/api/trades/byID/' + $stateParams.tradeID)
+            .then(function(res) {
+              return res.data;
+            })
+        },
+        p1Events: function($http, trade) {
+          return $http.get('/api/events/forUser/' + trade.p1.user.soundcloud.id)
+            .then(function(res) {
+              return res.data;
+            })
+            .then(null, function(err) {
+              $.Zebra_Dialog("error getting your events");
+              return;
+            })
+        },
+        p2Events: function($http, trade) {
           return $http.get('/api/events/forUser/' + trade.p2.user.soundcloud.id)
-        .then(function(res) {
-          return res.data;
-        })
-        .then(null, function(err) {
-          $.Zebra_Dialog("error getting other's events events");
-          return;
-        })
+            .then(function(res) {
+              return res.data;
+            })
+            .then(null, function(err) {
+              $.Zebra_Dialog("error getting other's events events");
+              return;
+            })
+        },
+        currentTrades: function($http, SessionService) {
+          var user = SessionService.getUser();
+          return $http.get('/api/trades/withUser/' + user._id)
+            .then(function(res) {
+              var trades = res.data;
+              trades.forEach(function(trade) {
+                trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
+                trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
+              });
+              trades.sort(function(a, b) {
+                if (a.user.alert == "change") {
+                  return -1;
+                } else if (a.user.alert == "placement") {
+                  return -1
+                } else {
+                  return 1;
+                }
+              })
+              return trades;
+            })
+        }
+      },
+      onExit: function(socket) {
+        socket.disconnect();
       }
-    },
-    onExit: function(socket) {
-      socket.disconnect();
-    }
-  })
+    })
 });
 
-app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, p1Events, p2Events, trade, SessionService, socket, $stateParams) {
+app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, SessionService, socket, $stateParams, trade, p1Events, p2Events, currentTrades) {
+  $scope.user = SessionService.getUser();
   if (!SessionService.getUser()) {
     $state.go('login');
   }
   $scope.processing = false;
   socket.connect();
-  $scope.trade = trade;
-  $scope.user = SessionService.getUser();
-  var person = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1 : $scope.trade.p2;
-  $scope.user.accepted = person.accepted;
-  $scope.msgHistory=[];
+  $scope.msgHistory = [];
   $scope.makeEventURL = "";
   $scope.showOverlay = false;
   $scope.processiong = false;
   $scope.hideall = false;
+  $scope.trade = trade;
+  $scope.p1Events = p1Events;
+  $scope.p2Events = p2Events;
+  $scope.currentTrades = currentTrades;
+  var person = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1 : $scope.trade.p2;
+  $scope.user.accepted = person.accepted;
   $scope.p1dayIncr = 0;
   $scope.p2dayIncr = 0;
+
+
+  $scope.swapEvents = function() {
+    if ($scope.user._id == $scope.trade.p2.user._id) {
+      var tempEvents = $scope.p1Events;
+      $scope.p1Events = $scope.p2Events;
+      $scope.p2Events = tempEvents;
+      var tempPerson = $scope.trade.p1;
+      $scope.trade.p1 = $scope.trade.p2;
+      $scope.trade.p2 = tempPerson;
+    }
+  }
+  $scope.swapEvents();
+
+  $scope.user.accepted = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1.accepted : $scope.trade.p2.accepted;
+  $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
+    return $scope.trade._id == trade._id;
+  }));
+
+
+  $scope.refreshCalendar = function() {
+    $scope.user = SessionService.getUser();
+    $http.get('/api/trades/byID/' + $stateParams.tradeID)
+      .then(function(res) {
+        $scope.trade = res.data;
+        $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
+          return $scope.trade._id == trade._id;
+        }));
+        return $http.get('/api/events/forUser/' + $scope.trade.p2.user.soundcloud.id)
+      })
+      .then(function(res) {
+        $scope.p2Events = res.data;
+        return $http.get('/api/events/forUser/' + $scope.trade.p1.user.soundcloud.id)
+      })
+      .then(function(res) {
+        $scope.p1Events = res.data;
+        return $http.get('/api/trades/withUser/' + $scope.user._id)
+      }).then(function(res) {
+        var trds = res.data
+        trds.forEach(function(trade) {
+          trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
+          trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
+        });
+        $scope.currentTrades = trds;
+        $scope.swapEvents();
+        $scope.user.accepted = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1.accepted : $scope.trade.p2.accepted;
+        $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
+          return $scope.trade._id == trade._id;
+        }));
+        $scope.fillCalendar();
+        $scope.processing = false;
+        $scope.updateAlerts();
+      })
+      .then(null, function(err) {
+        $.Zebra_Dialog('Error getting data.');
+      })
+  }
 
   $scope.incrp1 = function(inc) {
     if ($scope.p1dayIncr < 21) $scope.p1dayIncr++;
@@ -97,7 +179,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
 
   $scope.unrepostOverlap = function() {
     if (!$scope.makeEvent.trackID) return false;
-    var events = ($scope.makeEvent.person.user._id == $scope.trade.p1.user._id) ? p1Events : p2Events;
+    var events = ($scope.makeEvent.person.user._id == $scope.trade.p1.user._id) ? $scope.p1Events : $scope.p2Events;
     var slots = $scope.makeEvent.person.slots;
     var blockEvents = events.filter(function(event) {
       event.day = new Date(event.day);
@@ -111,32 +193,14 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       if (moment($scope.makeEvent.day).format('LLL') == moment(slot.day).format('LLL') && $scope.makeEvent.trackID == slot.trackID) return false;
       return ($scope.makeEvent.trackID == slot.trackID && slot.unrepostDate.getTime() > $scope.makeEvent.day.getTime() - 24 * 3600000 && slot.day.getTime() < $scope.makeEvent.unrepostDate.getTime() + 24 * 3600000);
     })
-    console.log(blockEvents);
-    console.log(blockEvents2);
+
     return blockEvents.length > 0 || blockEvents2.length > 0;
   }
 
-
-  $scope.refreshCalendar = function() {
-    return $http.get('/api/events/forUser/' + $scope.trade.p1.user.soundcloud.id)
-      .then(function(res) {
-        p1Events = res.data;
-        return $http.get('/api/events/forUser/' + $scope.trade.p2.user.soundcloud.id)
-      })
-      .then(function(res) {
-        p2Events = res.data;
-        return $http.get('/api/trades/byID/' + $stateParams.tradeID)
-      })
-      .then(function(res) {
-        $scope.trade = res.data;
-        var person = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1 : $scope.trade.p2;
-        $scope.user.accepted = person.accepted;
-        $scope.fillCalendar();
-        $scope.processing = false;
-      })
-      .then(null, function(err) {
-        $.Zebra_Dialog('Error getting data.');
-      })
+  $scope.changeTrade = function() {
+    $state.go('reForReInteraction', {
+      tradeID: JSON.parse($scope.curTrade)._id
+    })
   }
 
   $scope.backEvent = function() {
@@ -165,20 +229,19 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.saveEvent = function() {
-    console.log($scope.makeEvent);
     if (!$scope.unrepostOverlap()) {
-    $scope.processing = true;
+      $scope.processing = true;
       if ($scope.makeEvent.type == 'traded') {
         var req = new Promise(function(resolve, reject) {
           if ($scope.makeEvent._id) $http.put('/api/events/repostEvents', $scope.makeEvent).then(resolve, reject);
           else $http.post('/api/events/repostEvents', $scope.makeEvent).then(resolve, reject);
         })
         req
-      .then(function(res) {
+          .then(function(res) {
             $scope.processing = false;
             $scope.showOverlay = false;
             $scope.refreshCalendar();
-        })
+          })
           .then(null, function(err) {
             $scope.processing = false;
             $.Zebra_Dialog('Error saving.');
@@ -192,16 +255,16 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         $scope.makeEvent.person = undefined;
         $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
         $http.put('/api/trades', $scope.trade)
-        .then(function(res) {
+          .then(function(res) {
             $scope.processing = false;
-        $scope.showOverlay = false;
+            $scope.showOverlay = false;
             $scope.trade = res.data;
             $scope.emitMessage(alertMessage, 'alert');
-      })
-      .then(null, function(err) {
-          $scope.processing = false;
+          })
+          .then(null, function(err) {
+            $scope.processing = false;
             $.Zebra_Dialog('Error with request');
-      })
+          })
       }
     } else {
       $.Zebra_Dialog('Issue! This repost will cause the to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
@@ -214,9 +277,9 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.setUpAndOpenMakeEvent = function(event, person) {
-      $scope.showOverlay = true;
-      $scope.makeEvent = JSON.parse(JSON.stringify(event));
-      $scope.makeEvent.day = new Date($scope.makeEvent.day);
+    $scope.showOverlay = true;
+    $scope.makeEvent = JSON.parse(JSON.stringify(event));
+    $scope.makeEvent.day = new Date($scope.makeEvent.day);
     if ($scope.makeEvent.unrepostDate) $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
     if ($scope.makeEvent.unrepostDate > new Date()) {
       $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
@@ -227,29 +290,33 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     }
     $scope.makeEvent.person = person;
     $scope.makeEvent.URL = $scope.makeEvent.trackURL;
-      SC.oEmbed($scope.makeEvent.trackURL, {
-        element: document.getElementById('scPlayer'),
-        auto_play: false,
-        maxheight: 150
-      });
-    }
+    SC.oEmbed($scope.makeEvent.trackURL, {
+      element: document.getElementById('scPlayer'),
+      auto_play: false,
+      maxheight: 150
+    });
+  }
 
   $scope.changeUnrepost = function() {
     if ($scope.makeEvent.unrepost) {
       $scope.makeEvent.day = new Date($scope.makeEvent.day);
       $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
-              } else {
+    } else {
       $scope.makeEvent.unrepostDate = new Date(0);
-                  }
-              }
+    }
+  }
 
   $scope.clickedSlot = function(day, dayOffset, hour, calendar, person, event) {
     if ($scope.user.accepted) {
       $.Zebra_Dialog("You can't make changes to this trade because you already accepted it. You will be able to make changes if the other person makes a change.");
       return;
-          }
+    }
     var makeDay = new Date(day);
     makeDay.setHours(hour, 30, 0, 0);
+    if (makeDay < new Date()) {
+      $.Zebra_Dialog('Timeslot has passed.');
+      return;
+    }
 
     switch (event.type) {
       case 'queue':
@@ -260,12 +327,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
 
       case 'empty':
 
-              var calEvent = {
-                type: "trade",
-                day: makeDay,
+        var calEvent = {
+          type: "trade",
+          day: makeDay,
           userID: person.user.soundcloud.id,
           unrepostDate: new Date(makeDay.getTime() + 24 * 60 * 60 * 1000)
-              };
+        };
         $scope.setUpAndOpenMakeEvent(calEvent, person);
         break;
 
@@ -276,11 +343,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       case 'traded':
         if (event.owner == $scope.user._id) {
           $scope.setUpAndOpenMakeEvent(event, person);
-          console.log(event);
-              } else {
+        } else {
           $.Zebra_Dialog('Cannot manage this time slot.');
           return;
-              }
+        }
         break;
     }
   }
@@ -325,7 +391,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         caption: 'Cancel',
         callback: function() {
           console.log('No was clicked');
-    }
+        }
       }]
     });
   }
@@ -335,13 +401,13 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
   }
 
-  socket.on('init', function (data) {
+  socket.on('init', function(data) {
     $scope.name = data.name;
     $scope.users = data.users;
   });
 
-  socket.on('send:message', function (message) {
-    if(message.tradeID == $stateParams.tradeID){
+  socket.on('send:message', function(message) {
+    if (message.tradeID == $stateParams.tradeID) {
       $scope.msgHistory.push(message);
       $scope.message = message.message;
       $scope.trade.messages.push(message);
@@ -351,31 +417,31 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     }
   });
 
-  socket.on('get:message', function (data) {
+  socket.on('get:message', function(data) {
     if (data != '') {
       if (data._id == $stateParams.tradeID) {
         $scope.msgHistory = data ? data.messages : [];
       }
     }
   });
-  
+
   $scope.emitMessage = function(message, type) {
-    if($scope.trade.p1.user._id == $scope.user._id){
+    if ($scope.trade.p1.user._id == $scope.user._id) {
       $scope.trade.p2.alert = "change";
     } else {
       $scope.trade.p1.alert = "change";
-    }  
+    }
     socket.emit('send:message', {
       message: message,
       type: type,
-      id:$scope.user._id,
+      id: $scope.user._id,
       tradeID: $stateParams.tradeID,
       trade: $scope.trade
     });
     $scope.message = '';
   }
 
-  $scope.getMessage = function () {
+  $scope.getMessage = function() {
     socket.emit('get:message', $stateParams.tradeID);
   }
 
@@ -410,25 +476,28 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
 
   $scope.fillCalendar = function() {
     function setEventDays(arr) {
-    arr.forEach(function(ev) {
-      ev.day = new Date(ev.day);
-    })
-  }
-    setEventDays(p1Events);
-    setEventDays(p2Events);
+      arr.forEach(function(ev) {
+        ev.day = new Date(ev.day);
+      })
+    }
+    setEventDays($scope.p1Events);
+    setEventDays($scope.p2Events);
     setEventDays($scope.trade.p1.slots);
     setEventDays($scope.trade.p2.slots);
 
+    var now = new Date()
+    now.setHours(now.getHours(), 30, 0, 0);
+
     var op1Length = $scope.trade.p1.slots.length;
-    p1Events.forEach(function(event) {
+    $scope.p1Events.forEach(function(event) {
       $scope.trade.p1.slots = $scope.trade.p1.slots.filter(function(slot) {
-        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours())
+        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours()) && !(slot.day < now);
       })
     })
     var op2Length = $scope.trade.p2.slots.length;
-    p2Events.forEach(function(event) {
+    $scope.p2Events.forEach(function(event) {
       $scope.trade.p2.slots = $scope.trade.p2.slots.filter(function(slot) {
-        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours())
+        return !(slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours()) && !(slot.day < now);
       })
     })
 
@@ -446,21 +515,20 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
           window.location.reload()
         })
     } else {
-      $scope.calendarp1 = $scope.fillDateArrays(p1Events, $scope.trade.p1.slots);
-      $scope.calendarp2 = $scope.fillDateArrays(p2Events, $scope.trade.p2.slots);
+      $scope.calendarp1 = $scope.fillDateArrays($scope.p1Events, $scope.trade.p1.slots);
+      $scope.calendarp2 = $scope.fillDateArrays($scope.p2Events, $scope.trade.p2.slots);
     }
   }
   $scope.fillCalendar();
 
   $scope.updateAlerts = function() {
-    if($scope.trade.p1.user._id == $scope.user._id){
+    if ($scope.trade.p1.user._id == $scope.user._id) {
       $scope.trade.p1.alert = "none";
     } else if ($scope.trade.p2.user._id == $scope.user._id) {
       $scope.trade.p2.alert = "none";
-    }                
+    }
     $http.put('/api/trades', $scope.trade);
   }
-  $scope.updateAlerts();
 
   $scope.calcUnrepostDate = function(slot) {
     slot.day = new Date(slot.day);
@@ -487,7 +555,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       event.owner = $scope.trade.p1.user._id
       $http.post('/api/events/repostEvents', event);
     })
-      $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
+    $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
     $scope.trade.p1.slots = $scope.trade.p2.slots = [];
     $http.put('/api/trades', $scope.trade)
       .then(function(res) {
@@ -544,6 +612,40 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.showBoxInfo = function(event) {
     return (event.type == 'trade' || event.type == 'traded' && event.owner == $scope.user._id)
   }
+
+  $scope.followerShow = function() {
+    return (screen.width > '436');
+  }
+
+  function promptForEmail() {
+    if (!$scope.user.email) {
+      $scope.hideall = true;
+
+      var answer = prompt('Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.');
+      if (!answer) {
+        $state.go('artistToolsDownloadGatewayList');
+      }
+      var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
+      if (myArray) {
+        $scope.user.email = answer;
+        return $http.put('/api/database/profile', $scope.user)
+          .then(function(res) {
+            SessionService.create(res.data);
+            $scope.user = SessionService.getUser();
+            $scope.hideall = false;
+          })
+          .then(null, function(err) {
+            $.Zebra_Dialog("Error saving.")
+            promptForEmail();
+          })
+      } else {
+        promptForEmail();
+      }
+
+    }
+  }
+  promptForEmail();
+
 });
 
 
@@ -602,4 +704,5 @@ app.directive('timeSlot', function(moment) {
     var strTime = hours + ':' + minutes + ' ' + ampm;
     return strTime;
   }
+
 });

@@ -388,6 +388,14 @@ font-family: 'Glyphicons Halflings';
 content: '\e013';
 color: #F5D3B5;
 }
+.player {
+	border-radius:8px; 
+	width: 400px; 
+	max-width:90%; 
+	margin: 0 auto; 
+	overflow:none; 
+	-webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
+}
 /*** custom checkboxes End***/
 .form-container{
 min-height:350px;

@@ -3,29 +3,28 @@
 <div id="sidebar-wrapper">
   <div class="left-side">
     <div class="tropical"> <span>{{user.name}}</span> <img class="img-responsive img-circle" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't200x200') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:100px;">
-      <p>3 Reposts <br>
-        {{user.soundcloud.followers | number:0}} Followers</p>
+      <p>{{user.soundcloud.followers | number:0}} Followers</p>
     </div>
     <!--tropical end-->
-		<div class="left-menus">
+    <div class="left-menus">
       <nav class="nav">
-                <ul class="nav nav-navabar">
-                    <li ui-sref-active-eq="left-menu-active" id="profile" class="border-bottom"><a href="javascript:void(0)" ui-sref="artistToolsProfile">SETTINGS</a></li>
-                    <li ui-sref-active-eq="left-menu-active" id="downloadgateway" class="border-bottom"><a href="javascript:void(0)" ui-sref="artistToolsDownloadGatewayList">DOWNLOAD GATEWAY</a></li>
+        <ul class="nav nav-navabar">
+          <li ui-sref-active-eq="left-menu-active" id="profile" class="border-bottom"><a href="javascript:void(0)" ui-sref="artistToolsProfile">SETTINGS</a></li>
+          <li ui-sref-active-eq="left-menu-active" id="downloadgateway" class="border-bottom"><a href="javascript:void(0)" ui-sref="artistToolsDownloadGatewayList">DOWNLOAD GATEWAY</a></li>
           <li ui-sref-active-eq="left-menu-active" id="reforrelists" class="border-bottom"><a href="javascript:void(0)" ui-sref="reForReLists">RE FOR RE</a></li>
           <li ui-sref-active-eq="left-menu-active" id="scheduler" class="border-bottom"><a href="javascript:void(0)" ui-sref="artistToolsScheduler">SCHEDULER</a></li>
         </ul>
       </nav>
-  </div>                            
+    </div>                            
     <!--left-menus end--> 
-</div>
+  </div>
 </div>
 <!-- /#sidebar-wrapper --> 
 <script>
   $(document).ready(function(){
     $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
     });
   });
-    </script>
+</script>
