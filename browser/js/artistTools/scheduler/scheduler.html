@@ -21,24 +21,25 @@
                     <div ng-repeat="i in ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16', '17', '18', '19', '20', '21', '22', '23']" class="cell-time bold">{{i}}</div>
                   </div>   
                   <div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
-                   <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendar[l+dayIncr].events[p])" class="row-scheduler" ng-click="clickedSlot(calendar[l+dayIncr].day, p)">{{calendar[l+dayIncr].events[p].title}} </div>
+                    <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendar[l+dayIncr].events[p])" class="row-scheduler" ng-click="clickedSlot(calendar[l+dayIncr].day, p)" style="position:relative;">
+                     <span>{{calendar[l+dayIncr].events[p].title}}</span>
+                     <img ng-if="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img></div>
+                   </div>
                  </div>
-               </div>
 
-
-               <!-- Auto-fill tracks -->
-               <div style="text-align:center">
-                <span style="text-align:center; margin:100px auto; font-size:1.3em" class="label-scheduler">Auto-fill tracks</span>
-                <div style="text-align:center">
-                  <input class="form-control form-scheduler" placeholder="Soundcloud Track Url" style="text-align:center; width:300px; max-width:90%;" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()"/>
-                  <span>{{newQueue.title}}</span><br>
-                  <button class="btn btn-default btn-small" ng-click="addSong()">Add</button>
-                </div>
-                <div style="width:50%; text-align:center; margin: 10px auto;">
-                  <div ng-repeat="song in user.queue" style="padding:10px 0;">
-                    <div id="{{song}}player" style="display:inline-block; width:90%; background-color:gray; height:150px;"></div>
-                    <div style="display:inline-block; width: 9%; height:150px; vertical-align: top;">
-                      <button ng-click="removeQueueSong(user.queue.indexOf(song))" class="btn btn-default btn-queue" ><img style="height: 90%" src="/assets/images/x-gray.png"/></button>
+                 <!-- Auto-fill tracks -->
+                 <div style="text-align:center">
+                  <span style="text-align:center; margin:100px auto; font-size:1.3em" class="label-scheduler">Auto-fill tracks</span>
+                  <div style="text-align:center">
+                    <input class="form-control form-scheduler" placeholder="Soundcloud Track Url" style="text-align:center; width:300px; max-width:90%;" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()"/>
+                    <span>{{newQueue.title}}</span><br>
+                    <button class="btn btn-default btn-small" ng-click="addSong()">Add</button>
+                  </div>
+                  <div style="width:50%; text-align:center; margin: 10px auto;">
+                    <div ng-repeat="song in user.queue" style="padding:10px 0;">
+                      <div id="{{song}}player" style="display:inline-block; width:90%; background-color:gray; height:150px;"></div>
+                      <div style="display:inline-block; width: 9%; height:150px; vertical-align: top;">
+                        <button ng-click="removeQueueSong(user.queue.indexOf(song))" class="btn btn-default btn-queue" ><img style="height: 90%" src="/assets/images/x-gray.png"/></button>
               <!--               <button ng-click="moveUp(user.queue.indexOf(song))" class="btn btn-default btn-queue"><img src="/assets/images/arrow-up.png"/></button>
               <button ng-click="moveDown(user.queue.indexOf(song))" class="btn btn-default btn-queue" ><img src="/assets/images/arrow-down.png"/></button> -->
             </div>

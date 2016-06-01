@@ -634,6 +634,26 @@ button:active:after {
   width: 80%;
   margin: 60px auto; }
 
+.unrepost-symbol {
+  width: 14px;
+  height: 14px;
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+  padding: 2px 2px; }
+
+.unrepost-symbol-scheduler {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+  padding: 2px 2px; }
+
 .btn-scheduler {
   background: transparent;
   border-color: transparent;
@@ -977,15 +997,40 @@ h2, h3 {
   text-align: center; }
 
 .notification-bubble {
-  right: 38px;
+  left: -6px;
   top: -8px;
   position: absolute;
-  border-radius: 5px;
-  width: 10%;
+  border-radius: 12px;
+  width: 20px;
   padding-top: 2px;
   background: #ff3300;
   text-align: center;
-  color: #fff; }
+  color: #fff;
+  height: 20px; }
+
+.notification-bubble-tab {
+  right: 163px;
+  top: 10px;
+  position: absolute;
+  border-radius: 50%;
+  width: 20px;
+  padding-top: 2px;
+  background: #ff3300;
+  text-align: center;
+  color: #fff;
+  height: 20px; }
+
+.notification-bubble-left-menu {
+  right: 105px;
+  top: 14px;
+  position: absolute;
+  border-radius: 50%;
+  width: 20px;
+  padding-top: 2px;
+  background: #ff3300;
+  text-align: center;
+  color: #fff;
+  height: 20px; }
 
 .trades-container {
   height: 130px;
