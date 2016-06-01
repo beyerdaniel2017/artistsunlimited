@@ -38,10 +38,9 @@ module.exports = function(io) {
 					io.emit('get:message', data);
 				})
 				.then(null, console.log);
-
+		});
 			socket.on('disconnect', function() {
 				console.log('user disconnected');
 			});
 		});
-	});
 };

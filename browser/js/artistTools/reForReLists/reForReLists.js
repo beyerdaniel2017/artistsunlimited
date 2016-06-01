@@ -72,6 +72,12 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
   $scope.minSearchTradefollowers = Math.pow(1.1, $scope.sliderSearchMin);
   $scope.maxSearchTradefollowers = Math.pow(1.1, $scope.sliderSearchMax);
 
+  	$scope.sliderManageMin = 0;
+  	$scope.sliderManageMax = 200000000;
+
+  	$scope.minManageTradefollowers = Math.pow(1.1, $scope.sliderManageMin);
+  	$scope.maxManageTradefollowers = Math.pow(1.1, $scope.sliderManageMax);
+
   $scope.$watch(function() {
     return $scope.sliderSearchMin
   }, function(newVal, oldVal) {
@@ -83,6 +89,17 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
     $scope.maxSearchTradefollowers = Math.pow(1.1, newVal);
   })
 
+  	$scope.$watch(function() {
+    	return $scope.sliderManageMin
+  	}, function(newVal, oldVal) {
+    	$scope.minManageTradefollowers = Math.pow(1.1, newVal)
+  	})
+  	$scope.$watch(function() {
+    	return $scope.sliderManageMax
+  	}, function(newVal, oldVal) {
+    	$scope.maxManageTradefollowers = Math.pow(1.1, newVal);
+  	})
+	
   $scope.sortby = "Recent Alert";
   $scope.sort_order = "ascending";
   var searchTradeRange = {
@@ -161,19 +178,29 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
         })
         $scope.sort_order = "ascending";
       }
+		} 
+		else if(sortby == "Unfilled Tracks"){
+			if(sort_order == "ascending"){
+		        $scope.currentTrades.sort(function(a, b) {
+		          return b.unfilledTrackCount - a.unfilledTrackCount;
+		        })
+				$scope.sort_order = "descending";
     } else {
+		        $scope.currentTrades.sort(function(a, b) {
+		          return a.unfilledTrackCount - b.unfilledTrackCount;
+		        })
+				$scope.sort_order = "ascending";
+			}
+		}
+		else {
       if (sort_order == "ascending") {
         $scope.currentTrades.sort(function(a, b) {
-          var A = a.other.alert.toLowerCase();
-          var B = b.other.alert.toLowerCase();
-          return A < B;
+			     	return a.other.alert.toLowerCase() < b.other.alert.toLowerCase();
         });
         $scope.sort_order = "descending";
       } else {
         $scope.currentTrades.sort(function(a, b) {
-          var A = a.other.alert.toLowerCase();
-          var B = b.other.alert.toLowerCase();
-          return A > B;
+				    return a.other.alert.toLowerCase() > b.other.alert.toLowerCase();
         });
         $scope.sort_order = "ascending";
       }
@@ -246,6 +273,30 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
         $.Zebra_Dialog("Error in creating trade");
       });
   }
+	$scope.checkNotification = function(){
+		console.log(currentTrades);
+		
+		angular.forEach(currentTrades, function(trade) {
+			console.log('if1',trade._id, trade.p1.user._id + "==" + $scope.user._id)
+			if(trade.p1.user._id == $scope.user._id){
+				if(trade.p1.alert == "change"){
+					$scope.$parent.shownotification = true;
+				}
+			}
+			console.log('if2',trade._id, trade.p2.user._id + "==" + $scope.user._id)
+			if(trade.p2.user._id == $scope.user._id){
+				console.log(trade.p2.alert);
+				if(trade.p2.alert == "change"){
+					console.log('else',trade.p2.alert);
+					$scope.$parent.shownotification = true;
+				}
+			}
+		});
+
+		console.log('$scope.$parent.shownotification',$scope.$parent.shownotification);
+	}
+
+  $scope.checkNotification();
   $scope.sortResult($scope.sortby);
 });
 
