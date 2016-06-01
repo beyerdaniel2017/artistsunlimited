@@ -2,6 +2,7 @@ var router = require('express').Router();
 module.exports = router;
 var mongoose = require('mongoose');
 var Trade = mongoose.model('Trade');
+var RepostEvent = mongoose.model('RepostEvent');
 
 router.get('/withUser/:userID', function(req, res, next) {
   Trade.find({
@@ -12,7 +13,33 @@ router.get('/withUser/:userID', function(req, res, next) {
       }]
     }).populate('p1.user').populate('p2.user').exec()
     .then(function(trades) {
-      res.send(trades);
+    var tradesResult = [];
+    if(trades.length > 0){
+      trades.forEach(function(trade, index) {
+        var t = trade.toJSON();
+        t.unfilledTrackCount = 0;
+        var ownerid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p1.user._id : t.p2.user._id);
+        var userid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p2.user.soundcloud.id : t.p1.user.soundcloud.id);
+        RepostEvent.count({
+          day: {$gt: new Date()}, 
+          owner: ownerid, 
+          userID: userid, 
+          trackID:{$exists: false},
+          type: 'traded'
+        })
+        .exec()
+        .then(function(events) {
+          t.unfilledTrackCount = events;
+          tradesResult.push(t);
+          if(index == (trades.length - 1)){
+            res.send(tradesResult);
+          }
+        });
+      });  
+    }
+    else{
+      res.send([]);
+    }    
     })
     .then(null, next);
 });
