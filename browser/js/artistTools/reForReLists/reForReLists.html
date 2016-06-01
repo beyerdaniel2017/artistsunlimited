@@ -26,9 +26,9 @@
                       <div class="col-md-6 col-sm-6 col-xs-12">
                         <div class="range-main">
                           <p>Followers</p>
-                          <div range-slider min="0" max="10000000" model-min="minSearchTradefollowers" model-max="maxSearchTradefollowers" attach-handle-values="true" on-handle-up='searchByFollowers()'></div>
-                          <span class="pull-left">{{minSearchTradefollowers}}</span> 
-                          <span class="pull-right">{{maxSearchTradefollowers}}</span>
+                          <div range-slider min="0" max="200" model-min="sliderSearchMin" model-max="sliderSearchMax" attach-handle-values="true" on-handle-up='searchByFollowers()'></div>
+                          <span class="pull-left">{{minSearchTradefollowers | number:0}}</span> 
+                          <span class="pull-right">{{maxSearchTradefollowers | number:0}}</span>
                         </div>                                               
                       </div><!--search-trad End-->
                     </div>                 
@@ -60,11 +60,11 @@
                     </div><!--search-trad End-->
                     <div class="col-md-5">
                       <div class="range-main">
-                        <div class="slidethamb-box">
+                        <div class="range-main">
                           <p>Followers</p>
-                          <div range-slider min="0" max="10000000" model-min="minManageTradefollowers" model-max="maxManageTradefollowers" attach-handle-values="true" on-handle-up='searchCurrentTrade()'></div>
-                          <span class="pull-left">{{minManageTradefollowers}}</span> 
-                          <span class="pull-right">{{maxManageTradefollowers}}</span>  
+                          <div range-slider min="0" max="200" model-min="sliderSearchMin" model-max="sliderSearchMax" attach-handle-values="true" on-handle-up='searchByFollowers()'></div>
+                          <span class="pull-left">{{minSearchTradefollowers | number:0}}</span> 
+                          <span class="pull-right">{{maxSearchTradefollowers | number:0}}</span>
                         </div>
                       </div><!--search-trad End-->
                     </div> 
