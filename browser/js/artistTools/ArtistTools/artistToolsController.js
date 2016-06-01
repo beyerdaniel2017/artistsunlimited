@@ -56,7 +56,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
 
     $scope.modalInstance = {};
     $scope.modal = {};
-  
+
     $scope.openModal = {
       downloadURL: function(downloadURL) {
         $scope.modal.downloadURL = downloadURL;
@@ -71,6 +71,19 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     $scope.closeModal = function() {
       $scope.modalInstance.close();
     };
+
+    $scope.openHelpModal = function() {
+      console.log($state);
+      if ($state.current.url == '/artistTools/profile') {
+        var displayText = "<h3>Help</h3><span style='font-weight:bold'>Permanent Links:</span> Add artist soundcloud urls here to make the artists followed on every one of your download gates.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
+      } else if ($state.current.url == '/artistTools/downloadGateway') {
+        var displayText = "<h3>Help</h3><span style='font-weight:bold'>List of downloads gateways:</span> This is a list of your download gates. You can create a new one, edit, delete one or view a download gate in the list.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
+      }
+
+      $.Zebra_Dialog(displayText, {
+        width: 600
+      });
+    }
 
     $scope.editProfileModalInstance = {};
     $scope.editProfilemodal = {};

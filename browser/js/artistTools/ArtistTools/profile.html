@@ -69,7 +69,7 @@
                                 <small>These artists will be followed on all of your Download Gates</small>
                                 <form role="form" ng-submit="saveProfileInfo()">
                                     <div class="input-box" ng-repeat="link in profile.data.permanentLinks">
-                                        <input class="form-control" placeholder="URL" ng-model="link.url" ng-change="permanentLinkURLChange($index)"/>
+                                        <input class="form-control" placeholder="Artist Soundcloud Url" ng-model="link.url" ng-change="permanentLinkURLChange($index)"/>
                                         <a class="pro-icon" href="#" ng-show="link.avatar !== ''"><img class="profile-icon" ng-src="{{link.avatar}}" /></a> <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePermanentLink($index)"></a> </div>
                                         <a href="#" ng-click="addPermanentLink()" ng-if="!hidebutton">+ Artist</a>
                                         <div class="col-md-12 text-center">

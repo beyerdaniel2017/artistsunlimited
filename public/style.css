@@ -610,12 +610,14 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .songs-list h4 {
   font-size: 12px; }
 
-.songs-list a {
-  width: 800px;
-  display: inline-block;
+.song-list span {
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
+  width: 400px; }
+
+.songs-list a {
+  display: inline-block;
+  white-space: nowrap;
   text-align: right; }
 
 html {
