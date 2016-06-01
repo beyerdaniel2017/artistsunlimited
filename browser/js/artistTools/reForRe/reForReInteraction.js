@@ -6,7 +6,6 @@ app.config(function($stateProvider) {
       controller: 'ReForReInteractionController',
       resolve: {
         trade: function($http, $stateParams) {
-          console.log($stateParams);
           return $http.get('/api/trades/byID/' + $stateParams.tradeID)
             .then(function(res) {
               return res.data;
@@ -117,7 +116,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       .then(function(res) {
         $scope.p1Events = res.data;
         return $http.get('/api/trades/withUser/' + $scope.user._id)
-      }).then(function(res) {
+    })
+    .then(function(res) {
         var trds = res.data
         trds.forEach(function(trade) {
           trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
@@ -524,9 +524,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.updateAlerts = function() {
     if ($scope.trade.p1.user._id == $scope.user._id) {
       $scope.trade.p1.alert = "none";
-    } else if ($scope.trade.p2.user._id == $scope.user._id) {
+    } 
+
+    if ($scope.trade.p2.user._id == $scope.user._id) {
       $scope.trade.p2.alert = "none";
     }
+    $scope.$parent.shownotification = false;          
     $http.put('/api/trades', $scope.trade);
   }
 
@@ -644,8 +647,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
 
     }
   }
+  $scope.updateAlerts();
   promptForEmail();
-
 });
 
 

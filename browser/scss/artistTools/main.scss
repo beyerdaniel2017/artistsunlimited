@@ -431,15 +431,42 @@ h2, h3 {
 }
 
 .notification-bubble {
-	right: 38px;
+    left: -6px;
 	top: -8px;
 	position: absolute;
-	border-radius: 5px;
-	width: 10%;
+    border-radius: 12px;
+    width: 20px;
 	padding-top: 2px;
 	background: #ff3300;
 	text-align: center;
 	color:#fff;
+    height: 20px;
+}
+
+.notification-bubble-tab {
+    right: 163px;
+    top: 10px;
+    position: absolute;
+    border-radius: 50%;
+    width: 20px;
+    padding-top: 2px;
+    background: #ff3300;
+    text-align: center;
+    color: #fff;
+    height: 20px;
+}
+
+.notification-bubble-left-menu {
+    right: 105px;
+    top: 14px;
+    position: absolute;
+    border-radius: 50%;
+    width: 20px;
+    padding-top: 2px;
+    background: #ff3300;
+    text-align: center;
+    color: #fff;
+    height: 20px;
 }
 
 .trades-container {
