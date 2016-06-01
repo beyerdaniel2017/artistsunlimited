@@ -1,74 +1,115 @@
-<ng-include src="'js/home/views/navigation.html'"></ng-include>
-<!-- Content Start  -->
-<div class="container" ng-cloak>
-	<ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-	<div class="content-area bg-white">
-		<hr>
-		<h3>Search</h3>
-		<div id="search-inputs">
-			<div id="search-left">
-				URL: 
-				<input id="input-username" class="form-control" type="text" name="searchUsername" ng-model="searchURL" placeholder="Artist Soundcloud URL"/>
-			</div>
-			<div id="search-right">
-				<!--<div id="label-optional">
-					<h3>Optional</h3>
-				</div>-->
-				<div id="follower-range">
-					Followers:
-					<input id="input-f-min" class="form-control input-follower-range" type="number" ng-model="minfollowers" name="followerMin" placeholder="0"/> -
-					<input id="input-f-max" class="form-control input-follower-range" type="number" ng-model="maxfollowers" name="followerMax" placeholder="..."/>
-				</div>
-				<button class="btn btn-default" id="btn-search" ng-click="sendSearch();">Search</button>
-			</div>
-		</div>
-		<hr>
-		<h3>Current Trades</h3>
-		<section class="current">
-			<div ng-repeat="trade in currentTrades" class="trade-box slide-box">
-				<div class="notification-bubble" ng-show="trade.user.alert == 'change'">!</div>
-				<div class="label-result-box" title="{{trade.other.user.name}}">{{trade.other.user.name.length < 17 ? trade.other.user.name : trade.other.user.name.substring(0,17)}}</div>
-				<div class="label-result-box">{{((trade.other.user.soundcloud.followers && trade.other.user.soundcloud.followers > 0) ? trade.other.user.soundcloud.followers : 0 ) | number:0}} followers</div>
-				<div class="label-freq" ng-if="trade.other.accepted&&trade.user.accepted">Traded</div>
-				<div class="label-freq" ng-if="!(trade.other.accepted&&trade.user.accepted)">{{trade.other.slots.length}}:{{trade.user.slots.length}}</div>
-				<button class="btn-manage-trade bold" ui-sref="reForReInteraction({
-				tradeID: trade._id})">Manage</button>
-			</div>
-		</section>
-		<hr class="marg-top">
-		<h3>Open a Trade</h3>
-		<section class="open">
-			<div ng-repeat="user in searchUser" class="user-box slide-box">
-				<div class="label-result-box" title="{{user.name}}">{{user.name.length < 17 ? user.name : user.name.substring(0,17)}}</div>
-				<div class="label-result-box">{{((user.soundcloud.followers && user.soundcloud.followers > 0) ? user.soundcloud.followers : 0 ) | number:0}} followers</div>
-				<button class="btn-open-trade bold" ng-click="openTrade(user)">Open Trade</button>
-			</div>
-		</section>
-	</div>
+<ng-include src="'js/artistTools/ArtistTools/header-navigation.html'"></ng-include>
+<div id="wrapper">
+  <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
+  <div class="container-fluid height-100pr">
+    <div class="row height-100pr">
+      <div class="col-lg-12 height-100pr">
+        <div class="page-content right-side"><!--page-contant Start-->
+          <div class="row  nav-tabs margin0"> 
+            <div class="row"> 
+              <div class="col-md-12"> <!--tabe start-->                      
+                <div class="tab-content">
+                  <ul class="nav nav-pills">
+                    <li class="active">  <a data-toggle="tab" href="#SearchTrade"><img src="assets/images/search.png">SEARCH TRADES</a></li>
+                    <li><a data-toggle="tab" href="#ManageTrade"><img src="assets/images/two-arrow.png">MANAGE TRADES</a></li>                
+                  </ul>
+                  <div id="SearchTrade" class="tab-pane fade in active">
+                    <div class="row padding30">
+                      <div class="col-md-4 col-sm-4 col-xs-10">
+                        <div class="form-group">
+                          <div class="icon-addon addon-md">
+                            <input type="text" placeholder="Search by URL" class="form-control" id="txtSearchByURL" ng-model="searchURL" >
+                            <label for="txtSearchByURL" class="glyphicon glyphicon-search" rel="tooltip" title="Search by URL" ng-disable="!applicationObj.firstName" ng-click="sendSearch()"></label>
+                          </div>                                    
+                        </div><!--search-trad End-->
+                      </div>
+                      <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="range-main">
+                          <p>Followers</p>
+                          <div range-slider min="0" max="200" model-min="sliderSearchMin" model-max="sliderSearchMax" attach-handle-values="true" on-handle-up='searchByFollowers()'></div>
+                          <span class="pull-left">{{minSearchTradefollowers | number:0}}</span> 
+                          <span class="pull-right">{{maxSearchTradefollowers | number:0}}</span>
+                        </div>                                               
+                      </div><!--search-trad End-->
+                    </div>                 
+                    <div class="scroll-bar1 border-top" when-scrolled="loadMore()">
+                      <div class="row">
+                        <div class="slide-img-box col-md-12">
+                          <div ng-repeat="user in searchUser" class="col-md-3 col-sm-6 col-xs-12">
+                            <div class="slidethamb-box">
+                              <p>{{user.name}}</p>
+                              <div class="thumb-img-container">
+                               <img class="img-responsive" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:130px;"> <button class="img-btn" ng-click="openTrade(user)">OPEN TRADE</button>
+                             </div>
+                             <p>{{((user.soundcloud.followers && user.soundcloud.followers > 0) ? user.soundcloud.followers : 0 ) | number:0}} Followers</p>
+                           </div>
+                         </div>
+                       </div>
+                     </div><!--row end-->
+                   </div>
+                 </div>
+                 <div id="ManageTrade" class="tab-pane fade"> 
+                  <div class="row padding30">
+                    <div class="col-md-4 col-sm-4 col-xs-10">
+                      <div class="form-group">
+                        <div class="icon-addon addon-md">
+                          <input type="text" placeholder="Search by URL" class="form-control" id="txtSearchByArtistURL" ng-model="searchURL" style="">
+                          <label for="txtSearchByArtistURL" class="glyphicon glyphicon-search" rel="tooltip" title="Search by URL" ng-click="searchCurrentTrade()"></label>
+                        </div>
+                      </div>
+                    </div><!--search-trad End-->
+                    <div class="col-md-5">
+                      <div class="range-main">
+                        <div class="range-main">
+                          <p>Followers</p>
+                          <div range-slider min="0" max="200" model-min="sliderSearchMin" model-max="sliderSearchMax" attach-handle-values="true" on-handle-up='searchByFollowers()'></div>
+                          <span class="pull-left">{{minSearchTradefollowers | number:0}}</span> 
+                          <span class="pull-right">{{maxSearchTradefollowers | number:0}}</span>
+                        </div>
+                      </div><!--search-trad End-->
+                    </div> 
+                    <div class="col-md-2" style="float:right;">
+                     <div class="dropdown">
+                      <button class="btn dropdown-toggle sort-select {{sort_order}}" type="button" data-toggle="dropdown" style="width:130px;">{{sortby}}
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a href="#" ng-click="sortResult('Recent Alert')">Recent Alert</a></li>
+                        <li><a href="#" ng-click="sortResult('Followers')">Followers</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="scroll-bar1 border-top">
+                  <div class="row">
+                    <div ng-repeat="trade in currentTrades" class="col-md-6 border-top border-right">
+                      <div class="col-md-12" style="padding:10px;">
+                        <div class="col-md-6">
+                          <div class="manage-trade-thumb">
+                            <div class="notification-bubble" ng-show="trade.user.alert == 'change'">!</div>
+                            <img class="img-responsive" src="{{trade.other.user.soundcloud.avatarURL.replace('large', 't500x500') || 'http://i1.sndcdn.com/avatars-000223629160-q12lyq-t500x500.jpg'}}" style="width:190px;"/>
+                            <button class="manage-btn" ui-sref="reForReInteraction({tradeID: trade._id})">MANAGE</button>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <h5>{{trade.other.user.name}}</h5><br>
+                          {{((trade.other.user.soundcloud.followers && trade.other.user.soundcloud.followers > 0) ? trade.other.user.soundcloud.followers : 0 ) | number:0}} Followers<br>
+                          4 Slots Remaining<br>
+                          <span class="span-time">{{trade.other.slots.length}}:{{trade.user.slots.length}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--row end--> 
+                </div>
+              </div>
+              <!--tabe start--> 
+            </div>
+            <!--row end--> 
+          </div>
+          <!--page-contant End--> 
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <ng-include src="'js/home/views/loader.html'"></ng-include>
-<script type="text/javascript">
-	$(document).ready(function() {
-		setTimeout(function() {
-			$(".current").slick({
-				dots: false,
-				infinite: true,
-				slidesToShow: 4,
-				slidesToScroll: 1,
-				arrows: true,
-				variableWidth: false
-			});
-		}, 0);
-
-		setTimeout(function() {
-			$(".open").slick({
-				dots: false,
-				infinite: true,
-				slidesToShow: 4,
-				slidesToScroll: 1,
-				arrows: true,
-				variableWidth: false
-			});
-		}, 200);
-	});
-</script>

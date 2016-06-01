@@ -56,6 +56,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
 
     $scope.modalInstance = {};
     $scope.modal = {};
+  
     $scope.openModal = {
       downloadURL: function(downloadURL) {
         $scope.modal.downloadURL = downloadURL;
@@ -113,13 +114,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     /* Init profile */
     $scope.profile = {};
 
-    $scope.logout = function() {
-      $http.post('/api/logout').then(function() {
-        SessionService.deleteUser();
-        $state.go('login');
-        window.location.href = '/login';
-      });
-    };
 
     if ($stateParams.submission) {
       $scope.openThankYouModal.thankYou($stateParams.submission._id);

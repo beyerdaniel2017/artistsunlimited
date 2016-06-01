@@ -410,6 +410,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     if (message.tradeID == $stateParams.tradeID) {
       $scope.msgHistory.push(message);
       $scope.message = message.message;
+      $scope.trade.messages.push(message);
       if (message.type == "alert") {
         $scope.refreshCalendar();
       }
@@ -682,7 +683,7 @@ app.directive('timeSlot', function(moment) {
       }
     },
     replace: 'true',
-    template: '<p class="time" >{{slot}}</p>'
+    template: '<p class="time">{{slot}}</p>'
   };
 
   function isTodayDate(prevDate, eacDate) {
