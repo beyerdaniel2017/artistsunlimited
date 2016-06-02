@@ -465,32 +465,33 @@ h2, h3 {
   text-align: center;
   color:#fff;
   height: 20px;
+    font-weight:bold;
 }
 
 .notification-bubble-tab {
-  right: 163px;
-  top: 10px;
-  position: absolute;
+    background: #ff3300;
+	left: 10px;
+	position: relative;
   border-radius: 50%;
   width: 20px;
-  padding-top: 2px;
-  background: #ff3300;
-  text-align: center;
-  color: #fff;
   height: 20px;
+	padding-left: 8px;
+	padding-top: 4px;
 }
-
 .notification-bubble-left-menu {
-  right: 105px;
-  top: 14px;
-  position: absolute;
+    background: #ff3300;
+    left: 10px;
+    top: -1px;
+    position: relative;
   border-radius: 50%;
   width: 20px;
-  padding-top: 2px;
-  background: #ff3300;
-  text-align: center;
-  color: #fff;
   height: 20px;
+	padding-left: 8px;
+	padding-top: 4px;
+}
+.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
+    color: #fff;
+	background-color: #ff3300;
 }
 
 .trades-container {
@@ -1545,6 +1546,28 @@ input[type=range]::-ms-track {
 	margin-top: 82px;
 	margin-left: 60px;
 }
+.manage-trade-thumb:hover .manage-delete-btn {
+	display: block;
+}
+.manage-delete-btn{
+	background-color: #FF7676;
+	display: none;
+	padding: 8px 9px;
+	color: #FFF;
+	position: absolute;
+	z-index: 999;
+	left: 0;
+	border-radius: 8px;
+	border: 0px none;
+	top: 0;
+	margin-top: 132px;
+	margin-left: 60px;
+}
+
+.sort-btn{
+	margin-right: 20%;
+}
+
 .sort-select {
 	border-radius: 5px;
 	background: url(assets/images/down-arrow.png) no-repeat right transparent;
@@ -1586,13 +1609,13 @@ input[type=range]::-ms-track {
 	background: transparent url(assets/images/sorting-up.png);
 	background-size: 14px;
 	background-repeat: no-repeat;
-	background-position: 100px;
+	background-position: 95%;
 }
 .descending {
 	background: transparent url(assets/images/sorting-down.png);
 	background-size: 14px;
 	background-repeat: no-repeat;
-	background-position: 100px;
+	background-position: 95%;
 }
 .ngrs-runner {
 	background: transparent url(assets/images/range-line.png);

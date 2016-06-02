@@ -273,27 +273,48 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
         $.Zebra_Dialog("Error in creating trade");
       });
   }
-	$scope.checkNotification = function(){
-		console.log(currentTrades);
 		
+	$scope.deleteTrade = function(tradeID, index){
+		$.Zebra_Dialog('Are you sure? You want to delete this trade.'+tradeID, {
+	      'type': 'confirmation',
+	      'buttons': [{
+	        caption: 'Yes',
+	        callback: function() {
+	          	$scope.processing = true;
+	          	$http.post('/api/trades/delete', {
+	          		id: tradeID
+	          	})
+	            .then(function(res) {
+	              	$scope.processing = false;
+	              	$scope.currentTrades.splice(index, 1);
+	            })
+	            .then(null, function(err) {
+	              	$scope.processing = false;
+	              	$.Zebra_Dialog('Error accepting');
+	            })
+	        }
+	      }, {
+	        caption: 'No',
+	        callback: function() {
+	          console.log('No was clicked');
+	    	}
+	      }]
+	    });
+	}
+
+	$scope.checkNotification = function(){		
 		angular.forEach(currentTrades, function(trade) {
-			console.log('if1',trade._id, trade.p1.user._id + "==" + $scope.user._id)
 			if(trade.p1.user._id == $scope.user._id){
 				if(trade.p1.alert == "change"){
 					$scope.$parent.shownotification = true;
 				}
 			}
-			console.log('if2',trade._id, trade.p2.user._id + "==" + $scope.user._id)
 			if(trade.p2.user._id == $scope.user._id){
-				console.log(trade.p2.alert);
 				if(trade.p2.alert == "change"){
-					console.log('else',trade.p2.alert);
 					$scope.$parent.shownotification = true;
 				}
 			}
 		});
-
-		console.log('$scope.$parent.shownotification',$scope.$parent.shownotification);
 	}
 
   $scope.checkNotification();
