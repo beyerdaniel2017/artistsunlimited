@@ -70,3 +70,17 @@ router.get('/byID/:tradeID', function(req, res, next) {
     })
     .then(null, next);
 })
+router.post('/delete', function(req, res, next) {
+  var body = req.body;
+  Trade
+  .remove({
+    _id: body.id
+  })
+  .exec()
+  .then(function() {
+    return res.end();
+  })
+  .then(null, function(err) {
+    next(err);
+  });
+});

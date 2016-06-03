@@ -63,7 +63,7 @@ app.run(function($rootScope, AuthService, $state, $uiViewScroll, SessionService,
 });
 
 
-app.controller('FullstackGeneratedController', function($scope, mainService) {
+app.controller('FullstackGeneratedController', function($scope, $http, mainService, SessionService) {
     $scope.shownotification = false;
     $scope.openHelpModal = function() {
         mainService.openHelpModal();
@@ -73,6 +73,28 @@ app.controller('FullstackGeneratedController', function($scope, mainService) {
         mainService.logout();
     }
 
+    $scope.checkNotification = function(){
+        var user = SessionService.getUser();
+        if (user) {
+            return $http.get('/api/trades/withUser/' + user._id)
+            .then(function(res) {
+                var trades = res.data;
+                trades.forEach(function(trade) {
+                    if(trade.p1.user._id == user._id){
+                        if(trade.p1.alert == "change"){
+                            $scope.shownotification = true;
+                        }
+                    }
+                    if(trade.p2.user._id == user._id){
+                        if(trade.p2.alert == "change"){
+                            $scope.shownotification = true;
+                        }
+                    }
+                });
+            })
+        }
+    }
+    $scope.checkNotification();
 });
 
 app.directive('fileread', [function() {

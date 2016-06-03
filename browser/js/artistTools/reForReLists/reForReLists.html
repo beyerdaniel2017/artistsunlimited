@@ -11,7 +11,7 @@
                 <div class="tab-content">
                   <ul class="nav nav-pills">
                     <li class="active">  <a data-toggle="tab" href="#SearchTrade"><img src="assets/images/search.png">SEARCH TRADES</a></li>
-                    <li><a data-toggle="tab" href="#ManageTrade"><img src="assets/images/two-arrow.png">MANAGE TRADES</a><div class="notification-bubble-tab" ng-show="shownotification">!</div></li>                
+                    <li><a data-toggle="tab" href="#ManageTrade"><img src="assets/images/two-arrow.png">MANAGE TRADES <span class="badge notification-bubble-tab" ng-show="shownotification">!</span></a></li>                
                   </ul>
                   <div id="SearchTrade" class="tab-pane fade in active">
                     <div class="row padding30">
@@ -37,7 +37,7 @@
                         <div class="slide-img-box col-md-12">
                           <div ng-repeat="user in searchUser" class="col-md-3 col-sm-6 col-xs-12">
                             <div class="slidethamb-box">
-                              <p>{{user.name}}</p>
+                              <p><a href="{{user.soundcloud.permalinkURL}}" target="_blank">{{user.name}}</a></p>
                               <div class="thumb-img-container">
                                <img class="img-responsive" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:130px;"> <button class="img-btn" ng-click="openTrade(user)">OPEN TRADE</button>
                              </div>
@@ -60,17 +60,16 @@
                     </div><!--search-trad End-->
                     <div class="col-md-5">
                       <div class="range-main">
-                        <div class="range-main">
                           <p>Followers</p>
                           <div range-slider min="0" max="200" model-min="sliderManageMin" model-max="sliderManageMax" attach-handle-values="true" on-handle-up='searchCurrentTrade()'></div>
                           <span class="pull-left">{{minManageTradefollowers | number:0}}</span> 
                           <span class="pull-right">{{maxManageTradefollowers | number:0}}</span>
                         </div>
-                      </div><!--search-trad End-->
+                          <!--search-trad End-->
                     </div> 
-                    <div class="col-md-2" style="float:right;">
-                     <div class="dropdown">
-                      <button class="btn dropdown-toggle sort-select {{sort_order}}" type="button" data-toggle="dropdown" style="width:130px;">{{sortby}}
+                      <div class="col-md-3">
+                         <div class="dropdown pull-right sort-btn">
+                          <button class="btn dropdown-toggle sort-select {{sort_order}}" type="button" data-toggle="dropdown">{{sortby}}
                       </button>
                       <ul class="dropdown-menu">
                         <li><a href="#" ng-click="sortResult('Recent Alert')">Recent Alert</a></li>
@@ -88,11 +87,12 @@
                           <div class="manage-trade-thumb">
                             <img class="img-responsive" src="{{trade.other.user.soundcloud.avatarURL.replace('large', 't500x500') || 'http://i1.sndcdn.com/avatars-000223629160-q12lyq-t500x500.jpg'}}" style="width:190px;"/>
                             <button class="manage-btn" ui-sref="reForReInteraction({tradeID: trade._id})">MANAGE</button>
+                              <button class="manage-delete-btn" ng-click="deleteTrade(trade._id, $index)">DELETE</button>
                               <div class="notification-bubble" ng-show="trade.user.alert == 'change'">!</div>
                           </div>
                         </div>
                         <div class="col-md-6">
-                          <h5>{{trade.other.user.name}}</h5><br>
+                              <h5><a href="{{trade.other.user.soundcloud.permalinkURL}}" target="_blank">{{trade.other.user.name}}</a></h5><br>
                           {{((trade.other.user.soundcloud.followers && trade.other.user.soundcloud.followers > 0) ? trade.other.user.soundcloud.followers : 0 ) | number:0}} Followers<br>
                               {{trade.unfilledTrackCount | number:0}} Unfilled Tracks<br>
                           <span class="span-time">{{trade.other.slots.length}}:{{trade.user.slots.length}}</span>
