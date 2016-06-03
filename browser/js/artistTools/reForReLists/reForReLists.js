@@ -275,7 +275,7 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
   }
 		
 	$scope.deleteTrade = function(tradeID, index){
-		$.Zebra_Dialog('Are you sure? You want to delete this trade.'+tradeID, {
+		$.Zebra_Dialog('Are you sure? You want to delete this trade.', {
 	      'type': 'confirmation',
 	      'buttons': [{
 	        caption: 'Yes',
