@@ -16,6 +16,7 @@ router.get('/withUser/:userID', function(req, res, next) {
     var tradesResult = [];
     if(trades.length > 0){
       trades.forEach(function(trade, index) {
+        if(trade.p1.user && trade.p2.user){
         var t = trade.toJSON();
         t.unfilledTrackCount = 0;
         var ownerid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p1.user._id : t.p2.user._id);
@@ -35,6 +36,7 @@ router.get('/withUser/:userID', function(req, res, next) {
             res.send(tradesResult);
           }
         });
+        }
       });  
     }
     else{
@@ -70,6 +72,7 @@ router.get('/byID/:tradeID', function(req, res, next) {
     })
     .then(null, next);
 })
+
 router.post('/delete', function(req, res, next) {
   var body = req.body;
   Trade
