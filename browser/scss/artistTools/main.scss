@@ -1330,13 +1330,18 @@ input[type=range]::-ms-track {
 /*Genres css End*/
 
 .scroll-bar1{ 
-	height:500px;
+	height: 100%;
 	margin-top: 0;
 	overflow-x: hidden;
 	overflow-y: auto;
-	background-color: #F9F9F9;
-	border-radius: 3px;
-	padding:0 20px;
+	padding-left: 300px;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	padding-top: 300px;
+	width: 100%;
+	right: 0;
+	padding-right: 35px;
 }
 .scroll-bar2{ 
 	overflow-y: auto;
@@ -1532,10 +1537,11 @@ input[type=range]::-ms-track {
 .manage-trade-thumb:hover .manage-btn {
 	display: block;
 }
+
 .manage-btn {
 	background-color: #FF7676;
 	display: none;
-	padding: 8px 9px;
+	padding: 8px 19px;
 	color: #FFF;
 	position: absolute;
 	z-index: 999;
@@ -1543,8 +1549,8 @@ input[type=range]::-ms-track {
 	border-radius: 8px;
 	border: 0px none;
 	top: 0;
-	margin-top: 82px;
-	margin-left: 60px;
+	margin-top: 55px;
+	margin-left: 55px;
 }
 .manage-trade-thumb:hover .manage-delete-btn {
 	display: block;
@@ -1552,16 +1558,15 @@ input[type=range]::-ms-track {
 .manage-delete-btn{
 	background-color: #FF7676;
 	display: none;
-	padding: 8px 9px;
+	padding: 8px 20px;
 	color: #FFF;
 	position: absolute;
 	z-index: 999;
 	left: 0;
 	border-radius: 8px;
 	border: 0px none;
-	top: 0;
-	margin-top: 132px;
-	margin-left: 60px;
+	bottom: 60px;
+	margin-left: 55px;
 }
 
 .sort-btn{
@@ -1609,13 +1614,13 @@ input[type=range]::-ms-track {
 	background: transparent url(assets/images/sorting-up.png);
 	background-size: 14px;
 	background-repeat: no-repeat;
-	background-position: 95%;
+	background-position: 94%;
 }
 .descending {
 	background: transparent url(assets/images/sorting-down.png);
 	background-size: 14px;
 	background-repeat: no-repeat;
-	background-position: 95%;
+	background-position: 94%;
 }
 .ngrs-runner {
 	background: transparent url(assets/images/range-line.png);
@@ -1673,7 +1678,7 @@ input[type=range]::-ms-track {
 #sidebar-wrapper {
 	position: fixed;
 	left: 240px;
-	width: 0;
+    width: 100%;
 	height: 100%;
 	margin-left: -240px;
     /*overflow-y: auto;*/
@@ -1682,6 +1687,7 @@ input[type=range]::-ms-track {
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
+    z-index: 1;
   }
   #sidebar-wrapper:before{
   	position: absolute;
@@ -1784,3 +1790,63 @@ input[type=range]::-ms-track {
 
 }
 /************ SIDEBAR START END*****************/
+
+/********* NEW **************/
+.tab-menu {
+	z-index: 1;
+	position: relative;
+	background: #fff;
+}
+.manage-bar {
+	z-index: 1;
+	position: relative;
+	background: #fff;
+}
+.right-side::before {
+	position: absolute;
+	content: '';
+	width: 98%;
+	height: 40px;
+	background: transparent url(assets/images/bg-line.png);
+	top: -40px;
+	left: 0;
+	background-repeat: repeat;
+	background-size: 12px;
+	z-index: 1;
+}/*********** Media CSS **************/
+@media screen and (max-width: 1024px) {
+    .scroll-bar1 {
+		padding-right: 55px;
+	}
+	.manage-btn {
+		margin-top: 25px;
+		margin-left: 15px;
+	}
+	.manage-delete-btn {
+		bottom: 20px;
+		margin-left: 15px;
+	}
+	.slide-img-box div {
+		padding: 0 0 0 2%;
+	}
+}
+@media screen and (max-width: 768px) {
+    .manage-btn {
+		margin-top: 70px;
+		margin-left: 50px;
+	}
+	.manage-delete-btn {
+		bottom: 40px;
+		margin-left: 50px;
+	}
+	.img-btn {
+		margin-left: 50px;
+	}
+}
+@media screen and (max-width: 375px) {
+    .scroll-bar1 {
+		padding-top: 465px;
+		padding-right: 38px;
+		padding-left: 40px;
+	}
+}

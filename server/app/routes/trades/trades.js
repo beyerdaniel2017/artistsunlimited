@@ -14,10 +14,13 @@ router.get('/withUser/:userID', function(req, res, next) {
     }).populate('p1.user').populate('p2.user').exec()
     .then(function(trades) {
     var tradesResult = [];
+    var i = -1;
     if(trades.length > 0){
-      trades.forEach(function(trade, index) {
-        if(trade.p1.user && trade.p2.user){
-        var t = trade.toJSON();
+      var next = function() {
+        i++;
+        if(i < trades.length) {
+          var t = trades[i].toJSON();
+          if(t.p1.user && t.p2.user){
         t.unfilledTrackCount = 0;
         var ownerid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p1.user._id : t.p2.user._id);
         var userid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p2.user.soundcloud.id : t.p1.user.soundcloud.id);
@@ -32,12 +35,18 @@ router.get('/withUser/:userID', function(req, res, next) {
         .then(function(events) {
           t.unfilledTrackCount = events;
           tradesResult.push(t);
-          if(index == (trades.length - 1)){
+              next();
+            });
+          }
+          else{
+            next();
+          }
+        }
+        else{
             res.send(tradesResult);
           }
-        });
         }
-      });  
+      next();
     }
     else{
       res.send([]);
