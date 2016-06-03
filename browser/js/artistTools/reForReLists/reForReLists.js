@@ -179,7 +179,7 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
         $scope.sort_order = "ascending";
       }
 		} 
-		else if(sortby == "Unfilled Tracks"){
+		else if(sortby == "Unfilled Slots"){
 			if(sort_order == "ascending"){
 		        $scope.currentTrades.sort(function(a, b) {
 		          return b.unfilledTrackCount - a.unfilledTrackCount;

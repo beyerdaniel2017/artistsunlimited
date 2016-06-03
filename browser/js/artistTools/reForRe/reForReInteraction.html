@@ -7,7 +7,8 @@
 <div class="content-area bg-white" style="padding: 1% 2%">
 	<div class="rfr-schedule-container" ng-init="getMessage()">
 		<!-- schedule 1 -->
-		<div class="scheduler-small">
+	<div class="scheduler-small" id="{{getSchedulerID(trade.p1.user._id)}}">
+
 			<div class="label-username"><a target="_blank" href="{{trade.p1.user.soundcloud.permalinkURL}}">{{trade.p1.user.soundcloud.username}}</a> <span style="color:#ADD8E6">( {{trade.p1.slots.length}} slots )</span><span ng-if="followerShow()"> - {{trade.p1.user.soundcloud.followers | number:0}} followers </span></div>
 			<div style="text-align:center; width:100%; height: 94%; margin: auto;">
 				<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
@@ -33,7 +34,7 @@
 			</div>
 		</div>
 		<!-- schedule 2 -->
-		<div class="scheduler-small" id="scheduler-right">
+	<div class="scheduler-small" id="{{getSchedulerID(trade.p2.user._id)}}">
 			<div class="label-username"><a target="_blank" href="{{trade.p2.user.soundcloud.permalinkURL}}">{{trade.p2.user.soundcloud.username}}</a> <span style="color:#ADD8E6">( {{trade.p2.slots.length}} slots )</span><span ng-if="followerShow()"> - {{trade.p2.user.soundcloud.followers | number:0}} followers </span> </div>
 			<div style="text-align:center; width:100%; height: 94%; margin: auto; @media screen and (max-width: 436px) {height: 88%};">
 				<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
