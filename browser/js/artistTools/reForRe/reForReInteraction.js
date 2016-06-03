@@ -85,19 +85,20 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.user.accepted = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1.accepted : $scope.trade.p2.accepted;
-  $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
-    return $scope.trade._id == trade._id;
-  }));
-
+  // $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
+  //   return $scope.trade._id == trade._id;
+  // }));
+  $scope.curTrade = JSON.stringify($.grep($scope.currentTrades, function(e){ return e._id == $scope.trade._id; }));
 
   $scope.refreshCalendar = function() {
     $scope.user = SessionService.getUser();
     $http.get('/api/trades/byID/' + $stateParams.tradeID)
       .then(function(res) {
         $scope.trade = res.data;
-        $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
-          return $scope.trade._id == trade._id;
-        }));
+      // $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
+      //   return $scope.trade._id == trade._id;
+      // }));
+      $scope.curTrade = JSON.stringify($.grep($scope.currentTrades, function(e){ return e._id == $scope.trade._id; }));
         return $http.get('/api/events/forUser/' + $scope.trade.p2.user.soundcloud.id)
       })
       .then(function(res) {
@@ -117,9 +118,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         $scope.currentTrades = trds;
       //$scope.swapEvents();
         $scope.user.accepted = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1.accepted : $scope.trade.p2.accepted;
-        $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
-          return $scope.trade._id == trade._id;
-        }));
+      // $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
+      //   return $scope.trade._id == trade._id;
+      // }));
+      $scope.curTrade = JSON.stringify($.grep($scope.currentTrades, function(e){ return e._id == $scope.trade._id; }));
         $scope.fillCalendar();
         $scope.updateAlerts();
       $scope.processing = false;
