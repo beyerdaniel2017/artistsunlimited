@@ -107,113 +107,6 @@ router.delete('/ignore/:subID/:password', function(req, res, next) {
     .then(null, next);
 });
 
-router.post('/paid', function(req, res, next) {
-  var submission;
-  var chanID;
-  var supportifyChunk = "";
-  Submission.findOne({
-      invoiceIDS: req.body.resource.invoice.id
-    }).exec()
-    .then(function(sub) {
-      var index = sub.channelIDS.indexOf(147045855); //supportify
-      if (index == -1) {
-        sub.channelIDS.push(147045855);
-        sendInvoice(sub, 147045855);
-        supportifyChunk = "Since we’ve approved you for a repost you can also get featured with our partners at <a href='https://soundcloud.com/supportify'>Supportify</a>. If you are interested in being featured there, please pay the invoice for Supportify that we are sending you. "
-      }
-      submission = sub;
-      var index = sub.invoiceIDS.indexOf(req.body.resource.invoice.id);
-      chanID = sub.channelIDS[index];
-      return Event.find({
-        paid: true,
-        trackID: null,
-        channelID: chanID
-      }).exec()
-    })
-    .then(function(events) {
-      events.forEach(function(event) {
-        event.day = new Date(event.day);
-      });
-      events.sort(function(a, b) {
-        return a.day.getTime() - b.day.getTime();
-      });
-      var index = 0;
-      var today = new Date();
-      var ev = events[index];
-      while (ev && ev.day.getTime() < today.getTime()) {
-        index++;
-        ev = events[index];
-      }
-      Channel.findOne({
-          channelID: chanID
-        }).exec()
-        .then(function(channel) {
-          if (!ev) {
-            Event.find({
-                channelID: chanID
-              }).exec()
-              .then(function(allEvents) {
-                allEvents.forEach(function(event1) {
-                  event1.day = new Date(event1.day);
-                });
-                var searchHours = [27, 30, 33, 46, 48];
-                var continu = true;
-                var ind = 1;
-                while (continu) {
-                  searchHours.forEach(function(hour) {
-                    var actualHour = calcHour(hour, -5);
-                    var desiredDay = new Date();
-                    var releaseDay = new Date();
-                    if (channel.blockRelease) releaseDay = new Date(channel.blockRelease);
-                    if (releaseDay > desiredDay) desiredDay = releaseDay;
-                    desiredDay.setDate(desiredDay.getDate() + ind);
-                    desiredDay.setHours(actualHour);
-                    if (continu) {
-                      var event = allEvents.find(function(eve) {
-                        return eve.day.getHours() == actualHour && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
-                      });
-                      if (!event) {
-                        continu = false;
-                        var newEve = new Event({
-                          paid: true,
-                          day: desiredDay,
-                          trackID: submission.trackID,
-                          title: submission.title,
-                          trackURL: submission.trackURL,
-                          channelID: chanID,
-                          email: submission.email,
-                          name: submission.name
-                        });
-                        newEve.save()
-                          .then(function(eve) {
-                            eve.day = new Date(eve.day);
-                            sendEmail(eve.name, eve.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>Thank you for completing the last step for promotion of your track <a href='" + eve.trackURL + "'>" + eve.title + "</a>! After reviewing the track and receiving your payment we have scheduled the repost on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". " + supportifyChunk + "Thank you for your business and if you haven’t already, check out our more extensive PR services by emailing artistsunlimited.pr@gmail.com.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
-                            res.send({});
-                          })
-                          .then(null, next);
-                      }
-                    }
-                  });
-                  ind++;
-                }
-              });
-          } else {
-            ev.trackID = submission.trackID;
-            ev.email = submission.email;
-            ev.name = submission.name;
-            ev.title = submission.title;
-            ev.trackURL = submission.trackURL;
-            ev.save().then(function(eve) {
-              eve.day = new Date(eve.day);
-              sendEmail(eve.name, eve.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>Thank you for completing the last step for promotion of your track<a href='" + eve.trackURL + "'>" + eve.title + "</a>! After reviewing the track and receiving your payment we have scheduled the repost on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". " + supportifyChunk + "Thank you for your business and if you haven’t already, check out our more extensive PR services by emailing artistsunlimited.pr@gmail.com.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
-              res.send(eve);
-            })
-          }
-        })
-    })
-    .then(null, next);
-});
-
 //reschedule repost
 router.post('/rescheduleRepost', function(req, res, next) {
   var eventHolder;
@@ -263,7 +156,7 @@ router.post('/rescheduleRepost', function(req, res, next) {
                     allEvents.forEach(function(event1) {
                       event1.day = new Date(event1.day);
                     });
-                    var searchHours = [27, 30, 33, 35, 37, 39, 41, 43, 46, 48];
+                    var searchHours = [24, 26, 28, 30, 32, 34];
                     var continu = true;
                     var ind = 1;
                     while (continu) {
@@ -414,7 +307,7 @@ function schedulePaidRepost(chanID, submission) {
                   allEvents.forEach(function(event1) {
                     event1.day = new Date(event1.day);
                   });
-                  var searchHours = [27, 30, 33, 35, 37, 39, 41, 43, 46, 48];
+                  var searchHours = [24, 26, 28, 30, 32, 34];
                   var continu = true;
                   var ind = 1;
                   while (continu) {

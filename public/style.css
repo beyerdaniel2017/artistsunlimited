@@ -1006,31 +1006,33 @@ h2, h3 {
   background: #ff3300;
   text-align: center;
   color: #fff;
-  height: 20px; }
+  height: 20px;
+  font-weight: bold; }
 
 .notification-bubble-tab {
-  right: 163px;
-  top: 10px;
-  position: absolute;
+  background: #ff3300;
+  left: 10px;
+  position: relative;
   border-radius: 50%;
   width: 20px;
-  padding-top: 2px;
-  background: #ff3300;
-  text-align: center;
-  color: #fff;
-  height: 20px; }
+  height: 20px;
+  padding-left: 8px;
+  padding-top: 4px; }
 
 .notification-bubble-left-menu {
-  right: 105px;
-  top: 14px;
-  position: absolute;
+  background: #ff3300;
+  left: 10px;
+  top: -1px;
+  position: relative;
   border-radius: 50%;
   width: 20px;
-  padding-top: 2px;
-  background: #ff3300;
-  text-align: center;
+  height: 20px;
+  padding-left: 8px;
+  padding-top: 4px; }
+
+.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
   color: #fff;
-  height: 20px; }
+  background-color: #ff3300; }
 
 .trades-container {
   height: 130px;
@@ -1791,13 +1793,18 @@ input[type=range]:focus::-ms-fill-upper {
 
 /*Genres css End*/
 .scroll-bar1 {
-  height: 500px;
+  height: 100%;
   margin-top: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: #F9F9F9;
-  border-radius: 3px;
-  padding: 0 20px; }
+  padding-left: 300px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  padding-top: 300px;
+  width: 100%;
+  right: 0;
+  padding-right: 35px; }
 
 .scroll-bar2 {
   overflow-y: auto;
@@ -1977,7 +1984,7 @@ input[type=range]:focus::-ms-fill-upper {
 .manage-btn {
   background-color: #FF7676;
   display: none;
-  padding: 8px 9px;
+  padding: 8px 19px;
   color: #FFF;
   position: absolute;
   z-index: 999;
@@ -1985,8 +1992,27 @@ input[type=range]:focus::-ms-fill-upper {
   border-radius: 8px;
   border: 0px none;
   top: 0;
-  margin-top: 82px;
-  margin-left: 60px; }
+  margin-top: 55px;
+  margin-left: 55px; }
+
+.manage-trade-thumb:hover .manage-delete-btn {
+  display: block; }
+
+.manage-delete-btn {
+  background-color: #FF7676;
+  display: none;
+  padding: 8px 20px;
+  color: #FFF;
+  position: absolute;
+  z-index: 999;
+  left: 0;
+  border-radius: 8px;
+  border: 0px none;
+  bottom: 60px;
+  margin-left: 55px; }
+
+.sort-btn {
+  margin-right: 20%; }
 
 .sort-select {
   border-radius: 5px;
@@ -2029,13 +2055,13 @@ input[type=range]:focus::-ms-fill-upper {
   background: transparent url(assets/images/sorting-up.png);
   background-size: 14px;
   background-repeat: no-repeat;
-  background-position: 100px; }
+  background-position: 94%; }
 
 .descending {
   background: transparent url(assets/images/sorting-down.png);
   background-size: 14px;
   background-repeat: no-repeat;
-  background-position: 100px; }
+  background-position: 94%; }
 
 .ngrs-runner {
   background: transparent url(assets/images/range-line.png);
@@ -2092,7 +2118,8 @@ input[type=range]:focus::-ms-fill-upper {
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
-  transition: all 0.5s ease; }
+  transition: all 0.5s ease;
+  z-index: 1; }
 
 #sidebar-wrapper:before {
   position: absolute;
@@ -2124,36 +2151,6 @@ input[type=range]:focus::-ms-fill-upper {
   padding: 0;
   list-style: none; }
 
-.sidebar-nav li {
-  text-indent: 20px;
-  line-height: 40px; }
-
-.sidebar-nav li a {
-  display: block;
-  text-decoration: none;
-  color: #999999; }
-
-.sidebar-nav li a:hover {
-  text-decoration: none;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.2); }
-
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus {
-  text-decoration: none; }
-
-.sidebar-nav > .sidebar-brand {
-  height: 65px;
-  font-size: 18px;
-  line-height: 60px; }
-
-.sidebar-nav > .sidebar-brand a {
-  color: #999999; }
-
-.sidebar-nav > .sidebar-brand a:hover {
-  color: #fff;
-  background: none; }
-
 @media (min-width: 768px) {
   #wrapper {
     padding-left: 250px; }
@@ -2171,3 +2168,67 @@ input[type=range]:focus::-ms-fill-upper {
     margin-right: 0; } }
 
 /************ SIDEBAR START END*****************/
+/********* NEW **************/
+.tab-menu {
+  z-index: 51;
+  position: relative;
+  background: #fff; }
+
+.manage-bar {
+  z-index: 51;
+  position: relative;
+  background: #fff; }
+
+.right-side::before {
+  position: absolute;
+  content: '';
+  width: 98%;
+  height: 40px;
+  background: transparent url(assets/images/bg-line.png);
+  top: -40px;
+  left: 0;
+  background-repeat: repeat;
+  background-size: 12px;
+  z-index: 1; }
+
+/*********** Media CSS **************/
+@media screen and (max-width: 1024px) {
+  .scroll-bar1 {
+    padding-right: 55px; }
+  .manage-btn {
+    margin-top: 25px;
+    margin-left: 15px; }
+  .manage-delete-btn {
+    bottom: 20px;
+    margin-left: 15px; }
+  .slide-img-box div {
+    padding: 0 0 0 2%; } }
+
+@media screen and (max-width: 768px) {
+  .manage-btn {
+    margin-top: 70px;
+    margin-left: 50px; }
+  .manage-delete-btn {
+    bottom: 40px;
+    margin-left: 50px; }
+  .img-btn {
+    margin-left: 50px; } }
+
+@media screen and (max-width: 375px) {
+  .scroll-bar1 {
+    padding-top: 465px;
+    padding-right: 38px;
+    padding-left: 40px; }
+  .img-btn {
+    margin-left: 90px; }
+  .page-header ul li {
+    float: left; }
+  .page-header ul li {
+    float: left;
+    padding: 0 10px; }
+  .inner-head {
+    float: right; }
+  .inner-head .navbar-nav {
+    margin: 0; }
+  .page-header ul li img {
+    width: 22px; } }
