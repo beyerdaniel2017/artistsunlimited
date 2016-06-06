@@ -64,7 +64,7 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
   $scope.currentTradesCopy = currentTrades;
   $scope.otherUsers = [];
   $scope.searchUser = openTrades;
-
+	$scope.currentTab = "SearchTrade";
   $scope.searchURL = "";
 
   $scope.sliderSearchMin = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers / 2) : 0)) / Math.log(1.1);
@@ -316,6 +316,20 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
 			}
 		});
 	}
+	$scope.setCurrentTab = function(currentTab){
+		$scope.currentTab = currentTab;
+	}
+	$scope.openHelpModal = function() {
+      if ($scope.currentTab == 'SearchTrade') {
+        var displayText = "<span style='font-weight:bold'>Search Trade:</span> Here you will be able to find people to trade reposts with. By entering a SoundCloud User’s URL into the Search, you will find that user and then be able to initiate a trade with that user.<br/><br/>By clicking open trade, you will be led to our repost for repost interface.<br/><br/><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
+      } else if ($scope.currentTab == 'ManageTrade') {
+        var displayText = "<span style='font-weight:bold'>Manage Trade:</span> Here you will be able to find the users you have already initiated trades with in the past, or people who have initiated a trade with you. By hovering over user’s icon, you will be able to enter into your trade or delete the trade with that given user.<br/><br/>By clicking manage while hovering over a user’s icon, the repost for repost interface will open.<br/><br/><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
+      }
+
+      $.Zebra_Dialog(displayText, {
+        width: 600
+      });
+    }
 
   $scope.checkNotification();
   $scope.sortResult($scope.sortby);

@@ -66,7 +66,7 @@ app.run(function($rootScope, AuthService, $state, $uiViewScroll, SessionService,
 app.controller('FullstackGeneratedController', function($scope, $http, mainService, SessionService) {
     $scope.shownotification = false;
     $scope.openHelpModal = function() {
-        mainService.openHelpModal();
+        //mainService.openHelpModal();
     };
 
     $scope.logout = function() {
