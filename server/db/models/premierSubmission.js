@@ -17,6 +17,10 @@ var schema = new mongoose.Schema({
     },
     comment: { 
         type: String
+    },
+    status: {
+        type: String, 
+        default: 'new'
     }
 });
 
