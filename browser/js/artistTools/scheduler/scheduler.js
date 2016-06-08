@@ -34,6 +34,34 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.dayIncr = 0;
 
+  $scope.trackList = [];
+  $scope.trackListObj = null;
+  $scope.newQueueSong = "";
+
+  $scope.trackListChange = function(index) {
+    $scope.newQueueSong = $scope.trackListObj.permalink_url;
+    $scope.changeQueueSong();
+  };
+
+  $scope.getTrackListFromSoundcloud = function() {
+    var profile = $scope.user;
+    if (profile.soundcloud) {
+      $scope.processing = true;
+      SC.get('/users/' + profile.soundcloud.id + '/tracks', {
+        filter: 'public'
+      })
+      .then(function(tracks) {
+        $scope.trackList = tracks;
+        $scope.processing = false;
+        $scope.$apply();
+      })
+      .catch(function(response) {
+        $scope.processing = false;
+        $scope.$apply();
+      });
+    }
+  }
+
   $scope.saveUser = function() {
     $scope.processing = true;
     $http.put("/api/database/profile", $scope.user)
@@ -47,8 +75,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         $scope.processing = false;
       });
   }
-  $scope.dayIncr = 0;
 
+  $scope.dayIncr = 0;
 
   $scope.saveUser = function() {
     $scope.processing = true;
@@ -188,7 +216,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     } else {
       $scope.makeEvent.unrepostDate = new Date(0);
     }
-
   }
 
   $scope.findUnrepostOverlap = function() {
@@ -211,14 +238,12 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         $scope.processing = true;
         if ($scope.newEvent) {
           var req = $http.post('/api/events/repostEvents', $scope.makeEvent)
-
         } else {
           var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
         }
         req
           .then(function(res) {
             return $scope.refreshEvents();
-
           })
           .then(function(res) {
             $scope.showOverlay = false;
@@ -253,6 +278,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.user.queue.push($scope.newQueueID);
     $scope.saveUser();
     $scope.newQueueSong = undefined;
+    $scope.trackListObj = "";
     $scope.newQueue = undefined;
     $scope.loadQueueSongs([$scope.newQueueID]);
   }
@@ -375,6 +401,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     }
     return calendar;
   };
+
   $scope.calendar = $scope.fillDateArrays(events);
 
 
@@ -402,7 +429,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       } else {
         promptForEmail();
       }
-
     }
   }
   promptForEmail();

@@ -80,6 +80,32 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.p1dayIncr = 0;
   $scope.p2dayIncr = 0;
 
+  $scope.trackList = [];
+
+  $scope.trackListChange = function(index) {
+    $scope.makeEvent.URL = $scope.makeEvent.trackListObj.permalink_url;
+    $scope.changeURL();
+  };
+
+  $scope.getTrackListFromSoundcloud = function() {
+    var profile = $scope.user;
+    if (profile.soundcloud) {
+      $scope.processing = true;
+      SC.get('/users/' + profile.soundcloud.id + '/tracks', {
+        filter: 'public'
+      })
+      .then(function(tracks) {
+        $scope.trackList = tracks;
+        $scope.processing = false;
+        $scope.$apply();
+      })
+      .catch(function(response) {
+        $scope.processing = false;
+        $scope.$apply();
+      });
+    }
+  }
+
   $scope.getSchedulerID = function(uid){
     return ((uid == $scope.user._id) ? "scheduler-left" : "scheduler-right");
   }
@@ -273,6 +299,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.setUpAndOpenMakeEvent = function(event, person) {
     $scope.showOverlay = true;
     $scope.makeEvent = JSON.parse(JSON.stringify(event));
+    $scope.makeEvent.trackListObj = null;
     $scope.makeEvent.day = new Date($scope.makeEvent.day);
     if ($scope.makeEvent.unrepostDate) $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
     if ($scope.makeEvent.unrepostDate > new Date()) {
