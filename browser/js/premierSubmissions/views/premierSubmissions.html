@@ -1,0 +1,26 @@
+<div style="text-align:center" ng-init="loadSubmissions()">
+  <div>
+    <h2 style="display:inline;text-align:center">Admin</h2>
+  </div>
+  </br>
+  <ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
+  </br>
+  <div>
+    <h3 style="text-align:center">Premier Submissions</h3>
+    <div style="width:80%; text-align:center; margin: 10px auto;">
+      <div ng-repeat="sub in showingElements" style="padding:10px 150px; margin:10px 10px; background-color: #fff;">
+        <h4>Name: {{sub.name}} ----- Email: {{sub.email}} ----- Genre: {{sub.genre}}</h4>
+        <h4>Comment: {{sub.comment}}</h4>
+        <audio controls style="display: block !important; width: 50%; height: 50px; margin: 0 auto;">
+          <source ng-src="{{sub.s3URL | trusted }}" type="audio/mpeg">
+        </audio>
+        <div style="width: 50%; margin: 0 auto; padding-top:10px;padding-bottom:10px;">
+          <button ng-click="decline(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:red ; font-size:2em">Decline</button>
+          <button ng-click="accept(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:#67f967 ; font-size:2em">Accept</button>
+        </div>
+      </div>
+      <button ng-click="loadMore()" style="width:95%; height: 45px; margin: 0 0; background-color:#67f967 ; font-size:2em">Load More</button>
+    </div>
+  </div>
+</div>
+<ng-include src="'js/home/views/loader.html'"></ng-include>
