@@ -1,4 +1,4 @@
-<div style="text-align:center" ng-init="loadSubmissions()">
+<div style="text-align:center" ng-init="loadSubmissions();getChannels();">
   <div>
     <h2 style="display:inline;text-align:center">Admin</h2>
   </div>
@@ -17,6 +17,13 @@
         <div style="width: 50%; margin: 0 auto; padding-top:10px;padding-bottom:10px;">
           <button ng-click="decline(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:red ; font-size:2em">Decline</button>
           <button ng-click="accept(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:#67f967 ; font-size:2em">Accept</button>
+          <button ng-click="delete(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:red ; font-size:2em">Delete</button>
+        </div>
+        <div style="width: 40%; margin: 0 auto; padding-top:10px;padding-bottom:10px;">
+          <select class="form-control" style="width:170px;float:left;" ng-model="sub.channelName" ng-options="name.displayName for name in channels" ng-change="channelChange(sub)">
+            <option value="">-Channel List-</option>
+          </select>
+          <a href="mailto:{{sub.email}}?subject=Premier Submissions&body={{sub.emailBody}}" style="padding:8px; background-color:yellow; font-size:2em">Send Email</a>          
         </div>
       </div>
       <button ng-click="loadMore()" style="width:95%; height: 45px; margin: 0 0; background-color:#67f967 ; font-size:2em">Load More</button>

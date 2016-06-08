@@ -142,6 +142,7 @@ router.post('/', function(req, res, next) {
     return res.status(400).send(err);
   }
 });
+
 router.put('/accept', function(req, res, next) {
   PremierSubmission.findByIdAndUpdate(req.body._id, req.body, {
     new: true
@@ -164,4 +165,17 @@ router.put('/decline', function(req, res, next) {
     res.send(sub);
   })
   .then(null, next);
+});
+router.post('/delete', function(req, res, next) {
+  PremierSubmission
+  .remove({
+    _id: req.body.id
+  })
+  .exec()
+  .then(function() {
+    return res.end();
+  })
+  .then(null, function(err) {
+    next(err);
+  });
 });
