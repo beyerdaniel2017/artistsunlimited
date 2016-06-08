@@ -56,7 +56,6 @@ app.controller('DownloadTrackController', ['$rootScope',
 
 			function receiveDownloadTrack(result) {
 				$scope.track = result.data;
-				console.log($scope.track);
 				$scope.backgroundStyle = function() {
 					return {
 						'background-image': 'url(' + $scope.track.trackArtworkURL + ')',
