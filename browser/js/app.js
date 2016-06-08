@@ -1,5 +1,5 @@
 'use strict';
-window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'angularMoment','luegg.directives','ui-rangeSlider', 'ngSanitize']);
+window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'angularMoment', 'luegg.directives', 'ui-rangeSlider', 'ngSanitize']);
 
 app.config(function($urlRouterProvider, $locationProvider, $uiViewScrollProvider) {
     // This turns off hashbang urls (/#about) and changes it to something normal (/about)
@@ -65,9 +65,6 @@ app.run(function($rootScope, AuthService, $state, $uiViewScroll, SessionService,
 
 app.controller('FullstackGeneratedController', function($scope, $http, mainService, SessionService) {
     $scope.shownotification = false;
-    $scope.openHelpModal = function() {
-        //mainService.openHelpModal();
-    };
 
     $scope.logout = function() {
         mainService.logout();
@@ -77,21 +74,21 @@ app.controller('FullstackGeneratedController', function($scope, $http, mainServi
         var user = SessionService.getUser();
         if (user) {
             return $http.get('/api/trades/withUser/' + user._id)
-            .then(function(res) {
-                var trades = res.data;
-                trades.forEach(function(trade) {
-                    if(trade.p1.user._id == user._id){
-                        if(trade.p1.alert == "change"){
-                            $scope.shownotification = true;
+                .then(function(res) {
+                    var trades = res.data;
+                    trades.forEach(function(trade) {
+                        if (trade.p1.user._id == user._id) {
+                            if (trade.p1.alert == "change") {
+                                $scope.shownotification = true;
+                            }
                         }
-                    }
-                    if(trade.p2.user._id == user._id){
-                        if(trade.p2.alert == "change"){
-                            $scope.shownotification = true;
+                        if (trade.p2.user._id == user._id) {
+                            if (trade.p2.alert == "change") {
+                                $scope.shownotification = true;
+                            }
                         }
-                    }
-                });
-            })
+                    });
+                })
         }
     }
     $scope.checkNotification();
