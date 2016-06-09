@@ -80,47 +80,54 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.p1dayIncr = 0;
   $scope.p2dayIncr = 0;
 
+  $scope.trackList = [];
+
+  $scope.trackListChange = function(index) {
+    $scope.makeEvent.URL = $scope.makeEvent.trackListObj.permalink_url;
+    $scope.changeURL();
+  };
+
+  $scope.getTrackListFromSoundcloud = function() {
+    var profile = $scope.user;
+    if (profile.soundcloud) {
+      $scope.processing = true;
+      SC.get('/users/' + profile.soundcloud.id + '/tracks', {
+        filter: 'public'
+      })
+      .then(function(tracks) {
+        $scope.trackList = tracks;
+        $scope.processing = false;
+        $scope.$apply();
+      })
+      .catch(function(response) {
+        $scope.processing = false;
+        $scope.$apply();
+      });
+    }
+  }
+
   $scope.getSchedulerID = function(uid){
     return ((uid == $scope.user._id) ? "scheduler-left" : "scheduler-right");
   }
 
   $scope.user.accepted = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1.accepted : $scope.trade.p2.accepted;
-  // $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
-  //   return $scope.trade._id == trade._id;
-  // }));
   $scope.curTrade = JSON.stringify($.grep($scope.currentTrades, function(e){ return e._id == $scope.trade._id; }));
 
   $scope.refreshCalendar = function() {
     $scope.user = SessionService.getUser();
-    $http.get('/api/trades/byID/' + $stateParams.tradeID)
+    $http.get('/api/trades/getTradeData/' + $stateParams.tradeID)
       .then(function(res) {
-        $scope.trade = res.data;
-      // $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
-      //   return $scope.trade._id == trade._id;
-      // }));
+      $scope.trade = res.data.trade;
       $scope.curTrade = JSON.stringify($.grep($scope.currentTrades, function(e){ return e._id == $scope.trade._id; }));
-        return $http.get('/api/events/forUser/' + $scope.trade.p2.user.soundcloud.id)
-      })
-      .then(function(res) {
-        $scope.p2Events = res.data;
-        return $http.get('/api/events/forUser/' + $scope.trade.p1.user.soundcloud.id)
-      })
-      .then(function(res) {
-        $scope.p1Events = res.data;
-        return $http.get('/api/trades/withUser/' + $scope.user._id)
-    })
-    .then(function(res) {
-        var trds = res.data
+      $scope.p2Events = res.data.p2Events;
+      $scope.p1Events = res.data.p1Events;
+      var trds = res.data.userTrades;
         trds.forEach(function(trade) {
           trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
           trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
         });
         $scope.currentTrades = trds;
-      //$scope.swapEvents();
         $scope.user.accepted = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1.accepted : $scope.trade.p2.accepted;
-      // $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
-      //   return $scope.trade._id == trade._id;
-      // }));
       $scope.curTrade = JSON.stringify($.grep($scope.currentTrades, function(e){ return e._id == $scope.trade._id; }));
         $scope.fillCalendar();
         $scope.updateAlerts();
@@ -273,6 +280,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.setUpAndOpenMakeEvent = function(event, person) {
     $scope.showOverlay = true;
     $scope.makeEvent = JSON.parse(JSON.stringify(event));
+    $scope.makeEvent.trackListObj = null;
     $scope.makeEvent.day = new Date($scope.makeEvent.day);
     if ($scope.makeEvent.unrepostDate) $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
     if ($scope.makeEvent.unrepostDate > new Date()) {
@@ -644,9 +652,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
 
   $scope.openHelpModal = function() {
     var displayText = "This interface shows your scheduler and the scheduler for the user you are trading with, labeled on the top of each respective schedule. Your calendar will always be on the left.<br/><br/>Grey slots represents slots that are already taken.<br/>Blue slots represent slots that are being bargained in the trade.<br/>An Arrow within a slot means it will be unreposted after 24 hours.<br/>The chat window on the bottom allows you to chat with your Repost Partner about your trade.<br/>Email will automatically open a new email on your mailing app, allowing you to message your repost partner via email for your trade.<br/><br/>How to use AU's Repost for Repost System:<br/>1. Start by deciding how you would like to trade with your partner.<br/>2. Mark slots on your calendar and mark slots on your partners calendar.<br/>3. Click accept<br/><br/>When your partner returns to AU, he will be able to accept your trade. If accepted, you will be able to schedule reposts on the slots designated on your partner’s calendar; your partner will be able to schedule reposts on the slots designated on your calendar. If you are away from keyboard at the time of your trade, tracks that are in your 'auto-fill' queue (hyperlink to autofill queu) in the scheduler will automatically be scheduled for repost.<br/><br/>Tips:<br/>1. Make sure you are fair with your trades. If you have half as many followers as your partner, offer 2 reposts on your calendar in exchange for 1 repost on theirs.<br />2. Make sure you check your trades on a regular basis. People are much more likely to constantly trade reposts with you if you are reliable.<br />3. Try communicating with the user on Facebook, Email, SoundCloud messenger or any messaging app to make sure they take action on trades when it is their turn. A friendly 'Hey, let me know when you accept the trade on AU! Thanks again for trading with me :)' is enough to ensure a good flow of communication for your trades!";
-
     $.Zebra_Dialog(displayText, {
-      width: 600
+      width: 800
     });
   }
   $scope.updateAlerts();

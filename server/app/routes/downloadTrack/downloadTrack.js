@@ -168,7 +168,7 @@ router.get('/track/recent', function(req, res, next) {
       userid: userID
     }).sort({
       createdOn: -1
-    }).limit(6).exec()
+  }).limit(10).exec()
     .then(function(downloadTracks) {
       var tracks = downloadTracks.filter(function(item) {
         return item._id.toString() !== trackID;

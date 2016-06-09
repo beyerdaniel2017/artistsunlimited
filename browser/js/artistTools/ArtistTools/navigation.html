@@ -2,8 +2,8 @@
 
 <div id="sidebar-wrapper">
   <div class="left-side">
-    <div class="tropical"> <span>{{user.name}}</span> <img class="img-responsive img-circle" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't200x200') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:100px;">
-      <p>{{user.soundcloud.followers | number:0}} Followers</p>
+    <div class="tropical"><a href="{{user.soundcloud.permalinkURL}}" target="_blank" style="color:#8a8a8a"><span>{{user.name}}</span><img class="img-responsive img-circle" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't200x200') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:100px;">
+      <p>{{user.soundcloud.followers | number:0}} Followers</p></a>
     </div>
     <!--tropical end-->
     <div class="left-menus">

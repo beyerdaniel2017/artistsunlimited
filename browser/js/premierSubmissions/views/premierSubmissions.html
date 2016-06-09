@@ -1,4 +1,4 @@
-<div style="text-align:center" ng-init="loadSubmissions()">
+<div style="text-align:center" ng-init="loadSubmissions();getChannels();">
   <div>
     <h2 style="display:inline;text-align:center">Admin</h2>
   </div>
@@ -8,6 +8,11 @@
   <div>
     <h3 style="text-align:center">Premier Submissions</h3>
     <div style="width:80%; text-align:center; margin: 10px auto;">
+      <select class="form-control" style="width:170px;float:right; margin-right:10px;"ng-options="item for item in   genreArray" ng-model="genre" ng-change="getSubmissionsByGenre()">
+        <option value="">--Select Genre--</option>
+      </select>
+      <br>
+      <br>
       <div ng-repeat="sub in showingElements" style="padding:10px 150px; margin:10px 10px; background-color: #fff;">
         <h4>Name: {{sub.name}} ----- Email: {{sub.email}} ----- Genre: {{sub.genre}}</h4>
         <h4>Comment: {{sub.comment}}</h4>
@@ -17,6 +22,13 @@
         <div style="width: 50%; margin: 0 auto; padding-top:10px;padding-bottom:10px;">
           <button ng-click="decline(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:red ; font-size:2em">Decline</button>
           <button ng-click="accept(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:#67f967 ; font-size:2em">Accept</button>
+          <button ng-click="delete(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:red ; font-size:2em">Delete</button>
+        </div>
+        <div style="width: 40%; margin: 0 auto; padding-top:10px;padding-bottom:10px;">
+          <select class="form-control" style="width:170px;float:left;" ng-model="sub.channelName" ng-options="name.displayName for name in channels" ng-change="channelChange(sub)">
+            <option value="">-Channel List-</option>
+          </select>
+          <a href="mailto:{{sub.email}}?subject=Premier Submissions&body={{sub.emailBody}}" style="padding:8px; background-color:yellow; font-size:2em">Send Email</a>          
         </div>
       </div>
       <button ng-click="loadMore()" style="width:95%; height: 45px; margin: 0 0; background-color:#67f967 ; font-size:2em">Load More</button>
