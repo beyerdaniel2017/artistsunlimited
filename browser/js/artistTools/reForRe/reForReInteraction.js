@@ -111,42 +111,23 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.user.accepted = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1.accepted : $scope.trade.p2.accepted;
-  // $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
-  //   return $scope.trade._id == trade._id;
-  // }));
   $scope.curTrade = JSON.stringify($.grep($scope.currentTrades, function(e){ return e._id == $scope.trade._id; }));
 
   $scope.refreshCalendar = function() {
     $scope.user = SessionService.getUser();
-    $http.get('/api/trades/byID/' + $stateParams.tradeID)
+    $http.get('/api/trades/getTradeData/' + $stateParams.tradeID)
       .then(function(res) {
-        $scope.trade = res.data;
-      // $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
-      //   return $scope.trade._id == trade._id;
-      // }));
+      $scope.trade = res.data.trade;
       $scope.curTrade = JSON.stringify($.grep($scope.currentTrades, function(e){ return e._id == $scope.trade._id; }));
-        return $http.get('/api/events/forUser/' + $scope.trade.p2.user.soundcloud.id)
-      })
-      .then(function(res) {
-        $scope.p2Events = res.data;
-        return $http.get('/api/events/forUser/' + $scope.trade.p1.user.soundcloud.id)
-      })
-      .then(function(res) {
-        $scope.p1Events = res.data;
-        return $http.get('/api/trades/withUser/' + $scope.user._id)
-    })
-    .then(function(res) {
-        var trds = res.data
+      $scope.p2Events = res.data.p2Events;
+      $scope.p1Events = res.data.p1Events;
+      var trds = res.data.userTrades;
         trds.forEach(function(trade) {
           trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
           trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
         });
         $scope.currentTrades = trds;
-      //$scope.swapEvents();
         $scope.user.accepted = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1.accepted : $scope.trade.p2.accepted;
-      // $scope.curTrade = JSON.stringify($scope.currentTrades.find(function(trade) {
-      //   return $scope.trade._id == trade._id;
-      // }));
       $scope.curTrade = JSON.stringify($.grep($scope.currentTrades, function(e){ return e._id == $scope.trade._id; }));
         $scope.fillCalendar();
         $scope.updateAlerts();
