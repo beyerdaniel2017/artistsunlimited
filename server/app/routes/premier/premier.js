@@ -12,7 +12,18 @@ var awsConfig = require('./../../../env').AWS;
 var rootURL = require('../../../env').ROOTURL;
 
 router.get('/unaccepted', function(req, res, next) {
-  PremierSubmission.find({status: 'new'}).exec()
+  var genre = req.query.genre ? req.query.genre : undefined;
+  var skipcount  = req.query.skip;
+  var limitcount  = req.query.limit;
+  var searchObj = {status: 'new'};
+  if(genre != undefined && genre != 'null'){
+    searchObj = {status: 'new', genre: genre};
+  }
+  PremierSubmission
+  .find(searchObj)
+  .skip(skipcount)
+  .limit(limitcount)
+  .exec()
   .then(function(subs) {
     res.send(subs);
   })
@@ -161,11 +172,12 @@ router.put('/decline', function(req, res, next) {
   })
   .exec()
   .then(function(sub) {
-    sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting audio file of your track to us! We checked out your premier submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.<br><br> We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.co/submit'>Artists Unlimited</a>.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
+    sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting your track <a href='" + sub.s3URL + "'>track</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.<br><br> We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.co/submit'>Artists Unlimited</a>.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
     res.send(sub);
   })
   .then(null, next);
 });
+
 router.post('/delete', function(req, res, next) {
   PremierSubmission
   .remove({

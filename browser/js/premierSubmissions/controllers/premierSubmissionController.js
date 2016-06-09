@@ -7,13 +7,40 @@ app.config(function($stateProvider) {
 });
 
 app.controller('PremierSubmissionController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$sce) {
+  if (!SessionService.getUser()) {
+    $state.go('admin');
+  }
   $scope.counter = 0;
   $scope.channels = [];
   $scope.showingElements = [];
   $scope.submissions = [];
-  if (!SessionService.getUser()) {
-    $state.go('admin');
-  }
+  $scope.genre = "";
+  $scope.skip = 0;
+  $scope.limit = 10;
+  $scope.genreArray = [
+      'Alternative Rock',
+      'Ambient',
+      'Creative',
+      'Chill',
+      'Classical',
+      'Country',
+      'Dance & EDM',
+      'Dancehall',
+      'Deep House',
+      'Disco',
+      'Drum & Bass',
+      'Dubstep',
+      'Electronic',
+      'Festival',
+      'Folk',
+      'Hip-Hop/RNB',
+      'House',
+      'Indie/Alternative',
+      'Latin',
+      'Trap',
+      'Vocalists/Singer-Songwriter'
+  ];
+
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
       SessionService.deleteUser();
@@ -24,13 +51,24 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     });
   }
 
+  $scope.getSubmissionsByGenre = function(){
+    $scope.showingElements = [];
+    $scope.skip = 0;
+    $scope.loadSubmissions();
+  }
+
   $scope.loadSubmissions = function() {
     $scope.processing = true;
-    $http.get('/api/premier/unaccepted')
+    $http.get('/api/premier/unaccepted?genre='+$scope.genre+"&skip="+$scope.skip+"&limit="+$scope.limit)
     .then(function(res) {
-      $scope.submissions = res.data;
-      $scope.loadMore();
        $scope.processing = false;
+      if (res.data.length > 0) {
+        angular.forEach(res.data, function(d) {
+          d.channelName = null;
+          d.emailBody = "";
+          $scope.showingElements.push(d);
+        });
+      }
     })
     .then(null, function(err) {
       $scope.processing = false;
@@ -40,17 +78,19 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   }
 
   $scope.loadMore = function() {
-    var loadElements = [];
-    for (let i = $scope.counter; i < $scope.counter + 15; i++) {
-      var sub = $scope.submissions[i];
-      if (sub) {
-        sub.channelName = null;
-        sub.emailBody = "";
-        $scope.showingElements.push(sub);
-        loadElements.push(sub);
-      }
-    }
-    $scope.counter += 15;
+    $scope.skip += 10;
+    $scope.loadSubmissions();
+    //var loadElements = [];
+    // for (let i = $scope.counter; i < $scope.counter + 15; i++) {
+    //   var sub = $scope.submissions[i];
+    //   if (sub) {
+    //     sub.channelName = null;
+    //     sub.emailBody = "";
+    //     $scope.showingElements.push(sub);
+    //     loadElements.push(sub);
+    //   }
+    // }
+    // $scope.counter += 15;
   }
 
   $scope.accept = function(submi) {

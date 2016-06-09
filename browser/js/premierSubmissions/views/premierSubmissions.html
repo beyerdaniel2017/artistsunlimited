@@ -8,6 +8,11 @@
   <div>
     <h3 style="text-align:center">Premier Submissions</h3>
     <div style="width:80%; text-align:center; margin: 10px auto;">
+      <select class="form-control" style="width:170px;float:right; margin-right:10px;"ng-options="item for item in   genreArray" ng-model="genre" ng-change="getSubmissionsByGenre()">
+        <option value="">--Select Genre--</option>
+      </select>
+      <br>
+      <br>
       <div ng-repeat="sub in showingElements" style="padding:10px 150px; margin:10px 10px; background-color: #fff;">
         <h4>Name: {{sub.name}} ----- Email: {{sub.email}} ----- Genre: {{sub.genre}}</h4>
         <h4>Comment: {{sub.comment}}</h4>
