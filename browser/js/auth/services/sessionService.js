@@ -15,6 +15,13 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		}
 	}
 
+    function getLoginToken() {
+		var token = $window.localStorage.getItem('logintoken');
+		if (token) {
+			return token;
+		}
+	}
+
 	function refreshUser() {
 		var curUser = getUser();
 		if (curUser) {
@@ -29,6 +36,7 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		create: create,
 		deleteUser: deleteUser,
 		getUser: getUser,
+		getLoginToken:getLoginToken,
 		refreshUser: refreshUser
 	};
 });

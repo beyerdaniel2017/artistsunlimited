@@ -11,6 +11,7 @@ var https = require('https');
 var request = require('request');
 var scConfig = global.env.SOUNDCLOUD;
 var scWrapper = require("../../SCWrapper/SCWrapper.js");
+var jwt = require('jsonwebtoken');
 
 router.post('/', function(req, res, next) {
   passport.authenticate('local-login', function(err, user, info) {
@@ -33,11 +34,13 @@ router.post('/', function(req, res, next) {
         req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
         req.session.cookie.maxAge = 28 * 24 * 3600000;
         req.session.cookie.expires = false;
+        var logintoken = jwt.sign({ uid : user._id }, global.env.SESSION_SECRET || 'arTistisUnlimited');
         delete user.password;
         delete user.salt;
         return res.json({
           'success': true,
           'message': '',
+          'logintoken': logintoken,
           'user': user
         });
       });
@@ -106,9 +109,11 @@ router.post('/soundCloudLogin', function(req, res, next) {
         req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
         req.session.cookie.maxAge = 28 * 24 * 3600000;
         req.session.cookie.expires = false;
+        var logintoken = jwt.sign({ uid : user._id }, global.env.SESSION_SECRET || 'arTistisUnlimited');        
         return res.json({
           'success': true,
           'message': '',
+          'logintoken': logintoken,
           'user': user
         });
       });
