@@ -6,7 +6,7 @@ app.config(function($stateProvider) {
   });
 });
 
-app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, SessionService) {
+app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$window) {
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.submissions = [];
@@ -21,9 +21,9 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
       .login($scope.loginObj)
       .then(handleLoginResponse)
       .catch(handleLoginError)
-
     function handleLoginResponse(res) {
       if (res.status === 200 && res.data.success) {
+        $window.localStorage.setItem('logintoken', res.data.logintoken);
         SessionService.create(res.data.user);
         $state.go('submissions');
       } else {
@@ -41,7 +41,6 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
       };
     }
   };
-
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
       SessionService.deleteUser();
@@ -51,7 +50,6 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
       $.Zebra_Dialog('Wrong Password');
     });
   }
-
   $scope.manage = function() {
     $scope.processing = true;
     SC.connect()

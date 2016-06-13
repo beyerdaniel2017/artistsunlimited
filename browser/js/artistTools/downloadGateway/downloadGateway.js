@@ -17,6 +17,7 @@ app.config(function($stateProvider) {
 
 app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService, AdminDLGateService) {
   /* Init Download Gateway form data */
+    var logintoken = SessionService.getLoginToken();
   $scope.user = SessionService.getUser();
   $scope.showTitle = [];
   $scope.track = {
@@ -141,7 +142,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
 
     var options = {
       method: 'POST',
-      url: '/api/database/downloadurl',
+            url: '/api/database/downloadurl?logintoken=' + logintoken,
       headers: {
         'Content-Type': undefined
       },
@@ -150,6 +151,19 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     };
     $http(options)
       .then(function(res) {
+                if (res.data.status == 401) {
+                    $scope.processing = false;
+                    $.Zebra_Dialog('Your login token has been expired.Please login again!!', {
+                        'type': 'confirmation',
+                        'buttons': [{
+                            caption: 'OK',
+                            callback: function() {
+                                SessionService.deleteUser();
+                                $state.go('login');
+                            }
+                        }]
+                    });
+                } else {
         $scope.processing = false;
         if ($stateParams.submission) {
           $state.go('artistToolsDownloadGatewayList', {
@@ -163,6 +177,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
           }
           $state.go('artistToolsDownloadGatewayList');
         }
+                }
       })
       .then(null, function(err) {
         $scope.processing = false;

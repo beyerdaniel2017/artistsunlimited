@@ -40,6 +40,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     if (!SessionService.getUser()) {
       $state.go('login');
     }
+        var logintoken = SessionService.getLoginToken();
     /* Init boolean variables for show/hide and other functionalities */
     $scope.processing = false;
     $scope.isTrackAvailable = false;
@@ -73,7 +74,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     };
 
     $scope.openHelpModal = function() {
-      console.log($state);
       if ($state.current.url == '/artistTools/profile') {
         var displayText = "<h3>Help</h3><span style='font-weight:bold'>Permanent Links:</span> Add artist soundcloud urls here to make the artists followed on every one of your download gates.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
       } else if ($state.current.url == '/artistTools/downloadGateway') {
@@ -168,7 +168,8 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       var sendObj = {
         name: '',
         password: '',
-        permanentLinks: JSON.stringify(permanentLinks)
+                permanentLinks: JSON.stringify(permanentLinks),
+                logintoken: logintoken
       }
       if ($scope.profile.field === 'name') {
         sendObj.name = $scope.profile.data.name;
@@ -182,6 +183,20 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       ArtistToolsService
         .saveProfileInfo(sendObj)
         .then(function(res) {
+                    if (res.data.status == 401) {
+                        $scope.processing = false;
+                        $scope.closeEditProfileModal();
+                        $.Zebra_Dialog('Your login token has been expired.Please login again!', {
+                            'type': 'confirmation',
+                            'buttons': [{
+                                caption: 'OK',
+                                callback: function() {
+                                    SessionService.deleteUser();
+                                    $state.go('login');
+                                }
+                            }]
+                        });
+                    } else {
           $scope.processing = false;
           if (res.data === 'Email Error') {
             $scope.message = {
@@ -192,6 +207,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
           }
           SessionService.create(res.data);
           $scope.closeEditProfileModal();
+                    }
         })
         .catch(function(res) {
           $scope.processing = false;
@@ -294,15 +310,30 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
         $scope.processing = true;
         ArtistToolsService
           .deleteDownloadGateway({
-            id: downloadGateWayID
+                        id: downloadGateWayID,
+                        logintoken: logintoken
           })
           .then(handleResponse)
           .catch(handleError);
 
         function handleResponse(res) {
+                    if (res.data.status == 401) {
+                        $scope.processing = false;
+                        $.Zebra_Dialog('Your login token has been expired.Please login again!!', {
+                            'type': 'confirmation',
+                            'buttons': [{
+                                caption: 'OK',
+                                callback: function() {
+                                    SessionService.deleteUser();
+                                    $state.go('login');
+                                }
+                            }]
+                        });
+                    } else {
           $scope.processing = false;
           $scope.downloadGatewayList.splice(index, 1);
         }
+                }
 
         function handleError(res) {
           $scope.processing = false;

@@ -155,7 +155,7 @@ router.post('/', function(req, res, next) {
 });
 
 router.put('/accept', function(req, res, next) {
-  PremierSubmission.findByIdAndUpdate(req.body._id, req.body, {
+  PremierSubmission.findByIdAndUpdate(req.body.submi._id, req.body, {
     new: true
   })
   .exec()
@@ -167,7 +167,7 @@ router.put('/accept', function(req, res, next) {
 });
 
 router.put('/decline', function(req, res, next) {
-  PremierSubmission.findByIdAndUpdate(req.body._id, req.body, {
+  PremierSubmission.findByIdAndUpdate(req.body.submission._id, req.body, {
     new: true
   })
   .exec()

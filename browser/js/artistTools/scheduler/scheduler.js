@@ -36,7 +36,13 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.trackList = [];
   $scope.trackListObj = null;
+  $scope.trackListSlotObj = null;
   $scope.newQueueSong = "";
+
+  $scope.trackChange = function(index) {
+    $scope.makeEventURL=$scope.trackListSlotObj.permalink_url;
+    $scope.changeURL();
+  };
 
   $scope.trackListChange = function(index) {
     $scope.newQueueSong = $scope.trackListObj.permalink_url;
@@ -109,6 +115,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       return calD.day.toLocaleDateString() == day.toLocaleDateString();
     });
     $scope.makeEventURL = undefined;
+    $scope.trackListSlotObj = undefined;
     $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
     if ($scope.makeEvent.type == 'traded') {
       $scope.showOverlay = false;

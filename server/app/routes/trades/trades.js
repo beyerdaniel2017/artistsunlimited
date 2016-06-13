@@ -96,6 +96,7 @@ router.post('/delete', function(req, res, next) {
     next(err);
   });
 });
+
 router.get('/getTradeData/:tradeID', function(req, res, next) {
   var trade = {};
   var arrP1Events = [];

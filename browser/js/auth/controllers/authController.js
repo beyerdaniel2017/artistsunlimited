@@ -63,14 +63,11 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
       };
     }
   };
-
   $scope.checkIfSubmission = function() {
     if ($stateParams.submission) {
       $scope.soundcloudLogin();
     }
   }
-
-
   $scope.signup = function() {
     $scope.message = {
       val: '',
@@ -106,6 +103,7 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
       })
       .then(function(res) {
         $scope.processing = false;
+        $window.localStorage.setItem('logintoken', res.data.logintoken);
         SessionService.create(res.data.user);
         if ($stateParams.submission) {
           $state.go('artistToolsDownloadGatewayNew', {
@@ -116,7 +114,6 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
         $state.go('reForReLists');
       })
       .then(null, function(err) {
-        console.log(err);
         $.Zebra_Dialog('Error: Could not log in');
         $scope.processing = false;
       });

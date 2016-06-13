@@ -10,6 +10,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
+  var logintoken = SessionService.getToken();
   $scope.counter = 0;
   $scope.channels = [];
   $scope.showingElements = [];
@@ -96,11 +97,28 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   $scope.accept = function(submi) {
     $scope.processing = true;
     submi.status = "accepted";
-    $http.put("/api/premier/accept", submi)
+        $http.put("/api/premier/accept", {submi:submi,logintoken:logintoken})
     .then(function(sub) {
+               if (sub.data.status == 401) {
+                   $scope.processing = false;
+                                setTimeout(function() {
+                                    $.Zebra_Dialog('Your login token has been expired.Please login again!!', {
+                                        'type': 'confirmation',
+                                        'buttons': [{
+                                            caption: 'OK',
+                                            callback: function() {
+                                                SessionService.deleteUser();
+                                                $state.go('admin');
+                                            }
+                                        }]
+                                    });
+                                }, 1000);
+
+                            } else {
       $scope.showingElements.splice($scope.showingElements.indexOf(submi), 1);
       $.Zebra_Dialog("Accepted");
       $scope.processing = false;
+              }
     })
     .then(null, function(err) {
       $scope.processing = false;
@@ -111,12 +129,30 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   $scope.decline = function(submission) {
     $scope.processing = true;
     submission.status = "declined";
-    $http.put('/api/premier/decline',submission)
+        $http.put('/api/premier/decline', {submission:submission,logintoken:logintoken})
     .then(function(res) {
+               if (res.data.status == 401) {
+                                $scope.processing = false;
+
+                                setTimeout(function() {
+                                    $.Zebra_Dialog('Your login token has been expired.Please login again!!', {
+                                        'type': 'confirmation',
+                                        'buttons': [{
+                                            caption: 'OK',
+                                            callback: function() {
+                                                SessionService.deleteUser();
+                                                $state.go('admin');
+                                            }
+                                        }]
+                                    });
+                                }, 1000);
+
+                            } else {
       var index = $scope.showingElements.indexOf(submission);
       $scope.showingElements.splice(index, 1);
       $.Zebra_Dialog("Declined");
       $scope.processing = false
+              }
     })
     .then(null, function(err) {
       $scope.processing = false;
@@ -147,10 +183,26 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
         caption: 'Yes',
         callback: function() {
           $scope.processing = true;
-          $http.post("/api/premier/delete", {id : submission._id})
+                    $http.post("/api/premier/delete", { id: submission._id, logintoken: logintoken })
           .then(function(sub) {
+                            if (sub.data.status == 401) {
+                                $scope.processing = false;
+                                setTimeout(function() {
+                                    $.Zebra_Dialog('Your login token has been expired.Please login again!!', {
+                                        'type': 'confirmation',
+                                        'buttons': [{
+                                            caption: 'OK',
+                                            callback: function() {
+                                                SessionService.deleteUser();
+                                                $state.go('admin');
+                                            }
+                                        }]
+                                    });
+                                }, 1000);
+                            } else {
             $scope.showingElements.splice($scope.showingElements.indexOf(submission), 1);
             $scope.processing = false;
+                            }
           })
           .then(null, function(err) {
             $scope.processing = false;
