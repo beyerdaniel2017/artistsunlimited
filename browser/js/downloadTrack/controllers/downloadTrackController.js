@@ -1,5 +1,4 @@
-
-app.config(function ($stateProvider, $authProvider, $httpProvider) {
+app.config(function($stateProvider, $authProvider, $httpProvider) {
     $stateProvider.state('download', {
         url: '/download',
         templateUrl: 'js/downloadTrack/views/downloadTrack.view.html',
@@ -7,31 +6,34 @@ app.config(function ($stateProvider, $authProvider, $httpProvider) {
     });
 
     $authProvider.instagram({
-      clientId: 'ae84968993fc4adf9b2cd246b763bf6b'
+        clientId: 'ae84968993fc4adf9b2cd246b763bf6b'
     });
-    
+
 
     // Instagram
     $authProvider.instagram({
-          name: 'instagram',
-          url: '/api/download/auth/instagram',
-          authorizationEndpoint: 'https://api.instagram.com/oauth/authorize',
-          redirectUri: 'https://localhost:1443/download',
-          requiredUrlParams: ['scope'],
-          scope: ['basic','relationships','public_content','follower_list'],
-          scopeDelimiter: '+',
-          type: '2.0'
-        });
+        name: 'instagram',
+        url: '/api/download/auth/instagram',
+        authorizationEndpoint: 'https://api.instagram.com/oauth/authorize',
+        redirectUri: 'https://localhost:1443/download',
+        requiredUrlParams: ['scope'],
+        scope: ['basic', 'relationships', 'public_content', 'follower_list'],
+        scopeDelimiter: '+',
+        type: '2.0'
+    });
 
     $authProvider.twitter({
-          url: '/api/download/twitter/auth',
-          authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
-          redirectUri: 'https://localhost:1443/download',
-          type: '1.0',
-          popupOptions: { width: 495, height: 645 }
-        });
+        url: '/api/download/twitter/auth',
+        authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
+        redirectUri: 'https://localhost:1443/download',
+        type: '1.0',
+        popupOptions: {
+            width: 495,
+            height: 645
+        }
+    });
 
-    })
+})
 
 
 app.controller('DownloadTrackController', ['$rootScope',
@@ -44,7 +46,7 @@ app.controller('DownloadTrackController', ['$rootScope',
     'DownloadTrackService',
     '$sce',
     '$auth',
-    function ($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService, $sce, $auth) {
+    function($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService, $sce, $auth) {
 
         /* Normal JS vars and functions not bound to scope */
         var playerObj = null;
@@ -56,7 +58,7 @@ app.controller('DownloadTrackController', ['$rootScope',
             userName: 'la tropical'
         };
         $scope.toggle = true;
-        $scope.togglePlay = function () {
+        $scope.togglePlay = function() {
             $scope.toggle = !$scope.toggle;
             if ($scope.toggle) {
                 playerObj.pause();
@@ -72,8 +74,7 @@ app.controller('DownloadTrackController', ['$rootScope',
         $scope.recentTracks = [];
 
 
-        $scope.initiateDownload = function()
-        {
+        $scope.initiateDownload = function() {
             $scope.processing = false;
             if ($scope.track.downloadURL && $scope.track.downloadURL !== '') {
                 $window.location.href = $scope.track.downloadURL;
@@ -85,23 +86,20 @@ app.controller('DownloadTrackController', ['$rootScope',
 
         /* Function for Instagram */
 
-        $scope.authenticateInstagram = function()
-        {
-            $auth.authenticate('instagram').then(function(response)
-            {
+        $scope.authenticateInstagram = function() {
+            $auth.authenticate('instagram').then(function(response) {
                 console.log(response)
                 var userName = $scope.track.socialPlatformValue;
 
                 $http({
-                    method : "POST",
-                    url : '/api/download/instagram/follow_user',
-                    data : {
-                        'access_token' : response.data,
-                        'q' : userName
+                    method: "POST",
+                    url: '/api/download/instagram/follow_user',
+                    data: {
+                        'access_token': response.data,
+                        'q': userName
                     }
-                }).then(function(user){
-                    if(user.data.succ)
-                    {
+                }).then(function(user) {
+                    if (user.data.succ) {
                         $scope.initiateDownload();
                     }
                 });
@@ -110,32 +108,44 @@ app.controller('DownloadTrackController', ['$rootScope',
 
         /* Function for Twitter */
 
-        $scope.authenticateTwitter = function()
-        {
-            $auth.authenticate('twitter').then(function(response)
-            {
-                console.log(response)
+        $scope.authenticateTwitter = function() {
+            $auth.authenticate('twitter').then(function(response) {
+                // console.log(response)
                 var userName = $scope.track.socialPlatformValue;
 
-                if($scope.track.socialPlatform == 'twitterFollow')
-                {
+                if ($scope.track.socialPlatform == 'twitterFollow') {
                     $http({
-                        method : "POST",
-                        url : '/api/download/twitter/auth'
-                    }).then(function(records)
-                    {
-                        console.log(records)
+                        method: "POST",
+                        url: '/api/download/twitter/follow',
+                        data: {
+                            screen_name: userName,
+                            accessToken: response.data
+                        }
+                    }).then(function(records) {
+                        //console.log(records)
+                        if (records.data && records.statusText === "OK") {
+                            if (records.data.screen_name === $scope.track.socialPlatformValue) {
+                                //success case
+                                window.location.replace($scope.track.downloadURL);
+                            }
+                            console.log($scope.track);
+                        } else {
+                            console.log("Failed");
+                        }
                     });
-                }
-                else if ($scope.track.socialPlatform == 'twitterPost') {
-                    console.log(response)
-                    var userName = $scope.track.socialPlatformValue;
+                } else if ($scope.track.socialPlatform == 'twitterPost') {
+                    response.data.socialPlatformValue = $scope.track.socialPlatformValue;
+                    console.log("response <DownloadTrackController>:" + JSON.stringify(response));
                     $http({
-                        method : "POST",
-                        url : '/api/download/twitter/post'
-                    }).then(function(records)
-                    {
-                        console.log(records)
+                        method: "POST",
+                        url: '/api/download/twitter/post',
+                        data: response.data
+                    }).then(function(records) {
+                        if (records.statusText === "OK") {
+                            window.location.replace($scope.track.downloadURL);
+                        } else {
+                            alert("Something went wrong, please retry");
+                        }
                     });
                 }
             });
@@ -143,42 +153,40 @@ app.controller('DownloadTrackController', ['$rootScope',
 
         /* Function for Youtube */
 
-        $scope.authenticateYoutube = function(track)
-        {
+        $scope.authenticateYoutube = function(track) {
             var trackUrl = $scope.track.downloadURL
 
             $http({
-                method : "GET",
-                url : '/api/download/subscribe',
-                params : {
-                    trackURL : trackUrl,
-                    channelID : $scope.track.socialPlatformValue
+                method: "GET",
+                url: '/api/download/subscribe',
+                params: {
+                    trackURL: trackUrl,
+                    channelID: $scope.track.socialPlatformValue
                 }
-            }).then(function(response)
-            {
+            }).then(function(response) {
                 console.log(response)
-//                $scope.initiateDownload();
+                    //                $scope.initiateDownload();
 
             });
         }
 
         /* Default processing on page load */
 
-        $scope.getDownloadTrack = function () {
+        $scope.getDownloadTrack = function() {
 
             $scope.processing = true;
             var trackID = $location.search().trackid;
             DownloadTrackService
-                    .getDownloadTrack(trackID)
-                    .then(receiveDownloadTrack)
-                    .then(receiveRecentTracks)
-                    .then(initPlay)
-                    .catch(catchDownloadTrackError);
+                .getDownloadTrack(trackID)
+                .then(receiveDownloadTrack)
+                .then(receiveRecentTracks)
+                .then(initPlay)
+                .catch(catchDownloadTrackError);
 
             function receiveDownloadTrack(result) {
                 $scope.track = result.data;
                 console.log($scope.track);
-                $scope.backgroundStyle = function () {
+                $scope.backgroundStyle = function() {
                     return {
                         'background-image': 'url(' + $scope.track.trackArtworkURL + ')',
                         'background-repeat': 'no-repeat',
@@ -220,7 +228,7 @@ app.controller('DownloadTrackController', ['$rootScope',
 
         /* On click download track button */
 
-        $scope.downloadTrack = function () {
+        $scope.downloadTrack = function() {
             if ($scope.track.comment && !$scope.track.commentText) {
                 alert('Please write a comment!');
                 return false;
@@ -229,9 +237,9 @@ app.controller('DownloadTrackController', ['$rootScope',
             $scope.errorText = '';
 
             SC.connect()
-                    .then(performTasks)
-                    .then(initDownload)
-                    .catch(catchTasksError)
+                .then(performTasks)
+                .then(initDownload)
+                .catch(catchTasksError)
 
             function performTasks(res) {
                 $scope.track.token = res.oauth_token;
@@ -257,123 +265,73 @@ app.controller('DownloadTrackController', ['$rootScope',
 
         };
 
-        $scope.downloadTrackFacebookShare = function (shareURL)
-        {
-            FB.ui({
-                method: 'share',
-                href: shareURL
-            }, function (response)
-            {
-                console.log(response);
-                if (response && !response.error_code)
-                {
-                    console.log("OK: " + JSON.stringify(response));
+        $scope.downloadTrackFacebookShare = function(shareURL) {
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId: '1719978144956959',
+                    xfbml: true,
+                    version: 'v2.6'
+                });
+                FB.ui({
+                    method: 'share',
+                    href: shareURL
+                }, function(response) {
+                    console.log(response);
+                    if (response && !response.error_code) {
+                        console.log("OK: " + JSON.stringify(response));
 
-                    if ($scope.track.downloadURL && $scope.track.downloadURL !== '')
-                    {
-                        $window.location.href = $scope.track.downloadURL;
+                        if ($scope.track.downloadURL && $scope.track.downloadURL !== '') {
+                            $window.location.href = $scope.track.downloadURL;
+                        } else {
+                            $scope.errorText = 'Error! Could not fetch download URL';
+                            $scope.downloadURLNotFound = true;
+                        }
+                        $scope.$apply();
+                    } else if (response && response.error_code === 4201) {
+                        console.log("User cancelled: " + decodeURIComponent(response.error_message));
+                    } else {
+                        console.log("Not OK: " + JSON.stringify(response));
+                        alert("You have cancelled sharing on facebook.");
                     }
-                    else
-                    {
-                        $scope.errorText = 'Error! Could not fetch download URL';
-                        $scope.downloadURLNotFound = true;
-                    }
-                    $scope.$apply();
-                }
-                else if (response && response.error_code === 4201)
-                {
-                    console.log("User cancelled: " + decodeURIComponent(response.error_message));
-                }
-                else
-                {
-                    console.log("Not OK: " + JSON.stringify(response));
-                    alert("You have cancelled sharing on facebook.");
-                }
-            });
-        }
+                });
+            };
 
-        $scope.downloadTrackFacebookLike = function (likePage)
-        {
-            /********* Share Facebook API *********/
-//            var facebookShare = window.open('http://www.facebook.com/plugins/like.php?href=http://www.facebook.com/'+likePage+"&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=light&amp;",'facebookShare', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=650');
-//            
-//            window.setTimeout(function() {
-//                facebookShare.addEventListener("message", function(e)
-//                {
-//                    alert("a");
-//                    console.log(e);
-//                    console.log("received load event");
-//                }, false);
-//            }, 0);
-            alert("asdas");
-            twttr.widgets.createShareButton(
-                    'https://dev.twitter.com/',
-                    angular.element('container'),
-                    {
-                        text: 'Hello World'
-                    }
-            );
-            window.twttr = (function (d, s, id) {
-                var js, fjs = d.getElementsByTagName(s)[0],
-                        t = window.twttr || {};
-                if (d.getElementById(id))
-                    return t;
+            (function(d, s, id) {
+                console.log("executed !");
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {
+                    return;
+                }
                 js = d.createElement(s);
                 js.id = id;
-                js.src = "https://platform.twitter.com/widgets.js";
+                js.src = "//connect.facebook.net/en_US/sdk.js";
                 fjs.parentNode.insertBefore(js, fjs);
-
-                t._e = [];
-                t.ready = function (f) {
-                    t._e.push(f);
-                };
-
-                return t;
-            }(document, "script", "twitter-wjs"));
-
-
-            /********* Like Facebook API *********/
-
-//            (function (d, s, id) {
-//                var js, fjs = d.getElementsByTagName(s)[0];
-//                if (d.getElementById(id))
-//                    return;
-//                js = d.createElement(s);
-//                js.id = id;
-//                js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.6&appId=1719978144956959";
-//                fjs.parentNode.insertBefore(js, fjs);
-//            }(document, 'script', 'facebook-jssdk'));
-
-
-//            twttr.events.bind('tweet', function (event) {
-//                alert('tweet complete');
-//                // Do something there
-//            });
-//
-//            twttr.events.bind('click', function (event) {
-//                alert('clicked');
-//                // Do something there
-//            });
-//
-//            twttr.events.bind(
-//                      'follow',
-//                      function (event) {
-//                            console.log(event);
-//                      }
-//            );
-
-            return false;
+            }(document, 'script', 'facebook-jssdk'));
         }
+        $scope.downloadTrackFacebookLike = function(fblikeid) {
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId: '1719978144956959',
+                    xfbml: true,
+                    version: 'v2.6'
+                });
+                FB.Event.subscribe('edge.create', function(href, widget) {
+                    window.location = fblikeid.trackURL;
+                });
+            };
+            (function(d, s, id) {
+                console.log("executed !");
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {
+                    return;
+                }
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+
+        };
 
     }
 ]);
-
-
-
-
-
-
-
-
-
-

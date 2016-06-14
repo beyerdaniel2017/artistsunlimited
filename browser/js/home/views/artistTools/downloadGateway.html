@@ -29,7 +29,7 @@
                         <p class="text-justify pad-download-agreement">
                             By downloading this song you agree to: <img src="assets/images/favorite_icon.png" style="width:14px; height:12px;"> the track, <img src="assets/images/repost_icon.png" style="width:16px; height:12px;"> the track, and follow : </br> {{track.artistUsername}}
                             <span ng-repeat="artist in track.artists" ng-show="!track.admin">
-                                </br> {{artist.username}}   
+                                </br> {{artist.username}}
                             </span>
                             <span ng-show="!!track.admin"> and our network</span>
                             .
@@ -43,7 +43,7 @@
                         <h4>Social Media Links</h4>
                         <div class="social-media-links" ng-repeat="item in track.SMLinks">
                             <input class="form-control" type="text" placeholder="Link" ng-model="item.value" ng-change="SMLinkChange($index)"/>
-                            <span class="{{item.key}}"></span>                            
+                            <span class="{{item.key}}"></span>
                             <a class="close-ic-rel" href="#" ng-click="removeSMLink($index)"><img src="assets/images/close.png"></a>
                         </div>
                         <a href="#" ng-click="addSMLink()">+ Social Media</a>
@@ -59,7 +59,7 @@
                     </div>
                     <div class="social-container">
                         <h4>Download File</h4>
-                        <div>                                                   
+                        <div>
                             <input class="form-control" type="file" accept=".mp3" fileread="track.file" message="message" ng-click="clearOrInput()"/>
                             <div class="text-center">Adds the album artwork, song title, and artist's name to the .mp3 file.</div>
                             <div class="text-center">Or</div>
@@ -85,7 +85,7 @@
                         <h4>Required Steps to download track</h4>
                         <small class="orange-text">Users must complete each step before they can access this track. Each step can have multiple actions, but only one action per step is required to continue to the next step (unless the entire step is optional).</small>
 
-                        <select ng-model="track.socialPlatform">
+                        <select ng-model="track.socialPlatform" ng-change="track.socialPlatformValue='';">
                             <option value="">select an option</option>
                             <option value="facebookLike">Like Facebook page</option>
                             <option value="facebookShare">Share on Facebook</option>
@@ -103,11 +103,10 @@
                             <div ng-if="track.socialPlatform == 'facebookLike'">
                                 <label>Like Facebook Page :</label>
                                 <div class="input-group">
-                                    <span class="input-group-addon">facebook.com/</span>
-                                    <input type="text" class="form-control" input-append="www.facebook.com/" ng-model="track.socialPlatformValue" value="" />
+                                    <input type="text" class="form-control" ng-model="track.socialPlatformValue" value="" />
                                 </div>
                             </div>
-                            
+
                             <div ng-if="track.socialPlatform == 'facebookShare'">
                                 <label>Share on Facebook :</label>
                                 <div class="input-group">

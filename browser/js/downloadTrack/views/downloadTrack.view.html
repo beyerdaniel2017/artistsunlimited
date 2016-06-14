@@ -43,78 +43,78 @@
 
                             
                             
-                        <input type="text" ng-model="track.commentText" placeholder="Comment" ng-if="track.comment" style="width:360px; height:30px; margin-bottom:5px">
-<!--                        <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em;" href="javascript:void(0)" ng-click="downloadTrack()">CONNECT & DOWNLOAD</a>-->
+                            <input type="text" ng-model="track.commentText" placeholder="Comment" ng-if="track.comment" style="width:360px; height:30px; margin-bottom:5px">
+                            <!--                        <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em;" href="javascript:void(0)" ng-click="downloadTrack()">CONNECT & DOWNLOAD</a>-->
 
 
-                        
+
 <!--                         <button class="g-ytsubscribe" data-channel="GoogleDevelopers" data-layout="default" data-count="default">youtube</button>
-                        <button class="g-ytsubscribe" data-channel="GoogleDevelopers" data-layout="default" data-count="default" ng-click="onYtEvent">dfgfdgfd</button> -->
-                        <div ng-if="track.socialPlatform == 'youtubeSubscribe'">
-                            <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="authenticateYoutube(track)" >CONNECT & DOWNLOAD</a>
-                            <p class="text-justify pad-download-agreement">
-                                For downloading this song you need to subscribe {{ track.socialPlatformValue }} on youtube.
-                            </p>
-                        </div>
+    <button class="g-ytsubscribe" data-channel="GoogleDevelopers" data-layout="default" data-count="default" ng-click="onYtEvent">dfgfdgfd</button> -->
+    <div ng-if="track.socialPlatform == 'youtubeSubscribe'">
+        <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="authenticateYoutube(track)" >CONNECT & DOWNLOAD</a>
+        <p class="text-justify pad-download-agreement">
+            For downloading this song you need to subscribe {{ track.socialPlatformValue }} on youtube.
+        </p>
+    </div>
 
-                        <div ng-if="track.socialPlatform == 'twitterFollow'">
-                            <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="authenticateTwitter(track)" >CONNECT & DOWNLOAD</a>
+    <div ng-if="track.socialPlatform == 'twitterFollow'">
+        <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="authenticateTwitter(track)" >CONNECT & DOWNLOAD</a>
 
-                            <p class="text-justify pad-download-agreement">
-                                For downloading this song you need to follow {{ track.socialPlatformValue }} on twitter.
-                            </p>
-                        </div>
+        <p class="text-justify pad-download-agreement">
+            For downloading this song you need to follow {{ track.socialPlatformValue }} on twitter.
+        </p>
+    </div>
 
-                         <div ng-if="track.socialPlatform == 'twitterPost'">
-                            <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="authenticateTwitter(track)" >CONNECT & DOWNLOAD</a>
+    <div ng-if="track.socialPlatform == 'twitterPost'">
+        <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="authenticateTwitter(track)" >CONNECT & DOWNLOAD</a>
 
-                            <p class="text-justify pad-download-agreement">
-                                For downloading this song you need to tweet {{ track.socialPlatformValue }} on twitter.
-                            </p>
-                        </div>
+        <p class="text-justify pad-download-agreement">
+            For downloading this song you need to tweet {{ track.socialPlatformValue }} on twitter.
+        </p>
+    </div>
 
-                            <div ng-if="track.socialPlatform == 'facebookLike'">
-                                <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="downloadTrackFacebookLike(track.socialPlatformValue)" >CONNECT & DOWNLOAD</a>
-                                
-                                
-                                <p class="text-justify pad-download-agreement">
-                                    For downloading this song you need to {{ track.socialPlatformValue }} Facebook page/link.
-                                </p>
-                            </div>
+    <div ng-if="track.socialPlatform == 'facebookLike'">
+        <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="downloadTrackFacebookLike(track)" >CONNECT & DOWNLOAD</a>
+        <div class="fb-like" data-href="{{ track.socialPlatformValue }}" data-layout="standard" data-action="like" data-show-faces="false" data-share="false">
+        </div>
+         <p class="text-justify pad-download-agreement">
+        For downloading this song you need to {{ track.socialPlatformValue }} Facebook page/link.
+    </p>
+</div>
 <div id="container"></div>
 <!--                            <div id="fb-root"></div>
-                            <div class="fb-like" data-href="https://www.facebook.com/thinkwik" data-layout="button" data-action="like" data-show-faces="true" data-share="false"></div>-->
+    <div class="fb-like" data-href="https://www.facebook.com/thinkwik" data-layout="button" data-action="like" data-show-faces="true" data-share="false"></div>-->
 
-                            <div ng-if="track.socialPlatform == 'facebookShare'">
-                                <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="downloadTrackFacebookShare(track.socialPlatformValue)" >CONNECT & DOWNLOAD</a>
-                                <p class="text-justify pad-download-agreement">
-                                    For downloading this song you need to share {{ track.socialPlatformValue }} on Facebook.
-                                </p>
-                            </div>
+    <div ng-if="track.socialPlatform == 'facebookShare'">
+        <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #425F9C;" ng-click="downloadTrackFacebookShare(track.socialPlatformValue)" >CONNECT & DOWNLOAD</a>
+        <p class="text-justify pad-download-agreement">
+            For downloading this song you need to share {{ track.socialPlatformValue }} on Facebook.
+        </p>
+    </div>
 
-                            <div ng-if="track.socialPlatform == 'instagramFollow'">
-                                <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #a77658;" ng-click="authenticateInstagram(track)">
-                                    CONNECT & DOWNLOAD
-                                </a>
-                                <p class="text-justify pad-download-agreement">
-                                    For downloading this song you need to follow {{ track.socialPlatformValue }} on instagram.
-                                </p>
-                            </div>
+    <div ng-if="track.socialPlatform == 'instagramFollow'">
+        <a class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em; color: #a77658;" ng-click="authenticateInstagram(track)">
+            CONNECT & DOWNLOAD
+        </a>
+        <p class="text-justify pad-download-agreement">
+            For downloading this song you need to follow {{ track.socialPlatformValue }} on instagram.
+        </p>
+    </div>
 
-                        <br>
-                        <br>
-                        <div>
-                            <div ng-repeat="(name, url) in track.SMLinks" style="display:inline-block; margin:5px 10px;">
-                                <a href="{{url}}" target="_blank">
-                                    <img src="assets/images/{{name}}_icon.png" style="width:40px; height:40px;">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <br>
+    <br>
+    <div>
+        <div ng-repeat="(name, url) in track.SMLinks" style="display:inline-block; margin:5px 10px;">
+            <a href="{{url}}" target="_blank">
+                <img src="assets/images/{{name}}_icon.png" style="width:40px; height:40px;">
+            </a>
         </div>
-    </div>  
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>  
 </div>
 </div>        
 

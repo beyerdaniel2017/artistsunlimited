@@ -1,0 +1,36 @@
+<ng-include src="'js/home/views/navigation.html'"></ng-include>
+<!-- Content Start  -->
+<div class="container" ng-init="getDownloadList();checkIfSubmission()">
+  <div class="content-area bg-white">
+  	<ng-include src="'js/home/views/artistTools/navigation.html'"></ng-include>
+  	<div class="row">
+	  	<div class="col-md-12 text-center">
+        <div class="col-md-3">
+            <a href="#" class="btn btn-enter" ng-click="authFacbook();">Facebook</a>
+        </div>
+        <div class="col-md-3">
+            <a href="#" class="btn btn-enter" ng-click="authTwitter();">Twitter</a>
+        </div>
+        <div class="col-md-3">
+            <a href="#" class="btn btn-enter" ng-click="authInstagram();">Instagram</a>
+        </div>
+        <div class="col-md-3">
+            <a href="#" class="btn btn-enter" ng-click="authYoutube();">Youtube</a>
+        </div>
+	    </div>
+	  </div>
+
+	  <div class="row" ng-if="facebookPages[0]">
+      <div class="col-md-12 text-center">
+        <h3>Select Facebook Page</h3>
+        <div class="col-md-3"></div>
+        <div class="col-md-3" ng-repeat="facebookPage in facebookPages[0].pages track by $index">
+            <a href="#" class="btn btn-enter" ng-click="showFacebookPageState(facebookPage);">{{facebookPage.name}}</a>
+        </div>
+        <div class="col-md-3"></div>
+	    </div>
+	  </div>
+	</div>
+</div>
+<!-- Content End  -->
+<ng-include src="'js/home/views/loader.html'"></ng-include>
