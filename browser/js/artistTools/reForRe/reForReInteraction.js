@@ -323,10 +323,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     }
     var makeDay = new Date(day);
     makeDay.setHours(hour, 30, 0, 0);
-    // if (makeDay < new Date()) {
-    //   $.Zebra_Dialog('Timeslot has passed.');
-    //   return;
-    // }
+    if (makeDay < new Date()) {
+      $.Zebra_Dialog('Timeslot has passed.');
+      return;
+    }
 
     switch (event.type) {
       case 'queue':
@@ -391,28 +391,27 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
                   $state.go('artistToolsScheduler');
                 }
               });
-            }, 600);                        
-          }
-          else{
-          $scope.user.accepted = true;
-          if ($scope.trade.p1.user._id == $scope.user._id) {
-            $scope.trade.p1.accepted = true;
+            }, 600);
           } else {
-            $scope.trade.p2.accepted = true;
+            $scope.user.accepted = true;
+            if ($scope.trade.p1.user._id == $scope.user._id) {
+              $scope.trade.p1.accepted = true;
+            } else {
+              $scope.trade.p2.accepted = true;
+            }
+            $scope.processing = true;
+            $http.put('/api/trades', $scope.trade)
+              .then(function(res) {
+                $scope.processing = false;
+                $scope.trade = res.data;
+                if ($scope.trade.p1.accepted && $scope.trade.p2.accepted) $scope.completeTrade();
+                else $scope.emitMessage('---- ' + $scope.user.soundcloud.username + " accepted the trade ----", 'alert');
+              })
+              .then(null, function(err) {
+                $scope.processing = false;
+                $.Zebra_Dialog('Error accepting');
+              })
           }
-          $scope.processing = true;
-          $http.put('/api/trades', $scope.trade)
-            .then(function(res) {
-              $scope.processing = false;
-              $scope.trade = res.data;
-              if ($scope.trade.p1.accepted && $scope.trade.p2.accepted) $scope.completeTrade();
-              else $scope.emitMessage('---- ' + $scope.user.soundcloud.username + " accepted the trade ----", 'alert');
-            })
-            .then(null, function(err) {
-              $scope.processing = false;
-              $.Zebra_Dialog('Error accepting');
-            })
-        }
         }
       }, {
         caption: 'Cancel',
@@ -520,12 +519,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     var lastString = op1String;
     do {
       lastString = op1String;
-      // $scope.trade.p1.slots.forEach(function(slot) {
-      //   if (slot.day < now) {
-      //     slot.day.setHours(now.getHours() + Math.floor(Math.random() * 10) + 1);
-      //     change = true;
-      //   }
-      // });
+      $scope.trade.p1.slots.forEach(function(slot) {
+        if (slot.day < now) {
+          slot.day.setHours(now.getHours() + Math.floor(Math.random() * 10) + 14);
+          change = true;
+        }
+      });
       $scope.p1Events.forEach(function(event) {
         $scope.trade.p1.slots.forEach(function(slot) {
           if (slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours()) {
@@ -540,12 +539,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     var op2String = JSON.stringify($scope.trade.p2.slots)
     do {
       lastString = op2String;
-      // $scope.trade.p2.slots.forEach(function(slot) {
-      //   if (slot.day < now) {
-      //     slot.day.setHours(now.getHours() + Math.floor(Math.random() * 10) + 1);
-      //     change = true;
-      //   }
-      // });
+      $scope.trade.p2.slots.forEach(function(slot) {
+        if (slot.day < now) {
+          slot.day.setHours(now.getHours() + Math.floor(Math.random() * 10) + 14);
+          change = true;
+        }
+      });
       $scope.p2Events.forEach(function(event) {
         $scope.trade.p2.slots.forEach(function(slot) {
           if (slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours()) {
@@ -678,33 +677,30 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
           callback: function() {
             var answer = $("#txtremail").val();
             if (answer == "") {
-        $state.go('artistToolsDownloadGatewayList');
-      }
-            else {
-      var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
-      if (myArray) {
-        $scope.user.email = answer;
-        return $http.put('/api/database/profile', $scope.user)
-          .then(function(res) {
-            SessionService.create(res.data);
-            $scope.user = SessionService.getUser();
-            $scope.hideall = false;
-          })
-          .then(null, function(err) {
-                  $.Zebra_Dialog("Error saving.");
-                  setTimeout(function() {
-            promptForEmail();
-                  },600);
-          })
-              } 
-              else 
-              {
+              $state.go('artistToolsDownloadGatewayList');
+            } else {
+              var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
+              if (myArray) {
+                $scope.user.email = answer;
+                return $http.put('/api/database/profile', $scope.user)
+                  .then(function(res) {
+                    SessionService.create(res.data);
+                    $scope.user = SessionService.getUser();
+                    $scope.hideall = false;
+                  })
+                  .then(null, function(err) {
+                    $.Zebra_Dialog("Error saving.");
+                    setTimeout(function() {
+                      promptForEmail();
+                    }, 600);
+                  })
+              } else {
                 setTimeout(function() {
-        promptForEmail();
-                },600);
-      }
-    }
-  }
+                  promptForEmail();
+                }, 600);
+              }
+            }
+          }
         }],
       });
     }
