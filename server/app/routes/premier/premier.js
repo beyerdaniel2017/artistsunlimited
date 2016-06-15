@@ -171,8 +171,8 @@ router.put('/accept', function(req, res, next) {
 });
 
 router.put('/decline', function(req, res, next) {
-  PremierSubmission.findByIdAndUpdate(req.body.submission._id, req.body, {
-      new: true
+  PremierSubmission.findOneAndRemove({
+      _id: req.body.submission._id
     })
     .exec()
     .then(function(sub) {
