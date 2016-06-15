@@ -8,8 +8,7 @@
 <div class="content-area bg-white" style="padding: 1% 2%;" ng-init="getTrackListFromSoundcloud()">
 	<div class="rfr-schedule-container" ng-init="getMessage()">
 		<!-- schedule 1 -->
-	<div class="scheduler-small" id="{{getSchedulerID(trade.p1.user._id)}}">
-
+		<div class="scheduler-small" id="{{getSchedulerID(trade.p1.user._id)}}">
 			<div class="label-username"><a target="_blank" href="{{trade.p1.user.soundcloud.permalinkURL}}">{{trade.p1.user.soundcloud.username}}</a> <span style="color:#ADD8E6">( {{trade.p1.slots.length}} slots )</span><span ng-if="followerShow()"> - {{trade.p1.user.soundcloud.followers | number:0}} followers </span></div>
 			<div style="text-align:center; width:100%; height: 94%; margin: auto;">
 				<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
@@ -35,7 +34,7 @@
 			</div>
 		</div>
 		<!-- schedule 2 -->
-	<div class="scheduler-small" id="{{getSchedulerID(trade.p2.user._id)}}">
+		<div class="scheduler-small" id="{{getSchedulerID(trade.p2.user._id)}}">
 			<div class="label-username"><a target="_blank" href="{{trade.p2.user.soundcloud.permalinkURL}}">{{trade.p2.user.soundcloud.username}}</a> <span style="color:#ADD8E6">( {{trade.p2.slots.length}} slots )</span><span ng-if="followerShow()"> - {{trade.p2.user.soundcloud.followers | number:0}} followers </span> </div>
 			<div style="text-align:center; width:100%; height: 94%; margin: auto; @media screen and (max-width: 436px) {height: 88%};">
 				<div class="row-small" style="width:100%; height: 6%; display:flex; flex-direction:row; ">
@@ -63,7 +62,6 @@
 	</div>
 
 	<!--CHAT-->
-
 	<div class="rfr-chat">
 		<div class="rfr-chatbox">
 			<div class="convo-display" scroll-glue>
@@ -85,8 +83,8 @@
 			</div>
 		</div>
 		<div class="trade-options">
-			<select class='form-control select-rfr' name='curTrade' ng-model='curTrade'  ng-change="changeTrade()">
-				<option ng-repeat="trade in currentTrades" value="{{trade}}">{{trade.other.user.soundcloud.username}}</option>
+			<select class='form-control select-rfr' name='tradeIndex' ng-model='tradeIndex'  ng-change="changeTrade(tradeIndex)">
+				<option ng-repeat="trade in currentTrades track by $index" value="{{$index}}">{{trade.other.user.name}}</option>
 			</select>
 			<span style="text-align:center; margin:10px; margin-top:0px; width:100%; display:inline-block;" ng-if="user.accepted">You accepted this trade. Waiting for the other user to take action.</span>
 			<button ng-if="!user.accepted" class="btn btn-default btn-option" ng-style="user.accepted?{'background-color':'gray'}:{}" ng-click="accept()">Accept</button>
@@ -103,8 +101,8 @@
 				<input class="form-control" style="width:200px; max-width:90%; margin:0 auto;" type="text" placeholder="Soundcloud Url" ng-model="makeEvent.URL" ng-change="changeURL()"/>
 				<span style="font-size:.8em;" ng-if="makeEvent.type=='trade'">(can leave blank)</span><br>
 				<select class="form-control form-scheduler" ng-model="makeEvent.trackListObj" ng-options="item.title for item in trackList" style="text-align:center; width:300px; max-width:90%;" ng-change="trackListChange()">
-	              <option value="" ng-disabled="!!trackListObj" ng-show="trackList.length > 0">-My Songs-</option>
-	            </select><br>
+					<option value="" ng-disabled="!!trackListObj" ng-show="trackList.length > 0">-My Songs-</option>
+				</select><br>
 			</div>
 			<input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()" ng-disabled="makeEvent.type == 'traded'"/><span class="label-smaller" style="font-size:0.8em;"> Unrepost after 24h</span><br><br>
 			<div id='scPlayer' class="player" ng-show="makeEvent.trackID"></div>

@@ -34,13 +34,14 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.dayIncr = 0;
 
+  $scope.autoFillTracks = [];
   $scope.trackList = [];
   $scope.trackListObj = null;
   $scope.trackListSlotObj = null;
   $scope.newQueueSong = "";
 
   $scope.trackChange = function(index) {
-    $scope.makeEventURL=$scope.trackListSlotObj.permalink_url;
+    $scope.makeEventURL = $scope.trackListSlotObj.permalink_url;
     $scope.changeURL();
   };
 
@@ -54,17 +55,17 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     if (profile.soundcloud) {
       $scope.processing = true;
       SC.get('/users/' + profile.soundcloud.id + '/tracks', {
-        filter: 'public'
-      })
-      .then(function(tracks) {
-        $scope.trackList = tracks;
-        $scope.processing = false;
-        $scope.$apply();
-      })
-      .catch(function(response) {
-        $scope.processing = false;
-        $scope.$apply();
-      });
+          filter: 'public'
+        })
+        .then(function(tracks) {
+          $scope.trackList = tracks;
+          $scope.processing = false;
+          $scope.$apply();
+        })
+        .catch(function(response) {
+          $scope.processing = false;
+          $scope.$apply();
+        });
     }
   }
 
@@ -278,6 +279,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.removeQueueSong = function(index) {
     $scope.user.queue.splice(index, 1);
     $scope.saveUser()
+    $scope.loadQueueSongs();
   }
 
   $scope.addSong = function() {
@@ -287,7 +289,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.newQueueSong = undefined;
     $scope.trackListObj = "";
     $scope.newQueue = undefined;
-    $scope.loadQueueSongs([$scope.newQueueID]);
+    $scope.loadQueueSongs();
   }
 
   $scope.changeQueueSong = function() {
@@ -313,7 +315,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.user.queue[index] = $scope.user.queue[index - 1];
     $scope.user.queue[index - 1] = s;
     $scope.saveUser();
-    $scope.loadQueueSongs([$scope.user.queue[index], $scope.user.queue[index - 1]]);
+    $scope.loadQueueSongs();
   }
 
   $scope.moveDown = function(index) {
@@ -322,22 +324,21 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.user.queue[index] = $scope.user.queue[index + 1];
     $scope.user.queue[index + 1] = s;
     $scope.saveUser();
-    $scope.loadQueueSongs([$scope.user.queue[index], $scope.user.queue[index + 1]]);
+    $scope.loadQueueSongs();
   }
 
   $scope.loadQueueSongs = function(queue) {
-    setTimeout(function() {
-      queue.forEach(function(songID) {
-        SC.oEmbed("http://api.soundcloud.com/tracks/" + songID, {
-          element: document.getElementById(songID + "player"),
-          auto_play: false,
-          maxheight: 150
-        });
-      });
-    }, 50);
+    $scope.autoFillTracks = [];
+    $scope.user.queue.forEach(function(songID) {
+      SC.get('/tracks/' + songID)
+        .then(function(track) {
+          $scope.autoFillTracks.push(track);
+          $scope.$digest();
+        }, console.log);
+    })
   }
   if ($scope.user && $scope.user.queue) {
-    $scope.loadQueueSongs($scope.user.queue);
+    $scope.loadQueueSongs();
   }
 
   $scope.dayOfWeekAsString = function(date) {
