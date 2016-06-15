@@ -687,7 +687,7 @@ button:active:after {
   padding: 3px;
   width: 70px;
   height: 45px;
-  margin: 50px auto;
+  display: inline-block;
   padding: 4px;
   line-height: 45px;
   vertical-align: middle; }
@@ -2089,7 +2089,7 @@ input[type=range]:focus::-ms-fill-upper {
   .inner-head .menu-bar {
     display: block; } }
 
-/************ SIDEBAR START START *****************/
+/************ SIDEBAR START *****************/
 /*!
  * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
  * Code licensed under the Apache License v2.0.
@@ -2104,9 +2104,9 @@ input[type=range]:focus::-ms-fill-upper {
   transition: all 0.5s ease;
   height: 100%; }
 
-#wrapper.toggled {
-  padding-left: 240px; }
-
+/*#wrapper.toggled {
+	padding-left: 240px;
+}*/
 #sidebar-wrapper {
   position: fixed;
   left: 240px;
@@ -2119,7 +2119,7 @@ input[type=range]:focus::-ms-fill-upper {
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease;
-  z-index: 1; }
+  z-index: 1043; }
 
 #sidebar-wrapper:before {
   position: absolute;
@@ -2167,7 +2167,7 @@ input[type=range]:focus::-ms-fill-upper {
     position: relative;
     margin-right: 0; } }
 
-/************ SIDEBAR START END*****************/
+/************ SIDEBAR END*****************/
 /********* NEW **************/
 .tab-menu {
   z-index: 51;
@@ -2194,7 +2194,8 @@ input[type=range]:focus::-ms-fill-upper {
 /*********** Media CSS **************/
 @media screen and (max-width: 1024px) {
   .scroll-bar1 {
-    padding-right: 55px; }
+    padding-right: 55px;
+    padding-top: 290px; }
   .manage-btn {
     margin-top: 25px;
     margin-left: 15px; }
@@ -2204,15 +2205,27 @@ input[type=range]:focus::-ms-fill-upper {
   .slide-img-box div {
     padding: 0 0 0 2%; } }
 
+@media screen and (max-width: 980px) {
+  .manage-btn {
+    margin-top: 65px;
+    margin-left: 52px; }
+  .manage-delete-btn {
+    bottom: 48px;
+    margin-left: 55px; } }
+
 @media screen and (max-width: 768px) {
   .manage-btn {
-    margin-top: 70px;
+    margin-top: 60px;
     margin-left: 50px; }
   .manage-delete-btn {
-    bottom: 40px;
+    bottom: 50px;
     margin-left: 50px; }
   .img-btn {
-    margin-left: 50px; } }
+    margin-left: 50px; }
+  .scroll-bar1 {
+    padding-top: 340px; }
+  .nav-tabs .nav > li {
+    width: 50%; } }
 
 @media screen and (max-width: 375px) {
   .scroll-bar1 {
@@ -2225,10 +2238,40 @@ input[type=range]:focus::-ms-fill-upper {
     float: left; }
   .page-header ul li {
     float: left;
-    padding: 0 10px; }
+    padding: 0 9px; }
   .inner-head {
     float: right; }
   .inner-head .navbar-nav {
     margin: 0; }
   .page-header ul li img {
     width: 22px; } }
+
+@media screen and (max-width: 640px) {
+  .page-header ul li {
+    float: left; }
+  .page-header ul li {
+    float: left;
+    padding: 0 9px; }
+  .inner-head {
+    float: right; }
+  .inner-head .navbar-nav {
+    margin: 0; }
+  .page-header ul li img {
+    width: 22px; } }
+
+@media screen and (max-width: 600px) {
+  .scroll-bar1 {
+    padding-top: 460px;
+    padding-left: 30px; } }
+
+@media screen and (max-width: 360px) {
+  .img-btn {
+    margin-left: 77px; }
+  .nav-tabs .nav > li {
+    width: 100%; } }
+
+@media screen and (max-width: 320px) {
+  .page-header ul li {
+    padding: 0 5px; }
+  .left-menus ul li a {
+    padding: 15px 0px; } }
