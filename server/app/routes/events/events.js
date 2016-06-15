@@ -39,13 +39,18 @@ router.delete('/:id', function(req, res, next) {
     .then(null, next);
 });
 
-
-
 //----------Public Repost Events----------
 router.get('/forUser/:id', function(req, res, next) {
+  var date = new Date();
+  date.setDate(date.getDate()-1);
+  date.setHours(0,0,0,0);
   RepostEvent.find({
-      userID: req.params.id
-    }).exec()
+    userID: req.params.id,
+    day : {
+      $gte: date
+    }
+  })
+  .exec()
     .then(function(events) {
       res.send(events);
     })
@@ -69,7 +74,6 @@ router.put('/repostEvents', function(req, res, next) {
     })
     .then(null, next);
 });
-
 
 router.post('/repostEvents', function(req, res, next) {
   var event = new RepostEvent(req.body);

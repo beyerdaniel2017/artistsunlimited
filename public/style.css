@@ -67,18 +67,25 @@
 
 .ZebraDialog .ZebraDialog_Title, .ZebraDialog .ZebraDialog_BodyOuter, .ZebraDialog .ZebraDialog_ButtonsOuter {
   border-width: 0px;
-  border-radius: 0px;
   background: #fff; }
+
+.ZebraDialog_BodyOuter {
+  border-top-right-radius: 8px !important;
+  border-top-left-radius: 8px !important; }
+
+.ZebraDialog_ButtonsOuter {
+  border-bottom-right-radius: 8px !important;
+  border-bottom-left-radius: 8px !important; }
 
 .ZebraDialog .ZebraDialog_Buttons a:hover {
   background: #e7edef;
   color: #332;
-  border-radius: 0px; }
+  border-radius: 8px; }
 
 .ZebraDialog .ZebraDialog_Buttons a {
   background: #f5bbbc;
   color: #FFF;
-  border-radius: 0px; }
+  border-radius: 8px; }
 
 .time {
   text-align: center; }
@@ -314,9 +321,10 @@ a:hover, a:focus {
   display: block; }
 
 .intro-logo {
-  border-right: 4px solid white;
-  padding-right: 25px;
   display: inline-block; }
+
+.front-logo {
+  height: 110px; }
 
 .intro-text {
   text-align: left;
@@ -326,7 +334,8 @@ a:hover, a:focus {
 .intro-text h1 {
   color: #fff;
   font-weight: bolder;
-  margin: 0; }
+  margin: 0;
+  font-size: 3.5em; }
 
 .v-line {
   border-right: 4px solid #fff;
@@ -535,9 +544,37 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   .nav > li > a {
     margin: 0; }
   .intro-logo {
-    text-align: right; }
+    text-align: right;
+    margin-left: 20%; }
   .content-area {
     padding: 1% 2% 5% 2%; } }
+
+@media screen and (max-width: 375px) {
+  .intro-logo {
+    margin-left: 0; }
+  .front-logo {
+    height: 100px; }
+  .intro-text h1 {
+    font-size: 3.3em; } }
+
+@media screen and (max-width: 360px) {
+  .intro-logo {
+    margin-left: 0; }
+  .front-logo {
+    height: 90px; }
+  .intro-text h1 {
+    font-size: 2.8em;
+    padding-left: 8px; } }
+
+@media screen and (max-width: 320px) {
+  .front-logo {
+    height: 90px; }
+  .intro-text h1 {
+    font-size: 2.5em;
+    padding-left: 6px;
+    padding-top: 11px; }
+  .intro-logo {
+    margin-left: 0; } }
 
 /*************** Responsive Css End *************/
 .follow-area {
@@ -670,15 +707,14 @@ button:active:after {
   background: #F5BBBC;
   border: 2px solid white;
   border-radius: 8px;
-  padding: 6px 14px;
+  padding: 8px 20px;
   color: #fff;
   font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 3px;
-  width: 10%; }
+  letter-spacing: 3px; }
 
 .btn-overlay {
-  width: 20%; }
+  /*width: 20%;*/ }
 
 .btn-queue {
   background: white;
@@ -2203,7 +2239,10 @@ input[type=range]:focus::-ms-fill-upper {
     bottom: 20px;
     margin-left: 15px; }
   .slide-img-box div {
-    padding: 0 0 0 2%; } }
+    padding: 0 0 0 2%; }
+  .ZebraDialog {
+    width: 600px !important;
+    left: 32% !important; } }
 
 @media screen and (max-width: 980px) {
   .manage-btn {
@@ -2225,7 +2264,11 @@ input[type=range]:focus::-ms-fill-upper {
   .scroll-bar1 {
     padding-top: 340px; }
   .nav-tabs .nav > li {
-    width: 50%; } }
+    width: 50%; }
+  .ZebraDialog {
+    left: 279px !important;
+    top: 201px !important;
+    width: 450px !important; } }
 
 @media screen and (max-width: 375px) {
   .scroll-bar1 {
@@ -2233,7 +2276,7 @@ input[type=range]:focus::-ms-fill-upper {
     padding-right: 38px;
     padding-left: 40px; }
   .img-btn {
-    margin-left: 90px; }
+    margin-left: 103px; }
   .page-header ul li {
     float: left; }
   .page-header ul li {
@@ -2244,7 +2287,19 @@ input[type=range]:focus::-ms-fill-upper {
   .inner-head .navbar-nav {
     margin: 0; }
   .page-header ul li img {
-    width: 22px; } }
+    width: 22px; }
+  .ZebraDialog {
+    left: 0 !important;
+    top: 20% !important;
+    width: 100% !important; }
+  .nav-tabs .nav > li {
+    width: 100%; }
+  .slot-box {
+    width: 375px;
+    margin: 10px auto; }
+  .btn-enter {
+    padding: 14px 20px;
+    margin: 0; } }
 
 @media screen and (max-width: 640px) {
   .page-header ul li {
@@ -2266,12 +2321,35 @@ input[type=range]:focus::-ms-fill-upper {
 
 @media screen and (max-width: 360px) {
   .img-btn {
-    margin-left: 77px; }
+    margin-left: 95px; }
   .nav-tabs .nav > li {
-    width: 100%; } }
+    width: 100%; }
+  .slot-box {
+    width: 360px;
+    margin: 10px auto; } }
 
 @media screen and (max-width: 320px) {
+  .img-btn {
+    margin-left: 77px; }
   .page-header ul li {
     padding: 0 5px; }
   .left-menus ul li a {
-    padding: 15px 0px; } }
+    padding: 15px 0px; }
+  .ZebraDialog {
+    left: 2% !important;
+    top: 18% !important;
+    width: 307px !important; }
+  .slot-box {
+    width: 320px;
+    margin: 10px auto; }
+  .cl-sound-btn {
+    padding: 13px 4px; } }
+
+.padding-10 {
+  padding: 10px; }
+
+.btn {
+  margin-bottom: 5px; }
+
+.cl-sound-btn {
+  margin-top: 50px; }

@@ -68,20 +68,29 @@
 
 .ZebraDialog .ZebraDialog_Title, .ZebraDialog .ZebraDialog_BodyOuter, .ZebraDialog .ZebraDialog_ButtonsOuter {
     border-width: 0px;
-    border-radius: 0px;
     background: #fff;
+}
+
+.ZebraDialog_BodyOuter{
+    border-top-right-radius: 8px !important;
+    border-top-left-radius: 8px !important;
+}
+
+.ZebraDialog_ButtonsOuter{
+    border-bottom-right-radius: 8px !important;
+    border-bottom-left-radius: 8px !important;
 }
 
 .ZebraDialog .ZebraDialog_Buttons a:hover {
     background: #e7edef;
     color: #332;
-    border-radius: 0px;
+    border-radius: 8px;
 }
 
 .ZebraDialog .ZebraDialog_Buttons a {
     background: #f5bbbc;
     color: #FFF;
-    border-radius: 0px;
+    border-radius: 8px;
 }
 .time{
     text-align:center;

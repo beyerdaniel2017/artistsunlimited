@@ -416,11 +416,17 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   function promptForEmail() {
     if (!$scope.user.email) {
       $scope.hideall = true;
-
-      var answer = prompt('Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.');
-      if (!answer) {
+      $.Zebra_Dialog('Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.<br><br> <input id="txtemail" type="email" placeholder="example@domain.com" style="width:400px; border-radius:3px;padding:5px"/>', {
+        'type': 'confirmation',
+         width: 600,
+        'buttons': [{
+          caption: 'OK',
+          callback: function() {
+            var answer =  $("#txtemail").val();
+            if (answer=="") {
         $state.go('artistToolsDownloadGatewayList');
       }
+            else{
       var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
       if (myArray) {
         $scope.user.email = answer;
@@ -431,12 +437,20 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             $scope.hideall = false;
           })
           .then(null, function(err) {
-            $.Zebra_Dialog("Error saving.")
+                  setTimeout(function() {
             promptForEmail();
+                  },600);
           })
-      } else {
+              } 
+              else {
+                setTimeout(function() {
         promptForEmail();
+                },600);
+              }
       }
+    }
+        }]
+      });      
     }
   }
   promptForEmail();
