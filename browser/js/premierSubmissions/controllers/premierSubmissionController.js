@@ -38,7 +38,8 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     'Indie/Alternative',
     'Latin',
     'Trap',
-    'Vocalists/Singer-Songwriter'
+    'Vocalists/Singer-Songwriter',
+    'Saved'
   ];
 
   $scope.logout = function() {
@@ -66,6 +67,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
           angular.forEach(res.data, function(d) {
             d.channelName = null;
             d.emailBody = "";
+
             $scope.showingElements.push(d);
           });
         }
@@ -97,14 +99,13 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     $scope.processing = true;
     submi.status = "accepted";
     $http.put("/api/premier/accept", {
-        submi: submi,
-        logintoken: logintoken
+        submi: submi
       })
       .then(function(sub) {
         if (sub.data.status == 401) {
           $scope.processing = false;
           setTimeout(function() {
-            $.Zebra_Dialog('Your login token has been expired.Please login again!!', {
+            $.Zebra_Dialog('Your login token has been expired. Please login again!!', {
               'type': 'confirmation',
               'buttons': [{
                 caption: 'OK',
@@ -132,8 +133,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     $scope.processing = true;
     submission.status = "declined";
     $http.put('/api/premier/decline', {
-        submission: submission,
-        logintoken: logintoken
+        submission: submission
       })
       .then(function(res) {
         if (res.data.status == 401) {
@@ -189,8 +189,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
         callback: function() {
           $scope.processing = true;
           $http.post("/api/premier/delete", {
-              id: submission._id,
-              logintoken: logintoken
+              id: submission._id
             })
             .then(function(sub) {
               if (sub.data.status == 401) {
