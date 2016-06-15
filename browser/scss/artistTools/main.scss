@@ -21,27 +21,27 @@ button:active:after{
 }
 
 .unrepost-symbol{
-  width:14px; 
-  height:14px; 
-  position:absolute; 
-  top:1px; 
-  right:1px; 
-  background-color: 
-  rgba(255,255,255,0.6); 
-  border-radius:4px; 
-  padding:2px 2px;
+	width:14px; 
+	height:14px; 
+	position:absolute; 
+	top:1px; 
+	right:1px; 
+	background-color: 
+	rgba(255,255,255,0.6); 
+	border-radius:4px; 
+	padding:2px 2px;
 }
 
 .unrepost-symbol-scheduler{
-  width:20px; 
-  height:20px; 
-  position:absolute; 
-  top:1px; 
-  right:1px; 
-  background-color: 
-  rgba(255,255,255,0.6); 
-  border-radius:4px; 
-  padding:2px 2px;
+	width:20px; 
+	height:20px; 
+	position:absolute; 
+	top:1px; 
+	right:1px; 
+	background-color: 
+	rgba(255,255,255,0.6); 
+	border-radius:4px; 
+	padding:2px 2px;
 }
 
 .btn-scheduler {
@@ -62,7 +62,7 @@ button:active:after{
 	background: #F5BBBC;
 	border: 2px solid white;
 	border-radius: 8px;
-padding: 8px 20px;
+	padding: 8px 20px;
 	color: #fff;
 	font-size: 12px;
 	text-transform:uppercase;
@@ -80,7 +80,7 @@ padding: 8px 20px;
 	padding: 3px;
 	width: 70px;
 	height: 45px;
-	margin: 50px auto;
+	display:inline-block;
 	padding: 4px;
 	line-height: 45px;
 	vertical-align: middle;
@@ -454,42 +454,42 @@ h2, h3 {
 }
 
 .notification-bubble {
-  left: -6px;
-  top: -8px;
-  position: absolute;
-  border-radius: 12px;
-  width: 20px;
-  padding-top: 2px;
-  background: #ff3300;
-  text-align: center;
-  color:#fff;
-  height: 20px;
-    font-weight:bold;
+	left: -6px;
+	top: -8px;
+	position: absolute;
+	border-radius: 12px;
+	width: 20px;
+	padding-top: 2px;
+	background: #ff3300;
+	text-align: center;
+	color:#fff;
+	height: 20px;
+	font-weight:bold;
 }
 
 .notification-bubble-tab {
-    background: #ff3300;
+	background: #ff3300;
 	left: 10px;
 	position: relative;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
 	padding-left: 8px;
 	padding-top: 4px;
 }
 .notification-bubble-left-menu {
-    background: #ff3300;
-    left: 10px;
-    top: -1px;
-    position: relative;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
+	background: #ff3300;
+	left: 10px;
+	top: -1px;
+	position: relative;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
 	padding-left: 8px;
 	padding-top: 4px;
 }
 .list-group-item.active > .badge, .nav-pills > .active > a > .badge {
-    color: #fff;
+	color: #fff;
 	background-color: #ff3300;
 }
 
@@ -1677,7 +1677,7 @@ input[type=range]::-ms-track {
 #sidebar-wrapper {
 	position: fixed;
 	left: 240px;
-    width: 0;
+	width: 0;
 	height: 100%;
 	margin-left: -240px;
     /*overflow-y: auto;*/
@@ -1779,7 +1779,7 @@ input[type=range]::-ms-track {
 
 /*********** Media CSS **************/
 @media screen and (max-width: 1024px) {
-    .scroll-bar1 {
+	.scroll-bar1 {
 		padding-right: 55px;
 		padding-top: 290px;
 	}
@@ -1800,7 +1800,7 @@ input[type=range]::-ms-track {
 	}
 }
 @media screen and (max-width: 980px) {
-  .manage-btn {
+	.manage-btn {
 		margin-top: 65px;
 		margin-left: 52px;
 	}
@@ -1810,7 +1810,7 @@ input[type=range]::-ms-track {
 	}
 }
 @media screen and (max-width: 768px) {
-    .manage-btn {
+	.manage-btn {
 		margin-top: 60px;
 		margin-left: 50px;
 	}
@@ -1834,7 +1834,7 @@ input[type=range]::-ms-track {
 	}
 }
 @media screen and (max-width: 375px) {
-    .scroll-bar1 {
+	.scroll-bar1 {
 		padding-top: 465px;
 		padding-right: 38px;
 		padding-left: 40px;
@@ -1853,7 +1853,7 @@ input[type=range]::-ms-track {
 		float: right;
 	}
 	.inner-head .navbar-nav {
-	    margin:0;
+		margin:0;
 	}
 	.page-header ul li img {
 		width: 22px;
@@ -1876,7 +1876,7 @@ input[type=range]::-ms-track {
 	}
 }
 @media screen and (max-width: 640px) {
-   .page-header ul li {
+	.page-header ul li {
 		float: left;
 	}
 	.page-header ul li {
@@ -1887,21 +1887,20 @@ input[type=range]::-ms-track {
 		float: right;
 	}
 	.inner-head .navbar-nav {
-	    margin:0;
+		margin:0;
 	}
 	.page-header ul li img {
 		width: 22px;
 	}
-	
 }
 @media screen and (max-width: 600px) {
- 	.scroll-bar1 {
+	.scroll-bar1 {
 		padding-top: 460px;
 		padding-left: 30px;
 	}
 }
 @media screen and (max-width: 360px) {
-   .img-btn {
+	.img-btn {
 		margin-left: 95px;
 	}
 	.nav-tabs .nav > li {
@@ -1914,10 +1913,10 @@ input[type=range]::-ms-track {
 	
 }
 @media screen and (max-width: 320px) {
-   .img-btn {
+	.img-btn {
 		margin-left: 77px;
 	}
-   .page-header ul li {
+	.page-header ul li {
 		padding: 0 5px;
 	}
 	.left-menus ul li a {
@@ -1934,7 +1933,7 @@ input[type=range]::-ms-track {
 	}
 	.cl-sound-btn {
 		padding: 13px 4px;
-}
+	}
 
 }
 .padding-10{
