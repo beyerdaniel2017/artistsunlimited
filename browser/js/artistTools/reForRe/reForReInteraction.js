@@ -370,6 +370,22 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       'buttons': [{
         caption: 'Accept',
         callback: function() {
+          if ($scope.user.queue && $scope.user.queue.length == 0) {
+            setTimeout(function() {
+              $.Zebra_Dialog("You should fill in your auto-fill tracks so that if the trade is accepted and you don’t choose which songs you want to be reposted, the tracks in your auto-fill tracks list will be used instead.", {
+                'buttons': [{
+                  caption: 'OK',
+                  callback: function() {
+                    $state.go('artistToolsScheduler');
+                  }
+                }],
+                'onClose': function() {
+                  $state.go('artistToolsScheduler');
+                }
+              });
+            }, 600);                        
+          }
+          else{
           $scope.user.accepted = true;
           if ($scope.trade.p1.user._id == $scope.user._id) {
             $scope.trade.p1.accepted = true;
@@ -388,6 +404,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
               $scope.processing = false;
               $.Zebra_Dialog('Error accepting');
             })
+        }
         }
       }, {
         caption: 'Cancel',
@@ -625,11 +642,17 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   function promptForEmail() {
     if (!$scope.user.email) {
       $scope.hideall = true;
-
-      var answer = prompt('Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.');
-      if (!answer) {
+      $.Zebra_Dialog('Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.<br><br> <input id="txtremail" type="email" placeholder="example@domain.com" style="width:400px; border-radius:3px;padding:5px"/>', {
+        'type': 'confirmation',
+        width: 600,
+        'buttons': [{
+          caption: 'OK',
+          callback: function() {
+            var answer = $("#txtremail").val();
+            if (answer == "") {
         $state.go('artistToolsDownloadGatewayList');
       }
+            else {
       var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
       if (myArray) {
         $scope.user.email = answer;
@@ -640,16 +663,24 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
             $scope.hideall = false;
           })
           .then(null, function(err) {
-            $.Zebra_Dialog("Error saving.")
+                  $.Zebra_Dialog("Error saving.");
+                  setTimeout(function() {
             promptForEmail();
+                  },600);
           })
-      } else {
+              } 
+              else 
+              {
+                setTimeout(function() {
         promptForEmail();
+                },600);
       }
-
     }
   }
-
+        }],
+      });
+    }
+  }
   $scope.openHelpModal = function() {
     var displayText = "This interface shows your scheduler and the scheduler for the user you are trading with, labeled on the top of each respective schedule. Your calendar will always be on the left.<br/><br/>Grey slots represents slots that are already taken.<br/>Blue slots represent slots that are being bargained in the trade.<br/>An Arrow within a slot means it will be unreposted after 24 hours.<br/>The chat window on the bottom allows you to chat with your Repost Partner about your trade.<br/>Email will automatically open a new email on your mailing app, allowing you to message your repost partner via email for your trade.<br/><br/>How to use AU's Repost for Repost System:<br/>1. Start by deciding how you would like to trade with your partner.<br/>2. Mark slots on your calendar and mark slots on your partners calendar.<br/>3. Click accept<br/><br/>When your partner returns to AU, he will be able to accept your trade. If accepted, you will be able to schedule reposts on the slots designated on your partner’s calendar; your partner will be able to schedule reposts on the slots designated on your calendar. If you are away from keyboard at the time of your trade, tracks that are in your 'auto-fill' queue (hyperlink to autofill queu) in the scheduler will automatically be scheduled for repost.<br/><br/>Tips:<br/>1. Make sure you are fair with your trades. If you have half as many followers as your partner, offer 2 reposts on your calendar in exchange for 1 repost on theirs.<br />2. Make sure you check your trades on a regular basis. People are much more likely to constantly trade reposts with you if you are reliable.<br />3. Try communicating with the user on Facebook, Email, SoundCloud messenger or any messaging app to make sure they take action on trades when it is their turn. A friendly 'Hey, let me know when you accept the trade on AU! Thanks again for trading with me :)' is enough to ensure a good flow of communication for your trades!";
     $.Zebra_Dialog(displayText, {

@@ -202,19 +202,22 @@ width: 100%;
 display: block;
 }
 .intro-logo {
-border-right: 4px solid white;
-padding-right: 25px;
 display: inline-block;
+}
+.front-logo{
+	height:110px;
 }
 .intro-text {
 text-align: left;
 float: right;
 width: 60%;
+	
 }
 .intro-text h1{
 color:#fff;
 font-weight:bolder;
 margin:0;
+font-size: 3.5em;
 
 }
 .v-line{
@@ -441,9 +444,46 @@ margin: 0;
 }
 .intro-logo{
 text-align: right;
+	margin-left: 20%;
 }
 	.content-area {
 		padding: 1% 2% 5% 2%;
+	}
+}
+@media screen and (max-width: 375px) {
+	.intro-logo {
+		margin-left:0;
+	}
+	.front-logo {
+		height: 100px;
+	}
+	.intro-text h1 {
+		font-size: 3.3em;
+	}
+}
+@media screen and (max-width: 360px) {
+	.intro-logo {
+		margin-left:0;
+	}
+	.front-logo {
+		height: 90px;
+	}
+	.intro-text h1 {
+		font-size: 2.8em;
+		padding-left: 8px;
+	}
+}
+@media screen and (max-width: 320px) {
+	.front-logo {
+		height: 90px;
+	}
+	.intro-text h1 {
+		font-size: 2.5em;
+		padding-left: 6px;
+		padding-top: 11px;
+	}
+	.intro-logo {
+		margin-left:0;
 	}
 }
 /*************** Responsive Css End *************/
