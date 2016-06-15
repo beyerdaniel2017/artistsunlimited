@@ -31,9 +31,7 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/unaccepted', function(req, res, next) {
-  Submission.find({
-      status: 'new'
-    }).exec()
+  Submission.find({}).exec()
     .then(function(subs) {
       subs = subs.filter(function(sub) {
         return sub.channelIDS.length == 0;

@@ -19,7 +19,6 @@ function doRepost() {
   setTimeout(function() {
     doRepost();
   }, 1800000);
-  console.log('dorepost');
   var lowerDate = new Date();
   lowerDate.setTime(lowerDate.getTime() - lowerDate.getMinutes(0) * 60 * 1000 - lowerDate.getMinutes(0) * 1000);
   var upperDate = new Date();
