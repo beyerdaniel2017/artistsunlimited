@@ -115,7 +115,7 @@ app.controller('FullstackGeneratedController', function($scope, $http, mainServi
         mainService.logout();
     }
 
-    $scope.checkNotification = function(){
+    $scope.checkNotification = function() {
         var user = SessionService.getUser();
         if (user) {
             return $http.get('/api/trades/withUser/' + user._id)

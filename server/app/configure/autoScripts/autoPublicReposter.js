@@ -19,7 +19,6 @@ function doRepost() {
   setTimeout(function() {
     doRepost();
   }, 1800000);
-  console.log('dorepost');
   var lowerDate = new Date();
   lowerDate.setTime(lowerDate.getTime() - lowerDate.getMinutes(0) * 60 * 1000 - lowerDate.getMinutes(0) * 1000);
   var upperDate = new Date();
@@ -33,7 +32,6 @@ function doRepost() {
       }
     }).exec()
     .then(function(events) {
-      console.log(events);
       events.forEach(function(event) {
         User.findOne({
             'soundcloud.id': event.userID
@@ -54,8 +52,6 @@ function doRepost() {
 }
 
 function repostAndRemove(event, user) {
-  console.log('repandremove');
-
   var idPromise = getID(event, user);
   idPromise.then(function(id) {
       event.trackID = id;
@@ -82,7 +78,6 @@ function repostAndRemove(event, user) {
 }
 
 function getID(event, user) {
-  console.log('getID');
   return new Promise(function(resolve, reject) {
     var id;
     var count = 0;
@@ -90,7 +85,6 @@ function getID(event, user) {
       if (count == person.queue.length) reject();
       id = person.queue.splice(0, 1)[0];
       person.queue.push(id);
-      console.log(id);
       RepostEvent.find({
           trackID: id,
           day: {
@@ -104,14 +98,12 @@ function getID(event, user) {
           }
         })
         .then(function(events) {
-          console.log(events);
           if (events.length > 0) {
             count++;
             person.save().then(function() {
               findAgain(person);
             })
           } else {
-            console.log(id);
             count++;
             person.save().then(function() {
               resolve(id);
