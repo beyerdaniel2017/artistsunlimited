@@ -1,10 +1,40 @@
-app.config(function($stateProvider) {
+app.config(function($stateProvider, $authProvider, $httpProvider) {
 	$stateProvider.state('download', {
 		url: '/download',
 		templateUrl: 'js/downloadTrack/views/downloadTrack.view.html',
 		controller: 'DownloadTrackController'
 	});
+
+    $authProvider.instagram({
+        clientId: 'ae84968993fc4adf9b2cd246b763bf6b'
 });
+
+
+    // Instagram
+    $authProvider.instagram({
+        name: 'instagram',
+        url: '/api/download/auth/instagram',
+        authorizationEndpoint: 'https://api.instagram.com/oauth/authorize',
+        redirectUri: 'https://localhost:1443/download',
+        requiredUrlParams: ['scope'],
+        scope: ['basic', 'relationships', 'public_content', 'follower_list'],
+        scopeDelimiter: '+',
+        type: '2.0'
+    });
+
+    $authProvider.twitter({
+        url: '/api/download/twitter/auth',
+        authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
+        redirectUri: 'https://localhost:1443/download',
+        type: '1.0',
+        popupOptions: {
+            width: 495,
+            height: 645
+        }
+    });
+
+})
+
 
 app.controller('DownloadTrackController', ['$rootScope',
 	'$state',
@@ -14,7 +44,9 @@ app.controller('DownloadTrackController', ['$rootScope',
 	'$window',
 	'$q',
 	'DownloadTrackService',
-	function($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService) {
+    '$sce',
+    '$auth',
+    function($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService, $sce, $auth) {
 
 		/* Normal JS vars and functions not bound to scope */
 		var playerObj = null;
@@ -40,6 +72,103 @@ app.controller('DownloadTrackController', ['$rootScope',
 		$scope.errorText = '';
 		$scope.followBoxImageUrl = 'assets/images/who-we-are.png';
 		$scope.recentTracks = [];
+
+
+        $scope.initiateDownload = function() {
+            $scope.processing = false;
+            if ($scope.track.downloadURL && $scope.track.downloadURL !== '') {
+                $window.location.href = $scope.track.downloadURL;
+            } else {
+                $scope.errorText = 'Error! Could not fetch download URL';
+                $scope.downloadURLNotFound = true;
+            }
+        }
+
+        /* Function for Instagram */
+
+        $scope.authenticateInstagram = function() {
+            $auth.authenticate('instagram').then(function(response) {
+                console.log(response)
+                var userName = $scope.track.socialPlatformValue;
+
+                $http({
+                    method: "POST",
+                    url: '/api/download/instagram/follow_user',
+                    data: {
+                        'access_token': response.data,
+                        'q': userName
+                    }
+                }).then(function(user) {
+                    if (user.data.succ) {
+                        $scope.initiateDownload();
+                    }
+                });
+            });
+        }
+
+        /* Function for Twitter */
+
+        $scope.authenticateTwitter = function() {
+            $auth.authenticate('twitter').then(function(response) {
+                // console.log(response)
+                var userName = $scope.track.socialPlatformValue;
+
+                if ($scope.track.socialPlatform == 'twitterFollow') {
+                    $http({
+                        method: "POST",
+                        url: '/api/download/twitter/follow',
+                        data: {
+                            screen_name: userName,
+                            accessToken: response.data
+                        }
+                    }).then(function(records) {
+                        //console.log(records)
+                        if (records.data && records.statusText === "OK") {
+                            if (records.data.screen_name === $scope.track.socialPlatformValue) {
+                                //success case
+                                window.location.replace($scope.track.downloadURL);
+                            }
+                            console.log($scope.track);
+                        } else {
+                            console.log("Failed");
+                        }
+                    });
+                } else if ($scope.track.socialPlatform == 'twitterPost') {
+                    response.data.socialPlatformValue = $scope.track.socialPlatformValue;
+                    console.log("response <DownloadTrackController>:" + JSON.stringify(response));
+                    $http({
+                        method: "POST",
+                        url: '/api/download/twitter/post',
+                        data: response.data
+                    }).then(function(records) {
+                        if (records.statusText === "OK") {
+                            window.location.replace($scope.track.downloadURL);
+                        } else {
+                            alert("Something went wrong, please retry");
+                        }
+                    });
+                }
+            });
+        }
+
+        /* Function for Youtube */
+
+        $scope.authenticateYoutube = function(track) {
+            var trackUrl = $scope.track.downloadURL
+
+            $http({
+                method: "GET",
+                url: '/api/download/subscribe',
+                params: {
+                    trackURL: trackUrl,
+                    channelID: $scope.track.socialPlatformValue
+                }
+            }).then(function(response) {
+                console.log(response)
+                    //                $scope.initiateDownload();
+
+            });
+        }
 
 		/* Default processing on page load */
 
@@ -134,5 +263,74 @@ app.controller('DownloadTrackController', ['$rootScope',
 			}
 
 		};
+
+        $scope.downloadTrackFacebookShare = function(shareURL) {
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId: '1719978144956959',
+                    xfbml: true,
+                    version: 'v2.6'
+                });
+                FB.ui({
+                    method: 'share',
+                    href: shareURL
+                }, function(response) {
+                    console.log(response);
+                    if (response && !response.error_code) {
+                        console.log("OK: " + JSON.stringify(response));
+
+                        if ($scope.track.downloadURL && $scope.track.downloadURL !== '') {
+                            $window.location.href = $scope.track.downloadURL;
+                        } else {
+                            $scope.errorText = 'Error! Could not fetch download URL';
+                            $scope.downloadURLNotFound = true;
+                        }
+                        $scope.$apply();
+                    } else if (response && response.error_code === 4201) {
+                        console.log("User cancelled: " + decodeURIComponent(response.error_message));
+                    } else {
+                        console.log("Not OK: " + JSON.stringify(response));
+                        alert("You have cancelled sharing on facebook.");
+                    }
+                });
+            };
+
+            (function(d, s, id) {
+                console.log("executed !");
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {
+                    return;
+                }
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        }
+        $scope.downloadTrackFacebookLike = function(fblikeid) {
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId: '1719978144956959',
+                    xfbml: true,
+                    version: 'v2.6'
+                });
+                FB.Event.subscribe('edge.create', function(href, widget) {
+                    window.location = fblikeid.trackURL;
+                });
+            };
+            (function(d, s, id) {
+                console.log("executed !");
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {
+                    return;
+                }
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+
+        };
+
 	}
 ]);

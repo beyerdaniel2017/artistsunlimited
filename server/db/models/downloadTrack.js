@@ -69,6 +69,12 @@ var schema = new mongoose.Schema({
   updatedOn: {
     type: Date,
     default: Date.now
+  },
+  socialPlatform : {
+    type : String
+  },
+  socialPlatformValue : {
+    type : String
   }
 });
 
