@@ -276,25 +276,19 @@ router.put('/completedPayment', function(req, res, next) {
 
 function schedulePaidRepost(chanID, submission) {
   return new Promise(function(fulfill, reject) {
+    var today = new Date();
     Event.find({
         paid: true,
         trackID: null,
-        channelID: chanID
+        channelID: chanID,
+        day: {
+          $gt: today
+        }
       }).exec()
       .then(function(events) {
-        events.forEach(function(event) {
-          event.day = new Date(event.day);
-        });
         events.sort(function(a, b) {
           return a.day.getTime() - b.day.getTime();
         });
-        var index = 0;
-        var today = new Date();
-        var ev = events[index];
-        while (ev && ev.day.getTime() < today.getTime()) {
-          index++;
-          ev = events[index];
-        }
         Channel.findOne({
             channelID: chanID
           }).exec()

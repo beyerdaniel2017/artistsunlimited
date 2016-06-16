@@ -118,7 +118,9 @@ function getID(event, user) {
       } else if (event.type == 'traded') {
         User.findById(event.owner).exec()
           .then(function(owner) {
-            findAgain(owner);
+            if (owner) {
+              findAgain(owner);
+            }
           })
       }
     } else {
