@@ -118,6 +118,11 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
               tradeID: $window.localStorage.getItem('tid')
             });
           }
+          else if($window.localStorage.getItem('returnstate') == "artistToolsDownloadGatewayEdit"){
+            $state.go($window.localStorage.getItem('returnstate'), {
+              gatewayID: $window.localStorage.getItem('tid')
+            });
+          }
           else{
             $state.go($window.localStorage.getItem('returnstate'));
           }

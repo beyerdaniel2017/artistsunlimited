@@ -38,7 +38,17 @@ app.config(function($stateProvider) {
 app.controller('ArtistToolsController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService) {
     $scope.user = SessionService.getUser();
     if (!SessionService.getUser()) {
+      var path = window.location.pathname;
+      if(path == "/artistTools/profile"){
+        $window.localStorage.setItem('returnstate','artistToolsProfile');
+      }
+      else if(path == "/artistTools/downloadGateway"){
+        $window.localStorage.setItem('returnstate','artistToolsDownloadGatewayList');
+      }
       $state.go('login');
+    }
+    else{
+      $window.localStorage.removeItem('returnstate');
     }
         var logintoken = SessionService.getLoginToken();
     /* Init boolean variables for show/hide and other functionalities */
