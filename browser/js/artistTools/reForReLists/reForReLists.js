@@ -57,7 +57,6 @@ app.config(function($stateProvider) {
 
 app.controller("ReForReListsController", function($scope, currentTrades, openTrades, $http, SessionService, $state, $timeout) {
     var logintoken = SessionService.getLoginToken();
-
   if (!SessionService.getUser()) {
     $state.go('login');
   }

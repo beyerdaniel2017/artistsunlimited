@@ -4,7 +4,11 @@ app.config(function($stateProvider) {
     templateUrl: 'js/artistTools/scheduler/scheduler.html',
     controller: 'ATSchedulerController',
     resolve: {
-      events: function($http, SessionService) {
+      events: function($http, $window, SessionService) {
+        if (!SessionService.getUser()) {
+          $window.localStorage.setItem('returnstate','artistToolsScheduler');
+          $window.location.href = '/login';
+        }
         return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
           .then(function(res) {
             return res.data;
@@ -21,6 +25,9 @@ app.config(function($stateProvider) {
 app.controller('ATSchedulerController', function($rootScope, $state, $scope, $http, AuthService, $window, events, SessionService) {
   if (!SessionService.getUser()) {
     $state.go('login');
+  }
+  else{
+    $window.localStorage.removeItem('returnstate');
   }
   $scope.user = SessionService.getUser();
   $scope.makeEventURL = "";
