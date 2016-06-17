@@ -348,7 +348,25 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
         width: 600
       });
     }
-
+    $scope.verifyBrowser = function(){
+	    if(navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1){
+	      var position = navigator.userAgent.search("Version") + 8;
+	      var end = navigator.userAgent.search(" Safari");
+	      var version = navigator.userAgent.substring(position,end);
+	      if(parseInt(version) < 9){
+	        $.Zebra_Dialog('You have old version of safari. Click <a href="https://support.apple.com/downloads/safari">here</a> to download the latest version of safari for better site experience.', {
+	          'type': 'confirmation',
+	          'buttons': [{
+	            caption: 'OK'
+	          }],
+	          'onClose': function(){
+	            $window.location.href = "https://support.apple.com/downloads/safari";
+	          }
+	        });
+	      }
+	    }
+  	}
+  	$scope.verifyBrowser();
   $scope.checkNotification();
   $scope.sortResult($scope.sortby);
 });

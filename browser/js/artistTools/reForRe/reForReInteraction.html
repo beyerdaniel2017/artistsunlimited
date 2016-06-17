@@ -125,26 +125,18 @@
     <div class="modal-dialog">    
       <!-- Modal content-->
       <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 style="text-align:center" class="modal-title">Autofill Slot</h4>
-        </div>
-        <div style="text-align:center">
+        <div style="text-align:center; padding:10px;">
         <p>You need to add an auto-fill track incase unfilled slots are accepted. Autofill tracks will automatically be reposted in unfilled slot that you traded for.</p>
         </div>
-        <div style="text-align:center">
+        <div style="text-align:center;padding-bottom:10px;">
                 <input class="form-control form-scheduler" placeholder="Soundcloud Track Url" style="text-align:center; width:300px; max-width:90%;" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()"/>
                     <select class="form-control form-scheduler" ng-model="trackListObj" ng-options="item.title for item in trackList" style="text-align:center; width:300px; max-width:90%;" ng-change="trackListChange()">
                       <option value="" ng-disabled="!!trackListObj" ng-show="trackList.length > 0">-My Songs-</option>
                     </select>
-                   
                     <button class="btn btn-default btn-small" id="closeModal" ng-click="addSong()">Add</button>
                   </div>
       </div>
-      
     </div>
   </div>
-
-
 	<!-- loader -->
 	<ng-include src="'js/home/views/loader.html'"></ng-include><script type="text/javascript">
