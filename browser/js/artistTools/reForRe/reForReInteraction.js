@@ -5,12 +5,12 @@ app.config(function($stateProvider) {
       templateUrl: 'js/artistTools/reForRe/reForReInteraction.html',
       controller: 'ReForReInteractionController',
       resolve: {
-      trade: function($http, $stateParams, $window, SessionService) {        
-        if (!SessionService.getUser()) {
-          $window.localStorage.setItem('returnstate','reForReInteraction');
-          $window.localStorage.setItem('tid',$stateParams.tradeID);
-          $window.location.href = '/login';
-        }
+        trade: function($http, $stateParams, $window, SessionService) {
+          if (!SessionService.getUser()) {
+            $window.localStorage.setItem('returnstate', 'reForReInteraction');
+            $window.localStorage.setItem('tid', $stateParams.tradeID);
+            $window.location.href = '/login';
+          }
           return $http.get('/api/trades/byID/' + $stateParams.tradeID)
             .then(function(res) {
               return res.data;
@@ -68,8 +68,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.user = SessionService.getUser();
   if (!SessionService.getUser()) {
     $state.go('login');
-  }
-  else{
+  } else {
     $window.localStorage.removeItem('returnstate');
     $window.localStorage.removeItem('tid');
   }
@@ -138,7 +137,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         trds.forEach(function(trade) {
           trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
           trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
-       
+
         });
         $scope.currentTrades = trds;
         $scope.user.accepted = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1.accepted : $scope.trade.p2.accepted;
@@ -377,61 +376,61 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.accept = function() {
-    if ($scope.trade.p1.user._id == $scope.user._id) {
-      var accString = $scope.trade.p2.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
-    } else {
-      var accString = $scope.trade.p1.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
-    }
-    $.Zebra_Dialog(accString, {
-      'type': 'confirmation',
-      'buttons': [{
-        caption: 'Accept',
-        callback: function() {
-          if ($scope.user.queue && $scope.user.queue.length == 0) {
-            $('#autoFillTrack').modal('show');
-            /*setTimeout(function() {
-              $.Zebra_Dialog("You should fill in your auto-fill tracks so that if the trade is accepted and you don’t choose which songs you want to be reposted, the tracks in your auto-fill tracks list will be used instead.", {
-                'buttons': [{
-                  caption: 'OK',
-                  callback: function() {
+      if ($scope.trade.p1.user._id == $scope.user._id) {
+        var accString = $scope.trade.p2.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
+      } else {
+        var accString = $scope.trade.p1.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
+      }
+      $.Zebra_Dialog(accString, {
+        'type': 'confirmation',
+        'buttons': [{
+          caption: 'Accept',
+          callback: function() {
+            if ($scope.user.queue && $scope.user.queue.length == 0) {
+              $('#autoFillTrack').modal('show');
+              /*setTimeout(function() {
+                $.Zebra_Dialog("You should fill in your auto-fill tracks so that if the trade is accepted and you don’t choose which songs you want to be reposted, the tracks in your auto-fill tracks list will be used instead.", {
+                  'buttons': [{
+                    caption: 'OK',
+                    callback: function() {
+                      $state.go('artistToolsScheduler');
+                    }
+                  }],
+                  'onClose': function() {
                     $state.go('artistToolsScheduler');
                   }
-                }],
-                'onClose': function() {
-                  $state.go('artistToolsScheduler');
-                }
-              });
-            }, 600);*/                        
-          } else {
-            $scope.user.accepted = true;
-            if ($scope.trade.p1.user._id == $scope.user._id) {
-              $scope.trade.p1.accepted = true;
+                });
+              }, 600);*/
             } else {
-              $scope.trade.p2.accepted = true;
+              $scope.user.accepted = true;
+              if ($scope.trade.p1.user._id == $scope.user._id) {
+                $scope.trade.p1.accepted = true;
+              } else {
+                $scope.trade.p2.accepted = true;
+              }
+              $scope.processing = true;
+              $http.put('/api/trades', $scope.trade)
+                .then(function(res) {
+                  $scope.processing = false;
+                  $scope.trade = res.data;
+                  if ($scope.trade.p1.accepted && $scope.trade.p2.accepted) $scope.completeTrade();
+                  else $scope.emitMessage('---- ' + $scope.user.soundcloud.username + " accepted the trade ----", 'alert');
+                })
+                .then(null, function(err) {
+                  $scope.processing = false;
+                  $.Zebra_Dialog('Error accepting');
+                })
             }
-            $scope.processing = true;
-            $http.put('/api/trades', $scope.trade)
-              .then(function(res) {
-                $scope.processing = false;
-                $scope.trade = res.data;
-                if ($scope.trade.p1.accepted && $scope.trade.p2.accepted) $scope.completeTrade();
-                else $scope.emitMessage('---- ' + $scope.user.soundcloud.username + " accepted the trade ----", 'alert');
-              })
-              .then(null, function(err) {
-                $scope.processing = false;
-                $.Zebra_Dialog('Error accepting');
-              })
           }
-        }
-      }, {
-        caption: 'Cancel',
-        callback: function() {
-          console.log('No was clicked');
-        }
-      }]
-    });
-  }
-  //overlay autofill track start//
+        }, {
+          caption: 'Cancel',
+          callback: function() {
+            console.log('No was clicked');
+          }
+        }]
+      });
+    }
+    //overlay autofill track start//
 
   $scope.autoFillTracks = [];
   $scope.trackList = [];
@@ -440,7 +439,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.newQueueSong = "";
 
   $scope.trackChange = function(index) {
-    $scope.makeEventURL=$scope.trackListSlotObj.permalink_url;
+    $scope.makeEventURL = $scope.trackListSlotObj.permalink_url;
     $scope.changeURL();
   };
 
@@ -451,65 +450,65 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   };
 
   $scope.addSong = function() {
-    
+
     if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
     $scope.user.queue.push($scope.newQueueID);
     $scope.saveUser();
     $scope.newQueueSong = undefined;
     $scope.trackListObj = "";
     $scope.newQueue = undefined;
-  
+    $scope.accept();
   }
 
   $scope.changeQueueSong = function() {
     $http.post('/api/soundcloud/resolve', {
-      url: $scope.newQueueSong
-    })
-    .then(function(res) {
-      $scope.processing = false;
-      var track = res.data;
-      $scope.newQueue = track;
-      $scope.newQueueID = track.id;
-    })
-    .then(null, function(err) {
-      $.Zebra_Dialog("Song not found.");
-      $scope.processing = false;
-    });
+        url: $scope.newQueueSong
+      })
+      .then(function(res) {
+        $scope.processing = false;
+        var track = res.data;
+        $scope.newQueue = track;
+        $scope.newQueueID = track.id;
+      })
+      .then(null, function(err) {
+        $.Zebra_Dialog("Song not found.");
+        $scope.processing = false;
+      });
   }
 
   $scope.saveUser = function() {
     $scope.processing = true;
     $http.put("/api/database/profile", $scope.user)
-    .then(function(res) {
-      SessionService.create(res.data);
-      $scope.user = SessionService.getUser();
-      $scope.processing = false;
-    })
-    .then(null, function(err) {
-      $.Zebra_Dialog("Error: did not save");
-      $scope.processing = false;
-    });
-     $('#autoFillTrack').modal('hide');
-  }
-$scope.getTrackListFromSoundcloud = function() {
-    var profile = $scope.user;
-    if (profile.soundcloud) {
-      $scope.processing = true;
-      SC.get('/users/' + profile.soundcloud.id + '/tracks', {
-        filter: 'public'
-      })
-      .then(function(tracks) {
-        $scope.trackList = tracks;
+      .then(function(res) {
+        SessionService.create(res.data);
+        $scope.user = SessionService.getUser();
         $scope.processing = false;
-        $scope.$apply();
       })
-      .catch(function(response) {
+      .then(null, function(err) {
+        $.Zebra_Dialog("Error: did not save");
         $scope.processing = false;
-        $scope.$apply();
       });
-    }
+    $('#autoFillTrack').modal('hide');
   }
-  //overlay autofill track end//
+  $scope.getTrackListFromSoundcloud = function() {
+      var profile = $scope.user;
+      if (profile.soundcloud) {
+        $scope.processing = true;
+        SC.get('/users/' + profile.soundcloud.id + '/tracks', {
+            filter: 'public'
+          })
+          .then(function(tracks) {
+            $scope.trackList = tracks;
+            $scope.processing = false;
+            $scope.$apply();
+          })
+          .catch(function(response) {
+            $scope.processing = false;
+            $scope.$apply();
+          });
+      }
+    }
+    //overlay autofill track end//
   $scope.dayOfWeekAsString = function(date) {
     var dayIndex = date.getDay();
     return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
@@ -799,29 +798,27 @@ $scope.getTrackListFromSoundcloud = function() {
       width: 800
     });
   }
-  
-  $scope.verifyBrowser = function(){
-    if(navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1){
+
+  $scope.verifyBrowser = function() {
+    if (navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1) {
       var position = navigator.userAgent.search("Version") + 8;
       var end = navigator.userAgent.search(" Safari");
-      var version = navigator.userAgent.substring(position,end);
-      if(parseInt(version) < 9){
+      var version = navigator.userAgent.substring(position, end);
+      if (parseInt(version) < 9) {
         $.Zebra_Dialog('You have old version of safari. Click <a href="https://support.apple.com/downloads/safari">here</a> to download the latest version of safari for better site experience.', {
           'type': 'confirmation',
           'buttons': [{
             caption: 'OK'
           }],
-          'onClose': function(){
+          'onClose': function() {
             $window.location.href = "https://support.apple.com/downloads/safari";
           }
         });
-      }
-      else{
+      } else {
         promptForEmail();
       }
-    }
-    else{
-  promptForEmail();
+    } else {
+      promptForEmail();
     }
   }
   $scope.updateAlerts();

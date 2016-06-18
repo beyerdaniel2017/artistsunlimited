@@ -6,7 +6,7 @@
 </style>
 <a href="#" style="float:right;margin:10px;"><img class="img-responsive" width="25px" ng-click="openHelpModal()" src="assets/images/question_icon.png"></a>
 <div class="content-area bg-white" style="padding: 1% 2%;" ng-init="getTrackListFromSoundcloud()">
-<div class="rfr-schedule-container" ng-init="getMessage();getTrackListFromSoundcloud();">
+	<div class="rfr-schedule-container" ng-init="getMessage();getTrackListFromSoundcloud();">
 		<!-- schedule 1 -->
 		<div class="scheduler-small" id="{{getSchedulerID(trade.p1.user._id)}}">
 			<div class="label-username"><a target="_blank" href="{{trade.p1.user.soundcloud.permalinkURL}}">{{trade.p1.user.soundcloud.username}}</a> <span style="color:#ADD8E6">( {{trade.p1.slots.length}} slots )</span><span ng-if="followerShow()"> - {{trade.p1.user.soundcloud.followers | number:0}} followers </span></div>
@@ -86,7 +86,7 @@
 			<select class='form-control select-rfr' name='tradeIndex' ng-model='tradeIndex'  ng-change="changeTrade(tradeIndex)">
 				<option ng-repeat="trade in currentTrades track by $index" value="{{$index}}">{{trade.other.user.name}}</option>
 			</select>
-			<span style="text-align:center; margin:10px; margin-top:0px; width:100%; display:inline-block;" ng-if="user.accepted">You accepted this trade. Waiting for the other user to take action.</span>
+			<span style="text-align:center; margin:10px; margin-top:0px; width:100%; display:inline-block;" ng-if="user.accepted">You accepted this trade. Waiting for the other user.</span>
 			<button ng-if="!user.accepted" class="btn btn-default btn-option" ng-style="user.accepted?{'background-color':'gray'}:{}" ng-click="accept()">Accept</button>
 			<button class="btn btn-default btn-option" ui-sref="reForReLists">Exit</button>
 			<button class="btn btn-default btn-option" ng-click="email()">Email</button>
@@ -119,24 +119,25 @@
 	</div>
 	<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
 	</div>
- 
-  <!-- Modal -->
-  <div class="modal fade" id="autoFillTrack" role="dialog">
-    <div class="modal-dialog">    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div style="text-align:center; padding:10px;">
-        <p>You need to add an auto-fill track incase unfilled slots are accepted. Autofill tracks will automatically be reposted in unfilled slot that you traded for.</p>
-        </div>
-        <div style="text-align:center;padding-bottom:10px;">
-                <input class="form-control form-scheduler" placeholder="Soundcloud Track Url" style="text-align:center; width:300px; max-width:90%;" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()"/>
-                    <select class="form-control form-scheduler" ng-model="trackListObj" ng-options="item.title for item in trackList" style="text-align:center; width:300px; max-width:90%;" ng-change="trackListChange()">
-                      <option value="" ng-disabled="!!trackListObj" ng-show="trackList.length > 0">-My Songs-</option>
-                    </select>
-                    <button class="btn btn-default btn-small" id="closeModal" ng-click="addSong()">Add</button>
-                  </div>
-      </div>
-    </div>
-  </div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="autoFillTrack" role="dialog">
+		<div class="modal-dialog">    
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div style="text-align:center; padding:10px;">
+					<p>You need to add an auto-fill track incase unfilled slots are accepted. Autofill tracks will automatically be reposted in unfilled slot that you traded for.</p>
+				</div>
+				<div style="text-align:center;padding-bottom:10px;">
+					<input class="form-control form-scheduler" placeholder="Soundcloud Track Url" style="text-align:center; width:300px; max-width:90%;" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()"/>
+					<select class="form-control form-scheduler" ng-model="trackListObj" ng-options="item.title for item in trackList" style="text-align:center; width:300px; max-width:90%;" ng-change="trackListChange()">
+						<option value="" ng-disabled="!!trackListObj" ng-show="trackList.length > 0">-My Songs-</option>
+					</select>
+					<a ng-if='newQueue' href="{{newQueue.permalink_url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{newQueue.artwork_url}}">{{' ' + newQueue.title}}</a><br>
+					<button class="btn btn-default btn-small" id="closeModal" ng-click="addSong()">Add</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- loader -->
 	<ng-include src="'js/home/views/loader.html'"></ng-include><script type="text/javascript">
