@@ -3,14 +3,17 @@ var router = require('express').Router();
 module.exports = router;
 var mongoose = require('mongoose');
 var Channel = mongoose.model('Channel');
+var User = mongoose.model('User');
 
 router.get('/', function(req, res, next) {
-  Channel.find({}).exec()
-    .then(function(channels) {
-      channels.forEach(function(c) {
-        c.accessToken = undefined;
+  User.find({
+      role: 'paid repost'
+    }).exec()
+    .then(function(users) {
+      users.forEach(function(u) {
+        if (u.soundcloud.token) u.soundcloud.token = undefined;
       });
-      res.send(channels);
+      res.send(users);
     })
     .then(null, next);
 });

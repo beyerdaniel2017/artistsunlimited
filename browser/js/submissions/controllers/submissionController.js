@@ -67,7 +67,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.changeBox = function(sub, chan) {
     var index = sub.channelIDS.indexOf(chan.channelID);
     if (index == -1) {
-      sub.channelIDS.push(chan.channelID);
+      sub.channelIDS.push(chan.soundcloud.id);
     } else {
       sub.channelIDS.splice(index, 1);
     }

@@ -44,17 +44,16 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   });
   $scope.total = 0;
   $scope.showTotal = 0;
+  console.log(channels);
   $scope.channels = channels.filter(function(ch) {
-    return (submission.channelIDS.indexOf(ch.channelID) != -1)
+    if (ch.soundcloud.followers) ch.price = parseFloat(ch.soundcloud.followers / 3000.0);
+    return (submission.channelIDS.indexOf(ch.soundcloud.id) != -1)
   });
+  console.log(submission.channelIDS);
+  console.log($scope.channels);
 
   $scope.auDLLink = $scope.track.purchase_url ? ($scope.track.purchase_url.indexOf("artistsunlimited.co") != -1) : false;
   console.log($scope.auDLLink);
-
-  $scope.selectedChannels = {};
-  $scope.channels.forEach(function(ch) {
-    $scope.selectedChannels[ch.displayName] = false;
-  });
 
   $scope.goToLogin = function() {
     $state.go('login', {
@@ -85,19 +84,15 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
       $scope.discountModalInstance.close();
     }
     $scope.processing = true;
+    if (discounted) $scope.showTotal = parseFloat($scope.total * 0.9).toFixed(2);
+    else $scope.showTotal = parseFloat($scope.total).toFixed(2);
     var pricingObj = {
-      channels: [],
-      discounted: discounted,
-      submission: $rootScope.submission
+      total: $scope.showTotal,
+      submission: $rootScope.submission,
+      channels: $scope.channels.filter(function(ch) {
+        return ch.addtocart;
+      })
     };
-    for (var key in $scope.selectedChannels) {
-      if ($scope.selectedChannels[key]) {
-        var chan = $scope.channels.find(function(ch) {
-          return ch.displayName == key;
-        })
-        pricingObj.channels.push(chan.channelID);
-      }
-    }
     $http.post('/api/submissions/getPayment', pricingObj)
       .then(function(res) {
         window.location = res.data;
@@ -106,18 +101,15 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
 
 
   $scope.addToCart = function(channel) {
-    console.log($scope.selectedChannels);
     if (channel.addtocart) {
       $scope.total = $scope.total - channel.price;
     } else {
       $scope.total += channel.price;
     }
+    console.log(typeof channel.price);
+    channel.addtocart = channel.addtocart ? false : true;
     if ($scope.auDLLink) $scope.showTotal = parseFloat($scope.total * 0.9).toFixed(2);
     else $scope.showTotal = parseFloat($scope.total).toFixed(2);
-
-    $scope.selectedChannels[channel.displayName] = $scope.selectedChannels[channel.displayName] == true ? false : true;
-
-    channel.addtocart = channel.addtocart ? false : true;
   };
 
 });

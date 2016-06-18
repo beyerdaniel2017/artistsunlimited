@@ -61,14 +61,6 @@ var schema = new mongoose.Schema({
   },
   admin: {
     type: Boolean
-  },
-  createdOn: {
-    type: Date,
-    default: Date.now
-  },
-  updatedOn: {
-    type: Date,
-    default: Date.now
   }
 });
 
