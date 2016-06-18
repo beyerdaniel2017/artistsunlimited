@@ -6,7 +6,7 @@ app.config(function($stateProvider) {
     resolve: {
       events: function($http, $window, SessionService) {
         if (!SessionService.getUser()) {
-          $window.localStorage.setItem('returnstate','artistToolsScheduler');
+          $window.localStorage.setItem('returnstate', 'artistToolsScheduler');
           $window.location.href = '/login';
         }
         return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
@@ -25,8 +25,7 @@ app.config(function($stateProvider) {
 app.controller('ATSchedulerController', function($rootScope, $state, $scope, $http, AuthService, $window, events, SessionService) {
   if (!SessionService.getUser()) {
     $state.go('login');
-  }
-  else{
+  } else {
     $window.localStorage.removeItem('returnstate');
   }
   $scope.user = SessionService.getUser();
@@ -365,13 +364,9 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.getStyle = function(event) {
     if (event.type == 'empty') {
       return {}
-    } else if (event.type == 'track') {
+    } else if (event.type == 'track' || event.type == 'queue') {
       return {
         'background-color': '#67f967'
-      }
-    } else if (event.type == 'queue') {
-      return {
-        'background-color': 'yellow'
       }
     } else if (event.type == 'traded') {
       return {
@@ -424,62 +419,58 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       $scope.hideall = true;
       $.Zebra_Dialog('Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.<br><br> <input id="txtemail" type="email" placeholder="example@domain.com" style="width:400px; border-radius:3px;padding:5px"/>', {
         'type': 'confirmation',
-         width: 600,
+        width: 600,
         'buttons': [{
           caption: 'OK',
           callback: function() {
-            var answer =  $("#txtemail").val();
-            if (answer=="") {
-        $state.go('artistToolsDownloadGatewayList');
-      }
-            else{
-      var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
-      if (myArray) {
-        $scope.user.email = answer;
-        return $http.put('/api/database/profile', $scope.user)
-          .then(function(res) {
-            SessionService.create(res.data);
-            $scope.user = SessionService.getUser();
-            $scope.hideall = false;
-          })
-          .then(null, function(err) {
-                  setTimeout(function() {
-            promptForEmail();
-                  },600);
-          })
-              } 
-              else {
+            var answer = $("#txtemail").val();
+            if (answer == "") {
+              $state.go('artistToolsDownloadGatewayList');
+            } else {
+              var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
+              if (myArray) {
+                $scope.user.email = answer;
+                return $http.put('/api/database/profile', $scope.user)
+                  .then(function(res) {
+                    SessionService.create(res.data);
+                    $scope.user = SessionService.getUser();
+                    $scope.hideall = false;
+                  })
+                  .then(null, function(err) {
+                    setTimeout(function() {
+                      promptForEmail();
+                    }, 600);
+                  })
+              } else {
                 setTimeout(function() {
-        promptForEmail();
-                },600);
+                  promptForEmail();
+                }, 600);
               }
-      }
-    }
+            }
+          }
         }]
-      });      
+      });
     }
   }
-  $scope.verifyBrowser = function(){
-    if(navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1){
+  $scope.verifyBrowser = function() {
+    if (navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1) {
       var position = navigator.userAgent.search("Version") + 8;
       var end = navigator.userAgent.search(" Safari");
-      var version = navigator.userAgent.substring(position,end);
-      if(parseInt(version) < 9){
+      var version = navigator.userAgent.substring(position, end);
+      if (parseInt(version) < 9) {
         $.Zebra_Dialog('You have old version of safari. Click <a href="https://support.apple.com/downloads/safari">here</a> to download the latest version of safari for better site experience.', {
           'type': 'confirmation',
           'buttons': [{
             caption: 'OK'
           }],
-          'onClose': function(){
+          'onClose': function() {
             $window.location.href = "https://support.apple.com/downloads/safari";
           }
         });
+      } else {
+        promptForEmail();
       }
-      else{
-  promptForEmail();
-      }
-    }
-    else{
+    } else {
       promptForEmail();
     }
   }

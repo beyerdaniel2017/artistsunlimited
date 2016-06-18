@@ -39,19 +39,17 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     $scope.user = SessionService.getUser();
     if (!SessionService.getUser()) {
       var path = window.location.pathname;
-      if(path == "/artistTools/profile"){
-        $window.localStorage.setItem('returnstate','artistToolsProfile');
-      }
-      else if(path == "/artistTools/downloadGateway"){
-        $window.localStorage.setItem('returnstate','artistToolsDownloadGatewayList');
+      if (path == "/artistTools/profile") {
+        $window.localStorage.setItem('returnstate', 'artistToolsProfile');
+      } else if (path == "/artistTools/downloadGateway") {
+        $window.localStorage.setItem('returnstate', 'artistToolsDownloadGatewayList');
       }
       $state.go('login');
-    }
-    else{
+    } else {
       $window.localStorage.removeItem('returnstate');
     }
 
-        var logintoken = SessionService.getLoginToken();
+    var logintoken = SessionService.getLoginToken();
     /* Init boolean variables for show/hide and other functionalities */
     $scope.processing = false;
     $scope.isTrackAvailable = false;
@@ -80,112 +78,112 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
         });
       }
     };
-        //overlay autofill track start//
+    //overlay autofill track start//
 
-        $scope.autoFillTracks = [];
-        $scope.trackList = [];
-        $scope.trackListObj = null;
-        $scope.trackListSlotObj = null;
-        $scope.newQueueSong = "";
+    $scope.autoFillTracks = [];
+    $scope.trackList = [];
+    $scope.trackListObj = null;
+    $scope.trackListSlotObj = null;
+    $scope.newQueueSong = "";
 
-        $scope.trackChange = function(index) {
-            $scope.makeEventURL = $scope.trackListSlotObj.permalink_url;
-            $scope.changeURL();
-        };
+    $scope.trackChange = function(index) {
+      $scope.makeEventURL = $scope.trackListSlotObj.permalink_url;
+      $scope.changeURL();
+    };
 
-        $scope.trackListChange = function(index) {
+    $scope.trackListChange = function(index) {
 
-            $scope.newQueueSong = $scope.trackListObj.permalink_url;
-            $scope.processing = true;
-            $scope.changeQueueSong();
-        };
+      $scope.newQueueSong = $scope.trackListObj.permalink_url;
+      $scope.processing = true;
+      $scope.changeQueueSong();
+    };
 
-        $scope.addSong = function() {
+    $scope.addSong = function() {
 
-            if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
-            $scope.user.queue.push($scope.newQueueID);
+      if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
+      $scope.user.queue.push($scope.newQueueID);
 
-            $scope.saveUser();
-            $scope.newQueueSong = undefined;
-            $scope.trackListObj = "";
-            $scope.newQueue = undefined;
+      $scope.saveUser();
+      $scope.newQueueSong = undefined;
+      $scope.trackListObj = "";
+      $scope.newQueue = undefined;
 
-        }
+    }
 
-        $scope.changeQueueSong = function() {
-            $http.post('/api/soundcloud/resolve', {
-                    url: $scope.newQueueSong
-                })
-                .then(function(res) {
+    $scope.changeQueueSong = function() {
+      $http.post('/api/soundcloud/resolve', {
+          url: $scope.newQueueSong
+        })
+        .then(function(res) {
 
-                    $scope.processing = false;
-                    var track = res.data;
-                    $scope.newQueue = track;
-                    $scope.newQueueID = track.id;
-                })
-                .then(null, function(err) {
-                    $.Zebra_Dialog("Song not found.");
-                    $scope.processing = false;
-                });
-        }
+          $scope.processing = false;
+          var track = res.data;
+          $scope.newQueue = track;
+          $scope.newQueueID = track.id;
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("Song not found.");
+          $scope.processing = false;
+        });
+    }
 
-        $scope.saveUser = function() {
+    $scope.saveUser = function() {
 
-            $scope.processing = true;
-            $http.put("/api/database/profile", $scope.user)
-                .then(function(res) {
-                    SessionService.create(res.data);
-                    $scope.user = SessionService.getUser();
-                    $scope.processing = false;
-                    $scope.loadQueueSongs();
-                   // $window.location.reload();
+      $scope.processing = true;
+      $http.put("/api/database/profile", $scope.user)
+        .then(function(res) {
+          SessionService.create(res.data);
+          $scope.user = SessionService.getUser();
+          $scope.processing = false;
+          $scope.loadQueueSongs();
+          // $window.location.reload();
 
-                })
-                .then(null, function(err) {
-                    $.Zebra_Dialog("Error: did not save");
-                    $scope.processing = false;
-                });
-            $('#autoFillTrack').modal('hide');
-        }
-        $scope.getTrackListFromSoundcloud = function() {
-            var profile = $scope.user;
-            if (profile.soundcloud) {
-                $scope.processing = true;
-                SC.get('/users/' + profile.soundcloud.id + '/tracks', {
-                        filter: 'public'
-                    })
-                    .then(function(tracks) {
-                        $scope.trackList = tracks;
-                        $scope.processing = false;
-                        $scope.$apply();
-                    })
-                    .catch(function(response) {
-                        $scope.processing = false;
-                        $scope.$apply();
-                    });
-            }
-        }
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("Error: did not save");
+          $scope.processing = false;
+        });
+      $('#autoFillTrack').modal('hide');
+    }
+    $scope.getTrackListFromSoundcloud = function() {
+      var profile = $scope.user;
+      if (profile.soundcloud) {
+        $scope.processing = true;
+        SC.get('/users/' + profile.soundcloud.id + '/tracks', {
+            filter: 'public'
+          })
+          .then(function(tracks) {
+            $scope.trackList = tracks;
+            $scope.processing = false;
+            $scope.$apply();
+          })
+          .catch(function(response) {
+            $scope.processing = false;
+            $scope.$apply();
+          });
+      }
+    }
 
 
-        $scope.removeQueueSong = function(index) {
-            $scope.user.queue.splice(index, 1);
-            $scope.saveUser()
-            $scope.loadQueueSongs();
-        }
-        $scope.loadQueueSongs = function(queue) {
-            $scope.autoFillTracks = [];
-            $scope.user.queue.forEach(function(songID) {
-                SC.get('/tracks/' + songID)
-                    .then(function(track) {
-                        $scope.autoFillTracks.push(track);
-                        $scope.$digest();
-                    }, console.log);
-            })
-        }
-        if ($scope.user && $scope.user.queue) {
-            $scope.loadQueueSongs();
-        }
-        //overlay autofill track end//
+    $scope.removeQueueSong = function(index) {
+      $scope.user.queue.splice(index, 1);
+      $scope.saveUser()
+      $scope.loadQueueSongs();
+    }
+    $scope.loadQueueSongs = function(queue) {
+      $scope.autoFillTracks = [];
+      $scope.user.queue.forEach(function(songID) {
+        SC.get('/tracks/' + songID)
+          .then(function(track) {
+            $scope.autoFillTracks.push(track);
+            $scope.$digest();
+          }, console.log);
+      })
+    }
+    if ($scope.user && $scope.user.queue) {
+      $scope.loadQueueSongs();
+    }
+    //overlay autofill track end//
     $scope.closeModal = function() {
       $scope.modalInstance.close();
     };
@@ -281,8 +279,8 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       var sendObj = {
         name: '',
         password: '',
-                permanentLinks: JSON.stringify(permanentLinks),
-                logintoken: logintoken
+        permanentLinks: JSON.stringify(permanentLinks),
+        logintoken: logintoken
       }
       if ($scope.profile.field === 'name') {
         sendObj.name = $scope.profile.data.name;
@@ -296,31 +294,31 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       ArtistToolsService
         .saveProfileInfo(sendObj)
         .then(function(res) {
-                    if (res.data.status == 401) {
-                        $scope.processing = false;
-                        $scope.closeEditProfileModal();
-                        $.Zebra_Dialog('Your login token has been expired.Please login again!', {
-                            'type': 'confirmation',
-                            'buttons': [{
-                                caption: 'OK',
-                                callback: function() {
-                                    SessionService.deleteUser();
-                                    $state.go('login');
-                                }
-                            }]
-                        });
-                    } else {
-          $scope.processing = false;
-          if (res.data === 'Email Error') {
-            $scope.message = {
-              value: 'Email already exists!',
-              visible: true
-            };
-            return;
+          if (res.data.status == 401) {
+            $scope.processing = false;
+            $scope.closeEditProfileModal();
+            $.Zebra_Dialog('Your login token has been expired.Please login again!', {
+              'type': 'confirmation',
+              'buttons': [{
+                caption: 'OK',
+                callback: function() {
+                  SessionService.deleteUser();
+                  $state.go('login');
+                }
+              }]
+            });
+          } else {
+            $scope.processing = false;
+            if (res.data === 'Email Error') {
+              $scope.message = {
+                value: 'Email already exists!',
+                visible: true
+              };
+              return;
+            }
+            SessionService.create(res.data);
+            $scope.closeEditProfileModal();
           }
-          SessionService.create(res.data);
-          $scope.closeEditProfileModal();
-                    }
         })
         .catch(function(res) {
           $scope.processing = false;
@@ -423,30 +421,30 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
         $scope.processing = true;
         ArtistToolsService
           .deleteDownloadGateway({
-                        id: downloadGateWayID,
-                        logintoken: logintoken
+            id: downloadGateWayID,
+            logintoken: logintoken
           })
           .then(handleResponse)
           .catch(handleError);
 
         function handleResponse(res) {
-                    if (res.data.status == 401) {
-                        $scope.processing = false;
-                        $.Zebra_Dialog('Your login token has been expired.Please login again!!', {
-                            'type': 'confirmation',
-                            'buttons': [{
-                                caption: 'OK',
-                                callback: function() {
-                                    SessionService.deleteUser();
-                                    $state.go('login');
-                                }
-                            }]
-                        });
-                    } else {
-          $scope.processing = false;
-          $scope.downloadGatewayList.splice(index, 1);
-        }
+          if (res.data.status == 401) {
+            $scope.processing = false;
+            $.Zebra_Dialog('Your login token has been expired.Please login again!!', {
+              'type': 'confirmation',
+              'buttons': [{
+                caption: 'OK',
+                callback: function() {
+                  SessionService.deleteUser();
+                  $state.go('login');
                 }
+              }]
+            });
+          } else {
+            $scope.processing = false;
+            $scope.downloadGatewayList.splice(index, 1);
+          }
+        }
 
         function handleError(res) {
           $scope.processing = false;
@@ -454,18 +452,18 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       }
     };
 
-    $scope.verifyBrowser = function(){
-      if(navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1){
+    $scope.verifyBrowser = function() {
+      if (navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1) {
         var position = navigator.userAgent.search("Version") + 8;
         var end = navigator.userAgent.search(" Safari");
-        var version = navigator.userAgent.substring(position,end);
-        if(parseInt(version) < 9){
+        var version = navigator.userAgent.substring(position, end);
+        if (parseInt(version) < 9) {
           $.Zebra_Dialog('You have old version of safari. Click <a href="https://support.apple.com/downloads/safari">here</a> to download the latest version of safari for better site experience.', {
             'type': 'confirmation',
             'buttons': [{
               caption: 'OK'
             }],
-            'onClose': function(){
+            'onClose': function() {
               $window.location.href = "https://support.apple.com/downloads/safari";
             }
           });
