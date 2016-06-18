@@ -62,19 +62,11 @@ var schema = new mongoose.Schema({
   admin: {
     type: Boolean
   },
-  createdOn: {
-    type: Date,
-    default: Date.now
+  socialPlatform: {
+    type: String
   },
-  updatedOn: {
-    type: Date,
-    default: Date.now
-  },
-  socialPlatform : {
-    type : String
-  },
-  socialPlatformValue : {
-    type : String
+  socialPlatformValue: {
+    type: String
   }
 });
 

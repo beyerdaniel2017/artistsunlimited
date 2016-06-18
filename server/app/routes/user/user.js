@@ -17,6 +17,7 @@ module.exports = router;
 router.get('/byId/:id', function(req, res, next) {
   User.findById(req.params.id).exec()
     .then(function(user) {
+      if (user.soundcloud.token) user.soundcloud.token = undefined;
       res.send(user);
     })
 });
@@ -100,12 +101,12 @@ router.post('/bySCURL', function(req, res, next) {
             }
           };
           scWrapper.request(reqObj, function(err, result) {
-          if(err){
-            return res.json({
-               "success": false,
-               message: "Error in processing your request"
-            });
-          };
+            if (err) {
+              return res.json({
+                "success": false,
+                message: "Error in processing your request"
+              });
+            };
             https.get(result.location, function(httpRes2) {
               var userBody = '';
               httpRes2.on("data", function(songChunk) {
@@ -145,43 +146,43 @@ router.post('/bySCURL', function(req, res, next) {
   }
 });
 
-router.post('/syncSCEmails', function(req, res, next) {
-  var sCount = 0;
-  var page = 0;
-  var lCount = 10000;
-  var processEmails = function(skipCount, limitCount) {
-    SCEmails.find({})
-      .skip(skipCount)
-      .limit(limitCount)
-      .exec()
-      .then(function(scemails) {
-        if (scemails.length > 0) {
-          scemails.forEach(function(sce, index) {
-            User.update({
-              'soundcloud.id': sce.soundcloudID
-            }, {
-              $set: {
-                'soundcloud.followers': sce.followers,
-                'soundcloud.permalinkURL': sce.soundcloudURL,
-                'soundcloud.id': sce.soundcloudID,
-                'soundcloud.username': sce.username,
-                name: sce.username,
-                email: sce.email,
-                queue: []
-              }
-            }, {
-              upsert: true
-            }, function(err, user) {
-              if (index == (scemails.length - 1)) {
-                page++;
-                sCount = (page * lCount);
-                console.log(page + "===" + sCount + "===" + lCount)
-                processEmails(sCount, lCount)
-              }
-            });
-          });
-        }
-      });
-  }
-  processEmails(sCount, lCount);
-});
+// router.post('/syncSCEmails', function(req, res, next) {
+//   var sCount = 0;
+//   var page = 0;
+//   var lCount = 10000;
+//   var processEmails = function(skipCount, limitCount) {
+//     SCEmails.find({})
+//       .skip(skipCount)
+//       .limit(limitCount)
+//       .exec()
+//       .then(function(scemails) {
+//         if (scemails.length > 0) {
+//           scemails.forEach(function(sce, index) {
+//             User.update({
+//               'soundcloud.id': sce.soundcloudID
+//             }, {
+//               $set: {
+//                 'soundcloud.followers': sce.followers,
+//                 'soundcloud.permalinkURL': sce.soundcloudURL,
+//                 'soundcloud.id': sce.soundcloudID,
+//                 'soundcloud.username': sce.username,
+//                 name: sce.username,
+//                 email: sce.email,
+//                 queue: []
+//               }
+//             }, {
+//               upsert: true
+//             }, function(err, user) {
+//               if (index == (scemails.length - 1)) {
+//                 page++;
+//                 sCount = (page * lCount);
+//                 console.log(page + "===" + sCount + "===" + lCount)
+//                 processEmails(sCount, lCount)
+//               }
+//             });
+//           });
+//         }
+//       });
+//   }
+//   processEmails(sCount, lCount);
+// });
