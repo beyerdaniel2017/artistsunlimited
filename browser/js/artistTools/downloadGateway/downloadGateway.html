@@ -7,7 +7,7 @@
   <div class="row height-100pr">
     <div class="col-md-12">
       <div class="page-content right-side">
-           <div class="col-md-11 col-md-offset-1">
+           <div class="col-md-12">
         <div class="row extrapadding">
             <!-- Download Section Start -->
             <div class="col-md-4">
@@ -69,13 +69,80 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="artist-follow">
+                    <div class="social-container">
+                        <h4>Required Steps to download track</h4>
+                        <small class="orange-text">Users must complete each step before they can access this track. Each step can have multiple actions, but only one action per step is required to continue to the next step (unless the entire step is optional).</small><br/><br/>
+
+                        <select class="form-control" ng-model="track.socialPlatform" ng-change="track.socialPlatformValue=''" ng-init="track.socialPlatform = 'actionsOnSoundCloud'">
+                            <option ng-selected="true" value="actionsOnSoundCloud">Actions on soundcloud</option>
+                            <option value="facebookLike">Like Facebook page</option>
+                            <option value="facebookShare">Share on Facebook</option>
+                            <option value="twitterFollow">Follow on twitter</option>
+                            <option value="twitterPost">Post tweet to twitter</option>
+                            <option value="instagramFollow">Follow on instagram</option>
+                            <option value="youtubeSubscribe">Subscribe on youtube</option>
+                        </select>
+                        <br/><br/>
+                        <div class="auSocialPlatform">
+                            <div ng-if="track.socialPlatform == 'facebookLike'">
+                                <label>Like Facebook Page :</label>
+                                <div class="col-sm-19">
+                                    <input type="text" class="form-control" ng-model="track.socialPlatformValue" value="" />
+                                </div>
+                            </div>
+
+                            <div ng-if="track.socialPlatform == 'facebookShare'">
+                                <label>Share on Facebook :</label>
+                                <div class="col-sm-19">
+                                    <input type="text" class="form-control"  ng-model="track.socialPlatformValue" value="" />
+                                </div>
+                            </div>
+
+                            <div ng-if="track.socialPlatform == 'twitterPost'">
+                                <label>Text to Tweet :</label>
+                                <div class ='col-sm-19'>
+                                    <input ng-model="track.socialPlatformValue" type="text" class="form-control" placeholder="enter a message to tweet" value="" />
+                                </div>
+                            </div>
+
+                            <div ng-if="track.socialPlatform == 'twitterFollow'">
+                                <label>User to Follow :</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">@</span>
+                                    <input type="text" class="form-control" input-prepend="@" ng-model="track.socialPlatformValue" placeholder="diplo" value="" />
+                                </div>
+                            </div>
+                            <div ng-if="track.socialPlatform == 'instagramFollow'">
+                                <label>User to Follow :</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">@</span>
+                                    <input type="text" class="form-control" input-prepend="@" ng-model="track.socialPlatformValue" placeholder="skrillex" value=""/>
+                                </div>
+                            </div>
+                            <div ng-if="track.socialPlatform == 'soundCloudFollow'">
+                                <label>Username:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">@</span>
+                                    <input type="text" class="form-control" input-prepend="www.soundcloud.com/" ng-model="track.socialPlatformValue" placeholder="octobersveryown" value=''/>
+                                </div>
+                            </div>
+                            <div ng-if="track.socialPlatform == 'youtubeSubscribe'">
+                                <label>Youtube Channel Url:</label>
+                                <div class ='col-sm-19'>
+                                    <input type="text" class="form-control" ng-model="track.socialPlatformValue" placeholder="Youtube Channel Url" value="" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <br/><br/>
+                    
+                    <div class="artist-follow" ng-if="track.socialPlatform == 'actionsOnSoundCloud'">
                         <h4>Artists to Follow</h4>
                         <div class="input-box" ng-repeat="artist in track.artists" ng-show="!artist.permanentLink">
                             <input class="form-control" placeholder="URL" ng-model="artist.url" ng-change="artistURLChange($index)"/>
                             <a class="pro-icon" href="{{artist.url}}" target="_blank" ng-show="artist.avatar !== ''"><img class="profile-icon" ng-src="{{artist.avatar}}" ></a> <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeArtist($index)"></a> </div>
                         <a href="#" ng-click="addArtist()" ng-hide="track.artists.length > 2 && !user.admin">+ Artist</a> </div>
-                    <div class="social-container">
+                    <div class="social-container" ng-if="track.socialPlatform == 'actionsOnSoundCloud'">
                         <h4>Actions</h4>
                         <small class="orange-text">To download the user will:</small>
                         <div class="checkbox-container">
@@ -98,6 +165,7 @@
                             </ul>
                         </div>
                     </div>
+                </div>
                 </div>
                 <div class="col-md-12 text-center" style="margin-top:20px;"> <a href="#" class="btn btn-enter" ui-sref="artistToolsDownloadGatewayList">Back</a> <a class="btn btn-enter" href="javascript:void(0)" ng-click="preview(track)" target="_blank">Preview</a>
                     <button type="submit" class="btn btn-enter">Save</button>

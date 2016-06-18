@@ -61,6 +61,12 @@ var schema = new mongoose.Schema({
   },
   admin: {
     type: Boolean
+  },
+  socialPlatform: {
+    type: String
+  },
+  socialPlatformValue: {
+    type: String
   }
 });
 

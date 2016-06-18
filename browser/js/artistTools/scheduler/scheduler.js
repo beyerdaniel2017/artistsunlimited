@@ -4,7 +4,11 @@ app.config(function($stateProvider) {
     templateUrl: 'js/artistTools/scheduler/scheduler.html',
     controller: 'ATSchedulerController',
     resolve: {
-      events: function($http, SessionService) {
+      events: function($http, $window, SessionService) {
+        if (!SessionService.getUser()) {
+          $window.localStorage.setItem('returnstate','artistToolsScheduler');
+          $window.location.href = '/login';
+        }
         return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
           .then(function(res) {
             return res.data;
@@ -21,6 +25,9 @@ app.config(function($stateProvider) {
 app.controller('ATSchedulerController', function($rootScope, $state, $scope, $http, AuthService, $window, events, SessionService) {
   if (!SessionService.getUser()) {
     $state.go('login');
+  }
+  else{
+    $window.localStorage.removeItem('returnstate');
   }
   $scope.user = SessionService.getUser();
   $scope.makeEventURL = "";
@@ -412,7 +419,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.calendar = $scope.fillDateArrays(events);
 
-
   function promptForEmail() {
     if (!$scope.user.email) {
       $scope.hideall = true;
@@ -453,5 +459,29 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       });      
     }
   }
+  $scope.verifyBrowser = function(){
+    if(navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1){
+      var position = navigator.userAgent.search("Version") + 8;
+      var end = navigator.userAgent.search(" Safari");
+      var version = navigator.userAgent.substring(position,end);
+      if(parseInt(version) < 9){
+        $.Zebra_Dialog('You have old version of safari. Click <a href="https://support.apple.com/downloads/safari">here</a> to download the latest version of safari for better site experience.', {
+          'type': 'confirmation',
+          'buttons': [{
+            caption: 'OK'
+          }],
+          'onClose': function(){
+            $window.location.href = "https://support.apple.com/downloads/safari";
+          }
+        });
+      }
+      else{
   promptForEmail();
+      }
+    }
+    else{
+      promptForEmail();
+    }
+  }
+  $scope.verifyBrowser();
 });

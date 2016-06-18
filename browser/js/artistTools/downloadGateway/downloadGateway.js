@@ -3,7 +3,17 @@ app.config(function($stateProvider) {
     .state('artistToolsDownloadGatewayEdit', {
       url: '/artistTools/downloadGateway/edit/:gatewayID',
       templateUrl: 'js/artistTools/downloadGateway/downloadGateway.html',
-      controller: 'ArtistToolsDownloadGatewayController'
+    controller: 'ArtistToolsDownloadGatewayController',
+    resolve: {
+      isLoggedIn : function($stateParams, $window, SessionService) {
+        if (!SessionService.getUser()) {
+          $window.localStorage.setItem('returnstate','artistToolsDownloadGatewayEdit');
+          $window.localStorage.setItem('tid',$stateParams.gatewayID);
+          $window.location.href = '/login';
+        }
+        return true;
+      }
+    }
     })
     .state('artistToolsDownloadGatewayNew', {
       url: '/artistTools/downloadGateway/new',
@@ -11,7 +21,16 @@ app.config(function($stateProvider) {
         submission: null
       },
       templateUrl: 'js/artistTools/downloadGateway/downloadGateway.html',
-      controller: 'ArtistToolsDownloadGatewayController'
+    controller: 'ArtistToolsDownloadGatewayController',
+    resolve: {
+      isLoggedIn : function($stateParams, $window, SessionService) {
+        if (!SessionService.getUser()) {
+          $window.localStorage.setItem('returnstate','artistToolsDownloadGatewayNew');
+          $window.location.href = '/login';
+        }
+        return true;
+      }
+    }
     })
 });
 
@@ -19,6 +38,13 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
   /* Init Download Gateway form data */
     var logintoken = SessionService.getLoginToken();
   $scope.user = SessionService.getUser();
+  if (!SessionService.getUser()) {
+    $state.go('login');
+  }
+  else{
+    $window.localStorage.removeItem('returnstate');
+    $window.localStorage.removeItem('tid');
+  }
   $scope.showTitle = [];
   $scope.track = {
     artistUsername: '',
@@ -90,12 +116,10 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
 
   $scope.openHelpModal = function() {
     var displayText = "<span style='font-weight:bold'>Song: </span>Choose or enter the url for the song you want to make the download gate for. If you make it for one of your tracks, the download link will be automatically added to your track on soundcloud.<br><br><span style='font-weight:bold'>Social Media Links: </span>The links that you add here will appear on the download gateway page.<br><br><span style='font-weight:bold'>Download File: </span>Either provide a link to a downloadable file or upload an mp3 file. If you upload an mp3, we format the file with the album artwork, title, and artist of your soundcloud track so that it will look good on a music player.<br><br><span style='font-weight:bold'>Artists to Follow and Actions: </span>The artists you add will be followed on this download gate. Under actions, you can make 'Liking', 'Reposting' and 'Commenting' mandatory on the download.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
-
     $.Zebra_Dialog(displayText, {
       width: 600
     });
   }
-
 
   $scope.removeSMLink = function(index) {
     $scope.track.SMLinks.splice(index, 1);
@@ -163,13 +187,15 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
                             }
                         }]
                     });
-                } else {
+      } 
+      else {
         $scope.processing = false;
         if ($stateParams.submission) {
           $state.go('artistToolsDownloadGatewayList', {
             'submission': $stateParams.submission
           });
-        } else {
+        } 
+        else {
           if ($scope.user.soundcloud.id == $scope.track.artistID) {
             $.Zebra_Dialog('Download gateway was saved and added to the track.');
           } else {
@@ -450,10 +476,23 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     $window.open(url, '_blank');
   }
 
-
-  // $scope.$watch('track', function(newVal, oldVal) {
-  //   console.log(newVal);
-  //   if (newVal.trackTitle)
-  //     //window.localStorage.setItem('trackPreviewData', JSON.stringify(newVal));
-  // }, true);
+  $scope.verifyBrowser = function(){
+    if(navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1){
+      var position = navigator.userAgent.search("Version") + 8;
+      var end = navigator.userAgent.search(" Safari");
+      var version = navigator.userAgent.substring(position,end);
+      if(parseInt(version) < 9){
+        $.Zebra_Dialog('You have old version of safari. Click <a href="https://support.apple.com/downloads/safari">here</a> to download the latest version of safari for better site experience.', {
+          'type': 'confirmation',
+          'buttons': [{
+            caption: 'OK'
+          }],
+          'onClose': function(){
+            $window.location.href = "https://support.apple.com/downloads/safari";
+          }
+        });
+      }
+    }
+  }
+  $scope.verifyBrowser();
 });

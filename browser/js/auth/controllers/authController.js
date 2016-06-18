@@ -111,7 +111,26 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
           });
           return;
         }
+
+        if($window.localStorage.getItem('returnstate') != undefined){
+          if($window.localStorage.getItem('returnstate') == "reForReInteraction"){
+            $state.go($window.localStorage.getItem('returnstate'), {
+              tradeID: $window.localStorage.getItem('tid')
+            });
+          }
+          else if($window.localStorage.getItem('returnstate') == "artistToolsDownloadGatewayEdit"){
+            $state.go($window.localStorage.getItem('returnstate'), {
+              gatewayID: $window.localStorage.getItem('tid')
+            });
+          }
+          else{
+            $state.go($window.localStorage.getItem('returnstate'));
+          }
+        }
+        else{
         $state.go('reForReLists');
+        }
+        
       })
       .then(null, function(err) {
         $.Zebra_Dialog('Error: Could not log in');
