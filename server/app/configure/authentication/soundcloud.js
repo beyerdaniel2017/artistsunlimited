@@ -34,7 +34,7 @@ module.exports = function(app) {
                                 'id': data.id,
                                 'username': data.username,
                                 'permalinkURL': data.permalink_url,
-            'avatarURL': data.avatar_url.replace('large','t500x500'),
+                                'avatarURL': data.avatar_url.replace('large', 't500x500'),
                                 'token': req.body.token,
                                 'followers': data.followers_count
                             }
@@ -60,7 +60,7 @@ module.exports = function(app) {
                                 'id': data.id,
                                 'username': data.username,
                                 'permalinkURL': data.permalink_url,
-              'avatarURL': data.avatar_url.replace('large','t500x500'),
+                                'avatarURL': data.avatar_url.replace('large', 't500x500'),
                                 'token': req.body.token,
                                 'followers': data.followers_count
                             }

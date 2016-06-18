@@ -25,10 +25,11 @@
           <button ng-click="delete(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:red ; font-size:2em">Delete</button>
         </div>
         <div style="width: 40%; margin: 0 auto; padding-top:10px;padding-bottom:10px;">
-          <select class="form-control" style="width:170px;float:left;" ng-model="sub.channelName" ng-options="name.displayName for name in channels" ng-change="channelChange(sub)">
+          <select class="form-control" style="width:170px;float:left;" ng-model="sub.channel" ng-change="channelChange(sub)">
             <option value="">-Channel List-</option>
+            <option ng-repeat="chan in channels" value="{{chan}}">{{chan.displayName}}</option>
           </select>  
-          <button style="height: 45px; margin-top: 7px; background-color:yellow ; font-size:2em"><a href="mailto:{{sub.email}}?subject=Premier Submissions&body={{sub.emailBody}}">Send Email</a></button>   
+          <button style="height: 45px; margin-top: 7px; background-color:yellow ; font-size:2em"><a href="mailto:{{sub.email}}?subject=Premier Submissions&body={{sub.emailBody}}">Send Email</a></button>
         </div>
       </div>
       <br>

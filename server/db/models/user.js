@@ -44,6 +44,9 @@ var schema = new mongoose.Schema({
     queue: {
         type: [Number],
         default: []
+    },
+    description: {
+        type: String
     }
 });
 
