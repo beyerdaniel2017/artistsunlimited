@@ -6,12 +6,12 @@ app.config(function($stateProvider) {
   });
 });
 
-app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$window) {
+app.controller('AdminLoginController', function($rootScope, $state, $scope, $http, AuthService, SessionService, $window) {
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.submissions = [];
   $scope.loginObj = {};
-  $scope.isLoggedIn = SessionService.getUser() ? true : false; 
+  $scope.isLoggedIn = SessionService.getUser() ? true : false;
   $scope.login = function() {
     $scope.message = {
       val: '',
@@ -21,6 +21,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
       .login($scope.loginObj)
       .then(handleLoginResponse)
       .catch(handleLoginError)
+
     function handleLoginResponse(res) {
       if (res.status === 200 && res.data.success) {
         $window.localStorage.setItem('logintoken', res.data.logintoken);
@@ -32,7 +33,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
           visible: true
         };
       }
-  }
+    }
 
     function handleLoginError(res) {
       $scope.message = {
@@ -42,35 +43,35 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
     }
   };
   $scope.logout = function() {
-    $http.get('/api/logout').then(function() {
-      SessionService.deleteUser();
-      window.location.href = '/admin';
-    }).catch(function(err) {
-      $scope.processing = false;
-      $.Zebra_Dialog('Wrong Password');
-    });
-  }
-  $scope.manage = function() {
-    $scope.processing = true;
-    SC.connect()
-      .then(function(res) {
-        $rootScope.accessToken = res.oauth_token;
-        return $http.post('/api/login/authenticated', {
-          token: res.oauth_token,
-          password: $rootScope.password,
-        })
-      })
-      .then(function(res) {
+      $http.get('/api/logout').then(function() {
+        SessionService.deleteUser();
+        window.location.href = '/admin';
+      }).catch(function(err) {
         $scope.processing = false;
-        $rootScope.schedulerInfo = res.data;
-        $rootScope.schedulerInfo.events.forEach(function(ev) {
-          ev.day = new Date(ev.day);
-        });
-        $state.go('scheduler');
-      })
-      .then(null, function(err) {
-        $.Zebra_Dialog('Error: Could not log in');
-        $scope.processing = false;
+        $.Zebra_Dialog('Wrong Password');
       });
-  }
+    }
+    // $scope.manage = function() {
+    //   $scope.processing = true;
+    //   SC.connect()
+    //     .then(function(res) {
+    //       $rootScope.accessToken = res.oauth_token;
+    //       return $http.post('/api/login/authenticated', {
+    //         token: res.oauth_token,
+    //         password: $rootScope.password,
+    //       })
+    //     })
+    //     .then(function(res) {
+    //       $scope.processing = false;
+    //       $rootScope.schedulerInfo = res.data;
+    //       $rootScope.schedulerInfo.events.forEach(function(ev) {
+    //         ev.day = new Date(ev.day);
+    //       });
+    //       $state.go('scheduler');
+    //     })
+    //     .then(null, function(err) {
+    //       $.Zebra_Dialog('Error: Could not log in');
+    //       $scope.processing = false;
+    //     });
+    // }
 });

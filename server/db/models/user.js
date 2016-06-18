@@ -34,7 +34,7 @@ var schema = new mongoose.Schema({
         id: String
     },
     soundcloud: {
-        id: String,
+        id: Number,
         username: String,
         permalinkURL: String,
         avatarURL: String,
@@ -44,14 +44,6 @@ var schema = new mongoose.Schema({
     queue: {
         type: [Number],
         default: []
-    },
-    createdOn: {
-        type: Date,
-        default: Date.now
-    },
-    updatedOn: {
-        type: Date,
-        default: Date.now
     }
 });
 
