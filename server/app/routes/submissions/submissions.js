@@ -217,7 +217,7 @@ function schedulePaidRepost(chanID, submission) {
             allEvents.forEach(function(event1) {
               event1.day = new Date(event1.day);
             });
-            var searchHours = [24, 26, 28, 30, 32, 34];
+            var searchHours = [24, 28, 32, 36, 40, 44];
             var continueSearch = true;
             var ind = 1;
             while (continueSearch) {
@@ -233,7 +233,7 @@ function schedulePaidRepost(chanID, submission) {
                   if (!event) {
                     continueSearch = false;
                     var newEve = new RepostEvent({
-                      type: 'traded',
+                      type: 'paid',
                       day: desiredDay,
                       trackID: submission.trackID,
                       title: submission.title,

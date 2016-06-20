@@ -372,6 +372,10 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       return {
         'background-color': '#FFDA97'
       }
+    } else if (event.type == 'paid') {
+      return {
+        'background-color': '#FFBBDD'
+      }
     }
   }
 

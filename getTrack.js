@@ -7,7 +7,7 @@ SC.init({
   uri: 'facebook.com'
 });
 
-SC.get('/tracks/265695889', function(err, res) {
+SC.get('/users/4780642/tracks', function(err, res) {
   if (err) {
     console.log("ERROR");
     console.log(err);
