@@ -1,0 +1,56 @@
+var jwt = require('jsonwebtoken');
+require('rootpath')();
+var session = require('express-session');
+var env = require('../../env');
+var lusca = require('lusca');
+module.exports = function(app) {
+  app.disable('x-powered-by');
+  app.use(lusca.csrf({
+    angular: true
+  }))
+  app.use(lusca.csp({
+    policy: {
+      'default-src': '\'self\'',
+      'script-src': '\'self\' https://*.soundcloud.com https://*.twitter.com https://*.facebook.net \'unsafe-eval\' \'unsafe-inline\'',
+      'img-src': '* data:',
+      'style-src': '* \'unsafe-inline\'',
+      'connect-src': '\'self\' https://soundcloud.com https://*.soundcloud.com wss://localhost:1443 ',
+      'frame-src': "https://*.soundcloud.com https://*.facebook.com"
+    },
+    reportOnly: false,
+  }))
+  app.use(lusca({
+    xframe: 'SAMEORIGIN',
+    p3p: 'ABCDEF',
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true
+    },
+    xssProtection: true,
+    nosniff: true
+  }));
+
+
+  //on all requests
+  // app.use(function(req, res, next) {
+  //   //dont serve page unless over ssl
+  //   res.setHeader('Strinct-Transport-Security', 'max-age=8640000; includeSubDomains');
+  //   var logintoken = req.body.logintoken || req.query.logintoken || req.params.logintoken || req.cookies.logintoken;
+  //   if (typeof logintoken != 'undefined') {
+  //     jwt.verify(logintoken, global.env.SESSION_SECRET || 'arTistisUnlimited', function(err, decoded) {
+  //       if (err) {
+  //         return res.json({
+  //           status: 401,
+  //           message: 'Not authorized'
+  //         })
+  //       } else {
+  //         req.decoded = decoded;
+  //         next();
+  //       }
+  //     });
+  //   } else {
+  //     return next();
+  //   }
+  // });
+}

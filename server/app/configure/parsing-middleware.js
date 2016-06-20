@@ -8,8 +8,6 @@ module.exports = function(app) {
   app.use(cookieParser());
   // Parse our POST and PUT bodies.
   app.use(bodyParser.json());
-  var tokenAuth = require('./tokenAuth');
-  app.use(tokenAuth());
   app.use(bodyParser.urlencoded({
     extended: true
   }));
