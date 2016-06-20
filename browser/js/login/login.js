@@ -24,7 +24,6 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
 
     function handleLoginResponse(res) {
       if (res.status === 200 && res.data.success) {
-        $window.localStorage.setItem('logintoken', res.data.logintoken);
         SessionService.create(res.data.user);
         $state.go('submissions');
       } else {

@@ -36,7 +36,6 @@ app.config(function($stateProvider) {
 
 app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService, AdminDLGateService) {
   /* Init Download Gateway form data */
-  var logintoken = SessionService.getLoginToken();
   $scope.user = SessionService.getUser();
   if (!SessionService.getUser()) {
     $state.go('login');
@@ -165,7 +164,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
 
     var options = {
       method: 'POST',
-      url: '/api/database/downloadurl?logintoken=' + logintoken,
+      url: '/api/database/downloadurl',
       headers: {
         'Content-Type': undefined
       },
@@ -174,24 +173,14 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     };
     $http(options)
       .then(function(res) {
-        if (res.data.status == 401) {
-          $scope.processing = false;
-          $.Zebra_Dialog('Your login token has been expired.Please login again!!', {
-            'type': 'confirmation',
-            'buttons': [{
-              caption: 'OK',
-              callback: function() {
-                SessionService.deleteUser();
-                $state.go('login');
-              }
-            }]
+        $scope.processing = false;
+        if ($stateParams.submission) {
+          $state.go('artistToolsDownloadGatewayList', {
+            'submission': $stateParams.submission
           });
         } else {
-          $scope.processing = false;
-          if ($stateParams.submission) {
-            $state.go('artistToolsDownloadGatewayList', {
-              'submission': $stateParams.submission
-            });
+          if ($scope.user.soundcloud.id == $scope.track.artistID) {
+            $.Zebra_Dialog('Download gateway was saved and added to the track.');
           } else {
             if ($scope.user.soundcloud.id == $scope.track.artistID) {
               $.Zebra_Dialog('Download gateway was saved and added to the track.');
