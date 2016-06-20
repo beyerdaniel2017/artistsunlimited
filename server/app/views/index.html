@@ -39,7 +39,9 @@
     <script type="text/javascript" src="/src/angular-range-slider/angular.rangeSlider.js"></script>
     <script src="/angular-sanitize/angular-sanitize.min.js"></script>
 </head>
-<body ng-app="FullstackGeneratedApp" ng-controller="FullstackGeneratedController">
+<body class="scroll-hide" ng-app="FullstackGeneratedApp" ng-controller="FullstackGeneratedController">
+<div class="main-scroll-body" when-scrolled="loadList()">
     <div id="main" ui-view></div>
+</div>
 </body>
 </html>

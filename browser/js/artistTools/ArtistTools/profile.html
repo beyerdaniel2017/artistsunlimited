@@ -1,13 +1,13 @@
 <ng-include src="'js/artistTools/ArtistTools/header-navigation.html'"></ng-include>
 <div id="wrapper">
   <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-  <!-- Content Start  -->
+<!-- Content Start  -->
   <div class="container-fluid height-100pr " ng-init="showProfileInfo();getTrackListFromSoundcloud();">
     <div class="row height-100pr">
       <div class="col-lg-12 height-100pr">
-        <div class="right-side page-content padding-10" style="padding:50px; overflow:scroll"><!--page-contant Start-->
-            <div class="col-md-8 col-md-offset-2">
-                <div class="row extrapadding">
+        <div class="right-side page-content padding-10"><!--page-contant Start-->
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="row extrapadding">
                     <form role="form" ng-submit="saveProfileInfo()">
                         <table cellpadding="10" cellspacing="10" width="100%">
                             <tr>
@@ -30,23 +30,23 @@
                             <button type="submit" class="btn btn-enter">Save</button>
                         </div>
                     </form>
-                </div>
-            </div>
-            <div class="row" ng-show="!profile.isAvailable.soundcloud">
-                <div class="col-sm-4 col-md-offset-1">
-                    <hr/>
-                    <div>
-                        <!--  <button class="btn btn-default btn-block btn-lg btn-soundcloud soundcloud-img" ng-click="saveSoundCloudAccountInfo()" type="button"><img src="assets/images/soundcloud_icon.png">Connect with  Soundcloud</button> -->
-                        <img src="assets/images/soundcloud-connect-button.png"  ng-click="saveSoundCloudAccountInfo()">
-                        <p ng-show="message.visible">{{message.value}}</p>
                     </div>
                 </div>
-            </div>
-            <div class="row" ng-show="profile.isAvailable.soundcloud">
-                <div class="col-md-8 col-md-offset-2">
-                    <hr/>
-                    <h4 class="bold">Soundcloud Info</h4>
-                    <table cellpadding="40" cellspacing="20" width="100%">
+                <div class="row" ng-show="!profile.isAvailable.soundcloud">
+                    <div class="col-sm-4 col-md-offset-1">
+                        <hr/>
+                        <div>
+                            <!--  <button class="btn btn-default btn-block btn-lg btn-soundcloud soundcloud-img" ng-click="saveSoundCloudAccountInfo()" type="button"><img src="assets/images/soundcloud_icon.png">Connect with  Soundcloud</button> -->
+                            <img src="assets/images/soundcloud-connect-button.png"  ng-click="saveSoundCloudAccountInfo()">
+                            <p ng-show="message.visible">{{message.value}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-show="profile.isAvailable.soundcloud">
+                    <div class="col-md-8 col-md-offset-2">
+                        <hr/>
+                        <h4 class="bold">Soundcloud Info</h4>
+                        <table cellpadding="40" cellspacing="20" width="100%">
                             <!-- <tr>
                                     <td class="bold">Id:</td>
                                     <td>{{profile.data.soundcloud.id}}</td>
@@ -72,12 +72,12 @@
                             <div class="permanent-links" style="text-align: center;">
                                 <h4 class="bold">Permanent Artists:</h4>
                                 <small>These artists will be followed on all of your Download Gates</small>
-                                <div class="input-box" ng-repeat="link in profile.data.permanentLinks">
-                                    <input class="form-control" placeholder="Artist Soundcloud Url" ng-model="link.url" ng-change="permanentLinkURLChange($index)"/>
-                                    <a class="pro-icon" href="#" ng-show="link.avatar !== ''"><img class="profile-icon" ng-src="{{link.avatar}}" /></a> 
-                                    <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePermanentLink($index)"></a> 
-                                </div>
-                                <a href="#" ng-click="addPermanentLink()" ng-if="!hidebutton">+ Artist</a>
+                                    <div class="input-box" ng-repeat="link in profile.data.permanentLinks">
+                                        <input class="form-control" placeholder="Artist Soundcloud Url" ng-model="link.url" ng-change="permanentLinkURLChange($index)"/>
+                                        <a class="pro-icon" href="#" ng-show="link.avatar !== ''"><img class="profile-icon" ng-src="{{link.avatar}}" /></a> 
+                                        <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePermanentLink($index)"></a> 
+                                     </div>
+                                        <a href="#" ng-click="addPermanentLink()" ng-if="!hidebutton">+ Artist</a>
 
                             </div>
                         </div>
@@ -90,7 +90,7 @@
                                 <h4 class="bold">Auto-fill Tracks</h4>
                                 <input class="form-control" placeholder="Soundcloud Track Url" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()"/><br/>
                                 <select class="form-control" ng-model="trackListObj" ng-options="item.title for item in trackList" ng-change="trackListChange()">
-                                    <option value="" ng-disabled="!!trackListObj" ng-show="trackList.length > 0">-My Songs-</option>
+                                <option value="" ng-disabled="!!trackListObj" ng-show="trackList.length > 0">-My Songs-</option>
                                 </select><br/>
                                 <span>{{newQueue.title}}</span><br>
                                 <div class="col-md-12 text-center">
@@ -99,7 +99,7 @@
                                 <div ng-repeat="song in autoFillTracks" style="padding:10px; color:#000; text-align: center;">
                                     <a href="{{song.permalink_url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{song.artwork_url}}">{{' ' + song.title}}</a>&nbsp;&nbsp;&nbsp;
                                     <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeQueueSong(user.queue.indexOf(song))"></a> 
-                                </div>
+                                </div>                             
                             </div>
                         </div>
                     </div>
@@ -135,10 +135,10 @@
                         <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    </div>
+  </div>
 </div>
 <!-- Content End  -->
 <ng-include src="'js/home/views/loader.html'"></ng-include>
@@ -147,20 +147,20 @@
     <div class="modal-header">
       <div class="form-group" ng-show="$parent.profile.field === 'name'">
         <input type="text"  class="form-control" ng-model="$parent.profile.data.name" placeholder="Name"  />
-    </div>
-    <div class="form-group" ng-show="$parent.profile.field === 'password'">
+      </div>
+      <div class="form-group" ng-show="$parent.profile.field === 'password'">
         <input type="text" class="form-control" ng-model="$parent.profile.data.password" placeholder="Password"  />
-    </div>
-    <div class="form-group" ng-show="$parent.profile.field === 'email'">
+      </div>
+      <div class="form-group" ng-show="$parent.profile.field === 'email'">
         <input type="text" class="form-control" ng-model="$parent.profile.data.email" placeholder="Email"  />
-    </div>
-    <div class="form-group" ng-show="$parent.message.visible">
+      </div>
+      <div class="form-group" ng-show="$parent.message.visible">
         {{$parent.message.value}}
+      </div>
     </div>
-</div>
-<div class="modal-body">
-  <button class="btn btn-success" type="submit">Save</button>
-  <button class="btn btn-warning" type="button" ng-click="$parent.closeEditProfileModal()">Close</button>
-</div>
-</form>
+    <div class="modal-body">
+      <button class="btn btn-success" type="submit">Save</button>
+      <button class="btn btn-warning" type="button" ng-click="$parent.closeEditProfileModal()">Close</button>
+    </div>
+  </form>
 </script>
