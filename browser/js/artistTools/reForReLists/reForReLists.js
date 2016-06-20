@@ -56,7 +56,6 @@ app.config(function($stateProvider) {
 });
 
 app.controller("ReForReListsController", function($scope, currentTrades, openTrades, $http, SessionService, $state, $timeout) {
-    var logintoken = SessionService.getLoginToken();
   if (!SessionService.getUser()) {
     $state.go('login');
   }
@@ -283,28 +282,11 @@ app.controller("ReForReListsController", function($scope, currentTrades, openTra
 	        callback: function() {
 	          	$scope.processing = true;
 	          	$http.post('/api/trades/delete', {
-	                id: tradeID,
-	                logintoken: logintoken
+	                id: tradeID
 	          	})
 	            .then(function(res) {
-	                if (res.data.status == 401) {
-	                    $scope.processing = false;
-	                    setTimeout(function() {
-	                        $.Zebra_Dialog('Your login token has been expired.Please login again!!', {
-	                            'type': 'confirmation',
-	                            'buttons': [{
-	                                caption: 'OK',
-	                                callback: function() {
-	                                    SessionService.deleteUser();
-	                                    $state.go('login');
-	                                }
-	                            }]
-	                        });
-	                    }, 1000);
-	                } else {
 	              	$scope.processing = false;
 	              	$scope.currentTrades.splice(index, 1);
-                    }
 	            })
 	            .then(null, function(err) {
 	              	$scope.processing = false;

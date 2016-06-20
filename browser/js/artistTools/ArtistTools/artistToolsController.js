@@ -49,7 +49,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       $window.localStorage.removeItem('returnstate');
     }
 
-    var logintoken = SessionService.getLoginToken();
     /* Init boolean variables for show/hide and other functionalities */
     $scope.processing = false;
     $scope.isTrackAvailable = false;
@@ -279,8 +278,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       var sendObj = {
         name: '',
         password: '',
-        permanentLinks: JSON.stringify(permanentLinks),
-        logintoken: logintoken
+        permanentLinks: JSON.stringify(permanentLinks)
       }
       if ($scope.profile.field === 'name') {
         sendObj.name = $scope.profile.data.name;
@@ -294,20 +292,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       ArtistToolsService
         .saveProfileInfo(sendObj)
         .then(function(res) {
-          if (res.data.status == 401) {
-            $scope.processing = false;
-            $scope.closeEditProfileModal();
-            $.Zebra_Dialog('Your login token has been expired.Please login again!', {
-              'type': 'confirmation',
-              'buttons': [{
-                caption: 'OK',
-                callback: function() {
-                  SessionService.deleteUser();
-                  $state.go('login');
-                }
-              }]
-            });
-          } else {
             $scope.processing = false;
             if (res.data === 'Email Error') {
               $scope.message = {
@@ -318,7 +302,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
             }
             SessionService.create(res.data);
             $scope.closeEditProfileModal();
-          }
         })
         .catch(function(res) {
           $scope.processing = false;
@@ -421,30 +404,15 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
         $scope.processing = true;
         ArtistToolsService
           .deleteDownloadGateway({
-            id: downloadGateWayID,
-            logintoken: logintoken
+            id: downloadGateWayID
           })
           .then(handleResponse)
           .catch(handleError);
 
         function handleResponse(res) {
-          if (res.data.status == 401) {
-            $scope.processing = false;
-            $.Zebra_Dialog('Your login token has been expired.Please login again!!', {
-              'type': 'confirmation',
-              'buttons': [{
-                caption: 'OK',
-                callback: function() {
-                  SessionService.deleteUser();
-                  $state.go('login');
-                }
-              }]
-            });
-          } else {
             $scope.processing = false;
             $scope.downloadGatewayList.splice(index, 1);
           }
-        }
 
         function handleError(res) {
           $scope.processing = false;
