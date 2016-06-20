@@ -208,7 +208,19 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
       }
     })
     .then(null, next);
-});router.put('/offline',function(req,res,next){
-  Trade.update({_id:req.body.tradeID,'p1.user':req.user._id},{'p1.online':false},function(e,r){});
-  Trade.update({_id:req.body.tradeID,'p2.user':req.user._id},{'p2.online':false},function(e,r){});
+});
+
+router.put('/offline', function(req, res, next) {
+  Trade.update({
+    _id: req.body.tradeID,
+    'p1.user': req.user._id
+  }, {
+    'p1.online': false
+  }, function(e, r) {});
+  Trade.update({
+    _id: req.body.tradeID,
+    'p2.user': req.user._id
+  }, {
+    'p2.online': false
+  }, function(e, r) {});
 });
