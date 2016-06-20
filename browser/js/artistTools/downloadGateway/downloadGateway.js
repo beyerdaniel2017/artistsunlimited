@@ -182,13 +182,9 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
           if ($scope.user.soundcloud.id == $scope.track.artistID) {
             $.Zebra_Dialog('Download gateway was saved and added to the track.');
           } else {
-            if ($scope.user.soundcloud.id == $scope.track.artistID) {
-              $.Zebra_Dialog('Download gateway was saved and added to the track.');
-            } else {
-              $.Zebra_Dialog('Download gateway saved.');
-            }
-            $state.go('artistToolsDownloadGatewayList');
+            $.Zebra_Dialog('Download gateway saved.');
           }
+          $state.go('artistToolsDownloadGatewayList');
         }
       })
       .then(null, function(err) {
