@@ -912,20 +912,20 @@ button:active:after {
   bottom: 0; }
 
 .btn-chat-send > img {
-  height: 70%;
-  margin: auto;
+  /* height: 70%; */
+  margin: 4px auto;
   vertical-align: center; }
 
 .time {
   margin-top: 4px; }
 
 .msg-line {
-  display: inline-block;
+  float: left;
   width: 100%;
   height: auto;
   background: transparent;
   padding: 0 8px;
-  margin: 4px 0; }
+  margin: 2px 0; }
 
 .msg-box {
   padding: 4px 12px;
@@ -1828,28 +1828,28 @@ input[type=range]:focus::-ms-fill-upper {
   width: 100%; }
 
 /*Genres css End*/
-.scroll-bar1 {
-  height: 100%;
-  margin-top: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding-left: 300px;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  padding-top: 300px;
-  width: 100%;
-  right: 0;
-  padding-right: 35px; }
-
-.scroll-bar2 {
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 380px;
-  background-color: #F9F9F9;
-  margin: 15px auto;
-  padding: 0 20px; }
-
+/*.scroll-bar1{ 
+	height: 100%;
+	margin-top: 0;
+    overflow-x: hidden;
+	overflow-y: auto;
+	padding-left: 300px;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	padding-top: 300px;
+	width: 100%;
+	right: 0;
+	padding-right: 35px;
+}
+.scroll-bar2{ 
+    overflow-y: auto;
+    overflow-x: hidden;
+	height:380px;
+	background-color: #F9F9F9;
+	margin: 15px auto;
+	padding:0 20px;
+}*/
 .slide-img-box {
   margin: 0px 0;
   display: inline-block;
@@ -2085,7 +2085,8 @@ input[type=range]:focus::-ms-fill-upper {
   border-color: #122b40; }
 
 .height-100pr {
-  height: 100%; }
+  /*height:100%;*/
+  min-height: 400px; }
 
 .ascending {
   background: transparent url(assets/images/sorting-up.png);
@@ -2141,7 +2142,7 @@ input[type=range]:focus::-ms-fill-upper {
   height: 100%; }
 
 /*#wrapper.toggled {
-	padding-left: 240px;
+    padding-left: 240px;
 }*/
 #sidebar-wrapper {
   position: fixed;
@@ -2215,23 +2216,28 @@ input[type=range]:focus::-ms-fill-upper {
   position: relative;
   background: #fff; }
 
-.right-side::before {
-  position: absolute;
-  content: '';
-  width: 98%;
-  height: 40px;
-  background: transparent url(assets/images/bg-line.png);
-  top: -40px;
-  left: 0;
-  background-repeat: repeat;
-  background-size: 12px;
-  z-index: 1; }
-
+/*.right-side::before {
+	position: absolute;
+	content: '';
+	width: 98%;
+	height: 40px;
+	background: transparent url(assets/images/bg-line.png);
+	top: -40px;
+	left: 0;
+	background-repeat: repeat;
+	background-size: 12px;
+	z-index: 1;
+}*/
 /*********** Media CSS **************/
+@media screen and (max-width: 1280px) {
+  .min-ht {
+    min-height: 800px; } }
+
 @media screen and (max-width: 1024px) {
-  .scroll-bar1 {
-    padding-right: 55px;
-    padding-top: 290px; }
+  /*.scroll-bar1 {
+		padding-right: 55px;
+		padding-top: 290px;
+	}*/
   .manage-btn {
     margin-top: 25px;
     margin-left: 15px; }
@@ -2242,7 +2248,9 @@ input[type=range]:focus::-ms-fill-upper {
     padding: 0 0 0 2%; }
   .ZebraDialog {
     width: 600px !important;
-    left: 32% !important; } }
+    left: 32% !important; }
+  .min-ht {
+    min-height: 1024px; } }
 
 @media screen and (max-width: 980px) {
   .manage-btn {
@@ -2252,6 +2260,10 @@ input[type=range]:focus::-ms-fill-upper {
     bottom: 48px;
     margin-left: 55px; } }
 
+@media screen and (max-width: 800px) {
+  .left-menus ul li a {
+    padding: 20px; } }
+
 @media screen and (max-width: 768px) {
   .manage-btn {
     margin-top: 60px;
@@ -2260,23 +2272,58 @@ input[type=range]:focus::-ms-fill-upper {
     bottom: 50px;
     margin-left: 50px; }
   .img-btn {
-    margin-left: 50px; }
-  .scroll-bar1 {
-    padding-top: 340px; }
+    margin-left: 66px; }
+  /*.scroll-bar1 {
+		padding-top: 340px;
+	}*/
   .nav-tabs .nav > li {
     width: 50%; }
   .ZebraDialog {
     left: 279px !important;
     top: 201px !important;
-    width: 450px !important; } }
+    width: 450px !important; }
+  .left-menus ul li a {
+    padding: 20px 10px; }
+  .rfr-chat {
+    margin-top: 70px; } }
+
+@media screen and (max-width: 667px) {
+  .img-btn {
+    margin-left: 264px; } }
+
+@media screen and (max-width: 640px) {
+  .page-header ul li {
+    float: left; }
+  .page-header ul li {
+    float: left;
+    padding: 0 9px; }
+  .inner-head {
+    float: right; }
+  .inner-head .navbar-nav {
+    margin: 0; }
+  .page-header ul li img {
+    width: 22px; }
+  .img-btn {
+    margin-left: 252px; } }
+
+@media screen and (max-width: 600px) {
+  /*.scroll-bar1 {
+		padding-top: 460px;
+		padding-left: 30px;
+	}*/ }
+
+@media screen and (max-width: 480px) {
+  .img-btn {
+    margin-left: 174px; } }
 
 @media screen and (max-width: 375px) {
-  .scroll-bar1 {
-    padding-top: 465px;
-    padding-right: 38px;
-    padding-left: 40px; }
+  /*.scroll-bar1 {
+		padding-top: 465px;
+		padding-right: 38px;
+		padding-left: 40px;
+	}*/
   .img-btn {
-    margin-left: 103px; }
+    margin-left: 121px; }
   .page-header ul li {
     float: left; }
   .page-header ul li {
@@ -2299,42 +2346,42 @@ input[type=range]:focus::-ms-fill-upper {
     margin: 10px auto; }
   .btn-enter {
     padding: 14px 20px;
-    margin: 0; } }
-
-@media screen and (max-width: 640px) {
-  .page-header ul li {
-    float: left; }
-  .page-header ul li {
-    float: left;
-    padding: 0 9px; }
-  .inner-head {
-    float: right; }
-  .inner-head .navbar-nav {
     margin: 0; }
-  .page-header ul li img {
-    width: 22px; } }
-
-@media screen and (max-width: 600px) {
-  .scroll-bar1 {
-    padding-top: 460px;
-    padding-left: 30px; } }
+  .left-menus ul li a {
+    padding: 15px 10px; }
+  .slot-date {
+    margin-bottom: 20px; }
+  .scheduler-small {
+    margin-top: 30px; }
+  .label-username {
+    height: initial; }
+  .rfr-chat {
+    margin-top: 160px; } }
 
 @media screen and (max-width: 360px) {
   .img-btn {
-    margin-left: 95px; }
+    margin-left: 114px; }
   .nav-tabs .nav > li {
     width: 100%; }
   .slot-box {
     width: 360px;
-    margin: 10px auto; } }
+    margin: 10px auto; }
+  .left-menus ul li a {
+    padding: 15px 10px; }
+  .slot-date {
+    margin-bottom: 30px; }
+  .scheduler-small {
+    margin-top: 30px; }
+  .label-username {
+    height: initial; } }
 
 @media screen and (max-width: 320px) {
   .img-btn {
-    margin-left: 77px; }
+    margin-left: 95px; }
   .page-header ul li {
     padding: 0 5px; }
   .left-menus ul li a {
-    padding: 15px 0px; }
+    padding: 15px 10px; }
   .ZebraDialog {
     left: 2% !important;
     top: 18% !important;
@@ -2343,7 +2390,14 @@ input[type=range]:focus::-ms-fill-upper {
     width: 320px;
     margin: 10px auto; }
   .cl-sound-btn {
-    padding: 13px 4px; } }
+    padding: 13px 4px; }
+  .slot-date {
+    margin-bottom: 40px; }
+  .scheduler-small {
+    margin-top: 20px;
+    margin-bottom: 30px; }
+  .label-username {
+    height: initial; } }
 
 .padding-10 {
   padding: 10px; }
@@ -2353,3 +2407,18 @@ input[type=range]:focus::-ms-fill-upper {
 
 .cl-sound-btn {
   margin-top: 50px; }
+
+.chat-input {
+  height: 40px; }
+
+.scroll-hide {
+  overflow: hidden; }
+
+.main-scroll-body {
+  overflow-y: scroll;
+  height: 100%;
+  top: 0;
+  position: fixed;
+  padding-top: 90px;
+  width: 100%;
+  overflow-x: hidden; }
