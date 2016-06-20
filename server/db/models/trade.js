@@ -17,6 +17,10 @@ var schema = new mongoose.Schema({
     accepted: {
       type: Boolean,
       default: false
+    },
+    online:{
+      type: Boolean,
+      default: false
     }
   },
   p2: {
@@ -27,6 +31,10 @@ var schema = new mongoose.Schema({
     alert: String,
     slots: [],
     accepted: {
+      type: Boolean,
+      default: false
+    },
+    online:{
       type: Boolean,
       default: false
     }

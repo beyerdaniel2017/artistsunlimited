@@ -1,5 +1,5 @@
 'use strict';
-window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'satellizer', 'angularMoment', 'luegg.directives', 'ui-rangeSlider', 'ngSanitize']);
+window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'satellizer','angularMoment','luegg.directives','ui-rangeSlider', 'ngSanitize']);
 
 app.config(function($urlRouterProvider, $locationProvider, $uiViewScrollProvider, $httpProvider) {
     // This turns off hashbang urls (/#about) and changes it to something normal (/about)
@@ -25,6 +25,13 @@ app.run(function($rootScope, AuthService, $state, $uiViewScroll, SessionService,
     // $stateChangeStart is an event fired
     // whenever the process of changing a state begins.
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams) {
+        if(toState.name =='reForReInteraction') {
+           $rootScope.state=false;
+        }
+        else
+        {
+            $rootScope.state=true;
+        }
         // if(toState = 'artistTools') {
         //     var user = SessionService.getUser();
         //     console.log(user);
@@ -69,10 +76,10 @@ app.directive('fbLike', [
             scope: {
                 fbLike: '=?'
             },
-            link: function(scope, element, attrs) {
+            link: function (scope, element, attrs) {
                 if (!$window.FB) {
                     // Load Facebook SDK if not already loaded
-                    $.getScript('//connect.facebook.net/en_US/sdk.js', function() {
+                    $.getScript('//connect.facebook.net/en_US/sdk.js', function () {
                         $window.FB.init({
                             appId: $rootScope.facebookAppId,
                             xfbml: true,
@@ -90,7 +97,7 @@ app.directive('fbLike', [
                     if (!!attrs.fbLike && !scope.fbLike && !watchAdded) {
                         // wait for data if it hasn't loaded yet
                         watchAdded = true;
-                        var unbindWatch = scope.$watch('fbLike', function(newValue, oldValue) {
+                        var unbindWatch = scope.$watch('fbLike', function (newValue, oldValue) {
                             if (newValue) {
                                 renderLikeButton();
 
@@ -110,32 +117,38 @@ app.directive('fbLike', [
     }
 ])
 
-app.controller('FullstackGeneratedController', function($scope, $http, mainService, SessionService) {
+app.controller('FullstackGeneratedController', function($scope,$state, $http, mainService, SessionService) {
+    /*Load More*/
+    $scope.loadList = function(){
+        $scope.$broadcast('loadTrades');
+    }
+
     $scope.shownotification = false;
+
 
     $scope.logout = function() {
         mainService.logout();
     }
 
-    $scope.checkNotification = function() {
+    $scope.checkNotification = function(){
         var user = SessionService.getUser();
         if (user) {
             return $http.get('/api/trades/withUser/' + user._id)
-                .then(function(res) {
-                    var trades = res.data;
-                    trades.forEach(function(trade) {
-                        if (trade.p1.user._id == user._id) {
-                            if (trade.p1.alert == "change") {
-                                $scope.shownotification = true;
-                            }
+            .then(function(res) {
+                var trades = res.data;
+                trades.forEach(function(trade) {
+                    if(trade.p1.user._id == user._id){
+                        if(trade.p1.alert == "change" && !trade.p1.online){
+                            $scope.shownotification = true;
                         }
-                        if (trade.p2.user._id == user._id) {
-                            if (trade.p2.alert == "change") {
-                                $scope.shownotification = true;
-                            }
+                    }
+                    if(trade.p2.user._id == user._id){
+                        if(trade.p2.alert == "change" && !trade.p1.online){
+                            $scope.shownotification = true;
                         }
-                    });
-                })
+                    }
+                });
+            })
         }
     }
     $scope.checkNotification();
@@ -179,7 +192,7 @@ app.directive('fileread', [function() {
     }
 }]);
 
-app.service('mainService', function($http, SessionService) {
+app.service('mainService', function($http,SessionService) {
     // this.openHelpModal = function() {
     //     var displayText = "Hey! Thanks for using artist tools! Please submit any questions you have by clicking 'Support' <br><br><a href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Support</a>";
     //     $.Zebra_Dialog(displayText, {
@@ -193,3 +206,16 @@ app.service('mainService', function($http, SessionService) {
         });
     }
 });
+
+/*Load more*/
+app.directive('whenScrolled', function() {
+  return function(scope, elm, attr) {
+    var raw = elm[0];
+    elm.bind('scroll', function() {
+      if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+        scope.$apply(attr.whenScrolled);
+      }
+    });
+  };
+});
+

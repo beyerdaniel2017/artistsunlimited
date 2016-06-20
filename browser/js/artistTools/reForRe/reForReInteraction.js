@@ -1,40 +1,40 @@
 app.config(function($stateProvider) {
-  $stateProvider
-    .state('reForReInteraction', {
-      url: '/artistTools/reForReInteraction/:tradeID',
-      templateUrl: 'js/artistTools/reForRe/reForReInteraction.html',
-      controller: 'ReForReInteractionController',
-      resolve: {
-        trade: function($http, $stateParams, $window, SessionService) {
-          if (!SessionService.getUser()) {
-            $window.localStorage.setItem('returnstate', 'reForReInteraction');
-            $window.localStorage.setItem('tid', $stateParams.tradeID);
-            $window.location.href = '/login';
-          }
-          return $http.get('/api/trades/byID/' + $stateParams.tradeID)
-            .then(function(res) {
-              return res.data;
-            })
-        },
-        p1Events: function($http, trade) {
-          return $http.get('/api/events/forUser/' + trade.p1.user.soundcloud.id)
-            .then(function(res) {
-              return res.data;
-            })
-            .then(null, function(err) {
-              $.Zebra_Dialog("error getting your events");
-              return;
-            })
-        },
-        p2Events: function($http, trade) {
-          return $http.get('/api/events/forUser/' + trade.p2.user.soundcloud.id)
-            .then(function(res) {
-              return res.data;
-            })
-            .then(null, function(err) {
-              $.Zebra_Dialog("error getting other's events events");
-              return;
-            })
+	$stateProvider
+	.state('reForReInteraction', {
+    url: '/artistTools/reForReInteraction/:tradeID',
+		templateUrl: 'js/artistTools/reForRe/reForReInteraction.html',
+		controller: 'ReForReInteractionController',
+    resolve: {
+      trade: function($http, $stateParams, $window, SessionService) {        
+        if (!SessionService.getUser()) {
+          $window.localStorage.setItem('returnstate','reForReInteraction');
+          $window.localStorage.setItem('tid',$stateParams.tradeID);
+          $window.location.href = '/login';
+        }
+        return $http.get('/api/trades/byID/' + $stateParams.tradeID)
+        .then(function(res) {
+          return res.data;
+        })
+      },
+      p1Events: function($http, trade) {
+        return $http.get('/api/events/forUser/' + trade.p1.user.soundcloud.id)
+        .then(function(res) {
+          return res.data;
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("error getting your events");
+          return;
+        })
+      },
+      p2Events: function($http, trade) {
+        return $http.get('/api/events/forUser/' + trade.p2.user.soundcloud.id)
+        .then(function(res) {
+          return res.data;
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("error getting other's events events");
+          return;
+        })
         },
         currentTrades: function($http, SessionService) {
           var user = SessionService.getUser();
@@ -56,12 +56,13 @@ app.config(function($stateProvider) {
               })
               return trades;
             })
-        }
-      },
-      onExit: function(socket) {
-        socket.disconnect();
       }
-    })
+    },
+    onExit: function($http,$stateParams,SessionService,socket) {
+      $http.put('/api/trades/offline',{tradeID:$stateParams.tradeID});
+      socket.disconnect();
+    }
+  })
 });
 
 app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, SessionService, socket, $stateParams, trade, p1Events, p2Events, currentTrades) {
@@ -74,7 +75,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
   $scope.processing = false;
   socket.connect();
-  $scope.msgHistory = [];
+  $scope.msgHistory=[];
   $scope.makeEventURL = "";
   $scope.showOverlay = false;
   $scope.processiong = false;
@@ -103,21 +104,21 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     if (profile.soundcloud) {
       $scope.processing = true;
       SC.get('/users/' + profile.soundcloud.id + '/tracks', {
-          filter: 'public'
-        })
-        .then(function(tracks) {
-          $scope.trackList = tracks;
-          $scope.processing = false;
-          $scope.$apply();
-        })
-        .catch(function(response) {
-          $scope.processing = false;
-          $scope.$apply();
-        });
+        filter: 'public'
+      })
+      .then(function(tracks) {
+        $scope.trackList = tracks;
+        $scope.processing = false;
+        $scope.$apply();
+      })
+      .catch(function(response) {
+        $scope.processing = false;
+        $scope.$apply();
+      });
     }
   }
 
-  $scope.getSchedulerID = function(uid) {
+  $scope.getSchedulerID = function(uid){
     return ((uid == $scope.user._id) ? "scheduler-left" : "scheduler-right");
   }
 
@@ -125,33 +126,33 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.curTrade = JSON.stringify($.grep($scope.currentTrades, function(e) {
     return e._id == $scope.trade._id;
   }));
-
+  
   $scope.refreshCalendar = function() {
     $scope.user = SessionService.getUser();
     $http.get('/api/trades/getTradeData/' + $stateParams.tradeID)
-      .then(function(res) {
-        $scope.trade = res.data.trade;
-        $scope.p2Events = res.data.p2Events;
-        $scope.p1Events = res.data.p1Events;
-        var trds = res.data.userTrades;
-        trds.forEach(function(trade) {
-          trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
-          trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
-
-        });
-        $scope.currentTrades = trds;
-        $scope.user.accepted = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1.accepted : $scope.trade.p2.accepted;
+    .then(function(res) {
+      $scope.trade = res.data.trade;
+      $scope.p2Events = res.data.p2Events;
+      $scope.p1Events = res.data.p1Events;
+      var trds = res.data.userTrades;
+      trds.forEach(function(trade) {
+        trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
+        trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
+       
+      });
+      $scope.currentTrades = trds;
+      $scope.user.accepted = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1.accepted : $scope.trade.p2.accepted;
         $scope.tradeIndex = currentTrades.findIndex(function(el) {
           return el._id == $scope.trade._id;
         });
-        $scope.fillCalendar();
-        $scope.updateAlerts();
-        $scope.processing = false;
-      })
-      .then(null, function(err) {
-        $scope.processing = false;
-        $.Zebra_Dialog('Error getting data.');
-      })
+      $scope.fillCalendar();
+      $scope.updateAlerts();
+      $scope.processing = false;
+    })
+    .then(null, function(err) {
+      $scope.processing = false;
+      $.Zebra_Dialog('Error getting data.');
+    })
   }
 
   $scope.incrp1 = function(inc) {
@@ -254,15 +255,15 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
           else $http.post('/api/events/repostEvents', $scope.makeEvent).then(resolve, reject);
         })
         req
-          .then(function(res) {
-            //$scope.processing = false;
-            $scope.showOverlay = false;
-            $scope.refreshCalendar();
-          })
-          .then(null, function(err) {
-            $scope.processing = false;
-            $.Zebra_Dialog('Error saving.');
-          })
+      .then(function(res) {
+          //$scope.processing = false;
+          $scope.showOverlay = false;
+          $scope.refreshCalendar();
+        })
+        .then(null, function(err) {
+          $scope.processing = false;
+          $.Zebra_Dialog('Error saving.');
+        })
       } else if ($scope.makeEvent.type == 'trade') {
         $scope.makeEvent.person.slots = $scope.makeEvent.person.slots.filter(function(slot, index) {
           return !(moment(slot.day).format('LLL') === moment($scope.makeEvent.day).format('LLL'));
@@ -272,16 +273,16 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         $scope.makeEvent.person = undefined;
         $scope.trade.p1.accepted = $scope.trade.p2.accepted = false;
         $http.put('/api/trades', $scope.trade)
-          .then(function(res) {
+        .then(function(res) {
             //$scope.processing = false;
             $scope.showOverlay = false;
             $scope.trade = res.data;
             $scope.emitMessage(alertMessage, 'alert');
-          })
-          .then(null, function(err) {
-            $scope.processing = false;
-            $.Zebra_Dialog('Error with request');
-          })
+      })
+      .then(null, function(err) {
+          $scope.processing = false;
+          $.Zebra_Dialog('Error with request');
+      })
       }
     } else {
       $.Zebra_Dialog('Issue! This repost will cause the to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
@@ -308,12 +309,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     }
     $scope.makeEvent.person = person;
     $scope.makeEvent.URL = $scope.makeEvent.trackURL;
-    SC.oEmbed($scope.makeEvent.trackURL, {
-      element: document.getElementById('scPlayer'),
-      auto_play: false,
-      maxheight: 150
-    });
-  }
+      SC.oEmbed($scope.makeEvent.trackURL, {
+        element: document.getElementById('scPlayer'),
+        auto_play: false,
+        maxheight: 150
+      });
+    }
 
   $scope.changeUnrepost = function() {
     if ($scope.makeEvent.unrepost) {
@@ -376,61 +377,61 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.accept = function() {
-      if ($scope.trade.p1.user._id == $scope.user._id) {
-        var accString = $scope.trade.p2.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
-      } else {
-        var accString = $scope.trade.p1.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
-      }
-      $.Zebra_Dialog(accString, {
-        'type': 'confirmation',
-        'buttons': [{
-          caption: 'Accept',
-          callback: function() {
-            if ($scope.user.queue && $scope.user.queue.length == 0) {
-              $('#autoFillTrack').modal('show');
-              /*setTimeout(function() {
-                $.Zebra_Dialog("You should fill in your auto-fill tracks so that if the trade is accepted and you don’t choose which songs you want to be reposted, the tracks in your auto-fill tracks list will be used instead.", {
-                  'buttons': [{
-                    caption: 'OK',
-                    callback: function() {
-                      $state.go('artistToolsScheduler');
-                    }
-                  }],
-                  'onClose': function() {
+    if ($scope.trade.p1.user._id == $scope.user._id) {
+      var accString = $scope.trade.p2.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
+    } else {
+      var accString = $scope.trade.p1.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
+    }
+    $.Zebra_Dialog(accString, {
+      'type': 'confirmation',
+      'buttons': [{
+        caption: 'Accept',
+        callback: function() {
+          if ($scope.user.queue && $scope.user.queue.length == 0) {
+            $('#autoFillTrack').modal('show');
+            /*setTimeout(function() {
+              $.Zebra_Dialog("You should fill in your auto-fill tracks so that if the trade is accepted and you don’t choose which songs you want to be reposted, the tracks in your auto-fill tracks list will be used instead.", {
+                'buttons': [{
+                  caption: 'OK',
+                  callback: function() {
                     $state.go('artistToolsScheduler');
                   }
-                });
-              }, 600);*/
+                }],
+                'onClose': function() {
+                  $state.go('artistToolsScheduler');
+                }
+              });
+            }, 600);*/                        
+          } else {
+            $scope.user.accepted = true;
+            if ($scope.trade.p1.user._id == $scope.user._id) {
+              $scope.trade.p1.accepted = true;
             } else {
-              $scope.user.accepted = true;
-              if ($scope.trade.p1.user._id == $scope.user._id) {
-                $scope.trade.p1.accepted = true;
-              } else {
-                $scope.trade.p2.accepted = true;
-              }
-              $scope.processing = true;
-              $http.put('/api/trades', $scope.trade)
-                .then(function(res) {
-                  $scope.processing = false;
-                  $scope.trade = res.data;
-                  if ($scope.trade.p1.accepted && $scope.trade.p2.accepted) $scope.completeTrade();
-                  else $scope.emitMessage('---- ' + $scope.user.soundcloud.username + " accepted the trade ----", 'alert');
-                })
-                .then(null, function(err) {
-                  $scope.processing = false;
-                  $.Zebra_Dialog('Error accepting');
-                })
+              $scope.trade.p2.accepted = true;
             }
+            $scope.processing = true;
+            $http.put('/api/trades', $scope.trade)
+            .then(function(res) {
+              $scope.processing = false;
+              $scope.trade = res.data;
+              if ($scope.trade.p1.accepted && $scope.trade.p2.accepted) $scope.completeTrade();
+              else $scope.emitMessage('---- ' + $scope.user.soundcloud.username + " accepted the trade ----", 'alert');
+            })
+            .then(null, function(err) {
+              $scope.processing = false;
+              $.Zebra_Dialog('Error accepting');
+            })
           }
-        }, {
-          caption: 'Cancel',
-          callback: function() {
-            console.log('No was clicked');
-          }
-        }]
-      });
-    }
-    //overlay autofill track start//
+        }
+      }, {
+        caption: 'Cancel',
+        callback: function() {
+          console.log('No was clicked');
+        }
+      }]
+    });
+  }
+  //overlay autofill track start//
 
   $scope.autoFillTracks = [];
   $scope.trackList = [];
@@ -439,7 +440,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.newQueueSong = "";
 
   $scope.trackChange = function(index) {
-    $scope.makeEventURL = $scope.trackListSlotObj.permalink_url;
+    $scope.makeEventURL=$scope.trackListSlotObj.permalink_url;
     $scope.changeURL();
   };
 
@@ -450,7 +451,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   };
 
   $scope.addSong = function() {
-
+    
     if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
     $scope.user.queue.push($scope.newQueueID);
     $scope.saveUser();
@@ -462,65 +463,65 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
 
   $scope.changeQueueSong = function() {
     $http.post('/api/soundcloud/resolve', {
-        url: $scope.newQueueSong
-      })
-      .then(function(res) {
-        $scope.processing = false;
-        var track = res.data;
-        $scope.newQueue = track;
-        $scope.newQueueID = track.id;
-      })
-      .then(null, function(err) {
-        $.Zebra_Dialog("Song not found.");
-        $scope.processing = false;
-      });
+      url: $scope.newQueueSong
+    })
+    .then(function(res) {
+      $scope.processing = false;
+      var track = res.data;
+      $scope.newQueue = track;
+      $scope.newQueueID = track.id;
+    })
+    .then(null, function(err) {
+      $.Zebra_Dialog("Song not found.");
+      $scope.processing = false;
+    });
   }
 
   $scope.saveUser = function() {
     $scope.processing = true;
     $http.put("/api/database/profile", $scope.user)
-      .then(function(res) {
-        SessionService.create(res.data);
-        $scope.user = SessionService.getUser();
-        $scope.processing = false;
-      })
-      .then(null, function(err) {
-        $.Zebra_Dialog("Error: did not save");
-        $scope.processing = false;
-      });
-    $('#autoFillTrack').modal('hide');
+    .then(function(res) {
+      SessionService.create(res.data);
+      $scope.user = SessionService.getUser();
+      $scope.processing = false;
+    })
+    .then(null, function(err) {
+      $.Zebra_Dialog("Error: did not save");
+      $scope.processing = false;
+    });
+     $('#autoFillTrack').modal('hide');
   }
-  $scope.getTrackListFromSoundcloud = function() {
-      var profile = $scope.user;
-      if (profile.soundcloud) {
-        $scope.processing = true;
-        SC.get('/users/' + profile.soundcloud.id + '/tracks', {
-            filter: 'public'
-          })
-          .then(function(tracks) {
-            $scope.trackList = tracks;
-            $scope.processing = false;
-            $scope.$apply();
-          })
-          .catch(function(response) {
-            $scope.processing = false;
-            $scope.$apply();
-          });
-      }
+$scope.getTrackListFromSoundcloud = function() {
+    var profile = $scope.user;
+    if (profile.soundcloud) {
+      $scope.processing = true;
+      SC.get('/users/' + profile.soundcloud.id + '/tracks', {
+        filter: 'public'
+      })
+      .then(function(tracks) {
+        $scope.trackList = tracks;
+        $scope.processing = false;
+        $scope.$apply();
+      })
+      .catch(function(response) {
+        $scope.processing = false;
+        $scope.$apply();
+      });
     }
-    //overlay autofill track end//
+  }
+  //overlay autofill track end//
   $scope.dayOfWeekAsString = function(date) {
     var dayIndex = date.getDay();
     return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
   }
 
-  socket.on('init', function(data) {
+  socket.on('init', function (data) {
     $scope.name = data.name;
     $scope.users = data.users;
   });
 
-  socket.on('send:message', function(message) {
-    if (message.tradeID == $stateParams.tradeID) {
+  socket.on('send:message', function (message) {
+    if(message.tradeID == $stateParams.tradeID){
       $scope.msgHistory.push(message);
       $scope.message = message.message;
       $scope.trade.messages.push(message);
@@ -530,31 +531,34 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     }
   });
 
-  socket.on('get:message', function(data) {
+  socket.on('get:message', function (data) {
     if (data != '') {
       if (data._id == $stateParams.tradeID) {
         $scope.msgHistory = data ? data.messages : [];
       }
     }
   });
-
+  
   $scope.emitMessage = function(message, type) {
-    if ($scope.trade.p1.user._id == $scope.user._id) {
+    console.log('before p2',$scope.trade.p2);
+    if($scope.trade.p1.user._id == $scope.user._id && $scope.trade.p2.online == false){
       $scope.trade.p2.alert = "change";
-    } else {
+    } 
+    else if($scope.trade.p2.user._id == $scope.user._id && $scope.trade.p1.online == false){
       $scope.trade.p1.alert = "change";
-    }
+    }  
+    console.log('after p2',$scope.trade.p2);
     socket.emit('send:message', {
       message: message,
       type: type,
-      id: $scope.user._id,
+      id:$scope.user._id,
       tradeID: $stateParams.tradeID,
       trade: $scope.trade
     });
     $scope.message = '';
   }
 
-  $scope.getMessage = function() {
+  $scope.getMessage = function () {
     socket.emit('get:message', $stateParams.tradeID);
   }
 
@@ -589,10 +593,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
 
   $scope.fillCalendar = function() {
     function setEventDays(arr) {
-      arr.forEach(function(ev) {
-        ev.day = new Date(ev.day);
-      })
-    }
+    arr.forEach(function(ev) {
+      ev.day = new Date(ev.day);
+    })
+  }
     setEventDays($scope.p1Events);
     setEventDays($scope.p2Events);
     setEventDays($scope.trade.p1.slots);
@@ -612,14 +616,14 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
           change = true;
         }
       });
-      $scope.p1Events.forEach(function(event) {
+    $scope.p1Events.forEach(function(event) {
         $scope.trade.p1.slots.forEach(function(slot) {
           if (slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours()) {
             slot.day.setHours(slot.day.getHours() + Math.floor(Math.random() * 10) + 1);
             change = true;
           }
-        })
       })
+    })
       op1String = JSON.stringify($scope.trade.p1.slots);
     } while (op1String != lastString);
 
@@ -632,17 +636,15 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
           change = true;
         }
       });
-      $scope.p2Events.forEach(function(event) {
+    $scope.p2Events.forEach(function(event) {
         $scope.trade.p2.slots.forEach(function(slot) {
           if (slot.day.toLocaleDateString() == event.day.toLocaleDateString() && slot.day.getHours() == event.day.getHours()) {
             slot.day.setHours(slot.day.getHours() + Math.floor(Math.random() * 10) + 1);
             change = true;
           }
-        })
       })
+    })
       op2String = JSON.stringify($scope.trade.p2.slots);
-      console.log(op1String);
-      console.log(lastString);
     } while (op2String != lastString);
 
     if (change) {
@@ -666,14 +668,16 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.fillCalendar();
 
   $scope.updateAlerts = function() {
-    if ($scope.trade.p1.user._id == $scope.user._id) {
+    if($scope.trade.p1.user._id == $scope.user._id){
       $scope.trade.p1.alert = "none";
-    }
+      $scope.trade.p1.online = true;
+    } 
 
     if ($scope.trade.p2.user._id == $scope.user._id) {
       $scope.trade.p2.alert = "none";
-    }
-    $scope.$parent.shownotification = false;
+      $scope.trade.p2.online = true;
+    }  
+    $scope.$parent.shownotification = false;          
     $http.put('/api/trades', $scope.trade);
   }
 
@@ -770,21 +774,21 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
               if (myArray) {
                 $scope.user.email = answer;
                 return $http.put('/api/database/profile', $scope.user)
-                  .then(function(res) {
-                    SessionService.create(res.data);
-                    $scope.user = SessionService.getUser();
-                    $scope.hideall = false;
-                  })
-                  .then(null, function(err) {
-                    $.Zebra_Dialog("Error saving.");
-                    setTimeout(function() {
-                      promptForEmail();
-                    }, 600);
-                  })
+                .then(function(res) {
+                  SessionService.create(res.data);
+                  $scope.user = SessionService.getUser();
+                  $scope.hideall = false;
+                })
+                .then(null, function(err) {
+                  $.Zebra_Dialog("Error saving.");
+                  setTimeout(function() {
+                    promptForEmail();
+                  },600);
+                })
               } else {
                 setTimeout(function() {
                   promptForEmail();
-                }, 600);
+                },600);
               }
             }
           }
@@ -793,24 +797,24 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     }
   }
   $scope.openHelpModal = function() {
-    var displayText = "This interface shows your scheduler and the scheduler for the user you are trading with, labeled on the top of each respective schedule. Your calendar will always be on the left.<br/><br/>Grey slots represents slots that are already taken.<br/>Blue slots represent slots that are being bargained in the trade.<br/>An Arrow within a slot means it will be unreposted after 24 hours.<br/>The chat window on the bottom allows you to chat with your Repost Partner about your trade.<br/>Email will automatically open a new email on your mailing app, allowing you to message your repost partner via email for your trade.<br/><br/>How to use AU's Repost for Repost System:<br/>1. Start by deciding how you would like to trade with your partner.<br/>2. Mark slots on your calendar and mark slots on your partners calendar.<br/>3. Click accept<br/><br/>When your partner returns to AU, he will be able to accept your trade. If accepted, you will be able to schedule reposts on the slots designated on your partner’s calendar; your partner will be able to schedule reposts on the slots designated on your calendar. If you are away from keyboard at the time of your trade, tracks that are in your 'auto-fill' queue (hyperlink to autofill queu) in the scheduler will automatically be scheduled for repost.<br/><br/>Tips:<br/>1. Make sure you are fair with your trades. If you have half as many followers as your partner, offer 2 reposts on your calendar in exchange for 1 repost on theirs.<br />2. Make sure you check your trades on a regular basis. People are much more likely to constantly trade reposts with you if you are reliable.<br />3. Try communicating with the user on Facebook, Email, SoundCloud messenger or any messaging app to make sure they take action on trades when it is their turn. A friendly 'Hey, let me know when you accept the trade on AU! Thanks again for trading with me :)' is enough to ensure a good flow of communication for your trades!";
+    var displayText = "This interface shows your scheduler and the scheduler for the user you are trading with, labeled on the top of each respective schedule. Your calendar will always be on the left.<br/><br/><img src='assets/images/grey-slot.png'/> Grey slots represents slots that are already taken.<br/><img src='assets/images/blue-slot.png'/>  Blue slots represent slots that are being bargained in the trade.<br/><img src='assets/images/arrow-slot.png'/>  An Arrow within a slot means it will be unreposted after 24 hours.<br/>The chat window on the bottom allows you to chat with your Repost Partner about your trade.<br/>Email will automatically open a new email on your mailing app, allowing you to message your repost partner via email for your trade.<br/><br/>How to use AU's Repost for Repost System:<br/>1. Start by deciding how you would like to trade with your partner.<br/>2. Mark slots on your calendar and mark slots on your partners calendar.<br/>3. Click accept<br/><br/>When your partner returns to AU, he will be able to accept your trade. If accepted, you will be able to schedule reposts on the slots designated on your partner’s calendar; your partner will be able to schedule reposts on the slots designated on your calendar. If you are away from keyboard at the time of your trade, tracks that are in your 'auto-fill' queue (hyperlink to autofill queu) in the scheduler will automatically be scheduled for repost.<br/><br/>Tips:<br/>1. Make sure you are fair with your trades. If you have half as many followers as your partner, offer 2 reposts on your calendar in exchange for 1 repost on theirs.<br />2. Make sure you check your trades on a regular basis. People are much more likely to constantly trade reposts with you if you are reliable.<br />3. Try communicating with the user on Facebook, Email, SoundCloud messenger or any messaging app to make sure they take action on trades when it is their turn. A friendly 'Hey, let me know when you accept the trade on AU! Thanks again for trading with me :)' is enough to ensure a good flow of communication for your trades!";
     $.Zebra_Dialog(displayText, {
-      width: 800
+      width: 1000
     });
   }
-
-  $scope.verifyBrowser = function() {
-    if (navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1) {
+  
+  $scope.verifyBrowser = function(){
+    if(navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1){
       var position = navigator.userAgent.search("Version") + 8;
       var end = navigator.userAgent.search(" Safari");
-      var version = navigator.userAgent.substring(position, end);
-      if (parseInt(version) < 9) {
+      var version = navigator.userAgent.substring(position,end);
+      if(parseInt(version) < 9){
         $.Zebra_Dialog('You have old version of safari. Click <a href="https://support.apple.com/downloads/safari">here</a> to download the latest version of safari for better site experience.', {
           'type': 'confirmation',
           'buttons': [{
             caption: 'OK'
           }],
-          'onClose': function() {
+          'onClose': function(){
             $window.location.href = "https://support.apple.com/downloads/safari";
           }
         });
@@ -821,6 +825,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       promptForEmail();
     }
   }
+
   $scope.updateAlerts();
   $scope.verifyBrowser();
 });
