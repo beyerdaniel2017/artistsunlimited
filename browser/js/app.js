@@ -1,7 +1,7 @@
 'use strict';
-window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'satellizer','angularMoment','luegg.directives','ui-rangeSlider', 'ngSanitize']);
+window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'satellizer', 'angularMoment', 'luegg.directives', 'ui-rangeSlider', 'ngSanitize']);
 
-app.config(function($urlRouterProvider, $locationProvider, $uiViewScrollProvider) {
+app.config(function($urlRouterProvider, $locationProvider, $uiViewScrollProvider, $httpProvider) {
     // This turns off hashbang urls (/#about) and changes it to something normal (/about)
     $locationProvider.html5Mode(true);
     // If we go to a URL that ui-router doesn't have registered, go to the "/" url.
@@ -62,16 +62,17 @@ app.run(function($rootScope, AuthService, $state, $uiViewScroll, SessionService,
 
 });
 app.directive('fbLike', [
-    '$window', '$rootScope', function ($window, $rootScope) {
+    '$window', '$rootScope',
+    function($window, $rootScope) {
         return {
             restrict: 'A',
             scope: {
                 fbLike: '=?'
             },
-            link: function (scope, element, attrs) {
+            link: function(scope, element, attrs) {
                 if (!$window.FB) {
                     // Load Facebook SDK if not already loaded
-                    $.getScript('//connect.facebook.net/en_US/sdk.js', function () {
+                    $.getScript('//connect.facebook.net/en_US/sdk.js', function() {
                         $window.FB.init({
                             appId: $rootScope.facebookAppId,
                             xfbml: true,
@@ -84,11 +85,12 @@ app.directive('fbLike', [
                 }
 
                 var watchAdded = false;
+
                 function renderLikeButton() {
                     if (!!attrs.fbLike && !scope.fbLike && !watchAdded) {
                         // wait for data if it hasn't loaded yet
                         watchAdded = true;
-                        var unbindWatch = scope.$watch('fbLike', function (newValue, oldValue) {
+                        var unbindWatch = scope.$watch('fbLike', function(newValue, oldValue) {
                             if (newValue) {
                                 renderLikeButton();
 

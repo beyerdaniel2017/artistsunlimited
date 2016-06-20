@@ -651,7 +651,6 @@ router.put('/profile', function(req, res, next) {
 });
 
 router.post('/profile/edit', function(req, res, next) {
-
   var body = req.body;
   var updateObj = {};
   if (body.name !== '') {
@@ -688,8 +687,6 @@ router.post('/profile/edit', function(req, res, next) {
 });
 
 router.post('/profile/soundcloud', function(req, res, next) {
-
-  var body = req.body;
 
   if (req.user) {
     getUserSCInfo()

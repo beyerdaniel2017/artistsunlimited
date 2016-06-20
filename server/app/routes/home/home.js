@@ -53,6 +53,11 @@ router.post('/application', function(req, res, next) {
     });
 });
 
+router.post('/ay', function(req, res, next) {
+  console.log('ay');
+  res.send('ay');
+})
+
 router.post('/artistemail', function(req, res, next) {
 
   var email = req.body.email;

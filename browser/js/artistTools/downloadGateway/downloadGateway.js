@@ -3,17 +3,17 @@ app.config(function($stateProvider) {
     .state('artistToolsDownloadGatewayEdit', {
       url: '/artistTools/downloadGateway/edit/:gatewayID',
       templateUrl: 'js/artistTools/downloadGateway/downloadGateway.html',
-    controller: 'ArtistToolsDownloadGatewayController',
-    resolve: {
-      isLoggedIn : function($stateParams, $window, SessionService) {
-        if (!SessionService.getUser()) {
-          $window.localStorage.setItem('returnstate','artistToolsDownloadGatewayEdit');
-          $window.localStorage.setItem('tid',$stateParams.gatewayID);
-          $window.location.href = '/login';
+      controller: 'ArtistToolsDownloadGatewayController',
+      resolve: {
+        isLoggedIn: function($stateParams, $window, SessionService) {
+          if (!SessionService.getUser()) {
+            $window.localStorage.setItem('returnstate', 'artistToolsDownloadGatewayEdit');
+            $window.localStorage.setItem('tid', $stateParams.gatewayID);
+            $window.location.href = '/login';
+          }
+          return true;
         }
-        return true;
       }
-    }
     })
     .state('artistToolsDownloadGatewayNew', {
       url: '/artistTools/downloadGateway/new',
@@ -21,16 +21,16 @@ app.config(function($stateProvider) {
         submission: null
       },
       templateUrl: 'js/artistTools/downloadGateway/downloadGateway.html',
-    controller: 'ArtistToolsDownloadGatewayController',
-    resolve: {
-      isLoggedIn : function($stateParams, $window, SessionService) {
-        if (!SessionService.getUser()) {
-          $window.localStorage.setItem('returnstate','artistToolsDownloadGatewayNew');
-          $window.location.href = '/login';
+      controller: 'ArtistToolsDownloadGatewayController',
+      resolve: {
+        isLoggedIn: function($stateParams, $window, SessionService) {
+          if (!SessionService.getUser()) {
+            $window.localStorage.setItem('returnstate', 'artistToolsDownloadGatewayNew');
+            $window.location.href = '/login';
+          }
+          return true;
         }
-        return true;
       }
-    }
     })
 });
 
@@ -39,8 +39,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
   $scope.user = SessionService.getUser();
   if (!SessionService.getUser()) {
     $state.go('login');
-  }
-  else{
+  } else {
     $window.localStorage.removeItem('returnstate');
     $window.localStorage.removeItem('tid');
   }
@@ -179,15 +178,17 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
           $state.go('artistToolsDownloadGatewayList', {
             'submission': $stateParams.submission
           });
-        } 
-      else
-      {
+        } else {
           if ($scope.user.soundcloud.id == $scope.track.artistID) {
             $.Zebra_Dialog('Download gateway was saved and added to the track.');
           } else {
-            $.Zebra_Dialog('Download gateway saved.');
+            if ($scope.user.soundcloud.id == $scope.track.artistID) {
+              $.Zebra_Dialog('Download gateway was saved and added to the track.');
+            } else {
+              $.Zebra_Dialog('Download gateway saved.');
+            }
+            $state.go('artistToolsDownloadGatewayList');
           }
-          $state.go('artistToolsDownloadGatewayList');
         }
       })
       .then(null, function(err) {
@@ -461,18 +462,18 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     $window.open(url, '_blank');
   }
 
-  $scope.verifyBrowser = function(){
-    if(navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1){
+  $scope.verifyBrowser = function() {
+    if (navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1) {
       var position = navigator.userAgent.search("Version") + 8;
       var end = navigator.userAgent.search(" Safari");
-      var version = navigator.userAgent.substring(position,end);
-      if(parseInt(version) < 9){
+      var version = navigator.userAgent.substring(position, end);
+      if (parseInt(version) < 9) {
         $.Zebra_Dialog('You have old version of safari. Click <a href="https://support.apple.com/downloads/safari">here</a> to download the latest version of safari for better site experience.', {
           'type': 'confirmation',
           'buttons': [{
             caption: 'OK'
           }],
-          'onClose': function(){
+          'onClose': function() {
             $window.location.href = "https://support.apple.com/downloads/safari";
           }
         });

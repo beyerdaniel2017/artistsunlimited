@@ -23,5 +23,6 @@ module.exports = function(app) {
     require('./authentication')(app);
 
     require('./autoScripts');
+    require('./security')(app);
     // require('./autoEmailer')();
 };
