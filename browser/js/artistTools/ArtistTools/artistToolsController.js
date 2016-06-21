@@ -110,20 +110,24 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     }
 
     $scope.changeQueueSong = function() {
+      if($scope.newQueueSong != ""){
+        $scope.processing = true;
       $http.post('/api/soundcloud/resolve', {
           url: $scope.newQueueSong
         })
         .then(function(res) {
-
           $scope.processing = false;
           var track = res.data;
+          console.log('track',track);
           $scope.newQueue = track;
           $scope.newQueueID = track.id;
+          $scope.processing = false;
         })
         .then(null, function(err) {
-          $.Zebra_Dialog("Song not found.");
+          $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
           $scope.processing = false;
         });
+    }
     }
 
     $scope.saveUser = function() {
