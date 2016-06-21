@@ -138,12 +138,12 @@ app.controller('FullstackGeneratedController', function($scope,$state, $http, ma
                 var trades = res.data;
                 trades.forEach(function(trade) {
                     if(trade.p1.user._id == user._id){
-                        if(trade.p1.alert == "change" && !trade.p1.online){
+                        if(trade.p1.alert == "change"){
                             $scope.shownotification = true;
                         }
                     }
                     if(trade.p2.user._id == user._id){
-                        if(trade.p2.alert == "change" && !trade.p1.online){
+                        if(trade.p2.alert == "change"){
                             $scope.shownotification = true;
                         }
                     }
