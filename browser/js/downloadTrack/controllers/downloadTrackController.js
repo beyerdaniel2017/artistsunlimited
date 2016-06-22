@@ -52,7 +52,6 @@ app.controller('DownloadTrackController', ['$rootScope',
         var playerObj = null;
 
         /* $scope bindings start */
-
         $scope.trackData = {
             trackName: 'Mixing and Mastering',
             userName: 'la tropical'
@@ -73,7 +72,6 @@ app.controller('DownloadTrackController', ['$rootScope',
         $scope.followBoxImageUrl = 'assets/images/who-we-are.png';
         $scope.recentTracks = [];
 
-
         $scope.initiateDownload = function() {
             $scope.processing = false;
             if ($scope.track.downloadURL && $scope.track.downloadURL !== '') {
@@ -85,12 +83,9 @@ app.controller('DownloadTrackController', ['$rootScope',
         }
 
         /* Function for Instagram */
-
         $scope.authenticateInstagram = function() {
             $auth.authenticate('instagram').then(function(response) {
-                console.log(response)
                 var userName = $scope.track.socialPlatformValue;
-
                 $http({
                     method: "POST",
                     url: '/api/download/instagram/follow_user',
@@ -107,12 +102,9 @@ app.controller('DownloadTrackController', ['$rootScope',
         }
 
         /* Function for Twitter */
-
         $scope.authenticateTwitter = function() {
             $auth.authenticate('twitter').then(function(response) {
-                // console.log(response)
                 var userName = $scope.track.socialPlatformValue;
-
                 if ($scope.track.socialPlatform == 'twitterFollow') {
                     $http({
                         method: "POST",
@@ -122,20 +114,17 @@ app.controller('DownloadTrackController', ['$rootScope',
                             accessToken: response.data
                         }
                     }).then(function(records) {
-                        //console.log(records)
                         if (records.data && records.statusText === "OK") {
                             if (records.data.screen_name === $scope.track.socialPlatformValue) {
-                                //success case
                                 window.location.replace($scope.track.downloadURL);
                             }
-                            console.log($scope.track);
-                        } else {
-                            console.log("Failed");
+                        } 
+                        else {
+                            $.Zebra_Dialog('Error in processing the request. Please try again.');
                         }
                     });
                 } else if ($scope.track.socialPlatform == 'twitterPost') {
                     response.data.socialPlatformValue = $scope.track.socialPlatformValue;
-                    console.log("response <DownloadTrackController>:" + JSON.stringify(response));
                     $http({
                         method: "POST",
                         url: '/api/download/twitter/post',
@@ -144,7 +133,7 @@ app.controller('DownloadTrackController', ['$rootScope',
                         if (records.statusText === "OK") {
                             window.location.replace($scope.track.downloadURL);
                         } else {
-                            alert("Something went wrong, please retry");
+                            $.Zebra_Dialog('Error in processing the request. Please try again.');
                         }
                     });
                 }
@@ -152,10 +141,8 @@ app.controller('DownloadTrackController', ['$rootScope',
         }
 
         /* Function for Youtube */
-
         $scope.authenticateYoutube = function(track) {
             var trackUrl = $scope.track.downloadURL
-
             $http({
                 method: "GET",
                 url: '/api/download/subscribe',
@@ -165,15 +152,11 @@ app.controller('DownloadTrackController', ['$rootScope',
                 }
             }).then(function(response) {
                 console.log(response)
-                    //                $scope.initiateDownload();
-
             });
         }
 
         /* Default processing on page load */
-
         $scope.getDownloadTrack = function() {
-
             $scope.processing = true;
             var trackID = $location.search().trackid;
             DownloadTrackService
@@ -226,7 +209,6 @@ app.controller('DownloadTrackController', ['$rootScope',
 
 
         /* On click download track button */
-
         $scope.authenticateSoundcloud = function() {
             if ($scope.track.comment && !$scope.track.commentText) {
                 $.Zebra_Dialog('Please write a comment!');
