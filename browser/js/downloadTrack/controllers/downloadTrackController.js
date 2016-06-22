@@ -1,9 +1,9 @@
 app.config(function($stateProvider, $authProvider, $httpProvider) {
-	$stateProvider.state('download', {
-		url: '/download',
-		templateUrl: 'js/downloadTrack/views/downloadTrack.view.html',
-		controller: 'DownloadTrackController'
-	});
+    $stateProvider.state('download', {
+        url: '/download',
+        templateUrl: 'js/downloadTrack/views/downloadTrack.view.html',
+        controller: 'DownloadTrackController'
+    });
 
     $authProvider.instagram({
         clientId: '0b2ab47baa464c31bf6d8e9f301d4469'
@@ -37,41 +37,41 @@ app.config(function($stateProvider, $authProvider, $httpProvider) {
 
 
 app.controller('DownloadTrackController', ['$rootScope',
-	'$state',
-	'$scope',
-	'$http',
-	'$location',
-	'$window',
-	'$q',
-	'DownloadTrackService',	
+    '$state',
+    '$scope',
+    '$http',
+    '$location',
+    '$window',
+    '$q',
+    'DownloadTrackService',
     '$sce',
     '$auth',
     function($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService, $sce, $auth) {
 
-		/* Normal JS vars and functions not bound to scope */
-		var playerObj = null;
+        /* Normal JS vars and functions not bound to scope */
+        var playerObj = null;
 
-		/* $scope bindings start */
+        /* $scope bindings start */
 
-		$scope.trackData = {
-			trackName: 'Mixing and Mastering',
-			userName: 'la tropical'
-		};
-		$scope.toggle = true;
-		$scope.togglePlay = function() {
-			$scope.toggle = !$scope.toggle;
-			if ($scope.toggle) {
-				playerObj.pause();
-			} else {
-				playerObj.play();
-			}
-		}
-		$scope.processing = false;
-		$scope.embedTrack = false;
-		$scope.downloadURLNotFound = false;
-		$scope.errorText = '';
-		$scope.followBoxImageUrl = 'assets/images/who-we-are.png';
-		$scope.recentTracks = [];
+        $scope.trackData = {
+            trackName: 'Mixing and Mastering',
+            userName: 'la tropical'
+        };
+        $scope.toggle = true;
+        $scope.togglePlay = function() {
+            $scope.toggle = !$scope.toggle;
+            if ($scope.toggle) {
+                playerObj.pause();
+            } else {
+                playerObj.play();
+            }
+        }
+        $scope.processing = false;
+        $scope.embedTrack = false;
+        $scope.downloadURLNotFound = false;
+        $scope.errorText = '';
+        $scope.followBoxImageUrl = 'assets/images/who-we-are.png';
+        $scope.recentTracks = [];
 
 
         $scope.initiateDownload = function() {
@@ -170,99 +170,99 @@ app.controller('DownloadTrackController', ['$rootScope',
             });
         }
 
-		/* Default processing on page load */
+        /* Default processing on page load */
 
-		$scope.getDownloadTrack = function() {
+        $scope.getDownloadTrack = function() {
 
-			$scope.processing = true;
-			var trackID = $location.search().trackid;
-			DownloadTrackService
-				.getDownloadTrack(trackID)
-				.then(receiveDownloadTrack)
-				.then(receiveRecentTracks)
-				.then(initPlay)
-				.catch(catchDownloadTrackError);
+            $scope.processing = true;
+            var trackID = $location.search().trackid;
+            DownloadTrackService
+                .getDownloadTrack(trackID)
+                .then(receiveDownloadTrack)
+                .then(receiveRecentTracks)
+                .then(initPlay)
+                .catch(catchDownloadTrackError);
 
-			function receiveDownloadTrack(result) {
-				$scope.track = result.data;
-				$scope.backgroundStyle = function() {
-					return {
-						'background-image': 'url(' + $scope.track.trackArtworkURL + ')',
-						'background-repeat': 'no-repeat',
-						'background-size': 'cover'
-					}
-				}
+            function receiveDownloadTrack(result) {
+                $scope.track = result.data;
+                $scope.backgroundStyle = function() {
+                    return {
+                        'background-image': 'url(' + $scope.track.trackArtworkURL + ')',
+                        'background-repeat': 'no-repeat',
+                        'background-size': 'cover'
+                    }
+                }
 
-				$scope.embedTrack = true;
-				$scope.processing = false;
+                $scope.embedTrack = true;
+                $scope.processing = false;
 
-				if ($scope.track.showDownloadTracks === 'user') {
-					return DownloadTrackService.getRecentTracks({
-						userID: $scope.track.userid,
-						trackID: $scope.track._id
-					});
-				} else {
-					return $q.resolve('resolve');
-				}
-			}
+                if ($scope.track.showDownloadTracks === 'user') {
+                    return DownloadTrackService.getRecentTracks({
+                        userID: $scope.track.userid,
+                        trackID: $scope.track._id
+                    });
+                } else {
+                    return $q.resolve('resolve');
+                }
+            }
 
-			function receiveRecentTracks(res) {
-				if ((typeof res === 'object') && res.data) {
-					$scope.recentTracks = res.data;
-				}
-				return SC.stream('/tracks/' + $scope.track.trackID);
-			}
+            function receiveRecentTracks(res) {
+                if ((typeof res === 'object') && res.data) {
+                    $scope.recentTracks = res.data;
+                }
+                return SC.stream('/tracks/' + $scope.track.trackID);
+            }
 
-			function initPlay(player) {
-				playerObj = player;
-			}
+            function initPlay(player) {
+                playerObj = player;
+            }
 
-			function catchDownloadTrackError() {
-				$.Zebra_Dialog('Song Not Found');
-				$scope.processing = false;
-				$scope.embedTrack = false;
-			}
-		};
+            function catchDownloadTrackError() {
+                $.Zebra_Dialog('Song Not Found');
+                $scope.processing = false;
+                $scope.embedTrack = false;
+            }
+        };
 
 
-		/* On click download track button */
+        /* On click download track button */
 
         $scope.authenticateSoundcloud = function() {
-			if ($scope.track.comment && !$scope.track.commentText) {
-				$.Zebra_Dialog('Please write a comment!');
-				return false;
-			}
-			$scope.processing = true;
-			$scope.errorText = '';
+            if ($scope.track.comment && !$scope.track.commentText) {
+                $.Zebra_Dialog('Please write a comment!');
+                return false;
+            }
+            $scope.processing = true;
+            $scope.errorText = '';
 
-			SC.connect()
-				.then(performTasks)
-				.then(initDownload)
-				.catch(catchTasksError)
+            SC.connect()
+                .then(performTasks)
+                .then(initDownload)
+                .catch(catchTasksError)
 
-			function performTasks(res) {
-				$scope.track.token = res.oauth_token;
-				return DownloadTrackService.performTasks($scope.track);
-			}
+            function performTasks(res) {
+                $scope.track.token = res.oauth_token;
+                return DownloadTrackService.performTasks($scope.track);
+            }
 
-			function initDownload(res) {
-				$scope.processing = false;
-				if ($scope.track.downloadURL && $scope.track.downloadURL !== '') {
-					$window.location.href = $scope.track.downloadURL;
-				} else {
-					$scope.errorText = 'Error! Could not fetch download URL';
-					$scope.downloadURLNotFound = true;
-				}
-				$scope.$apply();
-			}
+            function initDownload(res) {
+                $scope.processing = false;
+                if ($scope.track.downloadURL && $scope.track.downloadURL !== '') {
+                    $window.location.href = $scope.track.downloadURL;
+                } else {
+                    $scope.errorText = 'Error! Could not fetch download URL';
+                    $scope.downloadURLNotFound = true;
+                }
+                $scope.$apply();
+            }
 
-			function catchTasksError(err) {
-				$.Zebra_Dialog('Error in processing your request');
-				$scope.processing = false;
-				$scope.$apply();
-			}
+            function catchTasksError(err) {
+                $.Zebra_Dialog('Error in processing your request');
+                $scope.processing = false;
+                $scope.$apply();
+            }
 
-		};
+        };
 
         $scope.downloadTrackFacebookShare = function(shareURL) {
             window.fbAsyncInit = function() {
@@ -307,6 +307,7 @@ app.controller('DownloadTrackController', ['$rootScope',
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
         }
+
         $scope.downloadTrackFacebookLike = function(fblikeid) {
             window.fbAsyncInit = function() {
                 FB.init({
@@ -315,7 +316,7 @@ app.controller('DownloadTrackController', ['$rootScope',
                     version: 'v2.6'
                 });
                 FB.Event.subscribe('edge.create', function(href, widget) {
-                    window.location = fblikeid.trackURL;
+                    window.location = fblikeid.downloadURL;
                 });
             };
             (function(d, s, id) {
@@ -332,5 +333,5 @@ app.controller('DownloadTrackController', ['$rootScope',
 
         };
 
-	}
+    }
 ]);

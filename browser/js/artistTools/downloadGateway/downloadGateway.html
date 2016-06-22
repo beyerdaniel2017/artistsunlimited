@@ -75,41 +75,41 @@
                                                 <select class="form-control" ng-model="track.socialPlatform" ng-change="track.socialPlatformValue=''" ng-init="track.socialPlatform = 'actionsOnSoundcloud'">
                                                     <option ng-selected="true" value="actionsOnSoundcloud">Actions on Soundcloud</option>
                                                     <option value="facebookLike">Like Facebook page</option>
-                                                    <option value="facebookShare">Share on Facebook</option>
+                                                    <option value="facebookShare">Share link on Facebook</option>
                                                     <option value="twitterFollow">Follow on Twitter</option>
-                                                    <option value="twitterPost">Post tweet to Twitter</option>
+                                                    <option value="twitterPost">Tweet on Twitter</option>
                                                     <option value="instagramFollow">Follow on Instagram</option>
                                                     <option value="youtubeSubscribe">Subscribe on Youtube</option>
                                                 </select>
                                                 <br/><br/>
                                                 <div class="auSocialPlatform">
                                                     <div ng-if="track.socialPlatform == 'facebookLike'">
-                                                        <label>Like Facebook Page :</label>
+                                                        <label>Like Facebook Page:</label>
                                                         <div class="col-sm-19">
-                                                            <input type="text" class="form-control" ng-model="track.socialPlatformValue" value="" />
+                                                            <input placeholder='Url' type="text" class="form-control" ng-model="track.socialPlatformValue" value="" />
                                                         </div>
                                                     </div>
                                                     <div ng-if="track.socialPlatform == 'facebookShare'">
-                                                        <label>Share on Facebook :</label>
+                                                        <label>Share link on Facebook:</label>
                                                         <div class="col-sm-19">
-                                                            <input type="text" class="form-control"  ng-model="track.socialPlatformValue" value="" />
+                                                            <input placeholder='Url' type="text" class="form-control"  ng-model="track.socialPlatformValue" value="" />
                                                         </div>
                                                     </div>
                                                     <div ng-if="track.socialPlatform == 'twitterPost'">
-                                                        <label>Text to Tweet :</label>
+                                                        <label>Tweet on Twitter:</label>
                                                         <div class ='col-sm-19'>
-                                                            <input ng-model="track.socialPlatformValue" type="text" class="form-control" placeholder="enter a message to tweet" value="" />
+                                                            <input ng-model="track.socialPlatformValue" type="text" class="form-control" placeholder="text to tweet" value="" />
                                                         </div>
                                                     </div>
                                                     <div ng-if="track.socialPlatform == 'twitterFollow'">
-                                                        <label>User to Follow :</label>
+                                                        <label>User to Follow:</label>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">@</span>
                                                             <input type="text" class="form-control" input-prepend="@" ng-model="track.socialPlatformValue" placeholder="diplo" value="" />
                                                         </div>
                                                     </div>
                                                     <div ng-if="track.socialPlatform == 'instagramFollow'">
-                                                        <label>User to Follow :</label>
+                                                        <label>User to Follow:</label>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">@</span>
                                                             <input type="text" class="form-control" input-prepend="@" ng-model="track.socialPlatformValue" placeholder="skrillex" value=""/>
@@ -130,9 +130,9 @@
                                                     </div>
                                                 </div>
                                                 <br/><br/>
-                                                
+
                                                 <div ng-if="track.socialPlatform == 'actionsOnSoundcloud'">
-                                                    
+
                                                     <div class="artist-follow">
                                                         <h4>Artists to Follow</h4>
                                                         <div class="input-box" ng-repeat="artist in track.artists" ng-show="!artist.permanentLink">
@@ -164,7 +164,7 @@
                                                                             </ul>
                                                                         </div>
                                                                     </div>
-                                                                    
+
                                                                 </div>
                                                             </div>
                                                         </div>

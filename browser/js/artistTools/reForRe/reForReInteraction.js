@@ -342,12 +342,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     switch (event.type) {
       case 'queue':
       case 'track':
+      case 'paid':
         $.Zebra_Dialog('Cannot manage this time slot.');
         return;
         break;
 
       case 'empty':
-
         var calEvent = {
           type: "trade",
           day: makeDay,
