@@ -124,10 +124,10 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.makeEventURL = undefined;
     $scope.trackListSlotObj = undefined;
     $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
-    if ($scope.makeEvent.type == 'traded') {
+    if ($scope.makeEvent.type == 'traded' || $scope.makeEvent.type == 'paid') {
       $scope.showOverlay = false;
       $scope.makeEvent = undefined;
-      $.Zebra_Dialog("Cannot manage a traded slot.");
+      $.Zebra_Dialog("Cannot manage a traded or paid slot.");
       return;
     }
     if ($scope.makeEvent.type == "empty") {

@@ -19,6 +19,6 @@ process.stdin.resume();
   });
 }))
 .then(function(track) {
-    console.log(track);
+    console.log(tracks);
   })
   .then(null, console.log);

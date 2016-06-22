@@ -17,6 +17,7 @@ module.exports = router;
 var mongoose = require('mongoose');
 var DownloadTrack = mongoose.model('DownloadTrack');
 var User = mongoose.model('User');
+var env = require('./../../../env');
 var scConfig = require('./../../../env').SOUNDCLOUD;
 var sendEmail = require('../../mandrill/sendEmail.js');
 var scWrapper = require("../../SCWrapper/SCWrapper.js");
@@ -294,8 +295,8 @@ router.post("/twitter/auth", function(req, res, done) {
   // Part 1 of 2: Initial request from Satellizer.
   if (!req.body.oauth_token || !req.body.oauth_verifier) {
     var requestTokenOauth = {
-      consumer_key: 'HtFNqGObOo2O4IkzL1gasudPJ',
-      consumer_secret: 'bjDsl0XUZmcSLIWIl83lhkKRxJ3E99yvmRpYxQvCpbgL0kn4fN',
+      consumer_key: env.TWITTER.consumerKey,
+      consumer_secret: env.TWITTER.consumerSecret,
       callback: req.body.redirectUri
     };
 
@@ -311,8 +312,8 @@ router.post("/twitter/auth", function(req, res, done) {
   } else {
     // Part 2 of 2: Second request after Authorize app is clicked.
     var accessTokenOauth = {
-      consumer_key: 'HtFNqGObOo2O4IkzL1gasudPJ',
-      consumer_secret: 'bjDsl0XUZmcSLIWIl83lhkKRxJ3E99yvmRpYxQvCpbgL0kn4fN',
+      consumer_key: env.TWITTER.consumerKey,
+      consumer_secret: env.TWITTER.consumerSecret,
       token: req.body.oauth_token,
       verifier: req.body.oauth_verifier
     };
@@ -336,8 +337,8 @@ router.post("/twitter/follow", function(req, res, done) {
   //console.log("request body <downloadTracks.js>:"+"\n"+JSON.stringify(req.params)+"\n"+JSON.stringify(req.body)+"\n"+JSON.stringify(req.query));
   var followUrl = 'https://api.twitter.com/1.1/friendships/create.json?screen_name=' + req.body.screen_name;
   var profileOauthData = {
-    consumer_key: 'HtFNqGObOo2O4IkzL1gasudPJ',
-    consumer_secret: 'bjDsl0XUZmcSLIWIl83lhkKRxJ3E99yvmRpYxQvCpbgL0kn4fN',
+    consumer_key: env.TWITTER.consumerKey,
+    consumer_secret: env.TWITTER.consumerSecret,
     token: req.body.accessToken.oauth_token,
     token_secret: req.body.accessToken.oauth_token_secret
   };
@@ -359,8 +360,8 @@ router.post("/twitter/follow", function(req, res, done) {
 router.post("/twitter/post", function(req, res, done) {
   console.log(JSON.stringify(req.body));
   var profileOauthData = {
-    consumer_key: 'HtFNqGObOo2O4IkzL1gasudPJ',
-    consumer_secret: 'bjDsl0XUZmcSLIWIl83lhkKRxJ3E99yvmRpYxQvCpbgL0kn4fN',
+    consumer_key: env.TWITTER.consumerKey,
+    consumer_secret: env.TWITTER.consumerSecret,
     token: req.body.oauth_token,
     token_secret: req.body.oauth_token_secret
   };
@@ -388,8 +389,8 @@ router.post('/auth/twitter', function(req, res) {
 
   if (!req.body.oauth_token || !req.body.oauth_verifier) {
     var requestTokenOauth = {
-      consumer_key: 'HtFNqGObOo2O4IkzL1gasudPJ',
-      consumer_secret: 'bjDsl0XUZmcSLIWIl83lhkKRxJ3E99yvmRpYxQvCpbgL0kn4fN',
+      consumer_key: env.TWITTER.consumerKey,
+      consumer_secret: env.TWITTER.consumerSecret,
       callback: req.body.redirectUri
     };
 
@@ -406,8 +407,8 @@ router.post('/auth/twitter', function(req, res) {
   } else {
 
     var accessTokenOauth = {
-      consumer_key: 'HtFNqGObOo2O4IkzL1gasudPJ',
-      consumer_secret: 'bjDsl0XUZmcSLIWIl83lhkKRxJ3E99yvmRpYxQvCpbgL0kn4fN',
+      consumer_key: env.TWITTER.consumerKey,
+      consumer_secret: env.TWITTER.consumerSecret,
       token: req.body.oauth_token,
       verifier: req.body.oauth_verifier
     };
@@ -420,8 +421,8 @@ router.post('/auth/twitter', function(req, res) {
       accessToken = qs.parse(accessToken);
 
       var profileOauth = {
-        consumer_key: 'HtFNqGObOo2O4IkzL1gasudPJ',
-        consumer_secret: 'bjDsl0XUZmcSLIWIl83lhkKRxJ3E99yvmRpYxQvCpbgL0kn4fN',
+        consumer_key: env.TWITTER.consumerKey,
+        consumer_secret: env.TWITTER.consumerSecret,
         oauth_token: accessToken.oauth_token
       };
 
