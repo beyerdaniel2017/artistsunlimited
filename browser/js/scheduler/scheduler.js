@@ -101,6 +101,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   }
 
   $scope.changeURL = function() {
+    if($scope.makeEventURL != ""){
     $scope.processing = true;
     $http.post('/api/soundcloud/resolve', {
         url: $scope.makeEventURL
@@ -119,10 +120,12 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
         $scope.notFound = false;
         $scope.processing = false;
       }).then(null, function(err) {
+        $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
         document.getElementById('scPlayer').style.visibility = "hidden";
         $scope.notFound = true;
         $scope.processing = false;
       });
+  }
   }
 
   $scope.deleteEvent = function() {
@@ -227,6 +230,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
   }
 
   $scope.changeQueueSong = function() {
+    if($scope.newQueueSong != ""){
     $scope.processing = true;
     $http.post('/api/soundcloud/resolve', {
         url: $scope.newQueueSong
@@ -240,6 +244,7 @@ app.controller('SchedulerController', function($rootScope, $state, $scope, $http
         $.Zebra_Dialog("error getting song");
         $scope.processing = false;
       });
+  }
   }
 
   $scope.moveUp = function(index) {

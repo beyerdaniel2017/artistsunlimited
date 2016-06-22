@@ -10,18 +10,19 @@ module.exports = function(io) {
 				text: msg.message,
 				type: msg.type
 			}
-			msg.trade.messages.push(message);
-			trade.update({
-				_id: msg.tradeID
-			}, {
-				$set: {
-					messages: msg.trade.messages,
-					'p1.alert': msg.trade.p1.alert,
-					'p2.alert': msg.trade.p2.alert
+	   		
+   		trade.findById(msg.tradeID)
+   		.exec()
+   		.then(function(tradeData) { 
+   			if(tradeData){
+   				tradeData.messages.push(message);
+	   			if(tradeData.p1.user.toString() == msg.id.toString() && tradeData.p2.online == false){
+	   				tradeData.p2.alert = 'change';
+	   			}
+	   			else if(tradeData.p2.user.toString() == msg.id.toString() && tradeData.p1.online == false){
+	   				tradeData.p1.alert = 'change';
 				}
-			}, {
-				upsert: true
-			}, function(error, data) {
+	   			tradeData.save(function(result){
 				io.emit('send:message', {
 					senderId: msg.id,
 					date: new Date(),
@@ -29,6 +30,8 @@ module.exports = function(io) {
 					type: msg.type,
 					tradeID: msg.tradeID
 				});
+	   			})
+   			}
 			});
 		});
 

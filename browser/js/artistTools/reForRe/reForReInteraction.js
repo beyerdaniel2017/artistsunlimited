@@ -171,6 +171,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.changeURL = function() {
+    if($scope.makeEvent.URL != ""){
     $scope.processing = true;
     $http.post('/api/soundcloud/resolve', {
         url: $scope.makeEvent.URL
@@ -189,10 +190,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         $scope.notFound = false;
         $scope.processing = false;
       }).then(null, function(err) {
+        $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
         document.getElementById('scPlayer').style.visibility = "hidden";
         $scope.notFound = true;
         $scope.processing = false;
       });
+  }
   }
 
 
@@ -391,19 +394,6 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
           callback: function() {
             if ($scope.user.queue && $scope.user.queue.length == 0) {
               $('#autoFillTrack').modal('show');
-              /*setTimeout(function() {
-                $.Zebra_Dialog("You should fill in your auto-fill tracks so that if the trade is accepted and you don’t choose which songs you want to be reposted, the tracks in your auto-fill tracks list will be used instead.", {
-                  'buttons': [{
-                    caption: 'OK',
-                    callback: function() {
-                      $state.go('artistToolsScheduler');
-                    }
-                  }],
-                  'onClose': function() {
-                    $state.go('artistToolsScheduler');
-                  }
-                });
-              }, 600);*/
             } else {
               $scope.user.accepted = true;
               if ($scope.trade.p1.user._id == $scope.user._id) {
@@ -464,6 +454,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.changeQueueSong = function() {
+    if($scope.newQueueSong != ""){
+      $scope.processing = true;
     $http.post('/api/soundcloud/resolve', {
         url: $scope.newQueueSong
       })
@@ -474,9 +466,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         $scope.newQueueID = track.id;
       })
       .then(null, function(err) {
-        $.Zebra_Dialog("Song not found.");
+        $scope.newQueueSong = "";
+        $('#autoFillTrack').modal('hide');
+        $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
         $scope.processing = false;
       });
+  }
   }
 
   $scope.saveUser = function() {
@@ -542,19 +537,16 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   });
 
   $scope.emitMessage = function(message, type) {
-    console.log('before p2', $scope.trade.p2);
-    if ($scope.trade.p1.user._id == $scope.user._id && $scope.trade.p2.online == false) {
-      $scope.trade.p2.alert = "change";
-    } else if ($scope.trade.p2.user._id == $scope.user._id && $scope.trade.p1.online == false) {
-      $scope.trade.p1.alert = "change";
-    }
-    console.log('after p2', $scope.trade.p2);
+    // if($scope.trade.p1.user._id == $scope.user._id && $scope.trade.p2.online == false){
+    //   $scope.trade.p2.alert = "change";
+    // } else if ($scope.trade.p2.user._id == $scope.user._id && $scope.trade.p1.online == false) {
+    //   $scope.trade.p1.alert = "change";
+    // }  
     socket.emit('send:message', {
       message: message,
       type: type,
       id: $scope.user._id,
-      tradeID: $stateParams.tradeID,
-      trade: $scope.trade
+      tradeID: $stateParams.tradeID
     });
     $scope.message = '';
   }
@@ -798,9 +790,9 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     }
   }
   $scope.openHelpModal = function() {
-    var displayText = "This interface shows your scheduler and the scheduler for the user you are trading with, labeled on the top of each respective schedule. Your calendar will always be on the left.<br/><br/><img src='assets/images/grey-slot.png'/> Grey slots represents slots that are already taken.<br/><img src='assets/images/blue-slot.png'/>  Blue slots represent slots that are being bargained in the trade.<br/><img src='assets/images/arrow-slot.png'/>  An Arrow within a slot means it will be unreposted after 24 hours.<br/>The chat window on the bottom allows you to chat with your Repost Partner about your trade.<br/>Email will automatically open a new email on your mailing app, allowing you to message your repost partner via email for your trade.<br/><br/>How to use AU's Repost for Repost System:<br/>1. Start by deciding how you would like to trade with your partner.<br/>2. Mark slots on your calendar and mark slots on your partners calendar.<br/>3. Click accept<br/><br/>When your partner returns to AU, he will be able to accept your trade. If accepted, you will be able to schedule reposts on the slots designated on your partner’s calendar; your partner will be able to schedule reposts on the slots designated on your calendar. If you are away from keyboard at the time of your trade, tracks that are in your 'auto-fill' queue (hyperlink to autofill queu) in the scheduler will automatically be scheduled for repost.<br/><br/>Tips:<br/>1. Make sure you are fair with your trades. If you have half as many followers as your partner, offer 2 reposts on your calendar in exchange for 1 repost on theirs.<br />2. Make sure you check your trades on a regular basis. People are much more likely to constantly trade reposts with you if you are reliable.<br />3. Try communicating with the user on Facebook, Email, SoundCloud messenger or any messaging app to make sure they take action on trades when it is their turn. A friendly 'Hey, let me know when you accept the trade on AU! Thanks again for trading with me :)' is enough to ensure a good flow of communication for your trades!";
+    var displayText = "This interface shows your scheduler and the scheduler for the user you are trading with, labeled on the top of each respective schedule. Your calendar will always be on the left.<br/><br/><img src='assets/images/grey-slot.png'/> Grey slots represents slots that are already taken.<br><br/><img src='assets/images/blue-slot.png'/>  Blue slots represent slots that are being bargained in the trade.<br/><br/><img src='assets/images/arrow-slot.png'/>  An Arrow within a slot means it will be unreposted after 24 hours.<br/><br>The chat window on the bottom allows you to chat with your Repost Partner about your trade.<br/>Email will automatically open a new email on your mailing app, allowing you to message your repost partner via email for your trade.<br/><br/>How to use AU's Repost for Repost System:<br/>1. Start by deciding how you would like to trade with your partner.<br/>2. Mark slots on your calendar and mark slots on your partners calendar.<br/>3. Click accept<br/><br/>When your partner returns to AU, he will be able to accept your trade. If accepted, you will be able to schedule reposts on the slots designated on your partner’s calendar; your partner will be able to schedule reposts on the slots designated on your calendar. If you are away from keyboard at the time of your trade, tracks that are in your 'auto-fill' queue (hyperlink to autofill queu) in the scheduler will automatically be scheduled for repost.<br/><br/>Tips:<br/>1. Make sure you are fair with your trades. If you have half as many followers as your partner, offer 2 reposts on your calendar in exchange for 1 repost on theirs.<br />2. Make sure you check your trades on a regular basis. People are much more likely to constantly trade reposts with you if you are reliable.<br />3. Try communicating with the user on Facebook, Email, SoundCloud messenger or any messaging app to make sure they take action on trades when it is their turn. A friendly 'Hey, let me know when you accept the trade on AU! Thanks again for trading with me :)' is enough to ensure a good flow of communication for your trades!";
     $.Zebra_Dialog(displayText, {
-      width: 1000
+      width: 900
     });
   }
 

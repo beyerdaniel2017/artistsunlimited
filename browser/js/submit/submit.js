@@ -9,6 +9,7 @@ app.config(function($stateProvider) {
 app.controller('SubmitSongController', function($rootScope, $state, $scope, $http) {
   $scope.submission = {};
   $scope.urlChange = function() {
+    if($scope.url != ""){
     $scope.processing = true;
     $http.post('/api/soundcloud/resolve', {
         url: $scope.url
@@ -27,11 +28,13 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
         $scope.processing = false;
         $scope.notFound = false;
       }).then(null, function(err) {
+        $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
         $scope.submission.trackID = null;
         $scope.notFound = true;
         $scope.processing = false;
         document.getElementById('scPlayer').style.visibility = "hidden";
       });
+  }
   }
 
   $scope.submit = function() {
