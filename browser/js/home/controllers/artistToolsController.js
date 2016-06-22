@@ -39,14 +39,284 @@ app.config(function($stateProvider) {
             },
             templateUrl: 'js/home/views/artistTools/analytics.html',
             controller: 'artistToolsDownloadGatewayAnalytics'
-        })
-
+        });
 });
 
-app.controller("artistToolsDownloadGatewayAnalytics", function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService) {
-  
-});
+app.controller("artistToolsDownloadGatewayAnalytics", function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, $auth, SessionService, ArtistToolsService) {
+    $scope.authFacbook = function(id) {
+        $scope.enableGraph = false;
+        FB.getLoginStatus(function(response_token) {
+            if (response_token.status === 'connected') {
+                //req.body.pid && req.body.userid && req.body.pageid
+                var http_post_data = {
+                    token: response_token.authResponse.accessToken
+                };
+                if (id) {
+                    console.log(id);
+                    http_post_data.pid = id.name;
+                    http_post_data.pageid = id.id;
+                    delete $scope.facebookPages;
+                }
+                $http({
+                    method: 'POST',
+                    url: '/api/analytics/facebook',
+                    data: http_post_data
+                }).then(function successCallback(response) {
+                    console.log(JSON.stringify(response));
+                    $scope.graph_data = response.data;
+                    $scope.enableGraph = true;
+                }, function errorCallback(response) {
+                    console.log("Error while posting to server"); //register user!
+                    function getStats(response_token) {
+                        $http({
+                            method: 'POST',
+                            url: '/api/analytics/facebook/owned',
+                            data: {
+                                token: response_token.authResponse.accessToken
+                            }
+                        }).then(function successCallback(response) {
+                            $scope.facebookPages = response.data.pages;
+                        }, function errorCallback(response) {
+                            console.log("Error while posting to server");
+                        });
+                    }
+                    getStats(response_token);
+                });
+            } else {
+                FB.login(function(response_token) {
+                    if (response_token.status === 'connected') {
 
+                        //req.body.pid && req.body.userid && req.body.pageid
+                        var http_post_data = {
+                            token: response_token.authResponse.accessToken
+                        };
+                        if (id) {
+                            console.log(id);
+                            http_post_data.pid = id.name;
+                            http_post_data.pageid = id.id;
+                            delete $scope.facebookPages;
+                        }
+                        $http({
+                            method: 'POST',
+                            url: '/api/analytics/facebook',
+                            data: http_post_data
+                        }).then(function successCallback(response) {
+                            console.log(JSON.stringify(response));
+                            $scope.graph_data = response.data;
+                            $scope.enableGraph = true;
+                        }, function errorCallback(response) {
+                            console.log("Error while posting to server"); //register user!
+                            function getStats(response_token) {
+                                $http({
+                                    method: 'POST',
+                                    url: '/api/analytics/facebook/owned',
+                                    data: {
+                                        token: response_token.authResponse.accessToken
+                                    }
+                                }).then(function successCallback(response) {
+                                    $scope.facebookPages = response.data.pages;
+                                }, function errorCallback(response) {
+                                    console.log("Error while posting to server");
+                                });
+                            }
+                            getStats(response_token);
+                        });
+                    } else {
+                        alert("Facebook login failed");
+                    }
+                },{scope: 'email,manage_pages'});
+            }
+        });
+    };
+    $scope.showFacebookPageState = function(id) {
+        delete $scope.facebookPages;
+        $scope.enableGraph = false;
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+                //req.body.pid && req.body.userid && req.body.pageid
+                console.log("id is :" + JSON.stringify(id));
+                $http({
+                    method: 'POST',
+                    url: '/api/analytics/facebook',
+                    data: {
+                        token: response.authResponse.accessToken,
+                        userid: 'dhavalp',
+                        pid: id.name,
+                        pageid: id.id,
+                    }
+                }).then(function successCallback(response) {
+                    console.log(JSON.stringify(response));
+                    $scope.graph_data = response.data;
+                    $scope.enableGraph = true;
+                }, function errorCallback(response) {
+                    console.log("Error while posting to server");
+                });
+            } else {
+                alert("Please login into facebook first");
+            }
+        });
+    };
+    $scope.authTwitter = function() {
+        //req.body.access_token_key && req.body.access_token_secret && req.body.uid
+        $scope.enableGraph = false;
+        $auth.authenticate('twitter').then(function(success_twitter) {
+            $http({
+                method: 'POST',
+                url: '/api/analytics/twitter',
+                data: {
+                    access_token_key: success_twitter.data.oauth_token,
+                    access_token_secret: success_twitter.data.oauth_token_secret,
+                }
+            }).then(function(success) {
+                $scope.graph_data = {};
+                for (var i = 0; i < success.data.length; i++) {
+                    var date_formatted = success.data[i].date;
+                    $scope.graph_data[date_formatted] = success.data[i].follows;
+                }
+                $scope.enableGraph = true;
+            }, function(failure) {
+                //if code=404, register twitter first!!
+                //req.body.screen_name && req.body.userid
+                $http({
+                    method: 'POST',
+                    url: '/api/analytics/twitter/create',
+                    data: {
+                        access_token_key: success_twitter.data.oauth_token,
+                        access_token_secret: success_twitter.data.oauth_token_secret,
+                        screen_name: success_twitter.data.screen_name
+                    }
+                }).then(function(success) {
+                    $http({
+                        method: 'POST',
+                        url: '/api/analytics/twitter',
+                        data: {
+                            access_token_key: success_twitter.data.oauth_token,
+                            access_token_secret: success_twitter.data.oauth_token_secret,
+                        }
+                    }).then(function(success) {
+                        console.log(success);
+                        $scope.graph_data = {};
+                        for (var i = 0; i < success.data.length; i++) {
+                            var date_formatted = success.data[i].date;
+                            $scope.graph_data[date_formatted] = success.data[i].follows;
+                        }
+                        $scope.enableGraph = true;
+                    }, function(error) {
+                        console.log("Error ::" + JSON.stringify(error));
+                    });
+                }, function(failure) {
+                    alert("New account creation failed :" + JSON.stringify(failure));
+                });
+            });
+        }, function(failure) {
+            console.log(failure);
+            return;
+        });
+    };
+    $scope.authInstagram = function() {
+        $scope.enableGraph = false;
+        $auth.authenticate('instagram').then(function(success) {
+            console.log(success);
+            $http({
+                method: 'POST',
+                url: '/api/analytics/instagram',
+                data: {
+                    access_token: success.data
+                }
+            }).then(function(success) {
+                $scope.graph_data = success.data;
+                $scope.enableGraph = true;
+            }, function(failure) {
+                console.log("failed at /api/analytics/instagram " + JSON.stringify(failure));
+            });
+        }, function(failure) {
+            console.log(failure);
+        });
+    };
+    $scope.authYoutube = function() {
+        $scope.enableGraph = false;
+        $http({
+            method: 'POST',
+            url: '/api/analytics/youtube/stats',
+            data:{
+              channelId :$scope.youtube_channelId
+            }
+        }).success(function(success_http) {
+            $scope.displayError = false;
+            $scope.graph_data = success_http;
+            $scope.enableGraph = true;
+        }).error(function() {
+            // $scope.displayError = true;
+            if ($auth.isAuthenticated()) {
+                var token = $auth.getToken();
+                getChannel(token);
+            } else {
+                $auth.authenticate('google').then(function(success) {
+                    getChannel(success.access_token);
+                }, function(failure) {
+                    console.log("failed >>>>" + JSON.stringify(failure));
+                });
+            }
+
+            function getChannel(token) {
+                $http({
+                    method: 'GET',
+                    url: "https://www.googleapis.com/youtube/v3/channels?part=contentOwnerDetails&mine=true&access_token=" + token
+                }).then(function(success) {
+                    $scope.youtube_channelId = success.data.items[0].id;
+                    $scope.authYoutube();
+                }, function(error) {
+                    console.log("error from google api :" + error);
+                });
+            }
+
+        });
+    };
+});
+app.controller('graphControler', function($scope) {
+    $scope.options = {
+        chart: {
+            type: 'discreteBarChart',
+            height: 500,
+            margin: {
+                top: 30,
+                right: 20,
+                bottom: 20,
+                left: 100
+            },
+            x: function(d) {
+                return d.label;
+            },
+            y: function(d) {
+                return d.value;
+            },
+            showValues: true,
+            duration: 100,
+            xAxis: {
+                axisLabel: 'Dates'
+            },
+            yAxis: {
+                axisLabel: 'Followers/Likes',
+                tickFormat: function(d) {
+                    return d3.format(',f')(d);
+                },
+                axisLabelDistance: 12
+            }
+        }
+    };
+    var value_array = [];
+    for (var lo_value in $scope.graph_data) {
+        value_array.push({
+            label: lo_value,
+            value: $scope.graph_data[lo_value]
+        });
+    }
+
+    $scope.data = [{
+        key: "Cumulative Return",
+        values: value_array
+    }];
+});
 app.controller('ArtistToolsController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService) {
         $scope.user = JSON.parse(SessionService.getUser());
 

@@ -1,4 +1,22 @@
 <ng-include src="'js/home/views/navigation.html'"></ng-include>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1719978144956959',
+      xfbml      : true,
+      version    : 'v2.6'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
 <!-- Content Start  -->
 <div class="container" ng-init="getDownloadList();checkIfSubmission()">
   <div class="content-area bg-white">
@@ -20,16 +38,27 @@
 	    </div>
 	  </div>
 
-	  <div class="row" ng-if="facebookPages[0]">
+	  <div class="row" ng-if="facebookPages">
       <div class="col-md-12 text-center">
         <h3>Select Facebook Page</h3>
         <div class="col-md-3"></div>
-        <div class="col-md-3" ng-repeat="facebookPage in facebookPages[0].pages track by $index">
-            <a href="#" class="btn btn-enter" ng-click="showFacebookPageState(facebookPage);">{{facebookPage.name}}</a>
+        <div class="col-md-3" ng-repeat="facebookPage in facebookPages track by $index" >
+            <a href="#" class="btn btn-enter" ng-click="authFacbook(facebookPage);">{{facebookPage.name}}</a>
         </div>
         <div class="col-md-3"></div>
 	    </div>
 	  </div>
+    <!-- <div class="row" ng-show="displayError">
+      <div class="col-md-12 text-center">
+        <h3>Enter Youtube channel id</h3><br>
+        <div class="col-md-3"></div>
+        <input class="col-md-12 text-center" type="text" ng-model="youtube_channelId"><button ng-click="authYoutube()">Enter</button>
+        <div class="col-md-3"></div>
+      </div>
+    </div> -->
+    <div ng-controller="graphControler" ng-if="enableGraph">
+        <nvd3 options="options" data="data"></nvd3>
+    </div>
 	</div>
 </div>
 <!-- Content End  -->

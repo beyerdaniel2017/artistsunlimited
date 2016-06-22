@@ -1,16 +1,72 @@
 'use strict';
-window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'satellizer']);
+window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'nvd3', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'satellizer']);
 
-app.config(function ($urlRouterProvider, $locationProvider, $uiViewScrollProvider) {
+app.config(function($urlRouterProvider, $locationProvider, $uiViewScrollProvider) {
     // This turns off hashbang urls (/#about) and changes it to something normal (/about)
     $locationProvider.html5Mode(true);
     // If we go to a URL that ui-router doesn't have registered, go to the "/" url.
     $urlRouterProvider.otherwise('/');
     // $uiViewScrollProvider.useAnchorScroll();
 });
+app.config(function($authProvider) {
+    $authProvider.facebook({
+        clientId: 'Facebook App ID'
+    });
 
+    // Optional: For client-side use (Implicit Grant), set responseType to 'token'
+    $authProvider.facebook({
+        clientId: 'Facebook App ID',
+        responseType: 'token'
+    });
+
+    $authProvider.google({
+        url: '',
+        clientId: '923811958466-kthtaatodor5mqq0pf5ub6km9msii82g.apps.googleusercontent.com',
+        scope: ['https://www.googleapis.com/auth/youtubepartner-channel-audit', 'https://www.googleapis.com/auth/youtube'],
+        responseType: 'token'
+    });
+
+    $authProvider.github({
+        clientId: 'GitHub Client ID'
+    });
+
+    $authProvider.linkedin({
+        clientId: 'LinkedIn Client ID'
+    });
+
+    $authProvider.instagram({
+        clientId: 'ae84968993fc4adf9b2cd246b763bf6b'
+
+    });
+
+    $authProvider.yahoo({
+        clientId: 'Yahoo Client ID / Consumer Key'
+    });
+
+    $authProvider.live({
+        clientId: 'Microsoft Client ID'
+    });
+
+    $authProvider.twitch({
+        clientId: 'Twitch Client ID'
+    });
+
+    $authProvider.bitbucket({
+        clientId: 'Bitbucket Client ID'
+    });
+
+    // No additional setup required for Twitter
+
+    $authProvider.oauth2({
+        name: 'foursquare',
+        url: '/auth/foursquare',
+        clientId: 'Foursquare Client ID',
+        redirectUri: window.location.origin,
+        authorizationEndpoint: 'https://foursquare.com/oauth2/authenticate',
+    });
+});
 // This app.run is for controlling access to specific states.
-app.run(function ($rootScope, AuthService, $state, $uiViewScroll, SessionService, AppConfig) {
+app.run(function($rootScope, AuthService, $state, $uiViewScroll, SessionService, AppConfig) {
     // The given state requires an authenticated user.
     // var destinationStateRequiresAuth = function (state) {
     //     return state.data && state.data.authenticate;
@@ -24,7 +80,7 @@ app.run(function ($rootScope, AuthService, $state, $uiViewScroll, SessionService
 
     // $stateChangeStart is an event fired
     // whenever the process of changing a state begins.
-    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams) {
         // if(toState = 'artistTools') {
         //     var user = SessionService.getUser();
         //     console.log(user);
@@ -61,16 +117,17 @@ app.run(function ($rootScope, AuthService, $state, $uiViewScroll, SessionService
 });
 
 app.directive('fbLike', [
-    '$window', '$rootScope', function ($window, $rootScope) {
+    '$window', '$rootScope',
+    function($window, $rootScope) {
         return {
             restrict: 'A',
             scope: {
                 fbLike: '=?'
             },
-            link: function (scope, element, attrs) {
+            link: function(scope, element, attrs) {
                 if (!$window.FB) {
                     // Load Facebook SDK if not already loaded
-                    $.getScript('//connect.facebook.net/en_US/sdk.js', function () {
+                    $.getScript('//connect.facebook.net/en_US/sdk.js', function() {
                         $window.FB.init({
                             appId: $rootScope.facebookAppId,
                             xfbml: true,
@@ -83,11 +140,12 @@ app.directive('fbLike', [
                 }
 
                 var watchAdded = false;
+
                 function renderLikeButton() {
                     if (!!attrs.fbLike && !scope.fbLike && !watchAdded) {
                         // wait for data if it hasn't loaded yet
                         watchAdded = true;
-                        var unbindWatch = scope.$watch('fbLike', function (newValue, oldValue) {
+                        var unbindWatch = scope.$watch('fbLike', function(newValue, oldValue) {
                             if (newValue) {
                                 renderLikeButton();
 
@@ -107,21 +165,21 @@ app.directive('fbLike', [
     }
 ])
 
-app.directive('fileread', [function () {
+app.directive('fileread', [function() {
     return {
         scope: {
             fileread: '=',
             message: '='
         },
-        link: function (scope, element, attributes) {
-            element.bind('change', function (changeEvent) {
-                scope.$apply(function () {
+        link: function(scope, element, attributes) {
+            element.bind('change', function(changeEvent) {
+                scope.$apply(function() {
                     scope.message = {
                         visible: false,
                         val: ''
                     };
-                    
-                    if(changeEvent.target.files[0].type != "audio/mpeg" && changeEvent.target.files[0].type != "audio/mp3") {
+
+                    if (changeEvent.target.files[0].type != "audio/mpeg" && changeEvent.target.files[0].type != "audio/mp3") {
                         scope.message = {
                             visible: true,
                             val: 'Error: Please upload mp3 format file.'
@@ -129,8 +187,8 @@ app.directive('fileread', [function () {
                         element.val(null);
                         return;
                     }
-                    
-                    if(changeEvent.target.files[0].size > 20*1000*1000) {
+
+                    if (changeEvent.target.files[0].size > 20 * 1000 * 1000) {
                         scope.message = {
                             visible: true,
                             val: 'Error: Please upload file upto 20 MB size.'
