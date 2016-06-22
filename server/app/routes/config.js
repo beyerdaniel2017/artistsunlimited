@@ -1,7 +1,7 @@
 module.exports = {
     'baseUrl': 'https://localhost:1443',
-    'CLIENT_ID': '505082485673-l26pmr17tne20hvoqblirnadbf5nu8rn.apps.googleusercontent.com',
-    'CLIENT_SEC': 'GmJjz4ctEywxwWDj4GB1Rh5k',
+    'CLIENT_ID': '634697887081-8b5r68vcomte522nst8d5nh2otf3nrvk.apps.googleusercontent.com',
+    'CLIENT_SEC': 'V0Kno41hqbns3XbVmdiwh17r',
     'REDIRECT_URL_VIDEO': 'https://localhost:1443/download',
     'REDIRECT_URL_SUBSCRIBE': 'https://localhost:1443/api/download/callbacksubscribe'
 };

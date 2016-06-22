@@ -194,7 +194,6 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
       });
   };
 
-
   $scope.checkIfEdit = function() {
     if ($stateParams.gatewayID) {
       $scope.getDownloadGateway($stateParams.gatewayID);

@@ -83,6 +83,19 @@
                           </ul>
                         </div>
 			            	  </div>
+                      <div class="col-md-4 col-sm-4 col-xs-10" style="margin-left: 45px;">
+                        <div class="checkbox-container">                
+                          <label class="with-square-checkbox">
+                          <input type="checkbox" ng-model="tradeType.Requests" ng-click="filterByTradeType()">
+                          <span>Requests</span> </label>                   
+                          <label class="with-square-checkbox">
+                          <input type="checkbox" value="{{Requested}}" ng-model="tradeType.Requested" ng-click="filterByTradeType()">
+                          <span>Requested</span></label>                   
+                          <label class="with-square-checkbox">
+                          <input type="checkbox" ng-model="tradeType.TradePartners" ng-click="filterByTradeType()">
+                          <span>Trade Partners</span> </label>                  
+                        </div>
+                      </div>
           				  </div>
                     </div>
                     <div class="scroll-bar1 border-top">

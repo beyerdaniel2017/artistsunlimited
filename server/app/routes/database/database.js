@@ -457,15 +457,20 @@ router.post('/downloadurl', function(req, res, next) {
   }
 
   function updateSoundCloudTrackInfo(downloadTrack) {
+    console.log('dltrack: ' + downloadTrack);
     return new Promise(function(resolve, reject) {
-      if (req.user && req.user.soundcloud && (String(body.fields.artistID) === req.user.soundcloud.id) && !body.fields._id) {
+      console.log('body.fields:');
+      console.log(body.fields);
+      console.log('user');
+      console.log(req.user);
+      if (req.user && req.user.soundcloud && (body.fields.artistID == req.user.soundcloud.id) && !body.fields._id) {
+        console.log('in');
         var token = req.user.soundcloud.token;
         var trackObj = {
-          purchase_url: rootURL + '/download?trackid=' + downloadTrack._id,
-          purchase_title: '|| D O W N L O A D'
-        };
-        trackObj.description = body.fields.description + '\n\nDownload for ' + downloadTrack.trackTitle + ' provided by ' + rootURL + '.';
-
+          purchase_url: rootURL + '/download?trackid=' + downloadTrack._id, //this doesnt work on localhost, but does on live
+          purchase_title: '|| D O W N L O A D',
+          description: body.fields.description + '\n\nDownload for ' + downloadTrack.trackTitle + ' provided by ' + rootURL + '.'
+        }
         request({
           method: 'PUT',
           url: 'https://api.soundcloud.com/tracks/' + downloadTrack.trackID + '?oauth_token=' + token,
@@ -533,7 +538,6 @@ router.get('/downloadurl/:id', function(req, res, next) {
 });
 
 router.get('/downloadurl', function(req, res, next) {
-
   DownloadTrack
     .find({
       userid: req.user._id

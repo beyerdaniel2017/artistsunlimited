@@ -5,19 +5,50 @@ var Trade = mongoose.model('Trade');
 var RepostEvent = mongoose.model('RepostEvent');
 
 router.get('/withUser/:userID', function(req, res, next) {
+  var tradeType = req.query.tradeType;
+  var query = {
+    $or: [{
+      'p1.user': req.params.userID
+    }, {
+      'p2.user': req.params.userID
+    }]
+  };  
+  if(tradeType != undefined){
+    tradeType = JSON.parse(tradeType);
+    if(tradeType.Requests == true || tradeType.Requested == true || tradeType.TradePartners == true){
+      query["$or"]=[];
+      if(tradeType.Requests == true){
+        query["$or"].push({
+          'p1.user': req.params.userID,
+          'p1.accepted': false
+        });
+      }
+      if(tradeType.Requested == true){
+        query["$or"].push({
+          'p2.user': req.params.userID,
+          'p2.accepted': false
+        });
+      }
+      if(tradeType.TradePartners == true){
+        query["$or"].push({
+          'p1.user': req.params.userID, 
+          'p1.accepted': true
+        });
+        query["$or"].push({
+          'p2.user': req.params.userID, 
+          'p2.accepted': true
+        });
+      }
+    }
+  }
+
   if (req.user._id != req.params.userID) {
     next({
       message: 'Forbidden',
       status: 403
     })
   } else {
-    Trade.find({
-        $or: [{
-          'p1.user': req.params.userID
-        }, {
-          'p2.user': req.params.userID
-        }]
-      }).populate('p1.user').populate('p2.user').exec()
+  Trade.find(query).populate('p1.user').populate('p2.user').exec()
       .then(function(trades) {
 
         var tradesResult = [];
