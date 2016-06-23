@@ -879,7 +879,7 @@ button:active:after {
 .convo-display {
   overflow-y: scroll;
   overflow-x: hidden;
-  height: 190px;
+  height: 180px;
   margin: 0;
   position: relative;
   padding: 15px 0 15px 0; }
@@ -2228,10 +2228,35 @@ input[type=range]:focus::-ms-fill-upper {
 	background-size: 12px;
 	z-index: 1;
 }*/
+.scroll-hide {
+  overflow: hidden; }
+
+.main-scroll-body {
+  overflow-y: scroll;
+  height: 100%;
+  top: 0;
+  position: absolute;
+  padding-top: 90px;
+  width: 100%;
+  overflow-x: hidden; }
+
+.main-scroll-body .pad-right {
+  margin-right: 24px; }
+
+.question-btn {
+  float: right;
+  margin: 10px 30px;
+  z-index: 1;
+  position: relative; }
+
 /*********** Media CSS **************/
 @media screen and (max-width: 1280px) {
   .min-ht {
-    min-height: 800px; } }
+    min-height: 800px; }
+  .main-scroll-body .pad-right {
+    margin-right: 40px; }
+  .question-btn {
+    margin: 10px 50px; } }
 
 @media screen and (max-width: 1024px) {
   /*.scroll-bar1 {
@@ -2285,7 +2310,11 @@ input[type=range]:focus::-ms-fill-upper {
   .left-menus ul li a {
     padding: 20px 10px; }
   .rfr-chat {
-    margin-top: 70px; } }
+    margin-top: 70px; }
+  .main-scroll-body .pad-right {
+    margin-right: 40px; }
+  .question-btn {
+    margin: 10px 50px; } }
 
 @media screen and (max-width: 667px) {
   .img-btn {
@@ -2356,7 +2385,11 @@ input[type=range]:focus::-ms-fill-upper {
   .label-username {
     height: initial; }
   .rfr-chat {
-    margin-top: 160px; } }
+    margin-top: 160px; }
+  .main-scroll-body .pad-right {
+    margin-right: 40px; }
+  .question-btn {
+    margin: 10px 50px; } }
 
 @media screen and (max-width: 360px) {
   .img-btn {
@@ -2373,7 +2406,11 @@ input[type=range]:focus::-ms-fill-upper {
   .scheduler-small {
     margin-top: 30px; }
   .label-username {
-    height: initial; } }
+    height: initial; }
+  .main-scroll-body .pad-right {
+    margin-right: 40px; }
+  .question-btn {
+    margin: 10px 50px; } }
 
 @media screen and (max-width: 320px) {
   .img-btn {
@@ -2397,8 +2434,13 @@ input[type=range]:focus::-ms-fill-upper {
     margin-top: 20px;
     margin-bottom: 30px; }
   .label-username {
-    height: initial; } }
+    height: initial; }
+  .main-scroll-body .pad-right {
+    margin-right: 40px; }
+  .question-btn {
+    margin: 10px 50px; } }
 
+/** MEDIA CSS END **/
 .padding-10 {
   padding: 10px; }
 
@@ -2409,16 +2451,4 @@ input[type=range]:focus::-ms-fill-upper {
   margin-top: 50px; }
 
 .chat-input {
-  height: 40px; }
-
-.scroll-hide {
-  overflow: hidden; }
-
-.main-scroll-body {
-  overflow-y: scroll;
-  height: 100%;
-  top: 0;
-  position: fixed;
-  padding-top: 90px;
-  width: 100%;
-  overflow-x: hidden; }
+  height: 38px; }

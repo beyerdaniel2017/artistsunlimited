@@ -102,9 +102,9 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
         submi: submi
       })
       .then(function(sub) {
-          $scope.showingElements.splice($scope.showingElements.indexOf(submi), 1);
-          $.Zebra_Dialog("Accepted");
-          $scope.processing = false;
+        $scope.showingElements.splice($scope.showingElements.indexOf(submi), 1);
+        $.Zebra_Dialog("Accepted");
+        $scope.processing = false;
       })
       .then(null, function(err) {
         $scope.processing = false;
@@ -119,10 +119,10 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
         submission: submission
       })
       .then(function(res) {
-          var index = $scope.showingElements.indexOf(submission);
-          $scope.showingElements.splice(index, 1);
-          $.Zebra_Dialog("Declined");
-          $scope.processing = false
+        var index = $scope.showingElements.indexOf(submission);
+        $scope.showingElements.splice(index, 1);
+        $.Zebra_Dialog("Declined");
+        $scope.processing = false
       })
       .then(null, function(err) {
         $scope.processing = false;
@@ -157,8 +157,8 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
               id: submission._id
             })
             .then(function(sub) {
-                $scope.showingElements.splice($scope.showingElements.indexOf(submission), 1);
-                $scope.processing = false;
+              $scope.showingElements.splice($scope.showingElements.indexOf(submission), 1);
+              $scope.processing = false;
             })
             .then(null, function(err) {
               $scope.processing = false;
