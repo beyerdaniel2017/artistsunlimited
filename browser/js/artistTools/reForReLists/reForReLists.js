@@ -165,6 +165,26 @@ app.controller("ReForReListsController", function($scope,$rootScope, currentTrad
 	  	$scope.$apply();
 	}
 
+    $scope.tradeType = {
+        Requests: true,
+        Requested: true,
+        TradePartners: true
+    };
+
+    $scope.filterByTradeType = function() {
+        var tradeType = $scope.tradeType;
+        tradeType = JSON.stringify(tradeType);
+        $http.get('/api/trades/withUser/' + $scope.user._id + '?tradeType=' + tradeType)
+        .then(function(res) {
+            var trades = res.data;
+            $scope.currentTrades = [];
+            trades.forEach(function(trade) {
+                trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
+                trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
+            });
+            $scope.currentTrades = trades;
+        })
+    }
 	$scope.sortResult = function(sortby) {
 		$scope.sortby = sortby;
 		var sort_order = $scope.sort_order;

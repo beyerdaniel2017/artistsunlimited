@@ -225,7 +225,6 @@ router.post("/instagram/follow_user", function(req, res, done) {
   }, function(error, response, body) {
 
     if (body.data.length > 0) {
-
       request.post({
         url: 'https://api.instagram.com/v1/users/' + body.data[0].id + '/relationship?access_token=' + access_token,
         form: {
@@ -253,32 +252,24 @@ router.post("/instagram/follow_user", function(req, res, done) {
         'msg': 'instagram user not found'
       });
     }
-
   });
-
 });
 
 router.post('/auth/instagram', function(req, res, done) {
   var accessTokenUrl = 'https://api.instagram.com/oauth/access_token';
-
   var params = {
-    client_id: req.body.clientId,
-    redirect_uri: req.body.redirectUri,
-    client_secret: '2fb6196d81064e94a8877285779274d6',
+    client_id: env.INSTAGRAM.clientID,
+    client_secret: env.INSTAGRAM.clientSecret,
+    redirect_uri: env.INSTAGRAM.callbackUrl,
     code: req.body.code,
     grant_type: 'authorization_code'
   };
-
   request.post({
     url: accessTokenUrl,
     form: params,
     json: true
   }, function(error, response, body) {
-
-    // console.log(response);
-
     res.json(response.body.access_token);
-
   });
 });
 
@@ -297,7 +288,7 @@ router.post("/twitter/auth", function(req, res, done) {
     var requestTokenOauth = {
       consumer_key: env.TWITTER.consumerKey,
       consumer_secret: env.TWITTER.consumerSecret,
-      callback: req.body.redirectUri
+      callback: env.TWITTER.callbackUrl,
     };
 
     // Step 1. Obtain request token for the authorization popup.
@@ -306,10 +297,10 @@ router.post("/twitter/auth", function(req, res, done) {
       oauth: requestTokenOauth
     }, function(err, response, body) {
       var oauthToken = qs.parse(body);
-
       res.send(oauthToken);
     });
-  } else {
+  } 
+  else {
     // Part 2 of 2: Second request after Authorize app is clicked.
     var accessTokenOauth = {
       consumer_key: env.TWITTER.consumerKey,
@@ -326,13 +317,15 @@ router.post("/twitter/auth", function(req, res, done) {
         //console.log(req.header('Authorization'));
         accessToken = qs.parse(accessToken);
         res.send(accessToken);
-      } else {
+      } 
+      else {
         console.log("Error from twitter callbacks" + err);
       }
     });
 
   }
 });
+
 router.post("/twitter/follow", function(req, res, done) {
   //console.log("request body <downloadTracks.js>:"+"\n"+JSON.stringify(req.params)+"\n"+JSON.stringify(req.body)+"\n"+JSON.stringify(req.query));
   var followUrl = 'https://api.twitter.com/1.1/friendships/create.json?screen_name=' + req.body.screen_name;
@@ -344,12 +337,9 @@ router.post("/twitter/follow", function(req, res, done) {
   };
   request.post({
     url: followUrl,
-    oauth: profileOauthData,
-
+    oauth:profileOauthData
   }, function(err, response, follow) {
-    //console.log("hit "+err,response,follow);
     if (!err) {
-      console.log(follow);
       res.send(follow);
     } else {
       console.log("Error from twitter oauth login attempt " + err);
@@ -358,7 +348,6 @@ router.post("/twitter/follow", function(req, res, done) {
 });
 
 router.post("/twitter/post", function(req, res, done) {
-  console.log(JSON.stringify(req.body));
   var profileOauthData = {
     consumer_key: env.TWITTER.consumerKey,
     consumer_secret: env.TWITTER.consumerSecret,
@@ -372,7 +361,6 @@ router.post("/twitter/post", function(req, res, done) {
     oauth: profileOauthData
   }, function(err, response, tweet) {
     if (!err) {
-      console.log(tweet);
       res.send(tweet);
     } else {
       console.log("<downloadTracks.js>:error while posting to twitter,error=" + err);
@@ -381,68 +369,7 @@ router.post("/twitter/post", function(req, res, done) {
 });
 // For Twitter
 
-router.post('/auth/twitter', function(req, res) {
-
-  var requestTokenUrl = 'https://api.twitter.com/oauth/request_token';
-  var accessTokenUrl = 'https://api.twitter.com/oauth/access_token';
-  var profileUrl = 'https://api.twitter.com/1.1/users/show.json?screen_name=';
-
-  if (!req.body.oauth_token || !req.body.oauth_verifier) {
-    var requestTokenOauth = {
-      consumer_key: env.TWITTER.consumerKey,
-      consumer_secret: env.TWITTER.consumerSecret,
-      callback: req.body.redirectUri
-    };
-
-    request.post({
-      url: requestTokenUrl,
-      oauth: requestTokenOauth
-    }, function(err, response, body) {
-      var oauthToken = qs.parse(body);
-
-      res.send(oauthToken);
-
-    });
-
-  } else {
-
-    var accessTokenOauth = {
-      consumer_key: env.TWITTER.consumerKey,
-      consumer_secret: env.TWITTER.consumerSecret,
-      token: req.body.oauth_token,
-      verifier: req.body.oauth_verifier
-    };
-
-    request.post({
-      url: accessTokenUrl,
-      oauth: accessTokenOauth
-    }, function(err, response, accessToken) {
-
-      accessToken = qs.parse(accessToken);
-
-      var profileOauth = {
-        consumer_key: env.TWITTER.consumerKey,
-        consumer_secret: env.TWITTER.consumerSecret,
-        oauth_token: accessToken.oauth_token
-      };
-
-      request.post({
-        url: profileUrl + 'dhavalpvrin',
-        oauth: profileOauth,
-        json: true
-      }, function(err, response, profile) {
-
-      });
-    });
-  }
-});
-
-
-// THIS PORTION IS NEWLY ADDED
-
 // For Youtube
-
-
 router.get("/callbacksubscribe", function(req, res, next) {
   oauth.getToken(req.query.code, function(err, tokens) {
     if (err) {
@@ -452,7 +379,6 @@ router.get("/callbacksubscribe", function(req, res, next) {
     /*
      * Youtube subscribed to channel
      */
-
     var options = {
       uri: 'https://www.googleapis.com/youtube/v3/subscriptions?part=snippet',
       method: 'POST',
@@ -478,13 +404,7 @@ router.get("/callbacksubscribe", function(req, res, next) {
         res.send("You have error in subscribing to user. You will not be redirected to downloading track");
       }
     });
-
-    /*
-     * Youtube subscribed to channel
-     */
-
   });
-
 });
 
 router.get("/subscribe", function(req, res, next) {

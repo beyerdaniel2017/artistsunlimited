@@ -26,10 +26,15 @@ module.exports = {
         "accessKeyId": process.env.AWS_ACCESS_KEY_ID,
         "secretAccessKey": process.env.AWS_SECRET_ACCESS_KEY
     },
+    "INSTAGRAM": {
+        "clientID": process.env.INSTAGRAM_CLIENT_ID,
+        "clientSecret": process.env.INSTAGRAM_CLIENT_SECRET,
+        "callbackUrl": process.env.INSTAGRAM_CALLBACK_URL
+      },
     "TWITTER": {
         "consumerKey": process.env.TWITTER_CONSUMER_KEY,
         "consumerSecret": process.env.TWITTER_CONSUMER_SECRET,
-        "callbackUrl": process.env.TWITTER_CALLBACK
+        "callbackUrl": process.env.TWITTER_CALLBACK_URL
     },
     "FACEBOOK": {
         "clientID": process.env.FACEBOOK_APP_ID,

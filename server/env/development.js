@@ -21,11 +21,12 @@ module.exports = {
   },
   "INSTAGRAM": {
     "clientID": "0b2ab47baa464c31bf6d8e9f301d4469",
-    "clientSecret": "bc084d93e74c4210ab26340bca24c79a"
+    "clientSecret": "bc084d93e74c4210ab26340bca24c79a",
+    "callbackUrl": "https://localhost:1443/download"
   },
   "TWITTER": {
-    "consumerKey": "FMd5bXJSNlXpvz3KpCcsHJzcN",
-    "consumerSecret": "JYUVZIJI8MeOiIM8gRHLh7oiyaqFm7Xk54AaKdWWdyAU5P5dyn",
+    "consumerKey": "5zGuJpzTAqoHOuRdziAhf5OtG",
+    "consumerSecret": "4edfdG7GZpxPv7nannqnhPEPseVqGLz1RPcCta8lXl4UPSOexG",
     "callbackUrl": "https://localhost:1443/download"
   },
   "FACEBOOK": {
