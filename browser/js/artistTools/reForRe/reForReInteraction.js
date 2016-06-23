@@ -86,7 +86,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.p1Events = p1Events;
   $scope.p2Events = p2Events;
   $scope.currentTrades = currentTrades;
-  $scope.tradeIndex = currentTrades.findIndex(function(el) {
+  $scope.selectTrade = currentTrades.find(function(el) {
     return el._id == $scope.trade._id;
   });
   var person = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1 : $scope.trade.p2;
@@ -110,7 +110,6 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         })
         .then(function(tracks) {
           $scope.trackList = tracks;
-          console.log($scope.trackList);
           $scope.processing = false;
           $scope.$apply();
         })
@@ -220,10 +219,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     return blockEvents.length > 0 || blockEvents2.length > 0;
   }
 
-  $scope.changeTrade = function(index) {
-    console.log(index);
+  $scope.changeTrade = function(trade) {
+    console.log(trade);
     $state.go('reForReInteraction', {
-      tradeID: $scope.currentTrades[index]._id
+      tradeID: trade._id
     })
   }
 

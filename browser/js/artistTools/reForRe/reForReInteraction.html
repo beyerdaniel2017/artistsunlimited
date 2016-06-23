@@ -83,8 +83,7 @@
 			</div>
 		</div>
 		<div class="trade-options">
-			<select class='form-control select-rfr' name='tradeIndex' ng-model='tradeIndex'  ng-change="changeTrade(tradeIndex)">
-				<option ng-repeat="trade in currentTrades track by $index" value="{{$index}}">{{trade.other.user.name}}</option>
+			<select class='form-control select-rfr' name='tradeIndex' ng-model='selectTrade'  ng-change="changeTrade(selectTrade)" ng-options="trade.other.user.name for trade in currentTrades">
 			</select>
 			<span style="text-align:center; margin:10px; margin-top:0px; width:100%; display:inline-block;" ng-if="user.accepted">You accepted this trade. Waiting for the other user.</span>
 			<button ng-if="!user.accepted" class="btn btn-default btn-option" ng-style="user.accepted?{'background-color':'gray'}:{}" ng-click="accept()">Accept</button>
