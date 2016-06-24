@@ -86,7 +86,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.p1Events = p1Events;
   $scope.p2Events = p2Events;
   $scope.currentTrades = currentTrades;
-  $scope.tradeIndex = currentTrades.findIndex(function(el) {
+  $scope.selectTrade = currentTrades.find(function(el) {
     return el._id == $scope.trade._id;
   });
   var person = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1 : $scope.trade.p2;
@@ -96,7 +96,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
 
   $scope.trackList = [];
 
-  $scope.trackListChange = function(index) {
+  $scope.trackListChangeEvent = function(index) {
     $scope.makeEvent.URL = $scope.makeEvent.trackListObj.permalink_url;
     $scope.changeURL();
   };
@@ -171,31 +171,31 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.changeURL = function() {
-    if($scope.makeEvent.URL != ""){
-    $scope.processing = true;
-    $http.post('/api/soundcloud/resolve', {
-        url: $scope.makeEvent.URL
-      })
-      .then(function(res) {
-        $scope.makeEvent.trackID = res.data.id;
-        $scope.makeEvent.title = res.data.title;
-        $scope.makeEvent.trackURL = res.data.trackURL;
-        if (res.data.user) $scope.makeEvent.artistName = res.data.user.username;
-        SC.oEmbed($scope.makeEvent.URL, {
-          element: document.getElementById('scPlayer'),
-          auto_play: false,
-          maxheight: 150
+    if ($scope.makeEvent.URL != "") {
+      $scope.processing = true;
+      $http.post('/api/soundcloud/resolve', {
+          url: $scope.makeEvent.URL
         })
-        document.getElementById('scPlayer').style.visibility = "visible";
-        $scope.notFound = false;
-        $scope.processing = false;
-      }).then(null, function(err) {
-        $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
-        document.getElementById('scPlayer').style.visibility = "hidden";
-        $scope.notFound = true;
-        $scope.processing = false;
-      });
-  }
+        .then(function(res) {
+          $scope.makeEvent.trackID = res.data.id;
+          $scope.makeEvent.title = res.data.title;
+          $scope.makeEvent.trackURL = res.data.trackURL;
+          if (res.data.user) $scope.makeEvent.artistName = res.data.user.username;
+          SC.oEmbed($scope.makeEvent.URL, {
+            element: document.getElementById('scPlayer'),
+            auto_play: false,
+            maxheight: 150
+          })
+          document.getElementById('scPlayer').style.visibility = "visible";
+          $scope.notFound = false;
+          $scope.processing = false;
+        }).then(null, function(err) {
+          $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
+          document.getElementById('scPlayer').style.visibility = "hidden";
+          $scope.notFound = true;
+          $scope.processing = false;
+        });
+    }
   }
 
 
@@ -219,10 +219,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     return blockEvents.length > 0 || blockEvents2.length > 0;
   }
 
-  $scope.changeTrade = function(index) {
-    console.log(index);
+  $scope.changeTrade = function(trade) {
+    console.log(trade);
     $state.go('reForReInteraction', {
-      tradeID: $scope.currentTrades[index]._id
+      tradeID: trade._id
     })
   }
 
@@ -365,12 +365,12 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         break;
 
       case 'traded':
-        if (event.owner == $scope.user._id) {
-          $scope.setUpAndOpenMakeEvent(event, person);
-        } else {
-          $.Zebra_Dialog('Cannot manage this time slot.');
-          return;
-        }
+        // if (event.owner == $scope.user._id) {
+        $scope.setUpAndOpenMakeEvent(event, person);
+        // } else {
+        //   $.Zebra_Dialog('Cannot manage this time slot.');
+        //   return;
+        // }
         break;
     }
   }
@@ -426,7 +426,6 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     //overlay autofill track start//
 
   $scope.autoFillTracks = [];
-  $scope.trackList = [];
   $scope.trackListObj = null;
   $scope.trackListSlotObj = null;
   $scope.newQueueSong = "";
@@ -454,57 +453,39 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.changeQueueSong = function() {
-    if($scope.newQueueSong != ""){
+    if ($scope.newQueueSong != "") {
       $scope.processing = true;
-    $http.post('/api/soundcloud/resolve', {
-        url: $scope.newQueueSong
-      })
-      .then(function(res) {
-        $scope.processing = false;
-        var track = res.data;
-        $scope.newQueue = track;
-        $scope.newQueueID = track.id;
-      })
-      .then(null, function(err) {
-        $scope.newQueueSong = "";
-        $('#autoFillTrack').modal('hide');
-        $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
-        $scope.processing = false;
-      });
-  }
+      $http.post('/api/soundcloud/resolve', {
+          url: $scope.newQueueSong
+        })
+        .then(function(res) {
+          $scope.processing = false;
+          var track = res.data;
+          $scope.newQueue = track;
+          $scope.newQueueID = track.id;
+        })
+        .then(null, function(err) {
+          $scope.newQueueSong = "";
+          $('#autoFillTrack').modal('hide');
+          $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
+          $scope.processing = false;
+        });
+    }
   }
 
   $scope.saveUser = function() {
-    $scope.processing = true;
-    $http.put("/api/database/profile", $scope.user)
-      .then(function(res) {
-        SessionService.create(res.data);
-        $scope.user = SessionService.getUser();
-        $scope.processing = false;
-      })
-      .then(null, function(err) {
-        $.Zebra_Dialog("Error: did not save");
-        $scope.processing = false;
-      });
-    $('#autoFillTrack').modal('hide');
-  }
-  $scope.getTrackListFromSoundcloud = function() {
-      var profile = $scope.user;
-      if (profile.soundcloud) {
-        $scope.processing = true;
-        SC.get('/users/' + profile.soundcloud.id + '/tracks', {
-            filter: 'public'
-          })
-          .then(function(tracks) {
-            $scope.trackList = tracks;
-            $scope.processing = false;
-            $scope.$apply();
-          })
-          .catch(function(response) {
-            $scope.processing = false;
-            $scope.$apply();
-          });
-      }
+      $scope.processing = true;
+      $http.put("/api/database/profile", $scope.user)
+        .then(function(res) {
+          SessionService.create(res.data);
+          $scope.user = SessionService.getUser();
+          $scope.processing = false;
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("Error: did not save");
+          $scope.processing = false;
+        });
+      $('#autoFillTrack').modal('hide');
     }
     //overlay autofill track end//
   $scope.dayOfWeekAsString = function(date) {
@@ -717,7 +698,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         'color': 'rgba(0,0,0,0)'
       }
     } else if (event.type == 'traded') {
-      if (event.owner == $scope.user._id) {
+      if (event.owner == $scope.trade.p1.user._id || event.owner == $scope.trade.p2.user._id) {
         return {
           'background-color': '#FFE1AB'
         }
@@ -743,7 +724,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.showBoxInfo = function(event) {
-    return (event.type == 'trade' || event.type == 'traded' && event.owner == $scope.user._id)
+    return (event.type == 'trade' || event.type == 'traded')
   }
 
   $scope.followerShow = function() {

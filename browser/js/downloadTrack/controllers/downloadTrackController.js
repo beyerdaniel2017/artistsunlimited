@@ -25,7 +25,7 @@ app.config(function($stateProvider, $authProvider, $httpProvider) {
     $authProvider.twitter({
         url: '/api/download/twitter/auth',
         authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
-        redirectUri: 'https://localhost:1443/download',
+        redirectUri: 'https://artistsunlimited.co/download', //must match website
         type: '1.0',
         popupOptions: {
             width: 495,
@@ -118,8 +118,7 @@ app.controller('DownloadTrackController', ['$rootScope',
                             if (records.data.screen_name === $scope.track.socialPlatformValue) {
                                 window.location.replace($scope.track.downloadURL);
                             }
-                        } 
-                        else {
+                        } else {
                             $.Zebra_Dialog('Error in processing the request. Please try again.');
                         }
                     });

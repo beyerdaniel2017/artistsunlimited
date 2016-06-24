@@ -124,12 +124,12 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.makeEventURL = undefined;
     $scope.trackListSlotObj = undefined;
     $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
-    if ($scope.makeEvent.type == 'traded' || $scope.makeEvent.type == 'paid') {
-      $scope.showOverlay = false;
-      $scope.makeEvent = undefined;
-      $.Zebra_Dialog("Cannot manage a traded or paid slot.");
-      return;
-    }
+    // if ($scope.makeEvent.type == 'traded' || $scope.makeEvent.type == 'paid') {
+    //   $scope.showOverlay = false;
+    //   $scope.makeEvent = undefined;
+    //   $.Zebra_Dialog("Cannot manage a traded or paid slot.");
+    //   return;
+    // }
     if ($scope.makeEvent.type == "empty") {
       var makeDay = new Date(day);
       makeDay.setHours(hour);
@@ -153,6 +153,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       });
       $scope.newEvent = false;
     }
+    console.log($scope.makeEvent.type);
   }
 
   $scope.changeQueueSlot = function() {
@@ -164,31 +165,31 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.changeURL = function() {
-    if($scope.makeEventURL != ""){
-    $scope.processing = true;
-    $http.post('/api/soundcloud/resolve', {
-        url: $scope.makeEventURL
-      })
-      .then(function(res) {
-        $scope.makeEvent.trackID = res.data.id;
-        $scope.makeEvent.title = res.data.title;
-        $scope.makeEvent.trackURL = res.data.trackURL;
-        if (res.data.user) $scope.makeEvent.artistName = res.data.user.username;
-        SC.oEmbed($scope.makeEventURL, {
-          element: document.getElementById('scPlayer'),
-          auto_play: false,
-          maxheight: 150
+    if ($scope.makeEventURL != "") {
+      $scope.processing = true;
+      $http.post('/api/soundcloud/resolve', {
+          url: $scope.makeEventURL
         })
-        document.getElementById('scPlayer').style.visibility = "visible";
-        $scope.notFound = false;
-        $scope.processing = false;
-      }).then(null, function(err) {
-        $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
-        document.getElementById('scPlayer').style.visibility = "hidden";
-        $scope.notFound = true;
-        $scope.processing = false;
-      });
-  }
+        .then(function(res) {
+          $scope.makeEvent.trackID = res.data.id;
+          $scope.makeEvent.title = res.data.title;
+          $scope.makeEvent.trackURL = res.data.trackURL;
+          if (res.data.user) $scope.makeEvent.artistName = res.data.user.username;
+          SC.oEmbed($scope.makeEventURL, {
+            element: document.getElementById('scPlayer'),
+            auto_play: false,
+            maxheight: 150
+          })
+          document.getElementById('scPlayer').style.visibility = "visible";
+          $scope.notFound = false;
+          $scope.processing = false;
+        }).then(null, function(err) {
+          $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
+          document.getElementById('scPlayer').style.visibility = "hidden";
+          $scope.notFound = true;
+          $scope.processing = false;
+        });
+    }
   }
 
   $scope.deleteEvent = function() {
@@ -302,22 +303,22 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.changeQueueSong = function() {
-    if($scope.newQueueSong != ""){
-    $scope.processing = true;
-    $http.post('/api/soundcloud/resolve', {
-        url: $scope.newQueueSong
-      })
-      .then(function(res) {
-        $scope.processing = false;
-        var track = res.data;
-        $scope.newQueue = track;
-        $scope.newQueueID = track.id;
-      })
-      .then(null, function(err) {
-        $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
-        $scope.processing = false;
-      });
-  }
+    if ($scope.newQueueSong != "") {
+      $scope.processing = true;
+      $http.post('/api/soundcloud/resolve', {
+          url: $scope.newQueueSong
+        })
+        .then(function(res) {
+          $scope.processing = false;
+          var track = res.data;
+          $scope.newQueue = track;
+          $scope.newQueueID = track.id;
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
+          $scope.processing = false;
+        });
+    }
   }
 
   $scope.moveUp = function(index) {
