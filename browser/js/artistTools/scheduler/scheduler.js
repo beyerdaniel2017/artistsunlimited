@@ -154,10 +154,10 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       });
       $scope.newEvent = false;
     }
-    console.log($scope.makeEvent.type);
   }
 
   $scope.changeQueueSlot = function() {
+    console.log('hi');
     $scope.makeEvent.title = null;
     $scope.makeEvent.trackURL = null;
     $scope.makeEvent.artistName = null;
@@ -166,7 +166,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.changeURL = function() {
-    if ($scope.makeEventURL != "") {
+    console.log($scope.makeEventURL);
+    if ($scope.makeEventURL) {
       $scope.processing = true;
       $http.post('/api/soundcloud/resolve', {
           url: $scope.makeEventURL

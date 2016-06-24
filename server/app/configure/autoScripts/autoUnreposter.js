@@ -60,7 +60,7 @@ function unrepostEvent(event, user) {
     }
   };
   scWrapper.request(reqObj, function(err, data) {
-    if (data){
+    if (!err) {
       putMessage(event, user);
     }
   });
@@ -68,19 +68,31 @@ function unrepostEvent(event, user) {
 
 /*Update Message*/
 function putMessage(event, user) {
-  var query = { $or: [{ 'p1.user': event.owner }, { 'p2.user': event.owner }], $or: [{ 'p1.user': user._id }, { 'p2.user': user._id }]};
-  var message={
-    type:'alert',
-    text:'A track was unreposted on ' + user.soundcloud.username,
-    senderId:event.owner,
-    date:new Date()
+  var query = {
+    $or: [{
+      'p1.user': event.owner,
+      'p2.user': user._id
+    }, {
+      'p2.user': event.owner,
+      'p1.user': user._id
+    }]
   };
-  Trade.update(query,{$addToSet:{messages:message}})
-  .exec()
-  .then(function(data) {
-    //Success
-  })
-  .then(null, function(error) {
-    //Error
-  });
+  var message = {
+    type: 'alert',
+    text: 'A track was unreposted on ' + user.soundcloud.username,
+    senderId: event.owner,
+    date: new Date()
+  };
+  Trade.update(query, {
+      $addToSet: {
+        messages: message
+      }
+    })
+    .exec()
+    .then(function(data) {
+      //Success
+    })
+    .then(null, function(error) {
+      //Error
+    });
 }

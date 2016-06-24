@@ -23,7 +23,7 @@
                 <div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
                   <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendar[l+dayIncr].events[p])" class="row-scheduler" ng-click="clickedSlot(calendar[l+dayIncr].day, p)" style="position:relative;">
                    <span>{{calendar[l+dayIncr].events[p].title}}</span>
-                   <img ng-if="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img>
+                   <img ng-show="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img>
                  </div>
                </div>
              </div>
@@ -31,7 +31,7 @@
              <div class="overlay" ng-show="showOverlay">
               <div class="label-scheduler label-smaller slot-box">
                 <span style="font-size:1.25em">{{makeEvent.day.toLocaleDateString()}}     {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
-                <div ng-if="!(makeEvent.type=='traded'||makeEvent.type=='paid')">
+                <div ng-show="!(makeEvent.type=='traded'||makeEvent.type=='paid')">
                   <input type="checkbox" ng-model="makeEvent.type" ng-true-value="'queue'" ng-false-value="'track'" ng-change="changeQueueSlot()"/><span> Autofill Slot</span><br>
                   <input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()"/><span> Unrepost after 24h</span><br>
                   <div ng-hide="(makeEvent.type == 'queue')">
@@ -45,8 +45,8 @@
                 <br>
                 <div>
                   <button class="btn btn-default btn-small btn-overlay" ng-click="backEvent()">Back</button>
-                  <button ng-if="!(makeEvent.type=='traded'||makeEvent.type=='paid')" class="btn btn-default btn-small btn-overlay" ng-click="deleteEvent()" style="margin:0 30px 0 30px;">Delete</button>
-                  <button ng-if="!(makeEvent.type=='traded'||makeEvent.type=='paid')" class="btn btn-default btn-small btn-overlay" ng-click="saveEvent()">Save</button>
+                  <button ng-show="!(makeEvent.type=='traded'||makeEvent.type=='paid')" class="btn btn-default btn-small btn-overlay" ng-click="deleteEvent()" style="margin:0 30px 0 30px;">Delete</button>
+                  <button ng-show="!(makeEvent.type=='traded'||makeEvent.type=='paid')" class="btn btn-default btn-small btn-overlay" ng-click="saveEvent()">Save</button>
                   <br><br>
                   <button ng-click="emailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/email_icon.png' style="height:30px; width:50px;"></button>
                 </div>

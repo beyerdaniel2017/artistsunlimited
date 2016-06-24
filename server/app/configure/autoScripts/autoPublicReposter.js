@@ -52,10 +52,10 @@ function doRepost() {
 }
 
 function repostAndRemove(event, user) {
-  var message={
-    type:'alert',
-    senderId:event.owner,
-    date:new Date()
+  var message = {
+    type: 'alert',
+    senderId: event.owner,
+    date: new Date()
   };
   var idPromise = getID(event, user);
   idPromise.then(function(id) {
@@ -72,12 +72,13 @@ function repostAndRemove(event, user) {
         if (!err) {
           event.completed = true;
           event.save();
-        message.text='There was an error reposting a track on ' + user.soundcloud.username;
-        putMessage(event, user, message);
+          message.text = 'There was an error reposting a track on ' + user.soundcloud.username;
+          putMessage(event, user, message);
+        } else {
+          message.text = 'A track was reposted on ' + user.soundcloud.username;
+          putMessage(event, user, message);
+          sendMessage(err, event, user);
         }
-      message.text = 'A track was reposted on ' + user.soundcloud.username;
-      putMessage(event, user, message);
-        sendMessage(err, event, user);
       });
     })
     .then(null, function() {
@@ -87,16 +88,28 @@ function repostAndRemove(event, user) {
 
 /*Update Message*/
 function putMessage(event, user, message) {
-  var query = { $or: [{ 'p1.user': event.owner }, { 'p2.user': event.owner }],$or: [{ 'p1.user': user._id }, { 'p2.user': user._id }]};
-  Trade.update(query,{$addToSet:{messages:message}})
-  .exec()
-  .then(function(data) {
-    //Success
-  })
-  .then(null, function(error) {
-    //Error
-  });
- }
+  var query = {
+    $or: [{
+      'p2.user': user._id,
+      'p1.user': event.owner
+    }, {
+      'p2.user': event.owner,
+      'p1.user': user._id
+    }]
+  };
+  Trade.update(query, {
+      $addToSet: {
+        messages: message
+      }
+    })
+    .exec()
+    .then(function(data) {
+      //Success
+    })
+    .then(null, function(error) {
+      //Error
+    });
+}
 
 function getID(event, user) {
   return new Promise(function(resolve, reject) {
