@@ -141,17 +141,24 @@ app.controller('DownloadTrackController', ['$rootScope',
 
         /* Function for Youtube */
         $scope.authenticateYoutube = function(track) {
-            var trackUrl = $scope.track.downloadURL
-            $http({
-                method: "GET",
-                url: '/api/download/subscribe',
-                params: {
-                    trackURL: trackUrl,
-                    channelID: $scope.track.socialPlatformValue
-                }
-            }).then(function(response) {
-                console.log(response)
-            });
+            $http.get('https://www.googleapis.com/youtube/v3/channels?key=AIzaSyBOuRHx25VQ69MrTEcvn-hIdkZ8NsZwsLw&forUsername=' + $scope.track.socialPlatformValue + '&part=id').then(function(response) {
+                    if (response.data.items[0]) {
+                        return $http({
+                            method: "GET",
+                            url: '/api/download/subscribe',
+                            params: {
+                                trackURL: $scope.track.downloadURL,
+                                channelID: response.data.items[0].id
+                            }
+                        })
+                    } else throw new Error();
+                })
+                .then(function(response) {
+                    console.log(response)
+                })
+                .then(null, function() {
+                    $.Zebra_Dialog('Youtube channel to subscribe to not found');
+                })
         }
 
         /* Default processing on page load */
