@@ -39,5 +39,12 @@ module.exports = {
     "clientSecret": "INSERT_GOOGLE_CLIENT_SECRET_HERE",
     "callbackURL": "INSERT_GOOGLE_CALLBACK_HERE"
   },
+  "YOUTUBE": {
+    'baseUrl': 'https://localhost:1443',
+    'CLIENT_ID': '634697887081-8b5r68vcomte522nst8d5nh2otf3nrvk.apps.googleusercontent.com',
+    'CLIENT_SEC': 'V0Kno41hqbns3XbVmdiwh17r',
+    'REDIRECT_URL_VIDEO': 'https://localhost:1443/download',
+    'REDIRECT_URL_SUBSCRIBE': 'https://localhost:1443/api/download/callbacksubscribe'
+  },
   "ROOTURL": "https://localhost:1443"
 };

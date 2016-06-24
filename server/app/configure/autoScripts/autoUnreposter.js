@@ -61,8 +61,6 @@ function unrepostEvent(event, user) {
     }
   };
   scWrapper.request(reqObj, function(err, data) {
-    console.log(err);
-    console.log(data);
     if (!err) {
       putMessage(event, user);
     }

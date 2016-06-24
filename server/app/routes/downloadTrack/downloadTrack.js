@@ -11,7 +11,6 @@ var router = require('express').Router();
 var Promise = require('bluebird');
 var request = require('request');
 var qs = require('qs');
-var config = require("./../config.js");
 module.exports = router;
 
 var mongoose = require('mongoose');
@@ -417,9 +416,9 @@ router.get("/subscribe", function(req, res, next) {
   req.session.channelID = channelID;
   oauth = Youtube.authenticate({
     type: "oauth",
-    client_id: config.CLIENT_ID,
-    client_secret: config.CLIENT_SEC,
-    redirect_url: config.REDIRECT_URL_SUBSCRIBE
+    client_id: env.YOUTUBE.CLIENT_ID,
+    client_secret: env.YOUTUBE.CLIENT_SEC,
+    redirect_url: env.YOUTUBE.REDIRECT_URL_SUBSCRIBE
   });
 
   Opn(oauth.generateAuthUrl({
