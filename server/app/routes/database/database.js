@@ -26,6 +26,7 @@ var request = require('request');
 var rootURL = require('./../../../env').ROOTURL;
 var nodeID3 = require('node-id3');
 var scWrapper = require("../../SCWrapper/SCWrapper.js");
+var crypto = require('crypto');
 
 scWrapper.init({
   id: scConfig.clientID,
@@ -654,6 +655,117 @@ router.put('/profile', function(req, res, next) {
     .then(null, next);
 });
 
+var generateSalt = function() {
+    return crypto.randomBytes(16).toString('base64');
+};
+
+var encryptPassword = function(plainText, salt) {
+    var hash = crypto.createHash('sha1');
+    hash.update(plainText);
+    hash.update(salt);
+    return hash.digest('hex');
+};
+
+router.put('/thirdPartyDetails', function(req, res, next) {
+  var salt = generateSalt();
+  var username = req.body.data.username;
+  var password = encryptPassword(req.body.data.passwordPlain, salt);
+  var passwordPlain = req.body.data.passwordPlain;
+  User.findOneAndUpdate({
+    '_id': req.body.userid
+  }, {
+    $set: { 
+      'thirdPartyInfo.username': username, 
+      'thirdPartyInfo.password': password,
+      'thirdPartyInfo.passwordPlain': passwordPlain, 
+      'thirdPartyInfo.salt': salt 
+    }
+  }, {
+    new: true
+  }).exec()
+  .then(function(result) {
+    res.send(result);
+  })
+  .then(null, function(err) {
+    next(err);
+  });
+});
+
+router.put('/deleteThirdPartyAccess', function(req, res, next) {
+  User.findOneAndUpdate({
+    '_id': req.body.userid
+  }, {
+    $set: { 
+      thirdPartyInfo: {}
+    }
+  }, {
+    new: true
+  }).exec()
+  .then(function(result) {
+    res.send(result);
+  })
+  .then(null, function(err) {
+    next(err);
+  });  
+});
+
+router.put('/saveLinkedAccount', function(req, res, next) {  
+  var username = req.body.data.username;
+  var password = req.body.data.password;
+  User.findOne({'thirdPartyInfo.username' : username, 'thirdPartyInfo.passwordPlain': password})
+  .then(function(user) {
+    if(user){
+      var linkedAccount = { 
+        username: username, 
+        password: password,
+        soundcloud: user.soundcloud
+      };
+      User.findOneAndUpdate({
+        '_id': req.body.userid
+      }, {
+        $addToSet: { 
+          linkedAccounts: linkedAccount
+        }
+      }, {
+        new: true
+      }).exec()
+      .then(function(result) {
+        res.send(result);
+      })
+      .then(null, function(err) {
+        next("Error in processing the request.");
+      });
+    }
+    else{
+      res.send(null);
+    }
+  })
+  .then(null, function(err) { 
+    next(err);
+  });  
+});
+
+router.put('/deleteLinkedAccount', function(req, res, next) {
+  var username = req.body.data.username;
+  var password = req.body.data.password;  
+  User.findOneAndUpdate({
+    '_id': req.body.userid
+  }, {
+    $pull: { 
+      linkedAccounts: {username: username, password:password}
+    }
+  }, {
+    new: true
+  }).exec()
+  .then(function(result) {
+    res.send(result);
+  })
+  .then(null, function(err) {
+    next(err);
+  });  
+});
+
+
 router.post('/profile/edit', function(req, res, next) {
   var body = req.body;
   var updateObj = {};
@@ -671,8 +783,6 @@ router.post('/profile/edit', function(req, res, next) {
   } catch (err) {
     next(err);
   }
-  console.log(req.user._id);
-  console.log(updateObj);
 
   User.findOneAndUpdate({
       '_id': req.user._id
@@ -691,7 +801,6 @@ router.post('/profile/edit', function(req, res, next) {
 });
 
 router.post('/profile/soundcloud', function(req, res, next) {
-
   if (req.user) {
     getUserSCInfo()
       .then(checkIfUser)
@@ -705,7 +814,6 @@ router.post('/profile/soundcloud', function(req, res, next) {
       "data": null
     });
   }
-
 
   function getUserSCInfo() {
     return new Promise(function(resolve, reject) {

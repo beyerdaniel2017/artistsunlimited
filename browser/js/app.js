@@ -151,6 +151,26 @@ app.controller('FullstackGeneratedController', function($scope,$state, $http, ma
             })
         }
     }
+
+    $scope.linkedUsersChange = function(linkedUsers) {
+        $http.post('/api/logout').then(function() {
+            SessionService.deleteUser();
+            $http.post("/api/login/thirdPartylogin", { username: linkedUsers.username, password: linkedUsers.password })
+            .then(function(res) {
+                if (res.data) {
+                  SessionService.create(res.data.user);
+                  location.reload();
+                } 
+                else {
+                    location.reload();
+                }
+            })
+            .then(null, function(err) {
+              $.Zebra_Dialog("Error in processing the request. Please try again.");
+              $scope.processing = false;
+            });
+        });
+    }
     $scope.checkNotification();
 });
 

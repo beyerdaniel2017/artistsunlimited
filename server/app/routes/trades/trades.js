@@ -40,6 +40,9 @@ router.get('/withUser/:userID', function(req, res, next) {
         });
       }
     }
+    else{
+      query = "";
+    }
   }
 
   if (req.user._id != req.params.userID) {
@@ -48,9 +51,9 @@ router.get('/withUser/:userID', function(req, res, next) {
       status: 403
     })
   } else {
+    if(query != ""){
   Trade.find(query).populate('p1.user').populate('p2.user').exec()
       .then(function(trades) {
-
         var tradesResult = [];
         var i = -1;
         if (trades.length > 0) {
@@ -92,6 +95,10 @@ router.get('/withUser/:userID', function(req, res, next) {
         }
       })
       .then(null, next);
+  }
+    else{
+      res.send([]);
+    }
   }
 });
 

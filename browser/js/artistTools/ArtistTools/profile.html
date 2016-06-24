@@ -47,22 +47,10 @@
                         <hr/>
                         <h4 class="bold">Soundcloud Info</h4>
                         <table cellpadding="40" cellspacing="20" width="100%">
-                            <!-- <tr>
-                                    <td class="bold">Id:</td>
-                                    <td>{{profile.data.soundcloud.id}}</td>
-                                </tr> -->
                                 <tr>
                                     <td class="bold">Username:</td>
                                     <td>{{profile.data.soundcloud.username}}</td>
                                 </tr>
-                            <!-- <tr>
-                                    <td class="bold">Avatar URL:</td>
-                                    <td>{{profile.data.soundcloud.avatarURL}}</td>
-                            </tr>
-                            <tr>
-                                    <td class="bold">Permalink URL:</td>
-                                    <td>{{profile.data.soundcloud.permalinkURL}}</td>
-                                </tr> -->
                             </table>
                         </div>
                     </div>
@@ -78,7 +66,52 @@
                                         <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePermanentLink($index)"></a> 
                                      </div>
                                         <a href="#" ng-click="addPermanentLink()" ng-if="!hidebutton">+ Artist</a>
-
+              </div>
+            </div>
+          </div>
+          <br>
+          <!---Third party access-->
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <hr/>
+              <div class="permanent-links" style="text-align: center;">
+                <h4 class="bold">Third Party access</h4>
+                <button type="button" class="btn btn-default btn-small" ng-show="!hasThirdPartyFields" ng-click="showThridPartyBox();">Add</button>
+                <form name="thirdPartyAcess" ng-show="hasThirdPartyFields" ng-submit="addThirdPartyDetails(thirdPartyInfo)">
+                  <input class="form-control" placeholder="Username" type="text" ng-model="thirdPartyInfo.username" required />
+                  <br/>
+                  <input class="form-control" placeholder="Password" type="text" ng-model="thirdPartyInfo.passwordPlain" required/>
+                  <br/>
+                  <br/>
+                  <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-default btn-small">Save</button>
+                    <button type="button" class="btn btn-default btn-small" ng-if="user.thirdPartyInfo" ng-click="removeThirdPartyAccess();">Delete</button>
+                  </div>
+                </form>
+                <br/>
+                <br/>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <hr/>
+              <div class="permanent-links" style="text-align: center;">
+                <h4 class="bold">Linked Accounts</h4>
+                <form name="frmlinkedAccounts" ng-submit="saveLinkedAccount(linkedAccountData)">
+                <input class="form-control" placeholder="Username" type="text" ng-model="linkedAccountData.username" required />
+                <br/>
+                <input class="form-control" placeholder="Password" type="password" ng-model="linkedAccountData.password" required/>
+                <br/>
+                <br/>
+                <div class="col-md-12 text-center">
+                  <button type="submit" class="btn btn-default btn-small">Add to list</button>
+                </div><br/><br/>
+                <div ng-repeat="account in user.linkedAccounts" style="padding:10px; color:#000; text-align: center;">
+                  <a href="{{account.soundcloud.permalinkURL}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{account.soundcloud.avatarURL}}">{{' ' + account.soundcloud.username}}</a>&nbsp;&nbsp;&nbsp;
+                  <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeLinkedAccount(account)"></a> 
+                </div>                             
                             </div>
                         </div>
                     </div>
@@ -103,7 +136,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- overlay -->
                     <div class="overlay" ng-show="showOverlay">
                         <div class="label-scheduler label-smaller slot-box">

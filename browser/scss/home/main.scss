@@ -365,6 +365,9 @@ margin:0;
 list-style-type: none;
 }
 /*** custom checkboxes Start ***/
+.check-bx label.with-square-checkbox {
+margin-right:10px;
+}
 label.with-square-checkbox {
 cursor: pointer;
 font-weight:400;
@@ -372,14 +375,25 @@ font-weight:400;
 label.with-square-checkbox span {
 line-height: 24px;
 }
-label.with-square-checkbox span::before {
+.check-bx label.with-square-checkbox span::before {
 margin-right: 4px;
-padding-left: 1px;
+padding-left: 2px;
 width: 21px;
 height: 21px;
 border: 1px solid #F5D3B5;
 display: inline-block;
-line-height: 15px;
+line-height: 20px;
+content: '';
+float: left;
+}
+label.with-square-checkbox span::before {
+margin-right: 4px;
+padding-left: 2px;
+width: 21px;
+height: 21px;
+border: 1px solid #F5D3B5;
+display: inline-block;
+line-height: 18px;
 content: '';
 float: left;
 }

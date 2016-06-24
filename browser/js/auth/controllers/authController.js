@@ -63,6 +63,27 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
       };
     }
   };
+
+  $scope.thirdPartyLogin = function(userdata) {
+    AuthService
+    .thirdPartylogin(userdata)
+    .then(handleLoginResponse)
+    .catch(handleLoginError)
+
+    function handleLoginResponse(res) {
+      if (res.status === 200 && res.data.success) {
+        SessionService.create(res.data.user);
+        $state.go('reForReLists');
+      } else {
+        $.Zebra_Dialog("Invalid Username OR Password.");
+      }
+    }
+
+    function handleLoginError(res) {
+      $.Zebra_Dialog("Error in processing your request");
+    }
+  }
+
   $scope.checkIfSubmission = function() {
     if ($stateParams.submission) {
       $scope.soundcloudLogin();

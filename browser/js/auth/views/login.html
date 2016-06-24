@@ -12,6 +12,24 @@
                <div class="text-center">
                  <button class="btn btn-enter cl-sound-btn" ng-click="soundcloudLogin()">Connect with SoundCloud</button>
                </div>
+                <!--Third party login-->
+                </br>
+                <hr>
+                <div class="text-center">
+                  <h3>Third Party Login</h3>
+                <form role="form" ng-submit="thirdPartyLogin(thirdParty)">
+                  <div class="internal-content" style="padding-left:30px;padding-right:30px;">    
+                    <div class="form-group col-md-12">
+                      <input class="form-control" type="text" placeholder="Username" ng-model="thirdParty.username" required/>
+                    </div>
+                    <div class="form-group col-md-12">
+                      <input class="form-control" type="password" placeholder="Password" ng-model="thirdParty.password" required/>
+                    </div>                    
+                    <div class="form-group col-md-12">                  
+                      <button class="btn btn-default btn-lg btn-enter" type="submit">Login</button>
+                    </div>
+                  </div>
+                </form>
              </div>
            </div>
          </div>

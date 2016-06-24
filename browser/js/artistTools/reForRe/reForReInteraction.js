@@ -220,7 +220,6 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.changeTrade = function(trade) {
-    console.log(trade);
     $state.go('reForReInteraction', {
       tradeID: trade._id
     })
