@@ -6,7 +6,8 @@ coverage
 nbproject/project.properties
 
 nbproject/project.xml
-public
+
+public/
 
 query.csv
 email.html

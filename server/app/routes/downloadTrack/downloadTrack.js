@@ -353,7 +353,7 @@ router.post("/twitter/post", function(req, res, done) {
     token_secret: req.body.oauth_token_secret
   };
   var tweetUrl = 'https://api.twitter.com/1.1/statuses/update.json?status=';
-  var tweetReqURL = tweetUrl + req.body.socialPlatformValue;
+  var tweetReqURL = tweetUrl + encodeURIComponent(req.body.socialPlatformValue);
   request.post({
     url: tweetReqURL,
     oauth: profileOauthData
@@ -362,7 +362,7 @@ router.post("/twitter/post", function(req, res, done) {
       console.log(tweet);
       res.send(tweet);
     } else {
-      next(err);
+      done(err);
     }
   });
 });
