@@ -118,8 +118,7 @@ app.controller('DownloadTrackController', ['$rootScope',
                             if (records.data.screen_name === $scope.track.socialPlatformValue) {
                                 window.location.replace($scope.track.downloadURL);
                             }
-                        } 
-                        else {
+                        } else {
                             $.Zebra_Dialog('Error in processing the request. Please try again.');
                         }
                     });
@@ -155,6 +154,8 @@ app.controller('DownloadTrackController', ['$rootScope',
                     } else throw new Error();
                 })
                 .then(function(response) {
+                    window.open(response.data.url, '_blank')
+                    window.focus()
                     console.log(response)
                 })
                 .then(null, function() {
