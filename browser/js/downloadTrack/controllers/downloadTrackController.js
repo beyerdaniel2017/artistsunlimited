@@ -25,7 +25,7 @@ app.config(function($stateProvider, $authProvider, $httpProvider) {
     $authProvider.twitter({
         url: '/api/download/twitter/auth',
         authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
-        redirectUri: 'https://localhost:1443/dl', //must match website
+        redirectUri: 'https://artistsunlimited.co/dl', //must match website
         type: '1.0',
         popupOptions: {
             width: 495,
