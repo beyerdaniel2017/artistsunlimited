@@ -232,6 +232,20 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     }
   }
 
+  $scope.resolveYoutube = function() {
+    if ($scope.track.socialPlatformValue.includes('/')) {
+      $.Zebra_Dialog('Enter a valid youtube username (part after the "/user/" in the url).');
+      return;
+    }
+    $http.get('https://www.googleapis.com/youtube/v3/channels?key=AIzaSyBOuRHx25VQ69MrTEcvn-hIdkZ8NsZwsLw&forUsername=' + $scope.track.socialPlatformValue + '&part=id').then(function(response) {
+        console.log(response.data);
+        if (!response.data.items[0]) throw new Error();
+      })
+      .then(null, function() {
+        $.Zebra_Dialog('Youtube user not found. Enter a valid youtube username (part after the "/user/" in the url).')
+      })
+  }
+
   $scope.trackURLChange = function() {
     if ($scope.track.trackURL !== '') {
       $scope.isTrackAvailable = false;

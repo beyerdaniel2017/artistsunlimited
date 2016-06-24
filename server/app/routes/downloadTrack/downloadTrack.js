@@ -370,10 +370,12 @@ router.post("/twitter/post", function(req, res, done) {
 
 // For Youtube
 router.get("/callbacksubscribe", function(req, res, next) {
+
   oauth.getToken(req.query.code, function(err, tokens) {
     if (err) {
       next(err);
     }
+    console.log(tokens);
     oauth.setCredentials(tokens);
     /*
      * Youtube subscribed to channel
@@ -395,10 +397,11 @@ router.get("/callbacksubscribe", function(req, res, next) {
     };
 
     request(options, function(error, response, body) {
+      console.log(response.statusCode);
+      console.log(body);
       if (!error && response.statusCode == 200) {
         res.redirect(req.session.trackURL);
       }
-
       if (error) {
         res.send("You have error in subscribing to user. You will not be redirected to downloading track");
       }
@@ -418,7 +421,6 @@ router.get("/subscribe", function(req, res, next) {
     client_secret: config.CLIENT_SEC,
     redirect_url: config.REDIRECT_URL_SUBSCRIBE
   });
-
 
   Opn(oauth.generateAuthUrl({
     access_type: "offline",
