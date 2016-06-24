@@ -4,7 +4,7 @@ var https = require('https');
 var app = express();
 var path = require("path");
 var bodyParser = require('body-parser');
-var oauth;
+var YoutubeOauth;
 var Youtube = require("youtube-api");
 var Opn = require("opn");
 var router = require('express').Router();
@@ -370,12 +370,12 @@ router.post("/twitter/post", function(req, res, done) {
 // For Youtube
 router.get("/callbacksubscribe", function(req, res, next) {
 
-  oauth.getToken(req.query.code, function(err, tokens) {
+  YoutubeOauth.getToken(req.query.code, function(err, tokens) {
     if (err) {
       next(err);
     }
     console.log(tokens);
-    oauth.setCredentials(tokens);
+    YoutubeOauth.setCredentials(tokens);
     /*
      * Youtube subscribed to channel
      */
@@ -414,19 +414,18 @@ router.get("/subscribe", function(req, res, next) {
 
   req.session.trackURL = trackURL;
   req.session.channelID = channelID;
-  oauth = Youtube.authenticate({
+  YoutubeOauth = Youtube.authenticate({
     type: "oauth",
     client_id: env.YOUTUBE.CLIENT_ID,
     client_secret: env.YOUTUBE.CLIENT_SEC,
     redirect_url: env.YOUTUBE.REDIRECT_URL_SUBSCRIBE
   });
 
-  Opn(oauth.generateAuthUrl({
-    access_type: "offline",
-    scope: ["https://www.googleapis.com/auth/youtube.upload", "https://www.googleapis.com/auth/youtubepartner", "https://www.googleapis.com/auth/youtube", "https://www.googleapis.com/auth/youtube.force-ssl"]
-  }));
-
   res.json({
-    msg: "Redirected to youtube authentication"
+    msg: "Redirected to youtube authentication",
+    url: YoutubeOauth.generateAuthUrl({
+      access_type: "online",
+      scope: ["https://www.googleapis.com/auth/youtube.upload", "https://www.googleapis.com/auth/youtubepartner", "https://www.googleapis.com/auth/youtube", "https://www.googleapis.com/auth/youtube.force-ssl"]
+    })
   });
 });
