@@ -30,7 +30,7 @@ module.exports = {
         "clientID": process.env.INSTAGRAM_CLIENT_ID,
         "clientSecret": process.env.INSTAGRAM_CLIENT_SECRET,
         "callbackUrl": process.env.INSTAGRAM_CALLBACK_URL
-      },
+    },
     "TWITTER": {
         "consumerKey": process.env.TWITTER_CONSUMER_KEY,
         "consumerSecret": process.env.TWITTER_CONSUMER_SECRET,
@@ -45,6 +45,13 @@ module.exports = {
         "clientID": process.env.GOOGLE_CLIENT_ID,
         "clientSecret": process.env.GOOGLE_CLIENT_SECRET,
         "callbackURL": process.env.GOOGLE_CALLBACK_URL
+    },
+    "YOUTUBE": {
+        'baseUrl': process.env.YOUTUBE_BASE_URL,
+        'CLIENT_ID': process.env.YOUTUBE_CLIENT_ID,
+        'CLIENT_SEC': process.env.YOUTUBE_CLIENT_SECRET,
+        'REDIRECT_URL_VIDEO': process.env.YOUTUBE_REDIRECT_URL_VIDEO,
+        'REDIRECT_URL_SUBSCRIBE': process.env.YOUTUBE_REDIRECT_URL_SUBSCRIBE
     },
     "ROOTURL": "https://artistsunlimited.co"
 };

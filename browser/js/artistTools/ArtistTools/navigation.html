@@ -3,8 +3,8 @@
   <div class="left-side">
     <div class="tropical"><a href="{{user.soundcloud.permalinkURL}}" target="_blank" style="color:#8a8a8a"><span>{{user.name}}</span><img class="img-responsive img-circle" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't200x200') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:100px;">
       <p>{{user.soundcloud.followers | number:0}} Followers</p></a>
-      <select class="form-control" style="width:200px; margin:0 auto;" ng-model="linkedUsers" ng-options="user.username for user in userlinkedAccounts" ng-show="userlinkedAccounts.length > 0" ng-change="linkedUsersChange(linkedUsers)">
-          <option value="">- Linked Accounts -</option>
+      <select class="form-control" style="width:200px; margin:0 auto;" ng-model="linkedUsers" ng-options="user.soundcloud.username for user in userlinkedAccounts" ng-show="userlinkedAccounts.length > 0" ng-change="linkedUsersChange(linkedUsers)">
+        <option value="">- Linked Accounts -</option>
       </select>
     </div>
 
