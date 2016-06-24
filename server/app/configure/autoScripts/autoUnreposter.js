@@ -59,5 +59,28 @@ function unrepostEvent(event, user) {
       oauth_token: user.soundcloud.token
     }
   };
-  scWrapper.request(reqObj, function(err, data) {});
+  scWrapper.request(reqObj, function(err, data) {
+    if (data){
+      putMessage(event, user);
+    }
+  });
+}
+
+/*Update Message*/
+function putMessage(event, user) {
+  var query = { $or: [{ 'p1.user': event.owner }, { 'p2.user': event.owner }], $or: [{ 'p1.user': user._id }, { 'p2.user': user._id }]};
+  var message={
+    type:'alert',
+    text:'A track was unreposted on ' + user.soundcloud.username,
+    senderId:event.owner,
+    date:new Date()
+  };
+  Trade.update(query,{$addToSet:{messages:message}})
+  .exec()
+  .then(function(data) {
+    //Success
+  })
+  .then(null, function(error) {
+    //Error
+  });
 }

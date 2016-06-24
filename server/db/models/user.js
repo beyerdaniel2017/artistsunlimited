@@ -47,7 +47,14 @@ var schema = new mongoose.Schema({
     },
     description: {
         type: String
-    }
+    },
+    thirdPartyInfo: {
+        username: String,
+        password: String,
+        passwordPlain: String,
+        salt:String
+    },
+    linkedAccounts: []
 });
 
 // method to remove sensitive information from user objects before sending them out

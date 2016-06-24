@@ -46,6 +46,40 @@ router.post('/', function(req, res, next) {
   })(req, res);
 });
 
+
+router.post('/thirdPartylogin', function(req, res, next) {
+  passport.authenticate('local-thirdParty', function(err, user, info) {
+    if (err) {
+      return res.json({
+        success: false,
+        "message": err
+      });
+    }
+    if (!user) {
+      return res.json({
+        success: false,
+        "message": "Invalid Username or Password"
+      });
+    } else {
+      req.login(user, function(err) {
+        //if(req.body.rememberme && (req.body.rememberme == "1" || req.body.rememberme == 1)){
+        req.session.cookie.expires = false;
+        req.session.name = user.userid;
+        req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
+        req.session.cookie.maxAge = 28 * 24 * 3600000;
+        req.session.cookie.expires = false;
+        delete user.password;
+        delete user.salt;
+        return res.json({
+          'success': true,
+          'message': '',          
+          'user': user
+        });
+      });
+    }
+  })(req, res);
+});
+
 router.post('/authenticated', function(req, res, next) {
   scWrapper.init({
     id: scConfig.clientID,

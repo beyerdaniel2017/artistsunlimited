@@ -29,6 +29,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $window.localStorage.removeItem('returnstate');
   }
   $scope.user = SessionService.getUser();
+  $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
   $scope.makeEventURL = "";
   $scope.showOverlay = false;
   $scope.processiong = false;

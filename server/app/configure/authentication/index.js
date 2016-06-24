@@ -10,6 +10,7 @@ var UserModel = mongoose.model('User');
 var ENABLED_AUTH_STRATEGIES = [
     'local',
     'signup',
+    'thirdpartylogin',
     //'twitter',
     //'facebook',
     //'google',

@@ -62,6 +62,7 @@ app.controller("ReForReListsController", function($scope,$rootScope, currentTrad
 
 	$scope.state='reForReInteraction';
 	$scope.user = SessionService.getUser();
+	$rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
 	$scope.currentTrades = currentTrades;
 	$scope.currentTradesCopy = currentTrades;
 	$scope.otherUsers = [];

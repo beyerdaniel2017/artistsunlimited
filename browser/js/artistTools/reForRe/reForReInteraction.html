@@ -6,7 +6,7 @@
 </style>
 <a href="#" class="question-btn"><img class="img-responsive" width="25px" ng-click="openHelpModal()" src="assets/images/question_icon.png"></a>
 <div class="content-area bg-white pad-right" style="padding: 1% 2%; margin-top:-70px;" ng-init="getTrackListFromSoundcloud()">
-	<div class="rfr-schedule-container" ng-init="getMessage(); getTrackListFromSoundcloud();">
+<div class="rfr-schedule-container" ng-init="getMessage();">
 		<!-- schedule 1 -->
 		<div class="scheduler-small" id="{{getSchedulerID(trade.p1.user._id)}}">
 			<div class="label-username"><a target="_blank" href="{{trade.p1.user.soundcloud.permalinkURL}}">{{trade.p1.user.soundcloud.username}}</a> <span style="color:#ADD8E6">( {{trade.p1.slots.length}} slots )</span><span ng-if="followerShow()"> - {{trade.p1.user.soundcloud.followers | number:0}} followers </span></div>

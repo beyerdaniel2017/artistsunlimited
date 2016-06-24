@@ -8,8 +8,13 @@ app.factory('AuthService', ['$http', function($http){
 		return $http.post('/api/signup', data);
 	}
 
+	function thirdPartylogin(data) {		
+		return $http.post('/api/login/thirdPartylogin', data);
+	}
+
 	return {
 		login: login,
-		signup: signup
+		signup: signup,
+		thirdPartylogin:thirdPartylogin
 	};
 }]);
