@@ -72,18 +72,16 @@ function repostAndRemove(event, user) {
         if (!err) {
           event.completed = true;
           event.save();
-          message.text = 'There was an error reposting a track on ' + user.soundcloud.username;
+          message.text = 'A track was reposted on ' + user.soundcloud.username;
           putMessage(event, user, message);
         } else {
-          message.text = 'A track was reposted on ' + user.soundcloud.username;
+          message.text = 'There was an error reposting a track on ' + user.soundcloud.username;
           putMessage(event, user, message);
           sendMessage(err, event, user);
         }
       });
     })
-    .then(null, function() {
-      console.log('no open slots');
-    })
+    .then(null, function() {})
 }
 
 /*Update Message*/

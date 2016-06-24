@@ -99,7 +99,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       $scope.changeQueueSong();
     };
 
-    $scope.showThridPartyBox = function(){
+    $scope.showThridPartyBox = function() {
       $scope.hasThirdPartyFields = true;
     }
 
@@ -113,23 +113,23 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     }
 
     $scope.changeQueueSong = function() {
-      if($scope.newQueueSong != ""){
+      if ($scope.newQueueSong != "") {
         $scope.processing = true;
-      $http.post('/api/soundcloud/resolve', {
-          url: $scope.newQueueSong
-        })
-        .then(function(res) {
-          $scope.processing = false;
-          var track = res.data;
-          $scope.newQueue = track;
-          $scope.newQueueID = track.id;
-          $scope.processing = false;
-        })
-        .then(null, function(err) {
-          $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
-          $scope.processing = false;
-        });
-    }
+        $http.post('/api/soundcloud/resolve', {
+            url: $scope.newQueueSong
+          })
+          .then(function(res) {
+            $scope.processing = false;
+            var track = res.data;
+            $scope.newQueue = track;
+            $scope.newQueueID = track.id;
+            $scope.processing = false;
+          })
+          .then(null, function(err) {
+            $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
+            $scope.processing = false;
+          });
+      }
     }
 
     $scope.saveUser = function() {
@@ -296,16 +296,16 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       ArtistToolsService
         .saveProfileInfo(sendObj)
         .then(function(res) {
-            $scope.processing = false;
-            if (res.data === 'Email Error') {
-              $scope.message = {
-                value: 'Email already exists!',
-                visible: true
-              };
-              return;
-            }
-            SessionService.create(res.data);
-            $scope.closeEditProfileModal();
+          $scope.processing = false;
+          if (res.data === 'Email Error') {
+            $scope.message = {
+              value: 'Email already exists!',
+              visible: true
+            };
+            return;
+          }
+          SessionService.create(res.data);
+          $scope.closeEditProfileModal();
         })
         .catch(function(res) {
           $scope.processing = false;
@@ -314,87 +314,97 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     };
 
     // Add third party credentials
-    $scope.addThirdPartyDetails=function(userdata)
-    {
+    $scope.addThirdPartyDetails = function(userdata) {
       $scope.processing = true;
-      $http.put("/api/database/thirdPartyDetails", {userid:$scope.user._id,data:userdata})
-      .then(function(res) {
-        if(res.data){
-          SessionService.create(res.data);
-          $scope.user = SessionService.getUser();
-          $scope.processing = false;
-          $.Zebra_Dialog("Changes saved succesfully");  
-        }   
-        else{
+      $http.put("/api/database/thirdPartyDetails", {
+          userid: $scope.user._id,
+          data: userdata
+        })
+        .then(function(res) {
+          if (res.data) {
+            SessionService.create(res.data);
+            $scope.user = SessionService.getUser();
+            $scope.processing = false;
+            $.Zebra_Dialog("Changes saved succesfully");
+          } else {
+            $.Zebra_Dialog("Error in processing the request. Please try again.");
+            $scope.processing = false;
+          }
+        })
+        .then(null, function(err) {
           $.Zebra_Dialog("Error in processing the request. Please try again.");
           $scope.processing = false;
-        }   
-      })
-      .then(null, function(err) {
-        $.Zebra_Dialog("Error in processing the request. Please try again.");
-        $scope.processing = false;
-      });
+        });
     }
 
     // Remove third party access from user
-    $scope.removeThirdPartyAccess=function()
-    {
+    $scope.removeThirdPartyAccess = function() {
       $scope.processing = true;
-      $http.put("/api/database/deleteThirdPartyAccess", {userid:$scope.user._id})
-      .then(function(res) {
-        SessionService.create(res.data);
-        $scope.user = SessionService.getUser();
-        $scope.thirdPartyInfo = ($scope.user.thirdPartyInfo ? $scope.user.thirdPartyInfo : null);
-        $scope.hasThirdPartyFields = ($scope.user.thirdPartyInfo ? true : false);
-        $scope.processing = false;
-        $.Zebra_Dialog("Account removed succesfully");        
-      })
-      .then(null, function(err) {
-        $.Zebra_Dialog("Error in processing the request. Please try again.");
-        $scope.processing = false;
-      });
+      $http.put("/api/database/deleteThirdPartyAccess", {
+          userid: $scope.user._id
+        })
+        .then(function(res) {
+          SessionService.create(res.data);
+          $scope.user = SessionService.getUser();
+          $scope.thirdPartyInfo = ($scope.user.thirdPartyInfo ? $scope.user.thirdPartyInfo : null);
+          $scope.hasThirdPartyFields = ($scope.user.thirdPartyInfo ? true : false);
+          $scope.processing = false;
+          $.Zebra_Dialog("Account removed succesfully");
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("Error in processing the request. Please try again.");
+          $scope.processing = false;
+        });
     }
 
     // Save linked accounts
-    $scope.saveLinkedAccount=function(data)
-    {
+    $scope.saveLinkedAccount = function(data) {
+      if ($scope.hasThirdPartyFields) {
+        $scope.processing = true;
+        $http.put("/api/database/saveLinkedAccount", {
+            userid: $scope.user._id,
+            data: data
+          })
+          .then(function(res) {
+            if (res.data) {
+              SessionService.create(res.data);
+              $scope.user = SessionService.getUser();
+              $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
+              $scope.processing = false;
+              $scope.linkedAccountData = {};
+              $.Zebra_Dialog("Account linked succesfully");
+            } else {
+              $scope.processing = false;
+              $.Zebra_Dialog("No account found with given username and password.");
+            }
+          })
+          .then(null, function(err) {
+            $.Zebra_Dialog("Error in processing the request. Please try again.");
+            $scope.processing = false;
+          });
+      } else {
+        $.Zebra_Dialog("You must add third party access to this account to link another account.")
+      }
+    }
+
+    // remove linked accounts
+    $scope.removeLinkedAccount = function(data) {
       $scope.processing = true;
-      $http.put("/api/database/saveLinkedAccount", {userid:$scope.user._id, data:data})
-      .then(function(res) {
-        if(res.data){
+      $http.put("/api/database/deleteLinkedAccount", {
+          userid: $scope.user._id,
+          data: data
+        })
+        .then(function(res) {
           SessionService.create(res.data);
           $scope.user = SessionService.getUser();
           $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
           $scope.processing = false;
-          $scope.linkedAccountData = {};
-          $.Zebra_Dialog("Account linked succesfully");   
-        }  
-        else{
+          $.Zebra_Dialog("Account removed succesfully");
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("Error in processing the request. Please try again.");
           $scope.processing = false;
-          $.Zebra_Dialog("No account found with given username and password.");   
-        }   
-      })
-      .then(null, function(err) {
-        $.Zebra_Dialog("Error in processing the request. Please try again.");
-        $scope.processing = false;
-      });
-    }
-
-        // remove linked accounts
-    $scope.removeLinkedAccount = function(data) {
-      $scope.processing = true;
-      $http.put("/api/database/deleteLinkedAccount", {userid:$scope.user._id, data:data})
-      .then(function(res) {
-        SessionService.create(res.data);
-        $scope.user = SessionService.getUser();
-        $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
-        $scope.processing = false;
-        $.Zebra_Dialog("Account removed succesfully");        
-      })
-      .then(null, function(err) {
-        $.Zebra_Dialog("Error in processing the request. Please try again.");
-        $scope.processing = false;
-      });
+        });
     }
 
     $scope.removePermanentLink = function(index) {
@@ -498,9 +508,9 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
           .catch(handleError);
 
         function handleResponse(res) {
-            $scope.processing = false;
-            $scope.downloadGatewayList.splice(index, 1);
-          }
+          $scope.processing = false;
+          $scope.downloadGatewayList.splice(index, 1);
+        }
 
         function handleError(res) {
           $scope.processing = false;
