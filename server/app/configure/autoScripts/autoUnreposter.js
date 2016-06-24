@@ -6,6 +6,7 @@ var scWrapper = require("../../SCWrapper/SCWrapper.js");
 var scConfig = require('./../../../env').SOUNDCLOUD;
 var sendEmail = require('../../mandrill/sendEmail.js');
 var request = require('request');
+var Trade = mongoose.model('Trade');
 
 scWrapper.init({
   id: scConfig.clientID,
@@ -60,6 +61,8 @@ function unrepostEvent(event, user) {
     }
   };
   scWrapper.request(reqObj, function(err, data) {
+    console.log(err);
+    console.log(data);
     if (!err) {
       putMessage(event, user);
     }
@@ -93,6 +96,6 @@ function putMessage(event, user) {
       //Success
     })
     .then(null, function(error) {
-      //Error
+      console.log(error);
     });
 }

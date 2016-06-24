@@ -656,14 +656,14 @@ router.put('/profile', function(req, res, next) {
 });
 
 var generateSalt = function() {
-    return crypto.randomBytes(16).toString('base64');
+  return crypto.randomBytes(16).toString('base64');
 };
 
 var encryptPassword = function(plainText, salt) {
-    var hash = crypto.createHash('sha1');
-    hash.update(plainText);
-    hash.update(salt);
-    return hash.digest('hex');
+  var hash = crypto.createHash('sha1');
+  hash.update(plainText);
+  hash.update(salt);
+  return hash.digest('hex');
 };
 
 router.put('/thirdPartyDetails', function(req, res, next) {
@@ -672,97 +672,132 @@ router.put('/thirdPartyDetails', function(req, res, next) {
   var password = encryptPassword(req.body.data.passwordPlain, salt);
   var passwordPlain = req.body.data.passwordPlain;
   User.findOneAndUpdate({
-    '_id': req.body.userid
-  }, {
-    $set: { 
-      'thirdPartyInfo.username': username, 
-      'thirdPartyInfo.password': password,
-      'thirdPartyInfo.passwordPlain': passwordPlain, 
-      'thirdPartyInfo.salt': salt 
-    }
-  }, {
-    new: true
-  }).exec()
-  .then(function(result) {
-    res.send(result);
-  })
-  .then(null, function(err) {
-    next(err);
-  });
+      '_id': req.body.userid
+    }, {
+      $set: {
+        'thirdPartyInfo.username': username,
+        'thirdPartyInfo.password': password,
+        'thirdPartyInfo.passwordPlain': passwordPlain,
+        'thirdPartyInfo.salt': salt
+      }
+    }, {
+      new: true
+    }).exec()
+    .then(function(result) {
+      res.send(result);
+    })
+    .then(null, function(err) {
+      next(err);
+    });
 });
 
 router.put('/deleteThirdPartyAccess', function(req, res, next) {
   User.findOneAndUpdate({
-    '_id': req.body.userid
-  }, {
-    $set: { 
-      thirdPartyInfo: {}
-    }
-  }, {
-    new: true
-  }).exec()
-  .then(function(result) {
-    res.send(result);
-  })
-  .then(null, function(err) {
-    next(err);
-  });  
+      '_id': req.body.userid
+    }, {
+      $set: {
+        thirdPartyInfo: {}
+      }
+    }, {
+      new: true
+    }).exec()
+    .then(function(result) {
+      res.send(result);
+    })
+    .then(null, function(err) {
+      next(err);
+    });
 });
 
-router.put('/saveLinkedAccount', function(req, res, next) {  
+router.put('/saveLinkedAccount', function(req, res, next) {
   var username = req.body.data.username;
   var password = req.body.data.password;
-  User.findOne({'thirdPartyInfo.username' : username, 'thirdPartyInfo.passwordPlain': password})
-  .then(function(user) {
-    if(user){
-      var linkedAccount = { 
-        username: username, 
-        password: password,
-        soundcloud: user.soundcloud
-      };
-      User.findOneAndUpdate({
-        '_id': req.body.userid
-      }, {
-        $addToSet: { 
-          linkedAccounts: linkedAccount
-        }
-      }, {
-        new: true
-      }).exec()
-      .then(function(result) {
-        res.send(result);
-      })
-      .then(null, function(err) {
-        next("Error in processing the request.");
-      });
-    }
-    else{
-      res.send(null);
-    }
-  })
-  .then(null, function(err) { 
-    next(err);
-  });  
+  User.findOne({
+      'thirdPartyInfo.username': username,
+      'thirdPartyInfo.passwordPlain': password
+    })
+    .then(function(user) {
+      if (user) {
+        var linkedAccount = {
+          username: username,
+          password: password,
+          soundcloud: user.soundcloud
+        };
+        User.findOneAndUpdate({
+            '_id': req.body.userid
+          }, {
+            $addToSet: {
+              linkedAccounts: linkedAccount
+            }
+          }, {
+            new: true
+          }).exec()
+          .then(function(result) {
+            var otherLinkedAccount = {
+              username: result.thirdPartyInfo.username,
+              password: result.thirdPartyInfo.passwordPlain,
+              soundcloud: result.soundcloud
+            }
+            return User.findOneAndUpdate({
+                '_id': user._id
+              }, {
+                $addToSet: {
+                  linkedAccounts: otherLinkedAccount
+                }
+              }, {
+                new: true
+              }).exec()
+              .then(function(result2) {
+                res.send(result);
+              })
+          })
+          .then(null, function(err) {
+            next(err);
+          });
+      } else {
+        next(new Error("User not found"));
+      }
+    })
+    .then(null, function(err) {
+      next(err);
+    });
 });
 
 router.put('/deleteLinkedAccount', function(req, res, next) {
   var username = req.body.data.username;
-  var password = req.body.data.password;  
+  var password = req.body.data.password;
   User.findOneAndUpdate({
-    '_id': req.body.userid
-  }, {
-    $pull: { 
-      linkedAccounts: {username: username, password:password}
-    }
-  }, {
-    new: true
-  }).exec()
-  .then(function(result) {
-    res.send(result);
-  })
-  .then(null, function(err) {
-    next(err);
-  });  
+      '_id': req.body.userid
+    }, {
+      $pull: {
+        linkedAccounts: {
+          username: username,
+          password: password
+        }
+      }
+    }, {
+      new: true
+    }).exec()
+    .then(function(result) {
+      User.findOneAndUpdate({
+          'thirdPartyInfo.username': username,
+          'thirdPartyInfo.passwordPlain': password
+        }, {
+          $pull: {
+            linkedAccounts: {
+              'soundcloud.id': result.soundcloud.id
+            }
+          }
+        }, {
+          new: true
+        }).exec()
+        .then(function(result2) {
+          res.send(result);
+        })
+    })
+    .then(null, function(err) {
+      next(err);
+    });
 });
 
 
