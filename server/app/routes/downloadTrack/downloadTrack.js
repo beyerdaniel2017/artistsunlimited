@@ -299,8 +299,7 @@ router.post("/twitter/auth", function(req, res, done) {
       var oauthToken = qs.parse(body);
       res.send(oauthToken);
     });
-  } 
-  else {
+  } else {
     // Part 2 of 2: Second request after Authorize app is clicked.
     var accessTokenOauth = {
       consumer_key: env.TWITTER.consumerKey,
@@ -317,8 +316,7 @@ router.post("/twitter/auth", function(req, res, done) {
         //console.log(req.header('Authorization'));
         accessToken = qs.parse(accessToken);
         res.send(accessToken);
-      } 
-      else {
+      } else {
         console.log("Error from twitter callbacks" + err);
       }
     });
@@ -337,7 +335,7 @@ router.post("/twitter/follow", function(req, res, done) {
   };
   request.post({
     url: followUrl,
-    oauth:profileOauthData
+    oauth: profileOauthData
   }, function(err, response, follow) {
     if (!err) {
       res.send(follow);
@@ -361,9 +359,10 @@ router.post("/twitter/post", function(req, res, done) {
     oauth: profileOauthData
   }, function(err, response, tweet) {
     if (!err) {
+      console.log(tweet);
       res.send(tweet);
     } else {
-      console.log("<downloadTracks.js>:error while posting to twitter,error=" + err);
+      next(err);
     }
   });
 });
@@ -373,7 +372,7 @@ router.post("/twitter/post", function(req, res, done) {
 router.get("/callbacksubscribe", function(req, res, next) {
   oauth.getToken(req.query.code, function(err, tokens) {
     if (err) {
-
+      next(err);
     }
     oauth.setCredentials(tokens);
     /*
