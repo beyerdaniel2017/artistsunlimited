@@ -374,7 +374,6 @@ router.get("/callbacksubscribe", function(req, res, next) {
     if (err) {
       next(err);
     }
-    console.log(tokens);
     YoutubeOauth.setCredentials(tokens);
     /*
      * Youtube subscribed to channel
@@ -396,24 +395,19 @@ router.get("/callbacksubscribe", function(req, res, next) {
     };
 
     request(options, function(error, response, body) {
-      console.log(response.statusCode);
-      console.log(body);
       if (!error && response.statusCode == 200) {
-        res.redirect(req.session.trackURL);
+        res.redirect(req.session.downloadURL);
       }
       if (error) {
-        res.send("You have error in subscribing to user. You will not be redirected to downloading track");
+        res.send("You had an error in subscribing to the user. You will not be redirected to downloading track.");
       }
     });
   });
 });
 
 router.get("/subscribe", function(req, res, next) {
-  var trackURL = req.query.trackURL;
-  var channelID = req.query.channelID;
-
-  req.session.trackURL = trackURL;
-  req.session.channelID = channelID;
+  req.session.downloadURL = req.query.downloadURL;
+  req.session.channelID = req.query.channelID;
   YoutubeOauth = Youtube.authenticate({
     type: "oauth",
     client_id: env.YOUTUBE.CLIENT_ID,

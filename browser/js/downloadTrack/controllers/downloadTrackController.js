@@ -141,26 +141,40 @@ app.controller('DownloadTrackController', ['$rootScope',
 
         /* Function for Youtube */
         $scope.authenticateYoutube = function(track) {
-            $http.get('https://www.googleapis.com/youtube/v3/channels?key=AIzaSyBOuRHx25VQ69MrTEcvn-hIdkZ8NsZwsLw&forUsername=' + $scope.track.socialPlatformValue + '&part=id').then(function(response) {
-                    if (response.data.items[0]) {
-                        return $http({
-                            method: "GET",
-                            url: '/api/download/subscribe',
-                            params: {
-                                trackURL: $scope.track.downloadURL,
-                                channelID: response.data.items[0].id
-                            }
+            $scope.processing = true;
+            var idPromise = new Promise(function(resolve, reject) {
+                if ($scope.track.socialPlatformValue.includes('/channel/')) {
+                    resolve($scope.track.socialPlatformValue.substring($scope.track.socialPlatformValue.indexOf('/channel/') + 9, $scope.track.socialPlatformValue.length));
+                } else {
+                    var username = $scope.track.socialPlatformValue.substring($scope.track.socialPlatformValue.indexOf('/user/') + 6, $scope.track.socialPlatformValue.length)
+                    $http.get('https://www.googleapis.com/youtube/v3/channels?key=AIzaSyBOuRHx25VQ69MrTEcvn-hIdkZ8NsZwsLw&forUsername=' + username + '&part=id')
+                        .then(function(res) {
+                            if (res.data.items[0]) resolve(res.data.items[0].id)
                         })
-                    } else throw new Error();
+                        .then(null, reject);
+                }
+
+            });
+            idPromise.then(function(id) {
+                    return $http({
+                        method: "GET",
+                        url: '/api/download/subscribe',
+                        params: {
+                            downloadURL: $scope.track.downloadURL,
+                            channelID: id
+                        }
+                    })
                 })
                 .then(function(response) {
+                    $scope.processing = false;
                     window.open(response.data.url, '_blank')
                     window.focus()
-                    console.log(response)
                 })
                 .then(null, function() {
+                    $scope.processing = false;
                     $.Zebra_Dialog('Youtube channel to subscribe to not found');
                 })
+
         }
 
         /* Default processing on page load */
