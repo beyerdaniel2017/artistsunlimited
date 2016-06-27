@@ -12,7 +12,7 @@
                         <table cellpadding="10" cellspacing="10" width="100%">
                             <tr>
                                 <td class="bold">Name:</td>
-                                <td>{{profile.data.name}}</td>
+                    <td>{{profile.data.soundcloud.username}}</td>
                                 <td><a href="#" ng-click="openEditProfileModal.editProfile('name')"> Edit</a></td>
                             </tr>
                             <tr>
@@ -26,9 +26,6 @@
                                 <td><a href="#" ng-click="openEditProfileModal.editProfile('password')">Edit</a></td>
                             </tr>
                         </table>
-                        <div class="col-md-12 text-center">
-                            <button type="submit" class="btn btn-enter">Save</button>
-                        </div>
                     </form>
                     </div>
                 </div>
@@ -36,40 +33,34 @@
                     <div class="col-sm-4 col-md-offset-1">
                         <hr/>
                         <div>
-                            <!--  <button class="btn btn-default btn-block btn-lg btn-soundcloud soundcloud-img" ng-click="saveSoundCloudAccountInfo()" type="button"><img src="assets/images/soundcloud_icon.png">Connect with  Soundcloud</button> -->
                             <img src="assets/images/soundcloud-connect-button.png"  ng-click="saveSoundCloudAccountInfo()">
                             <p ng-show="message.visible">{{message.value}}</p>
                         </div>
                     </div>
                 </div>
-                <div class="row" ng-show="profile.isAvailable.soundcloud">
-                    <div class="col-md-8 col-md-offset-2">
-                        <hr/>
-                        <h4 class="bold">Soundcloud Info</h4>
-                        <table cellpadding="40" cellspacing="20" width="100%">
-                                <tr>
-                                    <td class="bold">Username:</td>
-                                    <td>{{profile.data.soundcloud.username}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-md-8 col-md-offset-2">
                             <hr/>
                             <div class="permanent-links" style="text-align: center;">
                                 <h4 class="bold">Permanent Artists:</h4>
                                 <small>These artists will be followed on all of your Download Gates</small>
-                                    <div class="input-box" ng-repeat="link in profile.data.permanentLinks">
-                                        <input class="form-control" placeholder="Artist Soundcloud Url" ng-model="link.url" ng-change="permanentLinkURLChange($index)"/>
-                                        <a class="pro-icon" href="#" ng-show="link.avatar !== ''"><img class="profile-icon" ng-src="{{link.avatar}}" /></a> 
+                <br/>
+                <input class="form-control" placeholder="Artist Soundcloud Url" ng-model="link.url" ng-change="permanentLinkURLChange()" />
+                <br/>
+                <br/>
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-default btn-small" ng-click="saveProfileInfo()">Add to list</button>
+                </div>
+                <br/>
+                <br/>
+                <div ng-repeat="permanentLinks in user.permanentLinks" style="padding:10px; color:#000; text-align: center;">
+                    <a href="{{permanentLinks.username}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{permanentLinks.avatar}}">{{' ' + permanentLinks.username}}</a>&nbsp;&nbsp;&nbsp;
                                         <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePermanentLink($index)"></a> 
                                      </div>
-                                        <a href="#" ng-click="addPermanentLink()" ng-if="!hidebutton">+ Artist</a>
               </div>
             </div>
           </div>
-          <br>
+          <br/>
           <!---Third party access-->
           <div class="row">
             <div class="col-md-8 col-md-offset-2">
@@ -107,7 +98,10 @@
                 <br/>
                 <div class="col-md-12 text-center">
                   <button type="submit" class="btn btn-default btn-small">Add to list</button>
-                </div><br/><br/>
+                 </div>
+                                </form>
+                                <br/>
+                                <br/>
                 <div ng-repeat="account in user.linkedAccounts" style="padding:10px; color:#000; text-align: center;">
                   <a href="{{account.soundcloud.permalinkURL}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{account.soundcloud.avatarURL}}">{{' ' + account.soundcloud.username}}</a>&nbsp;&nbsp;&nbsp;
                   <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeLinkedAccount(account)"></a> 
@@ -121,14 +115,19 @@
                             <hr/>
                             <div class="permanent-links" style="text-align: center;">
                                 <h4 class="bold">Auto-fill Tracks</h4>
-                                <input class="form-control" placeholder="Soundcloud Track Url" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()"/><br/>
+                                <input class="form-control" placeholder="Soundcloud Track Url" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()" />
+                                <br/>
                                 <select class="form-control" ng-model="trackListObj" ng-options="item.title for item in trackList" ng-change="trackListChange()">
                                 <option value="" ng-disabled="!!trackListObj" ng-show="trackList.length > 0">-My Songs-</option>
-                                </select><br/>
-                                <span>{{newQueue.title}}</span><br>
+                                </select>
+                                <br/>
+                                <span>{{newQueue.title}}</span>
+                                <br>
                                 <div class="col-md-12 text-center">
                                     <button class="btn btn-default btn-small" ng-click="addSong()">Add</button>
-                                </div><br/><br/>
+                                </div>
+                                <br/>
+                                <br/>
                                 <div ng-repeat="song in autoFillTracks" style="padding:10px; color:#000; text-align: center;">
                                     <a href="{{song.permalink_url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{song.artwork_url}}">{{' ' + song.title}}</a>&nbsp;&nbsp;&nbsp;
                                     <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeQueueSong(user.queue.indexOf(song))"></a> 

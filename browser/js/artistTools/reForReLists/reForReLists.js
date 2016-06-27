@@ -173,6 +173,7 @@ app.controller("ReForReListsController", function($scope,$rootScope, currentTrad
     };
 
     $scope.filterByTradeType = function() {
+    	$scope.processing = true;
         var tradeType = $scope.tradeType;
         tradeType = JSON.stringify(tradeType);
         $http.get('/api/trades/withUser/' + $scope.user._id + '?tradeType=' + tradeType)
@@ -184,6 +185,7 @@ app.controller("ReForReListsController", function($scope,$rootScope, currentTrad
                 trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
             });
             $scope.currentTrades = trades;
+            $scope.processing = false;
         })
     }
 	$scope.sortResult = function(sortby) {

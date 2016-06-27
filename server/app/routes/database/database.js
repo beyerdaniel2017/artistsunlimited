@@ -827,7 +827,6 @@ router.post('/profile/edit', function(req, res, next) {
       new: true
     }).exec()
     .then(function(result) {
-      console.log(result);
       res.send(result);
     })
     .then(null, function(err) {

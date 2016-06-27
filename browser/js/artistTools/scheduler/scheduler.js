@@ -76,6 +76,13 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     }
   }
 
+  $scope.openHelpModal = function() {
+    var displayText = "Schedule your reposts using the assigned slots, and indicate your preference for un-reposting after 24 hours. Keep in mind that the scheduler will not allow you to repost and un-repost within a period of 48 hours.Arrow icons pointing downwards indicate that you have marked the track to be un-reposted after 24 hours.Orange-colored slots are reserved for trades initiated using the repost-for-repost platform.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
+    $.Zebra_Dialog(displayText, {
+      width: 600
+    });
+  }
+
   $scope.saveUser = function() {
     $scope.processing = true;
     $http.put("/api/database/profile", $scope.user)
