@@ -29,6 +29,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $window.localStorage.removeItem('returnstate');
   }
   $scope.user = SessionService.getUser();
+  $scope.showEmailModal = false;
   $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
   $scope.makeEventURL = "";
   $scope.showOverlay = false;
@@ -432,20 +433,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   };
 
   $scope.calendar = $scope.fillDateArrays(events);
-
-  function promptForEmail() {
-    if (!$scope.user.email) {
-      $scope.hideall = true;
-      $.Zebra_Dialog('Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.<br><br> <input id="txtemail" type="email" placeholder="example@domain.com" style="width:400px; border-radius:3px;padding:5px"/>', {
-        'type': 'confirmation',
-        width: 600,
-        'buttons': [{
-          caption: 'OK',
-          callback: function() {
-            var answer = $("#txtemail").val();
-            if (answer == "") {
-              $state.go('artistToolsDownloadGatewayList');
-            } else {
+  $scope.updateEmail = function(email) {
+    var answer = email;
               var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
               if (myArray) {
                 $scope.user.email = answer;
@@ -454,21 +443,27 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                     SessionService.create(res.data);
                     $scope.user = SessionService.getUser();
                     $scope.hideall = false;
+        $('#emailModal').modal('hide');
+        $scope.showEmailModal = false;
                   })
                   .then(null, function(err) {
                     setTimeout(function() {
-                      promptForEmail();
+          $scope.showEmailModal = false;
+          $scope.promptForEmail();
                     }, 600);
                   })
               } else {
                 setTimeout(function() {
-                  promptForEmail();
+        $scope.showEmailModal = false;
+        $scope.promptForEmail();
                 }, 600);
               }
             }
-          }
-        }]
-      });
+
+  $scope.promptForEmail = function() {
+    if (!$scope.user.email) {
+      $scope.showEmailModal = true;
+      $('#emailModal').modal('show');
     }
   }
   $scope.verifyBrowser = function() {
@@ -487,10 +482,10 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
           }
         });
       } else {
-        promptForEmail();
+        $scope.promptForEmail();
       }
     } else {
-      promptForEmail();
+      $scope.promptForEmail();
     }
   }
   $scope.verifyBrowser();

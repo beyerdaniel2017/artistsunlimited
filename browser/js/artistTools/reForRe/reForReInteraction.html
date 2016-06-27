@@ -138,4 +138,23 @@
 		</div>
 	</div>
 	<!-- loader -->
+<!--overlay-->
+<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showEmailModal">
+    <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
+	    <div class="modal-dialog">    
+	      	<!-- Modal content-->
+	      	<div class="modal-content">
+	        	<div style="text-align:center; padding:10px;">        
+	        	<div style="text-align:center;padding-bottom:10px;">
+	       	 	<p>Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.</p>
+	        	<form ng-submit="updateEmail(modal.email)">
+	           		<input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="modal.email" required/>
+	            	<button class="btn btn-default btn-small" type="submit" id="closeModal">Add</button>
+	           	</form>
+	          </div>
+	      	</div>      
+		</div>
+	  </div>           
+	</div>
+</div>
 	<ng-include src="'js/home/views/loader.html'"></ng-include><script type="text/javascript">
