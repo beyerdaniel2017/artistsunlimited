@@ -8,7 +8,12 @@ app.config(function($stateProvider) {
 			currentTrades: function($http, SessionService) {
 				var user = SessionService.getUser();
 				if (user) {
-    			return $http.get('/api/trades/withUser/' + user._id)
+				var tradeType = {
+			        Requests: true,
+			        Requested: true,
+			        TradePartners: true
+			    };
+    			return $http.get('/api/trades/withUser/' + user._id+ '?tradeType=' + JSON.stringify(tradeType))
 					.then(function(res) {
 						var trades = res.data;
 						trades.forEach(function(trade) {
@@ -173,6 +178,7 @@ app.controller("ReForReListsController", function($scope,$rootScope, currentTrad
     };
 
     $scope.filterByTradeType = function() {
+    	$scope.processing = true;
         var tradeType = $scope.tradeType;
         tradeType = JSON.stringify(tradeType);
         $http.get('/api/trades/withUser/' + $scope.user._id + '?tradeType=' + tradeType)
@@ -184,6 +190,7 @@ app.controller("ReForReListsController", function($scope,$rootScope, currentTrad
                 trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
             });
             $scope.currentTrades = trades;
+            $scope.processing = false;
         })
     }
 	$scope.sortResult = function(sortby) {

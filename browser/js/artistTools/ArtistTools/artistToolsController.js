@@ -271,7 +271,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
         value: '',
         visible: false
       };
-
       var permanentLinks = $scope.profile.data.permanentLinks.filter(function(item) {
         return item.id !== -1;
       }).map(function(item) {
@@ -282,6 +281,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       var sendObj = {
         name: '',
         password: '',
+        email:'',
         permanentLinks: JSON.stringify(permanentLinks)
       }
       if ($scope.profile.field === 'name') {
@@ -304,7 +304,9 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
             };
             return;
           }
+          $scope.link.url = "";
           SessionService.create(res.data);
+          $scope.user = SessionService.getUser();
           $scope.closeEditProfileModal();
         })
         .catch(function(res) {
@@ -409,6 +411,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
 
     $scope.removePermanentLink = function(index) {
       $scope.profile.data.permanentLinks.splice(index, 1);
+      $scope.saveProfileInfo();
     };
     $scope.hidebutton = false;
     $scope.addPermanentLink = function() {
@@ -430,17 +433,21 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       });
     };
 
-    $scope.permanentLinkURLChange = function(index) {
+        $scope.permanentLinkURLChange = function() {
       var permanentLink = {};
       $scope.processing = true;
       ArtistToolsService
         .resolveData({
-          url: $scope.profile.data.permanentLinks[index].url
+                    url: $scope.link.url
         })
         .then(function(res) {
-          $scope.profile.data.permanentLinks[index].avatar = res.data.avatar_url ? res.data.avatar_url : '';
-          $scope.profile.data.permanentLinks[index].username = res.data.permalink;
-          $scope.profile.data.permanentLinks[index].id = res.data.id;
+                    $scope.profile.data.permanentLinks.push({
+                        url: res.data.permalink_url,
+                        avatar: res.data.avatar_url ? res.data.avatar_url : '',
+                        username: res.data.username,
+                        id: res.data.id,
+                        permanentLink: true
+                    });
           $scope.processing = false;
         })
         .catch(function(err) {

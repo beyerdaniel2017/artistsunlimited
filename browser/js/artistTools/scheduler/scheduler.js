@@ -29,6 +29,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $window.localStorage.removeItem('returnstate');
   }
   $scope.user = SessionService.getUser();
+  $scope.showEmailModal = false;
   $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
   $scope.makeEventURL = "";
   $scope.showOverlay = false;
@@ -74,6 +75,13 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
           $scope.$apply();
         });
     }
+  }
+
+  $scope.openHelpModal = function() {
+    var displayText = "Schedule your reposts using the assigned slots, and indicate your preference for un-reposting after 24 hours. Keep in mind that the scheduler will not allow you to repost and un-repost within a period of 48 hours.Arrow icons pointing downwards indicate that you have marked the track to be un-reposted after 24 hours.Orange-colored slots are reserved for trades initiated using the repost-for-repost platform.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
+    $.Zebra_Dialog(displayText, {
+      width: 600
+    });
   }
 
   $scope.saveUser = function() {
@@ -425,20 +433,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   };
 
   $scope.calendar = $scope.fillDateArrays(events);
-
-  function promptForEmail() {
-    if (!$scope.user.email) {
-      $scope.hideall = true;
-      $.Zebra_Dialog('Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.<br><br> <input id="txtemail" type="email" placeholder="example@domain.com" style="width:400px; border-radius:3px;padding:5px"/>', {
-        'type': 'confirmation',
-        width: 600,
-        'buttons': [{
-          caption: 'OK',
-          callback: function() {
-            var answer = $("#txtemail").val();
-            if (answer == "") {
-              $state.go('artistToolsDownloadGatewayList');
-            } else {
+  $scope.updateEmail = function(email) {
+    var answer = email;
               var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
               if (myArray) {
                 $scope.user.email = answer;
@@ -447,21 +443,27 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
                     SessionService.create(res.data);
                     $scope.user = SessionService.getUser();
                     $scope.hideall = false;
+        $('#emailModal').modal('hide');
+        $scope.showEmailModal = false;
                   })
                   .then(null, function(err) {
                     setTimeout(function() {
-                      promptForEmail();
+          $scope.showEmailModal = false;
+          $scope.promptForEmail();
                     }, 600);
                   })
               } else {
                 setTimeout(function() {
-                  promptForEmail();
+        $scope.showEmailModal = false;
+        $scope.promptForEmail();
                 }, 600);
               }
             }
-          }
-        }]
-      });
+
+  $scope.promptForEmail = function() {
+    if (!$scope.user.email) {
+      $scope.showEmailModal = true;
+      $('#emailModal').modal('show');
     }
   }
   $scope.verifyBrowser = function() {
@@ -480,10 +482,10 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
           }
         });
       } else {
-        promptForEmail();
+        $scope.promptForEmail();
       }
     } else {
-      promptForEmail();
+      $scope.promptForEmail();
     }
   }
   $scope.verifyBrowser();
