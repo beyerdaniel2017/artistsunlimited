@@ -8,7 +8,12 @@ app.config(function($stateProvider) {
 			currentTrades: function($http, SessionService) {
 				var user = SessionService.getUser();
 				if (user) {
-    			return $http.get('/api/trades/withUser/' + user._id)
+				var tradeType = {
+			        Requests: true,
+			        Requested: true,
+			        TradePartners: true
+			    };
+    			return $http.get('/api/trades/withUser/' + user._id+ '?tradeType=' + JSON.stringify(tradeType))
 					.then(function(res) {
 						var trades = res.data;
 						trades.forEach(function(trade) {

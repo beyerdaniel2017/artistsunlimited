@@ -15,32 +15,7 @@ router.get('/withUser/:userID', function(req, res, next) {
   };  
   if(tradeType != undefined){
     tradeType = JSON.parse(tradeType);
-    if(tradeType.Requests == true || tradeType.Requested == true || tradeType.TradePartners == true){
-      query["$or"]=[];
-      if(tradeType.Requests == true){
-        query["$or"].push({
-          'p1.user': req.params.userID,
-          'p1.accepted': false
-        });
-      }
-      if(tradeType.Requested == true){
-        query["$or"].push({
-          'p2.user': req.params.userID,
-          'p2.accepted': false
-        });
-      }
-      if(tradeType.TradePartners == true){
-        query["$or"].push({
-          'p1.user': req.params.userID, 
-          'p1.accepted': true
-        });
-        query["$or"].push({
-          'p2.user': req.params.userID, 
-          'p2.accepted': true
-        });
-      }
-    }
-    else{
+    if(tradeType.Requests == false && tradeType.Requested == false && tradeType.TradePartners == false){
       query = "";
     }
   }
@@ -79,9 +54,40 @@ router.get('/withUser/:userID', function(req, res, next) {
                   .exec()
                   .then(function(events) {
                     t.unfilledTrackCount = events;
+                  if(tradeType.Requests == true && t.p1.user._id.toString() === req.user._id.toString() && t.p1.accepted == false){
+                    if(tradesResult.indexOf(t) == -1){
                     tradesResult.push(t);
+                    }                    
+                  }
+                  if(tradeType.Requested == true && t.p2.user._id.toString() === req.user._id.toString() && t.p2.accepted == false){
+                    if(tradesResult.indexOf(t) == -1){
+                      tradesResult.push(t);
+                    }
+                  }
+                  if(tradeType.TradePartners == true){ 
+                    RepostEvent.count({
+                      $or: [{
+                        userID: t.p1.user.soundcloud.id,
+                        owner: t.p2.user._id
+                      }, {
+                        userID: t.p2.user.soundcloud.id,
+                        owner: t.p1.user._id
+                      }]
+                    })
+                    .exec()
+                    .then(function(tp) {
+                      if(tp > 0){
+                        if(tradesResult.indexOf(t) == -1){
+                          tradesResult.push(t);
+                        }
+                      }
                     next();
                   });
+                  }
+                  else{                    
+                    next();
+                  }
+                });
               } else {
                 next();
               }
