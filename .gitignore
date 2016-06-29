@@ -7,7 +7,8 @@ nbproject/project.properties
 
 nbproject/project.xml
 
-public
+public/main.js
+public/style.css
 
 query.csv
 email.html
