@@ -17,7 +17,6 @@ router.use('/prplan', require('./prPlans/prPlans.js'));
 router.use('/mixingmastering', require('./mixingMastering/mixingMastering.js'));
 router.use('/trades/', require('./trades/trades.js'));
 router.use('/editDB/', require('./editDB.js'));
-router.use('/facebookWebhook', require('./facebook/facebook.js'));
 
 router.use('/logout', function(req, res) {
   req.logout();
