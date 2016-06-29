@@ -37,8 +37,13 @@ app.config(function($stateProvider) {
             })
         },
         currentTrades: function($http, SessionService) {
+          var tradeType = {
+            Requests: true,
+            Requested: true,
+            TradePartners: true
+          };
           var user = SessionService.getUser();
-          return $http.get('/api/trades/withUser/' + user._id)
+          return $http.get('/api/trades/withUser/' + user._id + '?tradeType=' + JSON.stringify(tradeType))
             .then(function(res) {
               var trades = res.data;
               trades.forEach(function(trade) {
@@ -54,6 +59,7 @@ app.config(function($stateProvider) {
                   return 1;
                 }
               })
+              console.log(trades);
               return trades;
             })
         }
@@ -731,7 +737,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     return (screen.width > '436');
   }
 
-  
+
   $scope.openHelpModal = function() {
     var displayText = "This interface shows your scheduler and the scheduler for the user you are trading with, labeled on the top of each respective schedule. Your calendar will always be on the left.<br/><br/><img src='assets/images/grey-slot.png'/> Grey slots represents slots that are already taken.<br><br/><img src='assets/images/blue-slot.png'/>  Blue slots represent slots that are being bargained in the trade.<br/><br/><img src='assets/images/arrow-slot.png'/>  An Arrow within a slot means it will be unreposted after 24 hours.<br/><br>The chat window on the bottom allows you to chat with your Repost Partner about your trade.<br/>Email will automatically open a new email on your mailing app, allowing you to message your repost partner via email for your trade.<br/><br/>How to use AU's Repost for Repost System:<br/>1. Start by deciding how you would like to trade with your partner.<br/>2. Mark slots on your calendar and mark slots on your partners calendar.<br/>3. Click accept<br/><br/>When your partner returns to AU, he will be able to accept your trade. If accepted, you will be able to schedule reposts on the slots designated on your partner’s calendar; your partner will be able to schedule reposts on the slots designated on your calendar. If you are away from keyboard at the time of your trade, tracks that are in your 'auto-fill' queue (hyperlink to autofill queu) in the scheduler will automatically be scheduled for repost.<br/><br/>Tips:<br/>1. Make sure you are fair with your trades. If you have half as many followers as your partner, offer 2 reposts on your calendar in exchange for 1 repost on theirs.<br />2. Make sure you check your trades on a regular basis. People are much more likely to constantly trade reposts with you if you are reliable.<br />3. Try communicating with the user on Facebook, Email, SoundCloud messenger or any messaging app to make sure they take action on trades when it is their turn. A friendly 'Hey, let me know when you accept the trade on AU! Thanks again for trading with me :)' is enough to ensure a good flow of communication for your trades!";
     $.Zebra_Dialog(displayText, {
@@ -745,19 +751,19 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     if (myArray) {
       $scope.user.email = answer;
       return $http.put('/api/database/profile', $scope.user)
-      .then(function(res) {
-        SessionService.create(res.data);
-        $scope.user = SessionService.getUser();
-        $scope.hideall = false;
-        $('#emailModal').modal('hide');
-        $scope.showEmailModal = false;
-      })
-      .then(null, function(err) {
-        setTimeout(function() {
+        .then(function(res) {
+          SessionService.create(res.data);
+          $scope.user = SessionService.getUser();
+          $scope.hideall = false;
+          $('#emailModal').modal('hide');
           $scope.showEmailModal = false;
-          $scope.promptForEmail();
-        }, 600);
-      })
+        })
+        .then(null, function(err) {
+          setTimeout(function() {
+            $scope.showEmailModal = false;
+            $scope.promptForEmail();
+          }, 600);
+        })
     } else {
       setTimeout(function() {
         $scope.showEmailModal = false;
