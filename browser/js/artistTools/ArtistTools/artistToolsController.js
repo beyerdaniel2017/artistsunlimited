@@ -87,6 +87,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     $scope.trackListObj = null;
     $scope.trackListSlotObj = null;
     $scope.newQueueSong = "";
+    $scope.tracksQueue = [];
 
     $scope.trackChange = function(index) {
       $scope.makeEventURL = $scope.trackListSlotObj.permalink_url;
@@ -105,11 +106,20 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
 
     $scope.addSong = function() {
       if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
+      if ($scope.tracksQueue.length > 0) {
+        for (var i = 0; i < $scope.tracksQueue.length; i++) {
+          if($scope.user.queue.indexOf($scope.tracksQueue[i]) == -1){
+            $scope.user.queue.push($scope.tracksQueue[i]);
+          }          
+        }
+      } else {
       $scope.user.queue.push($scope.newQueueID);
+      }
       $scope.saveUser();
       $scope.newQueueSong = undefined;
       $scope.trackListObj = "";
       $scope.newQueue = undefined;
+      $scope.tracksQueue = [];
     }
 
     $scope.changeQueueSong = function() {
@@ -121,8 +131,16 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
           .then(function(res) {
             $scope.processing = false;
             var track = res.data;
+          if (track.kind == "playlist") {
+            var tracksArr = track.tracks;
+            angular.forEach(tracksArr, function(t) {
+              $scope.newQueueID = t.id;
+              $scope.tracksQueue.push($scope.newQueueID);
+            });
+          } else {
             $scope.newQueue = track;
             $scope.newQueueID = track.id;
+          }                      
             $scope.processing = false;
           })
           .then(null, function(err) {
@@ -304,7 +322,9 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
             };
             return;
           }
+          if(permanentLinks != ""){
           $scope.link.url = "";
+           }         
           SessionService.create(res.data);
           $scope.user = SessionService.getUser();
           $scope.closeEditProfileModal();
