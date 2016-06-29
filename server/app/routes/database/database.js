@@ -805,7 +805,7 @@ router.post('/profile/edit', function(req, res, next) {
   var body = req.body;
   var updateObj = {};
   if (body.name !== '') {
-    updateObj.name = body.name;
+    updateObj['soundcloud.username'] = body.name;
   } else if (body.password !== '') {
     updateObj.salt = User.generateSalt();
     updateObj.password = User.encryptPassword(body.password, updateObj.salt);
