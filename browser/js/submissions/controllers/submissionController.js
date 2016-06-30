@@ -54,7 +54,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     setTimeout(function() {
       console.log(loadElements);
       loadElements.forEach(function(sub) {
-        SC.oEmbed(sub.trackURL, {
+        SC.oEmbed('/tracks/' + sub.trackID, {
           element: document.getElementById(sub.trackID + "player"),
           auto_play: false,
           maxheight: 150

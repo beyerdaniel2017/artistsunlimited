@@ -32,7 +32,6 @@ app.config(function($stateProvider) {
       templateUrl: 'js/artistTools/ArtistTools/downloadGateway.list.html',
       controller: 'ArtistToolsController'
     })
-
 });
 
 app.controller('ArtistToolsController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService) {
@@ -108,12 +107,12 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
       if ($scope.tracksQueue.length > 0) {
         for (var i = 0; i < $scope.tracksQueue.length; i++) {
-          if($scope.user.queue.indexOf($scope.tracksQueue[i]) == -1){
+          if ($scope.user.queue.indexOf($scope.tracksQueue[i]) == -1) {
             $scope.user.queue.push($scope.tracksQueue[i]);
-          }          
+          }
         }
       } else {
-      $scope.user.queue.push($scope.newQueueID);
+        $scope.user.queue.push($scope.newQueueID);
       }
       $scope.saveUser();
       $scope.newQueueSong = undefined;
@@ -131,16 +130,16 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
           .then(function(res) {
             $scope.processing = false;
             var track = res.data;
-          if (track.kind == "playlist") {
-            var tracksArr = track.tracks;
-            angular.forEach(tracksArr, function(t) {
-              $scope.newQueueID = t.id;
-              $scope.tracksQueue.push($scope.newQueueID);
-            });
-          } else {
-            $scope.newQueue = track;
-            $scope.newQueueID = track.id;
-          }                      
+            if (track.kind == "playlist") {
+              var tracksArr = track.tracks;
+              angular.forEach(tracksArr, function(t) {
+                $scope.newQueueID = t.id;
+                $scope.tracksQueue.push($scope.newQueueID);
+              });
+            } else {
+              $scope.newQueue = track;
+              $scope.newQueueID = track.id;
+            }
             $scope.processing = false;
           })
           .then(null, function(err) {
@@ -299,7 +298,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       var sendObj = {
         name: '',
         password: '',
-        email:'',
+        email: '',
         permanentLinks: JSON.stringify(permanentLinks)
       }
       if ($scope.profile.field === 'name') {
@@ -322,9 +321,9 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
             };
             return;
           }
-          if(permanentLinks != ""){
-          $scope.link.url = "";
-           }         
+          if (permanentLinks != "") {
+            $scope.link.url = "";
+          }
           SessionService.create(res.data);
           $scope.user = SessionService.getUser();
           $scope.closeEditProfileModal();
@@ -453,21 +452,21 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       });
     };
 
-        $scope.permanentLinkURLChange = function() {
+    $scope.permanentLinkURLChange = function() {
       var permanentLink = {};
       $scope.processing = true;
       ArtistToolsService
         .resolveData({
-                    url: $scope.link.url
+          url: $scope.link.url
         })
         .then(function(res) {
-                    $scope.profile.data.permanentLinks.push({
-                        url: res.data.permalink_url,
-                        avatar: res.data.avatar_url ? res.data.avatar_url : '',
-                        username: res.data.username,
-                        id: res.data.id,
-                        permanentLink: true
-                    });
+          $scope.profile.data.permanentLinks.push({
+            url: res.data.permalink_url,
+            avatar: res.data.avatar_url ? res.data.avatar_url : '',
+            username: res.data.username,
+            id: res.data.id,
+            permanentLink: true
+          });
           $scope.processing = false;
         })
         .catch(function(err) {
