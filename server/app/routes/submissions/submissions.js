@@ -42,7 +42,7 @@ router.get('/unaccepted', function(req, res, next) {
     Submission.find({
         channelIDS: []
       }).sort({
-        submissionDate: -1
+        submissionDate: 1
       }).exec()
       .then(function(subs) {
         subs = subs.filter(function(sub) {
