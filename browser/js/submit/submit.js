@@ -9,39 +9,37 @@ app.config(function($stateProvider) {
 app.controller('SubmitSongController', function($rootScope, $state, $scope, $http) {
   $scope.submission = {};
   $scope.urlChange = function() {
-    if($scope.url != ""){
-    $scope.processing = true;
-    $http.post('/api/soundcloud/resolve', {
-        url: $scope.url
-      })
-      .then(function(res) {
-        if (res.data.kind != "track") throw (new Error(''));
-        $scope.submission.trackID = res.data.id;
-        $scope.submission.title = res.data.title;
-        $scope.submission.trackURL = res.data.trackURL;
-        SC.oEmbed($scope.submission.trackURL, {
-          element: document.getElementById('scPlayer'),
-          auto_play: false,
-          maxheight: 150
+    if ($scope.url != "") {
+      $scope.processing = true;
+      $http.post('/api/soundcloud/resolve', {
+          url: $scope.url
         })
-        document.getElementById('scPlayer').style.visibility = "visible";
-        $scope.processing = false;
-        $scope.notFound = false;
-      }).then(null, function(err) {
-        $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
-        $scope.submission.trackID = null;
-        $scope.notFound = true;
-        $scope.processing = false;
-        document.getElementById('scPlayer').style.visibility = "hidden";
-      });
-  }
+        .then(function(res) {
+          if (res.data.kind != "track") throw (new Error(''));
+          $scope.submission.trackID = res.data.id;
+          $scope.submission.title = res.data.title;
+          $scope.submission.trackURL = res.data.trackURL;
+          SC.oEmbed($scope.submission.trackURL, {
+            element: document.getElementById('scPlayer'),
+            auto_play: false,
+            maxheight: 150
+          })
+          document.getElementById('scPlayer').style.visibility = "visible";
+          $scope.processing = false;
+          $scope.notFound = false;
+        }).then(null, function(err) {
+          $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
+          $scope.submission.trackID = null;
+          $scope.notFound = true;
+          $scope.processing = false;
+          document.getElementById('scPlayer').style.visibility = "hidden";
+        });
+    }
   }
 
   $scope.submit = function() {
     if (!$scope.submission.email || !$scope.submission.name) {
       $.Zebra_Dialog("Please fill in all fields")
-    } else if (!$scope.submission.trackID) {
-      $.Zebra_Dialog("Track Not Found");
     } else {
       $scope.processing = true;
       $http.post('/api/submissions', {

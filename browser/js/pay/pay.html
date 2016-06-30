@@ -29,14 +29,13 @@
                         <button ng-show="!channel.addtocart" class="btn btn-enter" style="background-color: #F6D6A5; margin-right: auto;margin-left: auto;width: 100%;" ng-click="addToCart(channel)">
                             Add to cart
                         </button>
-                    </div>
-
+                    </div>  
                     <div class="clearfix"></div>
                     <div style="margin: 30px 0px 10px 0px;display: inline-block;width: 100%;">
                         <button class="btn btn-enter" style="float: right; background-color: transparent; color: grey; outline: none; box-shadow: none;padding: 10px 0px;margin: 0px; font-size:1.3em" ng-click="makePayment()">Checkout</button>
                         <span style="float: left; background-color: transparent; color: grey; outline: none; box-shadow: none;padding: 10px 0px;margin: 0px; font-size:1.3em">TOTAL: ${{showTotal}}</span></span>
                     </div>
-
+                    <a href='{{submission.trackURL}}' target='_blank'>{{submission.trackURL}}</a>
                     <div id="scPlayer" style="margin:30px 0"></div>
                 </div>
             </div>
