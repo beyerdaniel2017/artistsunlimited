@@ -63,8 +63,8 @@ app.config(function($stateProvider) {
 app.controller("ReForReListsController", function($scope, $rootScope, currentTrades, openTrades, $http, SessionService, $state, $timeout) {
   if (!SessionService.getUser()) {
     $state.go('login');
+    	return;
   }
-
   $scope.state = 'reForReInteraction';
   $scope.user = SessionService.getUser();
   $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);

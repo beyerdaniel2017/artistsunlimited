@@ -14,6 +14,14 @@ scWrapper.init({
 });
 module.exports = router;
 
+router.get('/isUserAuthenticate', function(req, res, next) {
+  if(req.user && req.user._id != undefined){
+    res.send(req.user);
+  }else{
+    res.send(null);
+  }
+});
+
 router.get('/byId/:id', function(req, res, next) {
   User.findById(req.params.id).exec()
     .then(function(user) {

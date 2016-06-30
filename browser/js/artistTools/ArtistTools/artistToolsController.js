@@ -113,7 +113,9 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
           }          
         }
       } else {
+          if ($scope.newQueueID != null){
       $scope.user.queue.push($scope.newQueueID);
+      }
       }
       $scope.saveUser();
       $scope.newQueueSong = undefined;
