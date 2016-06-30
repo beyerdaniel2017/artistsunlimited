@@ -39,7 +39,7 @@ function doRepost() {
           .then(function(user) {
             event.day = new Date(event.day);
             event.unrepostDate = new Date(event.unrepostDate);
-            repostAndRemove(event, user);
+            repostAndRemove(event, user, 0);
           })
           .then(null, function(err) {
             console.log(err);
@@ -51,7 +51,7 @@ function doRepost() {
     });
 }
 
-function repostAndRemove(event, user) {
+function repostAndRemove(event, user, repCount) {
   var message = {
     type: 'alert',
     senderId: event.owner,
@@ -77,7 +77,10 @@ function repostAndRemove(event, user) {
         } else {
           message.text = 'There was an error reposting a track on ' + user.soundcloud.username;
           putMessage(event, user, message);
-          sendMessage(err, event, user);
+          var now = new Date();
+          if (now.getMinutes() >= 29) {
+            sendMessage(err, event, user);
+          }
         }
       });
     })
@@ -117,32 +120,47 @@ function getID(event, user) {
       if (count == person.queue.length) reject();
       id = person.queue.splice(0, 1)[0];
       person.queue.push(id);
-      RepostEvent.find({
-          trackID: id,
-          day: {
-            $lt: new Date(event.unrepostDate.getTime() + 24 * 3600000)
-          },
-          unrepostDate: {
-            $gt: new Date(event.day.getTime() - 24 * 3600000)
-          },
-          _id: {
-            $ne: event._id
-          }
-        })
-        .then(function(events) {
-          if (events.length > 0) {
-            count++;
-            person.save().then(function() {
-              findAgain(person);
+      scWrapper.setToken(user.soundcloud.token);
+      var reqObj = {
+        method: 'GET',
+        path: '/tracks/' + id,
+        qs: {}
+      }
+      scWrapper.request(reqObj, function(err, data) {
+        if (!err && data.user.id != person.soundcloud.id) {
+          RepostEvent.find({
+              trackID: id,
+              day: {
+                $lt: new Date(event.unrepostDate.getTime() + 24 * 3600000)
+              },
+              unrepostDate: {
+                $gt: new Date(event.day.getTime() - 24 * 3600000)
+              },
+              _id: {
+                $ne: event._id
+              }
             })
-          } else {
-            count++;
-            person.save().then(function() {
-              resolve(id);
+            .then(function(events) {
+              if (events.length > 0) {
+                count++;
+                person.save().then(function() {
+                  findAgain(person);
+                })
+              } else {
+                count++;
+                person.save().then(function() {
+                  resolve(id);
+                })
+              }
             })
-          }
-        })
-        .then(null, console.log);
+            .then(null, console.log);
+        } else {
+          count++;
+          person.save().then(function() {
+            findAgain(person);
+          })
+        }
+      });
     }
     if (!event.trackID) {
       if (event.type == 'queue') {
