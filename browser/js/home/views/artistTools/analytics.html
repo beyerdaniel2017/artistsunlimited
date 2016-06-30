@@ -56,8 +56,11 @@
         <div class="col-md-3"></div>
       </div>
     </div> -->
-    <div ng-controller="graphControler" ng-if="enableGraph">
+    <!-- <div ng-controller="graphControler" ng-if="enableGraph">
         <nvd3 options="options" data="data"></nvd3>
+    </div> -->
+    <div class="container analytics-graph" ng-if="enableGraph" ng-controller="graphControler">
+      <linechart data="data" options="options"></linechart>
     </div>
 	</div>
 </div>

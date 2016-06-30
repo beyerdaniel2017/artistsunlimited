@@ -274,48 +274,46 @@ app.controller("artistToolsDownloadGatewayAnalytics", function($rootScope, $stat
     };
 });
 app.controller('graphControler', function($scope) {
+    // $scope.data = [{
+    //     key: "Cumulative Return",
+    //     values: value_array
+    // }];
     $scope.options = {
-        chart: {
-            type: 'discreteBarChart',
-            height: 500,
-            margin: {
-                top: 30,
-                right: 20,
-                bottom: 20,
-                left: 100
-            },
-            x: function(d) {
-                return d.label;
-            },
-            y: function(d) {
-                return d.value;
-            },
-            showValues: true,
-            duration: 100,
-            xAxis: {
-                axisLabel: 'Dates'
-            },
-            yAxis: {
-                axisLabel: 'Followers/Likes',
-                tickFormat: function(d) {
-                    return d3.format(',f')(d);
-                },
-                axisLabelDistance: 12
-            }
-        }
-    };
-    var value_array = [];
-    for (var lo_value in $scope.graph_data) {
-        value_array.push({
-            label: lo_value,
-            value: $scope.graph_data[lo_value]
-        });
-    }
-
-    $scope.data = [{
-        key: "Cumulative Return",
-        values: value_array
-    }];
+ margin: {
+   top: 20
+ },
+ series: [
+   {
+     axis: "y",
+     dataset: "timed",
+     key: "val_0",
+     label: "Analytics data",
+     color: "hsla(88, 48%, 48%, 1)",
+     type: [
+       "line"
+     ],
+     id: "mySeries0"
+   }
+ ],
+ axes: {
+   x: {
+     key: "x",
+     type: "date"
+   }
+ }
+};
+$scope.data = {
+  timed: []
+};
+for(var local_data in $scope.graph_data){
+  $scope.data.timed.push({
+    x:local_data,
+    val_0:$scope.graph_data[local_data]
+  });
+}
+ for(var i in $scope.data.timed){
+    $scope.data.timed[i].x=new Date($scope.data.timed[i].x);
+  }
 });
 app.controller('ArtistToolsController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService) {
         $scope.user = JSON.parse(SessionService.getUser());
