@@ -9,7 +9,7 @@
             <h3 class="bold text-center">Thank you</h3>
             <p style="font-size: 1.5em">Dear {{submission.name}}, here are the dates for the reposts of <a href="{{submission.trackURL}}">{{(submission.title?submission.title:submission.trackURL)}}</a>:<br><br>
             </p>
-            <p style="font-size:1.3em" ng-if='notified'>Your track will be reposted on paid channels within 5 days.</p> 
+            <p style="font-size:1.3em" ng-if='notified'>Your track will be reposted on paid channels within 5 days.</p>
             <p ng-repeat="event in events" style="font-size:1.3em">{{event.channelName}} on {{event.date.toLocaleDateString()}}</p>
           </div>
         </div>
