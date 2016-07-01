@@ -181,15 +181,20 @@ router.put('/completedPayment', function(req, res, next) {
     .then(function(payment) {
       sub.payment = payment;
       var promiseArray = [];
-      sub.paidChannelIDS.forEach(function(chanID) {
-        promiseArray.push(schedulePaidRepost(chanID, sub));
-      });
-      return Promise.all(promiseArray)
+      if (sub.trackID) {
+        sub.paidChannelIDS.forEach(function(chanID) {
+          promiseArray.push(schedulePaidRepost(chanID, sub));
+        });
+        return Promise.all(promiseArray)
+      } else {
+        return [];
+      }
     })
     .then(function(events) {
       responseObj.events = events;
       sub.paid = true;
       sub.save();
+      if (!sub.trackID) responseObj.status = 'notify';
       res.send(responseObj);
     })
     .then(null, next);

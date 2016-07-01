@@ -28,9 +28,19 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
           $scope.processing = false;
           $scope.notFound = false;
         }).then(null, function(err) {
-          $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
+          if (err.status != 403) {
+            $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
+            $scope.notFound = true;
+          } else {
+            $scope.submission.trackURL = $scope.url;
+            SC.oEmbed($scope.submission.trackURL, {
+              element: document.getElementById('scPlayer'),
+              auto_play: false,
+              maxheight: 150
+            })
+          }
           $scope.submission.trackID = null;
-          $scope.notFound = true;
+
           $scope.processing = false;
           document.getElementById('scPlayer').style.visibility = "hidden";
         });
