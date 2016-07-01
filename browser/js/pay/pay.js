@@ -37,7 +37,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   $scope.auDLLink = false;
   if (submission.paid) $state.go('home');
   $scope.track = track;
-  SC.oEmbed(submission.trackID, {
+  SC.oEmbed(submission.trackURL, {
     element: document.getElementById('scPlayer'),
     auto_play: false,
     maxheight: 150
