@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
   }
 })
 
-app.post('/', function(req, res) {
+router.post('/', function(req, res) {
   var data = req.body;
   // Make sure this is a page subscription
   if (data.object == 'page') {
