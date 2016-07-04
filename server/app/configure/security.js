@@ -30,27 +30,4 @@ module.exports = function(app) {
     xssProtection: true,
     nosniff: true
   }));
-
-
-  //on all requests
-  // app.use(function(req, res, next) {
-  //   //dont serve page unless over ssl
-  //   res.setHeader('Strinct-Transport-Security', 'max-age=8640000; includeSubDomains');
-  //   var logintoken = req.body.logintoken || req.query.logintoken || req.params.logintoken || req.cookies.logintoken;
-  //   if (typeof logintoken != 'undefined') {
-  //     jwt.verify(logintoken, global.env.SESSION_SECRET || 'arTistisUnlimited', function(err, decoded) {
-  //       if (err) {
-  //         return res.json({
-  //           status: 401,
-  //           message: 'Not authorized'
-  //         })
-  //       } else {
-  //         req.decoded = decoded;
-  //         next();
-  //       }
-  //     });
-  //   } else {
-  //     return next();
-  //   }
-  // });
 }
