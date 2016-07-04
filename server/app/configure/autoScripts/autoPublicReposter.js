@@ -7,22 +7,16 @@ var scConfig = require('./../../../env').SOUNDCLOUD;
 var sendEmail = require('../../mandrill/sendEmail.js');
 var request = require('request');
 
-scWrapper.init({
-  id: scConfig.clientID,
-  secret: scConfig.clientSecret,
-  uri: scConfig.redirectURL
-});
-
 module.exports = doRepost;
-//executes every hour
+//executes every 5 min
 function doRepost() {
   setTimeout(function() {
     doRepost();
-  }, 1800000);
+  }, 300000);
   var lowerDate = new Date();
-  lowerDate.setTime(lowerDate.getTime() - lowerDate.getMinutes(0) * 60 * 1000 - lowerDate.getMinutes(0) * 1000);
+  lowerDate.setTime(lowerDate.getTime() - lowerDate.getMinutes() * 60 * 1000 - lowerDate.getSeconds() * 1000);
   var upperDate = new Date();
-  upperDate.setTime(upperDate.getTime() + 60 * 60 * 1000 - upperDate.getMinutes(0) * 60 * 1000 - upperDate.getMinutes(0) * 1000);
+  upperDate.setTime(upperDate.getTime() + 60 * 60 * 1000 - upperDate.getMinutes() * 60 * 1000 - upperDate.getSeconds() * 1000);
 
   RepostEvent.find({
       completed: false,
@@ -75,13 +69,14 @@ function repostAndRemove(event, user, repCount) {
           message.text = 'A track was reposted on ' + user.soundcloud.username;
           putMessage(event, user, message);
         } else {
+          console.log('error ------------------');
           console.log(err);
           console.log(data);
-          message.text = 'There was an error reposting a track on ' + user.soundcloud.username;
-          putMessage(event, user, message);
           var now = new Date();
-          if (now.getMinutes() >= 29) {
+          if (now.getMinutes() >= 55) {
             sendMessage(err, event, user);
+            message.text = 'There was an error reposting a track on ' + user.soundcloud.username;
+            putMessage(event, user, message);
           }
         }
       });

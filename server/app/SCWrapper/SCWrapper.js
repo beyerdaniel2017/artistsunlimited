@@ -63,8 +63,6 @@ module.exports = (function() {
         'Content-Length': qsdata.length
       };
     }
-    console.log('options');
-    console.log(options);
     var req = https.request(options, function(response) {
       var body = ' ';
       response.on('data', function(chunk) {
