@@ -112,7 +112,9 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
           }
         }
       } else {
+          if ($scope.newQueueID != null){
         $scope.user.queue.push($scope.newQueueID);
+      }
       }
       $scope.saveUser();
       $scope.newQueueSong = undefined;
@@ -188,7 +190,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     $scope.removeQueueSong = function(index) {
       $scope.user.queue.splice(index, 1);
       $scope.saveUser()
-      $scope.loadQueueSongs();
+      //$scope.loadQueueSongs();
     }
 
     $scope.loadQueueSongs = function(queue) {

@@ -29,11 +29,11 @@ router.post('/', function(req, res, next) {
     } else {
       req.login(user, function(err) {
         //if(req.body.rememberme && (req.body.rememberme == "1" || req.body.rememberme == 1)){
-        req.session.cookie.expires = false;
+        //req.session.cookie.expires = false;
         req.session.name = user.userid;
-        req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
-        req.session.cookie.maxAge = 28 * 24 * 3600000;
-        req.session.cookie.expires = false;
+        req.session.cookie.expires = new Date(Date.now() + (24 * 3600000));
+        req.session.cookie.maxAge = 24 * 3600000;
+        //req.session.cookie.expires = false;
         delete user.password;
         delete user.salt;
         return res.json({
@@ -63,11 +63,11 @@ router.post('/thirdPartylogin', function(req, res, next) {
     } else {
       req.login(user, function(err) {
         //if(req.body.rememberme && (req.body.rememberme == "1" || req.body.rememberme == 1)){
-        req.session.cookie.expires = false;
+        //req.session.cookie.expires = false;
         req.session.name = user.userid;
-        req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
-        req.session.cookie.maxAge = 28 * 24 * 3600000;
-        req.session.cookie.expires = false;
+        req.session.cookie.expires = new Date(Date.now() + (24 * 3600000));
+        req.session.cookie.maxAge = 24 * 3600000;
+        //req.session.cookie.expires = false;
         delete user.password;
         delete user.salt;
         return res.json({
@@ -136,11 +136,11 @@ router.post('/soundCloudLogin', function(req, res, next) {
       });
     } else {
       req.login(user, function(err) {
-        req.session.cookie.expires = false;
+        //req.session.cookie.expires = false;
         req.session.name = user.userid;
-        req.session.cookie.expires = new Date(Date.now() + (28 * 24 * 3600000));
-        req.session.cookie.maxAge = 28 * 24 * 3600000;
-        req.session.cookie.expires = false;
+        req.session.cookie.expires = new Date(Date.now() + (24 * 3600000));
+        req.session.cookie.maxAge = 24 * 3600000;
+        //req.session.cookie.expires = false;
         return res.json({
           'success': true,
           'message': '',
