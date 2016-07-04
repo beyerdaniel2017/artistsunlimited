@@ -32,6 +32,7 @@ var startServer = function() {
     console.log(chalk.blue('Secure server started on port', chalk.magenta(HTTPS_PORT)));
   });
 };
+
 var startexpress = function() {
   var expressApp = require('express')();
 

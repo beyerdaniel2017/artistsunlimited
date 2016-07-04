@@ -26,6 +26,7 @@ function sendEmail(to_name, to_email, from_name, from_email, subject, message_ht
 
     sender()
         .then(function(res) {
+            console.log(res);
             return res;
         })
         .catch(function(err) {

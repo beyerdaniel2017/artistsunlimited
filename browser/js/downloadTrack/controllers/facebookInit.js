@@ -1,8 +1,6 @@
-
-window.twttr = (function (d, s, id)
-{
+window.twttr = (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0],
-    t = window.twttr || {};
+        t = window.twttr || {};
     if (d.getElementById(id))
         return t;
     js = d.createElement(s);
@@ -11,8 +9,7 @@ window.twttr = (function (d, s, id)
     fjs.parentNode.insertBefore(js, fjs);
 
     t._e = [];
-    t.ready = function (f)
-    {
+    t.ready = function(f) {
         t._e.push(f);
     };
 

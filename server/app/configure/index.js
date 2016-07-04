@@ -23,7 +23,7 @@ module.exports = function(app) {
     require('./authentication')(app);
 
     require('./autoScripts');
-    // app.use('/facebookWebhook', require('./facebook/facebook.js'));
+    app.use('/facebookWebhook', require('../routes/facebook/facebook.js'));
     require('./security')(app);
     // require('./autoEmailer')();
 };
