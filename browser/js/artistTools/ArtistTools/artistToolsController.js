@@ -324,7 +324,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
             return;
           }
           if (permanentLinks != "") {
-            $scope.link.url = "";
+            $scope.linkUrl = "";
           }
           SessionService.create(res.data);
           $scope.user = SessionService.getUser();
@@ -434,6 +434,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       $scope.profile.data.permanentLinks.splice(index, 1);
       $scope.saveProfileInfo();
     };
+
     $scope.hidebutton = false;
     $scope.addPermanentLink = function() {
 
@@ -459,7 +460,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       $scope.processing = true;
       ArtistToolsService
         .resolveData({
-          url: $scope.link.url
+          url: $scope.linkUrl
         })
         .then(function(res) {
           $scope.profile.data.permanentLinks.push({

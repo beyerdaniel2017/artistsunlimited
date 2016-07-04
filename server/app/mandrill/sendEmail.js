@@ -31,7 +31,6 @@ function sendEmail(to_name, to_email, from_name, from_email, subject, message_ht
         .catch(function(err) {
             console.error('A mandrill error occurred: ' + err.name + ' - ' + err.message);
         });
-
 }
 
 module.exports = sendEmail;
