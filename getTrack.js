@@ -28,24 +28,18 @@ SC.init({
 //   // }
 // });
 
-scwrapper.setToken('1-231090-159813180-2a168e61a9907');
-scwrapper.request({
-    method: 'PUT',
-    path: '/me/followings/229290629'
-  },
-  function(err, response) {
-    if (err) console.log('error following main artist: ' + JSON.stringify(err));
-    else console.log(response);
-  });
-// scwrapper.setToken('1-230936-212407694-ee3eae5fe92b1');
-// scwrapper.request({
-//   method: 'PUT',
-//   path: '/me/followings/225727688',
-//   qs: {}
-// }, function(err, response) {
-//   if (err) console.log('error following main artist: ' + JSON.stringify(err));
-//   else console.log(response);
-// });
+scwrapper.setToken('1-231090-217102520-a7790ccf030c1');
+var reqObj = {
+  method: 'PUT',
+  path: '/e1/me/track_reposts/217102520',
+  qs: {
+    oauth_token: '1-231090-217102520-a7790ccf030c1'
+  }
+};
+scwrapper.request(reqObj, function(err, data) {
+  console.log(err);
+  console.log(data);
+});
 
 // SC.put('/me/followings/208940792', function(err, data) {
 //   console.log('err');
