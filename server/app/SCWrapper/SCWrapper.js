@@ -26,8 +26,6 @@ module.exports = (function() {
   };
 
   SCWrapper.prototype.request = function(data, callback) {
-    console.log('data.qs');
-    console.log(data.qs);
     var qsObj = data.qs;
     if (!data.qs) {
       qsObj = {
@@ -38,8 +36,6 @@ module.exports = (function() {
       qsObj.client_id = this.clientId;
       qsObj.format = 'json';
     }
-    console.log('qsObj');
-    console.log(qsObj);
     var endpoint = data.path.split('/')[1];
     if (endpoint === 'me') {
       if (this.isAuthorized) {
@@ -51,7 +47,7 @@ module.exports = (function() {
         return false;
       }
     }
-    var qsdata = (qsObj) ? qs.stringify(data.qs) : '';
+    var qsdata = (qsObj) ? qs.stringify(qsObj) : '';
     var paramChar = data.path.indexOf('?') >= 0 ? '&' : '?';
     var options = {
       hostname: hostApi,
@@ -66,29 +62,21 @@ module.exports = (function() {
         'Content-Length': qsdata.length
       };
     }
-    console.log(options);
-    console.log(options);
-
     var req = https.request(options, function(response) {
-      var body = '';
+      var body = ' ';
       response.on('data', function(chunk) {
         body += chunk;
       });
       response.on('end', function() {
         try {
-          console.log('body');
-          console.log(body);
           var d = JSON.parse(body);
-          console.log(response.statusCode);
           if (Number(response.statusCode) >= 400) {
             callback(d.errors, d);
           } else {
             callback(undefined, d);
           }
         } catch (e) {
-          console.log('catch e');
-          console.log(e);
-          callback(e);
+          callback(JSON.stringify(body));
         }
       });
     });
