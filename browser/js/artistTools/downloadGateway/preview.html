@@ -1,16 +1,13 @@
 <ng-include src="'js/home/views/navigation.html'"></ng-include>
-
 <!-- Sidebar Start -->
 <div class="sidebar-tracks" ng-show="recentTracks.length > 0">
     <div class="songs-list text-center" ng-repeat="item in recentTracks">
         <a ng-href="/download?trackid={{item._id}}" target="_blank">
-            <img class="avatar" ng-src="{{item.trackArtworkURL}}" ng-hover="showTitle[item] = !showTitle[item]"/>
-            <span ng-show="!!showTitle[item]">{{item.trackTitle}}</span>
+      <img class="avatar" ng-src="{{item.trackArtworkURL}}" ng-hover="showTitle[item] = !showTitle[item]"/><span ng-show="!!showTitle[item]">{{item.trackTitle}}</span>
         </a>
     </div>
 </div>
 <!-- Sidebar End -->
-
 <!-- Content Start  -->
 <div class="container">
     <div class="row">
@@ -29,17 +26,26 @@
                                 <div class="follow-bottom">
                                     <h4>{{track.trackTitle}}</h4>
                                     <a ng-href="{{track.artistURL}}" target="_blank"><img class="avatar" ng-src="{{track.artistArtworkURL}}"/> {{track.artistUsername}}</a>
-                                    <p class="text-justify pad-download-agreement">
-                                        By downloading this song you agree to: <img src="assets/images/favorite_icon.png" style="width:14px; height:12px;"> the track, <img src="assets/images/repost_icon.png" style="width:16px; height:12px;"> the track, and follow {{track.artistUsername}}
-                                        <span ng-repeat="artist in track.artists" ng-if="!track.admin">
-                                            , {{artist.username}} 
-                                        </span>
-                                        <span ng-if="track.admin"> and our network</span>
-                                        .
+                  <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'actionsOnSoundcloud'">
+                    By downloading this song you agree to: <img src="assets/images/favorite_icon.png" style="width:14px; height:12px;"> the track, <img src="assets/images/repost_icon.png" style="width:16px; height:12px;"> the track, and follow {{track.artistUsername}}<span ng-repeat="artist in track.artists" ng-if="user.admin == true">, {{artist.username}} </span><span> and our network</span>.
+                  </p>
+                  <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'youtubeSubscribe'">For downloading this song you need to subscribe to {{ track.socialPlatformValue }} on youtube.
+                  </p>
+                  <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'twitterFollow'">For downloading this song you need to follow {{ track.socialPlatformValue }} on twitter.
+                  </p>
+                  <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'twitterPost'">For downloading this song you need to tweet &quot{{ track.socialPlatformValue }}&quot on twitter.
+                  </p>
+                  <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'facebookLike'">For downloading this song you need to like {{ track.socialPlatformValue }} Facebook page/link.
+                  </p>
+                  <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'facebookShare'">For downloading this song you need to share {{ track.socialPlatformValue }} on Facebook.
+                  </p>
+                  <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'instagramFollow'">For downloading this song you need to follow {{ track.socialPlatformValue }} on instagram.
                                     </p>
                                 </div>  
                             </div>
+              <div ng-if="track.socialPlatform == 'actionsOnSoundcloud'">
                             <input type="text" class="form-control" ng-model="track.commentText" placeholder="Comment" ng-if="track.comment" style="width:360px; height:30px; margin-bottom:5px">
+              </div>
                             <button class="btn btn-default btn-lg no-border" style="width:360px; font-weight: bold; font-size:1.1em;" ng-click="nodl()">CONNECT & DOWNLOAD</button>
                             <br>
                             <br>
@@ -50,14 +56,11 @@
                                     </a>
                                 </div>
                             </div>
-
                             <br/>
                             <br/>
-
                             <div class="col-md-12 text-center">
                                 <!--<a href="#" class="btn btn-enter" ng-click="goBack();">Back</a>-->
                             </div>
-
                         </div>
                     </div>
                 </div>

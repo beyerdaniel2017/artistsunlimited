@@ -9,7 +9,6 @@ app.config(function($stateProvider, $authProvider, $httpProvider) {
         clientId: '0b2ab47baa464c31bf6d8e9f301d4469'
     });
 
-
     // Instagram
     $authProvider.instagram({
         name: 'instagram',
@@ -32,7 +31,6 @@ app.config(function($stateProvider, $authProvider, $httpProvider) {
             height: 645
         }
     });
-
 })
 
 
@@ -46,8 +44,9 @@ app.controller('DownloadTrackController', ['$rootScope',
     'DownloadTrackService',
     '$sce',
     '$auth',
-    function($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService, $sce, $auth) {
-
+  'SessionService',
+  function($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService, $sce, $auth, SessionService) {
+    $scope.user = SessionService.getUser();
         /* Normal JS vars and functions not bound to scope */
         var playerObj = null;
 
@@ -153,7 +152,6 @@ app.controller('DownloadTrackController', ['$rootScope',
                         })
                         .then(null, reject);
                 }
-
             });
             idPromise.then(function(id) {
                     return $http({
@@ -174,7 +172,6 @@ app.controller('DownloadTrackController', ['$rootScope',
                     $scope.processing = false;
                     $.Zebra_Dialog('Youtube channel to subscribe to not found');
                 })
-
         }
 
         /* Default processing on page load */
@@ -229,7 +226,6 @@ app.controller('DownloadTrackController', ['$rootScope',
             }
         };
 
-
         /* On click download track button */
         $scope.authenticateSoundcloud = function() {
             if ($scope.track.comment && !$scope.track.commentText) {
@@ -265,7 +261,6 @@ app.controller('DownloadTrackController', ['$rootScope',
                 $scope.processing = false;
                 $scope.$apply();
             }
-
         };
 
         $scope.downloadTrackFacebookShare = function(shareURL) {
@@ -279,10 +274,7 @@ app.controller('DownloadTrackController', ['$rootScope',
                     method: 'share',
                     href: shareURL
                 }, function(response) {
-                    console.log(response);
                     if (response && !response.error_code) {
-                        console.log("OK: " + JSON.stringify(response));
-
                         if ($scope.track.downloadURL && $scope.track.downloadURL !== '') {
                             $window.location.href = $scope.track.downloadURL;
                         } else {
@@ -300,7 +292,6 @@ app.controller('DownloadTrackController', ['$rootScope',
             };
 
             (function(d, s, id) {
-                console.log("executed !");
                 var js, fjs = d.getElementsByTagName(s)[0];
                 if (d.getElementById(id)) {
                     return;
@@ -324,7 +315,6 @@ app.controller('DownloadTrackController', ['$rootScope',
                 });
             };
             (function(d, s, id) {
-                console.log("executed !");
                 var js, fjs = d.getElementsByTagName(s)[0];
                 if (d.getElementById(id)) {
                     return;
@@ -334,8 +324,6 @@ app.controller('DownloadTrackController', ['$rootScope',
                 js.src = "//connect.facebook.net/en_US/sdk.js";
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
-
         };
-
     }
 ]);
