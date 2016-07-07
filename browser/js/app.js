@@ -2,15 +2,77 @@
 window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'satellizer', 'angularMoment', 'luegg.directives', 'ui-rangeSlider', 'ngSanitize']);
 
 app.config(function($urlRouterProvider, $locationProvider, $uiViewScrollProvider, $httpProvider) {
+
     // This turns off hashbang urls (/#about) and changes it to something normal (/about)
     $locationProvider.html5Mode(true);
     // If we go to a URL that ui-router doesn't have registered, go to the "/" url.
     $urlRouterProvider.otherwise('/');
     // $uiViewScrollProvider.useAnchorScroll();
 });
+app.config(function($authProvider) {
+    $authProvider.facebook({
+        clientId: 'Facebook App ID'
+    });
 
+    // Optional: For client-side use (Implicit Grant), set responseType to 'token'
+    $authProvider.facebook({
+        clientId: 'Facebook App ID',
+        responseType: 'token'
+    });
+
+    $authProvider.google({
+        optionalUrlParams: ['access_type'],
+        accessType: 'offline',
+        url: '/api/login/google/',
+        clientId: '923811958466-kthtaatodor5mqq0pf5ub6km9msii82g.apps.googleusercontent.com',
+        scope: ['https://www.googleapis.com/auth/youtubepartner-channel-audit', 'https://www.googleapis.com/auth/youtube'],
+        redirectUri: window.location.origin + '/analytics'
+    });
+    // redirectUri: window.location.origin+'/analytics'
+    //    responseType: 'token'
+    $authProvider.github({
+        clientId: 'GitHub Client ID'
+    });
+
+    $authProvider.linkedin({
+        clientId: 'LinkedIn Client ID'
+    });
+
+    $authProvider.instagram({
+        clientId: 'ae84968993fc4adf9b2cd246b763bf6b',
+        responseType: 'token'
+    });
+
+    $authProvider.yahoo({
+        clientId: 'Yahoo Client ID / Consumer Key'
+    });
+
+    $authProvider.live({
+        clientId: 'Microsoft Client ID'
+    });
+
+    $authProvider.twitch({
+        clientId: '727419002511745024'
+    });
+
+    $authProvider.bitbucket({
+        clientId: 'Bitbucket Client ID'
+    });
+
+
+    // No additional setup required for Twitter
+
+    $authProvider.oauth2({
+        name: 'foursquare',
+        url: '/auth/foursquare',
+        clientId: 'Foursquare Client ID',
+        redirectUri: window.location.origin,
+        authorizationEndpoint: 'https://foursquare.com/oauth2/authenticate',
+    });
+});
 // This app.run is for controlling access to specific states.
 app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll, SessionService, AppConfig) {
+
     // The given state requires an authenticated user.
     // var destinationStateRequiresAuth = function (state) {
     //     return state.data && state.data.authenticate;
@@ -61,9 +123,9 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
         //     }
         // });
 
-        if($window.location.pathname.indexOf('artistTools') != -1){
+        if ($window.location.pathname.indexOf('artistTools') != -1) {
             $http.get('/api/users/isUserAuthenticate').then(function(res) {
-                if(!res.data){
+                if (!res.data) {
                     $window.location.href = '/login';
                 }
             });
@@ -130,8 +192,6 @@ app.controller('FullstackGeneratedController', function($scope, $state, $http, m
     }
 
     $scope.shownotification = false;
-
-
     $scope.logout = function() {
         mainService.logout();
     }
@@ -182,6 +242,55 @@ app.controller('FullstackGeneratedController', function($scope, $state, $http, m
     }
     $scope.checkNotification();
 });
+
+app.directive('fbLike', [
+    '$window', '$rootScope',
+    function($window, $rootScope) {
+        return {
+            restrict: 'A',
+            scope: {
+                fbLike: '=?'
+            },
+            link: function(scope, element, attrs) {
+                if (!$window.FB) {
+                    // Load Facebook SDK if not already loaded
+                    $.getScript('//connect.facebook.net/en_US/sdk.js', function() {
+                        $window.FB.init({
+                            appId: $rootScope.facebookAppId,
+                            xfbml: true,
+                            version: 'v2.0'
+                        });
+                        renderLikeButton();
+                    });
+                } else {
+                    renderLikeButton();
+                }
+
+                var watchAdded = false;
+
+                function renderLikeButton() {
+                    if (!!attrs.fbLike && !scope.fbLike && !watchAdded) {
+                        // wait for data if it hasn't loaded yet
+                        watchAdded = true;
+                        var unbindWatch = scope.$watch('fbLike', function(newValue, oldValue) {
+                            if (newValue) {
+                                renderLikeButton();
+
+                                // only need to run once
+                                unbindWatch();
+                            }
+
+                        });
+                        return;
+                    } else {
+                        element.html('<div class="fb-like"' + (!!scope.fbLike ? ' data-href="' + scope.fbLike + '"' : '') + ' data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>');
+                        $window.FB.XFBML.parse(element.parent()[0]);
+                    }
+                }
+            }
+        };
+    }
+])
 
 app.directive('fileread', [function() {
     return {

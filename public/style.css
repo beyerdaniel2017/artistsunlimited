@@ -1,4 +1,8 @@
 @charset "UTF-8";
+#youtube-btn .btn-test {
+  width: 25%;
+  float: left; }
+
 .no-padding {
   padding: 0; }
 
@@ -2466,3 +2470,6 @@ input[type=range]:focus::-ms-fill-upper {
 
 .chat-input {
   height: 38px; }
+
+.margin-bottom-10 {
+  margin-bottom: 20px; }
