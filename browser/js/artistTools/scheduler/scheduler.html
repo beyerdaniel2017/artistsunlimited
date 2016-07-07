@@ -2,7 +2,7 @@
 <!-- Content Start  -->
 <div id="wrapper">
   <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-  <div class="container-fluid height-100pr" ng-init="getTrackListFromSoundcloud()">
+    <div class="container-fluid height-100pr">
     <div class="row">
       <div class="col-md-12 ">
         <div class="page-content right-side"><!--page-contant Start-->
@@ -36,9 +36,9 @@
                   <input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()"/><span> Unrepost after 24h</span><br>
                   <div ng-hide="(makeEvent.type == 'queue')">
                     <input type="text" class="form-control form-scheduler" style="width:400px; max-width:90%; text-align: center" ng-model="makeEventURL" ng-change="changeURL()" placeholder="Soundcloud Track Url" />
-                    <select class="form-control form-scheduler" ng-model="trackListSlotObj" ng-options="item.title for item in trackList" style="text-align:center; width:400px; max-width:90%;" ng-change="trackChange()">
+<!--       <select class="form-control form-scheduler" ng-model="trackListSlotObj" ng-options="item.title for item in trackList" style="text-align:center; width:400px; max-width:90%;" ng-change="trackChange()">
                       <option value="" ng-disabled="!!trackListSlotObj" ng-show="trackList.length > 0">-My Songs-</option>
-                    </select>
+      </select> -->
                   </div>
                 </div>
                 <div id='scPlayer' ng-show="makeEvent.trackID"></div>

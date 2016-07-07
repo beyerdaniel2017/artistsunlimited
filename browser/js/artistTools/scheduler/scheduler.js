@@ -47,6 +47,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.trackListObj = null;
   $scope.trackListSlotObj = null;
   $scope.newQueueSong = "";
+  $scope.trackArtistID = 0;
+  $scope.trackType = "";
 
   $scope.trackChange = function(index) {
     $scope.makeEventURL = $scope.trackListSlotObj.permalink_url;
@@ -165,7 +167,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.changeQueueSlot = function() {
-    console.log('hi');
     $scope.makeEvent.title = null;
     $scope.makeEvent.trackURL = null;
     $scope.makeEvent.artistName = null;
@@ -174,13 +175,16 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.changeURL = function() {
-    console.log($scope.makeEventURL);
     if ($scope.makeEventURL) {
       $scope.processing = true;
       $http.post('/api/soundcloud/resolve', {
           url: $scope.makeEventURL
         })
         .then(function(res) {
+        $scope.trackArtistID = res.data.user.id;
+        $scope.trackType = res.data.kind;
+        if(res.data.kind != "playlist"){
+          if(res.data.user.id === $scope.user.soundcloud.id){
           $scope.makeEvent.trackID = res.data.id;
           $scope.makeEvent.title = res.data.title;
           $scope.makeEvent.trackURL = res.data.trackURL;
@@ -193,6 +197,18 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
           document.getElementById('scPlayer').style.visibility = "visible";
           $scope.notFound = false;
           $scope.processing = false;
+          }
+          else{
+            $scope.notFound = false;
+            $scope.processing = false;
+            $.Zebra_Dialog("Sorry! We don't allow the track url of other artists. Please enter the track url your own.");
+          }
+        }
+        else{
+          $scope.notFound = false;
+          $scope.processing = false;
+          $.Zebra_Dialog("Sorry! We don't allow the playlist url here. Please enter the track url instead.");
+        }
         }).then(null, function(err) {
           $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
           document.getElementById('scPlayer').style.visibility = "hidden";
@@ -258,11 +274,12 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.saveEvent = function() {
+    if($scope.trackType == "track"){
+      if($scope.trackArtistID === $scope.user.soundcloud.id){
     if (!$scope.findUnrepostOverlap()) {
       if (!$scope.makeEvent.trackID && ($scope.makeEvent.type == "track")) {
         $.Zebra_Dialog("Enter a track URL");
       } else {
-        console.log($scope.makeEvent);
         $scope.processing = true;
         if ($scope.newEvent) {
           var req = $http.post('/api/events/repostEvents', $scope.makeEvent)
@@ -271,11 +288,15 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         }
         req
           .then(function(res) {
+              $scope.trackType = "";
+              $scope.trackArtistID = 0;
             return $scope.refreshEvents();
           })
           .then(function(res) {
             $scope.showOverlay = false;
             $scope.processing = false;
+              $scope.trackType = "";
+              $scope.trackArtistID = 0;
           })
           .then(null, function(err) {
             $scope.processing = false;
@@ -286,6 +307,14 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       $.Zebra_Dialog('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
     }
   }
+      else {
+        $.Zebra_Dialog("Sorry! We don't allow the track url of other artists. Please enter the track url your own.");
+      }
+    }
+    else {
+      $.Zebra_Dialog("Sorry! We don't allow the playlist url here. Please enter the track url instead.");
+    }
+  }
   $scope.emailSlot = function() {
     var mailto_link = "mailto:?subject=Repost of " + $scope.makeEvent.title + '&body=Hey,\n\n I am reposting your song ' + $scope.makeEvent.title + ' on ' + $scope.user.soundcloud.username + ' on ' + $scope.makeEvent.day.toLocaleDateString() + '.\n\n Best, \n' + $scope.user.soundcloud.username;
     location.href = encodeURI(mailto_link);
@@ -293,6 +322,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.backEvent = function() {
     $scope.makeEvent = null;
+    $scope.trackType = "";
+    $scope.trackArtistID = 0;
     $scope.showOverlay = false;
   }
 

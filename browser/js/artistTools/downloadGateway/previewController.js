@@ -10,10 +10,9 @@ app.config(function($stateProvider) {
         })
 });
 
-
 app.controller("ArtistToolsPreviewController", function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService) {
+  $scope.user = SessionService.getUser();
     var track = JSON.parse(window.localStorage.getItem('trackPreviewData'));
-    console.log(track);
     if (!track.trackTitle) {
         $.Zebra_Dialog('Track Not Found');
         $state.go("artistToolsDownloadGatewayList");

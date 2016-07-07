@@ -92,6 +92,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.trade = trade;
   $scope.p1Events = p1Events;
   $scope.p2Events = p2Events;
+  $scope.trackArtistID = 0;
+  $scope.trackType = "";
   $scope.currentTrades = currentTrades;
   $scope.selectTrade = currentTrades.find(function(el) {
     return el._id == $scope.trade._id;
@@ -184,6 +186,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
           url: $scope.makeEvent.URL
         })
         .then(function(res) {
+        $scope.trackArtistID = res.data.user.id;
+        $scope.trackType = res.data.kind;
+        if(res.data.kind != "playlist"){
+          if(res.data.user.id === $scope.user.soundcloud.id){
           $scope.makeEvent.trackID = res.data.id;
           $scope.makeEvent.title = res.data.title;
           $scope.makeEvent.trackURL = res.data.trackURL;
@@ -196,6 +202,18 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
           document.getElementById('scPlayer').style.visibility = "visible";
           $scope.notFound = false;
           $scope.processing = false;
+          }
+          else{
+            $scope.notFound = false;
+            $scope.processing = false;
+            $.Zebra_Dialog("Sorry! We don't allow the track url of other artists. Please enter the track url your own.");
+          }
+        }
+        else{
+          $scope.notFound = false;
+          $scope.processing = false;
+          $.Zebra_Dialog("Sorry! We don't allow the playlist url here. Please enter the track url instead.");
+        }
         }).then(null, function(err) {
           $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
           document.getElementById('scPlayer').style.visibility = "hidden";
@@ -234,6 +252,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
 
   $scope.backEvent = function() {
     $scope.makeEvent = undefined;
+    $scope.trackType = "";
+    $scope.trackArtistID = 0;
     $scope.showOverlay = false;
   }
 
@@ -258,6 +278,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.saveEvent = function() {
+    if($scope.trackType == "track"){
+      if($scope.trackArtistID === $scope.user.soundcloud.id){
     if (!$scope.unrepostOverlap()) {
       $scope.processing = true;
       if ($scope.makeEvent.type == 'traded') {
@@ -268,6 +290,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         req
           .then(function(res) {
             //$scope.processing = false;
+              $scope.trackType = "";
+              $scope.trackArtistID = 0;
             $scope.showOverlay = false;
             $scope.refreshCalendar();
           })
@@ -286,6 +310,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         $http.put('/api/trades', $scope.trade)
           .then(function(res) {
             //$scope.processing = false;
+                $scope.trackType = "";
+                $scope.trackArtistID = 0;
             $scope.showOverlay = false;
             $scope.trade = res.data;
             $scope.emitMessage(alertMessage, 'alert');
@@ -297,6 +323,14 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       }
     } else {
       $.Zebra_Dialog('Issue! This repost will cause the to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
+    }
+  }
+      else {
+        $.Zebra_Dialog("Sorry! We don't allow the track url of other artists. Please enter the track url your own.");
+      }
+    }
+    else {
+      $.Zebra_Dialog("Sorry! We don't allow the playlist url here. Please enter the track url instead.");
     }
   }
 

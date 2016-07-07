@@ -51,7 +51,7 @@
                                     <h4>Download File</h4>
                                     <div>                                                   
                                         <input class="form-control" type="file" accept=".mp3" fileread="track.file" message="message" ng-click="clearOrInput()"/>
-                                        <div class="text-center">Adds the album artwork, song title, and artist's name to the .mp3 file.</div>
+                            <div class="text-center">This will add the album artwork, artist, and title to the metadata of the .mp3.</div>
                                         <div class="text-center">Or</div>
                                         <input class="form-control" type="text" placeholder="Link" ng-model="track.downloadURL" ng-keyup="clearOrFile()"/>
                                     </div>
@@ -123,9 +123,7 @@
                                                 </div>
                                             </div>
                                             <br/><br/>
-
                                             <div ng-if="track.socialPlatform == 'actionsOnSoundcloud'">
-
                                                 <div class="artist-follow">
                                                     <h4>Artists to Follow</h4>
                                                     <div class="input-box" ng-repeat="artist in track.artists" ng-show="!artist.permanentLink">
