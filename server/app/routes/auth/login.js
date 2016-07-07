@@ -91,7 +91,7 @@ router.post('/soundCloudLogin', function(req, res, next) {
         success: false,
         "message": err
       });
-    } 
+    }
     if (!user) {
       return res.json({
         success: false,
@@ -112,4 +112,52 @@ router.post('/soundCloudLogin', function(req, res, next) {
         });
     }
   })(req, res);
+});
+/*
+Client Secrets
+Google -
+{
+client id:923811958466-kthtaatodor5mqq0pf5ub6km9msii82g.apps.googleusercontent.com
+client secret:K4wliD3PsnjdS0o-CKTNokjv
+}
+*/
+router.post('/google', function(req, res, next) {
+    request.post({
+        url: 'https://www.googleapis.com/oauth2/v4/token',
+        form: {
+            code: req.body.code,
+            client_id: '923811958466-kthtaatodor5mqq0pf5ub6km9msii82g.apps.googleusercontent.com',
+            client_secret: 'K4wliD3PsnjdS0o-CKTNokjv',
+            redirect_uri: req.body.redirectUri,
+            grant_type: 'authorization_code'
+        }
+    }, function(err, response, body_token) {
+      if(err) return console.log("<google,login.js>Error while getting access token from code :"+JSON.stringify(err));
+      //create entries into database under users authorization table
+      body_token=JSON.parse(body_token);
+      request.get({
+        url:'https://www.googleapis.com/youtube/v3/channels?part=contentOwnerDetails,brandingSettings,contentDetails&mine=true&access_token='+body_token.access_token
+      },function(err,response,body){
+        //prompt user to select an appropiate channel
+          if(err) return console.log("<google,login.js>Error while getting statistics from Google API :"+JSON.stringify(err));
+          body=JSON.parse(body);
+          body_token.isValid=false;
+          var AuthTokens=mongoose.model("AuthTokens");
+          AuthTokens.update({
+            userid:req.user._id
+          },{
+            userid:req.user._id,
+            youtube:body_token
+          },{
+            upsert:true
+          },function(err,nMod){
+            if(err) return console.log("<google,login.js>Error while pushing access tokens to database"+JSON.stringify(err));
+            var channels={};
+            for(var i=0; i<body.items.length; i++){
+              channels[body.items[i].id]=body.items[i].brandingSettings.channel.title;
+            }
+            res.send(channels);
+          });
+      });
+    });
 });

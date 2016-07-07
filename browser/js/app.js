@@ -20,12 +20,15 @@ app.config(function($authProvider) {
     });
 
     $authProvider.google({
-        url: '',
+        optionalUrlParams: ['access_type'],
+        accessType: 'offline',
+        url: '/api/login/google/',
         clientId: '923811958466-kthtaatodor5mqq0pf5ub6km9msii82g.apps.googleusercontent.com',
         scope: ['https://www.googleapis.com/auth/youtubepartner-channel-audit', 'https://www.googleapis.com/auth/youtube'],
-        responseType: 'token'
+        redirectUri: window.location.origin + '/analytics'
     });
-
+    // redirectUri: window.location.origin+'/analytics'
+    //    responseType: 'token'
     $authProvider.github({
         clientId: 'GitHub Client ID'
     });
@@ -35,8 +38,8 @@ app.config(function($authProvider) {
     });
 
     $authProvider.instagram({
-        clientId: 'ae84968993fc4adf9b2cd246b763bf6b'
-
+        clientId: 'ae84968993fc4adf9b2cd246b763bf6b',
+        responseType: 'token'
     });
 
     $authProvider.yahoo({
@@ -48,12 +51,13 @@ app.config(function($authProvider) {
     });
 
     $authProvider.twitch({
-        clientId: 'Twitch Client ID'
+        clientId: '727419002511745024'
     });
 
     $authProvider.bitbucket({
         clientId: 'Bitbucket Client ID'
     });
+
 
     // No additional setup required for Twitter
 

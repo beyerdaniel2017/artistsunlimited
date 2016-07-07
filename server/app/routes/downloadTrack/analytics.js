@@ -6,12 +6,13 @@ var request = require('request');
 var mongoose = require('mongoose');
 var graph = require('fbgraph');
 module.exports = router;
-var Analytics = mongoose.model('Analytics');
+//var Analytics = mongoose.model('Analytics');
 var Twitter = require('twitter');
-var twitter_database = mongoose.model("Twitter");
-var youtube_database = mongoose.model("Youtube");
+//var twitter_database = mongoose.model("Twitter");
+//var youtube_database = mongoose.model("Youtube");
 var path = require('path');
 var config = require(path.join(__dirname, '../../../env'));
+var socialconf = require('../config');
 /*Facebook analytics
 req.body->{
 token : access token of facebook (optional, if not send, only data from database served)
@@ -20,75 +21,139 @@ userid : artistUnlimited userid
 uid : facebook userid
 }
 */
-router.post("/facebook", function(req, response_rest, done) {
-    Analytics.findOne({
-        user: req.user._id
-    }, function(err, res) {
-        graph.setAccessToken(req.body.token);
-        if (!err && res !== null &&res.value.length!==0) {
-            //user found, insert new records into database and return old ones
-            var current_offset = (res.value[0] ? res.value[0].end_time.getTime() / 1000 : Math.floor(((new Date()).getTime() + (new Date()).getTimezoneOffset() * 60 * 1000) / 1000 - (7 * 24 * 60 * 60))) + 1000;
-            graph.get(res.pageid + "/insights?since=" + current_offset, function(err, result_fb) {
-                if (err) {
-                    console.log("error from facebook api :" + JSON.stringify(err));
-                    return;
+
+router.get("/facebook/generate", function(req, res, done) {
+    var AuthTokens = mongoose.model("AuthTokens"),
+        AnalyticsSchema = mongoose.model("AnalyticsSchema");
+    AuthTokens.findOne({
+        userid: req.user._id,
+        "facebook.isValid": true
+    }, function(err, res_db) {
+        if (err || res_db === null) return res.status(500).send("database failure or null result :" + JSON.stringify(err));
+        request.get({
+            url: "https://graph.facebook.com/v2.6/" + res_db.facebook.page + "?fields=fan_count&access_token=" + res_db.facebook.access_token
+                // url: "https://graph.facebook.com/v2.6/currentPageId?fields=fan_count&access_token=EAAYcT55aAh8BACsazSJZBbYCUZAXZC6RT4SmxJSoUNvfRBwktGJbZCy7qHHrYhNHhWJLKmrxDzyUssuLPS6IsfNNbALlSbP9MZCEbIXXArfZC2UkWm77iuhcNnEUi4RgzDpNjapCzMZAfGBJwUy9PF6ZBXozYz1JICTHcaMXxhAfWq2ngvM7Qgeh"
+        }, function(err, response_facebook) {
+            if (err) {
+                res.statusCode = 500;
+                res.send("Internal server error");
+                return;
+            }
+            response_facebook.body = JSON.parse(response_facebook.body);
+            (new AnalyticsSchema({
+                userid: req.user._id,
+                socialid: 'facebook',
+                data: {
+                    count: response_facebook.body.fan_count,
+                    date: new Date()
                 }
-                console.log(JSON.stringify(result_fb.data));
-                if (result_fb.data[0].values.length > 1) {
-                    for (var i = 0; i < result_fb.data[0].values.length; i++) {
-                        result_fb.data[0].values[i].end_time = new Date(result_fb.data[0].values[i].end_time);
-                        res.value.unshift(result_fb.data[0].values[i]);
-                    }
-                    res.save(function(err) {
-                        if (err) console.log("Error while pushing new analytics into database :" + err);
-                        else {
-                            response_rest.send(formatResponse(res)); //send top n values
+            })).save();
+        });
+    });
+});
+
+/*puneet facebook re single*/
+router.post("/facebook", function(req, res, done) {
+    var AuthTokens = mongoose.model("AuthTokens"),
+        AnalyticsSchema = mongoose.model("AnalyticsSchema");
+    if (!req.user) return res.status(409).send("User not login into sound cloud");
+    if (req.body.access_token) {
+        //register user and send success
+        return AuthTokens.update({
+                userid: req.user._id
+            }, {
+                $set: {
+                    "facebook.isValid": false,
+                    "facebook.access_token": req.body.access_token,
+                    "facebook.page": ""
+                }
+            }, {
+                strict: false,
+                multi: true,
+                upsert: true
+            },
+            function(err_db, res_db_update) {
+                if (!err_db) {
+                    /*Get pages list and show that to user*/
+                    graph.setAccessToken(req.body.access_token);
+                    graph.get("me/accounts", function(err, res_fb) {
+                        if (err) {
+                            console.log("Error while executing graph API:" + JSON.stringify(err));
+                            return;
+                        } else {
+                            var response = [];
+                            for (var i = 0; i < res_fb.data.length; i++) {
+                                response.push({
+                                    category: res_fb.data[i].category,
+                                    name: res_fb.data[i].name,
+                                    id: res_fb.data[i].id
+                                });
+                            }
+                            console.log(res_fb);
+                            console.log(response);
+                            graph.get('/me/', function(err, res_me) {
+                                if (!err) {
+                                    return res.send({
+                                        pages: response,
+                                        username: res_me.name,
+                                        id: res_me.id
+                                    });
+                                } else {
+                                    console.log("Unknown error :" + err);
+                                }
+                            });
                         }
                     });
                 } else {
-                    response_rest.send(formatResponse(res));
+                    console.log(JSON.stringify(err_db));
+                    return res.status(403).send("database error!");
                 }
             });
-        } else {
-            //user not found, register him
-            if (req.body.pid && req.user._id && req.body.pageid && !res) {
-                var saveobject = {
-                    pid: req.body.pid,
-                    user: req.user._id,
-                    pageid: req.body.pageid,
-                    value: []
-                };
-                var newAnalytics = new Analytics(saveobject);
-                newAnalytics.save(function(err) {
-                    if (err) console.log("Error while adding new user :" + err);
-                    else response_rest.send(formatResponse([newAnalytics]));
-                });
-            } else {
-                response_rest.statusCode = 404;
-                response_rest.send("wrong request format/No data");
-            }
-        }
-    }).sort({
-        _id: -1
-    });
-
-    function formatResponse(input) {
-        var output = {};
-        if (input.value) {
-            input.value.reverse();
-            input.value.slice(0, 6);
-            for (var i = 0; i < input.value.length; i++) {
-                var sum = 0;
-                for (var j in input.value[i].value) {
-                    sum = sum + input.value[i].value[j];
-                }
-                var date_formatted = input.value[i].end_time.toISOString();
-                date_formatted = date_formatted.substring(0, date_formatted.indexOf('T'));
-                output[date_formatted] = sum;
-            }
-        }
-        return (output);
     }
+    if (req.body.pageid) {
+        //register user and send success
+        return AuthTokens.update({
+                userid: req.user._id
+            }, {
+                $set: {
+                    "facebook.page": req.body.pageid,
+                    "facebook.isValid": true
+                }
+            }, {
+                strict: false,
+                multi: true,
+                upsert: true
+            },
+            function(err_db, res_db_update) {
+                if (!err_db) return res.send("successful registration");
+                else return res.status(403).send("database error!");
+            });
+    }
+    AuthTokens.findOne({
+        userid: req.user._id
+    }, {
+        facebook: 1
+    }, function(err_db, res_db) {
+        if (err_db || !res_db || !res_db.facebook || !res_db.facebook.isValid) {
+            //user has not yet registered
+            return res.status(404).send("entry not found");
+        } else {
+            var day_limit = req.body.day_limit || 7;
+            AnalyticsSchema.find({
+                userid: req.user._id,
+                socialid: "facebook"
+            }, function(err, res_analytics) {
+                if (err) return res.status(500).send("Internal server error");
+                var output = {};
+                for (var i = 0; i < res_analytics.length; i++) {
+                    output[res_analytics[i].data.date.toISOString()] = res_analytics[i].data.count;
+                }
+                res.send(output);
+            }).sort({
+                _id: -1
+            }).limit(day_limit * 4);
+        }
+    });
 });
 
 /*Get pages administered by the user
@@ -96,259 +161,346 @@ req.body->{
 token : access token of facebook
 }
 */
-router.post("/facebook/owned", function(req, res, done) {
-    graph.setAccessToken(req.body.token);
-    graph.get("me/accounts", function(err, res_fb) {
-        if (err) {
-            console.log("Error while executing graph API:" + JSON.stringify(err));
-            return;
-        } else {
-            var response = [];
-            for (var i = 0; i < res_fb.data.length; i++) {
-                response.push({
-                    category: res_fb.data[i].category,
-                    name: res_fb.data[i].name,
-                    id: res_fb.data[i].id
-                });
-            }
-            graph.get('/me/', function(err, res_me) {
-                if (!err) {
-                    res.send({
-                        pages: response,
-                        username: res_me.name,
-                        id: res_me.id
-                    });
-                } else {
-                    console.log("Unknown error :" + err);
-                }
-            });
+
+router.get("/twitter/generate", function(req, res, done) {
+    var AuthTokens = mongoose.model("AuthTokens"),
+        AnalyticsSchema = mongoose.model("AnalyticsSchema");
+    AuthTokens.findOne({
+        userid: req.user._id,
+        "twitter.isValid": true
+    }, function(err, db_res) {
+        if (err || !db_res) {
+            return res.send("Record not found, please register");
         }
+        var client = new Twitter({
+            // consumer_key: "HtFNqGObOo2O4IkzL1gasudPJ",
+            // consumer_secret: "bjDsl0XUZmcSLIWIl83lhkKRxJ3E99yvmRpYxQvCpbgL0kn4fN",
+            consumer_key: socialconf.socialSecres.twitter.consumer_key,
+            consumer_secret: socialconf.socialSecres.twitter.consumer_secret,
+            access_token_key: db_res.twitter.access_token,
+            access_token_secret: db_res.twitter.access_secret
+        });
+        client.get('favorites/list.json', function(error, tweets, response) {
+            if (error) {
+                res.statusCode = 500;
+                res.send("Internal server error");
+                return;
+            }
+            (new AnalyticsSchema({
+                userid: req.user._id,
+                socialid: 'twitter',
+                data: {
+                    count: JSON.parse(response.body)[0].user.followers_count,
+                    date: new Date()
+                }
+            })).save();
+        });
     });
 });
+
 
 //Twitter Analytics API
 router.post("/twitter", function(req, res, done) {
-    if (req.body.access_token_key && req.body.access_token_secret && req.user._id) {
-        var client = new Twitter({
-            consumer_key: 'HtFNqGObOo2O4IkzL1gasudPJ',
-            consumer_secret: 'bjDsl0XUZmcSLIWIl83lhkKRxJ3E99yvmRpYxQvCpbgL0kn4fN',
-            access_token_key: req.body.access_token_key,
-            access_token_secret: req.body.access_token_secret
-        });
-        twitter_database.findOne({
+    var AuthTokens = mongoose.model("AuthTokens"),
+        AnalyticsSchema = mongoose.model("AnalyticsSchema");
+    if (req.body.access_token_key && req.body.access_token_secret && req.user._id) { //call for twitter
+        return AuthTokens.update({
             userid: req.user._id
-        }, function(err, res_twitter) {
-            if (!err && res_twitter !== null) {
-                client.get("users/lookup.json", {
-                    screen_name: res_twitter.screen_name
-                }, function(error, tweets, response) {
-                    if (error) {
-                        console.log(JSON.stringify(error) + "\n error from twitterauth");
-                        return;
-                    } else {
-                        if ((res_twitter.follows.length === 0) || (res_twitter.follows[0].follows !== JSON.parse(response.body)[0].followers_count)) {
-                            res_twitter.follows.unshift({
-                                date: new Date(),
-                                follows: JSON.parse(response.body)[0].followers_count
-                            });
-                            res_twitter.save(function(err) {
-                                if (err) {
-                                    console.log("error while saving twitter followers :" + err);
-                                    return;
-                                }
-                                res.send(res_twitter.follows.slice(0, 5).reverse());
-                            });
-                        } else {
-                            res.send(res_twitter.follows.slice(0, 5).reverse());
-                        }
-                    }
-                });
-            } else {
-                res.statusCode = 404;
-                res.send("twitter not registered");
+        }, {
+            twitter: {
+                isValid: true,
+                access_token: req.body.access_token_key,
+                access_secret: req.body.access_token_secret,
+                screen_name: req.body.screen_name
             }
+        }, {
+            strict: false,
+            upsert: true,
+            multi: true
+        }, function(err, nMod) {
+            if (err) {
+                console.log("error while registering instagram user :" + err);
+                res.statusCode = 500;
+                res.send("Internal server error");
+                return;
+            }
+            res.send("ok registered");
         });
-    } else {
-        res.statusCode = 404;
-        res.send("malformed request");
     }
+    AuthTokens.findOne({
+        userid: req.user._id,
+        "twitter.isValid": true
+    }, function(err, res_db) {
+        if (err || !res_db) {
+            res.statusCode = 500;
+            res.send("Internal server error");
+            return;
+        }
+        var day_limit = req.body.day_limit || 7;
+        AnalyticsSchema.find({
+            userid: req.user._id,
+            socialid: "twitter"
+        }, function(err, res_analytics) {
+            if (err) {
+                res.statusCode = 500;
+                res.send("Internal server error");
+                return;
+            }
+            var output = {};
+            for (var i = 0; i < res_analytics.length; i++) {
+                output[res_analytics[i].data.date.toISOString()] = res_analytics[i].data.count;
+            }
+            res.send(output);
+        }).sort({
+            _id: -1
+        }).limit(day_limit * 4);
+    });
 });
 
-router.post("/twitter/create", function(req, res, done) {
-    if (req.body.screen_name && req.user._id) {
-        var twitter_save = new twitter_database({
-            screen_name: req.body.screen_name,
-            userid: req.user._id,
-            follows: []
-        });
-        twitter_save.save(function(err) {
+////Youtube analytics inititate api ---temp,will goto cron area later
+router.get("/youtube/stats/generate", function(req, res, done) {
+    var AuthTokens = mongoose.model("AuthTokens"),
+        AnalyticsSchema = mongoose.model("AnalyticsSchema");
+    AuthTokens.findOne({
+        userid: req.user._id,
+        "youtube.isValid": true
+    }, function(err, res_db) {
+        if (err || res_db === null) {
+            res.statusCode = 401;
+            res.send("database failure or null result :" + JSON.stringify(err));
+            return;
+        }
+        request.get({
+            url: "https://content.googleapis.com/youtube/v3/channels?part=statistics%2CcontentOwnerDetails&key=AIzaSyAMTf33Kl3OKP1ECNxhGT-qgg8zr_rB3LY&id=" + res_db.youtube.channel
+        }, function(err, response_youtube) {
             if (err) {
-                console.log("error while initializing twitter analytics :" + err);
-                res.send("already registered?");
+                res.statusCode = 500;
+                res.send("Internal server error");
                 return;
-            } else {
-                res.send("success");
             }
+            response_youtube.body = JSON.parse(response_youtube.body);
+            (new AnalyticsSchema({
+                userid: req.user._id,
+                socialid: 'youtube',
+                data: {
+                    count: response_youtube.body.items[0].statistics.subscriberCount,
+                    date: new Date()
+                }
+            })).save();
         });
-    } else {
-        res.statusCode = 401;
-        res.send("malformed request");
-    }
+    });
 });
+////Youtube analytics inititate api ---temp,will goto cron area later --cron
 
 //Youtube analytics api
 router.post("/youtube/stats", function(req, res, done) {
-    console.log("user ->" + req.user);
-    if (req.user._id) {
-        youtube_database.find({
-            uid: req.user._id
-        }, function(err, res_youtube_db) {
+    var AuthTokens = mongoose.model("AuthTokens"),
+        AnalyticsSchema = mongoose.model("AnalyticsSchema");
+    if (req.body.register && req.body.channelId) {
+        return AuthTokens.update({
+            userid: req.user._id
+        }, {
+            $set: {
+                "youtube.isValid": true,
+                "youtube.channel": req.body.channelId
+            }
+        }, {
+            strict: false,
+            multi: true
+        }, function(err, result_db_update) {
             if (err) {
-                console.log("Error from youtube database");
+                res.statusCode = 500;
+                return res.send("Internal Error");
+            } else {
+                return res.send("success");
+            }
+        });
+    } else {
+        AuthTokens.findOne({
+            userid: req.user._id,
+            "youtube.isValid": true
+        }, function(err, res_db) {
+            if (err || res_db === null) {
+                res.statusCode = 401;
+                res.send("database failure or null result :" + JSON.stringify(err));
                 return;
             }
-            var url;
-            if (res_youtube_db.length !== 0) {
-                url = "https://content.googleapis.com/youtube/v3/channels?part=statistics%2CcontentOwnerDetails&key=AIzaSyAMTf33Kl3OKP1ECNxhGT-qgg8zr_rB3LY&id=" + res_youtube_db[0].data.id;
-            } else if (req.body.channelId) {
-                url = "https://content.googleapis.com/youtube/v3/channels?part=statistics%2CcontentOwnerDetails&key=AIzaSyAMTf33Kl3OKP1ECNxhGT-qgg8zr_rB3LY&id=" + req.body.channelId;
-            } else {
-              res.statusCode = '401';
-              res.send("wrong request format");
-              return;
-            }
-            request.get({
-                url: url
-            }, function(error, response, body) {
-                var body_json = JSON.parse(body);
-                if (res_youtube_db.length !== 0) //user entry exists
-                {
-                    if (res_youtube_db[0].data.statistics.subscriberCount !== body_json.items[0].statistics.subscriberCount) { //stats changed
-                        var youtube = new youtube_database({
-                            uid: req.user._id,
-                            data: body_json.items[0],
-                            date: new Date()
-                        });
-                        youtube.save(function(err) {
-                            if (err) {
-                                console.log("error while saving :" + err);
-                                return;
-                            }
-                            res_youtube_db.unshift(youtube);
-                            res.send(formatResponse(res_youtube_db));
-                        });
-                    } else {
-                        res.send(formatResponse(res_youtube_db));
-                    }
-                } else if (req.body.channelId) { //user not found, correct request
-
-                    var youtube = new youtube_database({
-                        uid: req.user._id,
-                        data: body_json.items[0],
-                        date: new Date()
-                    });
-                    youtube.save(function(err) {
-                        if (err) {
-                            console.log("error while saving :" + err);
-                            return;
-                        }
-                        res.send(formatResponse([youtube]));
-                    });
-                } else {
-                    res.statusCode = '401';
-                    res.send("wrong request format");
+            var day_limit = req.body.day_limit || 7;
+            AnalyticsSchema.find({
+                userid: req.user._id,
+                socialid: "youtube"
+            }, function(err, res_analytics) {
+                if (err) {
+                    res.statusCode = 500;
+                    res.send("Internal server error");
+                    return;
                 }
-
-                function formatResponse(input) {
-                    input.reverse();
-                    var output = {};
-                    for (var i = 0; i < input.length; i++) {
-                        var date_string = input[i].date.toISOString();
-                        output[date_string] = input[i].data.statistics.subscriberCount;
-                    }
-                    return (output);
+                var output = {};
+                for (var i = 0; i < res_analytics.length; i++) {
+                    output[res_analytics[i].data.date.toISOString()] = res_analytics[i].data.count;
                 }
-            });
-        }).sort({
-            _id: -1
-        }).limit(6).lean();
-    } else {
-        res.statusCode = '401';
-        res.send("malformed request");
+                res.send(output);
+            }).sort({
+                _id: -1
+            }).limit(day_limit * 4); //we sample 4 times a day, assuming this
+        });
     }
 });
 
-router.post("/instagram", function(req, res, done) {
-    //Dynamic Variables Start
-    req.body.userid = req.user._id;
-    //  req.body.access_token = req.body.access_token ? req.body.access_token : '3201298647.1677ed0.7963843bb7ae48928ed36f6615844731';
-    //Dynamic Variables End
-    if (!req.body.access_token || !req.body.userid) {
-        res.statusCode = 401;
-        res.send("Authorization failed");
-    }
-    var ig = require('instagram-node').instagram();
-    ig.use({
-        client_id: 'ae84968993fc4adf9b2cd246b763bf6b',
-        client_secret: '2fb6196d81064e94a8877285779274d6',
-        access_token: req.body.access_token
-    });
-    ig.user('self', function(err, result, remaining, limit) {
-        if (err) {
-            console.log("Error from instagram analytics api" + err);
-            return;
+/*Instagram cron to be automated later */
+router.get("/instagram/generate", function(req, res, done) {
+    var AuthTokens = mongoose.model("AuthTokens"),
+        AnalyticsSchema = mongoose.model("AnalyticsSchema");
+    AuthTokens.findOne({
+        userid: req.user._id,
+        "instagram.isValid": true
+    }, function(err, db_res) {
+        if (err || !db_res) {
+            res.statusCode = 500;
+            return res.send("Record not found, please register");
         }
-        var Instagram = mongoose.model('Instagram');
-        //search if userid(artistUnlimited) is in database, otherwise create entry
-        Instagram.find({
-            userid: req.body.userid
-        }, function(err, response_database) {
+        var ig = require('instagram-node').instagram();
+        ig.use({
+            client_id: socialconf.socialSecres.instagram.client_id,
+            client_secret: socialconf.socialSecres.instagram.client_secret,
+            access_token: db_res.instagram.access_token
+        });
+        ig.user('self', function(err, result, remaining, limit) {
+            if (err) { //may be token has expired, set a value to indicate token expiry and handle it :
+                return console.log("Error from instagram analytics api" + err);
+            }
+            (new AnalyticsSchema({
+                userid: req.user._id,
+                socialid: 'instagram',
+                data: {
+                    count: result.counts.follows,
+                    date: new Date()
+                }
+            })).save();
+        });
+    });
+});
+
+router.post("/instagram", function(req, res, done) {
+    var AuthTokens = mongoose.model("AuthTokens"),
+        AnalyticsSchema = mongoose.model("AnalyticsSchema");
+    if (req.body.access_token) { //call for registration
+        return AuthTokens.update({
+            userid: req.user._id
+        }, {
+            instagram: {
+                isValid: true,
+                access_token: req.body.access_token
+            }
+        }, {
+            strict: false,
+            upsert: true
+        }, function(err, nMod) {
             if (err) {
-                console.log("Error from database, instagram_schema :" + err);
+                console.log("error while registering instagram user :" + err);
+                res.statusCode = 500;
+                res.send("Internal server error");
                 return;
             }
-            var save_database;
-            if (response_database.length !== 0) {
-                //entry in database
-                result.userid = req.body.userid;
-                if (result.counts.followed_by !== response_database[0].counts.followed_by) {
-                    save_database = new Instagram(result);
-                    save_database.save(function(err) {
-                        if (err) {
-                            console.log("fatal error while saving :" + err);
-                            return;
-                        } else {
-                            response_database.unshift(save_database);
-                            res.send(formatResponse(response_database));
-                        }
-                    });
-                } else {
-                    res.send(formatResponse(response_database));
-                }
-            } else {
-                //entry not in database
-                result.userid = req.body.userid;
-                save_database = new Instagram(result);
-                save_database.save(function(err) {
-                    if (err) {
-                        console.log("fatal error while saving :" + err);
-                        return;
-                    } else {
-                        res.send(formatResponse([save_database]));
-                    }
-                });
+            res.send("ok registered");
+        });
+    }
+    AuthTokens.findOne({
+        userid: req.user._id,
+        "instagram.isValid": true
+    }, function(err, res_db) {
+        if (err || !res_db) {
+            res.statusCode = 500;
+            res.send("Internal server error");
+            return;
+        }
+        var day_limit = req.body.day_limit || 7;
+        AnalyticsSchema.find({
+            userid: req.user._id,
+            socialid: "instagram"
+        }, function(err, res_analytics) {
+            if (err) {
+                res.statusCode = 500;
+                res.send("Internal server error");
+                return;
             }
+            var output = {};
+            for (var i = 0; i < res_analytics.length; i++) {
+                output[res_analytics[i].data.date.toISOString()] = res_analytics[i].data.count;
+            }
+            res.send(output);
         }).sort({
             _id: -1
-        }).limit(6).lean();
+        }).limit(day_limit);
     });
+    // //Dynamic Variables Start
+    // req.body.userid = req.user._id;
+    // //  req.body.access_token = req.body.access_token ? req.body.access_token : '3201298647.1677ed0.7963843bb7ae48928ed36f6615844731';
+    // //Dynamic Variables End
+    // if (!req.body.access_token || !req.body.userid) {
+    //     res.statusCode = 401;
+    //     res.send("Authorization failed");
+    // }
+    // var ig = require('instagram-node').instagram();
+    // ig.use({
+    //     client_id: 'ae84968993fc4adf9b2cd246b763bf6b',
+    //     client_secret: '2fb6196d81064e94a8877285779274d6',
+    //     access_token: req.body.access_token
+    // });
+    // ig.user('self', function(err, result, remaining, limit) {
+    //     if (err) {
+    //         console.log("Error from instagram analytics api" + err);
+    //         return;
+    //     }
+    //     var Instagram = mongoose.model('Instagram');
+    //     //search if userid(artistUnlimited) is in database, otherwise create entry
+    //     Instagram.find({
+    //         userid: req.body.userid
+    //     }, function(err, response_database) {
+    //         if (err) {
+    //             console.log("Error from database, instagram_schema :" + err);
+    //             return;
+    //         }
+    //         var save_database;
+    //         if (response_database.length !== 0) {
+    //             //entry in database
+    //             result.userid = req.body.userid;
+    //             if (result.counts.followed_by !== response_database[0].counts.followed_by) {
+    //                 save_database = new Instagram(result);
+    //                 save_database.save(function(err) {
+    //                     if (err) {
+    //                         console.log("fatal error while saving :" + err);
+    //                         return;
+    //                     } else {
+    //                     }
+    //                 });
+    //             } else {
+    //                 res.send(formatResponse(response_database));
+    //             }
+    //         } else {
+    //             //entry not in database
+    //             result.userid = req.body.userid;
+    //             save_database = new Instagram(result);
+    //             save_database.save(function(err) {
+    //                 if (err) {
+    //                     console.log("fatal error while saving :" + err);
+    //                     return;
+    //                 } else {
+    //                     res.send(formatResponse([save_database]));
+    //                 }
+    //             });
+    //         }
+    //     }).sort({
+    //         _id: -1
+    //     }).limit(6).lean();
+    //  });
 
-    function formatResponse(input) {
-        console.log(JSON.stringify(input));
-        var output = {};
-        for (var i = 0; i < input.length; i++) {
-            output[input[i]._id.getTimestamp().toISOString()] = input[i].counts.followed_by;
-        }
-        return output;
-    }
+    // function formatResponse(input) {
+    //     console.log(JSON.stringify(input));
+    //     var output = {};
+    //     for (var i = 0; i < input.length; i++) {
+    //         output[input[i]._id.getTimestamp().toISOString()] = input[i].counts.followed_by;
+    //     }
+    //     return output;
+    // }
 });
