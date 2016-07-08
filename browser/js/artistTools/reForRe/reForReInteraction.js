@@ -189,7 +189,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         $scope.trackArtistID = res.data.user.id;
         $scope.trackType = res.data.kind;
         if(res.data.kind != "playlist"){
-          if(res.data.user.id === $scope.user.soundcloud.id){
+          if(res.data.user.id != $scope.user.soundcloud.id){
           $scope.makeEvent.trackID = res.data.id;
           $scope.makeEvent.title = res.data.title;
           $scope.makeEvent.trackURL = res.data.trackURL;
@@ -206,7 +206,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
           else{
             $scope.notFound = false;
             $scope.processing = false;
-            $.Zebra_Dialog("Sorry! We don't allow the track url of other artists. Please enter the track url your own.");
+            $.Zebra_Dialog("You cannot repost your own track.");
           }
         }
         else{
@@ -279,7 +279,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
 
   $scope.saveEvent = function() {
     if($scope.trackType == "track"){
-      if($scope.trackArtistID === $scope.user.soundcloud.id){
+      if($scope.trackArtistID != $scope.user.soundcloud.id){
     if (!$scope.unrepostOverlap()) {
       $scope.processing = true;
       if ($scope.makeEvent.type == 'traded') {
@@ -326,7 +326,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     }
   }
       else {
-        $.Zebra_Dialog("Sorry! We don't allow the track url of other artists. Please enter the track url your own.");
+        $.Zebra_Dialog("You cannot repost your own track.");
       }
     }
     else {

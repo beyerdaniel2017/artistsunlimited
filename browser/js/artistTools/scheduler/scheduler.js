@@ -184,7 +184,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         $scope.trackArtistID = res.data.user.id;
         $scope.trackType = res.data.kind;
         if(res.data.kind != "playlist"){
-          if(res.data.user.id === $scope.user.soundcloud.id){
+          if(res.data.user.id != $scope.user.soundcloud.id){
           $scope.makeEvent.trackID = res.data.id;
           $scope.makeEvent.title = res.data.title;
           $scope.makeEvent.trackURL = res.data.trackURL;
@@ -201,7 +201,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
           else{
             $scope.notFound = false;
             $scope.processing = false;
-            $.Zebra_Dialog("Sorry! We don't allow the track url of other artists. Please enter the track url your own.");
+            $.Zebra_Dialog("You cannot repost your own track.");
           }
         }
         else{
@@ -275,7 +275,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.saveEvent = function() {
     if($scope.trackType == "track"){
-      if($scope.trackArtistID === $scope.user.soundcloud.id){
+      if($scope.trackArtistID != $scope.user.soundcloud.id){
     if (!$scope.findUnrepostOverlap()) {
       if (!$scope.makeEvent.trackID && ($scope.makeEvent.type == "track")) {
         $.Zebra_Dialog("Enter a track URL");
@@ -308,7 +308,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     }
   }
       else {
-        $.Zebra_Dialog("Sorry! We don't allow the track url of other artists. Please enter the track url your own.");
+        $.Zebra_Dialog("You cannot repost your own track.");
       }
     }
     else {
