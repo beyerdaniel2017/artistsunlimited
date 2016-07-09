@@ -9,7 +9,9 @@ app.factory('SessionService', function($cookies, $http, $window) {
 	}
 
 	function getUser() {
-		var user = JSON.parse($window.localStorage.getItem('user'));
+		if ($window.localStorage.getItem('user')) {
+			var user = JSON.parse($window.localStorage.getItem('user'));
+		}
 		if (user) {
 			return user;
 		}
