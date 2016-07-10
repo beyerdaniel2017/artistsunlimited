@@ -9,12 +9,13 @@ app.factory('SessionService', function($cookies, $http, $window) {
 	}
 
 	function getUser() {
-		if ($window.localStorage.getItem('user')) {
+		console.log($window.localStorage.getItem('user'));
+		try {
 			var user = JSON.parse($window.localStorage.getItem('user'));
-		}
-		if (user) {
-			return user;
-		}
+			if (user) {
+				return user;
+			}
+		} catch (e) {}
 	}
 
 	function refreshUser() {
