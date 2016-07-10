@@ -19,6 +19,7 @@ function runPlayer() {
         console.log(res);
         runPlayer();
       }, function(err) {
+        console.log(err);
         runPlayer();
       })
   }
@@ -44,7 +45,7 @@ function requestPromise(ipAndPort) {
         body += data;
       });
       res.on('end', function() {
-        // console.log(body);
+        console.log(body);
         resolve('------ done -----')
         totalSuccesses++;
       })

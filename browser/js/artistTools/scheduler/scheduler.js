@@ -308,7 +308,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         $.Zebra_Dialog("You cannot repost your own track.");
       }
     } else {
-      $.Zebra_Dialog("Sorry! We don't allow the playlist url here. Please enter the track url instead.");
+      $.Zebra_Dialog("Sorry! We don't currently allow playlist reposting. Please enter a track url instead.");
     }
   }
   $scope.emailSlot = function() {
