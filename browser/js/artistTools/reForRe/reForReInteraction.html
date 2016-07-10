@@ -6,7 +6,7 @@
 </style>
 <a href="#" class="question-btn"><img class="img-responsive" width="25px" ng-click="openHelpModal()" src="assets/images/question_icon.png"></a>
 <div class="content-area bg-white pad-right" style="padding: 1% 2%; margin-top:-70px;" ng-init="getTrackListFromSoundcloud()">
-<div class="rfr-schedule-container" ng-init="getMessage();">
+	<div class="rfr-schedule-container" ng-init="getMessage();">
 		<!-- schedule 1 -->
 		<div class="scheduler-small" id="{{getSchedulerID(trade.p1.user._id)}}">
 			<div class="label-username"><a target="_blank" href="{{trade.p1.user.soundcloud.permalinkURL}}">{{trade.p1.user.soundcloud.username}}</a> <span style="color:#ADD8E6">( {{trade.p1.slots.length}} slots )</span><span ng-if="followerShow()"> - {{trade.p1.user.soundcloud.followers | number:0}} followers </span></div>
@@ -99,11 +99,11 @@
 			<div ng-if="makeEvent.type=='trade' && makeEvent.person.user._id != user._id || makeEvent.type=='traded'">
 				<input class="form-control" style="width:300px; max-width:90%; margin:0 auto;" type="text" placeholder="Soundcloud Url" ng-model="makeEvent.URL" ng-if="makeEvent.owner == user._id || makeEvent.type=='trade'" ng-change="changeURL()"/>
 				<span style="font-size:.8em;" ng-if="makeEvent.type=='trade'">(leave blank for autofill)</span><br>
-				<!-- <select ng-if="makeEvent.owner == user._id || makeEvent.type=='trade'" class="form-control form-scheduler" ng-model="makeEvent.trackListObj" ng-options="item.title for item in trackList" style="text-align:center; width:300px; max-width:90%;" ng-change="trackListChangeEvent()">
+				<select ng-if="makeEvent.owner == user._id || makeEvent.type=='trade'" class="form-control form-scheduler" ng-model="makeEvent.trackListObj" ng-options="item.title for item in trackList" style="text-align:center; width:300px; max-width:90%;" ng-change="trackListChangeEvent()">
 					<option value="" ng-disabled="!!trackListObj" ng-show="trackList.length > 0">-My Songs-</option>
-            </select><br> -->
+				</select>
 			</div>
-		<br>
+			<br>
 			<input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()" ng-disabled="makeEvent.type == 'traded'"/><span class="label-smaller" style="font-size:0.8em;"> Unrepost after 24h</span><br><br>
 			<div id='scPlayer' class="player" ng-show="makeEvent.trackID"></div>
 			<br>
@@ -139,23 +139,23 @@
 		</div>
 	</div>
 	<!-- loader -->
-<!--overlay-->
-<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showEmailModal">
-    <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
-	    <div class="modal-dialog">    
-	      	<!-- Modal content-->
-	      	<div class="modal-content">
-	        	<div style="text-align:center; padding:10px;">        
-	        	<div style="text-align:center;padding-bottom:10px;">
-	       	 	<p>Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.</p>
-	        	<form ng-submit="updateEmail(modal.email)">
-	           		<input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="modal.email" required/>
-	            	<button class="btn btn-default btn-small" type="submit" id="closeModal">Add</button>
-	           	</form>
-	          </div>
-	      	</div>      
+	<!--overlay-->
+	<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showEmailModal">
+		<div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
+			<div class="modal-dialog">    
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div style="text-align:center; padding:10px;">        
+						<div style="text-align:center;padding-bottom:10px;">
+							<p>Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.</p>
+							<form ng-submit="updateEmail(modal.email)">
+								<input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="modal.email" required/>
+								<button class="btn btn-default btn-small" type="submit" id="closeModal">Add</button>
+							</form>
+						</div>
+					</div>      
+				</div>
+			</div>           
 		</div>
-	  </div>           
 	</div>
-</div>
 	<ng-include src="'js/home/views/loader.html'"></ng-include><script type="text/javascript">
