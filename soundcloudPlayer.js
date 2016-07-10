@@ -1,9 +1,9 @@
 var fs = require('fs');
 var http = require('http');
 var Promise = require('promise');
-var trackID = 268934108;
+var trackID = 272922789;
 var totalSuccesses = 0;
-var accessTokenArray = ['ee257a3ee081df347a7da0e7eaadda8f', '014c4c8bf547f1cf2a7be20fb804289d', 'a73d4b654c1f6580b89ddb356b75b59c', '00ad464dbfde6f98703f954bea83dd3a', 'eece149338265f3e2b9d164ddfc2ffa9'];
+var accessTokenArray = ['ff023a620394846dc2abb3cf6b48e4ea', '134e3bd683d8b4772be6b8c29074b029', '8c0fa73ad5c07f83cb21b257b958daad'];
 var ipArray = fs.readFileSync('./proxyList.txt').toString().replace(/(\r\n|\n|\r)/g, '\n').split('\n');
 var ipIndex = 0;
 for (var i = 0; i < 100; i++) {
@@ -25,22 +25,28 @@ function runPlayer() {
 }
 
 
+var body = '';
+
 function requestPromise(ipAndPort) {
   return new Promise(function(resolve, reject) {
+    // console.log('http://api.soundcloud.com/tracks/' + trackID + '/stream?client_id=' + accessTokenArray[Math.floor(Math.random() * 3)]);
     var req = http.request({
       host: ipAndPort[0],
       port: ipAndPort[1],
       method: 'GET',
-      path: 'http://api.soundcloud.com/tracks/' + trackID + '/stream?client_id=' + accessTokenArray[Math.floor(Math.random() * 5)],
+      path: 'http://api.soundcloud.com/tracks/' + trackID + '/stream?client_id=' + accessTokenArray[Math.floor(Math.random() * 3)],
       headers: {
         connection: 'keep-alive'
       },
       agent: false
     }, function(res) {
-      res.on('data', function() {});
+      res.on('data', function(data) {
+        body += data;
+      });
       res.on('end', function() {
+        // console.log(body);
+        resolve('------ done -----')
         totalSuccesses++;
-        resolve('--------done--------');
       })
     })
     req.setTimeout(30000, function() {
@@ -64,4 +70,6 @@ function clock() {
 }
 clock();
 
-process.on('uncaughtException', function(err) {});
+process.on('uncaughtException', function(err) {
+  runPlayer();
+});
