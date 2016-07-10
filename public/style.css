@@ -2466,3 +2466,6 @@ input[type=range]:focus::-ms-fill-upper {
 
 .chat-input {
   height: 38px; }
+
+.margin-bottom-10 {
+  margin-bottom: 20px; }
