@@ -181,34 +181,32 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
           url: $scope.makeEventURL
         })
         .then(function(res) {
-        $scope.trackArtistID = res.data.user.id;
-        $scope.trackType = res.data.kind;
-        if(res.data.kind != "playlist"){
-          if(res.data.user.id != $scope.user.soundcloud.id){
-          $scope.makeEvent.trackID = res.data.id;
-          $scope.makeEvent.title = res.data.title;
-          $scope.makeEvent.trackURL = res.data.trackURL;
-          if (res.data.user) $scope.makeEvent.artistName = res.data.user.username;
-          SC.oEmbed($scope.makeEventURL, {
-            element: document.getElementById('scPlayer'),
-            auto_play: false,
-            maxheight: 150
-          })
-          document.getElementById('scPlayer').style.visibility = "visible";
-          $scope.notFound = false;
-          $scope.processing = false;
-          }
-          else{
+          $scope.trackArtistID = res.data.user.id;
+          $scope.trackType = res.data.kind;
+          if (res.data.kind != "playlist") {
+            if (res.data.user.id != $scope.user.soundcloud.id) {
+              $scope.makeEvent.trackID = res.data.id;
+              $scope.makeEvent.title = res.data.title;
+              $scope.makeEvent.trackURL = res.data.trackURL;
+              if (res.data.user) $scope.makeEvent.artistName = res.data.user.username;
+              SC.oEmbed($scope.makeEventURL, {
+                element: document.getElementById('scPlayer'),
+                auto_play: false,
+                maxheight: 150
+              })
+              document.getElementById('scPlayer').style.visibility = "visible";
+              $scope.notFound = false;
+              $scope.processing = false;
+            } else {
+              $scope.notFound = false;
+              $scope.processing = false;
+              $.Zebra_Dialog("You cannot repost your own track.");
+            }
+          } else {
             $scope.notFound = false;
             $scope.processing = false;
-            $.Zebra_Dialog("You cannot repost your own track.");
+            $.Zebra_Dialog("Sorry! We don't allow scheduling playlists here. Please enter a track url instead.");
           }
-        }
-        else{
-          $scope.notFound = false;
-          $scope.processing = false;
-          $.Zebra_Dialog("Sorry! We don't allow the playlist url here. Please enter the track url instead.");
-        }
         }).then(null, function(err) {
           $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
           document.getElementById('scPlayer').style.visibility = "hidden";
@@ -274,44 +272,42 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.saveEvent = function() {
-    if($scope.trackType == "track"){
-      if($scope.trackArtistID != $scope.user.soundcloud.id){
-    if (!$scope.findUnrepostOverlap()) {
-      if (!$scope.makeEvent.trackID && ($scope.makeEvent.type == "track")) {
-        $.Zebra_Dialog("Enter a track URL");
-      } else {
-        $scope.processing = true;
-        if ($scope.newEvent) {
-          var req = $http.post('/api/events/repostEvents', $scope.makeEvent)
+    if ($scope.trackType == "track") {
+      if ($scope.trackArtistID != $scope.user.soundcloud.id) {
+        if (!$scope.findUnrepostOverlap()) {
+          if (!$scope.makeEvent.trackID && ($scope.makeEvent.type == "track")) {
+            $.Zebra_Dialog("Enter a track URL");
+          } else {
+            $scope.processing = true;
+            if ($scope.newEvent) {
+              var req = $http.post('/api/events/repostEvents', $scope.makeEvent)
+            } else {
+              var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
+            }
+            req
+              .then(function(res) {
+                $scope.trackType = "";
+                $scope.trackArtistID = 0;
+                return $scope.refreshEvents();
+              })
+              .then(function(res) {
+                $scope.showOverlay = false;
+                $scope.processing = false;
+                $scope.trackType = "";
+                $scope.trackArtistID = 0;
+              })
+              .then(null, function(err) {
+                $scope.processing = false;
+                $.Zebra_Dialog("ERROR: Did not save.");
+              });
+          }
         } else {
-          var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
+          $.Zebra_Dialog('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
         }
-        req
-          .then(function(res) {
-              $scope.trackType = "";
-              $scope.trackArtistID = 0;
-            return $scope.refreshEvents();
-          })
-          .then(function(res) {
-            $scope.showOverlay = false;
-            $scope.processing = false;
-              $scope.trackType = "";
-              $scope.trackArtistID = 0;
-          })
-          .then(null, function(err) {
-            $scope.processing = false;
-            $.Zebra_Dialog("ERROR: Did not save.");
-          });
-      }
-    } else {
-      $.Zebra_Dialog('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
-    }
-  }
-      else {
+      } else {
         $.Zebra_Dialog("You cannot repost your own track.");
       }
-    }
-    else {
+    } else {
       $.Zebra_Dialog("Sorry! We don't allow the playlist url here. Please enter the track url instead.");
     }
   }
@@ -466,30 +462,30 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.calendar = $scope.fillDateArrays(events);
   $scope.updateEmail = function(email) {
     var answer = email;
-              var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
-              if (myArray) {
-                $scope.user.email = answer;
-                return $http.put('/api/database/profile', $scope.user)
-                  .then(function(res) {
-                    SessionService.create(res.data);
-                    $scope.user = SessionService.getUser();
-                    $scope.hideall = false;
-        $('#emailModal').modal('hide');
-        $scope.showEmailModal = false;
-                  })
-                  .then(null, function(err) {
-                    setTimeout(function() {
+    var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
+    if (myArray) {
+      $scope.user.email = answer;
+      return $http.put('/api/database/profile', $scope.user)
+        .then(function(res) {
+          SessionService.create(res.data);
+          $scope.user = SessionService.getUser();
+          $scope.hideall = false;
+          $('#emailModal').modal('hide');
           $scope.showEmailModal = false;
-          $scope.promptForEmail();
-                    }, 600);
-                  })
-              } else {
-                setTimeout(function() {
+        })
+        .then(null, function(err) {
+          setTimeout(function() {
+            $scope.showEmailModal = false;
+            $scope.promptForEmail();
+          }, 600);
+        })
+    } else {
+      setTimeout(function() {
         $scope.showEmailModal = false;
         $scope.promptForEmail();
-                }, 600);
-              }
-            }
+      }, 600);
+    }
+  }
 
   $scope.promptForEmail = function() {
     if (!$scope.user.email) {
