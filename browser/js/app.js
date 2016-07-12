@@ -61,9 +61,9 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
         //     }
         // });
 
-        if($window.location.pathname.indexOf('artistTools') != -1){
+        if ($window.location.pathname.indexOf('artistTools') != -1) {
             $http.get('/api/users/isUserAuthenticate').then(function(res) {
-                if(!res.data){
+                if (!res.data) {
                     $window.location.href = '/login';
                 }
             });
@@ -167,11 +167,12 @@ app.controller('FullstackGeneratedController', function($scope, $state, $http, m
                     password: linkedUsers.password
                 })
                 .then(function(res) {
+                    console.log(res.data);
                     if (res.data) {
                         SessionService.create(res.data.user);
                         location.reload();
                     } else {
-                        location.reload();
+                        // location.reload();
                     }
                 })
                 .then(null, function(err) {
