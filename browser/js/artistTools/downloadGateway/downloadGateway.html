@@ -22,11 +22,6 @@
                         </select>
                         <!-- <a class="close-ic" href="#"><img src="assets/images/close.png"></a> -->
                     </div>
-                    <select class="form-control" ng-model="trackListObj" ng-options="item.title for item in trackList" ng-change="trackListChange()" ng-show="trackList.length > 0">
-                        <option value="" ng-disabled="!!trackListObj">-My Songs-</option>
-                    </select>
-                    <!-- <a class="close-ic" href="#"><img src="assets/images/close.png"></a> -->
-                </div>
                 <div class="col-md-4" ng-if="!isTrackAvailable"></div>
                 <div class="track-section text-center" ng-if="isTrackAvailable" style="border:1px solid #D3D3D3;"><img class="img-responsive" ng-src="{{track.trackArtworkURL}}" />
                     <div class="track-bottom">
@@ -40,6 +35,7 @@
                         <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'facebookShare'">For downloading this song you need to share {{ track.socialPlatformValue }} on Facebook.</p>
                         <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'instagramFollow'">For downloading this song you need to follow {{ track.socialPlatformValue }} on instagram.</p>
                     </div>
+                </div>
                 </div>
                 <form role="form" ng-submit="saveDownloadGate()">
                     <div class="col-md-4">

@@ -25,7 +25,7 @@ router.get('/isUserAuthenticate', function(req, res, next) {
 router.get('/byId/:id', function(req, res, next) {
   User.findById(req.params.id).exec()
     .then(function(user) {
-      if (user.soundcloud.token) user.soundcloud.token = undefined;
+      //if (user.soundcloud.token) user.soundcloud.token = undefined;
       res.send(user);
     })
 });

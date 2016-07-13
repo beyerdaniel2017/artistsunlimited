@@ -27,17 +27,18 @@ module.exports = {
   "TWITTER": {
     "consumerKey": "5zGuJpzTAqoHOuRdziAhf5OtG",
     "consumerSecret": "4edfdG7GZpxPv7nannqnhPEPseVqGLz1RPcCta8lXl4UPSOexG",
-    "callbackUrl": "https://localhost:1443/dl"
+    "callbackUrlDL": "https://localhost:1443/dl",
+    "callbackUrlAuth": "https://localhost:1443/auth/twitter/callback",
   },
   "FACEBOOK": {
-    "clientID": "INSERT_FACEBOOK_CLIENTID_HERE",
-    "clientSecret": "INSERT_FACEBOOK_CLIENT_SECRET_HERE",
-    "callbackURL": "INSERT_FACEBOOK_CALLBACK_HERE"
+    "clientID": "1576897469267996",
+    "clientSecret": "ef30ab338772e9df0a81178e57037b2f",
+    "callbackURL": "https://localhost:1443/auth/facebook/callback"
   },
   "GOOGLE": {
-    "clientID": "INSERT_GOOGLE_CLIENTID_HERE",
-    "clientSecret": "INSERT_GOOGLE_CLIENT_SECRET_HERE",
-    "callbackURL": "INSERT_GOOGLE_CALLBACK_HERE"
+    "clientID": "634697887081-8b5r68vcomte522nst8d5nh2otf3nrvk.apps.googleusercontent.com",
+    "clientSecret": "V0Kno41hqbns3XbVmdiwh17r",
+    "callbackURL": "https://localhost:1443/auth/google/callback"
   },
   "YOUTUBE": {
     'baseUrl': 'https://localhost:1443',

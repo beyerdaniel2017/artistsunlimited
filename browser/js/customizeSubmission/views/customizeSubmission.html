@@ -1,0 +1,278 @@
+<div style="text-align:center">
+  <div>
+    <h2 style="display:inline;text-align:center">Admin</h2>
+  </div>
+  </br>
+  <ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
+  </br>
+  <div ng-init="getCustomizeSettings();">
+    <h3 style="text-align:center">Customize Submission</h3>
+    <div style="width:80%; text-align:left; margin: 10px auto;">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="row nav-tabs margin0">
+            <div class="col-md-12 bg-white">
+            <div class="col-md-7">
+              <form role="form" novalidate name="postForm" ng-submit="saveSettings()">
+                <br />
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="panel-group" id="accordion">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#pnlHeading" onclick="return false;">HEADING <span class="glyphicon glyphicon-minus pull-right"></span></a>                            
+                          </h4>
+                        </div>
+                        <div id="pnlHeading" class="panel-collapse collapse in">
+                          <div class="panel-body">
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <label>Heading Text</label> 
+                                <input type="text" ng-model="postData.heading.text" class="form-control" placeholder="Heading Text">
+                              </div>
+                            </div>
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                               <label>Font Size</label><input type="number" ng-model="postData.heading.style.fontSize" class="form-control" placeholder="Font Size">
+                              </div>
+                            </div>
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <label>Font Weight</label> 
+                                <select class="form-control" ng-model="postData.heading.style.fontWeight" placeholder="Font Weight" ng-init="postData.heading.style.fontWeight = 'normal'">
+                                  <option ng-selected="true" value="normal">Normal</option>
+                                  <option value="bold">Bold</option>
+                                  <option value="italic">Italic</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                               <label>Font color</label> 
+                                <input colorpicker type="text" placeholder="Font color" ng-model="postData.heading.style.fontColor" class="form-control"/>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlSubheading">SUB HEADING <span class="glyphicon glyphicon-plus pull-right"></span></a>
+                          </h4>
+                        </div>
+                        <div id="pnlSubheading" class="panel-collapse collapse">
+                          <div class="panel-body">
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <label>Subheading</label>
+                                <textarea ng-model="postData.subHeading.text" class="form-control" name="Subheading Text" placeholder="Subheading"></textarea required>
+                              </div>
+                            </div>
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                               <label>Font Weight</label>
+                                <select class="form-control" ng-model="postData.subHeading.style.fontWeight" placeholder="Font Weight" ng-init="postData.subHeading.style.fontWeight='normal'">
+                                  <option ng-selected="true" value="normal">Normal</option>
+                                  <option value="bold">Bold</option>
+                                  <option value="italic">Italic</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <label>Font Size</label>
+                                <input type="number" ng-model="postData.subHeading.style.fontSize" 
+                                class="form-control" placeholder="Font Size">
+                              </div>
+                             </div>
+                             <div class="row margin-bottom-10">
+                               <div class="col-md-12">
+                               <label>Font color</label>
+                                <input colorpicker type="text" placeholder="Font color" ng-model="postData.subHeading.style.fontColor" class="form-control"/>
+                               </div>
+                              </br>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlInput">INPUT FIELDS <span class="glyphicon glyphicon-plus pull-right"></span></a>
+                          </h4>
+                        </div>
+                        <div id="pnlInput" class="panel-collapse collapse">
+                          <div class="panel-body">
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <label>Border</label>
+                                <input type="number" ng-model="postData.inputFields.style.border" class="form-control" placeholder="Border">
+                              </div>
+                              </br>
+                            </div>
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <label>Border Radius</label>
+                                 <input type="number" ng-model="postData.inputFields.style.borderRadius" class="form-control" placeholder="Border Radius">
+                              </div>
+                              </br>
+                            </div>
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <label>Border color</label>
+                                <input colorpicker type="text" placeholder="Border color" ng-model="postData.inputFields.style.borderColor" class="form-control"/>
+                              </div>
+                              </br>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlButton">BUTTON <span class="glyphicon glyphicon-plus pull-right"></span></a>
+                          </h4>
+                        </div>
+                        <div id="pnlButton" class="panel-collapse collapse">
+                          <div class="panel-body">
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <label>Button text</label>
+                              <input class="form-control" type="text" ng-model="postData.button.text" placeholder="Button text"/>
+                              </div>
+                              </br>
+                            </div>                           
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <label>Font size</label>
+                              <input type="number" ng-model="postData.button.style.fontSize" class="form-control" placeholder="Font size">
+                              </div>
+                              </br>
+                            </div>
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <label>Font color</label>
+                                <input colorpicker type="text" placeholder="Font color" ng-model="postData.button.style.fontColor" class="form-control"/>
+                              </div>
+                              </br>
+                            </div>
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <label>Border</label>
+                                <input type="number" ng-model="postData.button.style.border" class="form-control" placeholder="Border">
+                              </div>
+                              </br>
+                            </div>
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <label>Border Radius</label>
+                                 <input type="number" ng-model="postData.button.style.borderRadius" class="form-control" placeholder="Border Radius">
+                              </div>
+                              </br>
+                            </div>
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <label>BG color</label>
+                                <input colorpicker type="text" placeholder="BG color" ng-model="postData.button.style.bgColor" class="form-control"/>
+                              </div>
+                              </br>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlBackground">BACKGROUND <span class="glyphicon glyphicon-plus pull-right"></span></a>
+                          </h4>
+                        </div>
+                        <div id="pnlBackground" class="panel-collapse collapse">
+                          <div class="panel-body">
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                              <input class="form-control" type="file" file-input="backImage.file" name="imageFile" placeholder="Background Image" />
+                              </div>
+                              </br>
+                            </div>                           
+                           </div>
+                        </div>
+                      </div> -->
+                    </div>
+                  </div>
+                </div>    
+                <div class="text-center">
+                  <button type="submit" class="btn btn-enter">Save Settings</button>
+                </div>
+                </br>
+                </br>
+              </form>
+            </div>
+            <div class="col-md-5">
+              <!--preview area start-->
+              <div class="row">
+                <div class="col-md-12" ng-show="postData" style="top:17px;border: 2px solid;border-radius: 5px;">
+                <p class="text-center" style="color:{{postData.heading.style.fontColor}};
+                font-weight:{{postData.heading.style.fontWeight}};
+                font-size:{{postData.heading.style.fontSize}}px">{{postData.heading.text}}
+                </p>
+                <div class="internal-content">
+                  </br>
+                  <div class="row">
+                  <div class="col-md-12">
+                    <p class="text-left" style="color:{{postData.subHeading.style.fontColor}};font-size:{{postData.subHeading.style.fontSize}}px;font-weight:{{postData.subHeading.style.fontWeight}}" ng-bind-html="postData.subHeading.text"></p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                  <form role="form">
+                    </br>
+                    <div class="row">
+                      <div class="col-sm-6 col-sm-offset-3" ng-if="postData.inputFields">
+                          <input type="text" placeholder="Song URL" ng-model="url" ng-change="urlChange()" style="width:100%; height:34px; padding:5px; border:solid {{postData.inputFields.style.border}}px; border-radius:{{postData.inputFields.style.borderRadius}}px; border-color:{{postData.inputFields.style.borderColor}}" required/>
+                      </div>
+                    </div>
+                    </br>
+                    <div class="row">
+                      <div class="col-sm-6 col-sm-offset-3" ng-if="postData.inputFields">
+                          <input type="text" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{postData.inputFields.style.border}}px; border-radius:{{postData.inputFields.style.borderRadius}}px; border-color:{{postData.inputFields.style.borderColor}}" required/>
+                        </div>
+                    </div>
+                    </br>
+                    <div class="row">
+                      <div class="col-sm-6 col-sm-offset-3" ng-if="postData.inputFields">
+                        <input type="email" placeholder="Email" ng-model="submission.email" style="width:100%; height:34px; padding:5px; border:solid {{postData.inputFields.style.border}}px; border-radius:{{postData.inputFields.style.borderRadius}}px;border-color:{{postData.inputFields.style.borderColor}}" required/>
+                      </div>
+                    </div>
+                    </br>
+                    <div class="text-center" ng-if="postData.button">
+                      <button class="btn btn-default" style="color:{{postData.button.style.fontColor}}; font-size:{{postData.button.style.fontSize}}px; background-color:{{postData.button.style.bgColor}};border:solid {{postData.button.style.border}}px; border-radius:{{postData.button.style.borderRadius}}px;">{{postData.button.text}}</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+        </div>
+        <!--preview area ends-->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-include src="'js/home/views/loader.html'"></ng-include>
+<script>
+$(document).ready(function(){
+  $('.collapse').collapse({
+    toggle: false
+  })
+  $('.collapse').on('shown.bs.collapse', function(){
+    $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+    }).on('hidden.bs.collapse', function(){
+    $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+  });
+});
+</script>

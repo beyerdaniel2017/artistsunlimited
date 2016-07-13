@@ -8,6 +8,7 @@ app.config(function($stateProvider, $authProvider, $httpProvider) {
     $authProvider.instagram({
         clientId: '0b2ab47baa464c31bf6d8e9f301d4469'
     });
+
     // Instagram
     $authProvider.instagram({
         name: 'instagram',
@@ -301,6 +302,7 @@ app.controller('DownloadTrackController', ['$rootScope',
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
         }
+
         $scope.downloadTrackFacebookLike = function(fblikeid) {
             window.fbAsyncInit = function() {
                 FB.init({

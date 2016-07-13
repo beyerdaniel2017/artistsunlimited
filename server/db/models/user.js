@@ -28,10 +28,16 @@ var schema = new mongoose.Schema({
         tokenSecret: String
     },
     facebook: {
-        id: String
+        id: String,
+        name: String,
+        token: String,
+        refreshToken: String
     },
     google: {
-        id: String
+        id: String,
+        name: String,
+        token: String,
+        refreshToken: String
     },
     soundcloud: {
         id: Number,
