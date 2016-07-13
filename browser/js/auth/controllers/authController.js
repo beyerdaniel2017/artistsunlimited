@@ -66,9 +66,9 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
 
   $scope.thirdPartyLogin = function(userdata) {
     AuthService
-    .thirdPartylogin(userdata)
-    .then(handleLoginResponse)
-    .catch(handleLoginError)
+      .thirdPartylogin(userdata)
+      .then(handleLoginResponse)
+      .catch(handleLoginError)
 
     function handleLoginResponse(res) {
       if (res.status === 200 && res.data.success) {
@@ -114,6 +114,7 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
   };
 
   $scope.soundcloudLogin = function() {
+    $scope.processing = true;
     SC.connect()
       .then(function(res) {
         $rootScope.accessToken = res.oauth_token;
@@ -131,26 +132,23 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
           });
           return;
         }
-
-        if($window.localStorage.getItem('returnstate') != undefined){
-          if($window.localStorage.getItem('returnstate') == "reForReInteraction"){
+        $scope.processing = false;
+        if ($window.localStorage.getItem('returnstate') != undefined) {
+          if ($window.localStorage.getItem('returnstate') == "reForReInteraction") {
             $state.go($window.localStorage.getItem('returnstate'), {
               tradeID: $window.localStorage.getItem('tid')
             });
-          }
-          else if($window.localStorage.getItem('returnstate') == "artistToolsDownloadGatewayEdit"){
+          } else if ($window.localStorage.getItem('returnstate') == "artistToolsDownloadGatewayEdit") {
             $state.go($window.localStorage.getItem('returnstate'), {
               gatewayID: $window.localStorage.getItem('tid')
             });
-          }
-          else{
+          } else {
             $state.go($window.localStorage.getItem('returnstate'));
           }
+        } else {
+          $state.go('reForReLists');
         }
-        else{
-        $state.go('reForReLists');
-        }
-        
+
       })
       .then(null, function(err) {
         $.Zebra_Dialog('Error: Could not log in');

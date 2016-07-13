@@ -810,17 +810,17 @@ button:active:after {
 
 .overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5000px;
-  background-color: rgba(0, 0, 0, 0.85);
+  top: -100px;
+  left: -100px;
+  right: -100px;
+  height: 3000px;
+  background-color: rgba(0, 0, 0, 0.5);
   text-align: center; }
 
 .slot-box {
   width: 500px;
   background-color: white;
-  margin: 250px auto;
+  margin: 200px auto;
   padding: 50px 0;
   border-radius: 12px; }
 

@@ -2,7 +2,7 @@
 <!-- Content Start  -->
 <div id="wrapper">
   <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-    <div class="container-fluid height-100pr">
+  <div class="container-fluid height-100pr">
     <div class="row">
       <div class="col-md-12 ">
         <div class="page-content right-side"><!--page-contant Start-->
@@ -27,18 +27,22 @@
                  </div>
                </div>
              </div>
-             <!-- overlay -->
-             <div class="overlay" ng-show="showOverlay">
-              <div class="label-scheduler label-smaller slot-box">
-                <span style="font-size:1.25em">{{makeEvent.day.toLocaleDateString()}}     {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
-                <div ng-show="!(makeEvent.type=='traded'||makeEvent.type=='paid')">
-                  <input type="checkbox" ng-model="makeEvent.type" ng-true-value="'queue'" ng-false-value="'track'" ng-change="changeQueueSlot()"/><span> Autofill Slot</span><br>
-                  <input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()"/><span> Unrepost after 24h</span><br>
-                  <div ng-hide="(makeEvent.type == 'queue')">
-                    <input type="text" class="form-control form-scheduler" style="width:400px; max-width:90%; text-align: center" ng-model="makeEventURL" ng-change="changeURL()" placeholder="Soundcloud Track Url" />
+             
+
+           </div>
+         </div>
+         <!-- overlay -->
+         <div class="overlay" ng-show="showOverlay">
+          <div class="label-scheduler label-smaller slot-box">
+            <span style="font-size:1.25em">{{makeEvent.day.toLocaleDateString()}}     {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
+            <div ng-show="!(makeEvent.type=='traded'||makeEvent.type=='paid')">
+              <input type="checkbox" ng-model="makeEvent.type" ng-true-value="'queue'" ng-false-value="'track'" ng-change="changeQueueSlot()"/><span> Autofill Slot</span><br>
+              <input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()"/><span> Unrepost after 24h</span><br>
+              <div ng-hide="(makeEvent.type == 'queue')">
+                <input type="text" class="form-control form-scheduler" style="width:400px; max-width:90%; text-align: center" ng-model="makeEventURL" ng-change="changeURL()" placeholder="Soundcloud Track Url" />
 <!--       <select class="form-control form-scheduler" ng-model="trackListSlotObj" ng-options="item.title for item in trackList" style="text-align:center; width:400px; max-width:90%;" ng-change="trackChange()">
                       <option value="" ng-disabled="!!trackListSlotObj" ng-show="trackList.length > 0">-My Songs-</option>
-      </select> -->
+                    </select> -->
                   </div>
                 </div>
                 <div id='scPlayer' ng-show="makeEvent.trackID"></div>
@@ -51,32 +55,37 @@
                   <button ng-click="emailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/email_icon.png' style="height:30px; width:50px;"></button>
                 </div>
               </div>
-              <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
-              </div>
+              
             </div>
           </div>
+
         </div>
-<!--overlay-->
-<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showEmailModal">
-  <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
-    <div class="modal-dialog modal-vertical-centered">    
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div style="text-align:center; padding:10px;">        
-          <div style="text-align:center;padding-bottom:10px;">
-          <p>Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.</p>
-          <form ng-submit="updateEmail(modal.email)">
-             <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="modal.email" />
-              <button class="btn btn-default btn-small" type="submit" id="closeModal">Add</button>
-             </form>
-            </div>
-        </div>      
+      </div>
+      <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
       </div>
     </div>
-  </div>
-</div>
-<ng-include src="'js/home/views/loader.html'"></ng-include>
-      
-  </div>
+
+    <!--overlay-->
+    <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showEmailModal">
+      <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
+        <div class="modal-dialog modal-vertical-centered">    
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div style="text-align:center; padding:10px;">        
+              <div style="text-align:center;padding-bottom:10px;">
+                <p>Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.</p>
+                <form ng-submit="updateEmail(modal.email)">
+                 <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="modal.email" />
+                 <button class="btn btn-default btn-small" type="submit" id="closeModal">Add</button>
+               </form>
+             </div>
+           </div>      
+         </div>
+       </div>
+     </div>
+   </div>
+   <ng-include src="'js/home/views/loader.html'"></ng-include>
+
+ </div>
 </div>
 </div>
