@@ -30,6 +30,7 @@ scWrapper.init({
   uri: scConfig.callbackURL
 });
 
+
 router.get('/track', function(req, res, next) {
   DownloadTrack.findById(req.query.trackID).exec()
     .then(function(downloadTrack) {

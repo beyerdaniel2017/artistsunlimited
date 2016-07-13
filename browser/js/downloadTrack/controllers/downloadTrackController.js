@@ -8,7 +8,6 @@ app.config(function($stateProvider, $authProvider, $httpProvider) {
     $authProvider.instagram({
         clientId: '0b2ab47baa464c31bf6d8e9f301d4469'
     });
-
     // Instagram
     $authProvider.instagram({
         name: 'instagram',
@@ -44,9 +43,9 @@ app.controller('DownloadTrackController', ['$rootScope',
     'DownloadTrackService',
     '$sce',
     '$auth',
-  'SessionService',
-  function($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService, $sce, $auth, SessionService) {
-    $scope.user = SessionService.getUser();
+    'SessionService',
+    function($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService, $sce, $auth, SessionService) {
+        $scope.user = SessionService.getUser();
         /* Normal JS vars and functions not bound to scope */
         var playerObj = null;
 
@@ -302,7 +301,6 @@ app.controller('DownloadTrackController', ['$rootScope',
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
         }
-
         $scope.downloadTrackFacebookLike = function(fblikeid) {
             window.fbAsyncInit = function() {
                 FB.init({
