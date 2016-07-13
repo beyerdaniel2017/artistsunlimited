@@ -20,6 +20,7 @@ router.use('/editDB/', require('./editDB.js'));
 router.use('/posts/', require('./posts/posts.js'));
 router.use('/aws/', require('./aws.js'));
 router.use('/broadcast/', require('./broadcast.js'));
+router.use('/customsubmissions/', require('./customSubmissions/customSubmissions.js'));
 
 router.use('/logout', function(req, res) {
   req.logout();

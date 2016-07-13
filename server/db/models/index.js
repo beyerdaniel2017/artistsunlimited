@@ -19,4 +19,4 @@ require('./prPlans.js');
 require('./mixingMastering.js');
 require('./trade.js');
 require('./scEmails.js');
-require('./post.js');
+require('./post.js');require('./customSubmission.js');
