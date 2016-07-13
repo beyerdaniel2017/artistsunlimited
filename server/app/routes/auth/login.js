@@ -72,7 +72,7 @@ router.post('/thirdPartylogin', function(req, res, next) {
         delete user.salt;
         return res.json({
           'success': true,
-          'message': '',          
+          'message': '',
           'user': user
         });
       });
@@ -92,7 +92,7 @@ router.post('/authenticated', function(req, res, next) {
     qs: {}
   };
   scWrapper.setToken(req.body.token);
-  scWrapper.request(reqObj, function(err, data){
+  scWrapper.request(reqObj, function(err, data) {
     if (err) {
       next(err);
     } else {
