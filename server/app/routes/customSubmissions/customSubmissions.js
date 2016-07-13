@@ -23,7 +23,7 @@ router.post('/addCustomSubmission', function(req, res, next) {
  //    'button.style.bgColor': req.body.button.style.bgColor
 	// })
 
-  CustomSubmission.findByIdAndUpdate(req.body.userID, req.body, {
+  CustomSubmission.findByIdAndUpdate(req.body._id, req.body, {
     new: true,
     upsert: true
   })

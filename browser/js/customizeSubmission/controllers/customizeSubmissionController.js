@@ -11,23 +11,13 @@ app.config(function($stateProvider) {
   });
 });
 
-app.controller('CustomizeSubmissionController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$sce,customizeService, $location) {
+app.controller('CustomizeSubmissionController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$sce,customizeService) {
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
-  var userID = $location.search().userid;
   $scope.user = SessionService.getUser();
   $scope.submission = {}; 
   $scope.postData = {};
-  $scope.logout = function() {
-    $http.get('/api/logout').then(function() {
-      SessionService.deleteUser();
-      window.location.href = '/admin';
-    }).catch(function(err) {
-      $scope.processing = false;
-      $.Zebra_Dialog('Wrong Password');
-    });
-  }
   $scope.urlChange = function() {
     if($scope.url != ""){
       $scope.processing = true;
@@ -79,8 +69,7 @@ app.controller('CustomizeSubmissionController', function($rootScope, $state, $sc
         title: $scope.submission.title,
         trackURL: $scope.submission.trackURL,
         channelIDS: [],
-        invoiceIDS: [],
-        userID: userID
+        invoiceIDS: []
       })
       .then(function(res) {
         $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");

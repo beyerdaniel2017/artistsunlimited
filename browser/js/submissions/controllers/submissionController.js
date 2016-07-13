@@ -13,7 +13,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
-  $scope.user=SessionService.getUser();
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
       SessionService.deleteUser();
@@ -53,6 +52,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       }
     }
     setTimeout(function() {
+      console.log(loadElements);
       loadElements.forEach(function(sub) {
         SC.oEmbed(sub.trackURL, {
           element: document.getElementById(sub.trackID + "player"),
@@ -74,6 +74,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.save = function(submi) {
+    console.log(submi);
     if (submi.channelIDS.length == 0) {
       $scope.decline(submi);
     } else {

@@ -18,7 +18,6 @@ require('./repostEvent.js');
 require('./prPlans.js');
 require('./mixingMastering.js');
 require('./trade.js');
-require('./scEmails.js');
-require('./analytics.js');
+require('./scEmails.js');require('./analytics.js');
 require('./post.js');
 require('./customSubmission.js');
