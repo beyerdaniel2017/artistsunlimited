@@ -10,6 +10,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
+  $scope.user=SessionService.getUser();
   $scope.counter = 0;
   $scope.channels = [];
   $scope.showingElements = [];
