@@ -161,18 +161,22 @@ app.controller('FullstackGeneratedController', function($scope, $state, $http, m
     $scope.linkedUsersChange = function(linkedUsers) {
         $scope.processing = true;
         $http.post('/api/logout').then(function() {
-            SessionService.deleteUser();
             $http.post("/api/login/thirdPartylogin", {
                     username: linkedUsers.username,
                     password: linkedUsers.password
                 })
                 .then(function(res) {
-                    console.log(res.data);
-                    if (res.data) {
+                    if (res.data.user) {
                         SessionService.create(res.data.user);
                         location.reload();
                     } else {
-                        // location.reload();
+                        $scope.processing = false;
+                        $.Zebra_Dialog("Wrong third party access credentials.", {
+                            onClose: function() {
+                                $scope.processing = true;
+                                location.reload();
+                            }
+                        });
                     }
                 })
                 .then(null, function(err) {

@@ -102,20 +102,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.dayIncr = 0;
 
-  $scope.saveUser = function() {
-    $scope.processing = true;
-    $http.put("/api/database/profile", $scope.user)
-      .then(function(res) {
-        SessionService.create(res.data);
-        $scope.user = SessionService.getUser();
-        $scope.processing = false;
-      })
-      .then(null, function(err) {
-        $.Zebra_Dialog("Error: did not save");
-        $scope.processing = false;
-      });
-  }
-
   $scope.incrDay = function() {
     if ($scope.dayIncr < 21) $scope.dayIncr++;
   }
@@ -272,43 +258,41 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.saveEvent = function() {
-    if ($scope.trackType == "track") {
-      if ($scope.trackArtistID != $scope.user.soundcloud.id) {
-        if (!$scope.findUnrepostOverlap()) {
-          if (!$scope.makeEvent.trackID && ($scope.makeEvent.type == "track")) {
-            $.Zebra_Dialog("Enter a track URL");
-          } else {
-            $scope.processing = true;
-            if ($scope.newEvent) {
-              var req = $http.post('/api/events/repostEvents', $scope.makeEvent)
-            } else {
-              var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
-            }
-            req
-              .then(function(res) {
-                $scope.trackType = "";
-                $scope.trackArtistID = 0;
-                return $scope.refreshEvents();
-              })
-              .then(function(res) {
-                $scope.showOverlay = false;
-                $scope.processing = false;
-                $scope.trackType = "";
-                $scope.trackArtistID = 0;
-              })
-              .then(null, function(err) {
-                $scope.processing = false;
-                $.Zebra_Dialog("ERROR: Did not save.");
-              });
-          }
-        } else {
-          $.Zebra_Dialog('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
-        }
-      } else {
-        $.Zebra_Dialog("You cannot repost your own track.");
-      }
-    } else {
+    if ($scope.trackType == "playlist") {
       $.Zebra_Dialog("Sorry! We don't currently allow playlist reposting. Please enter a track url instead.");
+      return;
+    } else if ($scope.trackArtistID == $scope.user.soundcloud.id) {
+      $.Zebra_Dialog("Sorry! You cannot schedule your own track to be reposted.")
+      return;
+    } else if ($scope.findUnrepostOverlap()) {
+      $.Zebra_Dialog('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.');
+      return;
+    }
+    if (!$scope.makeEvent.trackID && ($scope.makeEvent.type == "track")) {
+      $.Zebra_Dialog("Enter a track URL");
+    } else {
+      $scope.processing = true;
+      if ($scope.newEvent) {
+        var req = $http.post('/api/events/repostEvents', $scope.makeEvent)
+      } else {
+        var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
+      }
+      req
+        .then(function(res) {
+          $scope.trackType = "";
+          $scope.trackArtistID = 0;
+          return $scope.refreshEvents();
+        })
+        .then(function(res) {
+          $scope.showOverlay = false;
+          $scope.processing = false;
+          $scope.trackType = "";
+          $scope.trackArtistID = 0;
+        })
+        .then(null, function(err) {
+          $scope.processing = false;
+          $.Zebra_Dialog("ERROR: Did not save.");
+        });
     }
   }
   $scope.emailSlot = function() {
