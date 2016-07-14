@@ -30,6 +30,13 @@ router.get('/byId/:id', function(req, res, next) {
     })
 });
 
+router.get('/getUserID', function(req, res, next) {
+  User.findOne({role: 'superadmin'}).limit(1).exec()
+    .then(function(user) {
+      res.send(user._id);
+    })
+});
+
 router.post('/bySCURL', function(req, res, next) {
   var minFollowers = (req.body.minFollower ? parseInt(req.body.minFollower) : 0);
   var maxFollowers = (req.body.maxFollower ? parseInt(req.body.maxFollower) : 100000000);

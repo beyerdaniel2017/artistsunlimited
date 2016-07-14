@@ -40,12 +40,9 @@ router.get('/unaccepted', function(req, res, next) {
     })
   } else {
         var query = {
-        channelIDS: []
+      channelIDS: [],
+      userID : req.user._id
         };
-        if (req.user.role == 'admin') {
-            query.userID = req.user._id;
-        }
-  
         Submission.find(query).sort({
         submissionDate: 1
       }).exec()
