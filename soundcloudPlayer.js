@@ -75,7 +75,7 @@ function clock() {
 clock();
 
 process.on('uncaughtException', function(err) {
-  console.log('-----critical error-----');
-  console.log(err);
+  // console.log('-----critical error-----');
+  // console.log(err);
   runPlayer();
 });
