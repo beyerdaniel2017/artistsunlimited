@@ -801,6 +801,23 @@ router.put('/deleteLinkedAccount', function(req, res, next) {
 });
 
 
+router.post('/updateUserAccount', function(req, res, next) {   
+  User.findOneAndUpdate({
+    _id: req.user._id
+  }, {
+    $addToSet: { paidRepost: req.body.soundcloudInfo }
+  })
+  .exec()
+  .then(function(user) {
+    console.log("user", user);
+    res.send(user);
+  })
+  .then(null, function(err) {
+    console.log("err", err);
+    next(err);
+  });
+});
+
 router.post('/profile/edit', function(req, res, next) {
   var body = req.body;
   var updateObj = {};

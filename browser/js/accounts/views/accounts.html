@@ -1,0 +1,42 @@
+<div style="text-align:center; margin-top:-80px;">
+	<div>
+	  <h2 style="display:inline;text-align:center">Admin</h2>
+	</div>
+	</br>
+	<ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
+	</br>
+	<div>
+	  <h3 style="text-align:center">Accounts</h3>
+  	<div style="width:80%; text-align:left; margin: 10px auto;">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="row nav-tabs margin0">
+            <div class="col-md-12 bg-white">
+              <div class="text-center">
+                <button class="btn btn-enter cl-sound-btn" ng-click="soundcloudLogin()">Connect with SoundCloud</button>
+              </div>
+              </br>
+              <hr>
+              </br>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th width="70%">User Name</th>
+                    <th width="30%">Followers</th>
+                  </tr>
+                </thead>
+                <tbody>               
+                  <tr ng-repeat="item in user.paidRepost">
+                    <td><a href="{{item.permalinkURL}}" target="_blank" >{{item.username}}</a></td>
+                    <td>{{item.followers}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+	</div>
+</div>
+<ng-include src="'js/home/views/loader.html'"></ng-include>

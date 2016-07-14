@@ -45,7 +45,8 @@ router.get('/unaccepted', function(req, res, next) {
         };
         Submission.find(query).sort({
         submissionDate: 1
-      }).exec()
+    })
+    .exec()
       .then(function(subs) {
         subs = subs.filter(function(sub) {
           return sub.channelIDS.length == 0;
