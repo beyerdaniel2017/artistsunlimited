@@ -58,10 +58,10 @@ var schema = new mongoose.Schema({
         username: String,
         password: String,
         passwordPlain: String,
-        salt:String
+        salt: String
     },
     linkedAccounts: [],
-    paidRepost :[]
+    paidRepost: []
 });
 
 // method to remove sensitive information from user objects before sending them out
