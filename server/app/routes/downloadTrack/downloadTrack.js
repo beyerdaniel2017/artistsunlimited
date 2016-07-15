@@ -287,7 +287,7 @@ router.post("/twitter/auth", function(req, res, done) {
     var requestTokenOauth = {
       consumer_key: env.TWITTER.consumerKey,
       consumer_secret: env.TWITTER.consumerSecret,
-      callback: env.TWITTER.callbackUrl,
+      callback: env.TWITTER.callbackUrlDL,
     };
 
     // Step 1. Obtain request token for the authorization popup.

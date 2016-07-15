@@ -91,7 +91,6 @@ router.put('/save', function(req, res, next) {
 });
 
 router.delete('/decline/:subID/:password', function(req, res, next) {
-  // if (req.params.password != "letMeManage") next(new Error("Wrong password"));
   if (!req.user.role == 'admin') {
     next({
       message: 'Forbidden',

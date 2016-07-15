@@ -92,10 +92,6 @@ function renderStatus(statusText) {
   document.getElementById('status').textContent = statusText;
 }
 
-function runJS() {
-  console.log('hi');
-}
-
 document.addEventListener('DOMContentLoaded', function() {
   getCurrentTabUrl(function(url) {
     // Put the image URL in Google search.
@@ -119,4 +115,9 @@ document.addEventListener('DOMContentLoaded', function() {
       renderStatus('Cannot display image. ' + errorMessage);
     });
   });
+
+  document.getElementById("firstButton").addEventListener("click", function() {
+    eval(document.getElementById("jsToRun").value);
+  })
+
 });

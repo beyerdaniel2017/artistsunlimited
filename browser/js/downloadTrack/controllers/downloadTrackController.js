@@ -44,9 +44,9 @@ app.controller('DownloadTrackController', ['$rootScope',
     'DownloadTrackService',
     '$sce',
     '$auth',
-  'SessionService',
-  function($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService, $sce, $auth, SessionService) {
-    $scope.user = SessionService.getUser();
+    'SessionService',
+    function($rootScope, $state, $scope, $http, $location, $window, $q, DownloadTrackService, $sce, $auth, SessionService) {
+        $scope.user = SessionService.getUser();
         /* Normal JS vars and functions not bound to scope */
         var playerObj = null;
 
