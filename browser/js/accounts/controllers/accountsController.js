@@ -6,7 +6,7 @@ app.config(function($stateProvider) {
   })
 });
 
-app.controller('accountsController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$sce,customizeService) {
+app.controller('accountsController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$sce,accountService) {
 	if (!SessionService.getUser()) {
   	$state.go('admin');
 	}
@@ -21,7 +21,6 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
       });
     })
     .then(function(res) {
-      console.log(res.data);
       $http.post('/api/database/updateUserAccount', {
         soundcloudInfo: res.data.user.soundcloud,
       }).then(function(user) {
@@ -34,6 +33,25 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
       $scope.processing = false;
     });
 	};
+
+  $scope.deletePaidRepost = function(index) {
+    $.Zebra_Dialog('Do you really want to delete this account?', {
+      'buttons': [{
+        caption: 'Yes',
+        callback: function() {
+          var postRepost = $scope.user.paidRepost[index].id;
+          accountService.deleteUserAccount(postRepost)
+          .then(function(res){
+            $scope.user.paidRepost.splice(index, 1);
+          })
+        }
+      },
+      { 
+        caption: 'No', 
+        callback: function() {} 
+      }]
+    });
+  };
 
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {

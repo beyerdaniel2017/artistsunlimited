@@ -21,14 +21,16 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th width="70%">User Name</th>
+                    <th width="60%">User Name</th>
                     <th width="30%">Followers</th>
+                    <th width="10%"></th>
                   </tr>
                 </thead>
                 <tbody>               
                   <tr ng-repeat="item in user.paidRepost">
                     <td><a href="{{item.permalinkURL}}" target="_blank" >{{item.username}}</a></td>
                     <td>{{item.followers}}</td>
+                    <td><a href="javascript:void(0);" style="color:black" class="btn btn-secondary btn-action" ng-click="deletePaidRepost($index)">Delete</a><span>&nbsp;&nbsp;</span></td>
                   </tr>
                 </tbody>
               </table>

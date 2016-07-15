@@ -217,7 +217,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       } else if ($state.current.url == '/artistTools/downloadGateway') {
         var displayText = "<h3>Help</h3><span style='font-weight:bold'>List of downloads gateways:</span> This is a list of your download gates. You can create a new one, edit, delete one or view a download gate in the list.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
       }
-
       $.Zebra_Dialog(displayText, {
         width: 600
       });

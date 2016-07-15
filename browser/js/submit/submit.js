@@ -9,6 +9,29 @@ app.config(function($stateProvider) {
 app.controller('SubmitSongController', function($rootScope, $state, $scope, $http) {
   $scope.submission = {};
   $scope.userID = "";
+  $scope.genreArray = [
+      'Alternative Rock',
+      'Ambient',
+      'Creative',
+      'Chill',
+      'Classical',
+      'Country',
+      'Dance & EDM',
+      'Dancehall',
+      'Deep House',
+      'Disco',
+      'Drum & Bass',
+      'Dubstep',
+      'Electronic',
+      'Festival',
+      'Folk',
+      'Hip-Hop/RNB',
+      'House',
+      'Indie/Alternative',
+      'Latin',
+      'Trap',
+      'Vocalists/Singer-Songwriter'
+    ];
   $scope.urlChange = function() {
     if ($scope.url != "") {
       $scope.processing = true;
@@ -61,7 +84,8 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
           trackURL: $scope.submission.trackURL,
           channelIDS: [],
         invoiceIDS: [],
-        userID: $scope.userID
+        userID: $scope.userID,
+        genre: $scope.submission.genre
         })
         .then(function(res) {
           $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");

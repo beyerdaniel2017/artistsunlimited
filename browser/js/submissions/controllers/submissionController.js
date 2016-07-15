@@ -10,10 +10,36 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.submissions = [];
+  $scope.genre = "";
+  $scope.skip = 0;
+  $scope.limit = 10;
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
   $scope.user=SessionService.getUser();
+  $scope.genreArray = [
+    'Alternative Rock',
+    'Ambient',
+    'Creative',
+    'Chill',
+    'Classical',
+    'Country',
+    'Dance & EDM',
+    'Dancehall',
+    'Deep House',
+    'Disco',
+    'Drum & Bass',
+    'Dubstep',
+    'Electronic',
+    'Festival',
+    'Folk',
+    'Hip-Hop/RNB',
+    'House',
+    'Indie/Alternative',
+    'Latin',
+    'Trap',
+    'Vocalists/Singer-Songwriter'
+  ];
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
       SessionService.deleteUser();
@@ -24,37 +50,24 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     });
   }
 
-  $scope.loadSubmissions = function() {
-    $scope.processing = true;
-    $http.get('/api/submissions/unaccepted')
-      .then(function(res) {
-      $scope.processing = false;
-        $scope.submissions = res.data;
-        $scope.loadMore();
-      //return $http.get('/api/channels');
-      })
-    // .then(function(res) {
-    //   $scope.channels = res.data;
-    //   $scope.processing = false;
-    // })
-      .then(null, function(err) {
-        $scope.processing = false;
-        $.Zebra_Dialog('Error: Could not get channels.')
-        console.log(err);
-      });
+  $scope.getSubmissionsByGenre = function(){
+    $scope.showingElements = [];
+    $scope.skip = 0;
+    $scope.loadSubmissions();
   }
 
-  $scope.loadMore = function() {
-    var loadElements = [];
-    for (let i = $scope.counter; i < $scope.counter + 15; i++) {
-      var sub = $scope.submissions[i];
-      if (sub) {
-        $scope.showingElements.push(sub);
-        loadElements.push(sub);
-      }
-    }
+  $scope.loadSubmissions = function() {
+    $scope.processing = true;
+    $http.get('/api/submissions/unaccepted?genre='+$scope.genre+"&skip="+$scope.skip+"&limit="+$scope.limit)
+      .then(function(res) {
+      $scope.processing = false;
+      if (res.data.length > 0) {
+        angular.forEach(res.data, function(d) {
+          $scope.showingElements.push(d);
+      });
+  }
     setTimeout(function() {
-      loadElements.forEach(function(sub) {
+        $scope.showingElements.forEach(function(sub) {
         SC.oEmbed(sub.trackURL, {
           element: document.getElementById(sub.trackID + "player"),
           auto_play: false,
@@ -62,7 +75,35 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
         });
       }, 50)
     });
-    $scope.counter += 15;
+    })
+    .then(null, function(err) {
+      $scope.processing = false;
+      $.Zebra_Dialog('Error: Could not get channels.')
+      console.log(err);
+    });
+  }
+
+  $scope.loadMore = function() {
+    $scope.skip += 10;
+    $scope.loadSubmissions();
+    // var loadElements = [];
+    // for (let i = $scope.counter; i < $scope.counter + 15; i++) {
+    //   var sub = $scope.submissions[i];
+    //   if (sub) {
+    //     $scope.showingElements.push(sub);
+    //     loadElements.push(sub);
+    //   }
+    // }
+    // setTimeout(function() {
+    //   loadElements.forEach(function(sub) {
+    //     SC.oEmbed(sub.trackURL, {
+    //       element: document.getElementById(sub.trackID + "player"),
+    //       auto_play: false,
+    //       maxheight: 150
+    //     });
+    //   }, 50)
+    // });
+    // $scope.counter += 15;
   }
 
   $scope.changeBox = function(sub, chan) {
