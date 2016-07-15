@@ -3,14 +3,14 @@
   "name": "Soundcloud Bot",
   "description": "This extension shows a Google Image search result for the current page",
   "version": "1.0",
-  "content_security_policy": "script-src 'unsafe-inline' 'unsafe-eval' 'self'",
   "background": {
     "persistent": false,
-    "scripts": ["jquery.min.js", "run.js"]
+    "scripts": ["jquery-3.1.0.js"]
   },
   "content_scripts": [{
-    "matches": ["https://soundcloud.com/*"],
-    "js": ["main.js"]
+    "matches": ["https://*/*", "http://*/*"],
+    "js": ["jquery-3.1.0.js", "main.js"],
+    "run_at": "document_end"
   }],
   "browser_action": {
     "default_icon": "icon.png",
