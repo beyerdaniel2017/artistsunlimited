@@ -58,7 +58,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
 
   $scope.loadSubmissions = function() {
     $scope.processing = true;
-    $http.get('/api/submissions/unaccepted?genre='+$scope.genre+"&skip="+$scope.skip+"&limit="+$scope.limit)
+    $http.get('/api/submissions/unaccepted?genre='+encodeURIComponent($scope.genre)+"&skip="+$scope.skip+"&limit="+$scope.limit)
       .then(function(res) {
       $scope.processing = false;
       if (res.data.length > 0) {

@@ -12,13 +12,33 @@ app.config(function($stateProvider) {
 });
 
 app.controller('CustomizeSubmissionController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$sce,customizeService, $location) {
-  if (!SessionService.getUser()) {
-    $state.go('admin');
-  }
   var userID = $location.search().userid;
   $scope.user = SessionService.getUser();
   $scope.submission = {}; 
   $scope.postData = {};
+  $scope.genreArray = [
+    'Alternative Rock',
+    'Ambient',
+    'Creative',
+    'Chill',
+    'Classical',
+    'Country',
+    'Dance & EDM',
+    'Dancehall',
+    'Deep House',
+    'Disco',
+    'Drum & Bass',
+    'Dubstep',
+    'Electronic',
+    'Festival',
+    'Folk',
+    'Hip-Hop/RNB',
+    'House',
+    'Indie/Alternative',
+    'Latin',
+    'Trap',
+    'Vocalists/Singer-Songwriter'
+  ];
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
       SessionService.deleteUser();
@@ -80,7 +100,8 @@ app.controller('CustomizeSubmissionController', function($rootScope, $state, $sc
         trackURL: $scope.submission.trackURL,
         channelIDS: [],
         invoiceIDS: [],
-        userID: userID
+        userID: userID,
+        genre: $scope.submission.genre
       })
       .then(function(res) {
         $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
