@@ -13,6 +13,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
+  $scope.user=SessionService.getUser();
   $scope.logout = function() {
     $http.get('/api/logout').then(function() {
       SessionService.deleteUser();
@@ -27,14 +28,15 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $scope.processing = true;
     $http.get('/api/submissions/unaccepted')
       .then(function(res) {
+      $scope.processing = false;
         $scope.submissions = res.data;
         $scope.loadMore();
-        return $http.get('/api/channels');
+      //return $http.get('/api/channels');
       })
-      .then(function(res) {
-        $scope.channels = res.data;
-        $scope.processing = false;
-      })
+    // .then(function(res) {
+    //   $scope.channels = res.data;
+    //   $scope.processing = false;
+    // })
       .then(null, function(err) {
         $scope.processing = false;
         $.Zebra_Dialog('Error: Could not get channels.')
@@ -52,7 +54,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       }
     }
     setTimeout(function() {
-      console.log(loadElements);
       loadElements.forEach(function(sub) {
         SC.oEmbed(sub.trackURL, {
           element: document.getElementById(sub.trackID + "player"),
@@ -65,16 +66,15 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.changeBox = function(sub, chan) {
-    var index = sub.channelIDS.indexOf(chan.channelID);
+    var index = sub.channelIDS.indexOf(chan.id);
     if (index == -1) {
-      sub.channelIDS.push(chan.soundcloud.id);
+      sub.channelIDS.push(chan.id);
     } else {
       sub.channelIDS.splice(index, 1);
     }
   }
 
   $scope.save = function(submi) {
-    console.log(submi);
     if (submi.channelIDS.length == 0) {
       $scope.decline(submi);
     } else {

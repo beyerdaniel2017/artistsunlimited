@@ -33,17 +33,20 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/unaccepted', function(req, res, next) {
-  if (!req.user.role == 'admin') {
+    if (!req.user.role == 'admin' || !req.user.role == 'superadmin') {
     next({
       message: 'Forbidden',
       status: 403
     })
   } else {
-    Submission.find({
-        channelIDS: []
-      }).sort({
+        var query = {
+      channelIDS: [],
+      userID : req.user._id
+        };
+        Submission.find(query).sort({
         submissionDate: 1
-      }).exec()
+    })
+    .exec()
       .then(function(subs) {
         subs = subs.filter(function(sub) {
           return sub.channelIDS.length == 0;

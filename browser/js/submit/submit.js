@@ -8,6 +8,7 @@ app.config(function($stateProvider) {
 
 app.controller('SubmitSongController', function($rootScope, $state, $scope, $http) {
   $scope.submission = {};
+  $scope.userID = "";
   $scope.urlChange = function() {
     if ($scope.url != "") {
       $scope.processing = true;
@@ -59,7 +60,8 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
           title: $scope.submission.title,
           trackURL: $scope.submission.trackURL,
           channelIDS: [],
-          invoiceIDS: []
+        invoiceIDS: [],
+        userID: $scope.userID
         })
         .then(function(res) {
           $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
@@ -74,5 +76,12 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
           $.Zebra_Dialog("Error: Could not submit song.");
         });
     }
+  }
+
+  $scope.getUserID = function(){
+    $http.get('/api/users/getUserID')
+    .then(function(res){
+      $scope.userID = res.data;
+    }); 
   }
 });

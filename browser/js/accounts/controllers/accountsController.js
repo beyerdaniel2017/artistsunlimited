@@ -1,0 +1,47 @@
+app.config(function($stateProvider) {
+  $stateProvider.state('accounts', {
+    url: '/admin/accounts',
+    templateUrl: 'js/accounts/views/accounts.html',
+    controller: 'accountsController'
+  })
+});
+
+app.controller('accountsController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$sce,customizeService) {
+	if (!SessionService.getUser()) {
+  	$state.go('admin');
+	}
+ 	$scope.user = SessionService.getUser();
+ 	$scope.soundcloudLogin = function() {
+    $scope.processing = true;
+    SC.connect()
+    .then(function(res) {
+      $rootScope.accessToken = res.oauth_token;
+      return $http.post('/api/login/soundCloudAuthentication', {
+        token: res.oauth_token
+      });
+    })
+    .then(function(res) {
+      console.log(res.data);
+      $http.post('/api/database/updateUserAccount', {
+        soundcloudInfo: res.data.user.soundcloud,
+      }).then(function(user) {
+        $scope.processing = false;
+        location.reload();
+      });
+    })
+    .then(null, function(err) {
+      $.Zebra_Dialog('Error: Could not log in');
+      $scope.processing = false;
+    });
+	};
+
+  $scope.logout = function() {
+    $http.get('/api/logout').then(function() {
+      SessionService.deleteUser();
+      window.location.href = '/admin';
+    }).catch(function(err) {
+      $scope.processing = false;
+      $.Zebra_Dialog('Wrong Password');
+    });
+  }
+});

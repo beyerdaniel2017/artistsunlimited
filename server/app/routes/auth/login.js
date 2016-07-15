@@ -155,6 +155,59 @@ router.post('/soundCloudLogin', function(req, res, next) {
   })(req, res);
 });
 
+
+router.post('/soundCloudAuthentication', function(req, res, next) {
+  scWrapper.init({
+    id: scConfig.clientID,
+    secret: scConfig.clientSecret,
+    uri: scConfig.callbackURL
+  });
+  var reqObj = {
+    method: 'GET',
+    path: '/me',
+    qs: {}
+  };
+  scWrapper.setToken(req.body.token);
+  scWrapper.request(reqObj, function(err, data) {
+    if(err){
+      next(err);
+    }
+    else{
+      User.findOne({
+        'soundcloud.id': data.id
+      })
+      .exec()
+      .then(function (user) {
+        if (user) {
+          return res.json({
+            'success': true,
+            'message': '',
+            'user': user
+          });                     
+        } else {
+          var newUser = new User({
+            'name': data.username,
+            'soundcloud': {
+              'id': data.id,
+              'username': data.username,
+              'permalinkURL': data.permalink_url,
+              'avatarURL': data.avatar_url.replace('large','t500x500'),
+              'token': req.body.token,
+              'followers': data.followers_count
+            }
+          });
+          newUser.save();
+          return res.json({
+            'success': true,
+            'message': '',
+            'user': user
+          });
+        }
+      });
+    }
+  });
+});
+
 /*
 Client Secrets
 Google -
