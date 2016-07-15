@@ -29,6 +29,14 @@
                     </br>
                     <div class="row">
                       <div class="col-sm-6 col-sm-offset-3">
+                        <select ng-options="item for item in genreArray" ng-model="submission.genre" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" ng-init="submission.genre = null" required>
+                          <option value="" ng-disabled="!!submission.genre">--Select Genre--</option>
+                        </select>
+                      </div>
+                    </div>
+                    </br>
+                    <div class="row">
+                      <div class="col-sm-6 col-sm-offset-3">
                           <input type="text" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
                         </div>
                     </div>

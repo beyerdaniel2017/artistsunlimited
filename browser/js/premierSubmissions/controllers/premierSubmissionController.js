@@ -39,8 +39,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     'Indie/Alternative',
     'Latin',
     'Trap',
-    'Vocalists/Singer-Songwriter',
-    'Saved'
+    'Vocalists/Singer-Songwriter'
   ];
 
   $scope.logout = function() {
@@ -68,7 +67,6 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
           angular.forEach(res.data, function(d) {
             d.channel = null;
             d.emailBody = "";
-
             $scope.showingElements.push(d);
           });
         }

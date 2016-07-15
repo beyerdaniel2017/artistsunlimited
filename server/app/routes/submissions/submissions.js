@@ -39,13 +39,21 @@ router.get('/unaccepted', function(req, res, next) {
       status: 403
     })
   } else {
+    var skipcount  = req.query.skip;
+    var limitcount  = req.query.limit;
+    var genre = req.query.genre ? req.query.genre : undefined;
         var query = {
       channelIDS: [],
       userID : req.user._id
         };
+    if(genre != undefined && genre != 'null'){
+      query.genre = genre;
+    }
         Submission.find(query).sort({
         submissionDate: 1
     })
+    .skip(skipcount)
+    .limit(limitcount)
     .exec()
       .then(function(subs) {
         subs = subs.filter(function(sub) {
@@ -223,7 +231,8 @@ function schedulePaidRepost(chanID, submission) {
             day: {
               $gt: today
             }
-          }).exec()
+      })
+      .exec()
           .then(function(allEvents) {
             allEvents.forEach(function(event1) {
               event1.day = new Date(event1.day);

@@ -818,6 +818,23 @@ router.post('/updateUserAccount', function(req, res, next) {
   });
 });
 
+router.put('/deleteUserAccount/:id', function(req, res, next) {
+    var soundcloudId = req.params;   
+     User.update({
+            _id: req.user._id
+        }, {
+             $pull: {paidRepost: {id:parseInt(soundcloudId.id,10)}}
+        })
+        .exec()
+        .then(function(user) {
+            console.log("user", user);
+            res.send(user);
+        })
+        .then(null, function(err) {
+            console.log("err", err);
+            next(err);
+        });
+});
 router.post('/profile/edit', function(req, res, next) {
   var body = req.body;
   var updateObj = {};

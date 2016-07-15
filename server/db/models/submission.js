@@ -46,7 +46,10 @@ var schema = new mongoose.Schema({
   },
   discounted: {
     type: Boolean
-  }
+  },
+  genre: {
+    type: String
+  },
 });
 
 mongoose.model("Submission", schema);
