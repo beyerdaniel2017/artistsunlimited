@@ -36,18 +36,8 @@ app.controller('CustomizeSubmissionController', function($rootScope, $state, $sc
     'Trap',
     'Vocalists/Singer-Songwriter'
   ];
-  $scope.logout = function() {
-    $http.get('/api/logout').then(function() {
-      SessionService.deleteUser();
-      window.location.href = '/admin';
-    }).catch(function(err) {
-      $scope.processing = false;
-      $.Zebra_Dialog('Wrong Password');
-    });
-  }
 
-  $scope.saveSettings=function()
-  {
+  $scope.saveSettings=function(){
     $scope.processing = true;
     //customizeService.uploadFile($scope.backImage.file).then(function(res){
       //var backImage=res.Location;

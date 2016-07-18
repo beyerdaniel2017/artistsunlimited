@@ -59,20 +59,10 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
     $scope.processing = true;
     $http.post('/api/database/updateGroup', {
       paidRepost: $scope.user.paidRepost,
-    }).then(function(user) {
+    }).then(function(res) {
       $scope.processing = false;
       SessionService.create(res.data);
       $scope.user = SessionService.getUser();
-    });
-  }
-
-  $scope.logout = function() {
-    $http.get('/api/logout').then(function() {
-      SessionService.deleteUser();
-      window.location.href = '/admin';
-    }).catch(function(err) {
-      $scope.processing = false;
-      $.Zebra_Dialog('Wrong Password');
     });
   }
 });

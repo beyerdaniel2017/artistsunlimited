@@ -13,31 +13,33 @@
   height:30px;
 }
 </style>
-<div style="text-align:center; margin-top:-80px;" ng-init="loadSubmissions()">
-<div>
-  <h2 style="display:inline;text-align:center">Admin</h2>
-</div>
-</br>
+<ng-include src="'js/home/views/_adminHeaderNavigation.html'"></ng-include>
+<div id="wrapper">
 <ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
-</br>
-<div>
-  <h3 style="text-align:center">Submissions</h3>
-  <div style="width:80%; text-align:center; margin: 10px auto;">
+  <div class="container-fluid height-100pr " ng-init="loadSubmissions()">
+    <div class="row height-100pr">
+      <div class="col-lg-12">
+        <div class="page-content right-side min-ht padding-10">
+          <div style="width:100%; text-align:center; margin: 10px auto;">
     <select class="form-control" style="width:170px;float:right; margin-right:10px;" ng-options="item for item in genreArray" ng-model="genre" ng-change="getSubmissionsByGenre()">
       <option value="">--Select Genre--</option>
     </select>
     <br>
     <br>
-    <div ng-repeat="sub in showingElements"  ng-if="sub.invoiceIDS.length == 0" style="padding:10px 150px; margin:10px 10px; background-color: gray; height:350px;">
+          <div ng-repeat="sub in showingElements"  ng-if="sub.invoiceIDS.length == 0" style="padding:10px 10px; margin:10px 10px; background-color: #fff; height:350px;  border-bottom: solid 1px #dcdcdc;">
       <h4>Name: {{sub.name}} ----- Email: {{sub.email}}----- Genre: {{sub.genre}}</h4>
       <a href="{{sub.trackURL}}" target="_blank">{{sub.trackURL}}</a><br>
-      <div id="{{sub.trackID}}player" style="display:inline-block; width:60%; background-color:gray; height:150px;"></div>
-      <div style="display:inline-block; width: 39%; height:150px; vertical-align: top;">
+              <div id="{{sub.trackID}}player" style="display:inline-block; width:60%; background-color:gray; height:150px; margin-top:10px;"></div>
+              <div style="display:inline-block; width: 39%; height:150px; vertical-align: top;margin-top:10px;">
           <button ng-click="youtube(sub)" style="width:45%; height: 45px; margin-top: 7px; background-color:blue ; font-size:2em" ng-show="user.role == 'superadmin'">To Zach</button>
           <button ng-click="sendMore(sub)" style="width:45%; height: 45px; margin-top: 7px; background-color:orange ; font-size:2em" ng-show="user.role == 'superadmin'">More</button>
         <button ng-click="ignore(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:yellow; font-size:2em">Ignore</button>
         <button ng-click="decline(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:red ; font-size:2em">Decline</button>
         <button ng-click="save(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:#67f967 ; font-size:2em">Save</button>
+                <div style="display:inline-block; width:100%; padding-top:10px;">
+                  <label><input type="radio" ng-model="sub.displayType" ng-value="'group'"> Group </label>
+                  <label><input type="radio" ng-model="sub.displayType" ng-value="'channel'"> Channel </label>
+                </div>
       </div>
       <div style="display:flex; flex-direction:row; flex-wrap: wrap; justify-content:space-around; width:100%; height: 20px;">
           <div ng-repeat="chan in user.paidRepost" ng-class='{greenbox : sub.approvedChannels.indexOf(chan.id) >= 0, graybox: sub.approvedChannels.indexOf(chan.id) < 0}'>
@@ -50,4 +52,8 @@
   </div>
 </div>
 </div>
+    </div>
+  </div>
+</div>
+<!-- Content End  -->
 <ng-include src="'js/home/views/loader.html'"></ng-include>

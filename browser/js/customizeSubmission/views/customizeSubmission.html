@@ -1,13 +1,10 @@
-<div style="text-align:center; margin-top:-80px;">
-  <div>
-    <h2 style="display:inline;text-align:center">Admin</h2>
-  </div>
-  </br>
+<ng-include src="'js/home/views/_adminHeaderNavigation.html'"></ng-include>
+<div id="wrapper">
   <ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
-  </br>
-  <div ng-init="getCustomizeSettings();">
-    <h3 style="text-align:center">Customize Submission</h3>
-    <div style="width:80%; text-align:left; margin: 10px auto;">
+  <div class="container-fluid height-100pr " ng-init="getCustomizeSettings();">
+    <div class="row height-100pr">
+      <div class="col-lg-12">
+        <div class="page-content right-side min-ht padding-10"><!--page-contant Start-->
       <div class="col-md-12">
         <div class="row">
           <div class="row nav-tabs margin0">
@@ -257,6 +254,10 @@
     </div>
   </div>
 </div>
+      </div>
+    </div>
+  </div>
+<!-- Content End  -->
 <ng-include src="'js/home/views/loader.html'"></ng-include>
 <script>
 $(document).ready(function(){
