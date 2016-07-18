@@ -10,28 +10,28 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   $scope.submission = {};
   $scope.userID = "";
   $scope.genreArray = [
-      'Alternative Rock',
-      'Ambient',
-      'Creative',
-      'Chill',
-      'Classical',
-      'Country',
-      'Dance & EDM',
-      'Dancehall',
-      'Deep House',
-      'Disco',
-      'Drum & Bass',
-      'Dubstep',
-      'Electronic',
-      'Festival',
-      'Folk',
-      'Hip-Hop/RNB',
-      'House',
-      'Indie/Alternative',
-      'Latin',
-      'Trap',
-      'Vocalists/Singer-Songwriter'
-    ];
+    'Alternative Rock',
+    'Ambient',
+    'Creative',
+    'Chill',
+    'Classical',
+    'Country',
+    'Dance & EDM',
+    'Dancehall',
+    'Deep House',
+    'Disco',
+    'Drum & Bass',
+    'Dubstep',
+    'Electronic',
+    'Festival',
+    'Folk',
+    'Hip-Hop/RNB',
+    'House',
+    'Indie/Alternative',
+    'Latin',
+    'Trap',
+    'Vocalists/Singer-Songwriter'
+  ];
   $scope.urlChange = function() {
     if ($scope.url != "") {
       $scope.processing = true;
@@ -83,9 +83,9 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
           title: $scope.submission.title,
           trackURL: $scope.submission.trackURL,
           channelIDS: [],
-        invoiceIDS: [],
-        userID: $scope.userID,
-        genre: $scope.submission.genre
+          invoiceIDS: [],
+          userID: $scope.userID,
+          genre: $scope.submission.genre
         })
         .then(function(res) {
           $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
@@ -102,10 +102,10 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     }
   }
 
-  $scope.getUserID = function(){
+  $scope.getUserID = function() {
     $http.get('/api/users/getUserID')
-    .then(function(res){
-      $scope.userID = res.data;
-    }); 
+      .then(function(res) {
+        $scope.userID = res.data;
+      });
   }
 });

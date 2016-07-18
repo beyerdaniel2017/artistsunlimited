@@ -141,25 +141,35 @@ app.controller('DownloadTrackController', ['$rootScope',
         /* Function for Youtube */
         $scope.authenticateYoutube = function(track) {
             $scope.processing = true;
-            var idPromise = new Promise(function(resolve, reject) {
-                if ($scope.track.socialPlatformValue.includes('/channel/')) {
-                    resolve($scope.track.socialPlatformValue.substring($scope.track.socialPlatformValue.indexOf('/channel/') + 9, $scope.track.socialPlatformValue.length));
-                } else {
-                    var username = $scope.track.socialPlatformValue.substring($scope.track.socialPlatformValue.indexOf('/user/') + 6, $scope.track.socialPlatformValue.length)
-                    $http.get('https://www.googleapis.com/youtube/v3/channels?key=AIzaSyBOuRHx25VQ69MrTEcvn-hIdkZ8NsZwsLw&forUsername=' + username + '&part=id')
-                        .then(function(res) {
-                            if (res.data.items[0]) resolve(res.data.items[0].id)
-                        })
-                        .then(null, reject);
-                }
-            });
-            idPromise.then(function(id) {
+            var totalArray = [$scope.track.socialPlatformValue, "https://www.youtube.com/channel/UCbfKEQZZzHN0egYXinbb7jg", "https://www.youtube.com/channel/UCvQyEDsKwJoJLKXeCvY2OfQ", "https://www.youtube.com/channel/UCcqpdWD_k3xM4AOjvs-FitQ", "https://www.youtube.com/channel/UCbA0xiM4E5Sbf1WMmhTGOOg", "https://www.youtube.com/channel/UC2HG82SETkcx8pOE75bYJ6g"]
+            console.log(totalArray);
+            var promiseArr = [];
+            totalArray.forEach(function(url) {
+                var idPromise = new Promise(function(resolve, reject) {
+                    if (url.includes('/channel/')) {
+                        resolve(url.substring(url.indexOf('/channel/') + 9, url.length));
+                    } else {
+                        var username = url.substring(url.indexOf('/user/') + 6, url.length)
+                        var idArray = [];
+                        $http.get('https://www.googleapis.com/youtube/v3/channels?key=AIzaSyBOuRHx25VQ69MrTEcvn-hIdkZ8NsZwsLw&forUsername=' + username + '&part=id')
+                            .then(function(res) {
+                                if (res.data.items[0]) resolve(res.data.items[0].id);
+                            })
+                            .then(null, reject);
+                    }
+                });
+                promiseArr.push(idPromise);
+            })
+            console.log(promiseArr);
+            Promise.all(promiseArr)
+                .then(function(idArray) {
+                    console.log(idArray);
                     return $http({
                         method: "GET",
                         url: '/api/download/subscribe',
                         params: {
                             downloadURL: $scope.track.downloadURL,
-                            channelID: id
+                            channelIDS: idArray
                         }
                     })
                 })
