@@ -806,6 +806,25 @@ router.post('/updateUserAccount', function(req, res, next) {
     _id: req.user._id
   }, {
     $addToSet: { paidRepost: req.body.soundcloudInfo }
+  },{
+    new: true
+  })
+  .exec()
+  .then(function(user) {
+    console.log("user", user);
+    res.send(user);
+  })
+  .then(null, function(err) {
+    console.log("err", err);
+    next(err);
+  });
+});
+
+router.post('/updateGroup', function(req, res, next) {
+  User.findOneAndUpdate({
+    _id: req.user._id
+  }, {
+    $set: { paidRepost: req.body.paidRepost }
   })
   .exec()
   .then(function(user) {
