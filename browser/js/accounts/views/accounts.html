@@ -1,17 +1,10 @@
-<div style="text-align:center; margin-top:-80px;">
-	<div>
-	  <h2 style="display:inline;text-align:center">Admin</h2>
-	</div>
-	</br>
-	<ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
-	</br>
-	<div>
-	  <h3 style="text-align:center">Accounts</h3>
-  	<div style="width:80%; text-align:left; margin: 10px auto;">
-      <div class="col-md-12">
-        <div class="row">
-          <div class="row nav-tabs margin0">
-            <div class="col-md-12 bg-white">
+<ng-include src="'js/home/views/_adminHeaderNavigation.html'"></ng-include>
+<div id="wrapper">
+  <ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
+    <div class="container-fluid height-100pr">
+        <div class="row height-100pr">
+            <div class="col-lg-12">
+                <div class="page-content right-side min-ht padding-10">
               <div class="text-center">
                 <button class="btn btn-enter cl-sound-btn" ng-click="soundcloudLogin()">Connect with SoundCloud</button>
               </div>
@@ -21,8 +14,9 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th width="60%">User Name</th>
-                    <th width="30%">Followers</th>
+                    <th width="50%">User Name</th>
+                    <th width="20%">Followers</th>
+                    <th width="20%">Group</th>
                     <th width="10%"></th>
                   </tr>
                 </thead>
@@ -30,7 +24,8 @@
                   <tr ng-repeat="item in user.paidRepost">
                     <td><a href="{{item.permalinkURL}}" target="_blank" >{{item.username}}</a></td>
                     <td>{{item.followers}}</td>
-                    <td><a href="javascript:void(0);" style="color:black" class="btn btn-secondary btn-action" ng-click="deletePaidRepost($index)">Delete</a><span>&nbsp;&nbsp;</span></td>
+                    <td><input type="text" class="form-control" ng-blur="updateGroup(item);" ng-model="item.group"/></td>
+                    <td align="right"><a href="javascript:void(0);" style="color:black" class="btn btn-secondary btn-action" ng-click="deletePaidRepost($index)">Delete</a><span>&nbsp;&nbsp;</span></td>
                   </tr>
                 </tbody>
               </table>
@@ -39,6 +34,5 @@
         </div>
       </div>
     </div>
-	</div>
-</div>
+<!-- Content End  -->
 <ng-include src="'js/home/views/loader.html'"></ng-include>

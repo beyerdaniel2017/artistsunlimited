@@ -6,6 +6,9 @@ var https = require('https');
 var router = require('express').Router();
 var scConfig = global.env.SOUNDCLOUD;
 var scWrapper = require("../../SCWrapper/SCWrapper.js");
+var Busboy = require('busboy');
+var AWS = require('aws-sdk');
+var awsConfig = require('./../../../env').AWS;
 
 scWrapper.init({
   id: scConfig.clientID,
@@ -159,6 +162,132 @@ router.post('/bySCURL', function(req, res, next) {
         }
       });
   }
+});
+
+/*profile updateion*/
+router.post('/profilePicUpdate', function(req, res, next) {
+  parseMultiPart()
+  .then(uploadToBucket)
+  .catch(errorHandler);
+  var body = {
+    fields: {},
+    file: {}
+  };
+
+  function parseMultiPart() {
+    return new Promise(function(resolve, reject) {
+      var busboy = new Busboy({
+        headers: req.headers,
+        limits: {
+          fileSize: 100 * 1024 * 1024,
+          files: 1
+        }
+      });
+      busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+        var buffer = new Buffer('');
+        var type = mimetype.split('/')[1];
+        var newfilename = (filename.substr(0, filename.lastIndexOf('.')) || filename) + '_' + Date.now().toString() + '.' + type;
+        file.on('data', function(data) {
+          buffer = Buffer.concat([buffer, data]);
+        });
+        file.on('limit', function() {
+          reject('Error: File size cannot be more than 20 MB');
+        });
+        file.on('end', function() {
+          body.file = {
+            fieldname: fieldname,
+            buffer: buffer,
+            filename: filename,
+            newfilename: newfilename,
+            encoding: encoding,
+            mimetype: mimetype
+          };
+        });
+      });
+      busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
+        body.fields[fieldname] = val;
+      });
+      busboy.on('finish', function() {
+        resolve();
+      });
+
+      busboy.on('error', function(err) {
+        reject(err);
+      });
+      req.pipe(busboy);
+    });
+  }
+
+  function uploadToBucket() {  
+    return new Promise(function(resolve, reject) {
+      AWS.config.update({
+        accessKeyId: awsConfig.accessKeyId,
+        secretAccessKey: awsConfig.secretAccessKey,
+      });
+      var data = {
+        Key: body.file.newfilename,
+        Body: body.file.buffer,
+        ContentType: body.file.mimetype
+      };
+      var s3 = new AWS.S3({
+        params: {
+          Bucket: awsConfig.profileimageBucketName
+        }
+      });
+      s3.upload(data, function(err, data) {
+        if (err) {
+          reject(err);
+          res.send({
+            success:false,
+            data:data
+          });
+        } else {  
+               
+          resolve(data);
+          res.send({
+           success:true,
+           data:data
+          });
+        }
+      });
+    });
+  }
+
+  function errorHandler(err) {
+    console.log(err);
+    return res.status(400).send(err);
+  }
+});
+
+/*Admin profile update start*/
+router.post('/updateAdminProfile', function(req, res, next) {
+  var body = req.body;
+  var updateObj={};
+  if(body.pictureUrl)
+  {
+    updateObj.profilePicture = body.pictureUrl
+  }
+  if (body.username) {
+    updateObj.name = body.username;
+  }
+  else if (body.password) {
+    updateObj.salt = User.generateSalt();
+    updateObj.password = User.encryptPassword(body.password, updateObj.salt);
+  } 
+
+ User.findOneAndUpdate({
+    '_id': req.user._id
+  }, {
+    $set: updateObj
+  }, {
+    new: true
+  }).exec()
+  .then(function(result) {
+    res.send(result);
+  })
+  .then(null, function(err) {
+    next(err);
+  });
 });
 
 // router.post('/syncSCEmails', function(req, res, next) {

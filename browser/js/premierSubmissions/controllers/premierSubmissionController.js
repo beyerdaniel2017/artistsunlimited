@@ -42,16 +42,6 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     'Vocalists/Singer-Songwriter'
   ];
 
-  $scope.logout = function() {
-    $http.get('/api/logout').then(function() {
-      SessionService.deleteUser();
-      window.location.href = '/admin';
-    }).catch(function(err) {
-      $scope.processing = false;
-      $.Zebra_Dialog('Wrong Password');
-    });
-  }
-
   $scope.getSubmissionsByGenre = function() {
     $scope.showingElements = [];
     $scope.skip = 0;

@@ -195,6 +195,9 @@ app.controller('FullstackGeneratedController', function($scope, $state, $http, m
     $scope.logout = function() {
         mainService.logout();
     }
+    $scope.adminlogout = function() {
+        mainService.adminlogout();
+    }
 
     $scope.checkNotification = function() {
         var user = SessionService.getUser();
@@ -346,6 +349,12 @@ app.service('mainService', function($http, SessionService) {
         $http.post('/api/logout').then(function() {
             SessionService.deleteUser();
             window.location.href = '/login';
+        });
+    }
+    this.adminlogout = function() {
+        $http.post('/api/logout').then(function() {
+            SessionService.deleteUser();
+            window.location.href = '/admin';
         });
     }
 });

@@ -1,19 +1,19 @@
-<div style="text-align:center; margin-top:-80px;" ng-init="loadSubmissions();getChannels();">
-  <div>
-    <h2 style="display:inline;text-align:center">Admin</h2>
-  </div>
-</br>
+<ng-include src="'js/home/views/_adminHeaderNavigation.html'"></ng-include>
+<div id="wrapper">
 <ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
-</br>
-<div>
-  <h3 style="text-align:center">Premier Submissions</h3>
-  <div style="width:80%; text-align:center; margin: 10px auto;">
+  <!-- Content Start  -->
+  <div class="container-fluid height-100pr" ng-init="loadSubmissions();getChannels();">
+    <div class="row height-100pr">
+      <div class="col-lg-12">
+        <div class="page-content right-side min-ht padding-10">
+          <!--page-contant Start-->
+          <div style="width:100%; text-align:center; margin: 10px auto;">
     <select class="form-control" style="width:170px;float:right; margin-right:10px;"ng-options="item for item in   genreArray" ng-model="genre" ng-change="getSubmissionsByGenre()">
       <option value="">--Select Genre--</option>
     </select>
     <br>
     <br>
-    <div ng-repeat="sub in showingElements" style="padding:10px 150px; margin:10px 10px; background-color: #fff;">
+            <div ng-repeat="sub in showingElements" style="padding:10px 10px; margin:10px 10px; background-color: #fff; border-bottom: solid 1px #dcdcdc;">
       <h4>Name: {{sub.name}} ----- Email: {{sub.email}} ----- Genre: {{sub.genre}}</h4>
       <h4>Comment: {{sub.comment}}</h4>
       <audio controls style="display: block !important; width: 50%; height: 50px; margin: 0 auto;">
@@ -29,7 +29,7 @@
             <option value="">-Channel List-</option>
             <option ng-repeat="chan in channels" value="{{chan}}">{{chan.displayName}}</option>
           </select>  
-          <button style="height: 45px; margin-top: 7px; background-color:yellow ; font-size:2em"><a href="mailto:{{sub.email}}?subject=Premier Submissions&body={{sub.emailBody}}">Send Email</a></button>
+                <button style="height: 45px; padding: 3px; background-color:yellow ; font-size:2em"><a href="mailto:{{sub.email}}?subject=Premier Submissions&body={{sub.emailBody}}">Send Email</a></button>   
         </div>
       </div>
       <br>
@@ -37,4 +37,8 @@
     </div>
   </div>
 </div>
+    </div>
+  </div>
+</div>
+<!-- Content End  -->
 <ng-include src="'js/home/views/loader.html'"></ng-include>

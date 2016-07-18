@@ -21,7 +21,7 @@ module.exports = function(app) {
     reportOnly: false,
   }))
   app.use(lusca({
-    xframe: 'SAMEORIGIN',
+    xframe: '*',
     p3p: 'ABCDEF',
     hsts: {
       maxAge: 31536000,

@@ -1,0 +1,51 @@
+<ng-include src="'js/home/views/_adminHeaderNavigation.html'"></ng-include>
+<div id="wrapper">
+  <ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
+  <div class="container-fluid height-100pr ">
+    <div class="row height-100pr">
+      <div class="col-lg-12">
+        <div class="page-content right-side min-ht padding-10">
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <div class="permanent-links" style="text-align: center;">
+                <h4 class="bold">Profile</h4>
+                <form ng-submit="updateProfileWithPicture(profile)">
+                  <input class="form-control" type="file" file-input="profilepic.file" name="imageFile" placeholder="Background Image" />
+                  <br/>                                  
+                  <input class="form-control" placeholder="Username" value="{{profile.name}}" type="text" ng-model="profile.name" required />
+                  <br/>
+                  <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-default btn-small">Save</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <hr/>
+              <br/>
+              <div class="permanent-links" style="text-align: center;">
+                <h4 class="bold">Change Passwords</h4>
+                <form name="reset" ng-submit="updatePassword(data)">
+                  <input class="form-control" placeholder="Password" type="password" ng-model="data.newPassword" required/>
+                  <br/>
+                  <input class="form-control" type="password" placeholder="Confirm Password" ng-model="data.confirmPassword" required/>
+                  <br/>
+                  <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-default btn-small">Save</button>
+                  </div>
+                </form>
+                <br/>                      
+              </div>
+            </div>
+          </div>
+          <br>                
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Content End  -->
+<ng-include src="'js/home/views/loader.html'"></ng-include>
