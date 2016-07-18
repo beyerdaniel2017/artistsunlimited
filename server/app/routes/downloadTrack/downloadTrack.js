@@ -365,49 +365,42 @@ router.post("/twitter/post", function(req, res, done) {
     }
   });
 });
-// For Twitter
 
 // For Youtube
 router.get("/callbacksubscribe", function(req, res, next) {
-
   YoutubeOauth.getToken(req.query.code, function(err, tokens) {
     if (err) {
       next(err);
     }
     YoutubeOauth.setCredentials(tokens);
-    /*
-     * Youtube subscribed to channel
-     */
-    var options = {
-      uri: 'https://www.googleapis.com/youtube/v3/subscriptions?part=snippet',
-      method: 'POST',
-      json: {
-        "snippet": {
-          "resourceId": {
-            "channelId": req.session.channelID,
-            "kind": "youtube#channel"
+    // Youtube subscribed to channel
+    req.session.channelIDS.forEach(function(id) {
+      var options = {
+        uri: 'https://www.googleapis.com/youtube/v3/subscriptions?part=snippet',
+        method: 'POST',
+        json: {
+          "snippet": {
+            "resourceId": {
+              "channelId": id,
+              "kind": "youtube#channel"
+            }
           }
+        },
+        headers: {
+          "Authorization": "Bearer " + tokens.access_token
         }
-      },
-      headers: {
-        "Authorization": "Bearer " + tokens.access_token
-      }
-    };
-
-    request(options, function(error, response, body) {
-      if (!error && response.statusCode == 200) {
-        res.redirect(req.session.downloadURL);
-      }
-      if (error) {
-        res.send("You had an error in subscribing to the user. You will not be redirected to downloading track.");
-      }
-    });
+      };
+      request(options, function(error, response, body) {
+        if (error || body.error) console.log('Error subscribing to youtube account: ' + error || body.error);
+      });
+    })
+    res.redirect(req.session.downloadURL);
   });
 });
 
 router.get("/subscribe", function(req, res, next) {
   req.session.downloadURL = req.query.downloadURL;
-  req.session.channelID = req.query.channelID;
+  req.session.channelIDS = req.query.channelIDS;
   YoutubeOauth = Youtube.authenticate({
     type: "oauth",
     client_id: env.YOUTUBE.CLIENT_ID,
