@@ -458,7 +458,6 @@ router.post('/downloadurl', function(req, res, next) {
   }
 
   function updateSoundCloudTrackInfo(downloadTrack) {
-    console.log('dltrack: ' + downloadTrack);
     return new Promise(function(resolve, reject) {
       console.log('body.fields:');
       console.log(body.fields);

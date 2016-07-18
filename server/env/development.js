@@ -16,6 +16,7 @@ module.exports = {
     "bucketName": "premiersubmissions",
     "prplanBucketName": "prplans",
     "mixingmasteringBucketName": "mixingmastering",
+    "profileimageBucketName" :"auprofileimages",
     "accessKeyId": "AKIAIYT7INNPUXKJSNEA",
     "secretAccessKey": "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"
   },
