@@ -10,7 +10,7 @@ app.config(function($stateProvider) {
             return res.data;
           })
       },
-      submission: function($http, $stateParams) {
+      submission: function($http, $submissiontateParams) {
         return $http.get('/api/submissions/withID/' + $stateParams.submissionID)
           .then(function(res) {
             return res.data;
