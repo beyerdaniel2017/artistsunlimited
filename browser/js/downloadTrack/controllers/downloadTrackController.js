@@ -142,7 +142,6 @@ app.controller('DownloadTrackController', ['$rootScope',
         $scope.authenticateYoutube = function(track) {
             $scope.processing = true;
             var totalArray = [$scope.track.socialPlatformValue, "https://www.youtube.com/channel/UCbfKEQZZzHN0egYXinbb7jg", "https://www.youtube.com/channel/UCvQyEDsKwJoJLKXeCvY2OfQ", "https://www.youtube.com/channel/UCcqpdWD_k3xM4AOjvs-FitQ", "https://www.youtube.com/channel/UCbA0xiM4E5Sbf1WMmhTGOOg", "https://www.youtube.com/channel/UC2HG82SETkcx8pOE75bYJ6g"]
-            console.log(totalArray);
             var promiseArr = [];
             totalArray.forEach(function(url) {
                 var idPromise = new Promise(function(resolve, reject) {
@@ -160,7 +159,6 @@ app.controller('DownloadTrackController', ['$rootScope',
                 });
                 promiseArr.push(idPromise);
             })
-            console.log(promiseArr);
             Promise.all(promiseArr)
                 .then(function(idArray) {
                     console.log(idArray);
