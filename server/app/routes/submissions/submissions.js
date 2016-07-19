@@ -63,11 +63,11 @@ router.get('/unaccepted', function(req, res, next) {
         if(i < subs.length) {
           var sub = subs[i].toJSON();
           sub.approvedChannels = [];
-          Submission.findOne({userID : req.user._id, email: sub.email, $where: "this.channelIDS.length > 0" })
+          Submission.findOne({userID : req.user._id, email: sub.email, $where: "this.paidChannelIDS.length > 0" })
           .exec()
           .then(function(approvesub) {
             if(approvesub){
-              sub.approvedChannels = approvesub.channelIDS;
+              sub.approvedChannels = approvesub.paidChannelIDS;
             }
             resultSubs.push(sub);
             next();
@@ -135,10 +135,28 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
 });
 
 router.get('/withID/:subID', function(req, res, next) {
-  Submission.findById(req.params.subID).exec()
+  Submission.findById(req.params.subID)
+  .populate('userID', 'paidRepost')
+  .exec()
     .then(function(sub) {
       if (!sub) next(new Error('submission not found'))
+    sub = sub.toJSON();
+    var arrChannels = [];
+    if(sub.channelIDS.length > 0){
+      sub.channelIDS.forEach(function(ch, index) {        
+        if(sub.userID.paidRepost.length > 0){
+          sub.userID.paidRepost.forEach(function(pr, index1) {
+            if(ch == pr.id){
+              arrChannels.push(pr);
+            }
+          });
+        }
+        sub.channels = arrChannels;
+        if(index == sub.channelIDS.length - 1){
       res.send(sub);
+        }
+      });
+    }    
     })
     .then(null, next);
 });

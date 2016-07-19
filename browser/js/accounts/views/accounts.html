@@ -14,8 +14,9 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th width="50%">User Name</th>
+                <th width="30%">User Name</th>
                     <th width="20%">Followers</th>
+                    <th width="20%">Price</th>
                     <th width="20%">Group</th>
                     <th width="10%"></th>
                   </tr>
@@ -24,11 +25,15 @@
                   <tr ng-repeat="item in user.paidRepost">
                     <td><a href="{{item.permalinkURL}}" target="_blank" >{{item.username}}</a></td>
                     <td>{{item.followers}}</td>
-                    <td><input type="text" class="form-control" ng-blur="updateGroup(item);" ng-model="item.group"/></td>
+                    <td><input type="number" class="form-control" ng-model="item.price"/></td>
+                    <td><input type="text" class="form-control" ng-model="item.group"/></td>
                     <td align="right"><a href="javascript:void(0);" style="color:black" class="btn btn-secondary btn-action" ng-click="deletePaidRepost($index)">Delete</a><span>&nbsp;&nbsp;</span></td>
                   </tr>
                 </tbody>
               </table>
+          <div class="text-center">
+            <button class="btn btn-default btn-small" type="button" style="padding: 13px 14px;" ng-click="updateGroup(item);">Save</button>
+          </div>
             </div>
           </div>
         </div>
