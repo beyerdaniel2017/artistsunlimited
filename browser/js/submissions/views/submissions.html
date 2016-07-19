@@ -37,12 +37,16 @@
         <button ng-click="decline(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:red ; font-size:2em">Decline</button>
         <button ng-click="save(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:#67f967 ; font-size:2em">Save</button>
                 <div style="display:inline-block; width:100%; padding-top:10px;">
-                  <label><input type="radio" ng-model="sub.displayType" ng-value="'group'"> Group </label>
-                  <label><input type="radio" ng-model="sub.displayType" ng-value="'channel'"> Channel </label>
+                  <label><input type="radio" ng-model="sub.displayType" ng-value="'group'" ng-change="sub.channelIDS = []"> Group </label>
+                  <label><input type="radio" ng-model="sub.displayType" ng-value="'channel'" ng-change="sub.channelIDS = []"> Channel </label>
                 </div>
       </div>
       <div style="display:flex; flex-direction:row; flex-wrap: wrap; justify-content:space-around; width:100%; height: 20px;">
-          <div ng-repeat="chan in user.paidRepost" ng-class='{greenbox : sub.approvedChannels.indexOf(chan.id) >= 0, graybox: sub.approvedChannels.indexOf(chan.id) < 0}'>
+                <div ng-if="sub.displayType == 'group'" ng-repeat="group in uniqueGroup" class="graybox">
+                  <span>{{group}}</span>
+                  <input type="checkbox" ng-model="sub[group]" ng-change="changeBoxGroup(sub, group)" />
+                </div>
+                <div ng-if="sub.displayType == 'channel' || (sub.displayType == 'group' && chan.group == '')" ng-repeat="chan in user.paidRepost" ng-class='{greenbox : sub.approvedChannels.indexOf(chan.id) >= 0, graybox: sub.approvedChannels.indexOf(chan.id) < 0}'>
             <span>{{chan.username}}</span>
             <input type="checkbox" ng-model="sub[chan.username]" ng-change="changeBox(sub, chan)"/>
         </div>
