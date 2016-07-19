@@ -21,8 +21,10 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
       });
     })
     .then(function(res) {
+      var scInfo = res.data.user.soundcloud;
+      scInfo.group = "";     
       $http.post('/api/database/updateUserAccount', {
-        soundcloudInfo: res.data.user.soundcloud,
+        soundcloudInfo: scInfo,
       }).then(function(user) {
         $scope.processing = false;
         location.reload();
@@ -53,13 +55,14 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
     });
   };
 
-  $scope.logout = function() {
-    $http.get('/api/logout').then(function() {
-      SessionService.deleteUser();
-      window.location.href = '/admin';
-    }).catch(function(err) {
+  $scope.updateGroup = function(account){
+    $scope.processing = true;
+    $http.post('/api/database/updateGroup', {
+      paidRepost: $scope.user.paidRepost,
+    }).then(function(res) {
       $scope.processing = false;
-      $.Zebra_Dialog('Wrong Password');
+      SessionService.create(res.data);
+      $scope.user = SessionService.getUser();
     });
   }
 });

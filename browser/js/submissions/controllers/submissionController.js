@@ -40,15 +40,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     'Trap',
     'Vocalists/Singer-Songwriter'
   ];
-  $scope.logout = function() {
-    $http.get('/api/logout').then(function() {
-      SessionService.deleteUser();
-      window.location.href = '/admin';
-    }).catch(function(err) {
-      $scope.processing = false;
-      $.Zebra_Dialog('Wrong Password');
-    });
-  }
 
   $scope.getSubmissionsByGenre = function(){
     $scope.showingElements = [];
@@ -63,6 +54,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       $scope.processing = false;
       if (res.data.length > 0) {
         angular.forEach(res.data, function(d) {
+          d.displayType = 'channel';
           $scope.showingElements.push(d);
       });
   }

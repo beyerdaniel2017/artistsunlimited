@@ -39,6 +39,7 @@ router.get('/unaccepted', function(req, res, next) {
       status: 403
     })
   } else {
+    var resultSubs = [];
     var skipcount  = req.query.skip;
     var limitcount  = req.query.limit;
     var genre = req.query.genre ? req.query.genre : undefined;
@@ -56,10 +57,26 @@ router.get('/unaccepted', function(req, res, next) {
     .limit(limitcount)
     .exec()
       .then(function(subs) {
-        subs = subs.filter(function(sub) {
-          return sub.channelIDS.length == 0;
+      var i = -1;
+      var next = function() {
+        i++;
+        if(i < subs.length) {
+          var sub = subs[i].toJSON();
+          sub.approvedChannels = [];
+          Submission.findOne({userID : req.user._id, email: sub.email, $where: "this.channelIDS.length > 0" })
+          .exec()
+          .then(function(approvesub) {
+            if(approvesub){
+              sub.approvedChannels = approvesub.channelIDS;
+            }
+            resultSubs.push(sub);
+            next();
         });
-        res.send(subs);
+        } else{
+          res.send(resultSubs);
+        }
+      }
+      next();   
       })
       .then(null, next);
   }

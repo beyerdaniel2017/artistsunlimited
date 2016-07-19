@@ -12,6 +12,9 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
   $scope.submissions = [];
   $scope.loginObj = {};
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
+  if($scope.isLoggedIn){
+    $state.go('submissions');
+  }
   $scope.login = function() {
     $scope.message = {
       val: '',
