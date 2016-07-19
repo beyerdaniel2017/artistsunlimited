@@ -17,6 +17,15 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $state.go('admin');
   }
   $scope.user=SessionService.getUser();
+  $scope.uniqueGroup = [];
+  if($scope.user.paidRepost.length > 0){
+    $scope.user.paidRepost.forEach(function(acc){
+      if(acc.group != "" && $scope.uniqueGroup.indexOf(acc.group) === -1){
+        $scope.uniqueGroup.push(acc.group);        
+      } 
+    });
+  }
+
   $scope.genreArray = [
     'Alternative Rock',
     'Ambient',
@@ -105,6 +114,19 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     } else {
       sub.channelIDS.splice(index, 1);
     }
+  }
+
+  $scope.changeBoxGroup = function(sub, group) {
+    $scope.user.paidRepost.forEach(function(acc){
+      if(acc.group != "" && acc.group == group){
+        var index = sub.channelIDS.indexOf(acc.id);
+        if (index == -1) {
+          sub.channelIDS.push(acc.id);
+        } else {
+          sub.channelIDS.splice(index, 1);
+        }      
+      }
+    });    
   }
 
   $scope.save = function(submi) {

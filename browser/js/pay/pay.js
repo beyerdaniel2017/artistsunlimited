@@ -4,17 +4,29 @@ app.config(function($stateProvider) {
     templateUrl: 'js/pay/pay.html',
     controller: 'PayController',
     resolve: {
-      channels: function($http) {
-        return $http.get('/api/channels')
+      // <<<<<<< HEAD
+      //       channels: function($http) {
+      //         return $http.get('/api/channels')
+      //           .then(function(res) {
+      //             return res.data;
+      //           })
+      //       },
+      //       submission: function($http, $submissiontateParams) {
+      // =======
+      submission: function($http, $stateParams) {
+        // >>>>>>> master
+        return $http.get('/api/submissions/withID/' + $stateParams.submissionID)
           .then(function(res) {
+            console.log(res.data);
             return res.data;
           })
       },
-      submission: function($http, $submissiontateParams) {
-        return $http.get('/api/submissions/withID/' + $stateParams.submissionID)
-          .then(function(res) {
-            return res.data;
-          })
+      channels: function($http, submission) {
+        return submission.channels;
+        // return $http.get('/api/users/getChannels')
+        // .then(function(res) {
+        //   return res.data;
+        // })
       },
       track: function(submission) {
         return SC.get('/tracks/' + submission.trackID)
@@ -34,6 +46,7 @@ app.filter('calculateDiscount', function() {
 
 app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track, $state, $uibModal) {
   $rootScope.submission = submission;
+  console.log(channels);
   $scope.auDLLink = false;
   if (submission.paid) $state.go('home');
   $scope.track = track;
@@ -44,16 +57,17 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   });
   $scope.total = 0;
   $scope.showTotal = 0;
-  console.log(channels);
-  $scope.channels = channels.filter(function(ch) {
-    if (ch.soundcloud.followers) ch.price = parseFloat(ch.soundcloud.followers / 3000.0);
-    return (submission.channelIDS.indexOf(ch.soundcloud.id) != -1)
-  });
-  console.log(submission.channelIDS);
-  console.log($scope.channels);
+  $scope.channels = channels;
+
+  // $scope.channels = channels.filter(function(ch) {
+  //   if (ch.soundcloud.followers) ch.price = parseFloat(ch.soundcloud.followers / 3000.0);
+  //   return (submission.channelIDS.indexOf(ch.soundcloud.id) != -1)
+  // });
+  //console.log(submission.channelIDS);
+  //console.log($scope.channels);
 
   $scope.auDLLink = $scope.track.purchase_url ? ($scope.track.purchase_url.indexOf("artistsunlimited.co") != -1) : false;
-  console.log($scope.auDLLink);
+  //console.log($scope.auDLLink);
 
   $scope.goToLogin = function() {
     $state.go('login', {
@@ -62,7 +76,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   }
 
   $scope.makePayment = function() {
-    console.log('ay');
+    //console.log('ay');
     if ($scope.total != 0) {
       if ($scope.auDLLink) {
         $scope.discountModalInstance = $uibModal.open({
@@ -102,11 +116,10 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
 
   $scope.addToCart = function(channel) {
     if (channel.addtocart) {
-      $scope.total = $scope.total - channel.price;
+      $scope.total = $scope.total - parseFloat(channel.price);
     } else {
-      $scope.total += channel.price;
+      $scope.total += parseFloat(channel.price);
     }
-    console.log(typeof channel.price);
     channel.addtocart = channel.addtocart ? false : true;
     if ($scope.auDLLink) $scope.showTotal = parseFloat($scope.total * 0.9).toFixed(2);
     else $scope.showTotal = parseFloat($scope.total).toFixed(2);

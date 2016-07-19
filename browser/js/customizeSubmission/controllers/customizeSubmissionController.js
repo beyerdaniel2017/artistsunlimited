@@ -12,7 +12,6 @@ app.controller('CustomizeSubmissionController', function($rootScope, $state, $sc
   }
   $scope.user = SessionService.getUser();
   $scope.submission = {}; 
-  $scope.postData = {};
   $scope.genreArray = [
     'Alternative Rock',
     'Ambient',
@@ -59,8 +58,47 @@ app.controller('CustomizeSubmissionController', function($rootScope, $state, $sc
   {
     customizeService.getCustomPageSettings($scope.user._id)
     .then(function(response){
+      if(response){
       $scope.postData = response;
       $scope.customizeSettings = response;
+      }
+      else{
+        $scope.postData = {
+          heading: {
+            text: "Submission for Promotion",
+            style: {
+              fontSize: 21,
+              fontColor: '#999',
+              fontWeight: 'Bold'
+            }
+          },
+          subHeading: {
+            text: "Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.",
+            style: {
+              fontSize: 16,
+              fontColor: '#7d5a5a',
+              fontWeight:'Normal'
+            }
+          },
+          inputFields: {
+            style:{
+              border: 1,
+              borderRadius: 4,
+              borderColor: '#F5D3B5',
+            }
+          },
+          button: {
+            text: 'Enter',
+            style: {
+              fontSize: 15,
+              fontColor: '#fff',
+              border: 1,
+              borderRadius: 4,
+              bgColor: '#F5BBBC'
+            }   
+          }
+        };
+      }
     });    
   }
 });
