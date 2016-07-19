@@ -63,7 +63,6 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
     }).then(function(res) {
       $scope.processing = false;
       SessionService.create(res.data);
-      location.reload();
       $scope.user = SessionService.getUser();
     });
   }
