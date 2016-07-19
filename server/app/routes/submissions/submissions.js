@@ -33,50 +33,54 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/unaccepted', function(req, res, next) {
-    if (!req.user.role == 'admin' || !req.user.role == 'superadmin') {
+  if (!req.user.role == 'admin' || !req.user.role == 'superadmin') {
     next({
       message: 'Forbidden',
       status: 403
     })
   } else {
     var resultSubs = [];
-    var skipcount  = req.query.skip;
-    var limitcount  = req.query.limit;
+    var skipcount = req.query.skip;
+    var limitcount = req.query.limit;
     var genre = req.query.genre ? req.query.genre : undefined;
-        var query = {
+    var query = {
       channelIDS: [],
-      userID : req.user._id
-        };
-    if(genre != undefined && genre != 'null'){
+      userID: req.user._id
+    };
+    if (genre != undefined && genre != 'null') {
       query.genre = genre;
     }
-        Submission.find(query).sort({
+    Submission.find(query).sort({
         submissionDate: 1
-    })
-    .skip(skipcount)
-    .limit(limitcount)
-    .exec()
+      })
+      .skip(skipcount)
+      .limit(limitcount)
+      .exec()
       .then(function(subs) {
-      var i = -1;
-      var next = function() {
-        i++;
-        if(i < subs.length) {
-          var sub = subs[i].toJSON();
-          sub.approvedChannels = [];
-          Submission.findOne({userID : req.user._id, email: sub.email, $where: "this.paidChannelIDS.length > 0" })
-          .exec()
-          .then(function(approvesub) {
-            if(approvesub){
-              sub.approvedChannels = approvesub.paidChannelIDS;
-            }
-            resultSubs.push(sub);
-            next();
-        });
-        } else{
-          res.send(resultSubs);
+        var i = -1;
+        var next = function() {
+          i++;
+          if (i < subs.length) {
+            var sub = subs[i].toJSON();
+            sub.approvedChannels = [];
+            Submission.findOne({
+                userID: req.user._id,
+                email: sub.email,
+                $where: "this.paidChannelIDS.length > 0"
+              })
+              .exec()
+              .then(function(approvesub) {
+                if (approvesub) {
+                  sub.approvedChannels = approvesub.paidChannelIDS;
+                }
+                resultSubs.push(sub);
+                next();
+              });
+          } else {
+            res.send(resultSubs);
+          }
         }
-      }
-      next();   
+        next();
       })
       .then(null, next);
   }
@@ -136,27 +140,27 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
 
 router.get('/withID/:subID', function(req, res, next) {
   Submission.findById(req.params.subID)
-  .populate('userID', 'paidRepost')
-  .exec()
+    .populate('userID', 'paidRepost')
+    .exec()
     .then(function(sub) {
       if (!sub) next(new Error('submission not found'))
-    sub = sub.toJSON();
-    var arrChannels = [];
-    if(sub.channelIDS.length > 0){
-      sub.channelIDS.forEach(function(ch, index) {        
-        if(sub.userID.paidRepost.length > 0){
-          sub.userID.paidRepost.forEach(function(pr, index1) {
-            if(ch == pr.id){
-              arrChannels.push(pr);
-            }
-          });
-        }
-        sub.channels = arrChannels;
-        if(index == sub.channelIDS.length - 1){
-      res.send(sub);
-        }
-      });
-    }    
+      sub = sub.toJSON();
+      var arrChannels = [];
+      if (sub.channelIDS.length > 0) {
+        sub.channelIDS.forEach(function(ch, index) {
+          if (sub.userID.paidRepost.length > 0) {
+            sub.userID.paidRepost.forEach(function(pr, index1) {
+              if (ch == pr.id) {
+                arrChannels.push(pr);
+              }
+            });
+          }
+          sub.channels = arrChannels;
+          if (index == sub.channelIDS.length - 1) {
+            res.send(sub);
+          }
+        });
+      }
     })
     .then(null, next);
 });
@@ -191,7 +195,7 @@ router.post('/getPayment', function(req, res, next) {
     .then(function(payment) {
       var submission = req.body.submission;
       submission.paidChannelIDS = req.body.channels.map(function(ch) {
-        return ch.soundcloud.id;
+        return ch.id;
       });
       submission.paid = false;
       submission.payment = payment;
@@ -266,8 +270,8 @@ function schedulePaidRepost(chanID, submission) {
             day: {
               $gt: today
             }
-      })
-      .exec()
+          })
+          .exec()
           .then(function(allEvents) {
             allEvents.forEach(function(event1) {
               event1.day = new Date(event1.day);

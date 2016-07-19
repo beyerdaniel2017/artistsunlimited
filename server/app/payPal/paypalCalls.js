@@ -15,7 +15,7 @@ module.exports = {
   makePayment: function(price, submission, channels) {
     var nameString = "Reposts on: ";
     channels.forEach(function(ch) {
-      nameString += ch.soundcloud.username + " - ";
+      nameString += ch.username + " - ";
     });
     var create_payment_json = {
       "intent": "sale",

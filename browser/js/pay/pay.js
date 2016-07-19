@@ -4,9 +4,20 @@ app.config(function($stateProvider) {
     templateUrl: 'js/pay/pay.html',
     controller: 'PayController',
     resolve: {
+      // <<<<<<< HEAD
+      //       channels: function($http) {
+      //         return $http.get('/api/channels')
+      //           .then(function(res) {
+      //             return res.data;
+      //           })
+      //       },
+      //       submission: function($http, $submissiontateParams) {
+      // =======
       submission: function($http, $stateParams) {
+        // >>>>>>> master
         return $http.get('/api/submissions/withID/' + $stateParams.submissionID)
           .then(function(res) {
+            console.log(res.data);
             return res.data;
           })
       },
@@ -35,6 +46,7 @@ app.filter('calculateDiscount', function() {
 
 app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track, $state, $uibModal) {
   $rootScope.submission = submission;
+  console.log(channels);
   $scope.auDLLink = false;
   if (submission.paid) $state.go('home');
   $scope.track = track;
@@ -46,7 +58,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   $scope.total = 0;
   $scope.showTotal = 0;
   $scope.channels = channels;
-  
+
   // $scope.channels = channels.filter(function(ch) {
   //   if (ch.soundcloud.followers) ch.price = parseFloat(ch.soundcloud.followers / 3000.0);
   //   return (submission.channelIDS.indexOf(ch.soundcloud.id) != -1)
