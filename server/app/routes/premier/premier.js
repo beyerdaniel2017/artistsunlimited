@@ -135,22 +135,22 @@ router.post('/', function(req, res, next) {
   }
 
   function mailData() {
-    var attachments = [{
-      'type': body.file.mimetype,
-      'name': body.file.newfilename,
-      'content': body.file.buffer.toString('base64')
-    }];
-    var email_body = '<b>Sender Comment: </b> ' +
-      body.fields.comment +
-      '<br />' +
-      '<br />' +
-      '<b>Sender Name: </b> ' +
-      body.fields.name +
-      '<br />' +
-      '<br />' +
-      '<b>Sender Email: </b> ' +
-      body.fields.email;
-    sendEmail('Edward', 'edward@peninsulamgmt.com', 'Artists Unlimited', 'coayscue@artistsunlimited.co', 'Premier Submission', email_body, attachments);
+    // var attachments = [{
+    //   'type': body.file.mimetype,
+    //   'name': body.file.newfilename,
+    //   'content': body.file.buffer.toString('base64')
+    // }];
+    // var email_body = '<b>Sender Comment: </b> ' +
+    //   body.fields.comment +
+    //   '<br />' +
+    //   '<br />' +
+    //   '<b>Sender Name: </b> ' +
+    //   body.fields.name +
+    //   '<br />' +
+    //   '<br />' +
+    //   '<b>Sender Email: </b> ' +
+    //   body.fields.email;
+    // sendEmail('Edward', 'edward@peninsulamgmt.com', 'Artists Unlimited', 'coayscue@artistsunlimited.co', 'Premier Submission', email_body, attachments);
     return res.end();
   }
 
