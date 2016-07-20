@@ -834,6 +834,23 @@ router.post('/updateGroup', function(req, res, next) {
   });
 });
 
+router.post('/updateCustomEmailButtons', function(req, res, next) {
+  User.findOneAndUpdate({
+    _id: req.user._id
+  }, {
+    $set: { customEmailButtons: req.body.customEmailButtons }
+  },{
+    new: true
+  })
+  .exec()
+  .then(function(user) {
+    res.send(user);
+  })
+  .then(null, function(err) {
+    next(err);
+  });
+});
+
 router.put('/deleteUserAccount/:id', function(req, res, next) {
     var soundcloudId = req.params;   
      User.update({

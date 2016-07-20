@@ -2,7 +2,6 @@
 window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'satellizer','angularMoment','luegg.directives','ui-rangeSlider', 'ngSanitize', 'colorpicker.module']);
 
 app.config(function($urlRouterProvider, $locationProvider, $uiViewScrollProvider, $httpProvider) {
-
     // This turns off hashbang urls (/#about) and changes it to something normal (/about)
     $locationProvider.html5Mode(true);
     // If we go to a URL that ui-router doesn't have registered, go to the "/" url.
@@ -61,7 +60,6 @@ app.config(function($authProvider) {
 
 
     // No additional setup required for Twitter
-
     $authProvider.oauth2({
         name: 'foursquare',
         url: '/auth/foursquare',
@@ -130,12 +128,10 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
                 }
             });
         };
-
     });
-
     SessionService.refreshUser();
-
 });
+
 app.directive('fbLike', [
     '$window', '$rootScope',
     function($window, $rootScope) {
@@ -160,7 +156,6 @@ app.directive('fbLike', [
                 }
 
                 var watchAdded = false;
-
                 function renderLikeButton() {
                     if (!!attrs.fbLike && !scope.fbLike && !watchAdded) {
                         // wait for data if it hasn't loaded yet
@@ -168,11 +163,9 @@ app.directive('fbLike', [
                         var unbindWatch = scope.$watch('fbLike', function(newValue, oldValue) {
                             if (newValue) {
                                 renderLikeButton();
-
                                 // only need to run once
                                 unbindWatch();
                             }
-
                         });
                         return;
                     } else {
@@ -275,7 +268,6 @@ app.directive('fbLike', [
                 }
 
                 var watchAdded = false;
-
                 function renderLikeButton() {
                     if (!!attrs.fbLike && !scope.fbLike && !watchAdded) {
                         // wait for data if it hasn't loaded yet
@@ -283,11 +275,9 @@ app.directive('fbLike', [
                         var unbindWatch = scope.$watch('fbLike', function(newValue, oldValue) {
                             if (newValue) {
                                 renderLikeButton();
-
                                 // only need to run once
                                 unbindWatch();
                             }
-
                         });
                         return;
                     } else {
@@ -313,7 +303,6 @@ app.directive('fileread', [function() {
                         visible: false,
                         val: ''
                     };
-
                     if (changeEvent.target.files[0].type != "audio/mpeg" && changeEvent.target.files[0].type != "audio/mp3") {
                         scope.message = {
                             visible: true,
@@ -322,7 +311,6 @@ app.directive('fileread', [function() {
                         element.val(null);
                         return;
                     }
-
                     if (changeEvent.target.files[0].size > 20 * 1000 * 1000) {
                         scope.message = {
                             visible: true,
@@ -339,12 +327,6 @@ app.directive('fileread', [function() {
 }]);
 
 app.service('mainService', function($http, SessionService) {
-    // this.openHelpModal = function() {
-    //     var displayText = "Hey! Thanks for using artist tools! Please submit any questions you have by clicking 'Support' <br><br><a href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Support</a>";
-    //     $.Zebra_Dialog(displayText, {
-    //         width: 600
-    //     });
-    // }
     this.logout = function() {
         $http.post('/api/logout').then(function() {
             SessionService.deleteUser();

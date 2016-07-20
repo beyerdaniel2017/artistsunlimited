@@ -7,11 +7,13 @@
         <div class="page-content right-side min-ht padding-10">
           <div class="row">
             <div class="col-md-8 col-md-offset-2">
-              <div class="permanent-links" style="text-align: center;">
-                <h4 class="bold">Profile</h4>
+              <div class="permanent-links">  
+                <br/><br/>              
                 <form ng-submit="updateProfileWithPicture(profile)">
+                  <label>Profile Image</label>
                   <input class="form-control" type="file" file-input="profilepic.file" name="imageFile" placeholder="Background Image" />
                   <br/>                                  
+                  <label>User Name</label>                                
                   <input class="form-control" placeholder="Username" value="{{profile.name}}" type="text" ng-model="profile.name" required />
                   <br/>
                   <div class="col-md-12 text-center">
