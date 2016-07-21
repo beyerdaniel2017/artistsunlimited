@@ -114,7 +114,8 @@ function getID(event, user) {
     var id;
     var count = 0;
     var findAgain = function(person) {
-      if (count == person.queue.length) reject();
+      console.log(count);
+      if (count >= person.queue.length) reject();
       id = person.queue.splice(0, 1)[0];
       person.queue.push(id);
       scWrapper.setToken(user.soundcloud.token);
