@@ -82,4 +82,15 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
   $scope.addItems=function(rowid,index){
     $("#"+rowid).toggleClass();
   }
+  $scope.clicked = false;
+  $scope.whiteSlot = [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 17, 18, 19, 21, 22, 23];
+  $scope.clickedSlot = function(index) {
+    $scope.clicked = true;
+    if ($scope.whiteSlot.indexOf(index) > -1) {
+      var value = $scope.whiteSlot.indexOf(index);
+      $scope.whiteSlot.splice(value, 1)
+    } else {
+      $scope.whiteSlot.push(index);
+    }
+  }
 });

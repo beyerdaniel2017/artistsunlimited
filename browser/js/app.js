@@ -121,12 +121,17 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
         //     }
         // });
 
-        if ($window.location.pathname.indexOf('artistTools') != -1) {
+    if($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin')){
+      var user = SessionService.getUser();
+      if(user){
+        var redirectPath = (user.role != undefined ?  "/admin" : "/login");
             $http.get('/api/users/isUserAuthenticate').then(function(res) {
                 if (!res.data) {
-                    $window.location.href = '/login';
+            SessionService.deleteUser();
+            $window.location.href = redirectPath;
                 }
             });
+      }
         };
     });
     SessionService.refreshUser();

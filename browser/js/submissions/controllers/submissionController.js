@@ -6,7 +6,7 @@ app.config(function($stateProvider) {
   });
 });
 
-app.controller('SubmissionController', function($rootScope, $state, $scope, $http, AuthService, SessionService) {
+app.controller('SubmissionController', function($rootScope, $state, $scope, $http, $window, AuthService, SessionService) {
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.submissions = [];
@@ -194,5 +194,19 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
         $scope.processing = false;
         $.Zebra_Dialog('Sent Email');
       })
+  }
+
+  $scope.openEmailClient = function(sub, item){
+    var body = (item.emailBody != undefined ? item.emailBody : "");
+    if(body != ""){
+      body = body.replace('{name}', sub.name);
+      body = body.replace('{email}', sub.email);
+      body = body.replace('{title}', sub.title);
+      body = body.replace('{url}', sub.trackURL);
+    }
+    var link = "mailto:"+ item.toEmail
+      + "?subject=" + escape(item.subject)
+      + "&body=" + escape(body); 
+    $window.location.href = link;
   }
 });

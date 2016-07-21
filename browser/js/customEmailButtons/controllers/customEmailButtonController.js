@@ -14,10 +14,11 @@ app.controller('CustomEmailButtonController', function($rootScope, $state, $scop
   $scope.customEmailButtons = $scope.user.customEmailButtons ? $scope.user.customEmailButtons : [];
   if($scope.customEmailButtons.length == 0){
     $scope.customEmailButtons.push({
-      toEmail: 'virendra.chouhan@linkites.com',
-      subject: 'subject 1',
-      buttonText: 'button 1',
-      buttonBgColor: '#592e2e'
+      toEmail: '',
+      subject: '',
+      emailBody: '',
+      buttonText: '',
+      buttonBgColor: ''
     });
   }
   $scope.saveSettings=function(){
@@ -36,6 +37,7 @@ app.controller('CustomEmailButtonController', function($rootScope, $state, $scop
     $scope.customEmailButtons.push({
       toEmail: '',
       subject: '',
+      emailBody: '',
       buttonText: '',
       buttonBgColor: ''
     });

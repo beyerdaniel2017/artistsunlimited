@@ -11,7 +11,10 @@
                 <div class="col-md-12 bg-white">
                   <form ng-submit="saveSettings()">
                     <br />
+                    <p class="text-center">To use a value from the submission, you can write: {name} for the submitter's name, {title} for the title of the track, {email} for the submitter's email or {url} for the url of the track.</p>
+                    <br />
                     <div class="row margin-bottom-10" ng-repeat="item in customEmailButtons" style="border-bottom: solid 1px #dcdcdc;">
+                      <div class="col-md-12">
                       <div class="col-md-1 margin-bottom-10">&nbsp;</div>
                       <div class="col-md-5 margin-bottom-10">
                         <label>To Email</label>
@@ -29,6 +32,15 @@
                       </div>
                       <div class="col-md-1 margin-bottom-10" style="margin-top:70px;">
                         <span class="glyphicon glyphicon-trash pull-left" ng-click="removeItem($index)"></span>
+                      </div>
+                    </div>
+                      <div class="col-md-12 margin-bottom-10">
+                        <div class="col-md-1">&nbsp;</div>
+                        <div class="col-md-10">
+                          <label>Email Body</label>
+                          <textarea ng-model="item.emailBody" class="form-control" rows="10" placeholder="Email body"></textarea>
+                        </div>
+                        <div class="col-md-1">&nbsp;</div>
                       </div>
                     </div>
                     <br/>

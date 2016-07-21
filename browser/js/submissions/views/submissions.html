@@ -31,23 +31,21 @@
       <a href="{{sub.trackURL}}" target="_blank">{{sub.trackURL}}</a><br>
               <div id="{{sub.trackID}}player" style="display:inline-block; width:60%; background-color:gray; height:150px; margin-top:10px;"></div>
               <div style="display:inline-block; width: 39%; height:150px; vertical-align: top;margin-top:10px;">
-                <div class="row" style="display:inline-block; width:100%; padding-top:10px;">
-                  <div class="col-md-4" ng-repeat="item in user.customEmailButtons" >
-                    <a href="mailto:{{item.toEmail}}&subject={{item.subject}}" style="width:45%; padding:7px; background-color:{{item.buttonBgColor}}; font-size:2em">{{item.buttonText}}</a>
-                  </div>
+                <div style="display:inline-block; width:100%; float:left">
+                  <button ng-click="openEmailClient(sub, item)" style="height: 45px; padding: 2px 5px; margin-right: 3px; margin-top: 7px; background-color:{{item.buttonBgColor}}; font-size:2em" ng-repeat="item in user.customEmailButtons">{{item.buttonText}}</button>
                 </div>
 <!--                 <button ng-click="youtube(sub)" style="width:45%; height: 45px; margin-top: 7px; background-color:blue ; font-size:2em" ng-show="user.role == 'superadmin'">To Zach</button>
                 <button ng-click="sendMore(sub)" style="width:45%; height: 45px; margin-top: 7px; background-color:orange ; font-size:2em" ng-show="user.role == 'superadmin'">More</button> -->
-                <div style="display:inline-block; width:100%; padding-top:10px;">
+                <div style="display:inline-block; width:100%; float:left">
         <button ng-click="ignore(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:yellow; font-size:2em">Ignore</button>
         <button ng-click="decline(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:red ; font-size:2em">Decline</button>
         <button ng-click="save(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:#67f967 ; font-size:2em">Save</button>
                 </div>
+              </div>
                 <div style="display:inline-block; width:100%; padding-top:10px;">
                   <label><input type="radio" ng-model="sub.displayType" ng-value="'group'" ng-change="sub.channelIDS = []"> Group </label>
                   <label><input type="radio" ng-model="sub.displayType" ng-value="'channel'" ng-change="sub.channelIDS = []"> Channel </label>
                 </div>
-      </div>
       <div style="display:flex; flex-direction:row; flex-wrap: wrap; justify-content:space-around; width:100%; height: 20px;">
                 <div ng-if="sub.displayType == 'group'" ng-repeat="group in uniqueGroup" class="graybox">
                   <span>{{group}}</span>
