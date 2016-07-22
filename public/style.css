@@ -86,6 +86,20 @@
   color: #332;
   border-radius: 8px; }
 
+.account-scheduler {
+  /*width: 40%;*/
+  height: 24px;
+  border: solid #dddddd;
+  border-width: 1px;
+  border-radius: 5px;
+  cursor: pointer;
+  vertical-align: middle;
+  overflow: hidden;
+  display: inline-block;
+  width: 57px !important;
+  float: left;
+  margin-top: 3px; }
+
 .ZebraDialog .ZebraDialog_Buttons a {
   background: #f5bbbc;
   color: #FFF;
@@ -2473,3 +2487,27 @@ input[type=range]:focus::-ms-fill-upper {
 
 .margin-bottom-10 {
   margin-bottom: 20px; }
+
+.account-scheduler {
+  /*width: 40%;*/
+  height: 24px;
+  border: solid #dddddd;
+  border-width: 1px;
+  border-radius: 5px;
+  cursor: pointer;
+  vertical-align: middle;
+  overflow: hidden;
+  display: inline-block;
+  width: 57px !important;
+  float: left;
+  margin-top: 3px; }
+
+.btn-grp .btn {
+  padding: 0px;
+  font-size: 22px; }
+
+/*********** Media CSS **************/
+@media screen and (max-width: 1024px) {
+  .btn-grp .btn {
+    font-size: 17px;
+    width: 34%; } }
