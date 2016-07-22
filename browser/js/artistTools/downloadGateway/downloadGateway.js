@@ -1,37 +1,37 @@
 app.config(function($stateProvider) {
   $stateProvider
-    .state('artistToolsDownloadGatewayEdit', {
-      url: '/artistTools/downloadGateway/edit/:gatewayID',
-      templateUrl: 'js/artistTools/downloadGateway/downloadGateway.html',
-      controller: 'ArtistToolsDownloadGatewayController',
-      resolve: {
-        isLoggedIn: function($stateParams, $window, SessionService) {
-          if (!SessionService.getUser()) {
-            $window.localStorage.setItem('returnstate', 'artistToolsDownloadGatewayEdit');
-            $window.localStorage.setItem('tid', $stateParams.gatewayID);
-            $window.location.href = '/login';
-          }
-          return true;
+  .state('artistToolsDownloadGatewayEdit', {
+    url: '/artistTools/downloadGateway/edit/:gatewayID',
+    templateUrl: 'js/artistTools/downloadGateway/downloadGateway.html',
+    controller: 'ArtistToolsDownloadGatewayController',
+    resolve: {
+      isLoggedIn: function($stateParams, $window, SessionService) {
+        if (!SessionService.getUser()) {
+          $window.localStorage.setItem('returnstate', 'artistToolsDownloadGatewayEdit');
+          $window.localStorage.setItem('tid', $stateParams.gatewayID);
+          $window.location.href = '/login';
         }
+        return true;
       }
-    })
-    .state('artistToolsDownloadGatewayNew', {
-      url: '/artistTools/downloadGateway/new',
-      params: {
-        submission: null
-      },
-      templateUrl: 'js/artistTools/downloadGateway/downloadGateway.html',
-      controller: 'ArtistToolsDownloadGatewayController',
-      resolve: {
-        isLoggedIn: function($stateParams, $window, SessionService) {
-          if (!SessionService.getUser()) {
-            $window.localStorage.setItem('returnstate', 'artistToolsDownloadGatewayNew');
-            $window.location.href = '/login';
-          }
-          return true;
+    }
+  })
+  .state('artistToolsDownloadGatewayNew', {
+    url: '/artistTools/downloadGateway/new',
+    params: {
+      submission: null
+    },
+    templateUrl: 'js/artistTools/downloadGateway/downloadGateway.html',
+    controller: 'ArtistToolsDownloadGatewayController',
+    resolve: {
+      isLoggedIn: function($stateParams, $window, SessionService) {
+        if (!SessionService.getUser()) {
+          $window.localStorage.setItem('returnstate', 'artistToolsDownloadGatewayNew');
+          $window.location.href = '/login';
         }
+        return true;
       }
-    })
+    }
+  })
 });
 
 app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService, AdminDLGateService) {
@@ -87,8 +87,8 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     $scope.track.SMLinks = [];
 
     SC.get('/users/' + $scope.track.artistID + '/web-profiles')
-      .then(handleWebProfiles)
-      .catch(handleError);
+    .then(handleWebProfiles)
+    .catch(handleError);
 
     function handleWebProfiles(profiles) {
       profiles.forEach(function(prof) {
@@ -172,26 +172,26 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
       data: sendObj
     };
     $http(options)
-      .then(function(res) {
-        $scope.processing = false;
-        if ($stateParams.submission) {
-          $state.go('artistToolsDownloadGatewayList', {
-            'submission': $stateParams.submission
-          });
+    .then(function(res) {
+      $scope.processing = false;
+      if ($stateParams.submission) {
+        $state.go('artistToolsDownloadGatewayList', {
+          'submission': $stateParams.submission
+        });
+      } else {
+        if ($scope.user.soundcloud.id == $scope.track.artistID) {
+          $.Zebra_Dialog('Download gateway was saved and added to the track.');
         } else {
-          if ($scope.user.soundcloud.id == $scope.track.artistID) {
-            $.Zebra_Dialog('Download gateway was saved and added to the track.');
-          } else {
-            $.Zebra_Dialog('Download gateway saved.');
-          }
-          $state.go('artistToolsDownloadGatewayList');
+          $.Zebra_Dialog('Download gateway saved.');
         }
-      })
-      .then(null, function(err) {
-        $scope.processing = false;
-        $.Zebra_Dialog("ERROR: Error in saving url");
-        $scope.processing = false;
-      });
+        $state.go('artistToolsDownloadGatewayList');
+      }
+    })
+    .then(null, function(err) {
+      $scope.processing = false;
+      $.Zebra_Dialog("ERROR: Error in saving url");
+      $scope.processing = false;
+    });
   };
 
   $scope.checkIfEdit = function() {
@@ -205,17 +205,17 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     if (profile.soundcloud) {
       $scope.processing = true;
       SC.get('/users/' + profile.soundcloud.id + '/tracks', {
-          filter: 'public'
-        })
-        .then(function(tracks) {
-          $scope.trackList = tracks;
-          $scope.processing = false;
-          $scope.$apply();
-        })
-        .catch(function(response) {
-          $scope.processing = false;
-          $scope.$apply();
-        });
+        filter: 'public'
+      })
+      .then(function(tracks) {
+        $scope.trackList = tracks;
+        $scope.processing = false;
+        $scope.$apply();
+      })
+      .catch(function(response) {
+        $scope.processing = false;
+        $scope.$apply();
+      });
     }
   }
 
@@ -294,6 +294,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
 
     var location = getLocation($scope.track.SMLinks[index].value);
     var host = location.hostname.split('.')[0];
+    if (host === 'www') host = location.hostname.split('.')[1];
     var findLink = $scope.track.SMLinks.filter(function(item) {
       return item.key === host;
     });
@@ -362,19 +363,19 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
   $scope.playlistURLChange = function(index) {
     $scope.processing = true;
     AdminDLGateService
-      .resolveData({
-        url: $scope.track.playlists[index].url
-      })
-      .then(function(res) {
-        $scope.track.playlists[index].avatar = res.data.artwork_url;
-        $scope.track.playlists[index].title = res.data.title;
-        $scope.track.playlists[index].id = res.data.id;
-        $scope.processing = false;
-      })
-      .then(null, function(err) {
-        $.Zebra_Dialog('Playlist not found');
-        $scope.processing = false;
-      })
+    .resolveData({
+      url: $scope.track.playlists[index].url
+    })
+    .then(function(res) {
+      $scope.track.playlists[index].avatar = res.data.artwork_url;
+      $scope.track.playlists[index].title = res.data.title;
+      $scope.track.playlists[index].id = res.data.id;
+      $scope.processing = false;
+    })
+    .then(null, function(err) {
+      $.Zebra_Dialog('Playlist not found');
+      $scope.processing = false;
+    })
   }
 
   function resetDownloadGateway() {
@@ -411,11 +412,11 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     // resetDownloadGateway();
     $scope.processing = true;
     ArtistToolsService
-      .getDownloadGateway({
-        id: downloadGateWayID
-      })
-      .then(handleResponse)
-      .catch(handleError);
+    .getDownloadGateway({
+      id: downloadGateWayID
+    })
+    .then(handleResponse)
+    .catch(handleError);
 
     function handleResponse(res) {
 

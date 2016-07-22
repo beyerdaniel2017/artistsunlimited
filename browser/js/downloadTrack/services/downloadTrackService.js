@@ -1,5 +1,5 @@
-app.service('DownloadTrackService', ['$http', function($http){
-	
+app.service('DownloadTrackService', ['$http', function($http) {
+
 	function getDownloadTrack(data) {
 		return $http.get('/api/download/track?trackID=' + data);
 	}
@@ -11,6 +11,7 @@ app.service('DownloadTrackService', ['$http', function($http){
 	}
 
 	function performTasks(data) {
+		console.log(data);
 		return $http.post('api/download/tasks', data);
 	}
 
