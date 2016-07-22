@@ -16,24 +16,24 @@
             <div ng-repeat="sub in showingElements" style="padding:10px 10px; margin:10px 10px; background-color: #fff; border-bottom: solid 1px #dcdcdc;">
       <h4>Name: {{sub.name}} ----- Email: {{sub.email}} ----- Genre: {{sub.genre}}</h4>
       <h4>Comment: {{sub.comment}}</h4>
-      <audio controls style="display: block !important; width: 50%; height: 50px; margin: 0 auto;">
+              <audio class="premier-video" controls>
         <source ng-src="{{sub.s3URL | trusted }}" type="audio/mpeg">
         </audio>
-        <div style="width: 50%; margin: 0 auto; padding-top:10px;padding-bottom:10px;">
-          <button ng-click="decline(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:red ; font-size:2em">Decline</button>
-          <button ng-click="accept(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:#67f967 ; font-size:2em">Accept</button>
-          <button ng-click="delete(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:red ; font-size:2em">Delete</button>
+              <div class="premier">
+                <button class="premier-btn btn" ng-click="decline(sub)" style="background-color:red;">Decline</button>
+                <button class="premier-btn btn" ng-click="accept(sub)" style="background-color:#67f967;">Accept</button>
+                <button class="premier-btn btn" ng-click="delete(sub)" style="background-color:red;">Delete</button>
         </div>
-        <div style="width: 40%; margin: 0 auto; padding-top:10px;padding-bottom:10px;">
-          <select class="form-control" style="width:170px;float:left;" ng-model="sub.channel" ng-change="channelChange(sub)">
+              <div class="premier-slect">
+                <select class="form-control" ng-model="sub.channel" ng-change="channelChange(sub)">
             <option value="">-Channel List-</option>
             <option ng-repeat="chan in channels" value="{{chan}}">{{chan.displayName}}</option>
           </select>  
-                <button style="height: 45px; padding: 3px; background-color:yellow ; font-size:2em"><a href="mailto:{{sub.email}}?subject=Premier Submissions&body={{sub.emailBody}}">Send Email</a></button>   
+                <button class="btn send-mail"><a href="mailto:{{sub.email}}?subject=Premier Submissions&body={{sub.emailBody}}">Send Email</a></button>   
         </div>
       </div>
       <br>
-      <button ng-click="loadMore()" style="width:95%; height: 45px; margin: 0 0; background-color:#67f967 ; font-size:2em">Load More</button>
+            <button class="btn" ng-click="loadMore()" style="width:95%; height: 45px; margin: 0 0; background-color:#67f967 ; font-size:2em;line-height: 0;">Load More</button>
     </div>
   </div>
 </div>
