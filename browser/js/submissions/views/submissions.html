@@ -26,27 +26,27 @@
     </select>
     <br>
     <br>
-          <div ng-repeat="sub in showingElements"  ng-if="sub.invoiceIDS.length == 0" style="padding:10px 10px; margin:10px 10px; background-color: #fff; height:350px;  border-bottom: solid 1px #dcdcdc;">
+          <div ng-repeat="sub in showingElements"  ng-if="sub.invoiceIDS.length == 0" class="submi-section">
       <h4>Name: {{sub.name}} ----- Email: {{sub.email}}----- Genre: {{sub.genre}}</h4>
       <a href="{{sub.trackURL}}" target="_blank">{{sub.trackURL}}</a><br>
-              <div id="{{sub.trackID}}player" style="display:inline-block; width:60%; background-color:gray; height:150px; margin-top:10px;"></div>
-              <div style="display:inline-block; width: 39%; height:150px; vertical-align: top;margin-top:10px;">
-                <div style="display:inline-block; width:100%; float:left">
-                  <button ng-click="openEmailClient(sub, item)" style="height: 45px; padding: 2px 5px; margin-right: 3px; margin-top: 7px; background-color:{{item.buttonBgColor}}; font-size:2em" ng-repeat="item in user.customEmailButtons">{{item.buttonText}}</button>
+              <div id="{{sub.trackID}}player" class="video-main"></div>
+              <div class="video-graph">
+                <div class="btn-grp">
+                  <button class="btn mail-btn" ng-click="openEmailClient(sub, item)" style="background-color:{{item.buttonBgColor}};" ng-repeat="item in user.customEmailButtons">{{item.buttonText}}</button>
                 </div>
 <!--                 <button ng-click="youtube(sub)" style="width:45%; height: 45px; margin-top: 7px; background-color:blue ; font-size:2em" ng-show="user.role == 'superadmin'">To Zach</button>
                 <button ng-click="sendMore(sub)" style="width:45%; height: 45px; margin-top: 7px; background-color:orange ; font-size:2em" ng-show="user.role == 'superadmin'">More</button> -->
-                <div style="display:inline-block; width:100%; float:left">
-        <button ng-click="ignore(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:yellow; font-size:2em">Ignore</button>
-        <button ng-click="decline(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:red ; font-size:2em">Decline</button>
-        <button ng-click="save(sub)" style="width:30%; height: 45px; margin-top: 7px; background-color:#67f967 ; font-size:2em">Save</button>
+                <div class="btn-grp">
+                <button class="btn mail-btn" ng-click="ignore(sub)" style="background-color:yellow;">Ignore</button>
+                <button class="btn mail-btn" ng-click="decline(sub)" style="background-color:red;">Decline</button>
+                <button class="btn mail-btn" ng-click="save(sub)" style="background-color:#67f967;">Save</button>
                 </div>
               </div>
                 <div style="display:inline-block; width:100%; padding-top:10px;">
                   <label><input type="radio" ng-model="sub.displayType" ng-value="'group'" ng-change="sub.channelIDS = []"> Group </label>
                   <label><input type="radio" ng-model="sub.displayType" ng-value="'channel'" ng-change="sub.channelIDS = []"> Channel </label>
                 </div>
-      <div style="display:flex; flex-direction:row; flex-wrap: wrap; justify-content:space-around; width:100%; height: 20px;">
+              <div style="flex-flow: row wrap;justify-content: space-around;margin: 0px auto;text-align:left;">
                 <div ng-if="sub.displayType == 'group'" ng-repeat="group in uniqueGroup" class="graybox">
                   <span>{{group}}</span>
                   <input type="checkbox" ng-model="sub[group]" ng-change="changeBoxGroup(sub, group)" />
@@ -57,7 +57,7 @@
         </div>
       </div>
     </div>
-    <button ng-click="loadMore()" style="width:95%; height: 45px; margin: 0 0; background-color:#67f967 ; font-size:2em">Load More</button>
+            <button class="btn send-mail" ng-click="loadMore()" style="width:95%; height: 45px; margin: 0 0; background-color:#67f967 ; font-size:2em;line-height: 0;">Load More</button>
   </div>
 </div>
 </div>
