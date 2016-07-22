@@ -20,10 +20,11 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
         token: res.oauth_token
       });
     })
-    .then(function(res) {
+    .then(function(res) { 
       var scInfo = res.data.user.soundcloud;
-      scInfo.group = "";     
-      scInfo.price = 0;    
+      scInfo.group = ""; 
+      scInfo.description = "";    
+      scInfo.price = 1;    
       $http.post('/api/database/updateUserAccount', {
         soundcloudInfo: scInfo,
       }).then(function(user) {
@@ -48,8 +49,7 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
             $scope.user.paidRepost.splice(index, 1);
           })
         }
-      },
-      { 
+       }, {
         caption: 'No', 
         callback: function() {} 
       }]
@@ -57,6 +57,18 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
   };
 
   $scope.updateGroup = function(account){
+    var priceFlag = true;
+    for (var i =  $scope.user.paidRepost.length - 1; i >= 0; i--) {
+      if ($scope.user.paidRepost[i].price){
+        priceFlag=true;
+      } else{
+        priceFlag=false;
+        break;
+      }
+    }
+    if (!priceFlag){
+      return $.Zebra_Dialog('Price can not be empty.');
+    }
     $scope.processing = true;
     $http.post('/api/database/updateGroup', {
       paidRepost: $scope.user.paidRepost,
@@ -65,5 +77,20 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
       SessionService.create(res.data);
       $scope.user = SessionService.getUser();
     });
+  }
+    
+  $scope.addItems=function(rowid,index){
+    $("#"+rowid).toggleClass();
+  }
+  $scope.clicked = false;
+  $scope.whiteSlot = [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 17, 18, 19, 21, 22, 23];
+  $scope.clickedSlot = function(index) {
+    $scope.clicked = true;
+    if ($scope.whiteSlot.indexOf(index) > -1) {
+      var value = $scope.whiteSlot.indexOf(index);
+      $scope.whiteSlot.splice(value, 1)
+    } else {
+      $scope.whiteSlot.push(index);
+    }
   }
 });

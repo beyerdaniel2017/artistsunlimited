@@ -62,6 +62,7 @@ var schema = new mongoose.Schema({
     },
     linkedAccounts: [],
     paidRepost :[],
+    customEmailButtons :[],
     profilePicture: {
         type: String
     },

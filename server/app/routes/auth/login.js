@@ -31,8 +31,8 @@ router.post('/', function(req, res, next) {
         //if(req.body.rememberme && (req.body.rememberme == "1" || req.body.rememberme == 1)){
         //req.session.cookie.expires = false;
         req.session.name = user.userid;
-        req.session.cookie.expires = new Date(Date.now() + (24 * 3600000));
-        req.session.cookie.maxAge = 24 * 3600000;
+        req.session.cookie.expires = new Date(Date.now() + (6 * 3600000));
+        req.session.cookie.maxAge = 6 * 3600000;
         //req.session.cookie.expires = false;
         delete user.password;
         delete user.salt;
