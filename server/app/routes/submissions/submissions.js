@@ -33,6 +33,7 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/unaccepted', function(req, res, next) {
+  console.log(req.bod)
   if (!req.user.role == 'admin' || !req.user.role == 'superadmin') {
     next({
       message: 'Forbidden',
@@ -58,29 +59,29 @@ router.get('/unaccepted', function(req, res, next) {
       .exec()
       .then(function(subs) {
         var i = -1;
-        var next = function() {
+        var cont = function() {
           i++;
           if (i < subs.length) {
             var sub = subs[i].toJSON();
             sub.approvedChannels = [];
-            Submission.findOne({
-                userID: req.user._id,
-                email: sub.email,
-                $where: "this.paidChannelIDS.length > 0"
+            Submission.find({
+                email: sub.email
               })
               .exec()
-              .then(function(approvesub) {
-                if (approvesub) {
-                  sub.approvedChannels = approvesub.paidChannelIDS;
-                }
+              .then(function(oldSubs) {
+                oldSubs.forEach(function(oldSub) {
+                  console.log(oldSub);
+                  sub.approvedChannels = sub.approvedChannels.concat(oldSub.paidChannelIDS)
+                });
                 resultSubs.push(sub);
-                next();
-              });
+                cont();
+              })
+              .then(null, next);
           } else {
             res.send(resultSubs);
           }
         }
-        next();
+        cont();
       })
       .then(null, next);
   }
