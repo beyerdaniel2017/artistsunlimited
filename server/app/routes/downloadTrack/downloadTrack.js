@@ -152,6 +152,9 @@ router.post('/tasks', function(req, res, next) {
       });
     });
   }
+  findOne({
+    downloadURL:
+  })
   DownloadTrack.findById(body._id).exec()
     .then(function(t) {
       if (t.downloadCount) t.downloadCount++;
