@@ -4,17 +4,7 @@ app.config(function($stateProvider) {
     templateUrl: 'js/pay/pay.html',
     controller: 'PayController',
     resolve: {
-      // <<<<<<< HEAD
-      //       channels: function($http) {
-      //         return $http.get('/api/channels')
-      //           .then(function(res) {
-      //             return res.data;
-      //           })
-      //       },
-      //       submission: function($http, $submissiontateParams) {
-      // =======
       submission: function($http, $stateParams) {
-        // >>>>>>> master
         return $http.get('/api/submissions/withID/' + $stateParams.submissionID)
           .then(function(res) {
             console.log(res.data);
@@ -23,10 +13,6 @@ app.config(function($stateProvider) {
       },
       channels: function($http, submission) {
         return submission.channels;
-        // return $http.get('/api/users/getChannels')
-        // .then(function(res) {
-        //   return res.data;
-        // })
       },
       track: function(submission) {
         return SC.get('/tracks/' + submission.trackID)
@@ -58,16 +44,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   $scope.total = 0;
   $scope.showTotal = 0;
   $scope.channels = channels;
-
-  // $scope.channels = channels.filter(function(ch) {
-  //   if (ch.soundcloud.followers) ch.price = parseFloat(ch.soundcloud.followers / 3000.0);
-  //   return (submission.channelIDS.indexOf(ch.soundcloud.id) != -1)
-  // });
-  //console.log(submission.channelIDS);
-  //console.log($scope.channels);
-
   $scope.auDLLink = $scope.track.purchase_url ? ($scope.track.purchase_url.indexOf("artistsunlimited.co") != -1) : false;
-  //console.log($scope.auDLLink);
 
   $scope.goToLogin = function() {
     $state.go('login', {
