@@ -42,16 +42,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   $scope.total = 0;
   $scope.showTotal = 0;
   $scope.channels = channels;
-
-  // $scope.channels = channels.filter(function(ch) {
-  //   if (ch.soundcloud.followers) ch.price = parseFloat(ch.soundcloud.followers / 3000.0);
-  //   return (submission.channelIDS.indexOf(ch.soundcloud.id) != -1)
-  // });
-  //console.log(submission.channelIDS);
-  //console.log($scope.channels);
-
   $scope.auDLLink = $scope.track.purchase_url ? ($scope.track.purchase_url.indexOf("artistsunlimited.co") != -1) : false;
-  //console.log($scope.auDLLink);
 
   $scope.goToLogin = function() {
     $state.go('login', {
