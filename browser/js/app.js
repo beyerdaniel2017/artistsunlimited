@@ -121,16 +121,25 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
         //     }
         // });
 
-    if($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin')){
+    if($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin') != -1){
       var user = SessionService.getUser();
       if(user){
         var redirectPath = (user.role != undefined ?  "/admin" : "/login");
+        if($window.location.pathname.indexOf('admin') != -1 && user.role == undefined){
+          $http.post('/api/logout').then(function() {
+            SessionService.deleteUser();
+            $state.go('admin');
+            //window.location.href = '/admin';
+          });
+        }
+        else{
             $http.get('/api/users/isUserAuthenticate').then(function(res) {
                 if (!res.data) {
             SessionService.deleteUser();
             $window.location.href = redirectPath;
                 }
             });
+      }
       }
         };
     });
@@ -188,7 +197,7 @@ app.controller('FullstackGeneratedController', function($scope, $state, $http, m
     $scope.loadList = function() {
         $scope.$broadcast('loadTrades');
     }
-
+  $scope.submissionsCount = 0;
     $scope.shownotification = false;
     $scope.logout = function() {
         mainService.logout();
@@ -196,7 +205,12 @@ app.controller('FullstackGeneratedController', function($scope, $state, $http, m
     $scope.adminlogout = function() {
         mainService.adminlogout();
     }
-
+  $scope.getSubmissionCount=function()
+  {
+    $http.get('/api/submissions/getUnacceptedSubmissions').then(function(res) {
+      $scope.submissionsCount = res.data;
+    });
+  }
     $scope.checkNotification = function() {
         var user = SessionService.getUser();
         if (user) {
@@ -247,6 +261,7 @@ app.controller('FullstackGeneratedController', function($scope, $state, $http, m
         });
     }
     $scope.checkNotification();
+  $scope.getSubmissionCount();
 });
 
 app.directive('fbLike', [
