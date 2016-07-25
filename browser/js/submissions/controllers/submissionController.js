@@ -197,6 +197,13 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.openEmailClient = function(sub, item){
+    var toEmail = (item.toEmail == '{email}' ? sub.email : item.toEmail);
+    var subject = (item.subject != undefined ? item.subject : "");
+    if(subject != ""){
+      subject = subject.replace('{title}', sub.title);
+      subject = subject.replace('{name}', sub.name);
+      subject = subject.replace('{url}', sub.trackURL);
+    }    
     var body = (item.emailBody != undefined ? item.emailBody : "");
     if(body != ""){
       body = body.replace('{name}', sub.name);
@@ -204,8 +211,8 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       body = body.replace('{title}', sub.title);
       body = body.replace('{url}', sub.trackURL);
     }
-    var link = "mailto:"+ item.toEmail
-      + "?subject=" + escape(item.subject)
+    var link = "mailto:"+ toEmail
+      + "?subject=" + escape(subject)
       + "&body=" + escape(body); 
     $window.location.href = link;
   }

@@ -459,17 +459,13 @@ router.post('/downloadurl', function(req, res, next) {
 
   function updateSoundCloudTrackInfo(downloadTrack) {
     return new Promise(function(resolve, reject) {
-      console.log('body.fields:');
-      console.log(body.fields);
-      console.log('user');
-      console.log(req.user);
       if (req.user && req.user.soundcloud && (body.fields.artistID == req.user.soundcloud.id) && !body.fields._id) {
-        console.log('in');
         var token = req.user.soundcloud.token;
+        var purchase_url = rootURL + '/download?trackid=' + downloadTrack._id;
         var trackObj = {
-          purchase_url: rootURL + '/download?trackid=' + downloadTrack._id, //this doesnt work on localhost, but does on live
+          purchase_url: purchase_url, //this doesnt work on localhost, but does on live
           purchase_title: '|| D O W N L O A D',
-          description: body.fields.description + '\n\nDownload for ' + downloadTrack.trackTitle + ' provided by ' + rootURL + '.'
+          description: body.fields.description + '\n\nDownload for ' + downloadTrack.trackTitle + ' provided by ' + rootURL + '.\n\n' + purchase_url
         }
         request({
           method: 'PUT',
@@ -482,8 +478,6 @@ router.post('/downloadurl', function(req, res, next) {
             console.log(err, 'err');
             return resolve(downloadTrack);
           }
-          console.log('updated track');
-          console.log(data);
           return resolve(downloadTrack);
         });
       } else {

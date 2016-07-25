@@ -7,7 +7,7 @@
       <nav class="nav">
         <ul class="nav nav-navabar">
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="settings">SETTINGS</a></li>
-          <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="submissions">SUBMISSION</a></li>
+          <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="submissions">SUBMISSION <div class="badge notification-bubble-submission-count" ng-show="submissionsCount > 0">{{submissionsCount}}</div></a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="premiersubmissions">PREMIER SUBMISSIONS</a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="customizesubmission">CUSTOM SUBMISSIONS</a></li>
            <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="accounts">ACCOUNTS</a></li>

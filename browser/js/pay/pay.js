@@ -4,29 +4,14 @@ app.config(function($stateProvider) {
     templateUrl: 'js/pay/pay.html',
     controller: 'PayController',
     resolve: {
-      // <<<<<<< HEAD
-      //       channels: function($http) {
-      //         return $http.get('/api/channels')
-      //           .then(function(res) {
-      //             return res.data;
-      //           })
-      //       },
-      //       submission: function($http, $submissiontateParams) {
-      // =======
       submission: function($http, $stateParams) {
-        // >>>>>>> master
         return $http.get('/api/submissions/withID/' + $stateParams.submissionID)
           .then(function(res) {
-            console.log(res.data);
             return res.data;
           })
       },
       channels: function($http, submission) {
         return submission.channels;
-        // return $http.get('/api/users/getChannels')
-        // .then(function(res) {
-        //   return res.data;
-        // })
       },
       track: function(submission) {
         return SC.get('/tracks/' + submission.trackID)
@@ -46,9 +31,8 @@ app.filter('calculateDiscount', function() {
 
 app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track, $state, $uibModal) {
   $rootScope.submission = submission;
-  console.log(channels);
   $scope.auDLLink = false;
-  if (submission.paid) $state.go('home');
+  //if (submission.paid) $state.go('home');
   $scope.track = track;
   SC.oEmbed(submission.trackURL, {
     element: document.getElementById('scPlayer'),
@@ -76,7 +60,6 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   }
 
   $scope.makePayment = function() {
-    //console.log('ay');
     if ($scope.total != 0) {
       if ($scope.auDLLink) {
         $scope.discountModalInstance = $uibModal.open({
