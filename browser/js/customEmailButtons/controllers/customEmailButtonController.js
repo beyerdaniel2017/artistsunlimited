@@ -22,6 +22,20 @@ app.controller('CustomEmailButtonController', function($rootScope, $state, $scop
     });
   }
   $scope.saveSettings=function(){
+    var valid = true;
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    angular.forEach($scope.customEmailButtons, function(cb) {
+      if(cb.toEmail != "{email}"){
+        var validEmail = re.test(cb.toEmail);
+        if (!validEmail) {
+          valid = false;
+        }
+      }
+    });
+    if(!valid){
+      $.Zebra_Dialog('Please enter {email} or a well formatted email id in Tom Email field.');
+      return;
+    }
     $scope.processing = true;
     $scope.user.customEmailButtons = $scope.customEmailButtons;
     $http.post('/api/database/updateCustomEmailButtons', {

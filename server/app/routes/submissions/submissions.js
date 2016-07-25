@@ -33,7 +33,6 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/unaccepted', function(req, res, next) {
-  console.log(req.bod)
   if (!req.user.role == 'admin' || !req.user.role == 'superadmin') {
     next({
       message: 'Forbidden',
@@ -59,7 +58,7 @@ router.get('/unaccepted', function(req, res, next) {
       .exec()
       .then(function(subs) {
         var i = -1;
-        var cont = function() {
+      var next = function() {
           i++;
           if (i < subs.length) {
             var sub = subs[i].toJSON();
@@ -70,21 +69,33 @@ router.get('/unaccepted', function(req, res, next) {
               .exec()
               .then(function(oldSubs) {
                 oldSubs.forEach(function(oldSub) {
-                  console.log(oldSub);
                   sub.approvedChannels = sub.approvedChannels.concat(oldSub.paidChannelIDS)
                 });
                 resultSubs.push(sub);
-                cont();
+            next();
               })
               .then(null, next);
           } else {
             res.send(resultSubs);
           }
         }
-        cont();
+      next();
       })
       .then(null, next);
   }
+});
+
+
+router.get('/getUnacceptedSubmissions', function(req, res, next) {
+  var query = {
+    channelIDS: [],
+    userID : req.user._id
+  }; 
+  Submission.count(query).exec()
+  .then(function(subs) {
+    return res.json(subs)
+  })
+  .then(0, next);
 });
 
 router.put('/save', function(req, res, next) {
@@ -244,7 +255,11 @@ router.put('/completedPayment', function(req, res, next) {
       responseObj.events = events;
       sub.paid = true;
       sub.save();
-      if (!sub.trackID) responseObj.status = 'notify';
+      if (!sub.trackID){
+        responseObj.status = 'notify';
+        var email_body = JSON.stringify(responseObj);
+        sendEmail('Edward', 'edward@peninsulamgmt.com', 'Artists Unlimited', 'coayscue@artistsunlimited.co', 'Needs Repost', email_body);
+      }
       res.send(responseObj);
     })
     .then(null, next);

@@ -7,7 +7,6 @@ app.config(function($stateProvider) {
       submission: function($http, $stateParams) {
         return $http.get('/api/submissions/withID/' + $stateParams.submissionID)
           .then(function(res) {
-            console.log(res.data);
             return res.data;
           })
       },
@@ -32,9 +31,8 @@ app.filter('calculateDiscount', function() {
 
 app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track, $state, $uibModal) {
   $rootScope.submission = submission;
-  console.log(channels);
   $scope.auDLLink = false;
-  if (submission.paid) $state.go('home');
+  //if (submission.paid) $state.go('home');
   $scope.track = track;
   SC.oEmbed(submission.trackURL, {
     element: document.getElementById('scPlayer'),
@@ -53,7 +51,6 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
   }
 
   $scope.makePayment = function() {
-    //console.log('ay');
     if ($scope.total != 0) {
       if ($scope.auDLLink) {
         $scope.discountModalInstance = $uibModal.open({
