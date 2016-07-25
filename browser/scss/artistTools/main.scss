@@ -487,6 +487,18 @@ h2, h3 {
   padding-left: 8px;
   padding-top: 4px;
 }
+
+.notification-bubble-submission-count {
+    background: #ff3300;
+    left: 10px;
+    top: -1px;
+    position: relative;
+	border-radius: 50%;
+	width: 25px;
+	height: 25px;
+	padding-top: 7px;
+}
+
 .list-group-item.active > .badge, .nav-pills > .active > a > .badge {
   color: #fff;
   background-color: #ff3300;

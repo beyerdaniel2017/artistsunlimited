@@ -14,7 +14,7 @@ function doRepost() {
     doRepost();
   }, 300000);
   var lowerDate = new Date();
-  lowerDate.setTime(lowerDate.getTime() - lowerDate.getMinutes() * 60 * 1000 - lowerDate.getSeconds() * 1000 - 60 * 60 * 1000 * 15);
+  lowerDate.setTime(lowerDate.getTime() - lowerDate.getMinutes() * 60 * 1000 - lowerDate.getSeconds() * 1000);
   var upperDate = new Date();
   upperDate.setTime(upperDate.getTime() - upperDate.getMinutes() * 60 * 1000 - upperDate.getSeconds() * 1000 + 60 * 60 * 1000);
 
