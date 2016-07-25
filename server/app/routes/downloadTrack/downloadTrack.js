@@ -32,10 +32,10 @@ scWrapper.init({
 
 router.get('/track', function(req, res, next) {
   DownloadTrack.findById(req.query.trackID).exec()
-    .then(function(downloadTrack) {
-      res.send(downloadTrack);
-    })
-    .then(null, next);
+  .then(function(downloadTrack) {
+    res.send(downloadTrack);
+  })
+  .then(null, next);
 });
 
 router.post('/tasks', function(req, res, next) {
@@ -153,59 +153,59 @@ router.post('/tasks', function(req, res, next) {
     });
   }
   DownloadTrack.findById(body._id).exec()
-    .then(function(t) {
-      if (t.downloadCount) t.downloadCount++;
-      else t.downloadCount = 1;
-      t.save();
-      res.end();
-    })
+  .then(function(t) {
+    if (t.downloadCount) t.downloadCount++;
+    else t.downloadCount = 1;
+    t.save();
+    res.end();
+  })
 });
 
 router.get('/track/recent', function(req, res, next) {
   var userID = req.query.userID;
   var trackID = req.query.trackID;
   DownloadTrack.find({
-      userid: userID
-    }).sort({
-      createdOn: -1
-    }).limit(10).exec()
-    .then(function(downloadTracks) {
-      var tracks = downloadTracks.filter(function(item) {
-        return item._id.toString() !== trackID;
-      });
-      res.send(tracks);
-      return res.end();
-    })
-    .then(null, next);
+    userid: userID
+  }).sort({
+    createdOn: -1
+  }).limit(10).exec()
+  .then(function(downloadTracks) {
+    var tracks = downloadTracks.filter(function(item) {
+      return item._id.toString() !== trackID;
+    });
+    res.send(tracks);
+    return res.end();
+  })
+  .then(null, next);
 });
 
 router.post('/linkDLTracks', function(req, res, next) {
   DownloadTrack.find({}).exec()
-    .then(function(tracks) {
-      tracks.forEach(function(track) {
-        User.findOneAndUpdate({
-          'soundcloud.id': track.artistID
-        }, {
-          $set: {
-            'soundcloud.permalinkURL': track.artistURL,
-            'soundcloud.id': track.artistID,
-            'soundcloud.username': track.artistUsername,
-            name: track.artistUsername,
-            queue: []
-          }
-        }, {
-          new: true,
-          upsert: true
-        }, function(err, user) {
-          console.log("------------")
-          track.userid = user._id;
-          track.save();
-          console.log(user);
-          console.log(track);
+  .then(function(tracks) {
+    tracks.forEach(function(track) {
+      User.findOneAndUpdate({
+        'soundcloud.id': track.artistID
+      }, {
+        $set: {
+          'soundcloud.permalinkURL': track.artistURL,
+          'soundcloud.id': track.artistID,
+          'soundcloud.username': track.artistUsername,
+          name: track.artistUsername,
+          queue: []
+        }
+      }, {
+        new: true,
+        upsert: true
+      }, function(err, user) {
+        console.log("------------")
+        track.userid = user._id;
+        track.save();
+        console.log(user);
+        console.log(track);
 
-        });
-      })
+      });
     })
+  })
 });
 
 router.post("/instagram/follow_user", function(req, res, done) {
@@ -337,6 +337,12 @@ router.post("/twitter/follow", function(req, res, done) {
     oauth: profileOauthData
   }, function(err, response, follow) {
     if (!err) {
+      DownloadTrack.findById(req.query.trackID).exec()
+      .then(function(t) {
+        if (t.downloadCount) t.downloadCount++;
+        else t.downloadCount = 1;
+        t.save();
+      })
       res.send(follow);
     } else {
       console.log("Error from twitter oauth login attempt " + err);
@@ -358,6 +364,12 @@ router.post("/twitter/post", function(req, res, done) {
     oauth: profileOauthData
   }, function(err, response, tweet) {
     if (!err) {
+      DownloadTrack.findById(req.query.trackID).exec()
+      .then(function(t) {
+        if (t.downloadCount) t.downloadCount++;
+        else t.downloadCount = 1;
+        t.save();
+      })
       console.log(tweet);
       res.send(tweet);
     } else {
@@ -407,6 +419,13 @@ router.get("/subscribe", function(req, res, next) {
     client_secret: env.YOUTUBE.CLIENT_SEC,
     redirect_url: env.YOUTUBE.REDIRECT_URL_SUBSCRIBE
   });
+
+  DownloadTrack.findById(req.query.trackID).exec()
+  .then(function(t) {
+    if (t.downloadCount) t.downloadCount++;
+    else t.downloadCount = 1;
+    t.save();
+  })
 
   res.json({
     msg: "Redirected to youtube authentication",
