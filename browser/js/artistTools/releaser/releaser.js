@@ -266,7 +266,7 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
         }
       }
       if(isFBPanelOpen){
-        if($scope.postData.facebookPost == undefined || ($scope.facebookCommentOn == "page" && $scope.facebookPageUrl == undefined)){
+        if($scope.postData.facebookPost == undefined || ($scope.facebookCommentOn == "page" && $scope.postData.facebookPageUrl == undefined)){
           message += "All Facebook posting informations are required. <br />";
         }
       }
@@ -276,7 +276,7 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
         }
       }
       if(isYTPanelOpen){
-        if(($scope.postData.awsVideoKeyName == undefined && $scope.video.file == undefined) || $scope.postData.youTubeTitle == undefined || $scope.youTubeDescription == undefined){
+        if(($scope.postData.awsVideoKeyName == undefined && $scope.video.file == undefined) || $scope.postData.youTubeTitle == undefined || $scope.postData.youTubeDescription == undefined){
           message += "All Youtube posting informations are required. <br />";
         }
       }
@@ -354,7 +354,9 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
       $scope.processing = true;
       BroadcastFactory[post.facebookPageUrl ? 'submitFacebookPagePost' : 'submitFacebookUserPost'](post._id, {
         token: $scope.user.facebook.token,
-        facebookUserPost : post.facebookPost
+        facebookPost : post.facebookPost,
+        facebookPageUrl : post.facebookPageUrl,
+        facebookPageInfo: post.facebookPageInfo
       })
       .then(function(res){
        if ($scope.user.twitter.token){

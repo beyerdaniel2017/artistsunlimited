@@ -25,7 +25,7 @@
       <div class="col-lg-12">
         <div class="page-content right-side min-ht padding-10">
           <div class="text-center">
-            <button class="btn btn-enter cl-sound-btn" ng-click="soundcloudLogin()">Connect with SoundCloud</button>
+            <button class="btn btn-default btn-enter cl-sound-btn" ng-click="soundcloudLogin()">Connect with SoundCloud</button>
           </div>
           </br>
           <hr>
@@ -40,13 +40,12 @@
                 <th class="user-table" width="30%">User Name</th>
                 <th class="user-table" width="20%">Followers</th>
                 <th class="user-table" width="20%">Price</th>
-                <th class="user-table"  width="20%">Group</th>
-                <th class="user-table" width="10%"></th>
+                <th class="user-table"  width="30%"></th>
               </tr>
             </thead>
             <tbody>               
               <tr ng-repeat="item in user.paidRepost">
-                <td class="user-table" width="100%" colspan="5" style="margin:0px; padding:0px;">
+                <td class="user-table" width="100%" colspan="4" style="margin:0px; padding:0px;">
                   <table class="table borderless" width="100%">
                     <tr>
                       <td width="30%">
@@ -56,10 +55,10 @@
                       <td width="20%">
                         <input type="number" class="form-control" min="1" ng-model="item.price"/>
                       </td>
-                      <td  width="20%">
+                      <!-- <td  width="20%">
                         <input type="text" class="form-control" ng-model="item.group"/>
-                      </td>
-                      <td  width="10%" align="right">
+                      </td> -->
+                      <td  width="30%" align="right">
                         <span class="glyphicon glyphicon-triangle-bottom pull-right" ng-click="addItems(item.id,$index)" ></span>
                         <span class="glyphicon glyphicon-trash pull-right" ng-click="deletePaidRepost($index)"  style="margin-right:10px"></span>
                         <!-- <a href="javascript:void(0);" style="color:black" class="btn btn-secondary btn-action" >Delete
@@ -71,7 +70,7 @@
                       <td colspan="2" style="padding:5px;">
                         <textarea class="form-control" width="100%" rows="23" placeholder="Description" ng-model="item.description">{{item.description}}</textarea>
                       </td> 
-                      <td colspan="3" style="padding:5px;">
+                      <td colspan="1" style="padding:5px;">
                         <div style="text-align:center; width:20%; margin:10px auto;" class="count-mail">  
                           <div style="width:100%; display:flex; flex-direction:row;">
                             <div ng-repeat="l in [0]" class="column-day" style="width:70%;">
@@ -82,6 +81,23 @@
                           </div>
                         </div>
                       </td> 
+                     <td colspan="1" align="center"> 
+                       <div class="margin-bottom-10">                    
+                        <div ng-repeat="group in item.groups track by $index" style="margin-bottom:5px;">
+                        <table>
+                          <tr>
+                            <td>
+                              <input type="text" class="form-control" ng-model="item.groups[$index]"/> 
+                            </td>
+                            <td align="right" style="padding-left:10px;">
+                              <a href="#" ng-click="removeItem($parent.$index,$index,group)"><span>X</span></a>
+                            </td>
+                          </tr>
+                        </table>                       
+                        </div>                    
+                       </div> 
+                        <a href="#" ng-click="addGroup($index,item)">+ Add group</a>
+                     </td>                   
                     </tr>
                   </table>
                 <td>

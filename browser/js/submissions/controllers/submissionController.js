@@ -10,7 +10,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.submissions = [];
+  $scope.selectedGroups = [];
+  $scope.selectedChannelIDS = [];
   $scope.genre = "";
+  $scope.displayType = 'channel';
   $scope.skip = 0;
   $scope.limit = 10;
   if (!SessionService.getUser()) {
@@ -18,14 +21,13 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
   $scope.user=SessionService.getUser();
   $scope.uniqueGroup = [];
-  if($scope.user.paidRepost.length > 0){
-    $scope.user.paidRepost.forEach(function(acc){
-      if(acc.group != "" && $scope.uniqueGroup.indexOf(acc.group) === -1){
-        $scope.uniqueGroup.push(acc.group);        
+  for (var i = 0; i < $scope.user.paidRepost.length; i++) {
+    $scope.user.paidRepost[i].groups.forEach(function(acc) {
+      if (acc != "" && $scope.uniqueGroup.indexOf(acc) === -1) {
+        $scope.uniqueGroup.push(acc);
       } 
     });
   }
-
   $scope.genreArray = [
     'Alternative Rock',
     'Ambient',
@@ -63,7 +65,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       $scope.processing = false;
       if (res.data.length > 0) {
         angular.forEach(res.data, function(d) {
-          d.displayType = 'channel';
           $scope.showingElements.push(d);
       });
   }
@@ -108,28 +109,38 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.changeBox = function(sub, chan) {
-    var index = sub.channelIDS.indexOf(chan.id);
+    var index = $scope.selectedChannelIDS.indexOf(chan.id);
     if (index == -1) {
-      sub.channelIDS.push(chan.id);
+      $scope.selectedChannelIDS.push(chan.id);
     } else {
-      sub.channelIDS.splice(index, 1);
+      $scope.selectedChannelIDS.splice(index, 1);
     }
   }
 
   $scope.changeBoxGroup = function(sub, group) {
+    var ind = $scope.selectedGroups.indexOf(group);
+    if(sub[group]){
+      if (ind == -1) {
+        $scope.selectedGroups.push(group);
+      }
+    }
+    else{
+      $scope.selectedGroups.splice(ind, 1);
+    }
+    $scope.selectedChannelIDS = [];
+    $scope.selectedGroups.forEach(function(g){
     $scope.user.paidRepost.forEach(function(acc){
-      if(acc.group != "" && acc.group == group){
-        var index = sub.channelIDS.indexOf(acc.id);
-        if (index == -1) {
-          sub.channelIDS.push(acc.id);
-        } else {
-          sub.channelIDS.splice(index, 1);
+        if(acc.groups.indexOf(g) != -1){
+          if($scope.selectedChannelIDS.indexOf(acc.id) == -1){
+            $scope.selectedChannelIDS.push(acc.id);
         }      
       }
     });    
+    });
   }
 
   $scope.save = function(submi) {
+    submi.channelIDS = $scope.selectedChannelIDS;
     if (submi.channelIDS.length == 0) {
       $scope.decline(submi);
     } else {

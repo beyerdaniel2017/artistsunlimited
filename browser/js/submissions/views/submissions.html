@@ -21,9 +21,14 @@
       <div class="col-lg-12">
         <div class="page-content right-side min-ht padding-10">
           <div style="width:100%; text-align:center; margin: 10px auto;">
-    <select class="form-control" style="width:170px;float:right; margin-right:10px;" ng-options="item for item in genreArray" ng-model="genre" ng-change="getSubmissionsByGenre()">
+            <div style="display:inline-block; padding-top:10px;float:right;">
+              <!-- radio buttons start-->
+              <label style="margin-right:10px;margin-top:8px;"><input type="radio" ng-model="displayType" ng-value="'group'"> Group </label>
+              <label style="margin-right:10px;margin-top:8px;"><input type="radio" ng-model="displayType" ng-value="'channel'"> Channel </label>
+              <select class="form-control" style="width:170px;float:right; margin-right:10px;margin-left:10px;" ng-options="item for item in genreArray" ng-model="genre" ng-change="getSubmissionsByGenre()">
       <option value="">--Select Genre--</option>
     </select>
+            </div>
     <br>
     <br>
           <div ng-repeat="sub in showingElements"  ng-if="sub.invoiceIDS.length == 0" class="submi-section">
@@ -42,22 +47,18 @@
                 <button class="btn mail-btn" ng-click="save(sub)" style="background-color:#67f967;">Save</button>
                 </div>
               </div>
-                <div style="display:inline-block; width:100%; padding-top:10px;">
-                  <label><input type="radio" ng-model="sub.displayType" ng-value="'group'" ng-change="sub.channelIDS = []"> Group </label>
-                  <label><input type="radio" ng-model="sub.displayType" ng-value="'channel'" ng-change="sub.channelIDS = []"> Channel </label>
-                </div>
               <div style="flex-flow: row wrap;justify-content: space-around;margin: 0px auto;text-align:left;">
-                <div ng-if="sub.displayType == 'group'" ng-repeat="group in uniqueGroup" class="graybox">
+                <div ng-show="displayType == 'group'" ng-repeat="group in uniqueGroup" class="graybox">
                   <span>{{group}}</span>
                   <input type="checkbox" ng-model="sub[group]" ng-change="changeBoxGroup(sub, group)" />
                 </div>
-                <div ng-if="sub.displayType == 'channel' || (sub.displayType == 'group' && chan.group == '')" ng-repeat="chan in user.paidRepost" ng-class='{greenbox : sub.approvedChannels.indexOf(chan.id) >= 0, graybox: sub.approvedChannels.indexOf(chan.id) < 0}'>
+                <div ng-show="(displayType == 'channel' || (displayType == 'group' && chan.groups.length == 0))" ng-repeat="chan in user.paidRepost" ng-class='{greenbox : sub.approvedChannels.indexOf(chan.id) >= 0, graybox: sub.approvedChannels.indexOf(chan.id) < 0}'>
             <span>{{chan.username}}</span>
             <input type="checkbox" ng-model="sub[chan.username]" ng-change="changeBox(sub, chan)"/>
         </div>
       </div>
     </div>
-            <button class="btn send-mail" ng-click="loadMore()" style="width:95%; height: 45px; margin: 0 0; background-color:#67f967 ; font-size:2em;line-height: 0;">Load More</button>
+            <button class="btn send-mail" ng-click="loadMore()" style="width:95%; height: 45px; margin: 10px 0; background-color:#67f967 ; font-size:2em; line-height: 0;">Load More</button>
   </div>
 </div>
 </div>
