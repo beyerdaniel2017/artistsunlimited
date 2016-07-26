@@ -38,12 +38,12 @@
                   </div>                  
               		  <div class="scroll-bar1 border-top reFor-scroll" when-scrolled="loadMore()">
                    <div class="row">
-                    <div class="slide-img-box col-md-12">
+                        <div class="col-md-12">
                       <div ng-repeat="user in searchUser" class="col-md-3 col-sm-6 col-xs-12">
                         <div class="slidethamb-box">
                           <p><a href="{{user.soundcloud.permalinkURL}}" target="_blank">{{user.name}}</a></p>
                           <div class="thumb-img-container">
-                               <img class="img-responsive" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:190px; height:100%"> <button class="img-btn" ng-click="openTrade(user)">OPEN TRADE</button>
+                               <img class="img-responsive" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:190px; height: 100%;"> <button class="img-btn" ng-click="openTrade(user)">OPEN TRADE</button>
                          </div>
                          <p>{{((user.soundcloud.followers && user.soundcloud.followers > 0) ? user.soundcloud.followers : 0 ) | number:0}} Followers</p>
                        </div>
@@ -101,10 +101,10 @@
                     <div class="scroll-bar1 border-top reFor-scroll">
                    <div class="row">
                     <div ng-repeat="trade in currentTrades" class="col-md-6 border-top border-right">
-                      <div class="col-md-12" style="padding:10px;">
+                          <div class="col-md-12 col-sm-6 col-cs-12" style="padding:10px;">
                         <div class="col-md-6">
-                          <div class="manage-trade-thumb">
-                              <img class="img-responsive" src="{{trade.other.user.soundcloud.avatarURL.replace('large', 't500x500') || 'http://i1.sndcdn.com/avatars-000223629160-q12lyq-t500x500.jpg'}}" style="width:190px;height:100%"/>
+                            <div class="manage-trade-thumb manage-thumb">
+                              <img class="img-responsive" src="{{trade.other.user.soundcloud.avatarURL.replace('large', 't500x500') || 'http://i1.sndcdn.com/avatars-000223629160-q12lyq-t500x500.jpg'}}" style="width:190px;height: 100%;"/>
                             <button class="manage-btn" ui-sref="reForReInteraction({tradeID: trade._id})">MANAGE</button>
                             <button class="manage-delete-btn" ng-click="deleteTrade(trade._id, $index)">DELETE</button>
                             <div class="notification-bubble" ng-show="trade.user.alert == 'change'">!</div>
