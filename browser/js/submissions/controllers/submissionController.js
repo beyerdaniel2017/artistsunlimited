@@ -12,6 +12,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.submissions = [];
   $scope.selectedGroups = [];
   $scope.selectedChannelIDS = [];
+  $scope.selectedGroupChannelIDS = [];
   $scope.genre = "";
   $scope.displayType = 'channel';
   $scope.skip = 0;
@@ -59,8 +60,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.loadSubmissions = function() {
+    var genre=$scope.genre.replace(/[0-9]/g, '');
+    var selectedGenre= genre.replace('(','').replace(')','').trim();
     $scope.processing = true;
-    $http.get('/api/submissions/unaccepted?genre='+encodeURIComponent($scope.genre)+"&skip="+$scope.skip+"&limit="+$scope.limit)
+    $http.get('/api/submissions/unaccepted?genre='+encodeURIComponent(selectedGenre)+"&skip="+$scope.skip+"&limit="+$scope.limit)
       .then(function(res) {
       $scope.processing = false;
       if (res.data.length > 0) {
@@ -127,12 +130,12 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     else{
       $scope.selectedGroups.splice(ind, 1);
     }
-    $scope.selectedChannelIDS = [];
+    $scope.selectedGroupChannelIDS = [];
     $scope.selectedGroups.forEach(function(g){
     $scope.user.paidRepost.forEach(function(acc){
         if(acc.groups.indexOf(g) != -1){
-          if($scope.selectedChannelIDS.indexOf(acc.id) == -1){
-            $scope.selectedChannelIDS.push(acc.id);
+          if($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1){
+            $scope.selectedGroupChannelIDS.push(acc.id);
         }      
       }
     });    
@@ -140,7 +143,12 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.save = function(submi) {
-    submi.channelIDS = $scope.selectedChannelIDS;
+    $scope.selectedChannelIDS.forEach(function(cid){
+      if($scope.selectedGroupChannelIDS.indexOf(cid) == -1){
+        $scope.selectedGroupChannelIDS.push(cid);
+      }
+    });
+    submi.channelIDS = $scope.selectedGroupChannelIDS;
     if (submi.channelIDS.length == 0) {
       $scope.decline(submi);
     } else {
@@ -227,4 +235,19 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       + "&body=" + escape(body); 
     $window.location.href = link;
   }
+
+  $scope.getSubmissionByGenre = function() {
+    $http.get('/api/submissions/getGroupedSubmissions').then(function(res) {
+      var unacceptedSubmission = res.data;
+      for(var i=0; i< $scope.genreArray.length; i++){
+        for(var j=0; j<unacceptedSubmission.length; j++){
+          if($scope.genreArray[i] == unacceptedSubmission[j]._id){
+            $scope.genreArray[i] = $scope.genreArray[i] +' ('+ unacceptedSubmission[j].total_count + ')';
+          }
+        }
+      }
+    });
+  }
+  $scope.getSubmissionByGenre();
+  $scope.loadSubmissions();
 });
