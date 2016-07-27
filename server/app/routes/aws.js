@@ -100,7 +100,7 @@ router.post('/', function(req, res, next){
 router.delete('/:keyName', function(req, res, next) {
 	var s3 = new AWS.S3();
 	var params = {
-		Bucket: bucketName, 
+		Bucket: "releaserposts", 
 		Key: req.params.keyName
 	};
 
@@ -122,7 +122,7 @@ router.delete('/:postId/both', function(req, res, next) {
 		console.log('post from inside delete both files', post);
 		var s3 = new AWS.S3();
 		var params = {
-			Bucket: bucketName, 
+			Bucket: "releaserposts", 
 			Delete: {
 				Objects: [
 					{ Key: post.awsAudioKeyName },

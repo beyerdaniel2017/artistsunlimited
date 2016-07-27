@@ -10,6 +10,8 @@ var promisifiedFB = Promise.promisify(FB.napi, {context: FB});
 var mongoose = require('mongoose');
 var Post = mongoose.model('Posts');
 var User = mongoose.model('User');
+var request = require("request");
+var HTTPS = require('https');
 mongoose.set('debug', true);
 var bucketName = "releaserposts";
 var env = require('./../../env');
@@ -41,6 +43,7 @@ router.param('postId', function(req, res, next, postId) {
 
 //============== TWITTER ==============
 router.post('/:postId/twitter', function(req, res, next) {
+	if(req.body.twitterPost && req.body.twitterPost != undefined && req.body.twitterPost != ""){
 	var client = new Twitter({
 		consumer_key: twitterConfig.consumerKey,
 		consumer_secret: twitterConfig.consumerSecret,
@@ -51,10 +54,15 @@ router.post('/:postId/twitter', function(req, res, next) {
 	client.post('statuses/update', {status: req.body.twitterPost}, function(error, tweet, response){
 		res.json({success:true});
 	});	
+	}	
+	else{
+		res.json({success:false});
+	}
 });
 		
 //============== YOUTUBE ==============
 router.post('/:postId/youtube', function(req, res, next) {	
+	if(req.body.awsVideoKeyName != "" && req.body.youTubeTitle != "" && req.body.youTubeDescription != ""){
   AWS.config.update({
     accessKeyId: env.AWS.accessKeyId,
     secretAccessKey: env.AWS.secretAccessKey,
@@ -95,10 +103,15 @@ router.post('/:postId/youtube', function(req, res, next) {
 			res.json({success:true});
 		});
 	});	
+	}
+	else{
+		res.json({success:false});
+	}
 });
 
 //============== YOUTUBE ==============
 router.post('/:postId/soundcloud', function(req, res, next) {
+	if(req.body.awsAudioKeyName != ""){
   AWS.config.update({
 	clientID: soundCloudConfig.clientID,
   	clientSecret: soundCloudConfig.clientSecret
@@ -111,33 +124,62 @@ router.post('/:postId/soundcloud', function(req, res, next) {
 	s3.getObject(s3data, function(err, data) {
 		res.json(data)
 	});	
+	}	
+	else{
+		res.json(null)
+	}
 });
 
 //============== FACEBOOK USER ==============
 router.post('/:postId/facebookuser', function(req, res, next) {
+	if (req.body.facebookPost && req.body.facebookPost != undefined && req.body.facebookPost != ""){
 	FB.setAccessToken(req.body.token);
 	promisifiedFB('me/feed', 
 		'post', 
 		{
-			message: req.post.facebookPost
+				message: req.body.facebookPost
 		}
 	)
 	.then(function(FBres){
 		res.json({success:true});
 	})
-	.catch(function(err){
+		.then(function(err){
 		res.json({success:false});
 	})	
+	}
+	else{
+		res.json({success:false});
+	}
 });
 
 //============== FACEBOOK PAGE ==============
 //*** PENDING: POST TO FACEBOOK PAGE REQUIRES REVIEW FROM FACEBOOK
 router.post('/:postId/facebookpage', function(req, res, next) {	
-	FB.setAccessToken(req.body.token);
-	promisifiedFB(facebookConfig.clientID +'/feed', 
+	if (req.body.facebookPageUrl && req.body.facebookPageUrl != ""){
+		var identifier = req.body.facebookPageUrl.substring(req.body.facebookPageUrl.lastIndexOf("/"));
+		HTTPS.get('https://graph.facebook.com/me/accounts?access_token=' + req.body.token + '&fields=link,access_token', function(result) {
+		 	var body = "";
+		 	result.on('data', function(resData) {
+    		body += resData;
+  		});
+		 	result.on('end', function() {
+  			var data = JSON.parse(body);
+	  		var accessToken = "";
+	  		var pageID = "";
+  			for (var i = 0; i < data.data.length; i++) {
+  				if (data.data[i].link.split('/')[3] == identifier.split('/')[1]) {
+  					accessToken = data.data[i].access_token,
+    				pageID = data.data[i].id
+  				}
+  			}
+
+  			FB.setAccessToken(accessToken);
+				promisifiedFB(pageID +'/feed', 
 		'post', 
 		{
-			message: req.post.facebookPagePost
+						message: req.body.facebookPost,
+						'publish_actions':'true',
+						'published':'true'
 		}
 	)
 	.then(function(FBres){	
@@ -146,4 +188,10 @@ router.post('/:postId/facebookpage', function(req, res, next) {
 	.catch(function(err){
 		res.json({success:true});		
 	})	
+			});
+		});
+	}
+	else{
+		res.json({success:true});
+	}						
 });
