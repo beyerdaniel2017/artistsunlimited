@@ -27,6 +27,7 @@ var rootURL = require('./../../../env').ROOTURL;
 var nodeID3 = require('node-id3');
 var scWrapper = require("../../SCWrapper/SCWrapper.js");
 var crypto = require('crypto');
+var NetworkAccounts = mongoose.model('NetworkAccounts');
 
 scWrapper.init({
   id: scConfig.clientID,
@@ -981,3 +982,135 @@ router.post('/profile/soundcloud', function(req, res, next) {
   }
 
 });
+
+router.post('/networkaccount', function(req, res, next) {
+  var userID = req.body.userID;
+  var linkedAccountID = req.body.linkedAccountID;
+  NetworkAccounts.find({
+    channels: userID
+  })
+  .exec()
+  .then(function(una){
+    var concatArraysUniqueWithSort = function (thisArray, otherArray) {
+      var newArray = thisArray.concat(otherArray).sort(function (a, b) {
+        return a > b ? 1 : a < b ? -1 : 0;
+      });
+      return newArray.filter(function (item, index) {
+        return newArray.indexOf(item) === index;
+      });
+    };
+    if(una.length > 0){
+      NetworkAccounts.find({
+        channels: linkedAccountID,
+        _id : {$ne: una[0]._id}
+      })
+      .exec()
+      .then(function(luna){
+        if(luna.length > 0){
+          var userChannelArray = una[0].channels;
+          var linkedUserChannelArray = luna[0].channels;
+          var mergedArray = concatArraysUniqueWithSort(userChannelArray, linkedUserChannelArray);
+          NetworkAccounts.remove({_id: una[0]._id}, function(result1){
+            NetworkAccounts.remove({_id: luna[0]._id}, function(result2){
+              NetworkAccounts.create({channels: mergedArray}, function(err, networkaccount){
+                if(!err){
+                  return res.json({
+                    "success": true,
+                    "message": "Network account added successfully",
+                    "data": networkaccount
+                  });
+                }
+              })
+            })
+          });
+        }
+        else{
+          var userChannels = una[0].channels;
+          if(userChannels.indexOf(linkedAccountID) == -1){
+            userChannels.push(linkedAccountID);
+            NetworkAccounts.findOneAndUpdate({
+              _id : una[0]._id
+            },{
+              $set: {channels: userChannels}
+            }, {
+              new: true
+            })
+            .exec()
+            .then(function(result){
+              return res.json({
+                "success": true,
+                "message": "Network account added successfully",
+                "data": result
+              });
+            })
+          }
+          else{
+            return res.json({
+              "success": true,
+              "message": "Network account already exists",
+              "data": una[0]
+            });
+          }
+        }
+      });
+    }
+    else{
+      NetworkAccounts.find({
+        channels: linkedAccountID
+      })
+      .exec()
+      .then(function(luna){
+        if(luna.length > 0){
+          var linkedUserChannels = luna[0].channels;
+          linkedUserChannels.push(userID);
+          NetworkAccounts.findOneAndUpdate({
+            _id : luna[0]._id
+          },{
+            $set: {channels: linkedUserChannels}
+          }, {
+            new: true
+          })
+          .exec()
+          .then(function(result){
+            return res.json({
+              "success": true,
+              "message": "Network account added successfully",
+              "data": result
+            });
+          })
+        }
+        else{
+          var channels = [];
+          channels.push(userID);
+          channels.push(linkedAccountID);
+          NetworkAccounts.create({channels: channels}, function(err, networkaccount){
+            if(!err){
+              return res.json({
+                "success": true,
+                "message": "Network account created successfully",
+                "data": networkaccount
+              });
+            }
+          })
+        }
+      });
+    }
+  });
+});
+
+router.get('/userNetworks', function(req, res, next) {
+  var userID = req.user._id;
+  NetworkAccounts.find({
+    channels: userID
+  })
+  .populate('channels.user')
+  .exec()
+  .then(function(una){
+    User.find({_id : {$in : una[0].channels}})
+    .exec()
+    .then(function(users){
+      return res.json(users);
+    });
+  });
+});
+

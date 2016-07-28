@@ -32,7 +32,7 @@ app.config(function($stateProvider) {
   })
 });
 
-app.controller('ReleaserController', function($scope, posts, StorageFactory, BroadcastFactory, $state, SessionService,$stateParams,$window) {
+app.controller('ReleaserController', function($rootScope, $scope, posts, StorageFactory, BroadcastFactory, $state, SessionService, $stateParams, $window, $http) {
   $scope.user = SessionService.getUser();
   if(!$scope.user){
     $state.go('login');
@@ -436,6 +436,13 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
       }); 
     }
   }
+  $scope.getUserNetwork = function(){
+    $http.get("/api/database/userNetworks")
+    .then(function(networks){
+      $rootScope.userlinkedAccounts = networks.data;
+    })
+  }
+  $scope.getUserNetwork();
   //$scope.checkFBToken();
   //$scope.checkGoogleToken();
 }); // CLOSES app.controller

@@ -30,7 +30,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
   $scope.user = SessionService.getUser();
   $scope.showEmailModal = false;
-  $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
   $scope.makeEventURL = "";
   $scope.showOverlay = false;
   $scope.processiong = false;
@@ -499,5 +498,12 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       $scope.promptForEmail();
     }
   }
+  $scope.getUserNetwork = function(){
+    $http.get("/api/database/userNetworks")
+    .then(function(networks){
+      $rootScope.userlinkedAccounts = networks.data;
+    })
+  }
+  $scope.getUserNetwork();
   $scope.verifyBrowser();
 });

@@ -483,5 +483,12 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
       }
     }
   }
+  $scope.getUserNetwork = function(){
+    $http.get("/api/database/userNetworks")
+    .then(function(networks){
+      $rootScope.userlinkedAccounts = networks.data;
+    })
+  }
+  $scope.getUserNetwork();
   $scope.verifyBrowser();
 });
