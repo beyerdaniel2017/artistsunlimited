@@ -32,7 +32,7 @@ app.config(function($stateProvider) {
   })
 });
 
-app.controller('ReleaserController', function($scope, posts, StorageFactory, BroadcastFactory, $state, SessionService,$stateParams,$window) {
+app.controller('ReleaserController', function($rootScope, $scope, posts, StorageFactory, BroadcastFactory, $state, SessionService, $stateParams, $window, $http) {
   $scope.user = SessionService.getUser();
   if(!$scope.user){
     $state.go('login');
@@ -103,22 +103,21 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
       return addPost();
     } 
     // audio ,video and image are being changed
-    else if (audioSelectionChanged() && videoSelectionChanged() && imageSelectionChanged()) {
-      return StorageFactory.deleteBothFiles($scope.postData._id)
-      .then(function(){
-        return StorageFactory.uploadFile($scope.audio.file);
-      })
+    else if (audioSelectionChanged() && videoSelectionChanged()) {
+      $scope.processing = true;
+      return StorageFactory.uploadFile($scope.audio.file)
       .then(function(res){
-        $scope.postData.awsAudioKeyName = res;
+        $scope.postData.awsAudioKeyName = res.Key;
         return StorageFactory.uploadFile($scope.video.file);
       })
       .then(function(res){
-        $scope.postData.awsVideoKeyName = res;
+        $scope.postData.awsVideoKeyName = res.Key;
          return StorageFactory.uploadFile($scope.image.file);
       })
       .then(function(res){
-        $scope.postData.awsImageKeyName = res;
+        $scope.postData.awsImageKeyName = res.Key;
         return StorageFactory.updatePost($scope.postData);
+        $state.go('releaser');
       })
       .then(function (post) {
         $state.reload();
@@ -131,15 +130,16 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
     }
     // only audio is being changed
     else if (audioSelectionChanged()) {
-      return StorageFactory.deleteSingleFile(oldPostData.awsAudioKeyName)
-      .then(function(){
-        return StorageFactory.uploadFile($scope.audio.file);
-      })
+      $scope.processing = true;
+      return StorageFactory.uploadFile($scope.audio.file)
       .then(function(res){
-        $scope.postData.awsAudioKeyName = res;
+        $scope.postData.awsAudioKeyName = res.Key;
         return StorageFactory.updatePost($scope.postData);        
+        $.Zebra_Dialog('Updated Successfully');
+        $state.go('releaser');
       })
       .then(function () {
+        $scope.processing = false;
         $state.reload();
       })
       .catch(function (error) {
@@ -150,34 +150,15 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
     }
     // only video is being changed
     else if (videoSelectionChanged()) {
-      return StorageFactory.deleteSingleFile(oldPostData.awsVideoKeyName)
-      .then(function(){
-        return StorageFactory.uploadFile($scope.video.file);
-      })
+      $scope.processing = true;
+      return StorageFactory.uploadFile($scope.video.file)
       .then(function(res){
-        $scope.postData.awsVideoKeyName = res;
+        $scope.postData.awsVideoKeyName = res.Key;
         return StorageFactory.updatePost($scope.postData);        
+        $state.go('releaser');
       })
       .then(function () {
-        $state.reload();
-      })
-      .catch(function (error) {
-        $.Zebra_Dialog(error,{
-          width: 600
-        });
-      });
-    }
-     // only image is being changed
-    else if (imageSelectionChanged()) {
-      return StorageFactory.deleteSingleFile(oldPostData.awsImageKeyName)
-      .then(function(){
-        return StorageFactory.uploadFile($scope.image.file);
-      })
-      .then(function(res){
-        $scope.postData.awsImageKeyName = res;
-        return StorageFactory.updatePost($scope.postData);        
-      })
-      .then(function () {
+        $scope.processing = false;
         $state.reload();
       })
       .catch(function (error) {
@@ -199,12 +180,7 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
             width: 600
           });
         });
-      // }
-      // else{
-      //   $.Zebra_Dialog(errMsg,{
-      //     width: 600
-      //   });
-      // }
+
     }
   };
 
@@ -236,8 +212,7 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
           width: 600
         });
       });
-    }
-    else{
+        } else {
       $.Zebra_Dialog(errMsg,{
         width: 600
       });
@@ -258,15 +233,14 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
     }
     if(!isSCPanelOpen && !isFBPanelOpen && !isTWPanelOpen && !isYTPanelOpen){      
       message += "Please enter atleast one of the social site posting information. <br />";
-    }
-    else {      
+        } else {
       if(isSCPanelOpen){
         if(($scope.postData.awsAudioKeyName == undefined && $scope.audio.file == undefined) || $scope.postData.soundCloudTitle == undefined || $scope.postData.soundCloudDescription == undefined){
           message += "All Soundcloud posting informations are required. <br />";          
         }
       }
       if(isFBPanelOpen){
-        if($scope.postData.facebookPost == undefined || ($scope.facebookCommentOn == "page" && $scope.facebookPageUrl == undefined)){
+        if($scope.postData.facebookPost == undefined || ($scope.facebookCommentOn == "page" && $scope.postData.facebookPageUrl == undefined)){
           message += "All Facebook posting informations are required. <br />";
         }
       }
@@ -276,7 +250,7 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
         }
       }
       if(isYTPanelOpen){
-        if(($scope.postData.awsVideoKeyName == undefined && $scope.video.file == undefined) || $scope.postData.youTubeTitle == undefined || $scope.youTubeDescription == undefined){
+        if(($scope.postData.awsVideoKeyName == undefined && $scope.video.file == undefined) || $scope.postData.youTubeTitle == undefined || $scope.postData.youTubeDescription == undefined){
           message += "All Youtube posting informations are required. <br />";
         }
       }
@@ -311,6 +285,7 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
 
   /* Method for getting post in case of edit */
   $scope.getPostInfo = function(releaseID) {
+        $scope.pagecomment = false;
     StorageFactory
     .getPostForEdit({
       id: releaseID
@@ -320,7 +295,15 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
 
     function handleResponse(res) {
       $scope.postData = res;           
+            oldPostData = res;
+            if ($scope.postData.facebookPageUrl) {
+                $scope.pagecomment = true;
+                $scope.facebookCommentOn = "page";
+            } else {
+                $scope.facebookCommentOn = "user";
+            }
     }
+
     function handleError(res) {
       
     }
@@ -354,7 +337,9 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
       $scope.processing = true;
       BroadcastFactory[post.facebookPageUrl ? 'submitFacebookPagePost' : 'submitFacebookUserPost'](post._id, {
         token: $scope.user.facebook.token,
-        facebookUserPost : post.facebookPost
+        facebookPost : post.facebookPost,
+        facebookPageUrl : post.facebookPageUrl,
+        facebookPageInfo: post.facebookPageInfo
       })
       .then(function(res){
        if ($scope.user.twitter.token){
@@ -433,8 +418,7 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
   $scope.checkFBToken = function(){
     if($scope.user.facebook && $scope.user.facebook.token != ""){
       StorageFactory.validateToken($scope.user._id,'facebook').then(function(res){  
-        if(res)
-        {
+                if (res) {
           SessionService.create(res.data);
           $scope.user = SessionService.getUser();
         }
@@ -445,14 +429,20 @@ app.controller('ReleaserController', function($scope, posts, StorageFactory, Bro
   $scope.checkGoogleToken = function(){
     if($scope.user.google && $scope.user.google.token != ""){
       StorageFactory.validateToken($scope.user._id,'google').then(function(res){  
-        if(res)
-        {
+                if (res) {
           SessionService.create(res.data);
           $scope.user = SessionService.getUser();
         }
       }); 
     }
   }
-  $scope.checkFBToken();
-  $scope.checkGoogleToken();
+  $scope.getUserNetwork = function(){
+    $http.get("/api/database/userNetworks")
+    .then(function(networks){
+      $rootScope.userlinkedAccounts = networks.data;
+    })
+  }
+  $scope.getUserNetwork();
+  //$scope.checkFBToken();
+  //$scope.checkGoogleToken();
 }); // CLOSES app.controller

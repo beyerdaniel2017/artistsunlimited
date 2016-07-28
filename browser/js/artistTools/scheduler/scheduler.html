@@ -40,9 +40,11 @@
               <input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()"/><span> Unrepost after 24h</span><br>
               <div ng-hide="(makeEvent.type == 'queue')">
                 <input type="text" class="form-control form-scheduler" style="width:400px; max-width:90%; text-align: center" ng-model="makeEventURL" ng-change="changeURL()" placeholder="Soundcloud Track Url" />
-<!--       <select class="form-control form-scheduler" ng-model="trackListSlotObj" ng-options="item.title for item in trackList" style="text-align:center; width:400px; max-width:90%;" ng-change="trackChange()">
-                      <option value="" ng-disabled="!!trackListSlotObj" ng-show="trackList.length > 0">-My Songs-</option>
-                    </select> -->
+        <div ng-show="userlinkedAccounts.length > 0" style="flex-flow: row wrap;justify-content: space-around; margin: 0px auto; text-align:center; font-size:11px;">
+          <div ng-if="u._id != user._id" ng-repeat="u in userlinkedAccounts" class="graybox">
+            <span>{{u.soundcloud.username}}</span> <input type="checkbox" ng-model="sub[u.soundcloud.username]" /> 
+          </div>
+        </div>
                   </div>
                 </div>
                 <div id='scPlayer' ng-show="makeEvent.trackID"></div>

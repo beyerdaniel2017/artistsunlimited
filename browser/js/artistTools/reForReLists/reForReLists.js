@@ -385,6 +385,13 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
       }
     }
   }
+  	$scope.getUserNetwork = function(){
+	    $http.get("/api/database/userNetworks")
+	    .then(function(networks){
+	      $rootScope.userlinkedAccounts = networks.data;
+	    })
+  	}
+  	$scope.getUserNetwork();
   $scope.verifyBrowser();
   $scope.checkNotification();
   $scope.sortResult($scope.sortby);

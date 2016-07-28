@@ -32,7 +32,7 @@ app.filter('calculateDiscount', function() {
 app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track, $state, $uibModal) {
   $rootScope.submission = submission;
   $scope.auDLLink = false;
-  //if (submission.paid) $state.go('home');
+  if (submission.paid) $state.go('home');
   $scope.track = track;
   SC.oEmbed(submission.trackURL, {
     element: document.getElementById('scPlayer'),
