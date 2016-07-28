@@ -84,11 +84,12 @@
                             <div class="row margin-bottom-10">
                               <div class="col-md-12">
                               <label class="radio-inline">
-                                <input type="radio" name="commentOn" ng-model="facebookCommentOn" value="page">Facebook Page Comment
+                                <input type="radio" name="commentOn" ng-model="facebookCommentOn" value="page" ng-checked="pagecomment">Facebook Page Comment
                               </label>
                               <label class="radio-inline">
                                 <input type="radio" name="commentOn" ng-model="facebookCommentOn" value="user" checked>Facebook User Comment
                               </label>
+                              </br></br>
                               <input type="text" name="facebookPageUrl" ng-if="facebookCommentOn=='page'" class="form-control" placeholder="Please provide page url" ng-model="postData.facebookPageUrl">
                                 <!-- <textarea ng-model="postData.facebookPagePost" class="form-control" name="fbPageCmt" placeholder="Facebook Page Comment"></textarea> -->
                               </div>
@@ -177,7 +178,7 @@
                   </div>
                 </div>    
                 <div class="text-center">
-                  <button type="submit" class="btn btn-enter">Save Post</button>
+                  <button type="submit" class="btn btn-enter btn-default">Save Post</button>
                 </div>
                 </br>
                 </br>

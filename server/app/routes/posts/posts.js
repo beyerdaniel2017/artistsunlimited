@@ -21,41 +21,11 @@ router.get('/', function(req, res, next) {
 
 //============== CREATE A POST ==============
 router.post('/', function(req, res, next) {
-	/*Check if Facebook url exists---START*/
-	if (req.body.facebookPageUrl){
-    var identifier = req.body.facebookPageUrl.substring(req.body.facebookPageUrl.lastIndexOf("/"));
-    HTTPS.get('https://graph.facebook.com/me/accounts?access_token=' + req.user.facebook.token + '&fields=link,access_token', (result) => {
-		 	result.on('data', (d) => {
-        if (result.statusCode === 200) {
-		  		var data = JSON.parse(d);
-          for (var i = 0; i < data.data.length; i++) {
-            if (data.data[i].link.split('/')[3] == identifier.split('/')[1]) {
-		  				req.body.facebookPageInfo = {
-                accessToken: data.data[i].access_token,
-                PageId: data.data[i].id
-		  				};
-		  			}
-          }
-		  		insertData();
-        } else {
-		  		insertData();	
-		  	}
-		  });
-		}).on('error', (e) => {
-		  console.error(e);
-		  insertData();
-		});
-  } else {
-		insertData();
-	}
-
-  function insertData(){
 		Post.create(req.body)
 		.then(function(post) {
 			res.status(201).json(post);
 		})
 		.then(null, next);
-  }	
 });
 
 //============ FIND A SINGLE POST ===========
@@ -159,7 +129,6 @@ router.get('/checkTokenValidity/:userID/:platform', function(req, res, next) {
 			    resp.on('end', function() {
 			    	var d = JSON.parse(data);
 			    	if(d.user_id == undefined){
-			    		console.log('data.id',data.user_id);
 			    		User.findByIdAndUpdate(req.params.userID, {'google.token' : ''}, {
 					      new: true
 					    })
@@ -176,14 +145,5 @@ router.get('/checkTokenValidity/:userID/:platform', function(req, res, next) {
 				});
 			}
 		});       
-   // 		HTTPS.get('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token='+req.params.token,function(err,data){
-
-	  //   if(data){
-	  //     res.json({success:true}); 
-	  //   }
-	  //   else{
-	  //     res.json({success:false}); 
-	  //   }
-	  // })
 	}
 });

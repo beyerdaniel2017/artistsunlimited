@@ -240,42 +240,92 @@ margin-top: 3px;
 .graybox {
     display: inline-block;
 }
+
+.graybox-main{
+    flex-flow: row wrap;
+    justify-content: space-around;
+    margin: 0px auto;
+    text-align:center;
+}
+
+.img-btn{
+    margin-left:42px;
+}
+.slide-img-box div{
+    padding: 0 0 0 3%;
+}
 /*********** Media CSS **************/
 @media screen and (max-width: 1280px) {
     .mail-btn{
         font-size:17px;     
     }
+    .img-btn{margin-left: 20px;}
+
 }
 @media screen and (max-width: 1024px) {
+    .slidethamb-box {
+        padding: 0 0;
+        margin: 0 auto;
+        text-align: center;
+        display: inline-block;
+     }
      .mail-btn{
         font-size:17px;
         width:87%; 
         display: block;
         margin:5px 0px;
     }
+    .left-menus ul li a{
+    padding:20px;
+    }
+    .reFor-scroll{
+        text-align:center;
+    }
+    .manage-thumb{
+           display: inline-flex;
+    }
 }
+
+
+
 @media screen and (max-width: 980px) {
+     .img-btn{margin-left: 40px;}
+
+     .slot-date{
+        margin-bottom:7px;
+    }
     .video-graph{
         matgin-top:5px;
     }
     .left-menus ul li a {
      padding: 20px;
     }
+    .left-menus ul li a{
+    padding:20px;
 }
-
-@media screen and (max-width: 980px) {
-    .slot-date{
-        margin-bottom:7px;
+     .reFor-scroll{
+        text-align:center;
     }
+    .manage-thumb{
+           display: inline-flex;
 }
-
-@media screen and (max-width: 980px) {
-     .img-btn{margin-left: 55px;}
 }
 
 @media screen and (max-width: 800px) {
     .img-btn{
-             margin-left: 60px;
+        margin-left: 37px;
+    }
+    .left-menus ul li a{
+        padding:20px;
+    }
+   .left-menus ul li a{
+    padding:20px;
+    }
+     .reFor-scroll{
+        text-align:center;
+    }
+    .manage-thumb{
+           display: inline-flex;
             }
 }
 
@@ -284,7 +334,8 @@ margin-top: 3px;
         width:100%;
     }
     .img-btn {
-    margin-left: 66px; }
+        margin-left: 55px; 
+    }
     .reFor-scroll {
         text-align: center;
     }
@@ -293,11 +344,24 @@ margin-top: 3px;
         margin: 0 auto;
         display: inline-flex;
      }
+      .reFor-scroll{
+        text-align:center;
+    }
+    .manage-thumb{
+           display: inline-flex;
+    }
+    .inner-head .menu-bar{
+        text-align: center;
+    }
+    .range-main{
+        width: 70%;
+        margin: 15px auto;
+    }
 }
 
 @media screen and (max-width: 667px) {
   .img-btn {
-         margin-left: 264px; } 
+         margin-left: 251px; } 
     .reFor-scroll {
          text-align: center;
     }
@@ -313,6 +377,12 @@ margin-top: 3px;
         text-align: center;
         float: none;
         }
+         .reFor-scroll{
+        text-align:center;
+    }
+    .manage-thumb{
+           display: inline-flex;
+    }
 }
 
 @media screen and (max-width: 640px) {
@@ -390,7 +460,8 @@ margin-top: 3px;
 }
 @media screen and (max-width: 480px) {
   .img-btn {
-        margin-left: 146px; } 
+        margin-left: 154px; 
+    } 
     .mail-btn, .premier{ 
         width: 100%;
         margin: 5px auto;
@@ -401,7 +472,7 @@ margin-top: 3px;
 
 @media screen and (max-width:375px) {
     .img-btn {
-    margin-left: 128px; }
+    margin-left: 105px; }
     .manage-trade-thumb {
         position: relative;
         margin: 0 auto;
@@ -412,6 +483,9 @@ margin-top: 3px;
         margin: 5px auto;
         text-align: center;
         float: none;
+    }
+    .graybox-main{
+       text-align: left;
     }
 }
 
@@ -423,7 +497,8 @@ margin-top: 3px;
         margin-left: 4px;
     }
      .img-btn {
-    margin-left: 114px; }
+        margin-left: 99px;
+     }
     .manage-trade-thumb {
         position: relative;
         margin: 0 auto;
@@ -435,6 +510,9 @@ margin-top: 3px;
         text-align: center;
         float: none;
         }
+    .graybox-main{
+       text-align: left;
+    }
 }
 
 @media screen and (max-width:320px) {
@@ -459,18 +537,20 @@ margin-top: 3px;
         margin-left: 4px;
     }
      .img-btn {
-        margin-left: 95px;
+        margin-left: 78px;
     }
-
     .manage-trade-thumb {
         position: relative;
         margin: 0 auto;
         display: inline-flex;
      }
     .mail-btn, .premier{ 
-        width: 54%;
+        width: 100%;
         margin: 5px auto;
         text-align: center;
         float: none;
+    }
+    .graybox-main{
+       text-align: left;
     }
 }

@@ -57,7 +57,7 @@
           </div>
           <br/>
           <!---Third party access-->
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-md-8 col-md-offset-2">
               <hr/>
               <div class="permanent-links" style="text-align: center;">
@@ -79,25 +79,17 @@
               </div>
             </div>
           </div>
-          <br>
+          <br> -->
           <div class="row">
             <div class="col-md-8 col-md-offset-2">
               <hr/>
               <div class="permanent-links" style="text-align: center;">
                 <h4 class="bold">Linked Accounts</h4>
-                <form name="frmlinkedAccounts" ng-submit="saveLinkedAccount(linkedAccountData)">
-                  <input class="form-control" placeholder="Username" type="text" ng-model="linkedAccountData.username" required />
-                  <br/>
-                  <input class="form-control" placeholder="Password" type="password" ng-model="linkedAccountData.password" required/>
-                  <br/>
-                  <br/>
                   <div class="col-md-12 text-center">
-                    <button type="submit" class="btn btn-default btn-small">Add to list</button>
+                  <button type="button" class="btn btn-default btn-small" ng-click="soundcloudLogin()">Add to list</button>
                   </div>
-                </form>
-                <br/>
-                <br/>
-                <div ng-repeat="account in user.linkedAccounts" style="padding:10px; color:#000; text-align: center;">
+                <br/><br/>
+                <div ng-if="account._id != user._id" ng-repeat="account in userlinkedAccounts" style="padding:10px; color:#000; text-align: center;">
                   <a href="{{account.soundcloud.permalinkURL}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{account.soundcloud.avatarURL}}">{{' ' + account.soundcloud.username}}</a>&nbsp;&nbsp;&nbsp;
                   <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeLinkedAccount(account)"></a> 
                 </div>                             

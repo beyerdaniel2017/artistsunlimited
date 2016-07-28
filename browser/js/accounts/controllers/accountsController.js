@@ -7,11 +7,12 @@ app.config(function($stateProvider) {
 });
 
 app.controller('accountsController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$sce,accountService) {
-	if (!SessionService.getUser()) {
+    if (!SessionService.getUser()) {
   	$state.go('admin');
-	}
- 	$scope.user = SessionService.getUser();
- 	$scope.soundcloudLogin = function() {
+    }
+    $scope.user = SessionService.getUser();
+    $scope.user.paidRepost.groups = $scope.user.paidRepost.groups ? $scope.user.paidRepost.groups : [];
+    $scope.soundcloudLogin = function() {
     $scope.processing = true;
     SC.connect()
     .then(function(res) {
@@ -22,7 +23,7 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
     })
     .then(function(res) { 
       var scInfo = res.data.user.soundcloud;
-      scInfo.group = ""; 
+      scInfo.groups = [];
       scInfo.description = "";    
       scInfo.price = 1;    
       $http.post('/api/database/updateUserAccount', {
@@ -81,6 +82,20 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
     
   $scope.addItems=function(rowid,index){
     $("#"+rowid).toggleClass();
+  }
+  
+  $scope.addGroup = function(index, item) {
+    $scope.user.paidRepost[index].groups.push('');
+  }
+  $scope.removeItem = function(parentIndex,index, item) {
+    $scope.user.paidRepost[parentIndex].groups.splice(index, 1)
+  }
+  $scope.updatePaidRepostGroup = function(item, group) {           
+    for (var i = 0; i < $scope.user.paidRepost.length; i++) {
+      if ($scope.user.paidRepost[i].id == item.id) {
+        $scope.user.paidRepost[i].groups.push(group);
+      }
+    }
   }
   $scope.clicked = false;
   $scope.whiteSlot = [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 17, 18, 19, 21, 22, 23];

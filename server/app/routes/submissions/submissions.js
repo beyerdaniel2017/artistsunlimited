@@ -85,7 +85,6 @@ router.get('/unaccepted', function(req, res, next) {
   }
 });
 
-
 router.get('/getUnacceptedSubmissions', function(req, res, next) {
   var query = {
     channelIDS: [],
@@ -96,6 +95,23 @@ router.get('/getUnacceptedSubmissions', function(req, res, next) {
       return res.json(subs)
     })
     .then(0, next);
+});
+
+
+router.get('/getGroupedSubmissions', function(req, res, next) {
+  Submission.aggregate({ 
+    $match : {
+      channelIDS: [],
+      userID : req.user._id
+    }
+  },
+  { $group: 
+    { _id: '$genre', total_count: { $sum: 1 } } 
+  }).exec()
+  .then(function(subs) {
+    return res.json(subs)
+  })
+  .then(0, next);
 });
 
 router.put('/save', function(req, res, next) {
