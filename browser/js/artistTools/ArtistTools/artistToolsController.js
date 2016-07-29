@@ -537,14 +537,13 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     };
 
     $scope.soundcloudLogin = function() {
-      // $scope.processing = true;
       SC.connect()
         .then(function(res) {
           var find = $scope.userlinkedAccounts.find(function(acct) {
             return acct.soundcloud.token == res.oauth_token;
           });
           if (res.oauth_token == SessionService.getUser().soundcloud.token || !!find) {
-            throw new Error();
+            throw new Error('already added');
           } else {
             $scope.processing = true;
             $rootScope.accessToken = res.oauth_token;
@@ -571,7 +570,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
         .then(null, function(err) {
           console.log(err);
           $scope.processing = false;
-          $.Zebra_Dialog('Error: Could not log in');
+          $.Zebra_Dialog('User already added. Please retry in 1 second.');
           setTimeout(function() {
             window.location.reload();
           }, 1000);
