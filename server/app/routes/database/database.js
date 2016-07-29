@@ -1011,7 +1011,7 @@ router.put('/networkaccount', function(req, res, next) {
 router.post('/networkaccount', function(req, res, next) {
   var userID = req.body.userID;
   var linkedAccountID = req.body.linkedAccountID;
-  NetworkAccounts.find({
+  NetworkAccounts.findOne({
       channels: userID
     })
     .exec()
@@ -1024,44 +1024,48 @@ router.post('/networkaccount', function(req, res, next) {
           return newArray.indexOf(item) === index;
         });
       };
-      if (una.length > 0) {
-        NetworkAccounts.find({
+      if (una) {
+        NetworkAccounts.findOne({
             channels: linkedAccountID,
             _id: {
-              $ne: una[0]._id
+              $ne: una._id
             }
-          })
-          .exec()
+          }).populate('channels').exec()
           .then(function(luna) {
-            if (luna.length > 0) {
-              var userChannelArray = una[0].channels;
-              var linkedUserChannelArray = luna[0].channels;
+            if (luna) {
+              console.log('both have network')
+              var userChannelArray = una.channels;
+              var linkedUserChannelArray = luna.channels;
               var mergedArray = concatArraysUniqueWithSort(userChannelArray, linkedUserChannelArray);
               NetworkAccounts.remove({
-                _id: una[0]._id
+                _id: una._id
               }, function(result1) {
                 NetworkAccounts.remove({
-                  _id: luna[0]._id
+                  _id: luna._id
                 }, function(result2) {
                   NetworkAccounts.create({
                     channels: mergedArray
                   }, function(err, networkaccount) {
                     if (!err) {
-                      return res.json({
-                        "success": true,
-                        "message": "Network account added successfully",
-                        "data": networkaccount
+                      console.log(1);
+                      networkaccount.populate('channels', function(err, networkaccount) {
+                        return res.json({
+                          "success": true,
+                          "message": "Linked account added successfully",
+                          "data": networkaccount
+                        });
                       });
                     }
                   })
                 })
               });
             } else {
-              var userChannels = una[0].channels;
+              console.log('user has network');
+              var userChannels = una.channels;
               if (userChannels.indexOf(linkedAccountID) == -1) {
                 userChannels.push(linkedAccountID);
                 NetworkAccounts.findOneAndUpdate({
-                    _id: una[0]._id
+                    _id: una._id
                   }, {
                     $set: {
                       channels: userChannels
@@ -1069,73 +1073,73 @@ router.post('/networkaccount', function(req, res, next) {
                   }, {
                     new: true
                   })
+                  .populate('channels')
                   .exec()
                   .then(function(result) {
                     return res.json({
                       "success": true,
-                      "message": "Network account added successfully",
+                      "message": "Linked account added successfully",
                       "data": result
                     });
-                  })
+                  }).then(null, next);
               } else {
                 return res.json({
                   "success": true,
-                  "message": "Network account already exists",
-                  "data": una[0]
+                  "message": "Linked account already exists",
+                  "data": una
                 });
               }
             }
-          });
+          }).then(null, next);
       } else {
-        NetworkAccounts.find({
+        NetworkAccounts.findOne({
             channels: linkedAccountID
           })
           .exec()
           .then(function(luna) {
-            if (luna.length > 0) {
-              var linkedUserChannels = luna[0].channels;
-              linkedUserChannels.push(userID);
-              NetworkAccounts.findOneAndUpdate({
-                  _id: luna[0]._id
-                }, {
-                  $set: {
-                    channels: linkedUserChannels
-                  }
-                }, {
-                  new: true
-                })
-                .exec()
-                .then(function(result) {
-                  return res.json({
-                    "success": true,
-                    "message": "Network account added successfully",
-                    "data": result
+            if (luna) {
+              luna.channels.push(userID);
+              luna.save()
+                .then(function(netAccount) {
+                  console.log(netAccount);
+                  netAccount.populate('channels', function(err, networkaccount) {
+                    if (err) next(err)
+                    else return res.json({
+                      "success": true,
+                      "message": "Linked account added successfully",
+                      "data": networkaccount
+                    });
                   });
-                })
+                }).then(null, next);
             } else {
+              console.log('no network');
               var channels = [];
               channels.push(userID);
               channels.push(linkedAccountID);
               NetworkAccounts.create({
                 channels: channels
               }, function(err, networkaccount) {
+                console.log(5);
                 if (!err) {
-                  return res.json({
-                    "success": true,
-                    "message": "Network account created successfully",
-                    "data": networkaccount
+                  networkaccount.populate('channels', function(err, networkaccount) {
+                    if (err) console.log(err);
+                    return res.json({
+                      "success": true,
+                      "message": "Linked account created successfully",
+                      "data": networkaccount
+                    });
                   });
                 }
               })
             }
-          });
+          }).then(null, next);
       }
-    });
+    }).then(null, next);
 });
 
 router.get('/userNetworks', function(req, res, next) {
   var userID = req.user._id;
-  NetworkAccounts.find({
+  NetworkAccounts.findOne({
       channels: userID
     })
     .populate('channels.user')
@@ -1143,7 +1147,7 @@ router.get('/userNetworks', function(req, res, next) {
     .then(function(una) {
       User.find({
           _id: {
-            $in: una[0].channels
+            $in: una.channels
           }
         })
         .exec()
