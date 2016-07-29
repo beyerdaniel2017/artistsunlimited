@@ -128,6 +128,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     //   $.Zebra_Dialog("Cannot manage a traded or paid slot.");
     //   return;
     // }
+    $scope.updateReach();
     if ($scope.makeEvent.type == "empty") {
       var makeDay = new Date(day);
       makeDay.setHours(hour);
@@ -512,12 +513,28 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       $scope.promptForEmail();
     }
   }
+
   $scope.getUserNetwork = function() {
     $http.get("/api/database/userNetworks")
       .then(function(networks) {
         $rootScope.userlinkedAccounts = networks.data;
       })
   }
+
+  $scope.updateReach = function() {
+    console.log('change');
+    $scope.repostReach = 0;
+    $scope.repostReach = $scope.user.soundcloud.followers;
+    for (var key in $scope.otherChannels) {
+      if ($scope.otherChannels[key]) {
+        var acct = $scope.userlinkedAccounts.find(function(acct) {
+          return acct.soundcloud.id == key;
+        })
+        $scope.repostReach += acct.soundcloud.followers;
+      }
+    }
+  }
+  $scope.updateReach();
   $scope.getUserNetwork();
   $scope.verifyBrowser();
 });
