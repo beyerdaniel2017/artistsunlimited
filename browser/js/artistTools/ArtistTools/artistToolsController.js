@@ -537,13 +537,21 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     };
 
     $scope.soundcloudLogin = function() {
-      $scope.processing = true;
+      // $scope.processing = true;
       SC.connect()
         .then(function(res) {
-          $rootScope.accessToken = res.oauth_token;
-          return $http.post('/api/login/soundCloudAuthentication', {
-            token: res.oauth_token
+          var find = $scope.userlinkedAccounts.find(function(acct) {
+            return acct.soundcloud.token == res.oauth_token;
           });
+          if (res.oauth_token == SessionService.getUser().soundcloud.token || !!find) {
+            throw new Error();
+          } else {
+            $scope.processing = true;
+            $rootScope.accessToken = res.oauth_token;
+            return $http.post('/api/login/soundCloudAuthentication', {
+              token: res.oauth_token
+            });
+          }
         })
         .then(function(res) {
           var linkedAccountID = res.data.user._id;
@@ -555,12 +563,18 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
               console.log(res.data);
               $.Zebra_Dialog(res.data.message);
               $scope.userlinkedAccounts = res.data.data.channels;
-              $scope.processing = false;
+              setTimeout(function() {
+                window.location.reload();
+              }, 1000);
             });
         })
         .then(null, function(err) {
-          $.Zebra_Dialog('Error: Could not log in');
+          console.log(err);
           $scope.processing = false;
+          $.Zebra_Dialog('Error: Could not log in');
+          setTimeout(function() {
+            window.location.reload();
+          }, 1000);
         });
     };
 
