@@ -7,26 +7,26 @@ paypal.configure({
 });
 
 
-var paymentId = "PAY-05N465626N2462218K4KSW6Q";
+var paymentId = "PAY-2NK20372P96057906K6KBDGI";
 
-paypal.payment.get(paymentId, function (error, payment1) {
-    if (error) {
-      console.log(error);
-      throw error;
-    } else {
-      console.log("Paid");
-      console.log(JSON.stringify(payment1));
-      if(payment1.payer.payer_info){
-        paypal.payment.execute(paymentId, { payer_id :payment1.payer.payer_info.payer_id }, function(error, payment) {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log('success');
-            console.log(JSON.stringify(payment));
-          }
-        });
-      }
+paypal.payment.get(paymentId, function(error, payment1) {
+  if (error) {
+    console.log(error);
+    throw error;
+  } else {
+    console.log("Paid");
+    console.log(JSON.stringify(payment1));
+    if (payment1.payer.payer_info) {
+      paypal.payment.execute(paymentId, {
+        payer_id: payment1.payer.payer_info.payer_id
+      }, function(error, payment) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('success');
+          console.log(JSON.stringify(payment));
+        }
+      });
     }
+  }
 });
-
-

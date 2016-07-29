@@ -795,73 +795,83 @@ router.put('/deleteLinkedAccount', function(req, res, next) {
 });
 
 
-router.post('/updateUserAccount', function(req, res, next) {   
+router.post('/updateUserAccount', function(req, res, next) {
   User.findOneAndUpdate({
-    _id: req.user._id
-  }, {
-    $addToSet: { paidRepost: req.body.soundcloudInfo }
-  },{
-    new: true
-  })
-  .exec()
-  .then(function(user) {
-    res.send(user);
-  })
-  .then(null, function(err) {
-    next(err);
-  });
+      _id: req.user._id
+    }, {
+      $addToSet: {
+        paidRepost: req.body.soundcloudInfo
+      }
+    }, {
+      new: true
+    })
+    .exec()
+    .then(function(user) {
+      res.send(user);
+    })
+    .then(null, function(err) {
+      next(err);
+    });
 });
 
 router.post('/updateGroup', function(req, res, next) {
   User.findOneAndUpdate({
-    _id: req.user._id
-  }, {
-    $set: { paidRepost: req.body.paidRepost }
-  },{
-    new: true
-  })
-  .exec()
-  .then(function(user) {
-    res.send(user);
-  })
-  .then(null, function(err) {
-    next(err);
-  });
+      _id: req.user._id
+    }, {
+      $set: {
+        paidRepost: req.body.paidRepost
+      }
+    }, {
+      new: true
+    })
+    .exec()
+    .then(function(user) {
+      res.send(user);
+    })
+    .then(null, function(err) {
+      next(err);
+    });
 });
 
 router.post('/updateCustomEmailButtons', function(req, res, next) {
   User.findOneAndUpdate({
-    _id: req.user._id
-  }, {
-    $set: { customEmailButtons: req.body.customEmailButtons }
-  },{
-    new: true
-  })
-  .exec()
-  .then(function(user) {
-    res.send(user);
-  })
-  .then(null, function(err) {
-    next(err);
-  });
+      _id: req.user._id
+    }, {
+      $set: {
+        customEmailButtons: req.body.customEmailButtons
+      }
+    }, {
+      new: true
+    })
+    .exec()
+    .then(function(user) {
+      res.send(user);
+    })
+    .then(null, function(err) {
+      next(err);
+    });
 });
 
 router.put('/deleteUserAccount/:id', function(req, res, next) {
-    var soundcloudId = req.params;   
-     User.update({
-            _id: req.user._id
-        }, {
-             $pull: {paidRepost: {id:parseInt(soundcloudId.id,10)}}
-  },{
-    new: true
-        })
-        .exec()
-        .then(function(user) {
-            res.send(user);
-        })
-        .then(null, function(err) {
-            next(err);
-        });
+  var soundcloudId = req.params;
+  User.update({
+      _id: req.user._id
+    }, {
+      $pull: {
+        paidRepost: {
+          id: parseInt(soundcloudId.id, 10)
+        }
+      }
+    }, {
+      new: true
+    })
+    .exec()
+    .then(function(user) {
+      res.send(user);
+    })
+    .then(null, function(err) {
+      next(err);
+    });
 });
 router.post('/profile/edit', function(req, res, next) {
   var body = req.body;
@@ -983,134 +993,162 @@ router.post('/profile/soundcloud', function(req, res, next) {
 
 });
 
+router.put('/networkaccount', function(req, res, next) {
+  console.log(req.body[0]._id);
+  NetworkAccounts.findOneAndUpdate({
+      channels: req.body[0]._id
+    }, {
+      channels: req.body
+    }, {
+      new: true
+    }).populate('channels').exec()
+    .then(function(networkAccount) {
+      res.send(networkAccount);
+    })
+    .then(null, next);
+})
+
 router.post('/networkaccount', function(req, res, next) {
   var userID = req.body.userID;
   var linkedAccountID = req.body.linkedAccountID;
   NetworkAccounts.find({
-    channels: userID
-  })
-  .exec()
-  .then(function(una){
-    var concatArraysUniqueWithSort = function (thisArray, otherArray) {
-      var newArray = thisArray.concat(otherArray).sort(function (a, b) {
-        return a > b ? 1 : a < b ? -1 : 0;
-      });
-      return newArray.filter(function (item, index) {
-        return newArray.indexOf(item) === index;
-      });
-    };
-    if(una.length > 0){
-      NetworkAccounts.find({
-        channels: linkedAccountID,
-        _id : {$ne: una[0]._id}
-      })
-      .exec()
-      .then(function(luna){
-        if(luna.length > 0){
-          var userChannelArray = una[0].channels;
-          var linkedUserChannelArray = luna[0].channels;
-          var mergedArray = concatArraysUniqueWithSort(userChannelArray, linkedUserChannelArray);
-          NetworkAccounts.remove({_id: una[0]._id}, function(result1){
-            NetworkAccounts.remove({_id: luna[0]._id}, function(result2){
-              NetworkAccounts.create({channels: mergedArray}, function(err, networkaccount){
-                if(!err){
+      channels: userID
+    })
+    .exec()
+    .then(function(una) {
+      var concatArraysUniqueWithSort = function(thisArray, otherArray) {
+        var newArray = thisArray.concat(otherArray).sort(function(a, b) {
+          return a > b ? 1 : a < b ? -1 : 0;
+        });
+        return newArray.filter(function(item, index) {
+          return newArray.indexOf(item) === index;
+        });
+      };
+      if (una.length > 0) {
+        NetworkAccounts.find({
+            channels: linkedAccountID,
+            _id: {
+              $ne: una[0]._id
+            }
+          })
+          .exec()
+          .then(function(luna) {
+            if (luna.length > 0) {
+              var userChannelArray = una[0].channels;
+              var linkedUserChannelArray = luna[0].channels;
+              var mergedArray = concatArraysUniqueWithSort(userChannelArray, linkedUserChannelArray);
+              NetworkAccounts.remove({
+                _id: una[0]._id
+              }, function(result1) {
+                NetworkAccounts.remove({
+                  _id: luna[0]._id
+                }, function(result2) {
+                  NetworkAccounts.create({
+                    channels: mergedArray
+                  }, function(err, networkaccount) {
+                    if (!err) {
+                      return res.json({
+                        "success": true,
+                        "message": "Network account added successfully",
+                        "data": networkaccount
+                      });
+                    }
+                  })
+                })
+              });
+            } else {
+              var userChannels = una[0].channels;
+              if (userChannels.indexOf(linkedAccountID) == -1) {
+                userChannels.push(linkedAccountID);
+                NetworkAccounts.findOneAndUpdate({
+                    _id: una[0]._id
+                  }, {
+                    $set: {
+                      channels: userChannels
+                    }
+                  }, {
+                    new: true
+                  })
+                  .exec()
+                  .then(function(result) {
+                    return res.json({
+                      "success": true,
+                      "message": "Network account added successfully",
+                      "data": result
+                    });
+                  })
+              } else {
+                return res.json({
+                  "success": true,
+                  "message": "Network account already exists",
+                  "data": una[0]
+                });
+              }
+            }
+          });
+      } else {
+        NetworkAccounts.find({
+            channels: linkedAccountID
+          })
+          .exec()
+          .then(function(luna) {
+            if (luna.length > 0) {
+              var linkedUserChannels = luna[0].channels;
+              linkedUserChannels.push(userID);
+              NetworkAccounts.findOneAndUpdate({
+                  _id: luna[0]._id
+                }, {
+                  $set: {
+                    channels: linkedUserChannels
+                  }
+                }, {
+                  new: true
+                })
+                .exec()
+                .then(function(result) {
                   return res.json({
                     "success": true,
                     "message": "Network account added successfully",
+                    "data": result
+                  });
+                })
+            } else {
+              var channels = [];
+              channels.push(userID);
+              channels.push(linkedAccountID);
+              NetworkAccounts.create({
+                channels: channels
+              }, function(err, networkaccount) {
+                if (!err) {
+                  return res.json({
+                    "success": true,
+                    "message": "Network account created successfully",
                     "data": networkaccount
                   });
                 }
               })
-            })
-          });
-        }
-        else{
-          var userChannels = una[0].channels;
-          if(userChannels.indexOf(linkedAccountID) == -1){
-            userChannels.push(linkedAccountID);
-            NetworkAccounts.findOneAndUpdate({
-              _id : una[0]._id
-            },{
-              $set: {channels: userChannels}
-            }, {
-              new: true
-            })
-            .exec()
-            .then(function(result){
-              return res.json({
-                "success": true,
-                "message": "Network account added successfully",
-                "data": result
-              });
-            })
-          }
-          else{
-            return res.json({
-              "success": true,
-              "message": "Network account already exists",
-              "data": una[0]
-            });
-          }
-        }
-      });
-    }
-    else{
-      NetworkAccounts.find({
-        channels: linkedAccountID
-      })
-      .exec()
-      .then(function(luna){
-        if(luna.length > 0){
-          var linkedUserChannels = luna[0].channels;
-          linkedUserChannels.push(userID);
-          NetworkAccounts.findOneAndUpdate({
-            _id : luna[0]._id
-          },{
-            $set: {channels: linkedUserChannels}
-          }, {
-            new: true
-          })
-          .exec()
-          .then(function(result){
-            return res.json({
-              "success": true,
-              "message": "Network account added successfully",
-              "data": result
-            });
-          })
-        }
-        else{
-          var channels = [];
-          channels.push(userID);
-          channels.push(linkedAccountID);
-          NetworkAccounts.create({channels: channels}, function(err, networkaccount){
-            if(!err){
-              return res.json({
-                "success": true,
-                "message": "Network account created successfully",
-                "data": networkaccount
-              });
             }
-          })
-        }
-      });
-    }
-  });
+          });
+      }
+    });
 });
 
 router.get('/userNetworks', function(req, res, next) {
   var userID = req.user._id;
   NetworkAccounts.find({
-    channels: userID
-  })
-  .populate('channels.user')
-  .exec()
-  .then(function(una){
-    User.find({_id : {$in : una[0].channels}})
+      channels: userID
+    })
+    .populate('channels.user')
     .exec()
-    .then(function(users){
-      return res.json(users);
+    .then(function(una) {
+      User.find({
+          _id: {
+            $in: una[0].channels
+          }
+        })
+        .exec()
+        .then(function(users) {
+          return res.json(users);
+        });
     });
-  });
 });
-
