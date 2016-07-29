@@ -48,6 +48,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.newQueueSong = "";
   $scope.trackArtistID = 0;
   $scope.trackType = "";
+  $scope.timeGap = '1';
+  $scope.otherChannels = {};
 
   $scope.trackChange = function(index) {
     $scope.makeEventURL = $scope.trackListSlotObj.permalink_url;
@@ -157,6 +159,10 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.makeEvent.artistName = null;
     $scope.makeEvent.trackID = null;
     $scope.makeEventURL = null;
+  }
+
+  $scope.log = function() {
+    console.log($scope.otherChannels);
   }
 
   $scope.changeURL = function() {
@@ -272,7 +278,14 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     } else {
       $scope.processing = true;
       if ($scope.newEvent) {
-        var req = $http.post('/api/events/repostEvents', $scope.makeEvent)
+        $scope.makeEvent.otherChannels = [];
+        for (var key in $scope.otherChannels) {
+          if ($scope.otherChannels[key]) $scope.makeEvent.otherChannels.push(key);
+        }
+        $scope.makeEvent.timeGap = parseInt($scope.timeGap);
+        var req = $http.post('/api/events/repostEventsScheduler', $scope.makeEvent)
+        $scope.otherChannels = [];
+        $scope.timeGap = '1';
       } else {
         var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
       }
@@ -305,6 +318,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.trackArtistID = 0;
     $scope.showOverlay = false;
   }
+
 
   $scope.removeQueueSong = function(index) {
     $scope.user.queue.splice(index, 1);
@@ -498,11 +512,11 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       $scope.promptForEmail();
     }
   }
-  $scope.getUserNetwork = function(){
+  $scope.getUserNetwork = function() {
     $http.get("/api/database/userNetworks")
-    .then(function(networks){
-      $rootScope.userlinkedAccounts = networks.data;
-    })
+      .then(function(networks) {
+        $rootScope.userlinkedAccounts = networks.data;
+      })
   }
   $scope.getUserNetwork();
   $scope.verifyBrowser();

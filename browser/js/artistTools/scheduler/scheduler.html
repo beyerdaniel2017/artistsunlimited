@@ -32,62 +32,67 @@
            </div>
          </div>
          <!-- overlay -->
-         <div class="overlay" ng-show="showOverlay">
-          <div class="label-scheduler label-smaller slot-box">
+         <div class="overlay" ng-show="showOverlay" ng-click="backEvent()">
+           <div class="label-scheduler label-smaller slot-box" ng-click="$event.stopPropagation();">
             <span style="font-size:1.25em">{{makeEvent.day.toLocaleDateString()}}     {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
             <div ng-show="!(makeEvent.type=='traded'||makeEvent.type=='paid')">
               <input type="checkbox" ng-model="makeEvent.type" ng-true-value="'queue'" ng-false-value="'track'" ng-change="changeQueueSlot()"/><span> Autofill Slot</span><br>
               <input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()"/><span> Unrepost after 24h</span><br>
               <div ng-hide="(makeEvent.type == 'queue')">
                 <input type="text" class="form-control form-scheduler" style="width:400px; max-width:90%; text-align: center" ng-model="makeEventURL" ng-change="changeURL()" placeholder="Soundcloud Track Url" />
-        <div ng-show="userlinkedAccounts.length > 0" style="flex-flow: row wrap;justify-content: space-around; margin: 0px auto; text-align:center; font-size:11px;">
-          <div ng-if="u._id != user._id" ng-repeat="u in userlinkedAccounts" class="graybox">
-            <span>{{u.soundcloud.username}}</span> <input type="checkbox" ng-model="sub[u.soundcloud.username]" /> 
-          </div>
-        </div>
+                <div ng-show="userlinkedAccounts.length > 0 && newEvent" style="flex-flow: row wrap;justify-content: space-around; margin: 0px auto; text-align:center; font-size:11px;">
+                  <span>Schedule on other channels:</span><br>
+                  <div ng-if="u._id != user._id" ng-repeat="u in userlinkedAccounts" class="graybox">
+                    <input type="checkbox" ng-model="otherChannels[u.soundcloud.id]" ng-change="log()"/><span> {{u.soundcloud.username}}</span>  
                   </div>
-                </div>
-                <div id='scPlayer' ng-show="makeEvent.trackID"></div>
+                  <br>
+                  <span>Time between reposts:</span><select ng-model="timeGap">
+                  <option ng-repeat="n in [0,1,2,3,4,5,6,7,8,9,10,11,12]" value="{{n}}">{{n}}</option>
+                </select> hours
                 <br>
-                <div>
-                  <button class="btn btn-default btn-small btn-overlay" ng-click="backEvent()">Back</button>
-                  <button ng-show="!(makeEvent.type=='traded'||makeEvent.type=='paid')" class="btn btn-default btn-small btn-overlay" ng-click="deleteEvent()" style="margin:0 30px 0 30px;">Delete</button>
-                  <button ng-show="!(makeEvent.type=='traded'||makeEvent.type=='paid')" class="btn btn-default btn-small btn-overlay" ng-click="saveEvent()">Save</button>
-                  <br><br>
-                  <button ng-click="emailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/email_icon.png' style="height:30px; width:50px;"></button>
-                </div>
+                <br>
               </div>
-              
+            </div>
+            <div id='scPlayer' ng-show="makeEvent.trackID"></div>
+            <br>
+            <div>
+              <button class="btn btn-default btn-small btn-overlay" ng-click="backEvent()">Back</button>
+              <button ng-show="!(makeEvent.type=='traded'||makeEvent.type=='paid')" class="btn btn-default btn-small btn-overlay" ng-click="deleteEvent()" style="margin:0 30px 0 30px;">Delete</button>
+              <button ng-show="!(makeEvent.type=='traded'||makeEvent.type=='paid')" class="btn btn-default btn-small btn-overlay" ng-click="saveEvent()">Save</button>
+              <br><br>
+              <button ng-click="emailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/email_icon.png' style="height:30px; width:50px;"></button>
             </div>
           </div>
-
         </div>
       </div>
-      <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
-      </div>
-    </div>
 
-    <!--overlay-->
-    <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showEmailModal">
-      <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
-        <div class="modal-dialog modal-vertical-centered">    
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div style="text-align:center; padding:10px;">        
-              <div style="text-align:center;padding-bottom:10px;">
-                <p>Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.</p>
-                <form ng-submit="updateEmail(modal.email)">
-                 <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="modal.email" />
-                 <button class="btn btn-default btn-small" type="submit" id="closeModal">Add</button>
-               </form>
-             </div>
-           </div>      
+    </div>
+  </div>
+  <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
+  </div>
+</div>
+
+<!--overlay-->
+<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showEmailModal">
+  <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-vertical-centered">    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div style="text-align:center; padding:10px;">        
+          <div style="text-align:center;padding-bottom:10px;">
+            <p>Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.</p>
+            <form ng-submit="updateEmail(modal.email)">
+             <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="modal.email" />
+             <button class="btn btn-default btn-small" type="submit" id="closeModal">Add</button>
+           </form>
          </div>
-       </div>
+       </div>      
      </div>
    </div>
-   <ng-include src="'js/home/views/loader.html'"></ng-include>
-
  </div>
+</div>
+<ng-include src="'js/home/views/loader.html'"></ng-include>
+
+</div>
 </div>
 </div>

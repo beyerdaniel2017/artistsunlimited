@@ -7,21 +7,22 @@ var User = mongoose.model('User');
 var crypto = require('crypto');
 
 module.exports = function(app) {
-  var thirdPartyStrategyFn = function(req,username,password,done) {  
+  var thirdPartyStrategyFn = function(req, username, password, done) {
+    NetworkAccount
     User.findOne({
-      'thirdPartyInfo.username': username
-    })
-    .then(function(user) {    
-      // user.correctPassword is a method from the User schema.      
-      if (!user || !correctPassword(password,user.thirdPartyInfo.salt,user.thirdPartyInfo.password)) {
-        return done(null, false);
-      } else {               
-        // Properly authenticated.
-        return done(null, user);
-      }
-    }, function(err) {
-      done(err);
-    });
+        'thirdPartyInfo.username': username
+      })
+      .then(function(user) {
+        // user.correctPassword is a method from the User schema.      
+        if (!user || !correctPassword(password, user.thirdPartyInfo.salt, user.thirdPartyInfo.password)) {
+          return done(null, false);
+        } else {
+          // Properly authenticated.
+          return done(null, user);
+        }
+      }, function(err) {
+        done(err);
+      });
   };
 
   passport.use('local-thirdParty', new LocalStrategy({
@@ -37,10 +38,9 @@ module.exports = function(app) {
     return hash.digest('hex');
   };
 
-  var correctPassword=function(password,salt,dbpassword)
-  {
-    var encryptedpass = encryptPassword(password,salt);
-    return encryptPassword(password,salt) === dbpassword;
+  var correctPassword = function(password, salt, dbpassword) {
+    var encryptedpass = encryptPassword(password, salt);
+    return encryptPassword(password, salt) === dbpassword;
   }
 
 };

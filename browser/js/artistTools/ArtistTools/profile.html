@@ -85,9 +85,9 @@
               <hr/>
               <div class="permanent-links" style="text-align: center;">
                 <h4 class="bold">Linked Accounts</h4>
-                  <div class="col-md-12 text-center">
+                <div class="col-md-12 text-center">
                   <button type="button" class="btn btn-default btn-small" ng-click="soundcloudLogin()">Add to list</button>
-                  </div>
+                </div>
                 <br/><br/>
                 <div ng-if="account._id != user._id" ng-repeat="account in userlinkedAccounts" style="padding:10px; color:#000; text-align: center;">
                   <a href="{{account.soundcloud.permalinkURL}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{account.soundcloud.avatarURL}}">{{' ' + account.soundcloud.username}}</a>&nbsp;&nbsp;&nbsp;

@@ -111,9 +111,9 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
           }
         }
       } else {
-          if ($scope.newQueueID != null){
-        $scope.user.queue.push($scope.newQueueID);
-      }
+        if ($scope.newQueueID != null) {
+          $scope.user.queue.push($scope.newQueueID);
+        }
       }
       $scope.saveUser();
       $scope.newQueueSong = undefined;
@@ -189,7 +189,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     $scope.removeQueueSong = function(index) {
       $scope.user.queue.splice(index, 1);
       $scope.saveUser()
-      //$scope.loadQueueSongs();
+        //$scope.loadQueueSongs();
     }
 
     $scope.loadQueueSongs = function(queue) {
@@ -409,23 +409,14 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     // }
 
     // remove linked accounts
-    $scope.removeLinkedAccount = function(data) {
-      $scope.processing = true;
-      $http.put("/api/database/deleteLinkedAccount", {
-          userid: $scope.user._id,
-          data: data
-        })
+    $scope.removeLinkedAccount = function(account) {
+      console.log(account);
+      $scope.userlinkedAccounts.splice($scope.userlinkedAccounts.indexOf(account), 1);
+      $http.put('/api/database/networkaccount', $scope.userlinkedAccounts)
         .then(function(res) {
-          SessionService.create(res.data);
-          $scope.user = SessionService.getUser();
-          $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
-          $scope.processing = false;
-          $.Zebra_Dialog("Account removed succesfully");
+          console.log(res.data);
+          $scope.userlinkedAccounts = res.data.channels;
         })
-        .then(null, function(err) {
-          $.Zebra_Dialog("Error in processing the request. Please try again.");
-          $scope.processing = false;
-        });
     }
 
     $scope.removePermanentLink = function(index) {
@@ -548,27 +539,29 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     $scope.soundcloudLogin = function() {
       $scope.processing = true;
       SC.connect()
-      .then(function(res) {
-        $rootScope.accessToken = res.oauth_token;
-        return $http.post('/api/login/soundCloudAuthentication', {
-          token: res.oauth_token
-        });
-      })
-      .then(function(res) { 
-        var linkedAccountID = res.data.user._id;
-        $http.post("/api/database/networkaccount", {
-          userID: $scope.user._id,
-          linkedAccountID: linkedAccountID
+        .then(function(res) {
+          $rootScope.accessToken = res.oauth_token;
+          return $http.post('/api/login/soundCloudAuthentication', {
+            token: res.oauth_token
+          });
         })
-        .then(function(netacc) {
-          $.Zebra_Dialog(netacc.data.message);
+        .then(function(res) {
+          var linkedAccountID = res.data.user._id;
+          $http.post("/api/database/networkaccount", {
+              userID: $scope.user._id,
+              linkedAccountID: linkedAccountID
+            })
+            .then(function(res) {
+              console.log(res.data);
+              $.Zebra_Dialog(res.data.message);
+              $scope.userlinkedAccounts = res.data.data.channels;
+              $scope.processing = false;
+            });
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog('Error: Could not log in');
           $scope.processing = false;
         });
-      })
-      .then(null, function(err) {
-        $.Zebra_Dialog('Error: Could not log in');
-        $scope.processing = false;
-      });
     };
 
     $scope.verifyBrowser = function() {
@@ -589,11 +582,11 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
         }
       }
     }
-    $scope.getUserNetwork = function(){
+    $scope.getUserNetwork = function() {
       $http.get("/api/database/userNetworks")
-      .then(function(networks){
-        $rootScope.userlinkedAccounts = networks.data;
-      })
+        .then(function(res) {
+          $rootScope.userlinkedAccounts = res.data;
+        })
     }
     $scope.getUserNetwork();
     $scope.verifyBrowser();

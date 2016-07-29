@@ -1,5 +1,5 @@
 'use strict';
-window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'satellizer','angularMoment','luegg.directives','ui-rangeSlider', 'ngSanitize', 'colorpicker.module']);
+window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'satellizer', 'angularMoment', 'luegg.directives', 'ui-rangeSlider', 'ngSanitize', 'colorpicker.module']);
 
 app.config(function($urlRouterProvider, $locationProvider, $uiViewScrollProvider, $httpProvider) {
     // This turns off hashbang urls (/#about) and changes it to something normal (/about)
@@ -121,26 +121,25 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
         //     }
         // });
 
-    if($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin') != -1){
-      var user = SessionService.getUser();
-      if(user){
-        var redirectPath = (user.role != undefined ?  "/admin" : "/login");
-        if($window.location.pathname.indexOf('admin') != -1 && user.role == undefined){
-          $http.post('/api/logout').then(function() {
-            SessionService.deleteUser();
-            $state.go('admin');
-            //window.location.href = '/admin';
-          });
-        }
-        else{
-            $http.get('/api/users/isUserAuthenticate').then(function(res) {
-                if (!res.data) {
-            SessionService.deleteUser();
-            $window.location.href = redirectPath;
+        if ($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin') != -1) {
+            var user = SessionService.getUser();
+            if (user) {
+                var redirectPath = (user.role != undefined ? "/admin" : "/login");
+                if ($window.location.pathname.indexOf('admin') != -1 && user.role == undefined) {
+                    $http.post('/api/logout').then(function() {
+                        SessionService.deleteUser();
+                        $state.go('admin');
+                        //window.location.href = '/admin';
+                    });
+                } else {
+                    $http.get('/api/users/isUserAuthenticate').then(function(res) {
+                        if (!res.data) {
+                            SessionService.deleteUser();
+                            $window.location.href = redirectPath;
+                        }
+                    });
                 }
-            });
-      }
-      }
+            }
         };
     });
     SessionService.refreshUser();
@@ -170,6 +169,7 @@ app.directive('fbLike', [
                 }
 
                 var watchAdded = false;
+
                 function renderLikeButton() {
                     if (!!attrs.fbLike && !scope.fbLike && !watchAdded) {
                         // wait for data if it hasn't loaded yet
@@ -192,12 +192,12 @@ app.directive('fbLike', [
     }
 ])
 
-app.controller('FullstackGeneratedController', function($scope, $state, $http, mainService, SessionService) {
+app.controller('FullstackGeneratedController', function($stateParams, $window, $scope, $state, $http, mainService, SessionService) {
     /*Load More*/
     $scope.loadList = function() {
         $scope.$broadcast('loadTrades');
     }
-  $scope.submissionsCount = 0;
+    $scope.submissionsCount = 0;
     $scope.shownotification = false;
     $scope.logout = function() {
         mainService.logout();
@@ -205,12 +205,11 @@ app.controller('FullstackGeneratedController', function($scope, $state, $http, m
     $scope.adminlogout = function() {
         mainService.adminlogout();
     }
-  $scope.getSubmissionCount=function()
-  {
-    $http.get('/api/submissions/getUnacceptedSubmissions').then(function(res) {
-      $scope.submissionsCount = res.data;
-    });
-  }
+    $scope.getSubmissionCount = function() {
+        $http.get('/api/submissions/getUnacceptedSubmissions').then(function(res) {
+            $scope.submissionsCount = res.data;
+        });
+    }
     $scope.checkNotification = function() {
         var user = SessionService.getUser();
         if (user) {
@@ -233,35 +232,27 @@ app.controller('FullstackGeneratedController', function($scope, $state, $http, m
         }
     }
 
-    $scope.linkedUsersChange = function(linkedUsers) {
+
+    $scope.linkedUsersChange = function(authToken) {
         $scope.processing = true;
-        $http.post('/api/logout').then(function() {
-            $http.post("/api/login/thirdPartylogin", {
-                    username: linkedUsers.username,
-                    password: linkedUsers.password
-                })
-                .then(function(res) {
-                    if (res.data.user) {
-                        SessionService.create(res.data.user);
-                        location.reload();
-                    } else {
-                        $scope.processing = false;
-                        $.Zebra_Dialog("Wrong third party access credentials.", {
-                            onClose: function() {
-                                $scope.processing = true;
-                                location.reload();
-                            }
-                        });
-                    }
-                })
-                .then(null, function(err) {
-                    $.Zebra_Dialog("Error in processing the request. Please try again.");
-                    $scope.processing = false;
-                });
-        });
+        $http.post('/api/login/soundCloudLogin', {
+                token: authToken,
+                password: 'test'
+            })
+            .then(function(res) {
+                $scope.processing = false;
+                SessionService.create(res.data.user);
+                $window.location.reload();
+
+            })
+            .then(null, function(err) {
+                $.Zebra_Dialog('Error: Could not log in');
+                $scope.processing = false;
+            });
     }
+
     $scope.checkNotification();
-  $scope.getSubmissionCount();
+    $scope.getSubmissionCount();
 });
 
 app.directive('fbLike', [
@@ -288,6 +279,7 @@ app.directive('fbLike', [
                 }
 
                 var watchAdded = false;
+
                 function renderLikeButton() {
                     if (!!attrs.fbLike && !scope.fbLike && !watchAdded) {
                         // wait for data if it hasn't loaded yet
