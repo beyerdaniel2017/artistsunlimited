@@ -40,23 +40,24 @@
               <input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()"/><span> Unrepost after 24h</span><br>
               <div ng-hide="(makeEvent.type == 'queue')">
                 <input type="text" class="form-control form-scheduler" style="width:400px; max-width:90%; text-align: center" ng-model="makeEventURL" ng-change="changeURL()" placeholder="Soundcloud Track Url" />
-                <div ng-show="userlinkedAccounts.length > 0 && newEvent" style="flex-flow: row wrap;justify-content: space-around; margin: 0px auto; text-align:center; font-size:11px;">
-                  <span>Schedule on other channels:</span><br>
-                  <div ng-if="u._id != user._id" ng-repeat="u in userlinkedAccounts" class="graybox">
-                    <input type="checkbox" ng-model="otherChannels[u.soundcloud.id]" ng-change="updateReach()"/><span> {{u.soundcloud.username}}</span>  
-                  </div>
-                  <br>
-                  <span>Time between reposts:</span>
-                  <select ng-model="timeGap">
-                    <option ng-repeat="n in [0,1,2,3,4,5,6,7,8,9,10,11,12]" value="{{n}}">{{n}}</option>
-                  </select> hours
-                  <br>
-                  <span>Total Reach: {{repostReach|number:0}} followers</span>
-                  <br>
-                  <br> 
-                </div>
               </div>
               <div id='scPlayer' ng-show="makeEvent.trackID"></div>
+              <br>
+              <div ng-show="userlinkedAccounts.length > 0 && newEvent && makeEvent.type != 'queue'" style="flex-flow: row wrap;justify-content: space-around; margin: 0px auto; text-align:center; font-size:11px;">
+                <span>Schedule on other channels:</span><br>
+                <div ng-if="u._id != user._id" ng-repeat="u in userlinkedAccounts" class="graybox">
+                  <input type="checkbox" ng-model="otherChannels[u.soundcloud.id]" ng-change="updateReach()"/><span> {{u.soundcloud.username}}</span>  
+                </div>
+                <br>
+                <span>Time between reposts:</span>
+                <select ng-model="timeGap">
+                  <option ng-repeat="n in [0,1,2,3,4,5,6,7,8,9,10,11,12]" value="{{n}}">{{n}}</option>
+                </select> hours
+                <br>
+                <span>Total Reach: {{repostReach|number:0}} followers</span>
+                <br>
+                <br> 
+              </div>
               <br>
               <div>
                 <button class="btn btn-default btn-small btn-overlay" ng-click="backEvent()">Back</button>

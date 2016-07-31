@@ -36,8 +36,19 @@ var SCEmailsSchema = new Schema({
     randomDay: Number,
     scanned: Boolean
 });
-
 var SCEmails = mongoose.model('SCEmails', SCEmailsSchema);
+
+var SCUsersSchema = new Schema({
+    numTracks: Number,
+    soundcloudID: {
+        type: Number,
+        unique: true
+    },
+    soundcloudURL: String,
+    username: String,
+    followers: Number
+});
+var SCUsers = mongoose.model('AllOfSouncloud', SCUsersSchema);
 
 var pr = (new Promise(function(fulfill, reject) {
     SCResolve({
@@ -88,7 +99,9 @@ function getFollowers(nextURL) {
 
                 if (myArray) {
                     var email = myArray[0];
-                    var newFollower = new SCEmails({
+                    SCEmails.findOneAndUpdate({
+                        email: email
+                    }, {
                         email: email,
                         numTracks: follower.track_count,
                         artist: (follower.track_count > 0),
@@ -98,11 +111,24 @@ function getFollowers(nextURL) {
                         followers: follower.followers_count,
                         randomDay: Math.floor(Math.random() * 50) + 1,
                         scanned: false
-                    });
-                    newFollower.save()
-                        .then(function(user) {
-                            totalEmails++;
-                        });
+                    }, {
+                        upsert: true
+                    }).exec().then(function(user) {
+                        totalEmails++;
+                    }).then(null, console.log);
+                }
+                if (follower.followers_count > 1000) {
+                    SCUsers.findOneAndUpdate({
+                        soundcloudID: follower.id
+                    }, {
+                        numTracks: follower.track_count,
+                        soundcloudID: follower.id,
+                        soundcloudURL: follower.permalink_url,
+                        username: follower.username,
+                        followers: follower.followers_count,
+                    }, {
+                        upsert: true
+                    }).exec().then(null, console.log);
                 }
             });
         }
@@ -132,3 +158,5 @@ function scanNextBiggestUser() {
         })
         .then(null, console.log);
 }
+
+var randStringGenerator
