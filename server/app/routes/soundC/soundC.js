@@ -27,5 +27,6 @@ router.post('/resolve', function(req, res, next) {
 });
 
 router.get('/soundcloudConfig', function(req, res, next) {
+  scConfig.clientSecret = undefined;
   res.send(scConfig);
 });
