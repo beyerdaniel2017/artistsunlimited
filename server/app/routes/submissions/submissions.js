@@ -99,19 +99,23 @@ router.get('/getUnacceptedSubmissions', function(req, res, next) {
 
 
 router.get('/getGroupedSubmissions', function(req, res, next) {
-  Submission.aggregate({ 
-    $match : {
-      channelIDS: [],
-      userID : req.user._id
-    }
-  },
-  { $group: 
-    { _id: '$genre', total_count: { $sum: 1 } } 
-  }).exec()
-  .then(function(subs) {
-    return res.json(subs)
-  })
-  .then(0, next);
+  Submission.aggregate({
+      $match: {
+        channelIDS: [],
+        userID: req.user._id
+      }
+    }, {
+      $group: {
+        _id: '$genre',
+        total_count: {
+          $sum: 1
+        }
+      }
+    }).exec()
+    .then(function(subs) {
+      return res.json(subs)
+    })
+    .then(0, next);
 });
 
 router.put('/save', function(req, res, next) {
@@ -270,6 +274,8 @@ router.put('/completedPayment', function(req, res, next) {
     .then(function(events) {
       responseObj.events = events;
       sub.paid = true;
+      sub.pooled = true;
+      setPooledSubTimer(sub);
       sub.save();
       if (!sub.trackID) {
         responseObj.status = 'notify';
@@ -280,6 +286,15 @@ router.put('/completedPayment', function(req, res, next) {
     })
     .then(null, next);
 })
+
+function setPooledSubTimer(submission) {
+  Submission.findByIdAndUpdate(sub._id, {
+      pooled: false
+    }).exec()
+    .then(function(sub) {
+
+    })
+}
 
 function schedulePaidRepost(chanID, submission) {
   return new Promise(function(fulfill, reject) {

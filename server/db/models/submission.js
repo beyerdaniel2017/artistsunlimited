@@ -50,6 +50,10 @@ var schema = new mongoose.Schema({
   genre: {
     type: String
   },
+  pooled: {
+    type: Boolean,
+    default: false
+  }
 });
 
 mongoose.model("Submission", schema);
