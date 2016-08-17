@@ -285,8 +285,8 @@ router.put('/completedPayment', function(req, res, next) {
     .then(function(events) {
       responseObj.events = events;
       sub.paid = true;
-      sub.pooled = true;
-      setPooledSubTimer(sub);
+      // sub.pooled = true;
+      // setPooledSubTimer(sub);
       sub.save();
       if (!sub.trackID) {
         responseObj.status = 'notify';
