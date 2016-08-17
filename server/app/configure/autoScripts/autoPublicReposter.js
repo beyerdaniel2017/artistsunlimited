@@ -68,6 +68,9 @@ function repostAndRemove(event, user, repCount) {
           event.save();
           message.text = 'A track was reposted on ' + user.soundcloud.username;
           putMessage(event, user, message);
+          if (event.name && event.email) {
+            sendMessage(err, event, user);
+          }
         } else {
           console.log('error ------------------');
           console.log(err);
@@ -196,6 +199,39 @@ function sendMessage(err, event, user) {
   } else {
     if (event.email && event.name) {
       sendEmail(event.name, event.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + event.name + ",<br><br>We would just like to let you know the track <a href='" + event.trackURL + "'>" + event.title + "</a> has been reposted on <a href='" + user.soundcloud.permalinkURL + "'>" + user.soundcloud.username + "</a>! If you would like to do another round of reposts please resubmit your track to artistsunlimited.co/submit. We will get back to you ASAP and continue to do our best in making our submission process as quick and easy as possible.<br><br>How was this experience by the way? Feel free to email some feedback, suggestions or just positive reviews to feedback@peninsulamgmt.com.<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
+      performStatBoosts(user, event.trackID);
     }
+  }
+}
+
+function performStatBoosts(user, trackID) {
+  var startingPlays = parseFloat(user.soundcloud.followers) / 80;
+  var startingLikes = parseFloat(startingPlays) / 20;
+  var startingReposts = parseFloat(startingPlays) / 100;
+  for (var i = 0; i < 7; i++) {
+    request.post('http://52.26.54.198:1337/api/bots/plays', {
+      form: {
+        hoursDelay: i * 24,
+        hoursSpan: 24,
+        numberPlays: parseFloat(startingPlays) / Math.pow(2, i),
+        trackID: trackID
+      }
+    }, function(err, response, body) {})
+    request.post('http://52.26.54.198:1337/api/bots/likes', {
+      form: {
+        hoursDelay: i * 24,
+        hoursSpan: 24,
+        numberLikes: parseFloat(startingLikes) / Math.pow(2, i),
+        trackID: trackID
+      }
+    }, function(err, response, body) {})
+    request.post('http://52.26.54.198:1337/api/bots/reposts', {
+      form: {
+        hoursDelay: i * 24,
+        hoursSpan: 24,
+        numberReposts: parseFloat(startingReposts) / Math.pow(2, i),
+        trackID: trackID
+      }
+    }, function(err, response, body) {})
   }
 }
