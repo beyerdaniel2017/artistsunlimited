@@ -50,6 +50,14 @@ var schema = new mongoose.Schema({
   genre: {
     type: String
   },
+  status: {
+    type: String,
+    default: "submitted"
+  },
+  pooledChannelIDS: {
+    type: Array,
+    default: []
+  }
 });
 
 mongoose.model("Submission", schema);
