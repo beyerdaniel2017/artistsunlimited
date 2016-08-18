@@ -1142,17 +1142,13 @@ router.get('/userNetworks', function(req, res, next) {
   NetworkAccounts.findOne({
       channels: userID
     })
-    .populate('channels.user')
+    .populate('channels')
     .exec()
     .then(function(una) {
-      User.find({
-          _id: {
-            $in: una.channels
-          }
-        })
-        .exec()
-        .then(function(users) {
-          return res.json(users);
-        });
+      if (una) {
+        res.send(una.channels)
+      } else {
+        res.send([]);
+      }
     });
 });
