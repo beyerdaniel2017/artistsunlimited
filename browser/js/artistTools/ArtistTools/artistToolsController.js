@@ -553,13 +553,13 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
           }
         })
         .then(function(res) {
+          console.log(res.data);
           var linkedAccountID = res.data.user._id;
           $http.post("/api/database/networkaccount", {
               userID: $scope.user._id,
               linkedAccountID: linkedAccountID
             })
             .then(function(res) {
-              console.log(res.data);
               $.Zebra_Dialog(res.data.message);
               $scope.userlinkedAccounts = res.data.data.channels;
               setTimeout(function() {
@@ -570,7 +570,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
         .then(null, function(err) {
           console.log(err);
           $scope.processing = false;
-          $.Zebra_Dialog('User already added. Please retry in 1 second.');
+          $.Zebra_Dialog('Please retry in 1 second.');
           setTimeout(function() {
             window.location.reload();
           }, 1000);
@@ -595,6 +595,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
         }
       }
     }
+
     $scope.getUserNetwork = function() {
       $http.get("/api/database/userNetworks")
         .then(function(res) {
