@@ -54,5 +54,5 @@ module.exports = {
         'REDIRECT_URL_VIDEO': process.env.YOUTUBE_REDIRECT_URL_VIDEO,
         'REDIRECT_URL_SUBSCRIBE': process.env.YOUTUBE_REDIRECT_URL_SUBSCRIBE
     },
-    "ROOTURL": "https://artistsunlimited.co"
+    "ROOTURL": "https://artistsunlimited.com"
 };
