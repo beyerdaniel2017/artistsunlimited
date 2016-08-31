@@ -115,7 +115,7 @@ router.post('/', function(req, res, next) {
       '<br />' +
       '<br />' +
       '<b>Sender Comment: </b> ' + body.fields.comment;
-    sendEmail('Edward', 'edward@peninsulamgmt.com', 'Artists Unlimited', 'coayscue@artistsunlimited.co', 'Mixing and Mastering', email_body, attachments);
+    sendEmail('Edward', 'edward@peninsulamgmt.com', 'Artists Unlimited', 'coayscue@artistsunlimited.com', 'Mixing and Mastering', email_body, attachments);
     return res.end();
   }
 

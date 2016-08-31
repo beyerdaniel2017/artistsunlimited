@@ -35,7 +35,7 @@ function checkTokens() {
               };
               scWrapper.request(reqObj, function(err, data) {
                 if (err) {
-                  sendEmail(user.soundcloud.username, user.email, "Artists Unlimited", "coayscue@artistsunlimited.co", "Invalid Access Token", "Hey " + user.soundcloud.username + ", <br><br>Your soundcloud access token for Artists Unlimited is invalid and you have some scheduled reposts coming up. Please log back in to <a href='https://artistsunlimited.co/login'>Artist Tools</a> to allow us to fulfill your scheduled reposts: <a href='https://artistsunlimited.co/login'>Artist Tools Login</a><br><br>Best,<br>Christian Ayscue<br>Artists Unlimited");
+                  sendEmail(user.soundcloud.username, user.email, "Artists Unlimited", "coayscue@artistsunlimited.com", "Invalid Access Token", "Hey " + user.soundcloud.username + ", <br><br>Your soundcloud access token for Artists Unlimited is invalid and you have some scheduled reposts coming up. Please log back in to <a href='https://artistsunlimited.com/login'>Artist Tools</a> to allow us to fulfill your scheduled reposts: <a href='https://artistsunlimited.com/login'>Artist Tools Login</a><br><br>Best,<br>Christian Ayscue<br>Artists Unlimited");
                 }
               });
             }
