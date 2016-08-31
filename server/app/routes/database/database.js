@@ -117,11 +117,11 @@ function addFollowers(followUser, nextURL, email) {
   };
   scWrapper.request(reqObj, function(err, res) {
     if (err) {
-      sendEmail('Database User', email, 'Email Database', 'coayscue@artistsunlimited.co', 'SUCCESSFUL Database Population', "Database has populated followers of " + followUser.username);
+      sendEmail('Database User', email, 'Email Database', 'coayscue@artistsunlimited.com', 'SUCCESSFUL Database Population', "Database has populated followers of " + followUser.username);
     } else if (res.next_href) {
       addFollowers(followUser, res.next_href, email);
     } else {
-      sendEmail('Database User', email, 'Email Database', 'coayscue@artistsunlimited.co', 'SUCCESSFUL Database Population', "Database has populated followers of " + followUser.username);
+      sendEmail('Database User', email, 'Email Database', 'coayscue@artistsunlimited.com', 'SUCCESSFUL Database Population', "Database has populated followers of " + followUser.username);
     }
     if (res && res.collection) {
       var i = -1;
@@ -403,7 +403,7 @@ router.post('/downloadurl', function(req, res, next) {
             var tags = {
               title: body.fields.trackTitle,
               artist: body.fields.artistUsername,
-              album: 'ArtistsUnlimited.co',
+              album: 'ArtistsUnlimited.com',
               image: "tmp/" + body.file.newfilename + ".jpg"
             }
             nodeID3.write(tags, 'tmp/' + body.file.newfilename); //Pass tags and filepath
