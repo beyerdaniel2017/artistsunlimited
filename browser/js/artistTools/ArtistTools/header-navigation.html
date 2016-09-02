@@ -11,10 +11,26 @@
     <div class="inner-head">
       <ul class="nav navbar-nav navbar-right">
         <li>
+                    <a href="#"><img class="img-responsive" src="assets/images/notification.png"></a>
+                  </li>
+        <li>
+          <a href="#"><img class="img-responsive" src="assets/images/message.png"></a>
+                  </li>
+                  <li>
           <a href="#"><img class="img-responsive" ng-click="openHelpModal()" src="assets/images/question_icon.png"></a>
         </li>
-        <li><a href="#" ui-sref="services"><img class="img-responsive" src="assets/images/home.png"></a>
+                  <li>
+                     <a href="#"><img class="img-responsive" src="assets/images/home.png"></a>
+                  </li>
+                  <li class="switch-btn">
+                     <label class="switch">
+            <input type="checkbox" ng-click="adminlogout()">
+                        <div class="slider round"></div>
+                     </label>
         </li> 
+        <li style="padding-right:10px;padding-top:5px;"> 
+          <h5>Admin</h5> 
+        </li>
         <li > 
               <a class="menu-bar" href="#menu-toggle" id="menu-toggle">
                 <img src="assets/images/bar-icon.png"/>

@@ -10,13 +10,33 @@ app.config(function($stateProvider) {
           $window.location.href = '/login';
         }
         return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
-          .then(function(res) {
-            return res.data;
-          })
-          .then(null, function(err) {
-            $.Zebra_Dialog("error getting your events");
-            return;
-          })
+        .then(function(res) {
+          return res.data;
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("error getting your events");
+          return;
+        })
+      }
+    }
+  }) .state('artistToolSongScheduler', {
+    url: '/artistTools/songScheduler',
+    templateUrl: 'js/artistTools/scheduler/songScheduler.html',
+    controller: 'ATSchedulerController',
+    resolve: {
+      events: function($http, $window, SessionService) {
+        if (!SessionService.getUser()) {
+          $window.localStorage.setItem('returnstate', 'artistToolsScheduler');
+          $window.location.href = '/login';
+        }
+        return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
+        .then(function(res) {
+          return res.data;
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("error getting your events");
+          return;
+        })
       }
     }
   });
@@ -28,6 +48,12 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   } else {
     $window.localStorage.removeItem('returnstate');
   }
+  if (events) {
+    $scope.events = events;
+  }
+  var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  $scope.currentDate = new Date();
   $scope.user = SessionService.getUser();
   $scope.showEmailModal = false;
   $scope.makeEventURL = "";
@@ -38,9 +64,9 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   });
   $scope.events = events;
   $scope.hideall = false;
-
+  $scope.itemview = "calender";
   $scope.dayIncr = 0;
-
+  $scope.eventDate = new Date();
   $scope.autoFillTracks = [];
   $scope.trackList = [];
   $scope.trackListObj = null;
@@ -50,12 +76,124 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.trackType = "";
   $scope.timeGap = '1';
   $scope.otherChannels = {};
-
+  $scope.listevents=[];
+  var defaultAvailableSlots = {
+    sunday: [],
+    monday: [],
+    tuesday: [],
+    wednesday: [],
+    thursday: [],
+    friday: [],
+    saturday: []
+  };
+  
+  $scope.availableSlots = (($scope.user.availableSlots != undefined) ?  $scope.user.availableSlots : defaultAvailableSlots);
+  $scope.setView = function(view) {
+    $scope.itemview = view;
+    $scope.getCurrentdateEvents();
+  };
   $scope.trackChange = function(index) {
     $scope.makeEventURL = $scope.trackListSlotObj.permalink_url;
     $scope.changeURL();
   };
 
+  function getshortdate(d) {
+    var YYYY = d.getFullYear();
+    var M=d.getMonth()+1;
+    var D=d.getDate();
+    var MM = (M<10)?('0'+M):M;
+    var DD = (D<10)?('0'+D):D;
+    var result = MM + "-" + DD + "-" + YYYY;
+    return result; 
+  }
+ 
+  $scope.getPreviousEvents = function(){
+    var d = new Date($scope.eventDate);
+    d = d.setDate(d.getDate() - 1);
+    $scope.eventDate = new Date(d);
+    $scope.listevents = [];
+    return $http.get('/api/events/listEvents/' + $scope.user.soundcloud.id+"?date="+getshortdate(new Date(d)))
+    .then(function(res) {
+      var prevevents = res.data;
+      prevevents.forEach(function(ev) {
+        ev.day = new Date(ev.day);
+      });
+      $scope.listevents = prevevents;
+    })
+    .then(null, function(err) {
+      $.Zebra_Dialog("error getting your events");
+      return;
+    })
+  }
+
+  $scope.getCurrentdateEvents=function()
+  {
+    $scope.listevents=[];
+    var allevents = $scope.events;
+    for(var i=0; i < allevents.length; i++)
+    {     
+      var eventDay = getshortdate(new Date(allevents[i].day));
+      var startDate = getshortdate(new Date());
+      var endDate = new Date();
+      endDate.setDate(endDate.getDate() + 6); 
+      endDate = getshortdate(endDate);
+      if(eventDay >= startDate && eventDay <= endDate)
+      {
+        $scope.listevents.push(allevents[i]);
+      }
+    }
+  }
+
+  $scope.getNextEvents = function(){
+    var d = new Date($scope.eventDate);
+    d = d.setDate(d.getDate() + 1);
+    $scope.eventDate = new Date(d);
+    $scope.listevents = [];
+    return $http.get('/api/events/listEvents/' + $scope.user.soundcloud.id+"?date="+getshortdate(new Date(d)))
+    .then(function(res) {
+      var nextevents = res.data;
+      nextevents.forEach(function(ev) {
+        ev.day = new Date(ev.day);
+      });
+      $scope.listevents = nextevents;
+    })
+    .then(null, function(err) {
+      $.Zebra_Dialog("error getting your events");
+      return;
+    })
+  }
+  
+  $scope.clickedSlotsave = function(day, hour) {
+    var pushhour = parseInt(hour);
+    if ($scope.availableSlots[daysArray[day]].indexOf(pushhour) > -1){
+      $scope.availableSlots[daysArray[day]].splice($scope.availableSlots[daysArray[day]].indexOf(pushhour), 1);
+    }else{
+      $scope.availableSlots[daysArray[day]].push(pushhour);
+    }
+    $http.post('/api/events/saveAvailableSlots', {
+      availableslots : $scope.availableSlots,
+      id : $scope.user._id
+    }).then(function(res) {
+      SessionService.create(res.data);
+      $scope.user = SessionService.getUser();
+      $scope.availableSlots = $scope.user.availableSlots;
+    });
+  }
+
+  $scope.setSlotStyle = function(day,hour){
+    if ($scope.availableSlots[daysArray[day]].indexOf(hour) > -1){
+      $("#slot"+day+hour).css('background-color', "white");
+      $("#slot"+day+hour).css('border-color', "#999");
+    }
+    else{
+      $("#slot"+day+hour).css('background-color', "#f8f8f8");
+      $("#slot"+day+hour).css('border-color', "#dfdfdf");
+    }
+  }
+
+  $scope.getChannels = function() {
+    $scope.channels = ["Emil", "Tobias", "Linus"];
+  }
   $scope.trackListChange = function(index) {
     $scope.newQueueSong = $scope.trackListObj.permalink_url;
     $scope.changeQueueSong();
@@ -402,7 +540,11 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     return event.unrepostDate > new Date();
   }
 
-  $scope.getStyle = function(event) {
+  $scope.getStyle = function(event, day, hour) {
+    if ($scope.availableSlots[daysArray[day]] && $scope.availableSlots[daysArray[day]].indexOf(hour) > -1){
+      $("#calslot"+day+hour).css('background-color', "white");
+      $("#calslot"+day+hour).css('border-color', "#999");
+    }
     if (event.type == 'empty') {
       return {}
     } else if (event.type == 'track' || event.type == 'queue') {
@@ -429,6 +571,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         });
         $scope.events = events;
         $scope.calendar = $scope.fillDateArrays(events);
+        
       })
   }
 
@@ -522,7 +665,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.updateReach = function() {
-    console.log('change');
     $scope.repostReach = 0;
     $scope.repostReach = $scope.user.soundcloud.followers;
     for (var key in $scope.otherChannels) {
