@@ -20,6 +20,7 @@ scWrapper.init({
   secret: scConfig.clientSecret,
   uri: scConfig.redirectURL
 });
+
 router.post('/', function(req, res, next) {
   var submission = new Submission(req.body);
   submission.invoiceIDS = [];
