@@ -19,6 +19,26 @@ app.config(function($stateProvider) {
         })
       }
     }
+  }) .state('artistToolSongScheduler', {
+    url: '/artistTools/songScheduler',
+    templateUrl: 'js/artistTools/scheduler/songScheduler.html',
+    controller: 'ATSchedulerController',
+    resolve: {
+      events: function($http, $window, SessionService) {
+        if (!SessionService.getUser()) {
+          $window.localStorage.setItem('returnstate', 'artistToolsScheduler');
+          $window.location.href = '/login';
+        }
+        return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
+        .then(function(res) {
+          return res.data;
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("error getting your events");
+          return;
+        })
+      }
+    }
   });
 });
 
@@ -32,6 +52,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.events = events;
   }
   var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   $scope.currentDate = new Date();
   $scope.user = SessionService.getUser();
   $scope.showEmailModal = false;
@@ -56,6 +77,17 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.timeGap = '1';
   $scope.otherChannels = {};
   $scope.listevents=[];
+  var defaultAvailableSlots = {
+    sunday: [],
+    monday: [],
+    tuesday: [],
+    wednesday: [],
+    thursday: [],
+    friday: [],
+    saturday: []
+  };
+  
+  $scope.availableSlots = (($scope.user.availableSlots != undefined) ?  $scope.user.availableSlots : defaultAvailableSlots);
   $scope.setView = function(view) {
     $scope.itemview = view;
     $scope.getCurrentdateEvents();
@@ -93,6 +125,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       return;
     })
   }
+
   $scope.getCurrentdateEvents=function()
   {
     $scope.listevents=[];
@@ -100,10 +133,11 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     for(var i=0; i < allevents.length; i++)
     {     
       var eventDay = getshortdate(new Date(allevents[i].day));
-      var todayDate = getshortdate(new Date());
-      //var newCompareDate=compareDate[0] + " " +compareDate[1] + " " + compareDate[2] + " " + compareDate[3];
-      //var eventsDate=eventDay[0] + " " + eventDay[1] + " " + eventDay[2] + " " + eventDay[3];
-      if(eventDay == todayDate)
+      var startDate = getshortdate(new Date());
+      var endDate = new Date();
+      endDate.setDate(endDate.getDate() + 6); 
+      endDate = getshortdate(endDate);
+      if(eventDay >= startDate && eventDay <= endDate)
       {
         $scope.listevents.push(allevents[i]);
       }
@@ -129,6 +163,34 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     })
   }
   
+  $scope.clickedSlotsave = function(day, hour) {
+    var pushhour = parseInt(hour);
+    if ($scope.availableSlots[daysArray[day]].indexOf(pushhour) > -1){
+      $scope.availableSlots[daysArray[day]].splice($scope.availableSlots[daysArray[day]].indexOf(pushhour), 1);
+    }else{
+      $scope.availableSlots[daysArray[day]].push(pushhour);
+    }
+    $http.post('/api/events/saveAvailableSlots', {
+      availableslots : $scope.availableSlots,
+      id : $scope.user._id
+    }).then(function(res) {
+      SessionService.create(res.data);
+      $scope.user = SessionService.getUser();
+      $scope.availableSlots = $scope.user.availableSlots;
+    });
+  }
+
+  $scope.setSlotStyle = function(day,hour){
+    if ($scope.availableSlots[daysArray[day]].indexOf(hour) > -1){
+      $("#slot"+day+hour).css('background-color', "white");
+      $("#slot"+day+hour).css('border-color', "#999");
+    }
+    else{
+      $("#slot"+day+hour).css('background-color', "#f8f8f8");
+      $("#slot"+day+hour).css('border-color', "#dfdfdf");
+    }
+  }
+
   $scope.getChannels = function() {
     $scope.channels = ["Emil", "Tobias", "Linus"];
   }
@@ -478,7 +540,11 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     return event.unrepostDate > new Date();
   }
 
-  $scope.getStyle = function(event) {
+  $scope.getStyle = function(event, day, hour) {
+    if ($scope.availableSlots[daysArray[day]] && $scope.availableSlots[daysArray[day]].indexOf(hour) > -1){
+      $("#calslot"+day+hour).css('background-color', "white");
+      $("#calslot"+day+hour).css('border-color', "#999");
+    }
     if (event.type == 'empty') {
       return {}
     } else if (event.type == 'track' || event.type == 'queue') {

@@ -1133,10 +1133,8 @@ h2, h3 {
 
  .page-content li img{
   display: inline-table;
-  width: 8%;
   padding: 11px 0px;
-  width: 40px;
-  margin: 0 20px;
+  margin: 0 10px;
 }
 
 .tab-content{
@@ -1171,7 +1169,7 @@ h2, h3 {
  padding: 0 48px;
 }
 .nav-tabs img{
-  width: 90%;
+  width:50px;
 }
 .nav-tabs .nav > li{
 	width: 50%;
@@ -1538,12 +1536,19 @@ input[type=range]::-ms-track {
  .left-menus ul li {
    padding: 0px 10px;
  }
+.songScheduler .channel-group{
+  margin:20px uto;
+ }
 }
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
  .range-main {
    margin:10px auto;
    width:80%;
  }
+ .songScheduler .channel-group{
+  margin:20px uto;
+ }
+ 
 }
 
 .min-ht{
@@ -1677,6 +1682,10 @@ input[type=range]::-ms-track {
   .inner-head .menu-bar{
    display:block;
  }
+.songScheduler .channel-group{
+  margin:20px uto;
+ }
+ 
 }
 /************ SIDEBAR START *****************/
 /*!
@@ -1775,6 +1784,12 @@ input[type=range]::-ms-track {
     position: relative;
     margin-right: 0;
   }
+  .songScheduler{
+    width:100%;
+  }
+  .songScheduler .channel-group{
+  margin:20px uto;
+ }
   
 }
 /************ SIDEBAR END*****************/
@@ -1983,6 +1998,220 @@ display: inline-block;
   border-radius: 3px;
   width: 100%;
 }
+
+
+.songScheduler{
+ width:70%;
+ margin: 0 auto;
+ color: rgb(138, 138, 138);
+}
+
+.songScheduler .title{
+  font-size: 18px;
+  list-style: none;
+  color: #686868;
+  font-weight: 400;
+  text-align: center;
+  margin: 10px 0 30px 0;
+}
+
+.songScheduler .switch-btn{
+ vertical-align: middle;
+ list-style: none;
+}
+
+.songScheduler .switch-btn span{
+  margin: 0px 10px;
+  color: rgb(138, 138, 138);
+  font-size: 17px;
+  letter-spacing: .2px;
+}
+
+.songScheduler label{
+  font-size: 15px;
+  color: rgb(138, 138, 138);
+  font-weight: 300;
+  margin: 10px 0;
+  vertical-align: middle;
+}
+
+.channel-check{
+border: 1px solid #727272;
+box-shadow: 0 0px 1px #AEAEAE; 
+border-radius: 10px; 
+display: inline-block;
+width: 100%;
+margin: 15px 0;
+}
+
+.channel-masege{
+  border-bottom: 1px solid rgb(216, 216, 216);
+  padding: 10px 0px 0px 24px;
+}
+
+.channel-masege ul li{
+ display: inline-block;
+  background-color: #FFD6D6;
+  margin: 0 5px;
+  padding: 5px 15px;
+  border-radius: 2px;
+  color: #6F6F6F;
+}
+
+.songScheduler .channel-group{
+  margin: 0 auto;
+  width: 190px;
+  display: block;
+}
+
+.songScheduler .channel-group a{
+ padding: 10px 20px;
+}
+
+.total-reach{
+  text-align:center;
+  margin:40px auto;
+}
+
+.total-reach a{
+  border-radius: 10px;
+  border: 1px solid #ff7676;
+  padding: 13px 25px;
+  color: #ff9393;
+  font-size: 15px;
+}
+
+.songScheduler .creat-link{
+  color: #ff9393;
+  padding: 10px 10px;
+  margin: 0 0 24px 0px;
+  border-top: 1px solid #d8d8d8;
+}
+
+.creat-link img{
+    width: 20px;
+    margin-left: 10px;
+}
+
+.creat-link a{ 
+  font-size: 15px;
+  color:#ff9393;
+}
+
+.songScheduler .next-previous{}
+
+.songScheduler .next-previous button{
+  padding: 10px 30px;
+  background: transparent none repeat scroll 0% 0%;
+  margin: 10px 3px;
+  border-radius: 10px;
+  border: 1px solid #727272;
+  box-shadow: 0 0px 1px #AEAEAE;
+  text-align: center;
+  color:#8a8a8a;
+  font-weight: 600;
+  font-size: 13px;
+
+}
+
+.songScheduler .next-previous button:active{
+  backgrpound-color:#FF7676;
+  color: rgb(138, 138, 138);
+}
+
+
+.left-textarea{
+  border: 1px solid #727272;
+  height: 100%;
+  display: inline-table;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0px 1px #AEAEAE;
+}
+
+.songScheduler input{
+    border: 1px solid #727272;
+    box-shadow: 0 0px 1px #AEAEAE;
+}
+
+.songScheduler select{
+    border: 1px solid #BDBDBD;;
+    box-shadow: 0 0px 1px #AEAEAE;
+}
+
+.songScheduler textarea{
+  border: 1px solid #727272;
+    box-shadow: 0 0px 1px #AEAEAE;
+}
+
+.songScheduler .save-share{
+  background-color:#FF7676!important;
+  color:#fff!important;
+  border:none!important;
+}
+
+.songScheduler input,.songScheduler select{
+  height:45px;
+  color:#c0c0c0;
+}
+
+.like-comment{
+  display: inline-flex;
+  list-style: none;
+}
+.like-comment li{
+    list-style: none;
+}
+
+.input-hour{
+  width: 45px;
+  margin: 0px 10px;
+  text-align: center;
+  display: inline;
+}
+
+/********* Checkbox ******/ 
+
+.demo-radio-btn{
+  margin:0 10px 0 0;
+}
+.demo-radio-btn input[type="checkbox"]{
+  display:none;
+}
+.demo-radio-btn input[type="checkbox"] + label{
+  color:#686868;
+}
+.demo-radio-btn input[type="checkbox"] + label span{
+  display:inline-block;
+  width:20px;
+  height:20px;
+  /*border-radius:50%;*/
+}
+.demo-radio-btn input[type="checkbox"] + label span{
+  display:inline-block;
+  width:20px;
+  height:20px;
+  vertical-align:middle;
+  margin:0 10px;
+  cursor:pointer;
+}
+.demo-radio-btn input[type="checkbox"] + label span{
+  background-color: #fff;
+  border: .5px solid #808080;
+  box-shadow: 0px 0px 1px #8A8A8A;
+}
+.demo-radio-btn input[type="checkbox"]:checked + label span{
+  background-color:#FF7676;
+}
+.demo-radio-btn input[type="checkbox"] + label span,
+.demo-radio-btn input[type="checkbox"]:checked + label span {
+  -webkit-transition: background-color 0.4s linear;
+  -o-transition: background-color 0.4s linear;
+  -moz-transition: background-color 0.4s linear;
+  transition: background-color 0.4s linear;
+}
+/********* Checkbox ******/ 
+
 /*********** Media CSS **************/
 @media screen and (max-width: 1280px) {
 	.min-ht {
@@ -2069,6 +2298,13 @@ display: inline-block;
 	.question-btn {
 		margin: 10px 50px;
 	}
+  .songScheduler{
+    width:100%;
+  }
+  .songScheduler .channel-group{
+  margin:20px auto;
+ }
+ 
 }
 @media screen and (max-width: 667px) {
 	.img-btn {
@@ -2200,6 +2436,9 @@ display: inline-block;
 .question-btn {
   margin: 10px 50px;
 }
+.songScheduler .channel-group{
+  margin:20px auto;
+}
 
 }
 @media screen and (max-width: 320px) {
@@ -2240,6 +2479,16 @@ display: inline-block;
 .question-btn {
   margin: 10px 50px;
 }
+
+.songScheduler{
+  width:100%;
+}
+.channel-masege{
+  text-align: center;
+  padding: 10px 0px 0px 0;
+}
+ 
+
 }
 /** MEDIA CSS END **/
 .padding-10{
