@@ -66,6 +66,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.hideall = false;
   $scope.itemview = "calender";
   $scope.dayIncr = 0;
+  $scope.listDayIncr = 0;
   $scope.eventDate = new Date();
   $scope.autoFillTracks = [];
   $scope.trackList = [];
@@ -90,7 +91,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.availableSlots = (($scope.user.availableSlots != undefined) ?  $scope.user.availableSlots : defaultAvailableSlots);
   $scope.setView = function(view) {
     $scope.itemview = view;
-    $scope.getCurrentdateEvents();
+    $scope.getListEvents();
   };
   $scope.trackChange = function(index) {
     $scope.makeEventURL = $scope.trackListSlotObj.permalink_url;
@@ -108,59 +109,49 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
  
   $scope.getPreviousEvents = function(){
-    var d = new Date($scope.eventDate);
-    d = d.setDate(d.getDate() - 1);
-    $scope.eventDate = new Date(d);
-    $scope.listevents = [];
-    return $http.get('/api/events/listEvents/' + $scope.user.soundcloud.id+"?date="+getshortdate(new Date(d)))
-    .then(function(res) {
-      var prevevents = res.data;
-      prevevents.forEach(function(ev) {
-        ev.day = new Date(ev.day);
-      });
-      $scope.listevents = prevevents;
-    })
-    .then(null, function(err) {
-      $.Zebra_Dialog("error getting your events");
-      return;
-    })
+    $scope.listDayIncr--;
+    $scope.getListEvents();
   }
 
-  $scope.getCurrentdateEvents=function()
+  $scope.getListEvents = function()
   {
     $scope.listevents=[];
-    var allevents = $scope.events;
-    for(var i=0; i < allevents.length; i++)
+    var currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + $scope.listDayIncr);   
+    for(var i=0; i < 7; i++)
     {     
-      var eventDay = getshortdate(new Date(allevents[i].day));
-      var startDate = getshortdate(new Date());
-      var endDate = new Date();
-      endDate.setDate(endDate.getDate() + 6); 
-      endDate = getshortdate(endDate);
-      if(eventDay >= startDate && eventDay <= endDate)
-      {
-        $scope.listevents.push(allevents[i]);
+      var d = new Date(currentDate);
+      d.setDate(d.getDate() + i);
+      var currentDay = parseInt(d.getDay());
+      var strDdate = getshortdate(d);
+      var slots = $scope.availableSlots[daysArray[currentDay]];
+      slots = slots.sort(function(a, b){return a-b});
+      angular.forEach(slots, function(s) {
+        var item = new Object();
+        var h = s;
+        var time = '';
+        if (h >= 12) {
+          h = h-12;
+          time = h+":00"+" PM";
+        } else {
+          time = h+":00"+" AM";
       }
+        item.date = strDdate + " " + time;
+        var calendarDay = $scope.calendar.find(function(calD) {
+          return calD.day.toLocaleDateString() == d.toLocaleDateString();
+        });
+        var event = calendarDay.events.find(function(ev) {
+          return new Date(ev.day).getHours() == s;
+        });
+        item.event = event;
+        $scope.listevents.push(item);
+      });      
     }
   }
 
   $scope.getNextEvents = function(){
-    var d = new Date($scope.eventDate);
-    d = d.setDate(d.getDate() + 1);
-    $scope.eventDate = new Date(d);
-    $scope.listevents = [];
-    return $http.get('/api/events/listEvents/' + $scope.user.soundcloud.id+"?date="+getshortdate(new Date(d)))
-    .then(function(res) {
-      var nextevents = res.data;
-      nextevents.forEach(function(ev) {
-        ev.day = new Date(ev.day);
-      });
-      $scope.listevents = nextevents;
-    })
-    .then(null, function(err) {
-      $.Zebra_Dialog("error getting your events");
-      return;
-    })
+    $scope.listDayIncr++;
+    $scope.getListEvents();
   }
   
   $scope.clickedSlotsave = function(day, hour) {
@@ -181,14 +172,11 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.setSlotStyle = function(day,hour){
+    var style = {};
     if ($scope.availableSlots[daysArray[day]].indexOf(hour) > -1){
-      $("#slot"+day+hour).css('background-color', "white");
-      $("#slot"+day+hour).css('border-color', "#999");
+      style = {'background-color': "#fff", 'border-color': "#999"};
     }
-    else{
-      $("#slot"+day+hour).css('background-color', "#f8f8f8");
-      $("#slot"+day+hour).css('border-color', "#dfdfdf");
-    }
+    return style;
   }
 
   $scope.getChannels = function() {
@@ -540,11 +528,16 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     return event.unrepostDate > new Date();
   }
 
-  $scope.getStyle = function(event, day, hour) {
-    if ($scope.availableSlots[daysArray[day]] && $scope.availableSlots[daysArray[day]].indexOf(hour) > -1){
-      $("#calslot"+day+hour).css('background-color', "white");
-      $("#calslot"+day+hour).css('border-color', "#999");
+  $scope.getStyle = function(event, date, day, hour) {
+    var style = {};
+    var currentDay = new Date(date).getDay();
+    if ($scope.availableSlots[daysArray[currentDay]] && $scope.availableSlots[daysArray[currentDay]].indexOf(hour) > -1){
+      style = {'background-color': '#fff', 'border-color' : "#999"}
     }
+    return style;
+    }
+
+  $scope.getEventStyle = function(event) {
     if (event.type == 'empty') {
       return {}
     } else if (event.type == 'track' || event.type == 'queue') {
