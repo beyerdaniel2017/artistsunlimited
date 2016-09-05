@@ -13,10 +13,12 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.selectedGroups = [];
   $scope.selectedChannelIDS = [];
   $scope.selectedGroupChannelIDS = [];
+  $scope.selectedChannelName = [];
   $scope.genre = "";
   $scope.displayType = 'channel';
   $scope.skip = 0;
   $scope.limit = 10;
+  $scope.isLoggedIn = SessionService.getUser() ? true : false;
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
@@ -115,8 +117,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     var index = $scope.selectedChannelIDS.indexOf(chan.id);
     if (index == -1) {
       $scope.selectedChannelIDS.push(chan.id);
+      $scope.selectedChannelName.push(chan.username);
     } else {
       $scope.selectedChannelIDS.splice(index, 1);
+      $scope.selectedChannelName.splice(index, 1);
     }
   }
 

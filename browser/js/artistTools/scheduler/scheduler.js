@@ -78,6 +78,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.timeGap = '1';
   $scope.otherChannels = {};
   $scope.listevents=[];
+  $scope.tabSelected = true;
   var defaultAvailableSlots = {
     sunday: [],
     monday: [],
@@ -97,6 +98,18 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.makeEventURL = $scope.trackListSlotObj.permalink_url;
     $scope.changeURL();
   };
+
+  $scope.showTab = function(){
+    $scope.tabSelected=true;
+  }
+
+  $scope.addNewSong = function(){
+    $scope.tabSelected=false;
+  }
+
+  $scope.addNewSongCancel = function(){
+    $scope.tabSelected=true;
+  }
 
   function getshortdate(d) {
     var YYYY = d.getFullYear();

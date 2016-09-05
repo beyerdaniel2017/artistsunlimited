@@ -27,7 +27,9 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
 
     function handleLoginResponse(res) {
       if (res.status === 200 && res.data.success) {
-        SessionService.create(res.data.user);
+        var userData = res.data.user;
+        userData.isAdmin = true;
+        SessionService.create(userData);
         $state.go('submissions');
       } else {
         $scope.message = {

@@ -1,7 +1,8 @@
 <!-- Sidebar -->
 <div id="sidebar-wrapper">
   <div class="left-side">
-    <div class="tropical"><a href="{{user.soundcloud.permalinkURL}}" target="_blank" style="color:#8a8a8a"><span>{{user.soundcloud.username}}</span><img class="img-responsive img-circle" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't200x200') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:100px;">
+    <div class="tropical"><a href="{{user.soundcloud.permalinkURL}}" target="_blank" style="color:#8a8a8a">
+      <span>{{user.soundcloud.username}}</span><img class="img-responsive img-circle" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't200x200') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:100px;">
       <p>{{user.soundcloud.followers | number:0}} Followers</p></a>
       <select class="form-control" style="width:200px; margin:0 auto;" ng-model="linkedUsers"
       ng-show="userlinkedAccounts.length > 0" ng-change="linkedUsersChange(linkedUsers)">

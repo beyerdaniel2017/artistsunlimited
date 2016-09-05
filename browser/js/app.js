@@ -251,6 +251,15 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
             });
     }
 
+    $scope.swithUser = function(isadmin){
+        if(isadmin){
+            mainService.logout();
+        }
+        else{
+            mainService.adminlogout();
+        }
+    }
+
     $scope.checkNotification();
     $scope.getSubmissionCount();
 });

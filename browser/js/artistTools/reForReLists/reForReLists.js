@@ -74,12 +74,10 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   $scope.searchUser = openTrades;
   $scope.currentTab = "SearchTrade";
   $scope.searchURL = "";
-
   $scope.sliderSearchMin = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers / 2) : 0)) / Math.log(1.1);
   $scope.sliderSearchMax = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers * 2) : 200000000)) / Math.log(1.1);
   $scope.minSearchTradefollowers = Math.pow(1.1, $scope.sliderSearchMin);
   $scope.maxSearchTradefollowers = Math.pow(1.1, $scope.sliderSearchMax);
-
   $scope.sliderManageMin = 0;
   $scope.sliderManageMax = 200000000;
 

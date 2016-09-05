@@ -46,7 +46,9 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
 
     function handleLoginResponse(res) {
       if (res.status === 200 && res.data.success) {
-        SessionService.create(res.data.user);
+        var userData = res.data.user;
+        userData.isAdmin = false;
+        SessionService.create(userData);
         $state.go('reForReLists');
       } else {
         $scope.message = {
@@ -125,7 +127,9 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
       })
       .then(function(res) {
         $scope.processing = false;
-        SessionService.create(res.data.user);
+        var userData = res.data.user;
+        userData.isAdmin = false;
+        SessionService.create(userData);
         if ($stateParams.submission) {
           $state.go('artistToolsDownloadGatewayNew', {
             'submission': $stateParams.submission
