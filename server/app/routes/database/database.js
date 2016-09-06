@@ -994,7 +994,6 @@ router.post('/profile/soundcloud', function(req, res, next) {
 });
 
 router.put('/networkaccount', function(req, res, next) {
-  console.log(req.body[0]._id);
   NetworkAccounts.findOneAndUpdate({
       channels: req.body[0]._id
     }, {
@@ -1151,4 +1150,23 @@ router.get('/userNetworks', function(req, res, next) {
         res.send([]);
       }
     });
+});
+
+router.put('/updateRepostSettings', function(req, res, next) {
+  var repostSettings = req.body.repostSettings;
+  User.findOneAndUpdate({
+    '_id': req.body.id
+  }, {
+    $set: {
+      repostSettings: repostSettings
+    }
+  }, {
+    new: true
+  }).exec()
+  .then(function(result) {
+    res.send(result);
+  })
+  .then(null, function(err) {
+    next(err);
+  });
 });
