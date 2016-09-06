@@ -1,8 +1,8 @@
   <style>
   .grey {
-   background-color:#DCDCDC;
-   color:#000000 !important;
-}
+    background-color:#DCDCDC;
+    color:#000000 !important;
+  }
   .margin-bottom-20{
     margin-bottom: 20px;
   }
@@ -11,7 +11,7 @@
   <!-- Content Start  -->
   <div id="wrapper">
     <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-    <div class="container-fluid height-100pr">
+    <div class="container-fluid height-100pr" ng-init="checkCommentEnable();getListEvents();">
       <div class="row">
         <div class="col-md-12">
           <div class="page-content right-side">
@@ -31,26 +31,26 @@
                 <!-- MY SCHEDULE : Start-->
                 <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
                   <div class="container-90">
-                      <div class="col-md-3 col-xs-6">
+                    <div class="col-md-3 col-xs-6">
                       <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
                         <a class="btn btn-default" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
                         <a class="btn btn-default" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
                       </div>
                     </div>
-                  <div class="col-md-5 col-xs-12 pull-right">
-                    <form >
-                      <div class="schedule-newsong">
+                    <div class="col-md-5 col-xs-12 pull-right">
+                      <form >
+                        <div class="schedule-newsong">
                           <button type="button" class="form-control" ng-click="addNewSong();">SCHEDULE NEW SONG</button>  
-                      </div>
-                    </form>
-                  </div>
-                   <div class="col-md-4 col-xs-6 pull-right text-right">
+                        </div>
+                      </form>
+                    </div>
+                    <div class="col-md-4 col-xs-6 pull-right text-right">
                       <div class="btn-group" role="group" aria-label="...">
                         <a class="btn btn-default" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.png" /></a>
                         <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
                       </div>
                     </div>
-                </div>
+                  </div>
                   <div class="">
                     <h3 style="text-align:center;">{{user.displayName}}</h3>
                     <div id="scheduler-container" ng-show="itemview == 'calender'">
@@ -226,7 +226,7 @@
                 </div><!--row ::end-->
                </div>
               </div>
-                <!-- MANAGE REPOSTS : End -->                
+              <!-- MANAGE REPOSTS : End -->                
               </div>
               <!-- Tab panes :: End-->
               <div class="col-md-12" ng-show="!tabSelected">
@@ -239,23 +239,23 @@
                         <input style="" class="form-control ng-pristine ng-valid ng-empty ng-touched" placeholder="songScheduler" ng-model="makeEventURL" ng-change="changeURL();">
                         <label>Next Available Repost Time</label>
                         <div class="form-group">
-                          <select class="form-control" ng-model="selectedName">
-                      <option style="color:black;text:center;" ng-repeat="date in listAvailableSlots" ng-click="clickedSlot(date.date,date.time);">{{date.date.toString().split(' ')[1] + ' ' +date.date.toString().split(' ')[2] + ' ' + date.date.toString().split(' ')[3]}} {{date.time}}</option>
+                          <select class="form-control" ng-model="selectedName">                       
+                            <option style="color:black;text:center;" ng-repeat="date in listAvailableSlots" ng-click="clickAvailableSlots(date.date,date.time);">{{date.date.toString().split(' ')[1] + ' ' +date.date.toString().split(' ')[2] + ' ' + date.date.toString().split(' ')[3]}} {{date.time}}</option>
                           </select>
                         </div>
                         <li class="switch-btn">
                           <label class="switch">
-                            <input checked="" type="checkbox">
+                            <input checked="" type="checkbox" ng-model="autoFillSlot">
                             <div class="slider round"></div>
                           </label> 
                           <span>Autofill slot</span>
                         </li>
                         <li class="switch-btn">
                           <label class="switch">
-                            <input checked="" type="checkbox">
+                            <input checked="" type="checkbox" ng-model="unrepostEnable">
                             <div class="slider round"></div>
                           </label> 
-                          <span>Unrepost after<input  class="form-control input-hour" placeholder="1">hours</span>
+                          <span>Unrepost after<input  class="form-control input-hour" placeholder="1" ng-model="unrepostDays">hours</span>
                         </li>
                       </div>
                         <div class="col-md-6 col-xs-12">              
@@ -292,7 +292,7 @@
                       <div class="row">
                         <div class="col-xs-12">
                           <div class="total-reach">
-                            <a href="#">Total Reach: 102K followers</a>
+                            <a href="#">Total Reach: {{followCounts}} followers</a>
                           </div>
                         </div>
                       </div><!--row end-->
@@ -308,7 +308,7 @@
                               <li>
                                 <a href="#"><img src="assets/images/like.png" class="img-responsive"></a>
                               </li>
-                              <li>
+                              <li >
                                 <a href="#"><img src="assets/images/comment.png" class="img-responsive"></a>
                               </li>
                             </ul>                      
@@ -331,10 +331,10 @@
                             </div>
                             <div class="col-md-6">
                               <div class="form-group">
-                                <textarea class="form-control" placeholder="Awesome track!"></textarea>
+                                <textarea class="form-control" placeholder="Awesome track!" ng-disabled="disable">{{comment}}</textarea>
                                 <div class="next-previous">
-                                  <button class="btn pull-left">Previous</button>
-                                  <button class="btn pull-right">Next</button>
+                                  <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
+                                  <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
                                 </div>
                               </div>
                             </div>

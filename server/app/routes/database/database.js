@@ -1151,6 +1151,7 @@ router.get('/userNetworks', function(req, res, next) {
       }
     });
 });
+
 router.put('/updateRepostSettings', function(req, res, next) {
   var repostSettings = req.body.repostSettings;
   User.findOneAndUpdate({

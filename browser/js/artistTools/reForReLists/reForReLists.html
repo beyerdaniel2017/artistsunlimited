@@ -1,149 +1,229 @@
-<ng-include src="'js/artistTools/ArtistTools/header-navigation.html'"></ng-include>
-<div id="wrapper">
-  <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-  <div class="container-fluid height-100pr">
-    <div class="row height-100pr">
-      <div class="col-lg-12 height-100pr">
-       <div class="page-content right-side min-ht"><!--page-contant Start-->
-        <div class="row  nav-tabs margin0"> 
-          <div class="row"> 
-            <div class="col-md-12"> <!--tabe start-->                      
-              <div class="tab-menu">
-                <ul class="nav nav-pills">
-                  <li class="active">  <a data-toggle="tab" href="#SearchTrade" ng-click="setCurrentTab('SearchTrade')"><img src="assets/images/search.png">SEARCH TRADES</a></li>
-                  <li><a data-toggle="tab" href="#ManageTrade" ng-click="setCurrentTab('ManageTrade')"><img src="assets/images/two-arrow.png">MANAGE TRADES <span class="badge notification-bubble-tab" ng-show="shownotification">!</span></a></li>                
-                </ul>
-              </div>
+  <style>
+  .grey {
+   background-color:#DCDCDC;
+   color:#000000 !important;
+}
+  </style>
+  <ng-include src="'js/artistTools/ArtistTools/header-navigation.html'"></ng-include>
+  <!-- Content Start  -->
+  <div id="wrapper">
+    <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
+    <div class="container-fluid height-100pr">
+      <div class="row">
+        <div class="col-md-12">         
+           <div class="page-content right-side">
+            <!--page-contant Start-->
+            <div class="scheduler-tabs">
+              <!-- Nav tabs :Start-->
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#myschedule" aria-controls="myschedule" role="tab" data-toggle="tab">
+                  <img src="assets/images/myschedule.png" />New Trade</a>
+                </li>
+                <li role="presentation"><a href="#organizeschedule" aria-controls="organizeschedule" role="tab" data-toggle="tab"> <img src="assets/images/organizeschedule.png"/> Incomplete Trade</a></li>
+                <li role="presentation"><a href="#managereposts" aria-controls="managereposts" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.png"/> MANAGE Trade Slots</a></li>
+              </ul>
+              <!-- Nav tabs :End-->
+              <!-- Tab panes :: Start-->
               <div class="tab-content">
-                <div id="SearchTrade" class="tab-pane fade in active">
-                  <div class="manage-bar">  
-                    <div class="row padding30">
-                      <div class="col-md-4 col-sm-4 col-xs-10">
-                        <div class="form-group">
-                          <div class="icon-addon addon-md">
-                            <input type="text" placeholder="Search by URL" class="form-control" id="txtSearchByURL" ng-model="searchURL" >
-                            <label for="txtSearchByURL" class="glyphicon glyphicon-search" rel="tooltip" title="Search by URL" ng-disable="!applicationObj.firstName" ng-click="sendSearch()"></label>
-                          </div>                                    
+                <!-- MY SCHEDULE : Start-->
+                <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
+                  <div class="container-90"> 
+                    <div class="manage-bar">  
+                      <div class="row padding30">                      
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <div class=" ">
+                            <p class="text-center">Followers</p>
+                            <div range-slider min="0" max="200" model-min="sliderSearchMin" model-max="sliderSearchMax" attach-handle-values="true" on-handle-up='searchByFollowers()'></div>
+                            <span class="pull-left">{{minSearchTradefollowers | number:0}}</span> 
+                            <span class="pull-right">{{maxSearchTradefollowers | number:0}}</span>
+                          </div>                                               
                         </div><!--search-trad End-->
-                      </div>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <div class="range-main">
-                          <p>Followers</p>
-                          <div range-slider min="0" max="200" model-min="sliderSearchMin" model-max="sliderSearchMax" attach-handle-values="true" on-handle-up='searchByFollowers()'></div>
-                          <span class="pull-left">{{minSearchTradefollowers | number:0}}</span> 
-                          <span class="pull-right">{{maxSearchTradefollowers | number:0}}</span>
-                        </div>                                               
-                      </div><!--search-trad End-->
+                        <div class="col-md-1"></div>
+                        <div class="col-md-4 col-sm-4 col-xs-10">
+                          <div class="form-group">
+                            <div class="icon-addon addon-md">
+                              <input placeholder="Search by URL" class="form-control ng-pristine ng-untouched ng-valid ng-empty" id="txtSearchByURL" ng-model="searchURL" type="text">
+                              <label for="txtSearchByURL" class="glyphicon glyphicon-search" rel="tooltip" title="Search by URL" ng-disable="!applicationObj.firstName" ng-click="sendSearch()"></label>
+                            </div>                                    
+                          </div><!--search-trad End-->
+                        </div>
+                      </div>                 
                     </div>                 
-                  </div>                  
-              		  <div class="scroll-bar1 border-top reFor-scroll" when-scrolled="loadMore()">
-                   <div class="row">
-                        <div class="col-md-12">
-                      <div ng-repeat="user in searchUser" class="col-md-3 col-sm-6 col-xs-12">
-                        <div class="slidethamb-box">
-                          <p><a href="{{user.soundcloud.permalinkURL}}" target="_blank">{{user.name}}</a></p>
-                          <div class="thumb-img-container">
-                               <img class="img-responsive" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:190px; height: 100%;"> <button class="img-btn" ng-click="openTrade(user)">OPEN TRADE</button>
-                         </div>
-                         <p>{{((user.soundcloud.followers && user.soundcloud.followers > 0) ? user.soundcloud.followers : 0 ) | number:0}} Followers</p>
-                       </div>
-                     </div>
-                   </div>
-                 </div><!--row end-->
-               </div>
-             </div>
-             <div id="ManageTrade" class="tab-pane fade"> 
-              <div class="manage-bar">
-                <div class="row padding30">
-                  <div class="col-md-4 col-sm-4 col-xs-10">
-                    <div class="form-group">
-                      <div class="icon-addon addon-md">
-                        <input type="text" placeholder="Search by URL" class="form-control" id="txtSearchByArtistURL" ng-model="searchURL" style="">
-                        <label for="txtSearchByArtistURL" class="glyphicon glyphicon-search" rel="tooltip" title="Search by URL" ng-click="searchCurrentTrade()"></label>
-                      </div>
-                    </div>
-                  </div><!--search-trad End-->
-                  <div class="col-md-5 col-sm-5 col-xs-12">
-                    <div class="range-main">
-                      <p>Followers</p>
-                      <div range-slider min="0" max="200" model-min="sliderManageMin" model-max="sliderManageMax" attach-handle-values="true" on-handle-up='searchCurrentTrade()'></div>
-                      <span class="pull-left">{{minManageTradefollowers | number:0}}</span> 
-                      <span class="pull-right">{{maxManageTradefollowers | number:0}}</span>
-                    </div>
-                    <!--search-trad End-->
-                  </div> 
-                  <div class="col-md-3 col-sm-3 col-xs-12; align-center">
-                   <div class="dropdown pull-right sort-btn">
-                    <button class="btn dropdown-toggle sort-select {{sort_order}}" type="button" data-toggle="dropdown">{{sortby}}
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li><a href="#" ng-click="sortResult('Recent Alert')">Recent Alert</a></li>
-                      <li><a href="#" ng-click="sortResult('Followers')">Followers</a></li>
-                      <li><a href="#" ng-click="sortResult('Unfilled Slots')">Unfilled Slots</a></li>
-                    </ul>
                   </div>
-                </div>
-                <div class="col-md-4 col-sm-4 col-xs-10" style="margin-left: 45px;">
-                  <div class="checkbox-container">                
-                    <label class="with-square-checkbox">
-                      <input type="checkbox" ng-model="tradeType.Requests" ng-click="filterByTradeType()">
-                      <span>Requests</span> </label>                   
-                      <label class="with-square-checkbox">
-                        <input type="checkbox" value="{{Requested}}" ng-model="tradeType.Requested" ng-click="filterByTradeType()">
-                        <span>Requested</span></label>                   
-                        <label class="with-square-checkbox">
-                          <input type="checkbox" ng-model="tradeType.TradePartners" ng-click="filterByTradeType()">
-                          <span>Trade Partners</span> </label>                  
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                    <div class="scroll-bar1 border-top reFor-scroll">
-                   <div class="row">
-                    <div ng-repeat="trade in currentTrades" class="col-md-6 border-top border-right">
-                          <div class="col-md-12 col-sm-6 col-cs-12" style="padding:10px;">
-                        <div class="col-md-6">
-                            <div class="manage-trade-thumb manage-thumb">
-                              <img class="img-responsive" src="{{trade.other.user.soundcloud.avatarURL.replace('large', 't500x500') || 'http://i1.sndcdn.com/avatars-000223629160-q12lyq-t500x500.jpg'}}" style="width:190px;height: 100%;"/>
-                            <button class="manage-btn" ui-sref="reForReInteraction({tradeID: trade._id})">MANAGE</button>
-                            <button class="manage-delete-btn" ng-click="deleteTrade(trade._id, $index)">DELETE</button>
-                            <div class="notification-bubble" ng-show="trade.user.alert == 'change'">!</div>
+                  <div class="container-90 border-top">
+                    <br>
+                    <div class="row">
+                      <div class="col-md-6 border-right">
+                        <div class="row">
+                         <p class="text-center"><strong>Favorites</strong></p>
+                          <div ng-repeat="user in searchUser" class="col-md-6 col-sm-6 col-xs-12 text-center margin-20">
+                            <div class="slidethamb-box">                          
+                              <div class="thumb-img-container">
+                                   <img class="img-responsive" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:190px; height: 100%;margin: 0 auto;"> 
+                                  <button class="img-btn" ng-click="openTrade(user)">OPEN TRADE</button>
+                                  <button class="img-btn2 img-btn">OPEN TRADE2</button>
+                             </div>
+                             <p class="ng-binding new-trade-ingtexst">{{user.soundcloud.followers}} Followers OPEN TRADE</p>
+                           </div>
                           </div>
-                        </div>
-                        <div class="col-md-6">
-                          <h5><a href="{{trade.other.user.soundcloud.permalinkURL}}" target="_blank">{{trade.other.user.name}}</a></h5><br>
-                          {{((trade.other.user.soundcloud.followers && trade.other.user.soundcloud.followers > 0) ? trade.other.user.soundcloud.followers : 0 ) | number:0}} Followers<br>
-                          {{trade.unfilledTrackCount | number:0}} Unfilled Slots<br>
-                          <span class="span-time">{{trade.other.slots.length}}:{{trade.user.slots.length}}</span>
-                        </div>
+                        </div><!--row ::end-->
                       </div>
-                    </div>
-                  </div>
-                  <!--row end--> 
+                      <div class="col-md-6">
+                        <div class="row">
+                          <p class="text-center"><strong>Others</strong></p>
+                          <div ng-repeat="user in searchUser" class="col-md-6 col-sm-6 col-xs-12 text-center margin-20">
+                            <div class="slidethamb-box">                             
+                              <div class="thumb-img-container">
+                                   <img class="img-responsive" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:190px; height: 100%;margin: 0 auto;"> 
+                                  <button class="img-btn" ng-click="openTrade(user)">OPEN TRADE</button>
+                                  <button class="img-btn2 img-btn">OPEN TRADE2</button>
+                             </div>
+                             <p class="ng-binding new-trade-ingtexst">{{user.soundcloud.followers}} Followers OPEN TRADE</p>
+                           </div>
+                          </div>
+                        </div><!--row ::end-->
+                      </div>
+                    </div><!--row ::end-->
+                  </div><!--container-90 ::end-->
                 </div>
-              </div>
-              <!--tabe start--> 
-            </div>
-            <!--row end--> 
-          </div>
-          <!--page-contant End--> 
+
+                <!-- MY SCHEDULE : End-->
+                <!-- ORGANIZE SCHEDULE :Start -->
+                <div role="tabpanel" class="tab-pane fade" id="organizeschedule">
+                  <br>
+                    <div class="organize-list">
+                        <br>                           
+                          <div class="row">
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                              <div class="btn-group channel-group" role="group" aria-label="...">
+                                <a class="btn btn-default active" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')">Inbox</a>
+                                <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')">Sent</a>
+                              </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                              
+                            </div>                            
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                              <div class="">
+                                <div class="icon-addon addon-md">
+                                  <input placeholder="Search by URL" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="txtSearchByArtistURL" ng-model="searchURL" style="" type="text">
+                                  <label for="txtSearchByArtistURL" class="organize-label glyphicon glyphicon-search" rel="tooltip" title="Search by URL" ng-click="searchCurrentTrade()"></label>
+                                </div>
+                              </div>
+                            </div>
+                          </div> 
+                         
+                          <br>
+                          <div class="row">
+                            <div class="border-padding">
+                              <div class="col-md-2 col-sm-3 col-xs-12">
+                                <div class="thumb-img-container">
+                                 <div class="organize-thumb-img">
+                                   <img src="https://i1.sndcdn.com/avatars-000231342858-55idd3-t500x500.jpg" class="responsive">
+                                 </div>
+                                </div>
+                              </div>
+                              <div class="col-md-2 col-sm-12 col-xs-12">
+                                <div class="organize-text">
+                                  <p>Mahama</p>
+                                  <p>2,020 Followers</p>
+                                </div>
+                              </div>
+                              <div class="col-md-2 col-sm-12 col-xs-12">
+                                <div class="organize-text">
+                                  <p>Mahama</p>
+                                  <p>2,020 Followers</p>
+                                </div>
+                              </div>                              
+                              <div class="col-md-2 col-sm-12 col-xs-12">
+                                <div class="organize-text">
+                                  <p>For 5 Weeks</p>                                 
+                                </div>
+                              </div>
+                              <div class="col-md-2 col-sm-12 col-xs-12">
+                                <div class="button-list">
+                                  <button class="btn organize-btn">FB Message</button>
+                                  <button class="btn organize-btn">Email</button>
+                                  <button class="btn organize-btn">Get Link</button>
+                                </div>
+                              </div>
+                              <div class="col-md-2 col-sm-3 col-xs-12">
+                              <br>
+                                <div class="button-list">
+                                  <button class="btn organize-btn">Manage</button>
+                                  <button class="btn organize-btn">Decline</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div><!--row ::end-->
+                          <br>
+                          <div class="row">
+                            <div class="border-padding">
+                              <div class="col-md-2 col-sm-12 col-xs-12">
+                                <div class="thumb-img-container">
+                                 <div class="organize-thumb-img">
+                                   <img src="https://i1.sndcdn.com/avatars-000231342858-55idd3-t500x500.jpg" class="responsive">
+                                 </div>
+                                </div>
+                              </div>
+                              <div class="col-md-2 col-sm-12 col-xs-12">
+                                <div class="organize-text">
+                                  <p>Mahama</p>
+                                  <p>2,020 Followers</p>
+                                </div>
+                              </div>
+                              <div class="col-md-2 col-sm-3 col-xs-12">
+                                <div class="organize-text">
+                                  <p>Mahama</p>
+                                  <p>2,020 Followers</p>
+                                </div>
+                              </div>                              
+                              <div class="col-md-2 col-sm-12 col-xs-12">
+                                <div class="organize-text">
+                                  <p>For 5 Weeks</p>                                 
+                                </div>
+                              </div>
+                              <div class="col-md-2 col-sm-12 col-xs-12">
+                                <!-- <div class="button-list">
+                                  <button class="btn organize-btn">FB Message</button>
+                                  <button class="btn organize-btn">Email</button>
+                                  <button class="btn organize-btn">Get Link</button>
+                                </div> -->
+                              </div>
+                              <div class="col-md-2 col-sm-12 col-xs-12">
+                              <br>
+                                <div class="button-list">
+                                  <button class="btn organize-btn">Manage</button>
+                                  <button class="btn organize-btn">Decline</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div><!--row ::end--> 
+                          <br>                                                     
+                        </div>
+                  <br>
+                </div>
+                <!-- ORGANIZE SCHEDULE :End -->
+                <!-- MANAGE REPOSTS : Start -->
+                <div role="tabpanel" class="tab-pane fade" id="managereposts"> 
+                  <div class="container-90">                    
+                    
+                  </div>
+
+                  </div>
+                  </div>
+                  <!-- MANAGE REPOSTS : End -->                
+                </div>
+                <!-- Tab panes :: End-->
+              </div><!--page-contant End-->
+
+        </div>
+        <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
         </div>
       </div>
+      <!--overlay-->
+   
+      <ng-include src="'js/home/views/loader.html'"></ng-include>
     </div>
   </div>
 </div>
-<ng-include src="'js/home/views/loader.html'"></ng-include>
-<!-- <script>
-  $(document).ready(function(){
-    $(function(){
-    $.w = $(window);
-    $.w.on('resize', res);
-    res();
-});
-
-function res() {
-    $('.scroll-bar1').css('height',($.w.outerHeight()-275)+'px');
-}
-
-   });
-</script> -->

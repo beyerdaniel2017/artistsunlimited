@@ -80,13 +80,15 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.trackType = "";
   $scope.timeGap = '1';
   $scope.otherChannels = {};
-  $scope.makeEvent={};
   $scope.listevents=[];
   $scope.tabSelected = true;
   $scope.listAvailableSlots=[];
   $scope.displayType='channel';
   $scope.paidCommentsArr=[];
   $scope.tradeCommentsArr=[];
+  var commentIndex=0;
+  $scope.comment= $scope.user.repostSettings.schedule.comments.length > 0 ? $scope.user.repostSettings.schedule.comments[0] : '';
+  
   var defaultAvailableSlots = {
     sunday: [],
     monday: [],
@@ -108,8 +110,38 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       } 
     });
   }
-  $scope.limit=[1,2,3,4,5,6,7,8,9,10];
+
+  $scope.checkCommentEnable = function()
+  {
+    if($scope.user.repostSettings.schedule)
+    {
+      if($scope.user.repostSettings.schedule.comment == false)
+      {
+        $scope.disable = true;
+      }
+      else
+      {
+        $scope.disable = false;
+      }
+    }
+  }
   
+  $scope.getPrevNextComment=function(type){
+    if(type == 'next'){
+      if(commentIndex < $scope.user.repostSettings.schedule.comments.length - 1){
+        commentIndex = commentIndex + 1;
+        $scope.comment = $scope.user.repostSettings.schedule.comments[commentIndex];
+      }     
+    }
+    else
+    {
+      if(commentIndex >= 1){
+        commentIndex = commentIndex - 1;
+        $scope.comment = $scope.user.repostSettings.schedule.comments[commentIndex];
+      }
+    } 
+  }
+
   $scope.saveRepostSettings=function()
   {    
     $http.put('/api/database/updateRepostSettings', {
@@ -118,6 +150,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     }).then(function(res) {
       SessionService.create(res.data);
       $scope.user = SessionService.getUser();
+      $scope.checkCommentEnable();
     });    
   }
 
@@ -141,7 +174,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       $scope.tradeComment = "";
     }    
   }
-  
+
   $scope.setActive=function(type)
   {
     $scope.displayType=type;    
@@ -161,6 +194,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }
     }
     $scope.otherChannelsAndGroups();
+    $scope.followersCount();
   }
 
   $scope.setGroup = function(value)
@@ -177,6 +211,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }     
     }
     $scope.otherChannelsAndGroups();
+    $scope.followersCount();
   }
  
   function formatAMPM(date) {
@@ -228,11 +263,11 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.getListEvents = function()
   {
-    $scope.listevents=[];
+    $scope.listevents=[]; 
     var currentDate = new Date();
     currentDate.setDate(currentDate.getDate() + $scope.listDayIncr);   
     for(var i=0; i < 7; i++)
-    {     
+    {  
       var d = new Date(currentDate);
       d.setDate(d.getDate() + i);
       var currentDay = parseInt(d.getDay());
@@ -248,7 +283,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
           time = h+":00"+" PM";
         } else {
           time = h+":00"+" AM";
-      }
+        } 
         
         var calendarDay = $scope.calendar.find(function(calD) {
           return calD.day.toLocaleDateString() == d.toLocaleDateString();
@@ -256,19 +291,15 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         var event = calendarDay.events.find(function(ev) {
           return new Date(ev.day).getHours() == s;
         });
-        if(!event)
-        { 
-          item.date = d;
-          item.time=time;
-          $scope.listAvailableSlots.push(item);
-        }
-        else
-        {
         item.event = event;
         item.date = strDdate + " " + time;
-        }
-        
         $scope.listevents.push(item);
+        if(event == undefined && new Date(item.date) > new Date())
+        { 
+          item.date = d;
+          item.time = time;
+          $scope.listAvailableSlots.push(item);
+        }
       });      
     }
   }
@@ -276,8 +307,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.getNextEvents = function(){
     $scope.listDayIncr++;
     $scope.getListEvents();
-  }
-  
+  } 
+
   $scope.getNextDayOfWeek=function() 
   {
     var thisDay = new Date();
@@ -383,28 +414,41 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     return sHours;
   }
 
-  $scope.clickedSlot = function(day, hour) {
-    if(hour.indexOf(':') > -1)
-    {
-      hour=ConvertStringTimeToUTC(hour);
-    }
-  
+  $scope.clickAvailableSlots =function(day,hour)
+  {
+    hour=ConvertStringTimeToUTC(hour);
     var today = new Date();
     if (today.toLocaleDateString() == day.toLocaleDateString() && today.getHours() > hour) return;
+    var calDay = {};
+    var calendarDay = $scope.calendar.find(function(calD) {
+      return calD.day.toLocaleDateString() == day.toLocaleDateString();
+    });
+    $scope.updateReach();
+    if(!$scope.makeEvent)
+      $scope.makeEvent={
+        type :"track"
+      };
+    var makeDay = new Date(day);
+    makeDay.setHours(hour);
+    $scope.makeEvent.day = makeDay;
+    $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
+    $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
+    $scope.makeEventURL = $scope.makeEvent.trackURL;  
+  }
+  
+  $scope.clickedSlot = function(day, hour) {
+    var d = new Date(day).getDay();
+    var h = new Date().getHours();
+    console.log('h',h, hour);
+    if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1 || hour > h) return;
     $scope.showOverlay = true;
     var calDay = {};
     var calendarDay = $scope.calendar.find(function(calD) {
       return calD.day.toLocaleDateString() == day.toLocaleDateString();
     });
     $scope.makeEventURL = undefined;
-    $scope.trackListSlotObj = undefined;
-    $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
-    // if ($scope.makeEvent.type == 'traded' || $scope.makeEvent.type == 'paid') {
-    //   $scope.showOverlay = false;
-    //   $scope.makeEvent = undefined;
-    //   $.Zebra_Dialog("Cannot manage a traded or paid slot.");
-    //   return;
-    // }
+    $scope.trackListSlotObj = undefined;    
+    $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));  
     $scope.updateReach();
     if ($scope.makeEvent.type == "empty") {
       var makeDay = new Date(day);
@@ -447,10 +491,14 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     if ($scope.makeEventURL) {
       $scope.processing = true;
       $http.post('/api/soundcloud/resolve', {
-          url: $scope.makeEventURL
-        })
-        .then(function(res) {
-        if(!$scope.makeEvent.type){
+        url: $scope.makeEventURL
+      })
+      .then(function(res) {
+        if(!$scope.makeEvent)
+        {
+          $scope.makeEvent={};
+        }
+          
           $scope.makeEvent.type="track";
           $scope.trackArtistID = res.data.user.id;
           $scope.trackType = res.data.kind;
@@ -478,13 +526,13 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             $scope.processing = false;
             $.Zebra_Dialog("Sorry! We don't allow scheduling playlists here. Please enter a track url instead.");
           }
-        }
-        }).then(null, function(err) {
-          $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
-          document.getElementById('scPlayer').style.visibility = "hidden";
-          $scope.notFound = true;
-          $scope.processing = false;
-        });
+        
+      }).then(null, function(err) {
+        $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
+        document.getElementById('scPlayer').style.visibility = "hidden";
+        $scope.notFound = true;
+        $scope.processing = false;
+      });
     }
   }
 
@@ -545,11 +593,19 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.otherChannelsAndGroups = function()
   {
-    $scope.groupAndChannel=$scope.channelArr.concat($scope.groupArr)
+    $scope.groupAndChannel=$scope.channelArr.concat($scope.groupArr);
     $scope.selectedGroupChannelIDS = [];
     $scope.groupAndChannel.forEach(function(g){
       $scope.user.paidRepost.forEach(function(acc){
         if(acc.groups.indexOf(g) != -1){
+        
+          if($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1){
+            $scope.selectedGroupChannelIDS.push(acc.id);
+          }      
+        } 
+        else
+          if(acc.username == g)
+          {
           if($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1){
             $scope.selectedGroupChannelIDS.push(acc.id);
           }      
@@ -569,7 +625,9 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     {
       $scope.makeEvent.otherChannels = [];
     }
-    
+       $scope.makeEvent.autofillslot = $scope.autoFillSlot;
+       $scope.makeEvent.unrepostDays = $scope.unrepostDays;
+       $scope.makeEvent.selectedComment =$scope.comment;
     if ($scope.trackType == "playlist") {
       $.Zebra_Dialog("Sorry! We don't currently allow playlist reposting. Please enter a track url instead.");
       return;
@@ -585,7 +643,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     } else {
       $scope.processing = true;
       if ($scope.newEvent) {
-        
         for (var key in $scope.otherChannels) {
           if ($scope.otherChannels[key]) $scope.makeEvent.otherChannels.push(key);
         }
@@ -715,7 +772,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       style = {'background-color': '#fff', 'border-color' : "#999"}
     }
     return style;
-    }
+  }
 
   $scope.getEventStyle = function(event) {
     if (event.type == 'empty') {
@@ -849,6 +906,20 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }
     }
   }
+  
+ $scope.followersCount = function()
+ {
+  var count = 0;
+  var channels = $scope.otherChannelsAndGroups();
+  for(var i=0; i<$scope.user.paidRepost.length; i++)
+  {
+    if(channels.indexOf($scope.user.paidRepost[i].id) > -1)
+    {
+       count = count + $scope.user.paidRepost[i].followers;
+    }    
+  }
+$scope.followCounts = count;
+ }
   $scope.updateReach();
   $scope.getUserNetwork();
   $scope.verifyBrowser();

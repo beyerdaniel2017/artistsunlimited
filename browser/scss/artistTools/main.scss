@@ -2364,6 +2364,7 @@ margin: 15px 0;
   background-image: url("assets/images/form-bg.png");
   padding: 20px 40px;
   width: 100%;
+  margin-bottom: 30px;
   border-radius: 5px;
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -2524,6 +2525,8 @@ label:hover:before {
   padding: 0px;
   letter-spacing: 2px;
   margin: 30px 0;
+  font-size: 15px;
+  color: #574D4D;
  }
 .become-admin h2{
   letter-spacing: 0;
@@ -2546,17 +2549,52 @@ label:hover:before {
  }
 
 .login-admin{
- width: 90%;
- margin: 0 auto;
+ width: 60%;
+ margin:15px auto;
 }
  
 .background-none{
   background:none;
 }
 
+.login-admin .panel {
+  border-radius: 15px;
+  border-color: #B9B9B9;
+  min-height: 493px;  
+}
+
+.become-admin{
+  padding: 0px 19px;
+}
+
+.login-admin .panel-body{
+  padding: 35px;
+}
+
 /*Login Admin css ::end*/
 
 /*search organize css ::start*/
+
+.new-trade-ingtexst{
+  width: 150px;
+  text-align: center;
+  margin: 5px auto;
+}
+
+.button-list{
+  marging-top:5%;
+}
+
+.button-list button{
+  min-width: 144px;
+  text-align: center;
+}
+
+.border-padding{
+  border-top:1px solid #c6c6c6;
+  padding-top:15px;
+}
+
 .searchorganizetrades .ngrs-handle{
   background: #FFF;
   border: 1px solid #FF7676;
@@ -2622,6 +2660,7 @@ label:hover:before {
 
 .sms-icon,.key-icon{
   padding:0 20px;
+  border-color: #F5D3B5;
 }
 
 .border-btn{
@@ -2671,9 +2710,75 @@ label:hover:before {
   padding-top: 28%;
 }
 
-
-
 /*organize-list::end*/
+
+/*Calendarview :start*/
+
+.calendar-trade li{
+  list-style: none;
+}
+
+.margin-20{
+  margin: 20px 0px;
+}
+
+.calendar-table,tr,td{
+  border: 0xp !important;
+}
+
+.calendar-table{
+  margin: 20px auto;  
+}
+.calendar-table tr td{
+  padding: 12px 20px !important;
+}
+.calendar-table tbody{
+  border: 1px solid #DBDBDB;
+}
+
+.red{
+  color:#FF7676;
+}
+
+
+.available-slot{
+  margin: 0px auto;
+  width: 30%;
+}
+
+.available-slot input{
+  margin: 20px 0px;
+}
+.available-slot select{
+  margin: 20px 0px;
+}
+.available-slot li{
+  margin: 0px 0px;
+  list-style: none;
+}
+.skyp{
+  padding: 10px 30px;
+  background: transparent none repeat scroll 0% 0%;
+  margin: 10px 3px;
+  border-radius: 10px;
+  border: 1px solid #727272;
+  box-shadow: 0 0px 1px #AEAEAE;
+  text-align: center;
+  color: #8a8a8a;
+  font-weight: 600;
+  font-size: 13px;  
+}
+
+.save-share{
+  background-color: #FF7676 !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+
+/*.available-slot li label{vertical-align: top;}*/
+
+/*Calendarview ::end*/
 /********* Checkbox ******/ 
 
 .demo-radio-btn{
@@ -2769,6 +2874,13 @@ label:hover:before {
 	}
 }
 @media screen and (max-width: 768px) {
+.payed-reposts li{
+  text-align: center;
+}
+.li-display-none{
+  display:none;
+}
+
 .tropical-slect{
   width:100%;
 }
