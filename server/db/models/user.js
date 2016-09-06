@@ -66,7 +66,8 @@ var schema = new mongoose.Schema({
     profilePicture: {
         type: String
     },
-    availableSlots: {}
+    availableSlots: {},
+    repostSettings:{}
 });
 
 // method to remove sensitive information from user objects before sending them out

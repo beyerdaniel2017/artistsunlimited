@@ -27,7 +27,7 @@
               </ul>
               <!-- Nav tabs :End-->
               <!-- Tab panes :: Start-->
-              <div class="tab-content" ng-if="tabSelected">
+              <div class="tab-content" ng-show="tabSelected">
                 <!-- MY SCHEDULE : Start-->
                 <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
                   <div class="container-90">
@@ -122,11 +122,114 @@
                 </div>
                 <!-- ORGANIZE SCHEDULE :End -->
                 <!-- MANAGE REPOSTS : Start -->
-                <div role="tabpanel" class="tab-pane fade" id="managereposts">...</div>
+                <div role="tabpanel" class="tab-pane fade" id="managereposts">
+                  <div class="container-90">
+                    <div class="row">
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <br>
+                          <h5 class="text-center">SCHEDULE SETTINGS</h5>
+                          <br>
+                        </div>
+                      </div><!--row ::end-->
+                      <div class="row">                       
+                        <div class="col-md-4 border-right text-right">
+                          <div class="payed-reposts">
+                             <ul class="repot-left-list"> 
+                              <span style="margin: 0 0 17px 0;display: block;"></span>
+                             <!--  <li><a href="#">Repost Limit per Day</a></li> -->
+                              <li><a href="#">Default Like Repost</a></li>
+                              <li><a href="#">Default Comment on Repost</a></li>
+                              <li><a href="#">&nbsp;</a></li>
+                              <li><a href="#">&nbsp;</a></li>
+                              <li><a href="#">&nbsp;</a></li>              
+                            </ul>                           
+                          </div>
+                        </div>
+                        <div class="col-md-4 border-right text-center">   
+                          <div class="payed-reposts">
+                            <p>Schedule Reposts</p>                         
+                            <!-- <div class="payed-reposts-select">
+                              <select class="form-control" id="sel1" ng-model="user.repostSettings.schedule.limit" ng-change="saveRepostSettings()">
+                                <option value="{{limit}}" ng-repeat="limit in limit">{{limit}}</option>
+                              </select>
+                            </div>  -->                           
+                            <li class="switch-btn">
+                              <label class="switch">
+                                <input checked="" type="checkbox" ng-model="user.repostSettings.schedule.like" ng-change="saveRepostSettings()">
+                                <div class="slider round"></div>
+                              </label>                               
+                            </li>                      
+                            <li class="switch-btn">
+                              <label class="switch">
+                                <input checked="" type="checkbox" ng-model="user.repostSettings.schedule.comment" ng-click="saveRepostSettings()">
+                                <div class="slider round"></div>
+                              </label>                               
+                            </li>
+                            <div class="payed-reposts-list">
+                              <ul ng-if="user.repostSettings.schedule.comments.length">
+                                <li class="text-left"  ng-repeat="comment in user.repostSettings.schedule.comments">{{comment}}<span class="pull-right">Edit</span></li>
+                              </ul>
+                            </div>
+                            <br>
+                            <button type="button" class="btn payed-reposts-btn pull-right" data-toggle="modal" data-target="#scheduleCommentModal">+ COMMENT</button>
+                          </div>                           
+                        </div>
+                        <div class="col-md-4 text-center"> 
+                          <div class="payed-reposts">
+                            <p>Trade Reposts</p>
+                            <!-- <div class="payed-reposts-select">
+                             <select class="form-control" id="sel1" ng-model="user.repostSettings.trade.limit" ng-change="saveRepostSettings()">
+                                <option value="{{limit}}" ng-repeat="limit in limit">{{limit}}</option>
+                              </select>
+                            </div>  -->                           
+                            <li class="switch-btn">
+                              <label class="switch">
+                                <input checked="" type="checkbox" ng-model="user.repostSettings.trade.like" ng-change="saveRepostSettings()">
+                                <div class="slider round"></div>
+                              </label>                               
+                            </li>                         
+                            <li class="switch-btn">
+                              <label class="switch">
+                                <input checked="" type="checkbox" ng-model="user.repostSettings.trade.comment" ng-click="saveRepostSettings()">
+                                <div class="slider round"></div>
+                              </label>                               
+                            </li>                           
+                            <div class="payed-reposts-list">
+                              <ul  ng-if="user.repostSettings.trade.comments.length">
+                                <li class="text-left" ng-repeat="comment in user.repostSettings.trade.comments">{{comment}}<span class="pull-right">Edit</span></li>
+                              </ul>
+                            </div>
+                          <br>
+                          <button type="button" class="btn payed-reposts-btn pull-right" data-toggle="modal" data-target="#tradeCommentModal">+ COMMENT</button>
+                          </div>                           
+                        </div>                         
+                      </div><!--row ::end-->                
+                      <div class="row">
+                        <div class="col-md-12 col-xs-12 text-center">
+                          <div class="border-top text-center"> 
+                           <div class="payed-reposts-bottom">
+    <!--                           Use Autofill Tracks for unused slots&nbsp;
+                                <li class="switch-btn" style="list-style: none;">
+                                <label class="switch">
+                                  <input checked="" type="checkbox">
+                                  <div class="slider round"></div>
+                                </label>                               
+                              </li> -->
+                           </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div><!--row ::end-->
+                  </div>
+                </div><!--row ::end-->
+               </div>
+              </div>
                 <!-- MANAGE REPOSTS : End -->                
               </div>
               <!-- Tab panes :: End-->
-              <div class="col-md-12" ng-if="!tabSelected">
+              <div class="col-md-12" ng-show="!tabSelected">
                 <div class="songScheduler">
                   <div class="row extrapadding">
                   <div class="col-md-12">
@@ -137,7 +240,7 @@
                         <label>Next Available Repost Time</label>
                         <div class="form-group">
                           <select class="form-control" ng-model="selectedName">
-                            <option style="color:black;text:center;" ng-if="date.date.split(' ')[1]+date.date.split(' ')[2] > time" ng-repeat="date in listAvailableSlots" ng-click="clickedSlot(date.date);">{{date.date}}</option>
+                      <option style="color:black;text:center;" ng-repeat="date in listAvailableSlots" ng-click="clickedSlot(date.date,date.time);">{{date.date.toString().split(' ')[1] + ' ' +date.date.toString().split(' ')[2] + ' ' + date.date.toString().split(' ')[3]}} {{date.time}}</option>
                           </select>
                         </div>
                         <li class="switch-btn">
@@ -315,6 +418,46 @@
           </div>
         </div>
       </div>
+      <!-- ManageRepost paidComment overlay start -->
+      <div class="modal fade" id="scheduleCommentModal" role="dialog">
+        <div class="modal-dialog">    
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Schedule Comment Box</h4>
+            </div>
+            <div class="modal-body">
+              <input class="form-control" type="text" ng-model="scheduleComment" placeholder="Enter new comment"></input>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="saveComments(scheduleComment,'schedule')">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ManageRepost paidComment overlay end -->
+      <!-- ManageRepost tradeComment overlay start -->
+      <div class="modal fade" id="tradeCommentModal" role="dialog">
+        <div class="modal-dialog">    
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Trade Comment Box</h4>
+            </div>
+            <div class="modal-body">
+              <input class="form-control" type="text" ng-model="tradeComment" placeholder="Enter new comment"></input>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="saveComments(tradeComment,'trade')">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ManageRepost tradeComment overlay end -->
       <ng-include src="'js/home/views/loader.html'"></ng-include>
     </div>
   </div>

@@ -2049,6 +2049,65 @@ display: inline-block;
 }
 
 
+/*scheduler css ::start*/
+
+.payed-reposts-list li:first-child {background:#F6F6F6;}
+.payed-reposts-list li:nth-child(2n+3) {background: #F6F6F6;}
+
+.repot-left-list{
+  
+}
+
+.payed-reposts{
+  padding:20px 15px;
+}
+
+.payed-reposts-btn{
+   border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-color: #686868;
+  outline: none;
+  text-align: center;
+  background: none;
+}
+
+.payed-reposts-list{
+  border: 1px solid rgb(194, 194, 194);
+  box-shadow: 0px 0px 3px rgb(200, 200, 200);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.payed-reposts li{
+  list-style: none;
+  padding:25px 0;
+}
+
+.payed-reposts li a{
+  color:#686868;
+}
+
+.payed-reposts-list li{
+  padding:10px;  
+  color: #686868;
+}
+
+.payed-reposts-select{
+  width:25%; margin:30px auto 15px;
+}
+
+.payed-reposts-list span{
+  color:#FF7676;
+}
+
+.payed-reposts-bottom{
+  display: inline-flex;
+  margin: 30px auto;
+}
+
+/*scheduler css ::end*/
+
+
 /*songScheduler css start*/
 
 .songScheduler{
@@ -2061,6 +2120,7 @@ display: inline-block;
 .check-list{
   max-height: 200px;
   overflow-y: auto;
+  padding-top: 10px;
 }
 
 .songScheduler .title{
@@ -2240,6 +2300,7 @@ margin: 15px 0;
 .check-list form{
   width:85%;
   margin:0 auto;
+  padding-top: 5px;
 }
 
 
@@ -2270,7 +2331,7 @@ margin: 15px 0;
 }
 
 .accpect,.decline{
-  width:100%;
+  width:90%;
 }
 
 .submitted-time{
