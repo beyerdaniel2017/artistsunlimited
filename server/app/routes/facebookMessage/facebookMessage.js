@@ -1,10 +1,8 @@
+var router = require('express').Router();
 module.exports = router;
 var mongoose = require('mongoose');
 var request = require('request');
-var accessToken = 'EAACF74AST74BAAZCA3IkYFhZA7pJNXekDn8sg35WBqOnMRE22jGkx6rGLFA9XHk1nueISUPb7fnFPaU2Iefi8nv5FrCZAfSCG8wXzTZAua2PFFmlzZCVB2J1LZAHgZAfaWiXUlVgdLhgUBMZB5omx6lPe65rjLmrERnm6uWYncp86QZDZD';
 var messengerAPI = require('../../messengerAPI/messengerAPI.js');
-var sendEmail = require('../../mandrill/sendEmail.js');
-var helpers = require('../../helpers.js');
 var moment = require('moment');
 
 router.get('/', function(req, res, next) {

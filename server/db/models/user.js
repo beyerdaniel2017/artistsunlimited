@@ -73,8 +73,15 @@ var schema = new mongoose.Schema({
             tradeRequest: Boolean,
             tradeAcceptance: Boolean,
             trackRepost: Boolean,
-            tradeTrackRepost: Boolean,
-
+            trackUnrepost: Boolean,
+            dailyUnfilledTrade: Boolean,
+        },
+        email: {
+            tradeRequest: Boolean,
+            tradeAcceptance: Boolean,
+            trackRepost: Boolean,
+            trackUnrepost: Boolean,
+            dailyUnfilledTrade: Boolean,
         }
     }
 });

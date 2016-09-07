@@ -1,14 +1,11 @@
 app.factory('SettingService', ['$http', function($http) {
 
     function updateAdminProfile(data) {
-
         return $http.post('/api/users/updateAdminProfile', data);
     }
 
     function getSaltPassword(data) {
-
         return $http.get('/api/users/getSaltPassword/pswd=' + data.password);
-
     }
 
     function uploadFile(data) {
@@ -17,11 +14,13 @@ app.factory('SettingService', ['$http', function($http) {
         return $http({
                 method: 'POST',
                 url: '/api/users/profilePicUpdate',
-                headers: { 'Content-Type': undefined },
+                headers: {
+                    'Content-Type': undefined
+                },
                 tranformRequest: angular.identify,
                 data: fd
             })
-            .then(function(response) {           
+            .then(function(response) {
                 return response.data;
             });
     }
@@ -30,6 +29,5 @@ app.factory('SettingService', ['$http', function($http) {
         getSaltPassword: getSaltPassword,
         updateAdminProfile: updateAdminProfile,
         uploadFile: uploadFile
-
     };
 }]);
