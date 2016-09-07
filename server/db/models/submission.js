@@ -54,6 +54,9 @@ var schema = new mongoose.Schema({
     type: String,
     default: "submitted"
   },
+  pooledSendDate:  {
+    type: Date
+  },
   pooledChannelIDS: {
     type: Array,
     default: []

@@ -45,7 +45,8 @@ router.get('/unaccepted', function(req, res, next) {
     var genre = req.query.genre ? req.query.genre : undefined;
     var query = {
       channelIDS: [],
-      userID: req.user._id
+      userID: req.user._id,
+      status: "submitted"
     };
     if (genre != undefined && genre != 'null') {
       query.genre = genre;
@@ -53,6 +54,62 @@ router.get('/unaccepted', function(req, res, next) {
     Submission.find(query).sort({
         submissionDate: 1
       })
+    .populate('userID')
+    .skip(skipcount)
+    .limit(limitcount)
+    .exec()
+    .then(function(subs) {
+      var i = -1;
+      var next = function() {
+        i++;
+        if (i < subs.length) {
+          var sub = subs[i].toJSON();
+          sub.approvedChannels = [];
+          Submission.find({
+              email: sub.email
+            })
+            .exec()
+            .then(function(oldSubs) {
+              oldSubs.forEach(function(oldSub) {
+                sub.approvedChannels = sub.approvedChannels.concat(oldSub.paidChannelIDS)
+              });
+              resultSubs.push(sub);
+              next();
+            })
+            .then(null, next);
+        } else {
+          res.send(resultSubs);
+        }
+      }
+      next();
+    })
+    .then(null, next);
+  }
+});
+
+router.get('/getMarketPlaceSubmission', function(req, res, next) {
+  if (!req.user.role == 'admin' || !req.user.role == 'superadmin') {
+    next({
+      message: 'Forbidden',
+      status: 403
+    })
+  } else {
+    var resultSubs = [];
+    var skipcount = req.query.skip;
+    var limitcount = req.query.limit;
+    var genre = req.query.genre ? req.query.genre : undefined;
+    var query = {
+      pooledChannelIDS: [],
+      userID: {$ne: req.user._id},
+      status: "pooled"
+    };
+    if (genre != undefined && genre != 'null') {
+      query.genre = genre;
+    }
+    Submission.find(query).sort({
+      submissionDate: 1
+    })
+    .populate('userID')
       .skip(skipcount)
       .limit(limitcount)
       .exec()
@@ -118,6 +175,29 @@ router.get('/getGroupedSubmissions', function(req, res, next) {
     .then(0, next);
 });
 
+router.get('/getPaidRepostAccounts', function(req, res) {
+  var accounts = req.user.paidRepost;
+  var results = [];
+  var i = -1;
+  var next = function() {
+    i++;
+    if (i < accounts.length) {
+      var acc = accounts[i];
+      User.findOne({_id: acc.userID}, function(e,u){        
+        if(u){
+          acc.user = u.soundcloud;
+          results.push(acc);
+        }
+        next();
+      });
+    }
+    else {
+      res.send(results);
+    }
+  }
+  next();
+});
+
 router.put('/save', function(req, res, next) {
   if (!req.user.role == 'admin') {
     next({
@@ -134,6 +214,8 @@ router.put('/save', function(req, res, next) {
         })
         .then(null, next);
     } else {
+      req.body.status = "pooled";
+      req.body.pooledSendDate = new Date();
       Submission.findByIdAndUpdate(req.body._id, req.body, {
           new: true
         }).exec()
