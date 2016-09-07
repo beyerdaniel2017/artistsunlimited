@@ -87,7 +87,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.paidCommentsArr=[];
   $scope.tradeCommentsArr=[];
   var commentIndex=0;
-  $scope.comment= $scope.user.repostSettings.schedule.comments.length > 0 ? $scope.user.repostSettings.schedule.comments[0] : '';
+  $scope.eventComment = ($scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
   
   var defaultAvailableSlots = {
     sunday: [],
@@ -98,6 +98,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     friday: [],
     saturday: []
   };
+ 
   $scope.channelArr=[];
   $scope.groupArr=[];
   $scope.selectedGroups={};
@@ -110,34 +111,86 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       } 
     });
   }
+  $scope.linkedAccounts=[];
+  /*Get Linked Accounts*/
+  $scope.getLinkedAccounts=function()
+  {
+    setTimeout(function() {
+      var linked = $rootScope.userlinkedAccounts;
+      for(var i=0; i<linked.length; i++){
+        if(linked[i]._id != $scope.user._id){
+          $scope.linkedAccounts.push(linked[i]);
+        }
+      }
+    }, 1000);
+  }
 
-  $scope.checkCommentEnable = function()
+  $scope.checkCommentEnable = function(){
+    if($scope.user.repostSettings.schedule){
+      if($scope.user.repostSettings.schedule.comment == false){
+        $scope.disable = true;
+        $scope.commentSrc='assets/images/noComment.png';
+      } else {
+        $scope.disable = false;
+        $scope.commentSrc='assets/images/comment.png';
+      }
+    }
+  }
+  $scope.checkLikeEnable = function()
   {
     if($scope.user.repostSettings.schedule)
     {
-      if($scope.user.repostSettings.schedule.comment == false)
+      if($scope.user.repostSettings.schedule.like == false)
       {
-        $scope.disable = true;
+        $scope.likeSrc='assets/images/like.png';
       }
       else
       {
-        $scope.disable = false;
+        $scope.likeSrc='assets/images/likeTrue.png'
       }
     }
+  }
+  $scope.changeLikeCommentIcons = function(type)
+  {
+    if(type == 'like'){
+      if($scope.likeSrc == 'assets/images/like.png'){
+        $scope.likeSrc = 'assets/images/likeTrue.png';
+        $scope.likeEvent = true;
+      }
+      else{
+        $scope.likeSrc='assets/images/like.png';
+        $scope.likeEvent = false
+      }
+    } else{
+      if($scope.commentSrc == 'assets/images/comment.png'){
+        $scope.commentSrc='assets/images/noComment.png';
+        $scope.commentEvent = false;
+        $scope.disable = true;
+        $scope.eventComment = "";
+      }
+      else{
+        $scope.commentSrc='assets/images/comment.png';
+        $scope.commentEvent = true;
+        $scope.disable = false;
+        commentIndex = 0;
+        $scope.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
+      }
+    }
+    //$scope.saveRepostSettings();
   }
   
   $scope.getPrevNextComment=function(type){
     if(type == 'next'){
       if(commentIndex < $scope.user.repostSettings.schedule.comments.length - 1){
         commentIndex = commentIndex + 1;
-        $scope.comment = $scope.user.repostSettings.schedule.comments[commentIndex];
+        $scope.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
       }     
     }
     else
     {
       if(commentIndex >= 1){
         commentIndex = commentIndex - 1;
-        $scope.comment = $scope.user.repostSettings.schedule.comments[commentIndex];
+        $scope.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
       }
     } 
   }
@@ -151,6 +204,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       SessionService.create(res.data);
       $scope.user = SessionService.getUser();
       $scope.checkCommentEnable();
+      $scope.checkLikeEnable();
     });    
   }
 
@@ -296,8 +350,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         $scope.listevents.push(item);
         if(event == undefined && new Date(item.date) > new Date())
         { 
-          item.date = d;
-          item.time = time;
+          item.slotdate = d;
+          item.slottime = time;
           $scope.listAvailableSlots.push(item);
         }
       });      
@@ -402,45 +456,42 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
   function ConvertStringTimeToUTC(strTime){
     var time = String(strTime);
-    var hours = Number(time.match(/^(\d+)/)[1]);
-    var minutes = Number(time.match(/:(\d+)/)[1]);
-    var AMPM = time.match(/\s(.*)$/)[1];
+    var hours = Number(time.split(':')[0]);
+    var AMPM = time.split(' ')[1];
     if (AMPM === "PM" && hours < 12) {hours = hours + 12}
     if (AMPM === "AM" && hours === 12) {hours = hours - 12}
     var sHours = hours.toString();
-    var sMinutes = minutes.toString();
     if (hours < 10) {sHours = "0" + sHours}
-    if (minutes < 10) {sMinutes = "0" + sMinutes}
     return sHours;
   }
 
-  $scope.clickAvailableSlots =function(day,hour)
+  $scope.clickAvailableSlots =function(selectedSlot)
   {
-    hour=ConvertStringTimeToUTC(hour);
-    var today = new Date();
-    if (today.toLocaleDateString() == day.toLocaleDateString() && today.getHours() > hour) return;
+    selectedSlot = JSON.parse(selectedSlot);
+    var day = new Date(selectedSlot.slotdate);
+    var hour = ConvertStringTimeToUTC(selectedSlot.slottime);
     var calDay = {};
     var calendarDay = $scope.calendar.find(function(calD) {
       return calD.day.toLocaleDateString() == day.toLocaleDateString();
     });
-    $scope.updateReach();
-    if(!$scope.makeEvent)
+    //$scope.updateReach();
+    if(!$scope.makeEvent){
       $scope.makeEvent={
         type :"track"
       };
-    var makeDay = new Date(day);
+    }
+    $scope.newEvent = true;
+    var makeDay = new Date(selectedSlot.slotdate);
     makeDay.setHours(hour);
     $scope.makeEvent.day = makeDay;
-    $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
-    $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
-    $scope.makeEventURL = $scope.makeEvent.trackURL;  
+    $scope.makeEventURL = $scope.makeEvent.trackURL;
   }
   
   $scope.clickedSlot = function(day, hour) {
     var d = new Date(day).getDay();
-    var h = new Date().getHours();
-    console.log('h',h, hour);
-    if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1 || hour > h) return;
+    if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1) return;
+    var today = new Date();
+    if (today.toLocaleDateString() == day.toLocaleDateString() && today.getHours() > hour) return;
     $scope.showOverlay = true;
     var calDay = {};
     var calendarDay = $scope.calendar.find(function(calD) {
@@ -593,41 +644,57 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.otherChannelsAndGroups = function()
   {
-    $scope.groupAndChannel=$scope.channelArr.concat($scope.groupArr);
     $scope.selectedGroupChannelIDS = [];
-    $scope.groupAndChannel.forEach(function(g){
-      $scope.user.paidRepost.forEach(function(acc){
-        if(acc.groups.indexOf(g) != -1){
-        
-          if($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1){
-            $scope.selectedGroupChannelIDS.push(acc.id);
-          }      
-        } 
-        else
-          if(acc.username == g)
+    if($scope.role == 'admin')
+    {
+      $scope.groupAndChannel=$scope.channelArr.concat($scope.groupArr);
+      $scope.groupAndChannel.forEach(function(g){
+        $scope.user.paidRepost.forEach(function(acc){
+          if(acc.groups.indexOf(g) != -1){        
+            if($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1){
+              $scope.selectedGroupChannelIDS.push(acc.id);
+            }      
+          } 
+          else
           {
-          if($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1){
-            $scope.selectedGroupChannelIDS.push(acc.id);
-          }      
-        }
-      });    
-    });
-    return $scope.selectedGroupChannelIDS;
+            if(acc.username == g)
+            {
+              if($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1){
+                $scope.selectedGroupChannelIDS.push(acc.id);
+              }      
+            }
+          }
+        });    
+      });
+      return $scope.selectedGroupChannelIDS;
+    }
+    else
+    {
+      $scope.channelArr.forEach(function(ch){
+        $scope.linkedAccounts.forEach(function(acc){
+          if(acc.soundcloud && acc.soundcloud.username == ch)
+          {
+            if($scope.selectedGroupChannelIDS.indexOf(acc.soundcloud.id) == -1){
+              $scope.selectedGroupChannelIDS.push(acc.soundcloud.id);
+            }      
+          }
+        });
+      });
+      return $scope.selectedGroupChannelIDS;
+    }
   }
 
   $scope.saveEvent = function() {
     var otherChannels = $scope.otherChannelsAndGroups();
-    if(otherChannels.length > 0)
-    {
+    if(otherChannels.length > 0){
       $scope.makeEvent.otherChannels = otherChannels;
-    }
-    else
-    {
+    } else{
       $scope.makeEvent.otherChannels = [];
-    }
-       $scope.makeEvent.autofillslot = $scope.autoFillSlot;
-       $scope.makeEvent.unrepostDays = $scope.unrepostDays;
-       $scope.makeEvent.selectedComment =$scope.comment;
+    }    
+    $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + (parseInt($scope.unrepostHours) * 60 * 60 * 1000));
+    $scope.makeEvent.unrepost = ($scope.unrepostEnable);
+    $scope.makeEvent.like = $scope.likeEvent;
+    $scope.makeEvent.comment = ($scope.commentEvent == true ? $scope.eventComment : '');
     if ($scope.trackType == "playlist") {
       $.Zebra_Dialog("Sorry! We don't currently allow playlist reposting. Please enter a track url instead.");
       return;
@@ -655,11 +722,19 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }
       req
         .then(function(res) {
+          if(res)
+          {
+            $scope.repostResponse =res.data._id;
+          }
           $scope.trackType = "";
           $scope.trackArtistID = 0;
           return $scope.refreshEvents();
         })
         .then(function(res) {
+          if(res)
+          {
+             $scope.repostResponse =res.data._id;
+          }
           $scope.showOverlay = false;
           $scope.processing = false;
           $scope.trackType = "";
@@ -907,19 +982,39 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     }
   }
   
- $scope.followersCount = function()
- {
-  var count = 0;
-  var channels = $scope.otherChannelsAndGroups();
-  for(var i=0; i<$scope.user.paidRepost.length; i++)
+  $scope.followersCount = function()
   {
-    if(channels.indexOf($scope.user.paidRepost[i].id) > -1)
+    var count = 0;
+    var channels = $scope.otherChannelsAndGroups();
+    if($scope.role == 'admin')
     {
-       count = count + $scope.user.paidRepost[i].followers;
-    }    
+      for(var i=0; i<$scope.user.paidRepost.length; i++)
+      {
+        if(channels.indexOf($scope.user.paidRepost[i].id) > -1)
+        {
+           count = count + $scope.user.paidRepost[i].followers;
+        }    
+      }
+    }
+    else
+    {
+      for(var i=0; i<$scope.linkedAccounts.length; i++)
+      {
+        if(channels.indexOf($scope.linkedAccounts[i].soundcloud.id) > -1)
+        {
+          count = count + $scope.linkedAccounts[i].soundcloud.followers;
+        }  
+      }
+    }
+    $scope.followCounts = count;
   }
-$scope.followCounts = count;
- }
+  
+  $scope.sendMail = function(id){
+    $scope.fbMessageLink ="https://localhost:1443/repost/"+id;
+    $window.open("mailto:example@demo.com?body="+$scope.fbMessageLink,"_self");
+  };
+  $scope.checkCommentEnable();
+  $scope.checkLikeEnable();
   $scope.updateReach();
   $scope.getUserNetwork();
   $scope.verifyBrowser();

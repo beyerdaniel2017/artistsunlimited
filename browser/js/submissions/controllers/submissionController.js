@@ -348,7 +348,9 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.getPaidRepostAccounts();
   $scope.loadSubmissions();
   $scope.loadMarketSubmissions();
-});app.directive('countdown', [
+});
+
+app.directive('countdown', [
   'Util',
   '$interval',
   function (Util, $interval) {
