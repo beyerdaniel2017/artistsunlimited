@@ -11,7 +11,7 @@
   <!-- Content Start  -->
   <div id="wrapper">
     <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-    <div class="container-fluid height-100pr" ng-init="checkCommentEnable();getListEvents();">
+    <div class="container-fluid height-100pr" ng-init="checkCommentEnable();getListEvents();getLinkedAccounts();">
       <div class="row">
         <div class="col-md-12">
           <div class="page-content right-side">
@@ -239,27 +239,35 @@
                         <input style="" class="form-control ng-pristine ng-valid ng-empty ng-touched" placeholder="songScheduler" ng-model="makeEventURL" ng-change="changeURL();">
                         <label>Next Available Repost Time</label>
                         <div class="form-group">
-                          <select class="form-control" ng-model="selectedName">                       
-                            <option style="color:black;text:center;" ng-repeat="date in listAvailableSlots" ng-click="clickAvailableSlots(date.date,date.time);">{{date.date.toString().split(' ')[1] + ' ' +date.date.toString().split(' ')[2] + ' ' + date.date.toString().split(' ')[3]}} {{date.time}}</option>
+                          <select class="form-control" ng-model="selectedSlot" ng-change="clickAvailableSlots(selectedSlot);">                       
+                            <option style="color:black;text:center;" ng-repeat="slot in listAvailableSlots"
+                            value="{{slot}}">{{slot.slotdate.toString().split(' ')[1] + ' ' +slot.slotdate.toString().split(' ')[2] + ' ' + slot.slotdate.toString().split(' ')[3]}} {{slot.slottime}}</option>
                           </select>
                         </div>
-                        <li class="switch-btn">
+                       <!--  <li class="switch-btn">
                           <label class="switch">
                             <input checked="" type="checkbox" ng-model="autoFillSlot">
                             <div class="slider round"></div>
                           </label> 
                           <span>Autofill slot</span>
-                        </li>
+                        </li> -->
                         <li class="switch-btn">
                           <label class="switch">
                             <input checked="" type="checkbox" ng-model="unrepostEnable">
                             <div class="slider round"></div>
                           </label> 
-                          <span>Unrepost after<input  class="form-control input-hour" placeholder="1" ng-model="unrepostDays">hours</span>
+                          <span>Unrepost after<input  class="form-control input-hour" placeholder="1" ng-model="unrepostHours">hours</span>
                         </li>
+                        <div class="form-group">
+                          <div class="col-xs-12">
+                            <div class="total-reach">
+                              <a href="#">Total Reach: {{followCounts}} followers</a>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                         <div class="col-md-6 col-xs-12">              
-                          <div class="btn-group channel-group" role="group" aria-label="...">
+                          <div class="btn-group channel-group" ng-if="user.role == 'admin'" role="group" aria-label="...">
                             <a class="btn btn-default active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender');setActive('channel')">Channels</a>
                             <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
                           </div>
@@ -278,24 +286,33 @@
                                   <span>{{group}}</span> </label>
                                 </p>
                               </div>
-                              <div class="checkbox demo-radio-btn" ng-show="displayType == 'channel'" ng-repeat="channel in user.paidRepost">
+                              <div class="checkbox demo-radio-btn" ng-show="user.role == 'admin'" ng-show="displayType == 'channel'" ng-repeat="channel in user.paidRepost">
                                 <p>
                                   <label class="with-square-checkbox">
                                   <input style="" id="{{channel.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(channel.username);" type="checkbox">
-                                  <span>{{channel.username}}</span> </label>
+                                  <span>{{channel.username}}</span> 
+                                  </label>
+                                </p>
+                              </div>
+                              <div class="checkbox demo-radio-btn" ng-show="user.role == 'user'" ng-show="displayType == 'channel'" ng-repeat="u in linkedAccounts">
+                                <p>
+                                  <label class="with-square-checkbox">
+                                  <input style="" id="{{u.soundcloud.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(u.soundcloud.username);" type="checkbox">
+                                  <span>{{u.soundcloud.username}}</span> 
+                                 </label>
                                 </p>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div><!--row end-->
-                      <div class="row">
+                      <!--<div class="row">
                         <div class="col-xs-12">
                           <div class="total-reach">
                             <a href="#">Total Reach: {{followCounts}} followers</a>
                           </div>
                         </div>
-                      </div><!--row end-->
+                      </div>-->
                       <div class="row">
                       <div class="col-xs-12">
                         <div id="scPlayer" style="margin:10px 0"></div>            
@@ -306,10 +323,10 @@
                           <div class="pull-right">
                             <ul class="like-comment">
                               <li>
-                                <a href="#"><img src="assets/images/like.png" class="img-responsive"></a>
+                                <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('like');"><img src="{{likeSrc}}" class="img-responsive"></a>
                               </li>
                               <li >
-                                <a href="#"><img src="assets/images/comment.png" class="img-responsive"></a>
+                                <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('comment');"><img src="{{commentSrc}}" class="img-responsive"></a>
                               </li>
                             </ul>                      
                           </div>
@@ -318,7 +335,7 @@
                       <div class="row">
                         <div class="col-md-12">                     
                           <div class="row">
-                            <div class="col-md-6">
+    <!--                    <div class="col-md-6">
                               <div class="form-group">
                                 <div class="left-textarea">
                                   <textarea class="form-control" placeholder="To" style="border:none;"></textarea>
@@ -328,10 +345,10 @@
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div class="col-md-6">
+                            </div> -->
+                            <div class="col-md-12">
                               <div class="form-group">
-                                <textarea class="form-control" placeholder="Awesome track!" ng-disabled="disable">{{comment}}</textarea>
+                                <textarea class="form-control" placeholder="Awesome track!" ng-disabled="disable" ng-model="eventComment">{{comment}}</textarea>
                                 <div class="next-previous">
                                   <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
                                   <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
@@ -342,9 +359,9 @@
                           <div class="row">
                             <div class="col-md-12">
                               <div class="next-previous text-center">
-                                <button class="btn active">SKIP TO NEXT AUTOFILL</button>
+                               <!--  <button class="btn active">SKIP TO NEXT AUTOFILL</button> -->
                                 <button class="btn" ng-click="addNewSongCancel()">CANCEL</button>
-                                <button class="btn save-share" ng-click="saveEvent();">SAVE & SHARE</button>
+                                <button class="btn save-share" data-toggle="modal" data-target="#saveAndShareModal" ng-click="saveEvent();">SAVE & SHARE</button>
                               </div>
                             </div>
                           </div><!--row end-->                    
@@ -458,7 +475,38 @@
         </div>
       </div>
       <!-- ManageRepost tradeComment overlay end -->
+        <!-- Save And Share overlay start -->
+       <div class="modal fade" id="saveAndShareModal" role="dialog">
+        <div class="modal-dialog">    
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Share Your Link</h4>
+            </div>
+            <div class="modal-body">
+              https://localhost:1443/repost/{{repostResponse}}
+              <br>
+              <button class="btn btn-default btn-block" ng-click="sendMail(repostResponse)">Send Email</button>
+             <div id="fb-root"></div>
+              <div class="fb-send" data-href="https://jsfiddle.net/37eL5smy/"></div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+          </div>
+        </div>
+      </div>
+              <!-- Save And Share overlay end -->
+
       <ng-include src="'js/home/views/loader.html'"></ng-include>
     </div>
   </div>
 </div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.7&appId=1576897469267996";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>

@@ -538,10 +538,10 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     $scope.soundcloudLogin = function() {
       SC.connect()
         .then(function(res) {
-          var find = $scope.userlinkedAccounts.find(function(acct) {
-            return acct.soundcloud.token == res.oauth_token;
-          });
-          if (res.oauth_token == SessionService.getUser().soundcloud.token || !!find) {
+          // var find = $scope.userlinkedAccounts.find(function(acct) {
+          //   return acct.soundcloud.token == res.oauth_token;
+          // });
+          if (res.oauth_token == SessionService.getUser().soundcloud.token) {
             throw new Error('already added');
           } else {
             $scope.processing = true;
@@ -552,7 +552,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
           }
         })
         .then(function(res) {
-          console.log(res.data);
           var linkedAccountID = res.data.user._id;
           $http.post("/api/database/networkaccount", {
               userID: $scope.user._id,

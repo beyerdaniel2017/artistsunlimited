@@ -3,6 +3,15 @@
 <div class="container" ng-init="checkIfSubmission()">
   <div class="row">
     <div class="col-sm-12">
+      <div class="pull-right">
+          <div class="switch-btn">
+            <label class="switch">
+              <input type="checkbox" ng-checked="false" ng-click="swithUser(false)">
+              <div class="slider round"></div>
+            </label>
+            <label> Admin</label>
+          </div>
+        </div>
       <div class="content-area bg-white">
         <div class="row">
           <div class="col-sm-12">
