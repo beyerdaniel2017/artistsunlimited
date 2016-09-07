@@ -1,51 +1,100 @@
-<div ng-show="!isLoggedIn">
-  <div class="col-md-2">
+<style>
+  .grey {
+   background-color:#DCDCDC;
+   color:#000000 !important;
+  }
+</style>
+  <ng-include src="'js/home/views/_adminHeaderNavigation.html'"></ng-include>
+  <!-- Content Start  -->
+  <div id="wrapper">
+    <div class="container-fluid height-100pr">
+      <div class="row">
+        <div class="col-md-12 " ng-init="getCurrentDate();getCurrentdateEvents();">
+          <div class="page-content right-side background-none">
+            <!--page-contant Start--> 
+              <div class="login-admin">
+                <div class="row">
+                <div class="col-md-6">
+                   <div id="loginbox" class="mainbox">                    
+                  <div class="panel panel-default" >
+                    <div class="panel-heading" style="background:none;">
+                      <div class="panel-title text-center">
+                        <h5>WELCOME TO ARTISTS UNLIMITED</h5>
+                      </div>                       
+                    </div>
+                    <div style="padding-top:30px" class="panel-body" >
+                      <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+                      <form id="loginform" class="form-horizontal" role="form" ng-submit="login()">
+                        <div style="margin-bottom: 25px" class="input-group">
+                          <span class="input-group-addon sms-icon" style="background: none;"><i></i></span>
+                          <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="E-mail" ng-model="loginObj.email" required>
+                        </div>                                
+                        <div style="margin-bottom: 25px" class="input-group">
+                          <span class="input-group-addon key-icon" style="background: none;"><i></i></span>
+                          <input id="login-password" type="password" class="form-control" name="password" placeholder="Password" ng-model="loginObj.password" required>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="input-group text-left">
+                              <div class="">                          
+                                <label class="with-square-checkbox">
+                                  <input class="ng-pristine ng-untouched ng-valid ng-not-empty" type="checkbox">
+                                <span> Remember me</span> 
+                                </label>                          
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6 text-right">
+                            <p class="">Forgot Password?</p>
   </div>
-  <div class="col-md-8">
-    <h2>Admin</h2>
-  </br>
-  <form role="form" ng-submit="login()">
+                        </div>  <!--row ::end-->                            
     <div class="row">
-      <div class="col-sm-5 col-sm-offset-3">
-        <input class="form-control" type="email" placeholder="Email" ng-model="loginObj.email" required/>
+                          <div class="col-md-12 col-xs-12">                           
+                            <button id="btn-login" href="#" class="btn login-btn" type="submit">LOG IN</button>
+                          </div>
+                        </div><!--row ::end-->                     
+                      </form> 
+                    </div>                     
       </div>
     </div>
-  </br>
+                <!--panel ::end-->
+              </div>
+              <div class="col-md-6 pull-right">
+                <div class="panel panel-default">                     
+                  <div class="panel-body text-center">
+                    <div class="become-admin">
+                      <h2 >Become an admin</h2>
   <div class="row">
-    <div class="col-sm-5 col-sm-offset-3">
-      <input class="form-control" type="password" placeholder="Password" ng-model="loginObj.password" required/>
+                          <div class="col-xs-12 text-center">
+                            <p>MONETIZE YOUR ACCOUNT</p>
     </div>
   </div>
-</br>
 <div class="row">
-  <div class="col-sm-5 col-sm-offset-3">
-    <div class="text-center">
-      <p ng-show="message.visible" class="text-center">{{message.val}}</p>
-      <br/>
-      <button class="btn btn-default btn-lg btn-enter pull-right" type="submit">LOG IN</button>
-
+                        <div class="col-xs-12 text-center">
+                          <p>SCHEDULE RELEASES WEEKS AHEAD</p>
     </div>
   </div>
+                      <div class="col-md-12 col-xs-12"> 
+                        <a id="btn-login" href="mailto:coayscue@artistsunlimited.com" class="btn btn-default login-btn">APPLY</a>
 </div>
-</form>
+                      <div class="row">
+                        <div class="col-xs-12 text-center">
+                          <p>BECOME THE BEST RECORD LABEL, MUSIC CURATOR, OR DISTRIBUTOR YOU CAN BE!</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div><!--panel ::end-->
+              </div><!--Become an admin ::End-->
+            </div> <!--row ::end-->
 </div>
-<div class="col-md-2">
+            <!--page-contant End-->   
 </div>
 </div>
-
-<div ng-show="isLoggedIn">
-  <div class="col-md-2">
+      <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
   </div>
-  <div class="col-md-8 text-center">
-    <h2>Admin</h2>
-  </br>
-  <ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
-</br>
-<!-- <button ng-click="manage()">Manage Channel</button> -->
-<br>
-<br>
 </div>
-<div class="col-md-2">
+    <!--overlay-->   
+    <ng-include src="'js/home/views/loader.html'"></ng-include>    </div>
 </div>
 </div>
-<ng-include src="'js/home/views/loader.html'"></ng-include>

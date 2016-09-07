@@ -1,0 +1,175 @@
+<ng-include src="'js/artistTools/ArtistTools/header-navigation.html'"></ng-include>
+<div id="wrapper">
+    <!-- Content Start  -->
+    <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
+    <div class="container-fluid height-100pr " ng-init="checkIfEdit();getTrackListFromSoundcloud();checkIfSubmission();getListEvents();"> 
+       <!--  <div class="content-area bg-white"> -->
+       <div class="row height-100pr">
+        <div class="col-md-12">
+          <div class="page-content right-side">
+           <div class="col-md-12">
+            <div class="songScheduler">
+              <div class="row extrapadding">
+              <div class="col-md-12">
+                <div class="row">                
+                  <h1 class="title">AVAILABLE SLOT</h1>               
+                  <div class="col-md-6 col-xs-12">              
+                    <input style="" class="form-control ng-pristine ng-valid ng-empty ng-touched" placeholder="songScheduler" ng-model="makeEventURL" ng-change="changeURL();">
+                    <label>Next Available Repost Time</label>
+                     <div class="form-group">
+                     <select class="form-control" ng-model="selectedName">
+                      <option style="color:black;text:center;" ng-if="date.date.split(' ')[1]+date.date.split(' ')[2] > time" ng-repeat="date in listAvailableSlots" ng-click="clickedSlot(date.date);">{{date.date}}</option>     
+                       
+                        </select>
+                    </div>
+                     <li class="switch-btn">
+                      <label class="switch">
+                        <input checked="" type="checkbox">
+                        <div class="slider round"></div>
+                      </label> 
+                      <span>Autofill slot</span>
+                    </li>
+                    <li class="switch-btn">
+                    <label class="switch">
+                        <input checked="" type="checkbox">
+                        <div class="slider round"></div>
+                      </label> 
+                      <span>Unrepost after<input  class="form-control input-hour" placeholder="1">hours</span>
+                    </li>
+                  </div>
+                  <div class="col-md-6 col-xs-12">              
+                    <div class="btn-group channel-group" role="group" aria-label="...">
+                      <a class="btn btn-default active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender');setActive('channel')">Channels</a>
+                      <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
+                    </div>
+                    <div class="channel-check">
+                      <div class="channel-masege">
+                        <ul>
+                          <li class="" ng-show="channelArr.length > 0" ng-repeat="chan in channelArr">{{chan}}<span></span></li>
+                          <li class="" ng-show="groupArr.length > 0" ng-repeat="group in groupArr">{{group}}<span></span></li>
+                         
+                        </ul>
+                      </div>
+                      <div class="check-list">
+                         <div class="checkbox demo-radio-btn" ng-show="displayType == 'group'" ng-repeat="group in uniqueGroup">
+                             <p>
+                              <label class="with-square-checkbox">
+                            <input style="" id="{{group}}" ng-click="setGroup(group);" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" >
+                             <span>{{group}}</span> </label>
+                              </p>
+                          </div>
+                          <div class="checkbox demo-radio-btn" ng-show="displayType == 'channel'" ng-repeat="channel in user.paidRepost">
+                             <p>
+                              <label class="with-square-checkbox">
+                            <input style="" id="{{channel.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(channel.username);" type="checkbox">
+                             <span>{{channel.username}}</span> </label>
+                              </p>
+                          </div>
+                          <!-- <div class="checkbox demo-radio-btn">
+                          <input type="checkbox" value="" id="test2">
+                            <label for="test2"><span></span>Basement</label>
+                          </div>
+                          <div class="checkbox demo-radio-btn">
+                          <input type="checkbox" value="" id="test3">
+                            <label for="test3"><span></span>La Tropical</label>
+                          </div>  -->
+                      </div>
+                    </div>
+
+                  </div>
+                </div><!--row end-->
+                <div class="row">
+                  <div class="col-xs-12">
+                    <div class="total-reach">
+                      <a href="#">Total Reach: 102K followers</a>
+                    </div>
+                  </div>
+                </div><!--row end-->
+                  <div class="row">
+                  <div class="col-xs-12">
+                   <!--  <div class="total-reach">
+                      <a href="#">Total Reach: 102K followers</a>
+                    </div> -->
+                    <div id="scPlayer" style="margin:10px 0"></div>
+            
+                  </div>
+                </div><!--row end-->
+                <div class="row">
+                  <div class="col-xs-12">
+                    <div class="pull-right">
+                     <ul class="like-comment">
+                       <li>
+                          <a href="#"><img src="assets/images/like.png" class="img-responsive"></a>
+                       </li>
+                        <li>
+                          <a href="#"><img src="assets/images/comment.png" class="img-responsive"></a>
+                       </li>
+                     </ul>                      
+                    </div>
+                  </div>
+                </div><!--row end-->
+                <div class="row">
+                  <div class="col-md-12">
+                     
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <div class="left-textarea">
+                              <textarea class="form-control" placeholder="To" style="border:none;"></textarea>
+                              <div class="creat-link">
+                                <div class="pull-left"><img src="assets/images/link.png"></div>
+                                <div class="pull-right"><a href="#">Create Link</a></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <textarea class="form-control" placeholder="Awesome track!"></textarea>
+                            <div class="next-previous">
+                              <button class="btn pull-left">Previous</button>
+                              <button class="btn pull-right">Next</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div><!--row end-->
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="next-previous text-center">
+                            <button class="btn active">SKIP TO NEXT AUTOFILL</button>
+                            <button class="btn">CANCEL</button>
+                            <button class="btn save-share" ng-click="saveEvent();">SAVE & SHARE</button>
+                          </div>
+                        </div>
+                      </div><!--row end-->
+                    
+                  </div>
+                </div><!--row end-->
+
+              </div>
+            </div><!--row end-->
+            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<!-- Content End  -->
+<ng-include src="'js/home/views/loader.html'"></ng-include>
+<script type="text/ng-template" id="downloadURL.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Your Download URL: </h3>
+        <a href="$parent.modal.downloadURL">{{$parent.modal.downloadURL}}</a>
+    </div>
+    <div class="modal-body">
+        <button class="btn btn-warning" type="button" ng-click="$parent.closeModal()">Close</button>
+    </div>
+</script>

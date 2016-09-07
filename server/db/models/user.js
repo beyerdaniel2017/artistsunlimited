@@ -61,11 +61,29 @@ var schema = new mongoose.Schema({
         salt: String
     },
     linkedAccounts: [],
-    paidRepost :[],
-    customEmailButtons :[],
+    paidRepost: [],
+    customEmailButtons: [],
     profilePicture: {
         type: String
     },
+    availableSlots: {},
+    repostSettings: {},
+    notificationSettings: {
+        facebookMessenger: {
+            tradeRequest: Boolean,
+            tradeAcceptance: Boolean,
+            trackRepost: Boolean,
+            trackUnrepost: Boolean,
+            dailyUnfilledTrade: Boolean,
+        },
+        email: {
+            tradeRequest: Boolean,
+            tradeAcceptance: Boolean,
+            trackRepost: Boolean,
+            trackUnrepost: Boolean,
+            dailyUnfilledTrade: Boolean,
+        }
+    }
 });
 
 // method to remove sensitive information from user objects before sending them out

@@ -13,14 +13,17 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.selectedGroups = [];
   $scope.selectedChannelIDS = [];
   $scope.selectedGroupChannelIDS = [];
+  $scope.selectedChannelName = [];
   $scope.genre = "";
   $scope.displayType = 'channel';
   $scope.skip = 0;
   $scope.limit = 10;
+  $scope.isLoggedIn = SessionService.getUser() ? true : false;
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
   $scope.user=SessionService.getUser();
+  $scope.user.isAdmin = $scope.user.role=='admin' ? true : false;
   $scope.uniqueGroup = [];
   for (var i = 0; i < $scope.user.paidRepost.length; i++) {
     $scope.user.paidRepost[i].groups.forEach(function(acc) {
@@ -68,7 +71,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       $scope.processing = false;
       if (res.data.length > 0) {
         angular.forEach(res.data, function(d) {
-          $scope.showingElements.push(d);
+          d.selectedChannelName = [];
+          d.selectedChannelIDS = [];
+          d.selectedGroups = [];
+          $scope.showingElements.push(d)
       });
   }
     setTimeout(function() {
@@ -78,6 +84,11 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
           auto_play: false,
           maxheight: 150
         });
+          SC.oEmbed(sub.trackURL, {
+            element: document.getElementById(sub.trackID + "_player"),
+            auto_play: false,
+            maxheight: 150
+          });
       }, 50)
     });
     })
@@ -112,26 +123,28 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.changeBox = function(sub, chan) {
-    var index = $scope.selectedChannelIDS.indexOf(chan.id);
+    var index = sub.selectedChannelIDS.indexOf(chan.id);
     if (index == -1) {
-      $scope.selectedChannelIDS.push(chan.id);
+      sub.selectedChannelIDS.push(chan.id);
+      sub.selectedChannelName.push(chan.username);
     } else {
-      $scope.selectedChannelIDS.splice(index, 1);
+      sub.selectedChannelIDS.splice(index, 1);
+      sub.selectedChannelName.splice(index, 1);
     }
   }
 
   $scope.changeBoxGroup = function(sub, group) {
-    var ind = $scope.selectedGroups.indexOf(group);
+    var ind = sub.selectedGroups.indexOf(group);
     if(sub[group]){
       if (ind == -1) {
-        $scope.selectedGroups.push(group);
+        sub.selectedGroups.push(group);
       }
     }
     else{
-      $scope.selectedGroups.splice(ind, 1);
+      sub.selectedGroups.splice(ind, 1);
     }
     $scope.selectedGroupChannelIDS = [];
-    $scope.selectedGroups.forEach(function(g){
+    sub.selectedGroups.forEach(function(g){
     $scope.user.paidRepost.forEach(function(acc){
         if(acc.groups.indexOf(g) != -1){
           if($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1){
@@ -143,7 +156,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.save = function(submi) {
-    $scope.selectedChannelIDS.forEach(function(cid){
+    submi.selectedChannelIDS.forEach(function(cid){
       if($scope.selectedGroupChannelIDS.indexOf(cid) == -1){
         $scope.selectedGroupChannelIDS.push(cid);
       }
@@ -152,6 +165,9 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     if (submi.channelIDS.length == 0) {
       $scope.decline(submi);
     } else {
+      delete submi.selectedGroups;
+      delete submi.selectedChannelIDS;
+      delete submi.selectedChannelName;
       submi.password = $rootScope.password;
       $scope.processing = true;
       $http.put("/api/submissions/save", submi)

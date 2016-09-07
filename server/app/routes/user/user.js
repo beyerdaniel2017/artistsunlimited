@@ -18,9 +18,9 @@ scWrapper.init({
 module.exports = router;
 
 router.get('/isUserAuthenticate', function(req, res, next) {
-  if(req.user && req.user._id != undefined){
+  if (req.user && req.user._id != undefined) {
     res.send(req.user);
-  }else{
+  } else {
     res.send(null);
   }
 });
@@ -34,7 +34,9 @@ router.get('/byId/:id', function(req, res, next) {
 });
 
 router.get('/getUserID', function(req, res, next) {
-  User.findOne({role: 'superadmin'}).limit(1).exec()
+  User.findOne({
+      role: 'superadmin'
+    }).limit(1).exec()
     .then(function(user) {
       res.send(user._id);
     })
@@ -167,8 +169,8 @@ router.post('/bySCURL', function(req, res, next) {
 /*profile updateion*/
 router.post('/profilePicUpdate', function(req, res, next) {
   parseMultiPart()
-  .then(uploadToBucket)
-  .catch(errorHandler);
+    .then(uploadToBucket)
+    .catch(errorHandler);
   var body = {
     fields: {},
     file: {}
@@ -218,7 +220,7 @@ router.post('/profilePicUpdate', function(req, res, next) {
     });
   }
 
-  function uploadToBucket() {  
+  function uploadToBucket() {
     return new Promise(function(resolve, reject) {
       AWS.config.update({
         accessKeyId: awsConfig.accessKeyId,
@@ -238,15 +240,15 @@ router.post('/profilePicUpdate', function(req, res, next) {
         if (err) {
           reject(err);
           res.send({
-            success:false,
-            data:data
+            success: false,
+            data: data
           });
-        } else {  
-               
+        } else {
+
           resolve(data);
           res.send({
-           success:true,
-           data:data
+            success: true,
+            data: data
           });
         }
       });
@@ -259,35 +261,44 @@ router.post('/profilePicUpdate', function(req, res, next) {
   }
 });
 
+router.put('/updateAdmin', function(req, res, next) {
+  User.findByIdAndUpdate(req.user._id, req.body).exec()
+    .then(function(user) {
+      res.send(user);
+    }).then(null, next);
+})
+
 /*Admin profile update start*/
 router.post('/updateAdminProfile', function(req, res, next) {
   var body = req.body;
-  var updateObj={};
-  if(body.pictureUrl)
-  {
+  var updateObj = {};
+  if (body.pictureUrl) {
     updateObj.profilePicture = body.pictureUrl
   }
   if (body.username) {
     updateObj.name = body.username;
-  }
-  else if (body.password) {
+  } else if (body.password) {
     updateObj.salt = User.generateSalt();
     updateObj.password = User.encryptPassword(body.password, updateObj.salt);
-  } 
+  } else {
+    updateObj = body;
+  }
 
- User.findOneAndUpdate({
-    '_id': req.user._id
-  }, {
-    $set: updateObj
-  }, {
-    new: true
-  }).exec()
-  .then(function(result) {
-    res.send(result);
-  })
-  .then(null, function(err) {
-    next(err);
-  });
+  console.log(updateObj);
+
+  User.findOneAndUpdate({
+      '_id': req.user._id
+    }, {
+      $set: updateObj
+    }, {
+      new: true
+    }).exec()
+    .then(function(result) {
+      res.send(result);
+    })
+    .then(null, function(err) {
+      next(err);
+    });
 });
 
 // router.post('/syncSCEmails', function(req, res, next) {

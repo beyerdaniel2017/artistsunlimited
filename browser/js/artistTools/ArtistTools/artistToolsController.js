@@ -66,7 +66,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
 
     $scope.modalInstance = {};
     $scope.modal = {};
-
     $scope.openModal = {
       downloadURL: function(downloadURL) {
         $scope.modal.downloadURL = downloadURL;

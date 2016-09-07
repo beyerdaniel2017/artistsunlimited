@@ -7,16 +7,29 @@ $aurange: #F5BBBC;
 html{
 	height:100%;
 }
+a:focus,
+a:after,
+a:active:after{
+  outline: none;
+}
 button:focus,
 button:after,
 button:active:after{
 	outline: none;
 }
+.btn-group > .btn:hover, .btn-group-vertical > .btn:hover, .btn-group > .btn:focus, .btn-group-vertical > .btn:focus, .btn-group > .btn:active, .btn-group-vertical > .btn:active, .btn-group > .btn.active, .btn-group-vertical > .btn.active {
+  z-index: 2;
+  outline: 0;
+}
+.btn-default:hover {
+  background-color: inherit;
+  border-color: inherit;
+}
 /* SCHEDULER */
 
 #scheduler-container {
 	text-align:center;
-	width:80%;
+  width: 90%;
 	margin:60px auto;
 }
 
@@ -52,12 +65,6 @@ button:active:after{
   width: 4.5%;
   height: 100%
 }
-
-.btn-scheduler > img {
-	height:100%;
-	margin-top:-20%;
-}
-
 .btn-small {
   background: #F5BBBC;
   border: 2px solid white;
@@ -96,14 +103,19 @@ button:active:after{
 .row-scheduler {
   width:100%;
   height:24px;
-  border: solid $light-gray;
-  border-width: 1px;
-  border-radius: 5px;
+  border: solid #d2d2d2;
+  border-width: 1px 1px 0px 1px;
+  background-color: #F8F8F8;
+  border-radius: 0;
   cursor:pointer;
   vertical-align:middle;
   overflow:hidden;
+  margin: 0px;
 }
-
+.row-scheduler:last-child {
+  border: solid #d2d2d2;
+  border-width: 1px 1px 1px 1px;
+}
 .row-scheduler:hover {
 	background-color: #f2f2f2;
 }
@@ -117,19 +129,15 @@ button:active:after{
 }
 
 .cell-date {
-  width: 13%;
-	/*border: solid $light-gray;
-	border-width: 0 0 1px 0;*/
-	color: $mid-gray;
-  font-size: 13px;
-  line-height: 16px;
-  vertical-align: middle;
+  width: 14.2857142857%;
+  color: #b3b3b3;
+  font-size: 12px;
+  line-height: 35px;
 }
 
 .column-day {
-	width: 13%;
-	height: 100%;
-}
+  width: 14.2857142857%;
+  height: 100%; }
 
 .column-time {
 	width: 4.5%;
@@ -974,28 +982,8 @@ h2, h3 {
 	margin: 0px;
 	padding:0px;
 }
-.container-fluid{    
- /*	padding-right: 0px !important;
-    padding-left: 0px !important;
-    height:100% !important;
-    margin-top: -31px;*/
-  }
-  .tropical{
-   text-align: center;
-   margin: 0 auto;
-   font-size: 13px;
-   color:rgb(138, 138, 138);
-   letter-spacing: 1px;
-   background-color: #F9F9F9;
-   padding: 44px 0;
-   font-weight: normal;
- }
- .tropical img{
-  width: 45%;
-  text-align: center;
-  margin: 20px auto;
-}
 
+  
 /*left-menu css start*/
 
 .left-side{
@@ -1044,7 +1032,8 @@ h2, h3 {
    border-right: 2px solid #959595;
  }
  .left-menus ul li:hover, .left-menus ul li:active, .left-menus ul li:focus {
-   border-right: 4px solid #959595;
+    border-right: 3px solid #FF7676;
+   background-color: #F8F8F8;
  }
  .logout{
    color: #686868;
@@ -1059,7 +1048,8 @@ h2, h3 {
    margin-right: 10px;
  }
  .left-menu-active {
-   border-right: 4px solid #959595 !important;
+  border-right: 3px solid #FF7676 !important;
+  background-color: #F8F8F8;
  }
  .logout li{
    list-style: outside none none;
@@ -1126,10 +1116,8 @@ h2, h3 {
 
  .page-content li img{
   display: inline-table;
-  width: 8%;
   padding: 11px 0px;
-  width: 40px;
-  margin: 0 20px;
+  margin: 0 10px;
 }
 
 .tab-content{
@@ -1164,8 +1152,9 @@ h2, h3 {
  padding: 0 48px;
 }
 .nav-tabs img{
-  width: 90%;
+  width:50px;
 }
+
 .nav-tabs .nav > li{
 	width: 50%;
 	display: inline-table;
@@ -1505,6 +1494,17 @@ input[type=range]::-ms-track {
 /*Search Box scss--END*/
 
 @media screen and (min-device-width: 320px) and (max-device-width: 768px) { 
+
+.organize-text {
+    padding-top: 2%;
+}
+
+.tropical-slect{
+  width:100% !important;
+}
+ .tropical-slect .decline, .tabe-tropical{
+  padding: 8px 0;
+}
   .page-content {
    margin:0 auto;
  }
@@ -1531,12 +1531,29 @@ input[type=range]::-ms-track {
  .left-menus ul li {
    padding: 0px 10px;
  }
+.songScheduler .channel-group{
+  margin:20px uto;
+ }
+  .scheduler-tabs .nav-tabs li{
+  width:100% !important;
+}
 }
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+.tropical-slect{
+  width:100% !important;
+}
+ .scheduler-tabs .nav-tabs li{
+  width:100%;
+}
+ 
  .range-main {
    margin:10px auto;
    width:80%;
  }
+ .songScheduler .channel-group{
+  margin:20px uto;
+ }
+ 
 }
 
 .min-ht{
@@ -1667,9 +1684,31 @@ input[type=range]::-ms-track {
  display:none ;
 }
 @media(max-width:767px) {
+.tropical-slect{
+  width:100%;
+}
+.decline-accpect-btn{
+  position: relative;
+  bottom: 0;
+}
   .inner-head .menu-bar{
    display:block;
  }
+.songScheduler .channel-group{
+  margin:20px uto;
+ }
+ 
+.decline-accpect-btn{
+  position: relative;
+  bottom: auto;
+  margin: 20px 0;
+}
+
+.submitted-time{
+  top: 10px;
+  bottom: 0;
+}
+ 
 }
 /************ SIDEBAR START *****************/
 /*!
@@ -1695,10 +1734,10 @@ input[type=range]::-ms-track {
 
 #sidebar-wrapper {
   position: fixed;
-  left: 240px;
+  left: 230px;
   width: 0;
   height: 100%;
-  margin-left: -240px;
+  margin-left: -230px;
     /*overflow-y: auto;*/
     background: #fff;
     -webkit-transition: all 0.5s ease;
@@ -1736,13 +1775,33 @@ input[type=range]::-ms-track {
 .sidebar-nav {
   position: absolute;
   top: 0;
-  width: 250px;
+  width: 230px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 @media(min-width:768px) {
+.tropical-slect{
+  width: 100% !important;
+}
+
+.tropical-slect .decline, .tabe-tropical{
+  padding: 8px 0;
+}
+.tropical-slect{
+  width:100%;
+}
+.decline-accpect-btn{
+  position: relative;
+  bottom: auto;
+  margin: 20px 0;
+}
+
+.submitted-time{
+  top: 10px;
+  bottom: 0;
+}
   #wrapper {
     padding-left: 250px;
   }
@@ -1768,6 +1827,12 @@ input[type=range]::-ms-track {
     position: relative;
     margin-right: 0;
   }
+  .songScheduler{
+    width:100%;
+  }
+  .songScheduler .channel-group{
+  margin:20px uto;
+ }
   
 }
 /************ SIDEBAR END*****************/
@@ -1778,6 +1843,12 @@ input[type=range]::-ms-track {
 	position: relative;
 	background: #fff;
 }
+
+.tab-menu .tab-menu img{
+  width:8px;
+}
+
+
 .manage-bar {
 	z-index: 51;
 	position: relative;
@@ -1816,6 +1887,941 @@ input[type=range]::-ms-track {
 	z-index: 1;
 	position: relative;
 }
+/*Scheduler Tabs CSS : START */
+.scheduler-tabs #myschedule{
+  padding: 30px 0px;
+}
+.scheduler-tabs .nav-tabs li {
+  width: 33.3333333333%;
+  display: inline-table;
+  margin: 0px;
+  text-align: center;
+  background: #F8F8F8;
+}
+.scheduler-tabs .nav-tabs > li > a {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  color: #ccc;
+  outline: 0;
+}
+.scheduler-tabs .nav > li > a:hover, .scheduler-tabs .nav > li > a:focus {
+  text-decoration: none;
+  background-color: #f4f4f4;
+}
+.scheduler-tabs .nav-tabs > li.active > a, .scheduler-tabs  .nav-tabs > li.active > a:hover, .scheduler-tabs .nav-tabs > li.active > a:focus {
+  color: #686868;
+  cursor: default;
+  background-color: #fff;
+  border: 0px solid transparent;
+  border-bottom-color: transparent;
+}
+.scheduler-tabs .nav-tabs li img {
+  display: inline-block;
+  padding: 11px 0px;
+  width: 22px;
+  margin: 0 9px;
+}
+.myschedule-btn{
+  color: #FF7676;
+  background-color: #fff;
+  border-color: #FF7676;
+}
+.myschedule-btn:hover {
+  background-color: #fff;
+  border-color: #FF7676;
+  color: #FF7676;
+}
+.myschedule-btn:focus, .myschedule-btn.focus {
+  color: #FF7676;
+  background-color: #fff;
+  border-color: #FF7676;
+}
+.myschedule-btn:active, .myschedule-btn.active, .open > .dropdown-toggle.btn-default {
+  color: #FF7676;
+  background-color: #FFFFFF;
+  border-color: #FF7676;
+}
+.myschedule-btn:active:hover, .myschedule-btn.active:hover, .open > .dropdown-toggle.btn-default:hover, .myschedule-btn:active:focus, .myschedule-btn.active:focus, .open > .dropdown-toggle.myschedule-btn:focus, .myschedule-btn.focus:active, .myschedule-btn.active.focus, .open > .dropdown-toggle.myschedule-btn.focus {
+  color: #FF7676;
+  background-color: #FFFFFF;
+  border-color: #FF7676;
+}
+/*Scheduler Tabs CSS : End */
+
+/*Switch BTN CSS :: START*/
+.switch-btn{
+  padding: 10px;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 21px;
+  margin: 0;
+}
+.switch input {display:none;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #D7D7D7;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+input:checked + .slider {
+  background-color: #FF7676;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #D7D7D7;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+.slider.round:before {
+  border-radius: 50%;
+}
+/*Switch BTN CSS :: END*/
+.schedule-date-change{
+
+}
+.schedule-newsong{
+  margin-bottom:5px;
+}
+.schedule-newsong .form-control {
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-color: #686868;
+  outline: none;
+  background: url("../assets/images/music-icon.png") no-repeat 93% 50%;
+  text-align: center;
+}
+.schedule-date-change {
+  max-width: 200px;
+  margin: 0 0 5px 0;
+}
+.change-date-btn {
+  border: 1px solid #686868;
+  border-radius: 8px;
+  padding: 8px 0;
+  text-align: center;
+}
+.change-date-btn a{
+  padding: 10px;
+}
+.change-date-btn .btn-date{
+  width: 120px;
+display: inline-block;
+}
+.container-90 {
+  width: 90%;
+  margin: 0 auto;
+}
+.track-btn{
+  font-size: 12px;
+  border: 0px none;
+  padding: 2px 12px;
+  color: rgb(255, 255, 255);
+  background-image: none;
+  border-radius: 3px;
+  width: 100%;
+}
+
+
+/*scheduler css ::start*/
+
+.payed-reposts-list li:first-child {background:#F6F6F6;}
+.payed-reposts-list li:nth-child(2n+3) {background: #F6F6F6;}
+
+.repot-left-list{
+  
+}
+
+.payed-reposts{
+  padding:20px 15px;
+}
+
+.payed-reposts-btn{
+   border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-color: #686868;
+  outline: none;
+  text-align: center;
+  background: none;
+}
+
+.payed-reposts-list{
+  border: 1px solid rgb(194, 194, 194);
+  box-shadow: 0px 0px 3px rgb(200, 200, 200);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.payed-reposts li{
+  list-style: none;
+  padding:25px 0;
+}
+
+.payed-reposts li a{
+  color:#686868;
+}
+
+.payed-reposts-list li{
+  padding:10px;  
+  color: #686868;
+}
+
+.payed-reposts-select{
+  width:25%; margin:30px auto 15px;
+}
+
+.payed-reposts-list span{
+  color:#FF7676;
+}
+
+.payed-reposts-bottom{
+  display: inline-flex;
+  margin: 30px auto;
+}
+
+/*scheduler css ::end*/
+
+
+/*songScheduler css start*/
+
+.songScheduler{
+ width:70%;
+ margin: 0 auto;
+ color: rgb(138, 138, 138);
+}
+
+
+.check-list{
+  max-height: 200px;
+  overflow-y: auto;
+  padding-top: 10px;
+}
+
+.songScheduler .title{
+  font-size: 18px;
+  list-style: none;
+  color: #686868;
+  font-weight: 400;
+  text-align: center;
+  margin: 10px 0 30px 0;
+  letter-spacing: 0.7px;
+}
+
+.songScheduler .switch-btn{
+ vertical-align: middle;
+ list-style: none;
+}
+
+.songScheduler .switch-btn span{
+  margin: 0px 10px;
+  color: rgb(138, 138, 138);
+  font-size: 17px;
+  letter-spacing: .2px;
+}
+
+.songScheduler label{
+  font-size: 15px;
+  color: rgb(138, 138, 138);
+  font-weight: 300;
+  margin: 10px 0;
+  vertical-align: middle;
+}
+
+.channel-check{
+border: 1px solid #727272;
+box-shadow: 0 0px 1px #AEAEAE; 
+border-radius: 10px; 
+display: inline-block;
+width: 100%;
+margin: 15px 0;
+}
+
+.channel-masege{
+  border-bottom: 1px solid rgb(216, 216, 216);
+  padding: 10px 0px 0px 24px;
+}
+
+.channel-masege ul li{
+ display: inline-block;
+  background-color: #FFD6D6;
+  margin: 0 5px;
+  padding: 5px 15px;
+  border-radius: 2px;
+  color: #6F6F6F;
+}
+
+.songScheduler .channel-group{
+  margin: 0 auto;
+  width: 190px;
+  display: block;
+}
+
+.songScheduler .channel-group a{
+ padding: 10px 20px;
+ border-radius: 10px;
+
+}
+
+.total-reach{
+  text-align:center;
+  margin:40px auto;
+}
+
+.total-reach a{
+  border-radius: 10px;
+  border: 1px solid #ff7676;
+  padding: 13px 25px;
+  color: #ff9393;
+  font-size: 15px;
+}
+
+.songScheduler .creat-link{
+  color: #ff9393;
+  padding: 10px 10px;
+  margin: 0 0 24px 0px;
+  border-top: 1px solid #d8d8d8;
+}
+
+.creat-link img{
+    width: 20px;
+    margin-left: 10px;
+}
+
+.creat-link a{ 
+  font-size: 15px;
+  color:#ff9393;
+}
+
+.songScheduler .next-previous{}
+
+.songScheduler .next-previous button{
+  padding: 10px 30px;
+  background: transparent none repeat scroll 0% 0%;
+  margin: 10px 3px;
+  border-radius: 10px;
+  border: 1px solid #727272;
+  box-shadow: 0 0px 1px #AEAEAE;
+  text-align: center;
+  color:#8a8a8a;
+  font-weight: 600;
+  font-size: 13px;
+
+}
+
+.songScheduler .next-previous button:active{
+  backgrpound-color:#FF7676;
+  color: rgb(138, 138, 138);
+}
+
+
+.left-textarea{
+  border: 1px solid #727272;
+  height: 100%;
+  display: inline-table;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0px 1px #AEAEAE;
+}
+
+.songScheduler input{
+    border: 1px solid #727272;
+    box-shadow: 0 0px 1px #AEAEAE;
+}
+
+.songScheduler select{
+    border: 1px solid #BDBDBD;;
+    box-shadow: 0 0px 1px #AEAEAE;
+}
+
+.songScheduler textarea{
+  border: 1px solid #727272;
+    box-shadow: 0 0px 1px #AEAEAE;
+}
+
+.songScheduler .save-share{
+  background-color:#FF7676!important;
+  color:#fff!important;
+  border:none!important;
+}
+
+.songScheduler input,.songScheduler select{
+  height:45px;
+  color: #868686;
+}
+/*songScheduler css ::end*/
+
+.like-comment{
+  display: inline-flex;
+  list-style: none;
+}
+.like-comment li{
+    list-style: none;
+}
+
+.input-hour{
+  width: 45px;
+  margin: 0px 10px;
+  text-align: center;
+  display: inline;
+}
+
+/*submissions css ::start*/
+.tab-content-main{
+  width: 85%;
+  margin: 0px auto;
+}
+
+.check-list form{
+  width:85%;
+  margin:0 auto;
+  padding-top: 5px;
+}
+
+
+.submissions-tab-list li img{
+  margin: 0 3px;
+  opacity: 0.5;
+}
+
+
+
+.submissions-tab-list{
+  list-style: none;
+  margin-bottom: 0px;
+}
+
+.submissions-tab-list li{
+  list-style: none;
+}
+
+.tab-content-main .decline{
+  background-color: rgba(255, 255, 255, 0);
+  border: 1px solid rgb(194, 194, 194);
+}
+
+.accpect{
+  background-color: #FF7676;
+  color:#fff;
+}
+
+.accpect,.decline{
+  width:90%;
+}
+
+.submitted-time{
+  font-size: 24px;
+  color: #000;
+  text-align: center;
+  position: relative;
+  bottom: -50px;
+}
+
+
+.typography-tab .panel-heading .panel-title{
+  font-size: 12px;
+  color: #686868;
+  font-weight: 300;
+}
+
+.tropical{
+  text-align: center;
+  margin: 0 auto;
+  font-size: 13px;
+  color:rgb(138, 138, 138);
+  letter-spacing: 1px;
+  background-color: #F9F9F9;
+  padding: 44px 0;
+  font-weight: normal;
+}
+
+.from-background{
+  background-image: url("assets/images/form-bg.png");
+  padding: 20px 40px;
+  width: 100%;
+  margin-bottom: 30px;
+  border-radius: 5px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.from-background form{
+  width:65%;
+  margin:0 auto;
+} 
+
+.form-logo{
+  width: 40%;
+  min-width: 40%;
+  margin: 20px auto;
+}
+
+.decline-accpect-btn{
+  position: absolute;
+  bottom: -131px;
+}
+
+.from-background form input{
+  width: 100% !important;
+  margin: 6px 0;
+  background: none;
+}
+
+.from-background p{
+  color:#fff;
+}
+
+.typography-tab .panel-default > .panel-heading{
+ background-color:rgba(245, 245, 245, 0);
+}
+
+
+.tropical img{
+  width: 45%;
+  text-align: center;
+  margin: 20px auto;
+}
+
+.tropical-slect{
+  display: inline-flex;
+  width: 40%;
+}
+.tropical-slect .decline, .tabe-tropical{
+ width: 100%;
+  border-radius: 8px;
+  border: 1px solid #c2c2c2;
+  margin: 14px;
+  box-shadow: 0 0 1px #3F3F3F;
+  text-align: center;
+  color: #686868;
+}
+
+
+.panel-heading a:after {
+    font-family:'Glyphicons Halflings';
+    content:"\e114";
+    float: right;
+    color: #b7b7b7;
+    font-size: 11px;
+    font-weight: normal;
+}
+.panel-heading a.collapsed:after {
+    content:"\e080";
+}
+
+.managesubmissions{
+  border-top: 1px solid #F8F8F8;
+  width: 85%;
+  margin: 0 auto;
+  margin-top: 20px;
+} 
+.decline{
+  background-color: RGBA(255, 255, 255, 0);
+  border: 1px solid #727272;
+}
+
+/*submissions css ::end*/
+
+/*check-box css ::start*/
+/* Base for label styling */
+[type="checkbox"]:not(:checked),
+[type="checkbox"]:checked {
+  position: absolute;
+  left: -9999px;
+}
+[type="checkbox"]:not(:checked) + label,
+[type="checkbox"]:checked + label {
+  position: relative;
+  padding-left: 25px;
+  cursor: pointer;
+}
+
+/* checkbox aspect */
+[type="checkbox"]:not(:checked) + label:before,
+[type="checkbox"]:checked + label:before {
+  content: '';
+  position: absolute;
+  left:0; top: 2px;
+  width: 17px; height: 17px;
+  border: 1px solid #aaa;
+  background: #f8f8f8;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.3)
+}
+/* checked mark aspect */
+[type="checkbox"]:not(:checked) + label:after,
+[type="checkbox"]:checked + label:after {
+  content: '✔';
+  position: absolute;
+  top: 5px;
+  left: 2px;
+  font-size: 15px;
+  line-height: 0.8;
+  color:#848484;
+  transition: all .2s;
+}
+/* checked mark aspect changes */
+[type="checkbox"]:not(:checked) + label:after {
+  opacity: 0;
+  transform: scale(0);
+}
+[type="checkbox"]:checked + label:after {
+  opacity: 1;
+  transform: scale(1);
+}
+/* disabled checkbox */
+[type="checkbox"]:disabled:not(:checked) + label:before,
+[type="checkbox"]:disabled:checked + label:before {
+  box-shadow: none;
+  border-color: #bbb;
+  background-color: #ddd;
+}
+[type="checkbox"]:disabled:checked + label:after {
+  color: #999;
+}
+[type="checkbox"]:disabled + label {
+  color: #aaa;
+}
+/* accessibility */
+[type="checkbox"]:checked:focus + label:before,
+[type="checkbox"]:not(:checked):focus + label:before {
+  border: 1px dotted blue;
+}
+
+/* hover style just for information */
+label:hover:before {
+  border: 1px solid #4778d9!important;
+}
+ 
+/*check-box css ::end*/
+
+/*Login Admin css ::start*/
+.become-admin p{
+  padding: 0px;
+  letter-spacing: 2px;
+  margin: 30px 0;
+  font-size: 15px;
+  color: #574D4D;
+ }
+.become-admin h2{
+  letter-spacing: 0;
+  text-transform: unset;
+  color:#686868;
+}
+
+.become-admin h5{
+  color:#686868;
+}
+
+.login-admin .form-control{height: 38px;}
+
+ .login-btn{
+  width:100%;
+  color:#fff;
+  margin:10px auto;
+  background-color: #FF7676;
+  border:1px solid #FF7676;
+ }
+
+.login-admin{
+ width: 60%;
+ margin:15px auto;
+}
+ 
+.background-none{
+  background:none;
+}
+
+.login-admin .panel {
+  border-radius: 15px;
+  border-color: #B9B9B9;
+  min-height: 493px;  
+}
+
+.become-admin{
+  padding: 0px 19px;
+}
+
+.login-admin .panel-body{
+  padding: 35px;
+}
+
+/*Login Admin css ::end*/
+
+/*search organize css ::start*/
+
+.new-trade-ingtexst{
+  width: 150px;
+  text-align: center;
+  margin: 5px auto;
+}
+
+.button-list{
+  marging-top:5%;
+}
+
+.button-list button{
+  min-width: 144px;
+  text-align: center;
+}
+
+.border-padding{
+  border-top:1px solid #c6c6c6;
+  padding-top:15px;
+}
+
+.searchorganizetrades .ngrs-handle{
+  background: #FFF;
+  border: 1px solid #FF7676;
+}
+
+ 
+
+.searchorganizetrades .slidethamb-box a{
+  color: #828282;
+}
+
+.searchorganizetrades .slidethamb-box p {
+    color: #828282;
+    width: 150px;
+    text-align: center;
+    margin: 7px auto;
+}
+
+.searchorganizetrades .img-btn{
+ /* margin-left: 60px;*/
+}
+
+.sms-icon i{
+    background-image: url(../assets/images/message.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 20px;
+    height: 13px;
+    position: absolute;
+    left: 10px;
+    top: 11px;
+}
+
+.thumb-img-container:hover .img-btn2{
+  display: block;
+}
+
+.img-btn2{
+  background-color: #FF7676;
+  display: none;
+  padding: 8px 6px;
+  color: #FFF;
+  position: absolute;
+  z-index: 999;
+  left: 0;
+  border-radius: 8px;
+  border: 0px none;
+  top: 0;
+  margin-top: 90px;
+  margin-left: 60px;
+}
+
+.key-icon i{
+  background-image: url(../assets/images/key.png);
+    background-repeat: no-repeat;
+    background-size: 90% 100%;
+    width: 20px;
+    height: 13px;
+    position: absolute;
+    left: 10px;
+    top: 11px;
+}
+
+.sms-icon,.key-icon{
+  padding:0 20px;
+  border-color: #F5D3B5;
+}
+
+.border-btn{
+  background: none;
+  border: 1px solid #c2c2c2;
+  font-size: 13px;
+}
+/*search organize css ::end*/
+
+/*organize-list::start*/
+.organize-list{
+  width: 90%;
+  margin: 0px auto;
+}
+
+.organize-thumb-img img{
+  width:100%;
+  height:auto;
+}
+
+.organize-list p{
+  
+}
+
+.organize-btn{
+  background-color: #FF7676;
+  padding: 8px 28px;
+  color: #FFF; 
+  z-index: 999;
+  left: 0;
+  border-radius: 8px;
+  border: 0px none;
+}
+
+.searchorganizetrades-range{
+  width: 50%!important;
+  margin: 0px auto;
+}
+
+.organize-label{
+  top: 0 !important;
+  right: 10px !important;
+  margin: 1px 0;
+}
+
+.organize-text{
+  padding-top: 28%;
+}
+
+/*organize-list::end*/
+
+/*Calendarview :start*/
+
+.calendar-trade li{
+  list-style: none;
+}
+
+.margin-20{
+  margin: 20px 0px;
+}
+
+.calendar-table,tr,td{
+  border: 0xp !important;
+}
+
+.calendar-table{
+  margin: 20px auto;  
+}
+.calendar-table tr td{
+  padding: 12px 20px !important;
+}
+.calendar-table tbody{
+  border: 1px solid #DBDBDB;
+}
+
+.red{
+  color:#FF7676;
+}
+
+
+.available-slot{
+  margin: 0px auto;
+  width: 30%;
+}
+
+.available-slot input{
+  margin: 20px 0px;
+}
+.available-slot select{
+  margin: 20px 0px;
+}
+.available-slot li{
+  margin: 0px 0px;
+  list-style: none;
+}
+.skyp{
+  padding: 10px 30px;
+  background: transparent none repeat scroll 0% 0%;
+  margin: 10px 3px;
+  border-radius: 10px;
+  border: 1px solid #727272;
+  box-shadow: 0 0px 1px #AEAEAE;
+  text-align: center;
+  color: #8a8a8a;
+  font-weight: 600;
+  font-size: 13px;  
+}
+
+.save-share{
+  background-color: #FF7676 !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+
+/*.available-slot li label{vertical-align: top;}*/
+
+/*Calendarview ::end*/
+/********* Checkbox ******/ 
+
+.demo-radio-btn{
+  margin:0 10px 0 0;
+}
+.demo-radio-btn input[type="checkbox"]{
+  display:none;
+}
+.demo-radio-btn input[type="checkbox"] + label{
+  color:#686868;
+  position: relative;
+}
+.demo-radio-btn input[type="checkbox"] + label span{
+  display:inline-block;
+  width:20px;
+  height:20px;
+  /*border-radius:50%;*/
+}
+.demo-radio-btn input[type="checkbox"] + label span{
+  display:inline-block;
+  width:20px;
+  height:20px;
+  vertical-align:middle;
+  margin:0 10px;
+  cursor:pointer;
+}
+.demo-radio-btn input[type="checkbox"] + label span{
+  background-color: #fff;
+  border: .5px solid #808080;
+  box-shadow: 0px 0px 1px #8A8A8A;
+}
+.demo-radio-btn input[type="checkbox"]:checked + label span{
+  background-color:#FF7676;
+}
+.demo-radio-btn input[type="checkbox"] + label span,
+.demo-radio-btn input[type="checkbox"]:checked + label span {
+  -webkit-transition: background-color 0.4s linear;
+  -o-transition: background-color 0.4s linear;
+  -moz-transition: background-color 0.4s linear;
+  transition: background-color 0.4s linear;
+}
+/********* Checkbox ******/ 
+
 /*********** Media CSS **************/
 @media screen and (max-width: 1280px) {
 	.min-ht {
@@ -1868,6 +2874,28 @@ input[type=range]::-ms-track {
 	}
 }
 @media screen and (max-width: 768px) {
+.payed-reposts li{
+  text-align: center;
+}
+.li-display-none{
+  display:none;
+}
+
+.tropical-slect{
+  width:100%;
+}
+
+.tropical-slect .decline, .tabe-tropical{
+  padding: 8px 0;
+}
+
+.tropical-slect{
+  width: 100%;
+}
+.decline-accpect-btn{
+  position: relative;
+  bottom: 0;
+}
   .manage-btn {
     margin-top: 60px;
     margin-left: 50px;
@@ -1902,6 +2930,13 @@ input[type=range]::-ms-track {
 	.question-btn {
 		margin: 10px 50px;
 	}
+  .songScheduler{
+    width:100%;
+  }
+  .songScheduler .channel-group{
+  margin:20px auto;
+ }
+ 
 }
 @media screen and (max-width: 667px) {
 	.img-btn {
@@ -1909,6 +2944,11 @@ input[type=range]::-ms-track {
 	}
 }
 @media screen and (max-width: 640px) {
+
+.organize-text{
+  padding-top: 10px;
+}
+
  .page-header ul li {
   float: left;
 }
@@ -1939,6 +2979,9 @@ input[type=range]::-ms-track {
 	.img-btn {
 		margin-left: 174px;
 	}
+ .organize-text{
+  padding-top: 10px;
+}
 }
 @media screen and (max-width: 375px) {
     /*.scroll-bar1 {
@@ -2005,6 +3048,25 @@ input[type=range]::-ms-track {
 }
 
 @media screen and (max-width: 360px) {
+
+.organize-text{
+  padding-top: 10px;
+}
+
+.tropical-slect{
+  width:100%;
+  display: block;
+}
+.tropical-slect .decline, .tabe-tropical{
+  padding: 8px 0;
+}
+.decline-accpect-btn{
+  position: relative;
+  bottom: 0;
+}
+.scheduler-tabs .nav-tabs li{
+  width:100%!important;
+}
  .img-btn {
   margin-left: 114px;
 }
@@ -2033,9 +3095,35 @@ input[type=range]::-ms-track {
 .question-btn {
   margin: 10px 50px;
 }
+.songScheduler .channel-group{
+  margin:20px auto;
+}
 
 }
 @media screen and (max-width: 320px) {
+
+.organize-text{
+  padding-top: 10px;
+}
+
+.searchorganizetrades .img-btn{
+  margin-left: 78px;
+}
+
+.scheduler-tabs .nav-tabs li{
+  width:100%;
+}
+.decline-accpect-btn{
+  position: relative;
+  bottom: auto;
+  margin: 20px 0;
+}
+
+.submitted-time{
+  top: 10px;
+  bottom: 0;
+}
+
  .img-btn {
   margin-left: 95px;
 }
@@ -2073,6 +3161,16 @@ input[type=range]::-ms-track {
 .question-btn {
   margin: 10px 50px;
 }
+
+.songScheduler{
+  width:100%;
+}
+.channel-masege{
+  text-align: center;
+  padding: 10px 0px 0px 0;
+}
+ 
+
 }
 /** MEDIA CSS END **/
 .padding-10{

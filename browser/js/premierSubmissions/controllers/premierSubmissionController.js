@@ -7,14 +7,28 @@ app.config(function($stateProvider) {
 });
 
 app.controller('PremierSubmissionController', function($rootScope, $state, $scope, $http, AuthService, SessionService, $sce) {
+  $scope.isLoggedIn = SessionService.getUser() ? true : false;
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
   $scope.user=SessionService.getUser();
+  $scope.user.isAdmin = $scope.user.role=='admin' ? true : false;
+  $scope.uniqueGroup = [];
+  for (var i = 0; i < $scope.user.paidRepost.length; i++) {
+    $scope.user.paidRepost[i].groups.forEach(function(acc) {
+      if (acc != "" && $scope.uniqueGroup.indexOf(acc) === -1) {
+        $scope.uniqueGroup.push(acc);
+      } 
+    });
+  }
   $scope.counter = 0;
   $scope.channels = [];
+  $scope.selectedGroups = [];
   $scope.showingElements = [];
   $scope.submissions = [];
+  $scope.selectedChannelIDS = [];
+  $scope.selectedGroupChannelIDS = [];
+  $scope.selectedChannelName = [];
   $scope.genre = "";
   $scope.skip = 0;
   $scope.limit = 5;
@@ -84,6 +98,38 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     // $scope.counter += 15;
   }
 
+  $scope.changeBox = function(sub, chan) {
+    var index = $scope.selectedChannelIDS.indexOf(chan.id);
+    if (index == -1) {
+      $scope.selectedChannelIDS.push(chan.id);
+      $scope.selectedChannelName.push(chan.username);
+    } else {
+      $scope.selectedChannelIDS.splice(index, 1);
+      $scope.selectedChannelName.splice(index, 1);
+    }
+  }
+
+  $scope.changeBoxGroup = function(sub, group) {
+    var ind = $scope.selectedGroups.indexOf(group);
+    if(sub[group]){
+      if (ind == -1) {
+        $scope.selectedGroups.push(group);
+      }
+    }
+    else{
+      $scope.selectedGroups.splice(ind, 1);
+    }
+    $scope.selectedGroupChannelIDS = [];
+    $scope.selectedGroups.forEach(function(g){
+    $scope.user.paidRepost.forEach(function(acc){
+        if(acc.groups.indexOf(g) != -1){
+          if($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1){
+            $scope.selectedGroupChannelIDS.push(acc.id);
+        }      
+      }
+    });    
+    });
+  }
   $scope.accept = function(submi) {
     $scope.processing = true;
     submi.status = "accepted";
@@ -202,6 +248,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
       url: 'http://soundcloud.com/luxaudio'
     }]
   }
+  $scope.loadSubmissions();
 });
 
 app.filter('trusted', ['$sce', function($sce) {
