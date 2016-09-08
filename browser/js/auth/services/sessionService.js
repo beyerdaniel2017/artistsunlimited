@@ -6,11 +6,25 @@ app.factory('SessionService', function($cookies, $http, $window) {
 
 	function deleteUser() {
 		$window.localStorage.removeItem('user');
+		$window.localStorage.removeItem('AdminUser');
 	}
 
 	function getUser() {
 		try {
 			var user = JSON.parse($window.localStorage.getItem('user'));
+			if (user) {
+				return user;
+			}
+		} catch (e) {}
+	}
+
+	function createAdminUser(data) {
+		$window.localStorage.setItem('AdminUser', JSON.stringify(data));
+	}
+
+	function getAdminUser() {
+		try {
+			var user = JSON.parse($window.localStorage.getItem('AdminUser'));
 			if (user) {
 				return user;
 			}
@@ -31,6 +45,8 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		create: create,
 		deleteUser: deleteUser,
 		getUser: getUser,
-		refreshUser: refreshUser
+		refreshUser: refreshUser,
+		createAdminUser: createAdminUser,
+		getAdminUser: getAdminUser
 	};
 });
