@@ -60,7 +60,8 @@ var schema = new mongoose.Schema({
   pooledChannelIDS: {
     type: Array,
     default: []
-  }
+  },
+  ignoredBy:[]
 });
 
 mongoose.model("Submission", schema);

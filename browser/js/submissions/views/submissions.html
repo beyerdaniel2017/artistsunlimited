@@ -53,8 +53,14 @@
                          </div><!--row ::end-->
                       </div>
                        <div class="col-md-2">
-                        <div class="">
+                        <div style="padding-top: 30px;">
                         <ul class="submissions-tab-list decline-accpect-btn">
+                            <div class="dropdown sort-btn">
+                              <button class="btn dropdown-toggle sort-select descending" type="button" data-toggle="dropdown">CUSTOM EMAIL</button>
+                              <ul class="dropdown-menu">
+                                <li><a href="#" ng-click="openEmailClient(sub, button)" ng-repeat="button in user.customEmailButtons">{{button.buttonText}}</a></li>
+                              </ul>
+                            </div>
                             <button class="btn decline" ng-click="ignore(sub)">IGNORE</button>
                            <button class="btn decline" ng-click="decline(sub)">DECLINE</button>   
                            <button class="btn accpect" ng-click="save(sub)">ACCEPT</button>
@@ -142,7 +148,7 @@
                           </div>
                           <ul class="submissions-tab-list decline-accpect-btn">
                             <button class="btn decline" ng-click="marketIgnore(sub)">IGNORE</button>
-                            <button class="btn decline" ng-click="marketDecline(sub)">DECLINE</button>   
+                            <!-- <button class="btn decline" ng-click="marketDecline(sub)">DECLINE</button>    -->
                             <button class="btn accpect" ng-click="marketSave(sub)">ACCEPT</button>
                           </ul> 
                         </div>

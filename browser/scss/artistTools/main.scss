@@ -1451,6 +1451,9 @@ input[type=range]::-ms-track {
 .border-right{
 	border-right:1px solid #EDEDED;
 }
+.border-right-black{
+  border-right:1px solid #c5c5c5;
+}
 .padding30 {
 	padding:30px 0;
 }
@@ -1494,6 +1497,28 @@ input[type=range]::-ms-track {
 /*Search Box scss--END*/
 
 @media screen and (min-device-width: 320px) and (max-device-width: 768px) { 
+
+.container-60{
+  width:100%;
+}
+
+.edit-btn{
+  position: relative;
+}
+
+.left-side-profile{
+  width:96%;
+  position: relative!important;
+}
+.pr-padding-left-0{
+  padding-left: auto;
+}
+.quick-trade {
+    width: 100%;
+    margin: 20px auto;
+    background-color: #ebebeb;
+    padding: 20px 0;
+}
 
 .organize-text {
     padding-top: 2%;
@@ -1539,6 +1564,12 @@ input[type=range]::-ms-track {
 }
 }
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+
+.left-side-profile{
+  width:100%;
+  position: relative;
+}
+
 .tropical-slect{
   width:100% !important;
 }
@@ -1684,6 +1715,11 @@ input[type=range]::-ms-track {
  display:none ;
 }
 @media(max-width:767px) {
+.left-side-profile{
+  width:100%;
+  position: relative!important;
+}
+
 .tropical-slect{
   width:100%;
 }
@@ -1782,6 +1818,12 @@ input[type=range]::-ms-track {
 }
 
 @media(min-width:768px) {
+
+.left-side-profile{
+   width:100%;
+  position: relative;
+}
+
 .tropical-slect{
   width: 100% !important;
 }
@@ -2036,8 +2078,9 @@ display: inline-block;
 }
 .container-90 {
   width: 90%;
-  margin: 0 auto;
+  margin:0px auto;
 }
+ 
 .track-btn{
   font-size: 12px;
   border: 0px none;
@@ -2118,9 +2161,9 @@ display: inline-block;
 
 
 .check-list{
-  max-height: 200px;
+  max-height: 140px;
   overflow-y: auto;
-  padding-top: 10px;
+  min-height: 140px;
 }
 
 .songScheduler .title{
@@ -2165,12 +2208,17 @@ margin: 15px 0;
 .channel-masege{
   border-bottom: 1px solid rgb(216, 216, 216);
   padding: 10px 0px 0px 24px;
+  border-bottom: 1px solid #d8d8d8;
+  padding: 10px 0px 0px 24px;
+  min-height: 52px;
+  overflow-y: auto;
+  max-height: 50px;
 }
 
 .channel-masege ul li{
  display: inline-block;
   background-color: #FFD6D6;
-  margin: 0 5px;
+  margin: 2px 5px;
   padding: 5px 15px;
   border-radius: 2px;
   color: #6F6F6F;
@@ -2445,7 +2493,144 @@ margin: 15px 0;
   border: 1px solid #727272;
 }
 
+
+/*add-account css ::start*/
+.acceptance .channel-masege{
+  padding:15px 0px;
+}
+
+.acceptance .channel-check{
+  border: 1px solid #E1E1E1;
+}
+
+.acceptance-textarea,.acceptance-input{
+  border: 0px solid rgb(114, 114, 114);
+  width: 100%;
+  padding: 0px 10px;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+.acceptance-signatur,{
+  border: 1px solid #C9C9C9;
+  border-radius: 10px;
+  padding: 10px 10px;
+  margin: 50px 0;
+}
+
+.acceptance input{
+  width:100%;
+}
+  .add-account .small-text{
+    font-size: 11px;
+    color: #c2c2c2;
+  }
+.price-input{
+  border-radius: 10px;
+  border: 1px solid #999999;
+  padding: 7px;
+  padding-left: 30px;
+  margin-left: 10px;
+  width: 90px;
+  box-shadow: -1px 1px 0px #AEAEAE;
+}
+
+.price-box i{
+  position: absolute;
+  top: 25%;
+  left:57%;
+}
+
+.input-icon {
+  position: relative;
+  width: 120px;
+  margin: 0 auto;
+}
+
+ 
+
+.input-icon > i {
+  position: absolute;
+  display: block;
+  transform: translate(0, -50%);
+  top: 50%;
+  left: 22%;  
+  pointer-events: none;
+  width: 25px;
+  text-align: center;
+  font-style: normal;
+}
+
+.input-icon > input {  
+  margin: 0 auto;
+  padding-left: 30px;
+}
+
+.input-icon-right > i {
+  right: 0;
+}
+
+.input-icon-right > input {
+  padding-left: 0;
+  padding-right: 25px;
+  text-align: right;
+}
+
+.edit-btn{
+  vertical-align: bottom;
+  position: absolute;
+  right: 0px;
+  top: 90px;
+  bottom: 0px;
+  color:#FF7676;
+}
+
+
+/*add-account css ::end*/
+
 /*submissions css ::end*/
+
+.available-popup-box .slot-box{
+  width:420px;
+  padding:10px 40px;
+}
+
+.available-popup-box{ 
+  width: 80%;
+  margin: 0 auto;
+  min-width: 320px;
+}
+
+.available-popup-box .like-comment li{
+  margin:0 10px;
+}
+
+/*Combain page css ::start*/
+.margin-top-4{
+  margin-top:4%;
+}
+
+.container-40{
+  width: 40%;
+  margin: 0px auto;
+}
+
+.container-60{
+  width: 60%;
+  margin: 0px auto;
+}
+
+.container-80{
+  width:80%;
+  margin:0 auto;
+}
+ 
+/*Releaser Step css::Start*/
+/*Releaser Step css::End*/
+
+
+/*Combain page css ::end*/
+
 
 /*check-box css ::start*/
 /* Base for label styling */
@@ -2520,6 +2705,33 @@ label:hover:before {
  
 /*check-box css ::end*/
 
+.quick-trade{
+  width:75%;
+  margin: 20px auto;
+  background-color:#ebebeb;
+  padding: 20px 20px;
+}
+
+.quick-trade img{
+  margin-right:10px;
+  width: 45px;
+}
+
+.quick-trade ul li{
+  padding: 10px 20px 28px 20px;
+  list-style: none;
+  margin: 10px 0;
+  line-height: 20px;
+  background: #FFD3B8;
+}
+
+.quick-trade ul{
+ width: 100%;
+}
+
+.quick-trade ul li:first-child {background: #fff;}
+.quick-trade ul li:nth-child(2n+3) {background:#fff;}
+
 /*Login Admin css ::start*/
 .become-admin p{
   padding: 0px;
@@ -2575,6 +2787,22 @@ label:hover:before {
 
 /*search organize css ::start*/
 
+
+.pr-padding-left-0{
+  padding-left: 0;
+}
+.pr-paddin-right-0{
+  padding-right:0px;
+}
+
+.pr-margin-left-0{
+  margin-left:0px;
+}
+
+.pr-margin-right-0{
+  margin-right:0px;
+}
+
 .new-trade-ingtexst{
   width: 150px;
   text-align: center;
@@ -2582,7 +2810,7 @@ label:hover:before {
 }
 
 .button-list{
-  marging-top:5%;
+  margin-top: 6px;
 }
 
 .button-list button{
@@ -2714,12 +2942,28 @@ label:hover:before {
 
 /*Calendarview :start*/
 
+.left-side-profile{
+  position: fixed;
+  width: 16%;
+  z-index: 999;
+  float: left;
+  top: 24%;
+}
+
+.left-side-profile .tropical{
+  padding: 30px 0;
+}
+
 .calendar-trade li{
   list-style: none;
 }
 
 .margin-20{
   margin: 20px 0px;
+}
+
+.margin-40{
+  margin: 40px 0px;
 }
 
 .calendar-table,tr,td{
@@ -2776,9 +3020,39 @@ label:hover:before {
 }
 
 
-/*.available-slot li label{vertical-align: top;}*/
-
 /*Calendarview ::end*/
+
+/*button ccs ::start*/
+.border-black-btn{
+  padding: 10px 30px;
+  background: transparent none repeat scroll 0% 0%;
+  margin: 10px 3px;
+  border-radius: 10px;
+  border: 1px solid #727272;
+  box-shadow: 0 0px 1px #AEAEAE;
+  text-align: center;
+  color: #8a8a8a;
+   font-weight: 300;
+  font-size: 13px; 
+  letter-spacing: 3px;
+  min-width: 120px;
+  box-shadow: inset 0 3px 5px rgba(255, 255, 255, 0.1) !important; 
+}
+
+
+.border-orange-btn{
+  padding: 10px 30px;
+  background:#FF7676;
+  margin: 10px 3px;
+  border-radius: 10px;     
+  text-align: center;
+  color: #fff;
+  font-weight: 300;
+  font-size: 13px; 
+  letter-spacing: 3px;
+  min-width: 120px;
+}
+/*button ccs ::end*/
 /********* Checkbox ******/ 
 
 .demo-radio-btn{
@@ -2874,6 +3148,16 @@ label:hover:before {
 	}
 }
 @media screen and (max-width: 768px) {
+
+.available-popup-box{
+  margin: 80px auto;
+}
+
+.left-side-profile{
+   width:96%!important;
+  position: relative!important;
+}
+
 .payed-reposts li{
   text-align: center;
 }
@@ -2984,6 +3268,41 @@ label:hover:before {
 }
 }
 @media screen and (max-width: 375px) {
+
+.available-popup-box{
+  margin: 80px auto;
+}
+
+.container-60{
+  width:100%;
+}
+
+.edit-btn{
+  position: relative;
+}
+.left-side-profile{
+  width:100%;
+  position: relative;
+}
+.pr-paddin-right-0{
+  padding-right: 15px;
+}
+.pr-padding-left-0{
+  padding-left: 15px;
+}
+.left-side-profile{
+  position: static;
+  width:100%;
+  float: none;
+}
+.quick-trade {
+    width: 100%;
+    padding: 20px 0;
+}
+
+.quick-trade .border-right-black{
+  border-right:0px;
+}
     /*.scroll-bar1 {
 		padding-top: 465px;
 		padding-right: 38px;
@@ -3049,6 +3368,15 @@ label:hover:before {
 
 @media screen and (max-width: 360px) {
 
+.available-popup-box{
+  margin: 80px auto;
+}
+
+.left-side-profile{
+  width:100%;
+  position: relative;
+}
+
 .organize-text{
   padding-top: 10px;
 }
@@ -3101,6 +3429,39 @@ label:hover:before {
 
 }
 @media screen and (max-width: 320px) {
+
+.available-popup-box{
+  margin: 80px auto;
+}
+
+.container-60{
+  width:100%;
+}
+
+.edit-btn{
+  position: relative;
+}
+
+.pr-padding-left-0{
+  padding-left: 15px;
+}
+.left-side-profile{
+  position: static;
+  width:100%;
+  float: none;
+}
+.pr-paddin-right-0{
+  padding-right: 15px;
+}
+.quick-trade .border-right-black{
+  border-right:0px;
+}
+.quick-trade {
+    width: 100%;
+    margin: 20px auto;
+    background-color: #ebebeb;
+    padding: 20px 0;
+}
 
 .organize-text{
   padding-top: 10px;
