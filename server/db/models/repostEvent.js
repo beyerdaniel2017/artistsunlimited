@@ -13,6 +13,9 @@ var schema = new mongoose.Schema({
   trackURL: {
     type: String
   },
+  trackArtUrl:{
+    type: String
+    },
   day: {
     type: Date
   },

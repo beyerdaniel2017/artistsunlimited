@@ -192,7 +192,8 @@ router.post('/soundCloudAuthentication', function(req, res, next) {
                 'permalinkURL': data.permalink_url,
                 'avatarURL': data.avatar_url.replace('large', 't500x500'),
                 'token': req.body.token,
-                'followers': data.followers_count
+                'followers': data.followers_count,
+                'role' : 'user'
               }
             });
             newUser.save();

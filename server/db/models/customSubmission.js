@@ -5,7 +5,10 @@ var schema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  background:{},
+  background:{
+    images:String,
+    blur:Number
+  },
   logo:{
     images:String,
     style:{

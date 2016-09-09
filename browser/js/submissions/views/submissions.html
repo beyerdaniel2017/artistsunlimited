@@ -58,7 +58,7 @@
                             <div class="dropdown sort-btn">
                               <button class="btn dropdown-toggle sort-select descending" type="button" data-toggle="dropdown">CUSTOM EMAIL</button>
                               <ul class="dropdown-menu">
-                                <li><a href="#" ng-click="openEmailClient(sub, button)" ng-repeat="button in user.customEmailButtons">{{button.buttonText}}</a></li>
+                                <li><a href="#" ng-click="openEmailClient(sub, button)" ng-repeat="button in user.customEmailButtons" ng-if="button.buttonText != 'accept' && button.buttonText != 'decline'">{{button.buttonText}}</a></li>
                               </ul>
                             </div>
                             <button class="btn decline" ng-click="ignore(sub)">IGNORE</button>
@@ -90,7 +90,7 @@
                     </div>
                       </div>
                      <div class="col-md-6">
-                        <div class="channel-check">
+                        <div class="channel-check" ng-if="uniqueGroup.length!= 0">
                       <div class="channel-masege">
                             <ul style="height: 20px;">
                               <li class="" ng-repeat="groups in sub.selectedGroups">{{groups}}</li>
@@ -112,6 +112,10 @@
                     </div><!--row ::end-->
                   </div>
                   </div>            
+                <br/>
+                <div class="col-md-12 text-center margin-20" >
+                  <button class="btn decline" style="background-color:#ffeb99" ng-click="loadMore()">LOAD MORE</button>           
+                </div><br/><br/>          
                 </div>
                 <!-- MY SCHEDULE : End-->
                 <!-- ORGANIZE SCHEDULE :Start -->
@@ -147,7 +151,7 @@
                             <span countdown='' date='{{sub.pooledSendDate | date:"yyyy-MM-dd HH:mm:ss" }}'>&nbsp;</span>
                           </div>
                           <ul class="submissions-tab-list decline-accpect-btn">
-                            <button class="btn decline" ng-click="marketIgnore(sub)">IGNORE</button>
+                            <button class="btn decline" style="width: 90%; !important" ng-click="marketIgnore(sub)">IGNORE</button>
                             <!-- <button class="btn decline" ng-click="marketDecline(sub)">DECLINE</button>    -->
                             <button class="btn accpect" ng-click="marketSave(sub)">ACCEPT</button>
                           </ul> 
@@ -176,7 +180,7 @@
                     </div>
                       </div>
                      <div class="col-md-6">
-                        <div class="channel-check">
+                        <div class="channel-check" ng-if="uniqueGroup.length!= 0">
                       <div class="channel-masege">
                             <ul style="height: 20px;">
                               <li class="" ng-repeat="groups in sub.selectedGroups">{{groups}}</li>
@@ -198,6 +202,10 @@
                     </div><!--row ::end-->
                   </div> 
                   </div>
+                <br/>
+                <div class="col-md-12 text-center margin-20" >
+                  <button class="btn decline" style="background-color:#ffeb99" ng-click="loadMore()">LOAD MORE</button>           
+                </div><br/><br/>
                 </div>
                 <!-- ORGANIZE SCHEDULE :End -->
                 <!-- MANAGE REPOSTS : Start -->

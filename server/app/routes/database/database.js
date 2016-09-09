@@ -853,13 +853,13 @@ router.post('/updateCustomEmailButtons', function(req, res, next) {
 });
 
 router.put('/deleteUserAccount/:id', function(req, res, next) {
-  var soundcloudId = req.params;
+  var userID = req.params.id;
   User.update({
       _id: req.user._id
     }, {
       $pull: {
         paidRepost: {
-          id: parseInt(soundcloudId.id, 10)
+          userID: userID
         }
       }
     }, {

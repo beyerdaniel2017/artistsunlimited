@@ -13,7 +13,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
   $scope.loginObj = {};
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
   if($scope.isLoggedIn){
-    $state.go('submissions');
+    $state.go('basicstep1');
   }
   $scope.login = function() {
     $scope.message = {
@@ -30,7 +30,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         var userData = res.data.user;
         userData.isAdmin = true;
         SessionService.create(userData);
-        $state.go('submissions');
+        $state.go('basicstep1');
       } else {
         $scope.message = {
           val: res.data.message,
@@ -55,27 +55,5 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         $.Zebra_Dialog('Wrong Password');
       });
     }
-    // $scope.manage = function() {
-    //   $scope.processing = true;
-    //   SC.connect()
-    //     .then(function(res) {
-    //       $rootScope.accessToken = res.oauth_token;
-    //       return $http.post('/api/login/authenticated', {
-    //         token: res.oauth_token,
-    //         password: $rootScope.password,
-    //       })
-    //     })
-    //     .then(function(res) {
-    //       $scope.processing = false;
-    //       $rootScope.schedulerInfo = res.data;
-    //       $rootScope.schedulerInfo.events.forEach(function(ev) {
-    //         ev.day = new Date(ev.day);
-    //       });
-    //       $state.go('scheduler');
-    //     })
-    //     .then(null, function(err) {
-    //       $.Zebra_Dialog('Error: Could not log in');
-    //       $scope.processing = false;
-    //     });
-    // }
+   
 });

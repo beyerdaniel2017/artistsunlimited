@@ -34,11 +34,6 @@
                               <li><strong>{{sub.name}} </strong>submitted a track <strong>{{sub.datedata}}</strong> to <strong>Le Sol</strong></li>
                             </ul>   
                           </div>
-                          <!-- <div class="col-sm-3">
-                            <ul class="submissions-tab-list">
-                              <li><img src="assets/images/dvd-icon.png"><strong>Le Sol</strong> </li>                               
-                            </ul> 
-                          </div> -->
                           <div class="col-sm-4">
                             <ul class="submissions-tab-list">
                               <li style="color:rgb(255, 118, 118);"><img src="" style="visibility: hidden;">Message {{sub.name}}</li>
@@ -50,7 +45,9 @@
                          <div class="row">
                            <div class="col-md-12" >
                             <div style="height: 160px; width: 100%;">
-                              <div id="{{sub.trackID}}player" class="video-main"></div>
+                            <audio class="premier-video" controls>
+                              <source ng-src="{{sub.s3URL | trusted }}" type="audio/mpeg">
+                              </audio>
                             </div>
                            </div>
                          </div><!--row ::end-->
@@ -58,56 +55,24 @@
                        <div class="col-md-2">
                         <div class=""><br/><br/>
                         <ul class="submissions-tab-list decline-accpect-btn">
+                            <div class="dropdown sort-btn">
+                              <button class="btn dropdown-toggle sort-select descending" type="button" data-toggle="dropdown">CUSTOM EMAIL
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0);" ng-click="openEmailClient(sub, button)" ng-repeat="button in user.customEmailButtons" ng-if="button.buttonText != 'accept' && button.buttonText != 'decline'">{{button.buttonText}}</a></li>
+                        </ul>
+                      </div>
+                            <button class="btn decline" ng-click="delete(sub)">DELETE</button>
                            <button class="btn decline" ng-click="decline(sub)">DECLINE</button>   
                             <button class="btn accpect" ng-click="accept(sub)">ACCEPT</button>
-                        </ul> 
-                      </div>
-                      </div>
-                    </div><!--row ::end-->
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="channel-check">
-                      <div class="channel-masege">
-                        <ul style="height: 20px;">
-                          <li ng-repeat="chans in selectedChannelName">{{chans}}</li>
                         </ul>
                       </div>
-                      <div class="check-list">
-                        <form action="#" >
-                        <div class="pull-left" style="width:50%;" ng-repeat="chan in user.paidRepost">
-                          <p>
-                          <label class="with-square-checkbox">
-                            <input style="" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" ng-model="sub[chan.username]" ng-change="changeBox(sub, chan)">
-                             <span>{{chan.username}}</span> </label>
-                          </p>
-                          </div>
-                        </form>
-                      
-                      </div>
-                    </div>
-                      </div>
-                     <div class="col-md-6">
-                        <div class="channel-check">
-                      <div class="channel-masege">
-                        <ul style="height: 20px;">
-                          <li class="" ng-repeat="groups in selectedGroups">{{groups}}</li>
-                        </ul>
-                      </div>
-                      <div class="check-list">
-                        <form action="#">
-                           <div class="pull-left" style="width:50%;" ng-repeat="group in uniqueGroup">
-                             <p>
-                              <label class="with-square-checkbox">
-                            <input style="" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" ng-model="sub[group]" ng-change="changeBoxGroup(sub, group)">
-                             <span>{{group}}</span></label>
-                              </p>
-                           </div>
-                        </form>
-                      </div>
-                    </div>
                       </div>
                     </div><!--row ::end-->
                   </div>
+                </div><br/><br/>
+                <div class="col-md-12 text-center margin-20" >
+                  <button class="btn decline" style="background-color:#ffeb99" ng-click="loadMore()">LOAD MORE</button>           
                   </div>            
                 </div>
                 <!-- MY SCHEDULE : End-->
