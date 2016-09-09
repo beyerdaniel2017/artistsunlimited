@@ -18,7 +18,7 @@ var schema = new mongoose.Schema({
       type: Boolean,
       default: false
     },
-    online:{
+    online: {
       type: Boolean,
       default: false
     }
@@ -34,7 +34,7 @@ var schema = new mongoose.Schema({
       type: Boolean,
       default: false
     },
-    online:{
+    online: {
       type: Boolean,
       default: false
     }

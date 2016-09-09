@@ -16,6 +16,8 @@ app.config(function($stateProvider) {
             return $http.get('/api/trades/withUser/' + user._id + '?tradeType=' + JSON.stringify(tradeType))
               .then(function(res) {
                 var trades = res.data;
+                console.log('trades')
+                console.log(trades)
                 trades.forEach(function(trade) {
                   trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
                   trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
@@ -50,8 +52,22 @@ app.config(function($stateProvider) {
                 }
               })
               .then(function(res) {
+                console.log('search')
+                console.log(res.data)
                 return res.data;
-              })
+              }).then(null, console.log);
+          } else {
+            return [];
+          }
+        },
+        favorites: function($http, SessionService) {
+          var user = SessionService.getUser();
+          if (user) {
+            return $http.post('/api/users/withIDs', user.tradePartners)
+              .then(function(res) {
+                console.log(res.data);
+                return res.data;
+              }).then(null, console.log);
           } else {
             return [];
           }
@@ -60,12 +76,12 @@ app.config(function($stateProvider) {
     })
 });
 
-app.controller("ReForReListsController", function($scope, $rootScope, currentTrades, openTrades, $http, SessionService, $state, $timeout) {
+app.controller("ReForReListsController", function($scope, $rootScope, currentTrades, favorites, openTrades, $http, SessionService, $state, $timeout) {
   if (!SessionService.getUser()) {
     $state.go('login');
-  	return;
+    return;
   }
-  console.log("hello from ReForReListsController");
+  $scope.favorites = favorites;
   $scope.state = 'reForReInteraction';
   $scope.user = SessionService.getUser();
   $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
@@ -384,13 +400,13 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
       }
     }
   }
-  	$scope.getUserNetwork = function(){
-	    $http.get("/api/database/userNetworks")
-	    .then(function(networks){
-	      $rootScope.userlinkedAccounts = networks.data;
-	    })
-  	}
-  	$scope.getUserNetwork();
+  $scope.getUserNetwork = function() {
+    $http.get("/api/database/userNetworks")
+      .then(function(networks) {
+        $rootScope.userlinkedAccounts = networks.data;
+      })
+  }
+  $scope.getUserNetwork();
   $scope.verifyBrowser();
   $scope.checkNotification();
   $scope.sortResult($scope.sortby);

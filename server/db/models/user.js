@@ -83,7 +83,11 @@ var schema = new mongoose.Schema({
             trackUnrepost: Boolean,
             dailyUnfilledTrade: Boolean,
         }
-    }
+    },
+    tradePartners: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 });
 
 // method to remove sensitive information from user objects before sending them out

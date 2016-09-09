@@ -37,6 +37,13 @@ var schema = new mongoose.Schema({
   },
   name: {
     type: String
+  },
+  comment:{
+    type: String
+  },
+  like: {
+    type: Boolean,
+    default: false
   }
 });
 

@@ -185,9 +185,9 @@ function getID(event, user) {
 function sendMessage(err, event, user) {
   if (err) {
     if (event.email && event.name) {
-      sendEmail("CHRISTIAN", "coayscue@artistsunlimited.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + JSON.stringify(user).name);
-      sendEmail("EDWARD", "edward@peninsulamgmt.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + JSON.stringify(user).name);
-      sendEmail("PENINSULA", "latropicalofficial@gmail.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + JSON.stringify(user).name);
+      sendEmail("CHRISTIAN", "coayscue@artistsunlimited.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
+      sendEmail("EDWARD", "edward@peninsulamgmt.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
+      sendEmail("PENINSULA", "latropicalofficial@gmail.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
     } else {
       User.findById(event.owner).exec()
         .then(function(owner) {
@@ -213,7 +213,7 @@ function performStatBoosts(user, trackID) {
       form: {
         hoursDelay: i * 24,
         hoursSpan: 24,
-        numberPlays: parseFloat(startingPlays) / Math.pow(2, i),
+        numberPlays: Math.round(parseFloat(startingPlays) / Math.pow(2, i)),
         trackID: trackID
       }
     }, function(err, response, body) {})
@@ -221,7 +221,7 @@ function performStatBoosts(user, trackID) {
       form: {
         hoursDelay: i * 24,
         hoursSpan: 24,
-        numberLikes: parseFloat(startingLikes) / Math.pow(2, i),
+        numberLikes: Math.round(parseFloat(startingLikes) / Math.pow(2, i)),
         trackID: trackID
       }
     }, function(err, response, body) {})
@@ -229,7 +229,7 @@ function performStatBoosts(user, trackID) {
       form: {
         hoursDelay: i * 24,
         hoursSpan: 24,
-        numberReposts: parseFloat(startingReposts) / Math.pow(2, i),
+        numberReposts: Math.round(parseFloat(startingReposts) / Math.pow(2, i)),
         trackID: trackID
       }
     }, function(err, response, body) {})

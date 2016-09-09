@@ -1,189 +1,191 @@
   <style>
-  .grey {
-   background-color:#DCDCDC;
-   color:#000000 !important;
-}
-  </style>
-  <ng-include src="'js/artistTools/ArtistTools/header-navigation.html'"></ng-include>
-  <!-- Content Start  -->
-  <div id="wrapper">
-    <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-    <div class="container-fluid height-100pr">
-      <div class="row">
-        <div class="col-md-12">         
-           <div class="page-content right-side">
-            <!--page-contant Start-->
-            <div class="scheduler-tabs">
-              <!-- Nav tabs :Start-->
-              <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#myschedule" aria-controls="myschedule" role="tab" data-toggle="tab">
-                  <img src="assets/images/myschedule.png" />New Trade</a>
-                </li>
-                <li role="presentation"><a href="#organizeschedule" aria-controls="organizeschedule" role="tab" data-toggle="tab"> <img src="assets/images/organizeschedule.png"/> Incomplete Trade</a></li>
-                <li role="presentation"><a href="#managereposts" aria-controls="managereposts" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.png"/> MANAGE Trade Slots</a></li>
-              </ul>
-              <!-- Nav tabs :End-->
-              <!-- Tab panes :: Start-->
-              <div class="tab-content">
-                <!-- MY SCHEDULE : Start-->
-                <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
-                  <div class="container-90"> 
-                    <div class="manage-bar">  
-                      <div class="row padding30">                      
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div class=" ">
-                            <p class="text-center">Followers</p>
-                            <div range-slider min="0" max="200" model-min="sliderSearchMin" model-max="sliderSearchMax" attach-handle-values="true" on-handle-up='searchByFollowers()'></div>
-                            <span class="pull-left">{{minSearchTradefollowers | number:0}}</span> 
-                            <span class="pull-right">{{maxSearchTradefollowers | number:0}}</span>
-                          </div>                                               
-                        </div><!--search-trad End-->
-                        <div class="col-md-1"></div>
-                        <div class="col-md-4 col-sm-4 col-xs-10">
-                          <div class="form-group">
-                            <div class="icon-addon addon-md">
-                              <input placeholder="Search by URL" class="form-control ng-pristine ng-untouched ng-valid ng-empty" id="txtSearchByURL" ng-model="searchURL" type="text">
-                              <label for="txtSearchByURL" class="glyphicon glyphicon-search" rel="tooltip" title="Search by URL" ng-disable="!applicationObj.firstName" ng-click="sendSearch()"></label>
-                            </div>                                    
-                          </div><!--search-trad End-->
-                        </div>
-                      </div>                 
-                    </div>                 
-                  </div>
-                  <div class="container-90 border-top">
-                    <br>
+    .grey {
+     background-color:#DCDCDC;
+     color:#000000 !important;
+   }
+ </style>
+ <ng-include src="'js/artistTools/ArtistTools/header-navigation.html'"></ng-include>
+ <!-- Content Start  -->
+ <div id="wrapper">
+  <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
+  <div class="container-fluid height-100pr">
+    <div class="row">
+      <div class="col-md-12">         
+       <div class="page-content right-side">
+        <!--page-contant Start-->
+        <div class="scheduler-tabs">
+          <!-- Nav tabs :Start-->
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#myschedule" aria-controls="myschedule" role="tab" data-toggle="tab">
+              <img src="assets/images/myschedule.png" />New Trade</a>
+            </li>
+            <li role="presentation"><a href="#organizeschedule" aria-controls="organizeschedule" role="tab" data-toggle="tab"> <img src="assets/images/organizeschedule.png"/> Incomplete Trade</a></li>
+            <li role="presentation"><a href="#managereposts" aria-controls="managereposts" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.png"/> MANAGE Trade Slots</a></li>
+          </ul>
+          <!-- Nav tabs :End-->
+          <!-- Tab panes :: Start-->
+          <div class="tab-content">
+            <!-- MY SCHEDULE : Start-->
+            <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
+              <div class="container-90"> 
+                <div class="manage-bar">  
+                  <div class="row padding30">                      
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class=" ">
+                        <p class="text-center">Followers</p>
+                        <div range-slider min="0" max="200" model-min="sliderSearchMin" model-max="sliderSearchMax" attach-handle-values="true" on-handle-up='searchByFollowers()'></div>
+                        <span class="pull-left">{{minSearchTradefollowers | number:0}}</span> 
+                        <span class="pull-right">{{maxSearchTradefollowers | number:0}}</span>
+                      </div>                                               
+                    </div><!--search-trad End-->
+                    <div class="col-md-1"></div>
+                    <div class="col-md-4 col-sm-4 col-xs-10">
+                      <div class="form-group">
+                        <div class="icon-addon addon-md">
+                          <input placeholder="Search by URL" class="form-control ng-pristine ng-untouched ng-valid ng-empty" id="txtSearchByURL" ng-model="searchURL" type="text">
+                          <label for="txtSearchByURL" class="glyphicon glyphicon-search" rel="tooltip" title="Search by URL" ng-disable="!applicationObj.firstName" ng-click="sendSearch()"></label>
+                        </div>                                    
+                      </div><!--search-trad End-->
+                    </div>
+                  </div>                 
+                </div>                 
+              </div>
+              <div class="container-90 border-top">
+                <br>
+                <div class="row">
+                  <div class="col-md-6 border-right">
                     <div class="row">
-                      <div class="col-md-6 border-right">
-                        <div class="row">
-                         <p class="text-center"><strong>Favorites</strong></p>
-                          <div ng-repeat="user in searchUser" class="col-md-6 col-sm-6 col-xs-12 text-center margin-20">
-                            <div class="slidethamb-box">                          
-                              <div class="thumb-img-container">
-                                   <img class="img-responsive" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:190px; height: 100%;margin: 0 auto;"> 
-                                  <button class="img-btn" ng-click="openTrade(user)">OPEN TRADE</button>
-                                  <button class="img-btn2 img-btn">OPEN TRADE2</button>
-                             </div>
-                             <p class="ng-binding new-trade-ingtexst">{{user.soundcloud.followers}} Followers OPEN TRADE</p>
-                           </div>
-                          </div>
-                        </div><!--row ::end-->
+                     <p class="text-center"><strong>Favorites</strong></p>
+                     <div ng-repeat="otherUser in favorites" class="col-md-6 col-sm-6 col-xs-12 text-center margin-20">
+                      <div class="slidethamb-box">                          
+                        <div class="thumb-img-container">
+                          <img class="img-responsive" src="{{otherUser.soundcloud.avatarURL ? otherUser.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:190px; height: 100%;margin: 0 auto;"> 
+                          <button class="img-btn" ng-click="openTrade(otherUser)">OPEN TRADE</button>
+                          <button class="img-btn2 img-btn">OPEN TRADE2</button>
+                        </div>
+                        <p class="ng-binding new-trade-ingtexst"><a href="{{otherUser.soundcloud.permalinkURL}}" target="_blank">{{otherUser.soundcloud.username}}</a></p>
+                        <p class="ng-binding new-trade-ingtexst">{{otherUser.soundcloud.followers}}</p>
                       </div>
-                      <div class="col-md-6">
-                        <div class="row">
-                          <p class="text-center"><strong>Others</strong></p>
-                          <div ng-repeat="user in searchUser" class="col-md-6 col-sm-6 col-xs-12 text-center margin-20">
-                            <div class="slidethamb-box">                             
-                              <div class="thumb-img-container">
-                                   <img class="img-responsive" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:190px; height: 100%;margin: 0 auto;"> 
-                                  <button class="img-btn" ng-click="openTrade(user)">OPEN TRADE</button>
-                                  <button class="img-btn2 img-btn">OPEN TRADE2</button>
-                             </div>
-                             <p class="ng-binding new-trade-ingtexst">{{user.soundcloud.followers}} Followers OPEN TRADE</p>
-                           </div>
-                          </div>
-                        </div><!--row ::end-->
-                      </div>
-                    </div><!--row ::end-->
-                  </div><!--container-90 ::end-->
+                    </div>
+                  </div><!--row ::end-->
                 </div>
+                <div class="col-md-6">
+                  <div class="row">
+                    <p class="text-center"><strong>Others</strong></p>
+                    <div ng-repeat="otherUser in searchUser" class="col-md-6 col-sm-6 col-xs-12 text-center margin-20" ng-hide="user.tradePartners.includes(otherUser._id)">
+                      <div class="slidethamb-box">                             
+                        <div class="thumb-img-container">
+                          <img class="img-responsive" src="{{otherUser.soundcloud.avatarURL ? otherUser.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:190px; height: 100%;margin: 0 auto;"> 
+                          <button class="img-btn" ng-click="openTrade(otherUser)">OPEN TRADE</button>
+                          <button class="img-btn2 img-btn">OPEN TRADE2</button>
+                        </div>
+                        <p class="ng-binding new-trade-ingtexst"><a href="{{otherUser.soundcloud.permalinkURL}}" target="_blank">{{otherUser.soundcloud.username}}</a></p>
+                        <p class="ng-binding new-trade-ingtexst">{{otherUser.soundcloud.followers}}</p>
+                      </div>
+                    </div>
+                  </div><!--row ::end-->
+                </div>
+              </div><!--row ::end-->
+            </div><!--container-90 ::end-->
+          </div>
 
-                <!-- MY SCHEDULE : End-->
-                <!-- ORGANIZE SCHEDULE :Start -->
-                <div role="tabpanel" class="tab-pane fade" id="organizeschedule">
+          <!-- MY SCHEDULE : End-->
+          <!-- ORGANIZE SCHEDULE :Start -->
+          <div role="tabpanel" class="tab-pane fade" id="organizeschedule">
+            <br>
+            <div class="organize-list">
+              <br>                           
+              <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                  <div class="btn-group channel-group" role="group" aria-label="...">
+                    <a class="btn btn-default active" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')">Inbox</a>
+                    <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')">Sent</a>
+                  </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-xs-12">
+
+                </div>                            
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                  <div class="">
+                    <div class="icon-addon addon-md">
+                      <input placeholder="Search by URL" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="txtSearchByArtistURL" ng-model="searchURL" style="" type="text">
+                      <label for="txtSearchByArtistURL" class="organize-label glyphicon glyphicon-search" rel="tooltip" title="Search by URL" ng-click="searchCurrentTrade()"></label>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+
+              <br>
+              <div class="row">
+                <div class="border-padding">
+                  <div class="col-md-2 col-sm-3 col-xs-12">
+                    <div class="thumb-img-container">
+                     <div class="organize-thumb-img">
+                       <img src="https://i1.sndcdn.com/avatars-000231342858-55idd3-t500x500.jpg" class="responsive">
+                     </div>
+                   </div>
+                 </div>
+                 <div class="col-md-2 col-sm-12 col-xs-12">
+                  <div class="organize-text">
+                    <p>Mahama</p>
+                    <p>2,020 Followers</p>
+                  </div>
+                </div>
+                <div class="col-md-2 col-sm-12 col-xs-12">
+                  <div class="organize-text">
+                    <p>Mahama</p>
+                    <p>2,020 Followers</p>
+                  </div>
+                </div>                              
+                <div class="col-md-2 col-sm-12 col-xs-12">
+                  <div class="organize-text">
+                    <p>For 5 Weeks</p>                                 
+                  </div>
+                </div>
+                <div class="col-md-2 col-sm-12 col-xs-12">
+                  <div class="button-list">
+                    <button class="btn organize-btn">FB Message</button>
+                    <button class="btn organize-btn">Email</button>
+                    <button class="btn organize-btn">Get Link</button>
+                  </div>
+                </div>
+                <div class="col-md-2 col-sm-3 col-xs-12">
                   <br>
-                    <div class="organize-list">
-                        <br>                           
-                          <div class="row">
-                            <div class="col-md-4 col-sm-6 col-xs-12">
-                              <div class="btn-group channel-group" role="group" aria-label="...">
-                                <a class="btn btn-default active" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')">Inbox</a>
-                                <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')">Sent</a>
-                              </div>
-                            </div>
-                            <div class="col-md-4 col-sm-6 col-xs-12">
-                              
-                            </div>                            
-                            <div class="col-md-4 col-sm-6 col-xs-12">
-                              <div class="">
-                                <div class="icon-addon addon-md">
-                                  <input placeholder="Search by URL" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="txtSearchByArtistURL" ng-model="searchURL" style="" type="text">
-                                  <label for="txtSearchByArtistURL" class="organize-label glyphicon glyphicon-search" rel="tooltip" title="Search by URL" ng-click="searchCurrentTrade()"></label>
-                                </div>
-                              </div>
-                            </div>
-                          </div> 
-                         
-                          <br>
-                          <div class="row">
-                            <div class="border-padding">
-                              <div class="col-md-2 col-sm-3 col-xs-12">
-                                <div class="thumb-img-container">
-                                 <div class="organize-thumb-img">
-                                   <img src="https://i1.sndcdn.com/avatars-000231342858-55idd3-t500x500.jpg" class="responsive">
-                                 </div>
-                                </div>
-                              </div>
-                              <div class="col-md-2 col-sm-12 col-xs-12">
-                                <div class="organize-text">
-                                  <p>Mahama</p>
-                                  <p>2,020 Followers</p>
-                                </div>
-                              </div>
-                              <div class="col-md-2 col-sm-12 col-xs-12">
-                                <div class="organize-text">
-                                  <p>Mahama</p>
-                                  <p>2,020 Followers</p>
-                                </div>
-                              </div>                              
-                              <div class="col-md-2 col-sm-12 col-xs-12">
-                                <div class="organize-text">
-                                  <p>For 5 Weeks</p>                                 
-                                </div>
-                              </div>
-                              <div class="col-md-2 col-sm-12 col-xs-12">
-                                <div class="button-list">
-                                  <button class="btn organize-btn">FB Message</button>
-                                  <button class="btn organize-btn">Email</button>
-                                  <button class="btn organize-btn">Get Link</button>
-                                </div>
-                              </div>
-                              <div class="col-md-2 col-sm-3 col-xs-12">
-                              <br>
-                                <div class="button-list">
-                                  <button class="btn organize-btn">Manage</button>
-                                  <button class="btn organize-btn">Decline</button>
-                                </div>
-                              </div>
-                            </div>
-                          </div><!--row ::end-->
-                          <br>
-                          <div class="row">
-                            <div class="border-padding">
-                              <div class="col-md-2 col-sm-12 col-xs-12">
-                                <div class="thumb-img-container">
-                                 <div class="organize-thumb-img">
-                                   <img src="https://i1.sndcdn.com/avatars-000231342858-55idd3-t500x500.jpg" class="responsive">
-                                 </div>
-                                </div>
-                              </div>
-                              <div class="col-md-2 col-sm-12 col-xs-12">
-                                <div class="organize-text">
-                                  <p>Mahama</p>
-                                  <p>2,020 Followers</p>
-                                </div>
-                              </div>
-                              <div class="col-md-2 col-sm-3 col-xs-12">
-                                <div class="organize-text">
-                                  <p>Mahama</p>
-                                  <p>2,020 Followers</p>
-                                </div>
-                              </div>                              
-                              <div class="col-md-2 col-sm-12 col-xs-12">
-                                <div class="organize-text">
-                                  <p>For 5 Weeks</p>                                 
-                                </div>
-                              </div>
-                              <div class="col-md-2 col-sm-12 col-xs-12">
+                  <div class="button-list">
+                    <button class="btn organize-btn">Manage</button>
+                    <button class="btn organize-btn">Decline</button>
+                  </div>
+                </div>
+              </div>
+            </div><!--row ::end-->
+            <br>
+            <div class="row">
+              <div class="border-padding">
+                <div class="col-md-2 col-sm-12 col-xs-12">
+                  <div class="thumb-img-container">
+                   <div class="organize-thumb-img">
+                     <img src="https://i1.sndcdn.com/avatars-000231342858-55idd3-t500x500.jpg" class="responsive">
+                   </div>
+                 </div>
+               </div>
+               <div class="col-md-2 col-sm-12 col-xs-12">
+                <div class="organize-text">
+                  <p>Mahama</p>
+                  <p>2,020 Followers</p>
+                </div>
+              </div>
+              <div class="col-md-2 col-sm-3 col-xs-12">
+                <div class="organize-text">
+                  <p>Mahama</p>
+                  <p>2,020 Followers</p>
+                </div>
+              </div>                              
+              <div class="col-md-2 col-sm-12 col-xs-12">
+                <div class="organize-text">
+                  <p>For 5 Weeks</p>                                 
+                </div>
+              </div>
+              <div class="col-md-2 col-sm-12 col-xs-12">
                                 <!-- <div class="button-list">
                                   <button class="btn organize-btn">FB Message</button>
                                   <button class="btn organize-btn">Email</button>
@@ -191,7 +193,7 @@
                                 </div> -->
                               </div>
                               <div class="col-md-2 col-sm-12 col-xs-12">
-                              <br>
+                                <br>
                                 <div class="button-list">
                                   <button class="btn organize-btn">Manage</button>
                                   <button class="btn organize-btn">Decline</button>
@@ -201,29 +203,29 @@
                           </div><!--row ::end--> 
                           <br>                                                     
                         </div>
-                  <br>
-                </div>
-                <!-- ORGANIZE SCHEDULE :End -->
-                <!-- MANAGE REPOSTS : Start -->
-                <div role="tabpanel" class="tab-pane fade" id="managereposts"> 
-                  <div class="container-90">                    
-                    
-                  </div>
+                        <br>
+                      </div>
+                      <!-- ORGANIZE SCHEDULE :End -->
+                      <!-- MANAGE REPOSTS : Start -->
+                      <div role="tabpanel" class="tab-pane fade" id="managereposts"> 
+                        <div class="container-90">                    
 
-                  </div>
-                  </div>
-                  <!-- MANAGE REPOSTS : End -->                
-                </div>
-                <!-- Tab panes :: End-->
-              </div><!--page-contant End-->
+                        </div>
 
-        </div>
-        <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
+                      </div>
+                    </div>
+                    <!-- MANAGE REPOSTS : End -->                
+                  </div>
+                  <!-- Tab panes :: End-->
+                </div><!--page-contant End-->
+
+              </div>
+              <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
+              </div>
+            </div>
+            <!--overlay-->
+
+            <ng-include src="'js/home/views/loader.html'"></ng-include>
+          </div>
         </div>
       </div>
-      <!--overlay-->
-   
-      <ng-include src="'js/home/views/loader.html'"></ng-include>
-    </div>
-  </div>
-</div>

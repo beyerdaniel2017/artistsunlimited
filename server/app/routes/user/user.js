@@ -30,7 +30,18 @@ router.get('/byId/:id', function(req, res, next) {
     .then(function(user) {
       //if (user.soundcloud.token) user.soundcloud.token = undefined;
       res.send(user);
-    })
+    }).then(null, next)
+});
+
+router.post('/withIDs', function(req, res, next) {
+  User.find({
+      _id: {
+        $in: req.body
+      }
+    }).exec()
+    .then(function(users) {
+      res.send(users);
+    }).then(null, next)
 });
 
 router.get('/getUserID', function(req, res, next) {
@@ -100,7 +111,7 @@ router.post('/bySCURL', function(req, res, next) {
         };
         findUsers(searchObj);
       }
-    });
+    }).then(null, next);
   var findUsers = function(sObj) {
     User.find(sObj)
       .sort({
@@ -155,14 +166,14 @@ router.post('/bySCURL', function(req, res, next) {
                       } else {
                         res.send([]);
                       }
-                    });
+                    }).then(null, next);
                 });
             });
           });
         } else {
           res.send([]);
         }
-      });
+      }).then(null, next);
   }
 });
 
