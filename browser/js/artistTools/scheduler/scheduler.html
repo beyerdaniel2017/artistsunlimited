@@ -251,6 +251,7 @@
                           </label> 
                           <span>Autofill slot</span>
                         </li> -->
+                        <ul>
                         <li class="switch-btn">
                           <label class="switch">
                             <input checked="" type="checkbox" ng-model="unrepostEnable">
@@ -258,11 +259,13 @@
                           </label> 
                           <span>Unrepost after<input  class="form-control input-hour" placeholder="1" ng-model="unrepostHours">hours</span>
                         </li>
+                        </ul><br/>
                         <div class="form-group">
                           <div class="col-xs-12">
-                            <div class="total-reach">
-                              <a href="#">Total Reach: {{followCounts}} followers</a>
-                            </div>
+                            <label>Time between reposts:</label>
+                            <select class="form-control input-hour" ng-model="timeGap">
+                              <option ng-repeat="n in [0,1,2,3,4,5,6,7,8,9,10,11,12]" value="{{n}}">{{n}}</option>
+                            </select> hours
                           </div>
                         </div>
                       </div>
@@ -301,6 +304,13 @@
                                   <span>{{u.soundcloud.username}}</span> 
                                  </label>
                                 </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="col-xs-12">
+                              <div class="total-reach">
+                                <a href="#">Total Reach: {{followCounts}} followers</a>
                               </div>
                             </div>
                           </div>
@@ -348,7 +358,7 @@
                             </div> -->
                             <div class="col-md-12">
                               <div class="form-group">
-                                <textarea class="form-control" placeholder="Awesome track!" ng-disabled="disable" ng-model="eventComment">{{comment}}</textarea>
+                                <textarea class="form-control" ng-disabled="disable" ng-model="eventComment">{{comment}}</textarea>
                                 <div class="next-previous">
                                   <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
                                   <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
@@ -373,40 +383,134 @@
               </div>
             </div>
             <!-- overlay -->
-            <div class="overlay" ng-show="showOverlay" ng-click="backEvent()">
+            <div class="overlay" ng-show="showOverlay" ng-click="backEvent()" style="z-index: 999;">
+              <div class="available-popup-box">
               <div class="label-scheduler label-smaller slot-box" ng-click="$event.stopPropagation();">
-                <span style="font-size:1.25em">{{makeEvent.day.toLocaleDateString()}}     {{(makeEvent.day.getHours()%12==0?12:makeEvent.day.getHours()%12)+(makeEvent.day.getHours()<=11?"AM":"PM")}}</span><br><br>
-                <div ng-show="!(makeEvent.type=='traded'||makeEvent.type=='paid')">
-                  <input type="checkbox" ng-model="makeEvent.type" ng-true-value="'queue'" ng-false-value="'track'" ng-change="changeQueueSlot()"/><span> Autofill Slot</span><br>
-                  <input type="checkbox" ng-model="makeEvent.unrepost" ng-change="changeUnrepost()"/><span> Unrepost after 24h</span><br>
-                  <div ng-hide="(makeEvent.type == 'queue')">
-                    <input type="text" class="form-control form-scheduler" style="width:400px; max-width:90%; text-align: center" ng-model="makeEventURL" ng-change="changeURL()" placeholder="Soundcloud Track Url" />
+                  <div class="">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <br>
+                        <h5 class="text-center">AVAILABLE SLOT</h5>
+                        <br>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <input style="" class="form-control ng-pristine ng-valid ng-empty ng-touched" placeholder="songScheduler" ng-model="makeEventURL" ng-change="changeURL();">
+                      </div>
                   </div>
-                  <div id='scPlayer' ng-show="makeEvent.trackID"></div>
                   <br>
-                  <div ng-show="userlinkedAccounts.length > 0 && newEvent && makeEvent.type != 'queue'" style="flex-flow: row wrap;justify-content: space-around; margin: 0px auto; text-align:center; font-size:11px;">
-                    <span>Schedule on other channels:</span><br>
-                    <div ng-if="u._id != user._id" ng-repeat="u in userlinkedAccounts" class="graybox">
-                      <input type="checkbox" ng-model="otherChannels[u.soundcloud.id]" ng-change="updateReach()"/><span> {{u.soundcloud.username}}</span>  
+                    <div class="row">
+                      <div class="col-md-12 col-xs-12">   
+                        <span>{{makeEvent.day | date:'MMMM dd yyyy h:mma'}}</span>
+                        <!-- <select class="form-control" ng-model="selectedSlot" ng-change="clickAvailableSlots(selectedSlot);">                       
+                          <option style="color:black;text:center;" ng-repeat="slot in listAvailableSlots"
+                            value="{{slot}}">{{slot.slotdate.toString().split(' ')[1] + ' ' +slot.slotdate.toString().split(' ')[2] + ' ' + slot.slotdate.toString().split(' ')[3]}} {{slot.slottime}}</option>
+                        </select> -->
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="btn-group channel-group" ng-if="user.role == 'admin'" role="group" aria-label="...">
+                          <a class="btn btn-default active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender');setActive('channel')">Channels</a>
+                          <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
+                        </div>
+                        <div class="channel-check" style="font-size: 11px;">
+                          <div class="channel-masege">
+                            <ul>
+                              <li class="" ng-show="channelArr.length > 0" ng-repeat="chan in channelArr">{{chan}}<span></span></li>
+                              <li class="" ng-show="groupArr.length > 0" ng-repeat="group in groupArr">{{group}}<span></span></li>
+                            </ul>
+                          </div>
+                          <div class="check-list text-left">
+                            <div class="checkbox demo-radio-btn" ng-show="displayType == 'group'" ng-repeat="group in uniqueGroup">
+                              <p>
+                                <label class="with-square-checkbox">
+                                <input style="" id="{{group}}" ng-click="setGroup(group);" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" >
+                                <span>{{group}}</span> </label>
+                              </p>
+                            </div>
+                            <div class="checkbox demo-radio-btn" ng-show="user.role == 'admin'" ng-show="displayType == 'channel'" ng-repeat="channel in user.paidRepost">
+                              <p>
+                                <label class="with-square-checkbox">
+                                <input style="" id="{{channel.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(channel.username);" type="checkbox">
+                                <span>{{channel.username}}</span> 
+                                </label>
+                              </p>
+                            </div>
+                            <div class="checkbox demo-radio-btn" ng-show="user.role == 'user'" ng-show="displayType == 'channel'" ng-repeat="u in linkedAccounts">
+                              <p>
+                                <label class="with-square-checkbox">
+                                <input style="" id="{{u.soundcloud.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(u.soundcloud.username);" type="checkbox">
+                                <span>{{u.soundcloud.username}}</span> 
+                                </label>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <br>
-                    <span>Time between reposts:</span>
-                    <select ng-model="timeGap">
+                    <span style="font-size:11px;">Total Reach: {{followCounts}} followers</span>
+                    <div class="row">
+                      <div class="col-md-12 text-left">
+                        <li class="switch-btn" style="font-size: 10px;vertical-align: middle;
+                        list-style: outside none none;">
+                          <label class="switch" style="vertical-align: top;">
+                            <input checked="" type="checkbox">
+                            <div class="slider round"></div>
+                          </label> 
+                          <span>Unrepost after<input  class="form-control input-hour" placeholder="1" ng-model="unrepostHours">hours</span>
+                        </li>
+                      </div>
+                      <div class="col-xs-12" style="font-size:10px;">
+                        <label>Time between reposts:</label>
+                        <select class="form-control input-hour" ng-model="timeGap">
                       <option ng-repeat="n in [0,1,2,3,4,5,6,7,8,9,10,11,12]" value="{{n}}">{{n}}</option>
-                    </select>
-                    hours
-                    <br>
-                    <span>Total Reach: {{repostReach|number:0}} followers</span>
-                    <br>
-                    <br> 
+                        </select> hours
+                      </div>
                   </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                         <div id="scPopupPlayer" style="margin:10px 0; width:100%;"></div>      
+                      </div>
+                    </div><!--row end-->
                   <br>
-                  <div>
-                    <button class="btn btn-default btn-small btn-overlay" ng-click="backEvent()">Back</button>
-                    <button ng-show="!(makeEvent.type=='traded'||makeEvent.type=='paid')" class="btn btn-default btn-small btn-overlay" ng-click="deleteEvent()" style="margin:0 30px 0 30px;">Delete</button>
-                    <button ng-show="!(makeEvent.type=='traded'||makeEvent.type=='paid')" class="btn btn-default btn-small btn-overlay" ng-click="saveEvent()">Save</button>
-                    <br><br>
-                    <button ng-click="emailSlot()" style="border:none; background-color:rgba(0,0,0,0);"><img src='assets/images/email_icon.png' style="height:30px; width:50px;"></button>
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <div class="pull-right">
+                          <ul class="like-comment">
+                            <li>
+                              <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('like');"><img src="{{likeSrc}}" class="img-responsive"></a>
+                            </li>
+                            <li>
+                              <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('comment');"><img src="{{commentSrc}}" class="img-responsive"></a>
+                            </li>
+                          </ul>                      
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">                        
+                        <div class="acceptance">
+                          <div class="channel-check">
+                            <textarea class="form-control" ng-disabled="disable" ng-model="eventComment">{{comment}}</textarea>
+                            <div class="next-previous">
+                              <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
+                              <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
+                            </div>
+                          </div>                         
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="next-previous text-center available-slot-btn">
+                          <!-- <button class="btn border-black-btn" style="width:100%;">SKIP TO NEXT AUTOFILL</button> -->
+                          <button class="btn organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE &amp; SHARE</button>
+                        </div>
+                      </div>
+                    </div><!--row end-->                  
                   </div>
                 </div>
               </div>
@@ -485,7 +589,7 @@
               <h4 class="modal-title">Share Your Link</h4>
             </div>
             <div class="modal-body">
-              https://localhost:1443/repost/{{repostResponse}}
+              https://localhost:1443/repost?id={{repostResponse}}
               <br>
               <button class="btn btn-default btn-block" ng-click="sendMail(repostResponse)">Send Email</button>
              <div id="fb-root"></div>

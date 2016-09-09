@@ -102,6 +102,7 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
     var query = {
       pooledChannelIDS: [],
       userID: {$ne: req.user._id},
+      ignoredBy: {$ne: req.user._id},
       status: "pooled"
     };
     if (genre != undefined && genre != 'null') {
@@ -144,6 +145,7 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
 });
 
 router.get('/getUnacceptedSubmissions', function(req, res, next) {
+  if(req.user){
   var query = {
     channelIDS: [],
     userID: req.user._id
@@ -153,6 +155,10 @@ router.get('/getUnacceptedSubmissions', function(req, res, next) {
       return res.json(subs)
     })
     .then(0, next);
+  }
+  else{
+    res.json([]);
+  }
 });
 
 
@@ -308,7 +314,7 @@ router.delete('/ignore/:subID/:password', function(req, res, next) {
       status: 403
     })
   } else {
-    Submission.findByIdAndRemove(req.params.subID).exec()
+    Submission.findByIdAndUpdate({_id:req.params.subID}, {$addToSet: {ignoredBy:req.user._id}}).exec()
       .then(function(sub) {
         res.send(sub);
       })
