@@ -33,41 +33,69 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     'Vocalists/Singer-Songwriter'
   ];
   $scope.urlChange = function() {
-    if ($scope.url != "") {
-      $scope.processing = true;
-      $http.post('/api/soundcloud/resolve', {
-          url: $scope.url
-        })
-        .then(function(res) {
-          if (res.data.kind != "track") throw (new Error(''));
-          $scope.submission.trackID = res.data.id;
-          $scope.submission.title = res.data.title;
-          $scope.submission.trackURL = res.data.trackURL;
-          SC.oEmbed($scope.submission.trackURL, {
-            element: document.getElementById('scPlayer'),
-            auto_play: false,
-            maxheight: 150
-          })
-          document.getElementById('scPlayer').style.visibility = "visible";
-          $scope.processing = false;
-          $scope.notFound = false;
-        }).then(null, function(err) {
-          if (err.status != 403) {
-            $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
-            $scope.notFound = true;
-          } else {
-            $scope.submission.trackURL = $scope.url;
-            SC.oEmbed($scope.submission.trackURL, {
-              element: document.getElementById('scPlayer'),
-              auto_play: false,
-              maxheight: 150
-            })
-          }
-          $scope.submission.trackID = null;
+    if ($scope.searchString != "") {
 
-          $scope.processing = false;
-          document.getElementById('scPlayer').style.visibility = "hidden";
-        });
+      function search(type) {
+        var localSearchString = $scope.searchString.slice(0);
+        // $http.get('https://api-v2.soundcloud.com/search/autocomplete?q=d')
+        //   .then(function(res) {
+        //     console.log(res.body);
+        //   })
+        return SC.get('/' + type, {
+          q: $scope.searchString,
+          license: 'cc-by-sa',
+          limit: 30
+        }).then(function(tracks) {
+          console.log(tracks);
+          console.log(localSearchString)
+          console.log($scope.searchString);
+          if (localSearchString == $scope.searchString) {
+            $scope.searchResults = tracks;
+            $scope.$digest();
+          }
+        }).then(null, console.log);
+      }
+
+      search('tracks');
+      // $.getJSON(url, function(tracks) {
+      //   $(tracks).forEach(function(track) {
+      //     console.log(track.title);
+      //   })
+      // });
+
+      // $http.post('/api/soundcloud/resolve', {
+      //     url: $scope.url
+      //   })
+      //   .then(function(res) {
+      //     if (res.data.kind != "track") throw (new Error(''));
+      //     $scope.submission.trackID = res.data.id;
+      //     $scope.submission.title = res.data.title;
+      //     $scope.submission.trackURL = res.data.trackURL;
+      //     SC.oEmbed($scope.submission.trackURL, {
+      //       element: document.getElementById('scPlayer'),
+      //       auto_play: false,
+      //       maxheight: 150
+      //     })
+      //     document.getElementById('scPlayer').style.visibility = "visible";
+      //     $scope.processing = false;
+      //     $scope.notFound = false;
+      //   }).then(null, function(err) {
+      //     if (err.status != 403) {
+      //       $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
+      //       $scope.notFound = true;
+      //     } else {
+      //       $scope.submission.trackURL = $scope.url;
+      //       SC.oEmbed($scope.submission.trackURL, {
+      //         element: document.getElementById('scPlayer'),
+      //         auto_play: false,
+      //         maxheight: 150
+      //       })
+      //     }
+      //     $scope.submission.trackID = null;
+
+      //     $scope.processing = false;
+      //     document.getElementById('scPlayer').style.visibility = "hidden";
+      //   });
     }
   }
 
