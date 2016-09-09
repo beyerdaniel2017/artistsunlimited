@@ -58,7 +58,7 @@
                           <div class="dropdown sort-btn">
                             <button class="btn dropdown-toggle sort-select descending" type="button" data-toggle="dropdown">CUSTOM EMAIL</button>
                             <ul class="dropdown-menu">
-                              <li><a href="#" ng-click="openEmailClient(sub, button)" ng-repeat="button in user.customEmailButtons">{{button.buttonText}}</a></li>
+                              <li><a href="#" ng-click="openEmailClient(sub, button)" ng-repeat="button in user.customEmailButtons" ng-if="button.buttonText != 'accept' && button.buttonText != 'decline'">{{button.buttonText}}</a></li>
                             </ul>
                           </div>
                           <button class="btn decline" ng-click="ignore(sub)">IGNORE</button>
@@ -89,268 +89,342 @@
                           </div>
                         </div>
                       </div>
+                      <<<<<<< HEAD
                       <div class="col-md-6">
                         <div class="channel-check">
                           <div class="channel-masege">
-                            <ul style="height: 20px;">
-                              <li class="" ng-repeat="groups in sub.selectedGroups">{{groups}}</li>
-                            </ul>
-                          </div>
-                          <div class="check-list">
-                            <form action="#">
-                             <div class="pull-left" style="width:50%;" ng-repeat="group in uniqueGroup">
-                               <p>
-                                <label class="with-square-checkbox">
-                                  <input style="" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" ng-model="sub[group]" ng-change="changeBoxGroup(sub, group)">
-                                  <span>{{group}}</span></label>
-                                </p>
+                            =======
+                            <div class="col-md-6">
+                              <div class="channel-check" ng-if="uniqueGroup.length!= 0">
+                                <div class="channel-masege">
+                                  >>>>>>> master-new
+                                  <ul style="height: 20px;">
+                                    <li class="" ng-repeat="groups in sub.selectedGroups">{{groups}}</li>
+                                  </ul>
+                                </div>
+                                <div class="check-list">
+                                  <form action="#">
+                                   <div class="pull-left" style="width:50%;" ng-repeat="group in uniqueGroup">
+                                     <p>
+                                      <label class="with-square-checkbox">
+                                        <input style="" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" ng-model="sub[group]" ng-change="changeBoxGroup(sub, group)">
+                                        <span>{{group}}</span></label>
+                                      </p>
+                                    </div>
+                                  </form>
+                                </div>
                               </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div><!--row ::end-->
-                  </div>
-                </div>            
-              </div>
-              <!-- MY SCHEDULE : End-->
-              <!-- ORGANIZE SCHEDULE :Start -->
-              <div role="tabpanel" class="tab-pane fade" id="marketplace">
-                <div ng-repeat="sub in marketSubmissions"  ng-if="sub.invoiceIDS.length == 0" class="submi-section">
-                  <div class="tab-content-main">
-                   <div class="row">
-                    <div class="col-md-10">
-                      <div class="row">
-                        <div class="col-sm-10">
-                          <ul class="submissions-tab-list">
-                            <li><strong>{{sub.name}} </strong>submitted a track <strong>{{sub.datedata}}</strong> to <strong>{{sub.userID.name}}</strong></li>
-                          </ul>   
-                        </div>
-                        <div class="col-sm-2">
-                        </div>
-                      </div>
-                    </div>
-                  </div><!--row ::end-->                
-                  <div class="row">
-                    <div class="col-md-10">                         
-                     <div class="row">
-                       <div class="col-md-12" >
-                        <div style="height: 160px; width: 100%;">
-                          <div id="{{sub.trackID}}_player" class="video-main"></div>
-                        </div>
-                      </div>
-                    </div><!--row ::end-->
-                  </div>
-                  <div class="col-md-2">
-                    <div class="">
-                      <div class="submitted-time">
-                        <span countdown='' date='{{sub.pooledSendDate | date:"yyyy-MM-dd HH:mm:ss" }}'>&nbsp;</span>
-                      </div>
-                      <ul class="submissions-tab-list decline-accpect-btn">
-                        <button class="btn decline" ng-click="marketIgnore(sub)">IGNORE</button>
-                        <!-- <button class="btn decline" ng-click="marketDecline(sub)">DECLINE</button>    -->
-                        <button class="btn accpect" ng-click="marketSave(sub)">ACCEPT</button>
-                      </ul> 
-                    </div>
-                  </div>
-                </div><!--row ::end-->
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="channel-check">
-                      <div class="channel-masege">
-                        <ul style="height: 20px;">
-                          <li class="" ng-repeat="chans in sub.selectedChannelName">{{chans}}</li>
-                        </ul>
-                      </div>
-                      <div class="check-list">
-                        <form action="#">
-                          <div class="pull-left" style="width:50%;" ng-repeat="chan in paidRepostAccounts">
-                            <p>
-                              <label class="with-square-checkbox">
-                                <input style="" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" ng-model="sub[chan.user.username]" ng-change="changeBox(sub, chan)">
-                                <span>{{chan.user.username}}</span> </label>
-                              </p>
                             </div>
-                          </form>
+                          </div><!--row ::end-->
                         </div>
-                      </div>
+                        <<<<<<< HEAD
+                      </div>            
                     </div>
-                    <div class="col-md-6">
-                      <div class="channel-check">
-                        <div class="channel-masege">
-                          <ul style="height: 20px;">
-                            <li class="" ng-repeat="groups in sub.selectedGroups">{{groups}}</li>
-                          </ul>
-                        </div>
-                        <div class="check-list">
-                          <form action="#">
-                            <div class="pull-left" style="width:50%;" ng-repeat="group in uniqueGroup">
-                             <p>
-                              <label class="with-square-checkbox">
-                                <input style="" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" ng-model="sub[group]" ng-change="changeBoxGroup(sub, group)">
-                                <span>{{group}}</span></label>
-                              </p>
-                            </div>  
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div><!--row ::end-->
-                </div> 
-              </div>
-            </div>
-            <!-- ORGANIZE SCHEDULE :End -->
-            <!-- MANAGE REPOSTS : Start -->
-            <div role="tabpanel" class="tab-pane fade" id="managesubmissions">
-              <div class="managesubmissions">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="tropical-slect pull-right">
-                      <select name="tropical" class="tabe-tropical">
-                        <option>Choose Template</option>
-                        <option>Driving</option>
-                        <option>Internet</option>
-                        <option>Movie</option>
-                        <option>Music</option>
-                        <option>Reading</option>
-                        <option>Sports</option>                
-                      </select>
-                      <button class="btn decline">Save Template</button>
-                    </div>
+                    <!-- MY SCHEDULE : End-->
+                    <!-- ORGANIZE SCHEDULE :Start -->
+                    <div role="tabpanel" class="tab-pane fade" id="marketplace">
+                      =======
+                    </div>            
+                    <br/>
+                    <div class="col-md-12 text-center margin-20" >
+                      <button class="btn decline" style="background-color:#ffeb99" ng-click="loadMore()">LOAD MORE</button>           
+                    </div><br/><br/>          
                   </div>
-                </div><!--row :end-->
-                <div class="row">
-                  <div class="col-md-12">
-                    <h5 class="text-center" style="margin: 30px 0px;">CUSTOMIZE SUBMISSION PAGE</h5>
-                  </div>
-                </div><!--row ::end-->  
-                <div class="row">
-                  <div class="col-md-5">
-                   <div class="typography-tab">
-                    <div class="panel-group" id="accordion">
-                      <div class="panel panel-default" id="panel1">
-                        <div class="panel-heading">
-                         <h4 class="panel-title">
-                          <a data-toggle="collapse" data-target="#collapseOne" href="#collapseOne">
-                            HEADING
-                          </a>
-                        </h4>
-                      </div>
-                      <div id="collapseOne" class="panel-collapse collapse in">
-                        <div class="panel-body">
+                  <!-- MY SCHEDULE : End-->
+                  <!-- ORGANIZE SCHEDULE :Start -->
+                  <div role="tabpanel" class="tab-pane fade" id="marketplace">
+                    >>>>>>> master-new
+                    <div ng-repeat="sub in marketSubmissions"  ng-if="sub.invoiceIDS.length == 0" class="submi-section">
+                      <div class="tab-content-main">
+                       <div class="row">
+                        <div class="col-md-10">
+                          <div class="row">
+                            <div class="col-sm-10">
+                              <ul class="submissions-tab-list">
+                                <li><strong>{{sub.name}} </strong>submitted a track <strong>{{sub.datedata}}</strong> to <strong>{{sub.userID.name}}</strong></li>
+                              </ul>   
+                            </div>
+                            <div class="col-sm-2">
+                            </div>
+                          </div>
+                          <<<<<<< HEAD
+                        </div>
+                      </div><!--row ::end-->                
+                      <div class="row">
+                        <div class="col-md-10">                         
                          <div class="row">
-                          <div class="col-xs-4 pull-left">Heading Text</div>
-                          <div class="col-xs-8 pull-right">
-                            <input type="text" ng-model="postData.heading.text" class="form-control" placeholder="Heading Text">
+                           <div class="col-md-12" >
+                            <div style="height: 160px; width: 100%;">
+                              <div id="{{sub.trackID}}_player" class="video-main"></div>
+                              =======
+                              <div class="col-md-2">
+                                <div class="">
+                                  <div class="submitted-time">
+                                    <span countdown='' date='{{sub.pooledSendDate | date:"yyyy-MM-dd HH:mm:ss" }}'>&nbsp;</span>
+                                  </div>
+                                  <ul class="submissions-tab-list decline-accpect-btn">
+                                    <button class="btn decline" style="width: 90%; !important" ng-click="marketIgnore(sub)">IGNORE</button>
+                                    <!-- <button class="btn decline" ng-click="marketDecline(sub)">DECLINE</button>    -->
+                                    <button class="btn accpect" ng-click="marketSave(sub)">ACCEPT</button>
+                                  </ul> 
+                                  >>>>>>> master-new
+                                </div>
+                              </div>
+                            </div><!--row ::end-->
+                          </div>
+                          <div class="col-md-2">
+                            <div class="">
+                              <div class="submitted-time">
+                                <span countdown='' date='{{sub.pooledSendDate | date:"yyyy-MM-dd HH:mm:ss" }}'>&nbsp;</span>
+                              </div>
+                              <ul class="submissions-tab-list decline-accpect-btn">
+                                <button class="btn decline" ng-click="marketIgnore(sub)">IGNORE</button>
+                                <!-- <button class="btn decline" ng-click="marketDecline(sub)">DECLINE</button>    -->
+                                <button class="btn accpect" ng-click="marketSave(sub)">ACCEPT</button>
+                              </ul> 
+                            </div>
                           </div>
                         </div><!--row ::end-->
-                        <br>
                         <div class="row">
-                          <div class="col-xs-4 pull-left">Heading Font</div>
-                          <div class="col-xs-8 pull-right">
-                            <input type="number" ng-model="postData.heading.style.fontSize" class="form-control" placeholder="Font Size">
-                          </div>
-                        </div><!--row ::end-->
-                        <br>
-                        <div class="row">
-                          <div class="col-xs-4 pull-left">Font Weight</div>
-                          <div class="col-xs-8 pull-right">
-                           <div class="bs-docs-example">
-                            <select class="form-control" ng-model="postData.heading.style.fontWeight" placeholder="Font Weight" ng-init="postData.heading.style.fontWeight = 'normal'">
-                              <option ng-selected="true" value="normal">Normal</option>
-                              <option value="bold">Bold</option>
-                              <option value="italic">Italic</option>
-                            </select>
-                          </div>
-                        </div><!--row ::end-->
+                          <div class="col-md-6">
+                            <div class="channel-check">
+                              <div class="channel-masege">
+                                <ul style="height: 20px;">
+                                  <li class="" ng-repeat="chans in sub.selectedChannelName">{{chans}}</li>
+                                </ul>
+                              </div>
+                              <div class="check-list">
+                                <form action="#">
+                                  <div class="pull-left" style="width:50%;" ng-repeat="chan in paidRepostAccounts">
+                                    <p>
+                                      <label class="with-square-checkbox">
+                                        <input style="" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" ng-model="sub[chan.user.username]" ng-change="changeBox(sub, chan)">
+                                        <span>{{chan.user.username}}</span> </label>
+                                      </p>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                            <<<<<<< HEAD
+                            <div class="col-md-6">
+                              <div class="channel-check">
+                                <div class="channel-masege">
+                                  <ul style="height: 20px;">
+                                    <li class="" ng-repeat="groups in sub.selectedGroups">{{groups}}</li>
+                                  </ul>
+                                </div>
+                                <div class="check-list">
+                                  <form action="#">
+                                    <div class="pull-left" style="width:50%;" ng-repeat="group in uniqueGroup">
+                                      =======
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="channel-check" ng-if="uniqueGroup.length!= 0">
+                                        <div class="channel-masege">
+                                          <ul style="height: 20px;">
+                                            <li class="" ng-repeat="groups in sub.selectedGroups">{{groups}}</li>
+                                          </ul>
+                                        </div>
+                                        <div class="check-list">
+                                          <form action="#">
+                                            <div class="pull-left" style="width:50%;" ng-repeat="group in uniqueGroup">
+                                              >>>>>>> master-new
+                                              <p>
+                                                <label class="with-square-checkbox">
+                                                  <input style="" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" ng-model="sub[group]" ng-change="changeBoxGroup(sub, group)">
+                                                  <span>{{group}}</span></label>
+                                                </p>
+                                              </div>  
+                                            </form>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <<<<<<< HEAD
+                                    </div><!--row ::end-->
+                                  </div> 
+                                </div>
+                                =======
+                              </div>
+                            </div><!--row ::end-->
+                          </div> 
+                        </div>
+                        <br/>
+                        <div class="col-md-12 text-center margin-20" >
+                          <button class="btn decline" style="background-color:#ffeb99" ng-click="loadMore()">LOAD MORE</button>           
+                        </div><br/><br/>
                       </div>
+                      <!-- ORGANIZE SCHEDULE :End -->
+                      <!-- MANAGE REPOSTS : Start -->
+                      <div role="tabpanel" class="tab-pane fade" id="managesubmissions">
+                        <div class="managesubmissions">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="tropical-slect pull-right">
+                                <select name="tropical" class="tabe-tropical">
+                                  <option>Choose Template</option>
+                                  <option>Driving</option>
+                                  <option>Internet</option>
+                                  <option>Movie</option>
+                                  <option>Music</option>
+                                  <option>Reading</option>
+                                  <option>Sports</option>                
+                                </select>
+                                <button class="btn decline">Save Template</button>
+                                >>>>>>> master-new
+                              </div>
+                              <!-- ORGANIZE SCHEDULE :End -->
+                              <!-- MANAGE REPOSTS : Start -->
+                              <div role="tabpanel" class="tab-pane fade" id="managesubmissions">
+                                <div class="managesubmissions">
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="tropical-slect pull-right">
+                                        <select name="tropical" class="tabe-tropical">
+                                          <option>Choose Template</option>
+                                          <option>Driving</option>
+                                          <option>Internet</option>
+                                          <option>Movie</option>
+                                          <option>Music</option>
+                                          <option>Reading</option>
+                                          <option>Sports</option>                
+                                        </select>
+                                        <button class="btn decline">Save Template</button>
+                                      </div>
+                                    </div>
+                                  </div><!--row :end-->
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <h5 class="text-center" style="margin: 30px 0px;">CUSTOMIZE SUBMISSION PAGE</h5>
+                                    </div>
+                                  </div><!--row ::end-->  
+                                  <div class="row">
+                                    <div class="col-md-5">
+                                     <div class="typography-tab">
+                                      <div class="panel-group" id="accordion">
+                                        <div class="panel panel-default" id="panel1">
+                                          <div class="panel-heading">
+                                           <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-target="#collapseOne" href="#collapseOne">
+                                              HEADING
+                                            </a>
+                                          </h4>
+                                        </div>
+                                        <div id="collapseOne" class="panel-collapse collapse in">
+                                          <div class="panel-body">
+                                           <div class="row">
+                                            <div class="col-xs-4 pull-left">Heading Text</div>
+                                            <div class="col-xs-8 pull-right">
+                                              <input type="text" ng-model="postData.heading.text" class="form-control" placeholder="Heading Text">
+                                            </div>
+                                          </div><!--row ::end-->
+                                          <br>
+                                          <div class="row">
+                                            <div class="col-xs-4 pull-left">Heading Font</div>
+                                            <div class="col-xs-8 pull-right">
+                                              <input type="number" ng-model="postData.heading.style.fontSize" class="form-control" placeholder="Font Size">
+                                            </div>
+                                          </div><!--row ::end-->
+                                          <br>
+                                          <div class="row">
+                                            <div class="col-xs-4 pull-left">Font Weight</div>
+                                            <div class="col-xs-8 pull-right">
+                                             <div class="bs-docs-example">
+                                              <select class="form-control" ng-model="postData.heading.style.fontWeight" placeholder="Font Weight" ng-init="postData.heading.style.fontWeight = 'normal'">
+                                                <option ng-selected="true" value="normal">Normal</option>
+                                                <option value="bold">Bold</option>
+                                                <option value="italic">Italic</option>
+                                              </select>
+                                            </div>
+                                          </div><!--row ::end-->
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="panel panel-default" id="panel2">
+                                      <div class="panel-heading">
+                                       <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-target="#collapseTwo" 
+                                        href="#collapseTwo" class="collapsed">
+                                        LOGO
+                                      </a>
+                                    </h4>
+
+                                  </div>
+                                  <div id="collapseTwo" class="panel-collapse collapse">
+                                    <div class="panel-body">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</div>
+                                  </div>
+                                </div>
+                                <div class="panel panel-default" id="panel3">
+                                  <div class="panel-heading">
+                                   <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-target="#collapseThree"
+                                    href="#collapseThree" class="collapsed">
+                                    BUTTON
+                                  </a>
+                                </h4>
+
+                              </div>
+                              <div id="collapseThree" class="panel-collapse collapse">
+                                <div class="panel-body">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</div>
+                              </div>
+                            </div>
+                            <div class="panel panel-default" id="panel4">
+                              <div class="panel-heading">
+                               <h4 class="panel-title">
+                                <a data-toggle="collapse" data-target="#collapseThree"
+                                href="#collapseThree" class="collapsed">
+                                BUTTON
+                              </a>
+                            </h4>
+
+                          </div>
+                          <div id="collapseThree" class="panel-collapse collapse">
+                            <div class="panel-body">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Post Info -->    
                     </div>
                   </div>
-                  <div class="panel panel-default" id="panel2">
-                    <div class="panel-heading">
-                     <h4 class="panel-title">
-                      <a data-toggle="collapse" data-target="#collapseTwo" 
-                      href="#collapseTwo" class="collapsed">
-                      LOGO
-                    </a>
-                  </h4>
-
                 </div>
-                <div id="collapseTwo" class="panel-collapse collapse">
-                  <div class="panel-body">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</div>
-                </div>
+                <div class="col-md-7 text-center">
+                  <div class="from-background">
+                    <h4 style="color:rgb(255, 240, 108);font-weight: bold;">SUBMISSION FOR PROMOTION</h4>
+                    <p>Our mission is to simply bring the best music to the people. We also have a 
+                      strong commitment to providing feedback and guidance for rising artists. We 
+                      guarantee that your song will be listened to and critiqued by our dedicated staff 
+                      if it passes our submission process. Although we cannot guarantee support for 
+                      your submission on our promotional platforms such as SoundCloud, YouTube, and 
+                      Facebook, we will make sure to get back to you with a response.</p>
+                      <img src="assets/images/other-logo.png" class="form-logo img-responsive">
+                      <form class="form-inline">
+                        
+                        <input type="email" class="form-control" id="email" placeholder="Write the song URL">                         
+                        
+                        <input type="password" class="form-control" id="pwd" placeholder="Name">
+                        
+                        <input type="password" class="form-control" id="pwd" placeholder="E-Mail">
+                        
+                      </form>
+                    </div>
+                  </div>
+                </div><!--row ::end-->   
               </div>
-              <div class="panel panel-default" id="panel3">
-                <div class="panel-heading">
-                 <h4 class="panel-title">
-                  <a data-toggle="collapse" data-target="#collapseThree"
-                  href="#collapseThree" class="collapsed">
-                  BUTTON
-                </a>
-              </h4>
-
             </div>
-            <div id="collapseThree" class="panel-collapse collapse">
-              <div class="panel-body">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</div>
-            </div>
+            <!-- MANAGE REPOSTS : End -->                
           </div>
-          <div class="panel panel-default" id="panel4">
-            <div class="panel-heading">
-             <h4 class="panel-title">
-              <a data-toggle="collapse" data-target="#collapseThree"
-              href="#collapseThree" class="collapsed">
-              BUTTON
-            </a>
-          </h4>
+          <!-- Tab panes :: End-->
+        </div>
+        <!-- overlay -->
 
-        </div>
-        <div id="collapseThree" class="panel-collapse collapse">
-          <div class="panel-body">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</div>
-        </div>
       </div>
     </div>
-    <!-- Post Info -->    
-  </div>
-</div>
-</div>
-<div class="col-md-7 text-center">
-  <div class="from-background">
-    <h4 style="color:rgb(255, 240, 108);font-weight: bold;">SUBMISSION FOR PROMOTION</h4>
-    <p>Our mission is to simply bring the best music to the people. We also have a 
-      strong commitment to providing feedback and guidance for rising artists. We 
-      guarantee that your song will be listened to and critiqued by our dedicated staff 
-      if it passes our submission process. Although we cannot guarantee support for 
-      your submission on our promotional platforms such as SoundCloud, YouTube, and 
-      Facebook, we will make sure to get back to you with a response.</p>
-      <img src="assets/images/other-logo.png" class="form-logo img-responsive">
-      <form class="form-inline">
-        
-        <input type="email" class="form-control" id="email" placeholder="Write the song URL">                         
-        
-        <input type="password" class="form-control" id="pwd" placeholder="Name">
-        
-        <input type="password" class="form-control" id="pwd" placeholder="E-Mail">
-        
-      </form>
+    <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
     </div>
   </div>
-</div><!--row ::end-->   
-</div>
-</div>
-<!-- MANAGE REPOSTS : End -->                
-</div>
-<!-- Tab panes :: End-->
-</div>
-<!-- overlay -->
+  <!--overlay-->
 
-</div>
-</div>
-<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
-</div>
-</div>
-<!--overlay-->
-
-<ng-include src="'js/home/views/loader.html'"></ng-include>    
+  <ng-include src="'js/home/views/loader.html'"></ng-include>    
 </div>
 </div>
 </div>

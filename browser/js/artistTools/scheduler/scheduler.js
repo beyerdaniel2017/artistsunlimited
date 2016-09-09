@@ -88,7 +88,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.paidCommentsArr=[];
   $scope.tradeCommentsArr=[];
   $scope.popup = false;
-  
+  $scope.selectedSlot = {};
+  $scope.unrepostHours = 1;
   var commentIndex=0;
   $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
   var defaultAvailableSlots = {
@@ -301,10 +302,52 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.addNewSong = function(){
     $scope.tabSelected=false;
+    $scope.makeEventURL = "";
+    $scope.makeEvent = null;
+    $scope.checkCommentEnable();
+    $scope.checkLikeEnable();
+  }
+  $scope.isEdit=false;
+  $scope.EditNewSong = function(item)
+  {
+      $scope.editChannelArr = [];
+      $scope.tabSelected=false;
+      $scope.isEdit=true;
+      var newObj = angular.copy(item);
+      $scope.makeEventURL = newObj.event.trackURL;
+      $scope.selectedSlot = newObj.event.day;
+      $scope.eventComment = newObj.event.comment;
+      $scope.timeGap = newObj.event.timeGap;
+      $scope.unrepostHours = newObj.event.unrepostHours;
+      $scope.unrepostEnable = newObj.event.unrepostHours ? true : false;
+      var channels = newObj.event.otherChannels;
+      if(channels.length > 0)
+      {
+        for(var i=0; i<channels.length; i++)
+        {
+          for(var j=0; j<$scope.linkedAccounts.length; j++)
+          {
+            if(channels[i] == $scope.linkedAccounts[j].soundcloud.id)
+            {
+               $scope.editChannelArr.push( $scope.linkedAccounts[j].name);
+            }
+          }
+        }
+        $scope.channelArr = $scope.editChannelArr;
+      }
+       SC.oEmbed($scope.makeEventURL, {
+        element: document.getElementById('scPlayer'),
+         auto_play: false,
+         maxheight: 120
+      })
+      document.getElementById('scPlayer').style.visibility = "visible";
+      $scope.followersCount();
   }
 
   $scope.addNewSongCancel = function(){
     $scope.tabSelected=true;
+    $scope.makeEventURL = "";
+    $scope.makeEvent = null;
   }
 
   function getshortdate(d) {
@@ -567,7 +610,11 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
               $scope.makeEvent.trackID = res.data.id;
               $scope.makeEvent.title = res.data.title;
               $scope.makeEvent.trackURL = res.data.trackURL;
-              if (res.data.user) $scope.makeEvent.artistName = res.data.user.username;
+            $scope.makeEvent.trackArtUrl = res.data.artwork_url;
+            if (res.data.user) 
+            {
+              $scope.makeEvent.artistName = res.data.user.username;              
+            }
 
               SC.oEmbed($scope.makeEventURL, {
               element: player,
@@ -713,6 +760,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       $scope.makeEvent.unrepostDate = new Date(0);
       $scope.makeEvent.unrepost = false;
     }    
+    $scope.makeEvent.userID = $scope.user.soundcloud.id;
     $scope.makeEvent.like = $scope.likeEvent;
     $scope.makeEvent.comment = ($scope.commentEvent == true ? $scope.eventComment : '');
     if ($scope.trackType == "playlist") {
@@ -746,6 +794,13 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
           {
             $scope.repostResponse =res.data._id;
           }
+          $scope.makeEventURL = "";
+          $scope.makeEvent = null;
+          $scope.eventComment = "";
+          document.getElementById('scPlayer').style.visibility = "hidden";
+          document.getElementById('scPopupPlayer').style.visibility = "hidden";
+          $scope.unrepostHours = 1;
+          $scope.tabSelected = true;
           $scope.trackType = "";
           $scope.trackArtistID = 0;
           return $scope.refreshEvents();
@@ -755,6 +810,13 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
           {
              $scope.repostResponse =res.data._id;
           }
+          $scope.makeEventURL = "";
+          $scope.makeEvent = null;
+          $scope.eventComment = "";
+          document.getElementById('scPlayer').style.visibility = "hidden";
+          document.getElementById('scPopupPlayer').style.visibility = "hidden";
+          $scope.unrepostHours = 1;
+          $scope.tabSelected = true;
           $scope.showOverlay = false;
           $scope.processing = false;
           $scope.trackType = "";
@@ -916,6 +978,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
           type: "empty"
         };
       }
+      
       dayEvents.forEach(function(ev) {
         eventArray[ev.day.getHours()] = ev;
       });
@@ -1030,7 +1093,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
   
   $scope.sendMail = function(id){
-    $scope.fbMessageLink ="https://localhost:1443/repost?id="+id;
+    $scope.fbMessageLink ="https://localhost:1443/repostevents?id="+id;
     $window.open("mailto:example@demo.com?body="+$scope.fbMessageLink,"_self");
   };
   $scope.followersCount();

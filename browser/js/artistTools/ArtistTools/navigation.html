@@ -1,7 +1,7 @@
 <!-- Sidebar -->
 <div id="sidebar-wrapper">
   <div class="left-side">
-    <div class="tropical"><a href="{{user.soundcloud.permalinkURL}}" target="_blank" style="color:#8a8a8a">
+    <div class="tropical" ng-if="user"><a href="{{user.soundcloud.permalinkURL}}" target="_blank" style="color:#8a8a8a">
       <span>{{user.soundcloud.username}}</span><img class="img-responsive img-circle" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't200x200') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:100px;">
       <p>{{user.soundcloud.followers | number:0}} Followers</p></a>
       <select class="form-control" style="width:200px; margin:0 auto;" ng-model="linkedUsers"
@@ -10,9 +10,13 @@
       <option ng-repeat="u in userlinkedAccounts" ng-if="u._id != user._id" value="{{u.soundcloud.token}}">{{u.soundcloud.username}}</option>
     </select>
   </div>
+  <div class="tropical" ng-if="!user">
+      <span>Sign in to AU and access Artist Tools</span><br><br>
+      <button class="btn btn-default btn-enter" ui-sref="login">Sign In</button>
+  </div>
 
   <!--tropical end-->
-  <div class="left-menus">
+  <div class="left-menus" ng-disable="!user">
     <nav class="nav">
       <ul class="nav nav-navabar">
         <li ui-sref-active-eq="left-menu-active" id="profile" class="border-bottom"><a href="javascript:void(0)" ui-sref="artistToolsProfile">SETTINGS</a></li>

@@ -206,6 +206,27 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     });
   }
 
+  $scope.openEmailClient = function(sub, item){
+    var toEmail = (item.toEmail == '{email}' ? sub.email : item.toEmail);
+    var subject = (item.subject != undefined ? item.subject : "");
+    if(subject != ""){
+      subject = subject.replace('{title}', sub.title);
+      subject = subject.replace('{name}', sub.name);
+      subject = subject.replace('{url}', sub.trackURL);
+    }    
+    var body = (item.emailBody != undefined ? item.emailBody : "");
+    if(body != ""){
+      body = body.replace('{name}', sub.name);
+      body = body.replace('{email}', sub.email);
+      body = body.replace('{title}', sub.title);
+      body = body.replace('{url}', sub.trackURL);
+    }
+    var link = "mailto:"+ toEmail
+      + "?subject=" + escape(subject)
+      + "&body=" + escape(body); 
+    $window.location.href = link;
+  }
+
   $scope.getChannels = function() {
     $scope.channels = [{
       displayName: 'La Tropical',

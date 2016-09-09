@@ -23,6 +23,44 @@ var date= moment().month(new Date().getMonth()).date(new Date().getDate()).hours
     .then(null, next);
 })
 
+router.get('/respostEvent/:id', function(req, res, next) {
+  var data =[];
+  RepostEvent.findOne({ 
+    _id: req.params.id,
+  })
+  .exec()
+  .then(function(event) {
+    RepostEvent.find({
+      trackID : event.trackID
+    })
+    .exec()
+    .then(function(tracks) {      
+      var i= -1;
+      function next() {
+        i++;
+          if(i<tracks.length){
+            var userid = parseInt(tracks[i].userID);
+            User.findOne({'soundcloud.id':userid},function(err,user){
+              var result = {
+                trackInfo : tracks[i],
+                userInfo : user.soundcloud
+              }
+              data.push(result);
+              next();
+            });
+          }
+          else
+          {
+            res.send(data);   
+          }      
+        }
+        next();
+    })
+    .then(null, next);
+  })
+  .then(null, next);
+})
+
 /*Get Repost events for List*/
 router.get('/listEvents/:id', function(req, res, next) {
 var query;

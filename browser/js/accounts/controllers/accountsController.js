@@ -10,6 +10,7 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
     if (!SessionService.getUser()) {
   	$state.go('admin');
     }
+     $scope.paidRepostAccounts = [];
     $scope.user = SessionService.getUser();
     $scope.user.paidRepost.groups = $scope.user.paidRepost.groups ? $scope.user.paidRepost.groups : [];
     $scope.soundcloudLogin = function() {
@@ -44,10 +45,10 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
       'buttons': [{
         caption: 'Yes',
         callback: function() {
-          var postRepost = $scope.user.paidRepost[index].id;
+          var postRepost = $scope.user.paidRepost[index].userID;
           accountService.deleteUserAccount(postRepost)
           .then(function(res){
-            $scope.user.paidRepost.splice(index, 1);
+            $scope.paidRepostAccounts.splice(index, 1);
           })
         }
        }, {
@@ -108,4 +109,12 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
       $scope.whiteSlot.push(index);
     }
   }
+
+  $scope.getPaidRepostAccounts = function() {
+    $http.get('/api/submissions/getPaidRepostAccounts').then(function(res) {
+      $scope.paidRepostAccounts = res.data;
+    });
+  }
+
+  $scope.getPaidRepostAccounts();
 });

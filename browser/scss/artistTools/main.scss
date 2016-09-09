@@ -1498,12 +1498,31 @@ input[type=range]::-ms-track {
 
 @media screen and (min-device-width: 320px) and (max-device-width: 768px) { 
 
+.accpect, .decline{
+  width: 100%;
+}
+
+.price-input{
+  margin:0px;
+}
+
+.price-box i{
+  position: absolute;
+  top: -2%;
+  left: 62%;
+}
+
+.organize-list {
+   text-align: center;
+}
+
 .container-60{
   width:100%;
 }
 
 .edit-btn{
-  position: relative;
+  position: relative !important;  
+  top: 0 !important;
 }
 
 .left-side-profile{
@@ -1564,6 +1583,14 @@ input[type=range]::-ms-track {
 }
 }
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+
+.accpect, .decline{
+  width: 100%;
+}
+
+.organize-list{
+  text-align: center;
+}
 
 .left-side-profile{
   width:100%;
@@ -1715,6 +1742,17 @@ input[type=range]::-ms-track {
  display:none ;
 }
 @media(max-width:767px) {
+
+.price-box i{
+  top: -7%;
+  left: 65%;
+  z-index: 999;
+}
+
+.organize-list {
+   text-align: center;
+}
+
 .left-side-profile{
   width:100%;
   position: relative!important;
@@ -1818,6 +1856,15 @@ input[type=range]::-ms-track {
 }
 
 @media(min-width:768px) {
+.price-box i{
+ top: -7%;
+  left: 65%;
+  z-index: 999;
+}
+
+.organize-list {
+   text-align: center;
+}
 
 .left-side-profile{
    width:100%;
@@ -2537,8 +2584,8 @@ margin: 15px 0;
 
 .price-box i{
   position: absolute;
-  top: 25%;
-  left:57%;
+  top: -2%;
+  left: 62%;
 }
 
 .input-icon {
@@ -2907,10 +2954,7 @@ label:hover:before {
 .organize-thumb-img img{
   width:100%;
   height:auto;
-}
-
-.organize-list p{
-  
+  max-width: 120px;
 }
 
 .organize-btn{
@@ -3149,6 +3193,20 @@ label:hover:before {
 }
 @media screen and (max-width: 768px) {
 
+.accpect, .decline{
+  width: 100%;
+}
+
+.price-box i{
+ top: -7%;
+  left: 65%;
+  z-index: 999;
+}
+
+.organize-list {
+   text-align: center;
+}
+
 .available-popup-box{
   margin: 80px auto;
 }
@@ -3269,6 +3327,24 @@ label:hover:before {
 }
 @media screen and (max-width: 375px) {
 
+.accpect, .decline{
+  width: 100%;
+}
+
+.price-input{
+  margin:0px;
+}
+
+.organize-list{
+  text-align: center;
+}
+
+.price-box i{
+  top: -7%;
+  left: 65%;
+  z-index: 999;
+}
+
 .available-popup-box{
   margin: 80px auto;
 }
@@ -3368,6 +3444,14 @@ label:hover:before {
 
 @media screen and (max-width: 360px) {
 
+.accpect, .decline{
+  width: 100%;
+}
+
+.price-input{
+  margin:0px;
+}
+
 .available-popup-box{
   margin: 80px auto;
 }
@@ -3430,6 +3514,24 @@ label:hover:before {
 }
 @media screen and (max-width: 320px) {
 
+.accpect, .decline{
+  width: 100%;
+}
+
+.price-input{
+  margin:0px;
+}
+
+.organize-list{
+  text-align: center;
+}
+
+.price-box i{
+  top: -7%;
+  left: 65%;
+  z-index: 999;
+}
+
 .available-popup-box{
   margin: 80px auto;
 }
@@ -3440,6 +3542,7 @@ label:hover:before {
 
 .edit-btn{
   position: relative;
+  top: 0;
 }
 
 .pr-padding-left-0{
