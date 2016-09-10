@@ -13,9 +13,9 @@ var schema = new mongoose.Schema({
   trackURL: {
     type: String
   },
-  trackArtUrl:{
+  trackArtUrl: {
     type: String
-    },
+  },
   day: {
     type: Date
   },
@@ -41,7 +41,7 @@ var schema = new mongoose.Schema({
   name: {
     type: String
   },
-  comment:{
+  comment: {
     type: String
   },
   like: {

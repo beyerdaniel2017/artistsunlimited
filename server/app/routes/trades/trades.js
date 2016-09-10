@@ -5,107 +5,16 @@ var Trade = mongoose.model('Trade');
 var RepostEvent = mongoose.model('RepostEvent');
 
 router.get('/withUser/:userID', function(req, res, next) {
-  var tradeType = req.query.tradeType;
-  var query = {
-    $or: [{
-      'p1.user': req.params.userID
-    }, {
-      'p2.user': req.params.userID
-    }]
-  };  
-  if(tradeType != undefined){
-    tradeType = JSON.parse(tradeType);
-    if(tradeType.Requests == false && tradeType.Requested == false && tradeType.TradePartners == false){
-      query = "";
-    }
-  }
-
-  if (req.user._id != req.params.userID) {
-    next({
-      message: 'Forbidden',
-      status: 403
-    })
-  } else {
-    if(query != ""){
-  Trade.find(query).populate('p1.user').populate('p2.user').exec()
-      .then(function(trades) {
-        var tradesResult = [];
-        var i = -1;
-        if (trades.length > 0) {
-          var next = function() {
-            i++;
-            if (i < trades.length) {
-              var t = trades[i].toJSON();
-              if (t.p1.user && t.p2.user) {
-                t.unfilledTrackCount = 0;
-                var ownerid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p1.user._id : t.p2.user._id);
-                var userid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p2.user.soundcloud.id : t.p1.user.soundcloud.id);
-                RepostEvent.count({
-                    day: {
-                      $gt: new Date()
-                    },
-                    owner: ownerid,
-                    userID: userid,
-                    trackID: {
-                      $exists: false
-                    },
-                    type: 'traded'
-                  })
-                  .exec()
-                  .then(function(events) {
-                    t.unfilledTrackCount = events;
-                  if(tradeType.Requests == true && t.p1.user._id.toString() === req.user._id.toString() && t.p1.accepted == false){
-                    if(tradesResult.indexOf(t) == -1){
-                    tradesResult.push(t);
-                    }                    
-                  }
-                  if(tradeType.Requested == true && t.p2.user._id.toString() === req.user._id.toString() && t.p2.accepted == false){
-                    if(tradesResult.indexOf(t) == -1){
-                      tradesResult.push(t);
-                    }
-                  }
-                  if(tradeType.TradePartners == true){ 
-                    RepostEvent.count({
-                      $or: [{
-                        userID: t.p1.user.soundcloud.id,
-                        owner: t.p2.user._id
-                      }, {
-                        userID: t.p2.user.soundcloud.id,
-                        owner: t.p1.user._id
-                      }]
-                    })
-                    .exec()
-                    .then(function(tp) {
-                      if(tp > 0){
-                        if(tradesResult.indexOf(t) == -1){
-                          tradesResult.push(t);
-                        }
-                      }
-                    next();
-                  });
-                  }
-                  else{                    
-                    next();
-                  }
-                });
-              } else {
-                next();
-              }
-            } else {
-              res.send(tradesResult);
-            }
-          }
-          next();
-        } else {
-          res.send([]);
-        }
-      })
-      .then(null, next);
-  }
-    else{
-      res.send([]);
-    }
-  }
+  Trade.find({
+      $or: [{
+        'p1.user': req.params.userID
+      }, {
+        'p2.user': req.params.userID
+      }]
+    }).populate('p1.user').populate('p2.user').exec()
+    .then(function(trades) {
+      res.send(trades)
+    }).then(null, next);
 });
 
 router.post('/new', function(req, res, next) {

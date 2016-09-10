@@ -19,8 +19,8 @@
             <li role="presentation" class="active"><a href="#myschedule" aria-controls="myschedule" role="tab" data-toggle="tab">
               <img src="assets/images/myschedule.png" />New Trade</a>
             </li>
-            <li role="presentation"><a href="#organizeschedule" aria-controls="organizeschedule" role="tab" data-toggle="tab"> <img src="assets/images/organizeschedule.png"/> Incomplete Trade</a></li>
-            <li role="presentation"><a href="#managereposts" aria-controls="managereposts" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.png"/> MANAGE Trade Slots</a></li>
+            <li role="presentation"><a href="#organizeschedule" aria-controls="organizeschedule" role="tab" data-toggle="tab"> <img src="assets/images/organizeschedule.png"/>Incomplete Trade</a></li>
+            <li role="presentation"><a href="#managereposts" aria-controls="managereposts" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.png"/>MANAGE Trade Slots</a></li>
           </ul>
           <!-- Nav tabs :End-->
           <!-- Tab panes :: Start-->
@@ -61,7 +61,7 @@
                         <div class="thumb-img-container">
                           <img class="img-responsive" src="{{otherUser.soundcloud.avatarURL ? otherUser.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:190px; height: 100%;margin: 0 auto;"> 
                           <button class="img-btn" ng-click="openTrade(otherUser)">OPEN TRADE</button>
-                          <button class="img-btn2 img-btn">OPEN TRADE2</button>
+                          <button class="img-btn2 img-btn" ng-href="otherUser.soundcloud.permalinkUrl">Souncloud</button>
                         </div>
                         <p class="ng-binding new-trade-ingtexst"><a href="{{otherUser.soundcloud.permalinkURL}}" target="_blank">{{otherUser.soundcloud.username}}</a></p>
                         <p class="ng-binding new-trade-ingtexst">{{otherUser.soundcloud.followers}}</p>
@@ -77,7 +77,7 @@
                         <div class="thumb-img-container">
                           <img class="img-responsive" src="{{otherUser.soundcloud.avatarURL ? otherUser.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:190px; height: 100%;margin: 0 auto;"> 
                           <button class="img-btn" ng-click="openTrade(otherUser)">OPEN TRADE</button>
-                          <button class="img-btn2 img-btn">OPEN TRADE2</button>
+                          <button class="img-btn2 img-btn" ng-click="viewSoundcloud(otherUser)">SOUNDCLOUD</button></a>
                         </div>
                         <p class="ng-binding new-trade-ingtexst"><a href="{{otherUser.soundcloud.permalinkURL}}" target="_blank">{{otherUser.soundcloud.username}}</a></p>
                         <p class="ng-binding new-trade-ingtexst">{{otherUser.soundcloud.followers}}</p>
@@ -88,9 +88,6 @@
               </div><!--row ::end-->
             </div><!--container-90 ::end-->
           </div>
-
-          <!-- MY SCHEDULE : End-->
-          <!-- ORGANIZE SCHEDULE :Start -->
           <div role="tabpanel" class="tab-pane fade" id="organizeschedule">
             <br>
             <div class="organize-list">
@@ -98,8 +95,8 @@
               <div class="row">
                 <div class="col-md-4 col-sm-6 col-xs-12">
                   <div class="btn-group channel-group" role="group" aria-label="...">
-                    <a class="btn btn-default active" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')">Inbox</a>
-                    <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')">Sent</a>
+                    <a class="btn btn-default active" ng-class="{active : itemView == 'inbox'}" href="javascript:void(0)" ng-click="setView('inbox')">Inbox</a>
+                    <a class="btn btn-default" ng-class="{active : itemView == 'sent'}" href="javascript:void(0)" ng-click="setView('sent')">Sent</a>
                   </div>
                 </div>
                 <div class="col-md-4 col-sm-6 col-xs-12">
@@ -116,116 +113,143 @@
               </div> 
 
               <br>
-              <div class="row">
+              <div class="row" ng-repeat="trade in shownTrades track by $index">
                 <div class="border-padding">
                   <div class="col-md-2 col-sm-3 col-xs-12">
                     <div class="thumb-img-container">
                      <div class="organize-thumb-img">
-                       <img src="https://i1.sndcdn.com/avatars-000231342858-55idd3-t500x500.jpg" class="responsive">
+                       <img src="{{trade.other.user.soundcloud.avatarURL}}">
                      </div>
-                   </div>
-                 </div>
-                 <div class="col-md-2 col-sm-12 col-xs-12">
-                  <div class="organize-text">
-                    <p>Mahama</p>
-                    <p>2,020 Followers</p>
-                  </div>
-                </div>
-                <div class="col-md-2 col-sm-12 col-xs-12">
-                  <div class="organize-text">
-                    <p>Mahama</p>
-                    <p>2,020 Followers</p>
-                  </div>
-                </div>                              
-                <div class="col-md-2 col-sm-12 col-xs-12">
-                  <div class="organize-text">
-                    <p>For 5 Weeks</p>                                 
-                  </div>
-                </div>
-                <div class="col-md-2 col-sm-12 col-xs-12">
-                  <div class="button-list">
-                    <button class="btn organize-btn">FB Message</button>
-                    <button class="btn organize-btn">Email</button>
-                    <button class="btn organize-btn">Get Link</button>
-                  </div>
-                </div>
-                <div class="col-md-2 col-sm-3 col-xs-12">
-                  <br>
-                  <div class="button-list">
-                    <button class="btn organize-btn">Manage</button>
-                    <button class="btn organize-btn">Decline</button>
-                  </div>
-                </div>
-              </div>
-            </div><!--row ::end-->
-            <br>
-            <div class="row">
-              <div class="border-padding">
-                <div class="col-md-2 col-sm-12 col-xs-12">
-                  <div class="thumb-img-container">
-                   <div class="organize-thumb-img">
-                     <img src="https://i1.sndcdn.com/avatars-000231342858-55idd3-t500x500.jpg" class="responsive">
                    </div>
                  </div>
                </div>
                <div class="col-md-2 col-sm-12 col-xs-12">
                 <div class="organize-text">
-                  <p>Mahama</p>
-                  <p>2,020 Followers</p>
+                  <p>{{trade.other.user.soundcloud.username}}</p>
+                  <p>{{trade.other.user.soundcloud.followers | number:0}} Followers</p>
                 </div>
               </div>
-              <div class="col-md-2 col-sm-3 col-xs-12">
+              <div class="col-md-2 col-sm-12 col-xs-12">
                 <div class="organize-text">
-                  <p>Mahama</p>
-                  <p>2,020 Followers</p>
+                  <p ng-show="itemView=='sent'">You are offering {{trade.user.slots.length}} slots<br>and asking for {{trade.other.slots.length}} slots</p>
+                  <p ng-show="itemView=='inbox'">{{trade.other.user.soundcloud.username}} is offering {{trade.other.slots.length}} slots<br>and asking for {{trade.user.slots.length}} slots</p>
                 </div>
               </div>                              
               <div class="col-md-2 col-sm-12 col-xs-12">
                 <div class="organize-text">
-                  <p>For 5 Weeks</p>                                 
+                  <p ng-show="trade.repeatFor==0">One time</p>
+                  <p ng-show="trade.repeatFor!=0">{{trade.repeatFor}} weeks</p>
                 </div>
               </div>
-              <div class="col-md-2 col-sm-12 col-xs-12">
-                                <!-- <div class="button-list">
-                                  <button class="btn organize-btn">FB Message</button>
-                                  <button class="btn organize-btn">Email</button>
-                                  <button class="btn organize-btn">Get Link</button>
-                                </div> -->
-                              </div>
-                              <div class="col-md-2 col-sm-12 col-xs-12">
-                                <br>
-                                <div class="button-list">
-                                  <button class="btn organize-btn">Manage</button>
-                                  <button class="btn organize-btn">Decline</button>
-                                </div>
-                              </div>
-                            </div>
-                          </div><!--row ::end--> 
-                          <br>                                                     
-                        </div>
-                        <br>
-                      </div>
-                      <!-- ORGANIZE SCHEDULE :End -->
-                      <!-- MANAGE REPOSTS : Start -->
-                      <div role="tabpanel" class="tab-pane fade" id="managereposts"> 
-                        <div class="container-90">                    
-
-                        </div>
-
+                <!-- <div class="col-md-2 col-sm-12 col-xs-12">
+                  <div class="button-list">
+                    <button class="btn organize-btn">FB Message</button>
+                    <button class="btn organize-btn">Email</button>
+                    <button class="btn organize-btn">Get Link</button>
+                  </div>
+                </div> -->
+                <div class="col-md-2 col-sm-3 col-xs-12">
+                  <br>
+                  <div class="button-list">
+                    <button class="btn organize-btn" ng-click="manage(trade)">Manage</button>
+                    <button class="btn organize-btn" ng-click="deleteTrade(trade._id, $index)">Delete</button>
+                    <button class="btn organize-btn" ng-show="!trade.other.accepted">Remind</button>
+                  </div>
+                </div>
+              </div>
+            </div><!--row ::end-->
+            <br>                                                     
+          </div>
+          <br>
+        </div>
+        <!-- ORGANIZE SCHEDULE :End -->
+        <!-- MANAGE REPOSTS : Start -->
+        <div role="tabpanel" class="tab-pane fade" id="managereposts"> 
+          <div class="container-90">                    
+            <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
+              <div class="container-90">
+                <div class="col-md-3 col-xs-6">
+                  <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
+                    <a class="btn btn-default" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
+                    <a class="btn btn-default" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
+                  </div>
+                </div>
+                <div class="col-md-5 col-xs-12 pull-right">
+                  <form >
+                    <div class="schedule-newsong">
+                      <button type="button" class="form-control" ng-click="addNewSong();">SCHEDULE NEW SONG</button>  
+                    </div>
+                  </form>
+                </div>
+                <div class="col-md-4 col-xs-6 pull-right text-right">
+                  <div class="btn-group" role="group" aria-label="...">
+                    <a class="btn btn-default" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.png" /></a>
+                    <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
+                  </div>
+                </div>
+              </div>
+              <div class="">
+                <h3 style="text-align:center;">{{user.displayName}}</h3>
+                <div id="scheduler-container" ng-show="itemview == 'calender'">
+                  <div style="width:100%; height:35px; display:flex; flex-direction:row;margin-bottom: 10px; ">
+                    <button class="btn btn-default btn-scheduler" ng-click="decrDay()"><img src="/assets/images/left-arrow.png"/></button>
+                    <div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendar[t+dayIncr].day).substring(0,3)}} {{calendar[t+dayIncr].day.getMonth()+1}}/{{calendar[t+dayIncr].day.getDate()}}
+                    </div>
+                    <button class="btn btn-default btn-scheduler" ng-click="incrDay()" ><img id="scheduler-btn-back" src="/assets/images/right-arrow.png"/></button>
+                  </div>
+                  <div style="width:100%; display:flex; flex-direction:row;">
+                    <div class="column-time">
+                      <div ng-repeat="i in ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16', '17', '18', '19', '20', '21', '22', '23']" class="cell-time bold">{{i}}</div>
+                    </div>   
+                    <div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
+                      <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendar[l+dayIncr].events[p], calendar[l+dayIncr].day, l, p)" class="row-scheduler" ng-click="clickedSlot(calendar[l+dayIncr].day, p)" style="position:relative;">
+                        <div ng-style="getEventStyle(calendar[l+dayIncr].events[p])" class="text-left">{{calendar[l+dayIncr].events[p].title}}</div>
+                        <img ng-show="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img>
                       </div>
                     </div>
-                    <!-- MANAGE REPOSTS : End -->                
                   </div>
-                  <!-- Tab panes :: End-->
-                </div><!--page-contant End-->
-
-              </div>
-              <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
+                </div>
+                <div id="scheduler-container" ng-show="itemview == 'list'">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th width="50%">Track Name</th>
+                        <th width="15%">Account</th>
+                        <th width="15%">Date</th>
+                        <th width="10%"></th>
+                        <th width="10%"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="item in listevents" ng-class='{grey : item.event.day < currentDate}'>
+                        <td class="text-left">{{item.event.title}}</td>
+                        <td class="text-left">{{user.soundcloud.username}}</td>
+                        <td class="text-left">{{item.date}}</td>
+                        <td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">{{item.event.type}}</button></td>
+                        <td class="text-left">
+                          <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>
+                          <a href="javascript:void(0)" style="color:#FF7676" ng-if="!item.event">Schedule</a></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
-            <!--overlay-->
-
-            <ng-include src="'js/home/views/loader.html'"></ng-include>
           </div>
         </div>
+        <!-- MANAGE REPOSTS : End -->                
       </div>
+      <!-- Tab panes :: End-->
+    </div><!--page-contant End-->
+
+  </div>
+  <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
+  </div>
+</div>
+<!--overlay-->
+
+<ng-include src="'js/home/views/loader.html'"></ng-include>
+</div>
+</div>
+</div>

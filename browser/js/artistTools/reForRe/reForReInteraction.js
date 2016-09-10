@@ -13,8 +13,12 @@ app.config(function($stateProvider) {
           }
           return $http.get('/api/trades/byID/' + $stateParams.tradeID)
             .then(function(res) {
-              return res.data;
-            })
+              var user = SessionService.getUser();
+              var trade = res.data;
+              trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
+              trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
+              return trade;
+            }).then(null, console.log)
         },
         p1Events: function($http, trade) {
           return $http.get('/api/events/forUser/' + trade.p1.user.soundcloud.id)
@@ -74,6 +78,7 @@ app.config(function($stateProvider) {
 });
 
 app.controller("ReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, SessionService, socket, $stateParams, trade, p1Events, p2Events, currentTrades) {
+  console.log([trade, p1Events, p2Events, currentTrades])
   $scope.user = SessionService.getUser();
   if (!SessionService.getUser()) {
     $state.go('login');
@@ -164,6 +169,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         $scope.processing = false;
         $.Zebra_Dialog('Error getting data.');
       })
+  }
+
+  $scope.backToLists = function(state) {
+
   }
 
   $scope.incrp1 = function(inc) {

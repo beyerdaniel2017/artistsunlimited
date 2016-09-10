@@ -9,7 +9,7 @@ var User = mongoose.model('User');
 
 //----------Public Repost Events----------
 router.get('/forUser/:id', function(req, res, next) {
-var date= moment().month(new Date().getMonth()).date(new Date().getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format();
+  var date = moment().month(new Date().getMonth()).date(new Date().getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format();
   RepostEvent.find({
       userID: req.params.id,
       day: {
@@ -24,51 +24,52 @@ var date= moment().month(new Date().getMonth()).date(new Date().getDate()).hours
 })
 
 router.get('/respostEvent/:id', function(req, res, next) {
-  var data =[];
-  RepostEvent.findOne({ 
-    _id: req.params.id,
-  })
-  .exec()
-  .then(function(event) {
-    RepostEvent.find({
-      trackID : event.trackID
+  var data = [];
+  RepostEvent.findOne({
+      _id: req.params.id,
     })
     .exec()
-    .then(function(tracks) {      
-      var i= -1;
-      function next() {
-        i++;
-          if(i<tracks.length){
-            var userid = parseInt(tracks[i].userID);
-            User.findOne({'soundcloud.id':userid},function(err,user){
-              var result = {
-                trackInfo : tracks[i],
-                userInfo : user.soundcloud
-              }
-              data.push(result);
-              next();
-            });
+    .then(function(event) {
+      RepostEvent.find({
+          trackID: event.trackID
+        })
+        .exec()
+        .then(function(tracks) {
+          var i = -1;
+
+          function next() {
+            i++;
+            if (i < tracks.length) {
+              var userid = parseInt(tracks[i].userID);
+              User.findOne({
+                'soundcloud.id': userid
+              }, function(err, user) {
+                var result = {
+                  trackInfo: tracks[i],
+                  userInfo: user.soundcloud
+                }
+                data.push(result);
+                next();
+              });
+            } else {
+              res.send(data);
+            }
           }
-          else
-          {
-            res.send(data);   
-          }      
-        }
-        next();
+          next();
+        })
+        .then(null, next);
     })
     .then(null, next);
-  })
-  .then(null, next);
 })
 
 /*Get Repost events for List*/
 router.get('/listEvents/:id', function(req, res, next) {
-var query;
-var fromDate=req.query.date ? moment().month(new Date(req.query.date).getMonth()).date(new Date(req.query.date).getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format() : moment().month(new Date().getMonth()).date(new Date().getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format();
-var toDate=req.query.date ? moment().month(new Date(req.query.date).getMonth()).date(new Date(req.query.date).getDate()+6).hours(23).minutes(59).seconds(59).milliseconds(999).format() : moment().month(new Date().getMonth()).date(new Date().getDate()).hours(23).minutes(59).seconds(59).milliseconds(999).format();
- RepostEvent.find({
+  var query;
+  var fromDate = req.query.date ? moment().month(new Date(req.query.date).getMonth()).date(new Date(req.query.date).getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format() : moment().month(new Date().getMonth()).date(new Date().getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format();
+  var toDate = req.query.date ? moment().month(new Date(req.query.date).getMonth()).date(new Date(req.query.date).getDate() + 6).hours(23).minutes(59).seconds(59).milliseconds(999).format() : moment().month(new Date().getMonth()).date(new Date().getDate()).hours(23).minutes(59).seconds(59).milliseconds(999).format();
+  RepostEvent.find({
       userID: req.params.id,
-      day:{
+      day: {
         $gte: fromDate,
         $lte: toDate
       }
@@ -170,15 +171,21 @@ router.delete('/repostEvents/:id', function(req, res, next) {
     .then(null, next);
 });
 
-router.post('/saveAvailableSlots', function(req, res, next){
-  User.findOneAndUpdate({_id: req.body.id},{$set: {availableSlots: req.body.availableslots}}, {
-    upsert: true,
-    new:true
-  }).exec()
-  .then(function(ev) {
-    res.send(ev);
-  })
-  .then(null, next);
+router.post('/saveAvailableSlots', function(req, res, next) {
+  User.findOneAndUpdate({
+      _id: req.body.id
+    }, {
+      $set: {
+        availableSlots: req.body.availableslots
+      }
+    }, {
+      upsert: true,
+      new: true
+    }).exec()
+    .then(function(ev) {
+      res.send(ev);
+    })
+    .then(null, next);
 })
 
 // router.put('/', function(req, res, next) {

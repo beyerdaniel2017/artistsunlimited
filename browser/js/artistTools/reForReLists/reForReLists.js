@@ -8,28 +8,12 @@ app.config(function($stateProvider) {
         currentTrades: function($http, SessionService) {
           var user = SessionService.getUser();
           if (user) {
-            var tradeType = {
-              Requests: true,
-              Requested: true,
-              TradePartners: true
-            };
-            return $http.get('/api/trades/withUser/' + user._id + '?tradeType=' + JSON.stringify(tradeType))
+            return $http.get('/api/trades/withUser/' + user._id)
               .then(function(res) {
                 var trades = res.data;
-                console.log('trades')
-                console.log(trades)
                 trades.forEach(function(trade) {
                   trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
                   trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
-                });
-                trades.sort(function(a, b) {
-                  if (a.user.alert == "change") {
-                    return -1;
-                  } else if (a.user.alert == "placement") {
-                    return -1
-                  } else {
-                    return 1;
-                  }
                 });
                 return trades;
               })
@@ -100,7 +84,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
 
   $scope.minManageTradefollowers = Math.pow(1.1, $scope.sliderManageMin);
   $scope.maxManageTradefollowers = Math.pow(1.1, $scope.sliderManageMax);
-
+  $scope.itemView = "inbox";
   $scope.$watch(function() {
     return $scope.sliderSearchMin
   }, function(newVal, oldVal) {
@@ -133,6 +117,11 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   $scope.searchByFollowers = function() {
     $scope.searchURL = "";
     $scope.sendSearch();
+  }
+
+  $scope.viewSoundcloud = function(user) {
+    console.log(user);
+    window.location.href = user.soundcloud.permalinkURL;
   }
 
   $scope.sendSearch = function() {
@@ -258,6 +247,18 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
     $scope.loadMore();
   });
 
+  $scope.setView = function(type) {
+    $scope.itemView = type;
+    $scope.shownTrades = $scope.currentTrades.filter(function(trade) {
+      if (type == 'inbox') return trade.other.accepted;
+      else return trade.user.accepted;
+    }).sort(function(trade) {
+      if (['change', 'message'].includes(trade.user.alert)) return -1;
+      else return 1
+    })
+    console.log($scope.shownTrades);
+    console.log($scope.currentTrades);
+  }
 
   $scope.loadMore = function() {
     searchTradeRange.skip += 12;
@@ -298,12 +299,12 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
         text: SessionService.getUser().soundcloud.username + ' opened a trade.',
         type: 'alert'
       }],
-      tradeType: 'one-time',
+      repeatFor: 0,
       p1: {
         user: SessionService.getUser()._id,
         alert: "none",
         slots: [],
-        accepted: false
+        accepted: true
       },
       p2: {
         user: user._id,
@@ -326,6 +327,12 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
       });
   }
 
+  $scope.manage = function(trade) {
+    $state.go('reForReInteraction', {
+      tradeID: trade._id
+    })
+  }
+
   $scope.deleteTrade = function(tradeID, index) {
     $.Zebra_Dialog('Are you sure? You want to delete this trade.', {
       'type': 'confirmation',
@@ -338,7 +345,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
             })
             .then(function(res) {
               $scope.processing = false;
-              $scope.currentTrades.splice(index, 1);
+              $scope.shownTrades.splice(index, 1);
             })
             .then(null, function(err) {
               $scope.processing = false;
