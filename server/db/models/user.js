@@ -70,7 +70,8 @@ var schema = new mongoose.Schema({
         premierUrl:String,
         createdOn: Date
     }],    
-    customEmailButtons :[],
+    submissionsCustomEmailButtons :[],
+    premierCustomEmailButtons :[],
     profilePicture: {
         type: String
     },

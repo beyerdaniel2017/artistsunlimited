@@ -5,7 +5,7 @@ app.config(function($stateProvider) {
     controller: 'SubmitSongController'
   });
   $stateProvider.state('customsubmit', {
-    url: '/:username/:submitpart',
+    url: '/custom/:username/:submitpart',
     templateUrl: 'js/submit/submit.view.html',
     controller: 'SubmitSongController',
     resolve: {

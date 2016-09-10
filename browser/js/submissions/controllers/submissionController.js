@@ -28,6 +28,18 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.user.isAdmin = $scope.user.role=='admin' ? true : false;
   $scope.uniqueGroup = [];
   $scope.paidRepostAccounts = [];
+  $scope.dynamicButton = [
+    { "name": "SONG URL", "appendText": " {SONGURL} " },
+    { "name": "EMAIL", "appendText": " {EMAIL} " },
+    { "name": "SONG NAME", "appendText": " {SONGNAME} " },
+    { "name": "ARTIST", "appendText": " {ARTIST} " },
+    { "name": "NAME", "appendText": " {NAME} " },
+    { "name": "NAME OF TRACK", "appendText": " {NAMEOFTRACK} " },
+    { "name": "TRACK COVER ART", "appendText": " {TRACKCOVERART} " },
+    { "name": "SUBMITTED CHANNEL", "appendText": " {SUBMITTEDCHANNEL} " },
+    { "name": "ACCEPTED CHANNEL LIST", "appendText": " {ACCEPTEDCHANNELLIST} " },
+    { "name": "TODAYS DATE", "appendText": " {TODAYSDATE} " }
+  ];
   $scope.genreArray = [
     'Alternative Rock',
     'Ambient',
@@ -71,17 +83,17 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
           d.selectedChannelIDS = [];
           d.selectedGroups = [];
           $scope.showingElements.push(d)
-      });
-  }
-    setTimeout(function() {
-        $scope.showingElements.forEach(function(sub) {
-        SC.oEmbed(sub.trackURL, {
-          element: document.getElementById(sub.trackID + "player"),
-          auto_play: false,
-          maxheight: 150
         });
-      }, 50)
-    });
+      }
+      setTimeout(function() {
+        $scope.showingElements.forEach(function(sub) {
+          SC.oEmbed(sub.trackURL, {
+            element: document.getElementById(sub.trackID + "player"),
+            auto_play: false,
+            maxheight: 150
+          });
+        }, 50)
+      });
     })
     .then(null, function(err) {
       $scope.processing = false;
@@ -153,13 +165,13 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     }
     $scope.selectedGroupChannelIDS = [];
     sub.selectedGroups.forEach(function(g){
-    $scope.user.paidRepost.forEach(function(acc){
+      $scope.user.paidRepost.forEach(function(acc){
         if(acc.groups.indexOf(g) != -1){
           if($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1){
             $scope.selectedGroupChannelIDS.push(acc.id);
-        }      
-      }
-    });    
+          }      
+        }
+      });    
     });
   }
 
@@ -307,10 +319,16 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     }    
     var body = (item.emailBody != undefined ? item.emailBody : "");
     if(body != ""){
-      body = body.replace('{name}', sub.name);
-      body = body.replace('{email}', sub.email);
-      body = body.replace('{title}', sub.title);
-      body = body.replace('{url}', sub.trackURL);
+      body = body.replace('{NAME}', sub.name);
+      body = body.replace('{SONGURL}', sub.trackURL);
+      body = body.replace('{EMAIL}', sub.email);
+      body = body.replace('{SONGNAME}', sub.title);
+      body = body.replace('{ARTIST}', sub.name);
+      body = body.replace('{NAMEOFTRACK}', sub.title);
+      body = body.replace('{TRACKCOVERART}', '<img src="'+sub.track_art_url+'"/>');
+      //body = body.replace('{SUBMITTEDCHANNEL}', sub.userID.name);
+      //body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);
+      body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
     }
     var link = "mailto:"+ toEmail
       + "?subject=" + escape(subject)
@@ -329,6 +347,75 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
         }
       }
     });
+  }
+
+  $scope.customEmailButtons = $scope.user.submissionsCustomEmailButtons.length > 0 ? $scope.user.submissionsCustomEmailButtons : [];
+  if($scope.customEmailButtons.length == 0){
+    $scope.customEmailButtons.push({
+      toEmail: '',
+      subject: '',
+      emailBody: '',
+      buttonText: '',
+      buttonBgColor: ''
+    });
+  }
+  $scope.saveSettings=function(){
+    var valid = true;
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    angular.forEach($scope.customEmailButtons, function(cb) {
+      if(cb.toEmail != "{email}"){
+        var validEmail = re.test(cb.toEmail);
+        if (!validEmail) {
+          valid = false;
+        }
+      }
+    });
+    if(!valid){
+      $.Zebra_Dialog('Please enter {email} or a well formatted email id in To Email field.');
+      return;
+    }
+    $scope.processing = true;
+    $scope.user.submissionsCustomEmailButtons = $scope.customEmailButtons;
+    $http.post('/api/database/updateSubmissionsCustomEmailButtons', {
+      customEmailButtons: $scope.user.submissionsCustomEmailButtons,
+    }).then(function(res) {
+      $scope.processing = false;
+      SessionService.create(res.data);
+      $scope.user = SessionService.getUser();
+    });
+  }
+
+  $scope.addItem = function() {
+    $scope.customEmailButtons.push({
+      toEmail: '',
+      subject: '',
+      emailBody: '',
+      buttonText: '',
+      buttonBgColor: ''
+    });
+  }
+
+  $scope.removeItem = function(index) {
+    $scope.customEmailButtons.splice(index, 1);
+  }
+
+  $scope.addEventClass = function(index,type) {
+    $('textarea').removeClass("selectedBox");
+    $("." + type+index).addClass("selectedBox");
+  }
+
+  $scope.appendBody = function(btn) {
+    if ($('.selectedBox').length) {
+      var boxIndex = $('.selectedBox').attr("index");
+      var cursorPos = $('.selectedBox').prop('selectionStart');
+      var v = $('.selectedBox').val();
+      console.log('boxIndex',boxIndex);
+      var textBefore = v.substring(0, cursorPos);
+      var textAfter = v.substring(cursorPos, v.length);
+      var newtext = textBefore + btn.appendText + textAfter;
+      $scope.customEmailButtons[boxIndex].emailBody = newtext;
+      $('textarea').removeClass("selectedBox");
+    }
   }
 
   $scope.getPaidRepostAccounts = function() {

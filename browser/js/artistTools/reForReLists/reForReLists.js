@@ -35,6 +35,7 @@ app.config(function($stateProvider) {
             return [];
           }
         },
+  
         openTrades: function($http, SessionService) {
           var user = SessionService.getUser();
           if (user) {
@@ -60,12 +61,12 @@ app.config(function($stateProvider) {
     })
 });
 
+
 app.controller("ReForReListsController", function($scope, $rootScope, currentTrades, openTrades, $http, SessionService, $state, $timeout) {
   if (!SessionService.getUser()) {
     $state.go('login');
   	return;
-  }
-  console.log("hello from ReForReListsController");
+  } 
   $scope.state = 'reForReInteraction';
   $scope.user = SessionService.getUser();
   $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
@@ -113,6 +114,20 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
     skip: 0,
     limit: 12
   }
+
+  $scope.dayIncr = 0;
+    $scope.incrDay = function() {
+    if ($scope.dayIncr < 21) $scope.dayIncr++;
+  }
+  $scope.decrDay = function() {
+    if ($scope.dayIncr > 0) $scope.dayIncr--;
+  }
+  $scope.currentDate = new Date();
+  var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  $scope.itemview = "calender";
+  $scope.setView = function(view) {
+    $scope.itemview = view;
+  };
 
   $scope.searchByFollowers = function() {
     $scope.searchURL = "";
@@ -390,7 +405,9 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
 	      $rootScope.userlinkedAccounts = networks.data;
 	    })
   	}
-  	$scope.getUserNetwork();
+
+
+  $scope.getUserNetwork();
   $scope.verifyBrowser();
   $scope.checkNotification();
   $scope.sortResult($scope.sortby);

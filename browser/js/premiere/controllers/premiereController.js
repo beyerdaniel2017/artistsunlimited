@@ -56,6 +56,7 @@ app.controller('PremierController', ['$rootScope',
       for (var prop in $scope.premierObj) {
         data.append(prop, $scope.premierObj[prop]);
       }
+      data.append("userID", $scope.userID);
       PremierService
         .savePremier(data)
         .then(receiveResponse)

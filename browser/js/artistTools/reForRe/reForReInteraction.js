@@ -16,6 +16,20 @@ app.config(function($stateProvider) {
               return res.data;
             })
         },
+        events: function($http, $window, SessionService) {
+          if (!SessionService.getUser()) {
+            $window.localStorage.setItem('returnstate', 'artistToolsScheduler');
+            $window.location.href = '/login';
+          }
+          return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
+          .then(function(res) {
+            return res.data;
+          })
+          .then(null, function(err) {
+            $.Zebra_Dialog("error getting your events");
+            return;
+          })
+        },
         p1Events: function($http, trade) {
           return $http.get('/api/events/forUser/' + trade.p1.user.soundcloud.id)
             .then(function(res) {
@@ -59,7 +73,7 @@ app.config(function($stateProvider) {
                   return 1;
                 }
               })
-              console.log(trades);
+              // console.log(trades);
               return trades;
             })
         }
@@ -102,7 +116,19 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.user.accepted = person.accepted;
   $scope.p1dayIncr = 0;
   $scope.p2dayIncr = 0;
-
+   $scope.dayIncr = 0;
+    $scope.incrDay = function() {
+    if ($scope.dayIncr < 21) $scope.dayIncr++;
+  }
+  $scope.decrDay = function() {
+    if ($scope.dayIncr > 0) $scope.dayIncr--;
+  }
+  $scope.currentDate = new Date();
+  var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  $scope.itemview = "calender";
+  $scope.setView = function(view) {
+    $scope.itemview = view;
+  };
   $scope.trackList = [];
 
   $scope.trackListChangeEvent = function(index) {

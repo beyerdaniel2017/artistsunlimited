@@ -47,7 +47,10 @@ var schema = new mongoose.Schema({
   like: {
     type: Boolean,
     default: false
-  }
+  },
+  otherChannels:[],
+  timeGap:{},
+  unrepostHours:{}
 });
 
 mongoose.model("RepostEvent", schema);

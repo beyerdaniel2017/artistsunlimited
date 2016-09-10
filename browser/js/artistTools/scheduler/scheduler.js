@@ -114,6 +114,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       } 
     });
   }
+
   $scope.linkedAccounts=[];
   /*Get Linked Accounts*/
   $scope.getLinkedAccounts=function()
@@ -301,11 +302,19 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.addNewSong = function(){
+    $scope.isEdit=false;
     $scope.tabSelected=false;
     $scope.makeEventURL = "";
-    $scope.makeEvent = null;
+    $scope.makeEvent = {};
+    $scope.unrepostHours = "";
+    $scope.timeGap="";
+    $scope.eventComment = "";
+    $scope.channelArr = [];
+    $scope.selectedSlot = "";
+    $scope.followersCount();
     $scope.checkCommentEnable();
     $scope.checkLikeEnable();
+    document.getElementById('scPlayer').style.visibility = "hidden";
   }
   $scope.isEdit=false;
   $scope.EditNewSong = function(item)
@@ -356,7 +365,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     var D=d.getDate();
     var MM = (M<10)?('0'+M):M;
     var DD = (D<10)?('0'+D):D;
-    var result = MM + "-" + DD + "-" + YYYY;
+    var result = MM + "/" + DD + "/" + YYYY;
     return result; 
   }
  
@@ -395,6 +404,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         var event = calendarDay.events.find(function(ev) {
           return new Date(ev.day).getHours() == s;
         });
+        
         item.event = event;
         item.date = strDdate + " " + time;
         $scope.listevents.push(item);
@@ -538,7 +548,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.makeEventURL = $scope.makeEvent.trackURL;
   }
   
-  $scope.clickedSlot = function(day, hour) {
+  $scope.clickedSlot = function(day, hour,data) {
     $scope.popup = true;
     var d = new Date(day).getDay();
     if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1) return;
@@ -549,7 +559,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     var calendarDay = $scope.calendar.find(function(calD) {
       return calD.day.toLocaleDateString() == day.toLocaleDateString();
     });
-    $scope.makeEventURL = undefined;
+    $scope.makeEventURL = "";
     $scope.trackListSlotObj = undefined;    
     $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));  
     $scope.updateReach();
@@ -564,13 +574,33 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
       $scope.makeEvent.unrepost = true;
       $scope.newEvent = true;
+      document.getElementById('scPopupPlayer').style.visibility = "hidden";
     } else {
+      $scope.editChannelArr = [];
+      var channels = data.otherChannels;
+      if(channels.length > 0)
+      {
+        for(var i=0; i<channels.length; i++)
+        {
+          for(var j=0; j<$scope.linkedAccounts.length; j++)
+          {
+            if(channels[i] == $scope.linkedAccounts[j].soundcloud.id)
+            {
+               $scope.editChannelArr.push( $scope.linkedAccounts[j].name);
+            }
+          }
+        }
+        $scope.channelArr = $scope.editChannelArr;
+      }
+      $scope.unrepostHours = data.unrepostHours;
+      $scope.timeGap = data.timeGap;
+      $scope.followersCount();
       $scope.makeEvent.day = new Date($scope.makeEvent.day);
       $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
       $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
       $scope.makeEventURL = $scope.makeEvent.trackURL;
-      SC.oEmbed('https://api.soundcloud.com/tracks/' + $scope.makeEvent.trackID, {
-        element: document.getElementById('scPlayer'),
+      SC.oEmbed($scope.makeEvent.trackURL, {
+        element: document.getElementById('scPopupPlayer'),
         auto_play: false,
         maxheight: 150
       });
@@ -601,44 +631,44 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         if(!$scope.makeEvent)
         {
           $scope.makeEvent={};
-        }
-          $scope.makeEvent.type="track";
-          $scope.trackArtistID = res.data.user.id;
-          $scope.trackType = res.data.kind;
-          if (res.data.kind != "playlist") {
-            if (res.data.user.id != $scope.user.soundcloud.id) {
-              $scope.makeEvent.trackID = res.data.id;
-              $scope.makeEvent.title = res.data.title;
-              $scope.makeEvent.trackURL = res.data.trackURL;
+        }          
+        $scope.makeEvent.type="track";
+        $scope.trackArtistID = res.data.user.id;
+        $scope.trackType = res.data.kind;
+        if (res.data.kind != "playlist") {
+          if (res.data.user.id != $scope.user.soundcloud.id) {
+            $scope.makeEvent.trackID = res.data.id;
+            $scope.makeEvent.title = res.data.title;
+            $scope.makeEvent.trackURL = res.data.trackURL;
             $scope.makeEvent.trackArtUrl = res.data.artwork_url;
             if (res.data.user) 
             {
               $scope.makeEvent.artistName = res.data.user.username;              
             }
 
-              SC.oEmbed($scope.makeEventURL, {
+            SC.oEmbed($scope.makeEventURL, {
               element: player,
-                auto_play: false,
-                maxheight: 150
-              })
+              auto_play: false,
+              maxheight: 150
+            })
             if($scope.popup == false){
               player.style.visibility = "visible";
             }
             else{
               player.style.visibility = "visible";
             }            
-              $scope.notFound = false;
-              $scope.processing = false;
-            } else {
-              $scope.notFound = false;
-              $scope.processing = false;
-              $.Zebra_Dialog("You cannot repost your own track.");
-            }
+            $scope.notFound = false;
+            $scope.processing = false;
           } else {
             $scope.notFound = false;
             $scope.processing = false;
-            $.Zebra_Dialog("Sorry! We don't allow scheduling playlists here. Please enter a track url instead.");
+            $.Zebra_Dialog("You cannot repost your own track.");
           }
+        } else {
+          $scope.notFound = false;
+          $scope.processing = false;
+          $.Zebra_Dialog("Sorry! We don't allow scheduling playlists here. Please enter a track url instead.");
+        }        
       }).then(null, function(err) {
         $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
         player.style.visibility = "hidden";
@@ -753,15 +783,17 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       $scope.makeEvent.otherChannels = [];
     }    
     if($scope.unrepostEnable){
-    $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + (parseInt($scope.unrepostHours) * 60 * 60 * 1000));
+      $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + (parseInt($scope.unrepostHours) * 60 * 60 * 1000));
       $scope.makeEvent.unrepost = true;
     }
     else{
       $scope.makeEvent.unrepostDate = new Date(0);
       $scope.makeEvent.unrepost = false;
-    }    
+    }  
     $scope.makeEvent.userID = $scope.user.soundcloud.id;
     $scope.makeEvent.like = $scope.likeEvent;
+    $scope.makeEvent.unrepostHours =$scope.unrepostHours;
+    $scope.makeEvent.timeGap =$scope.timeGap;
     $scope.makeEvent.comment = ($scope.commentEvent == true ? $scope.eventComment : '');
     if ($scope.trackType == "playlist") {
       $.Zebra_Dialog("Sorry! We don't currently allow playlist reposting. Please enter a track url instead.");
@@ -808,7 +840,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         .then(function(res) {
           if(res)
           {
-             $scope.repostResponse =res.data._id;
+           $scope.repostResponse =res.data._id;
           }
           $scope.makeEventURL = "";
           $scope.makeEvent = null;

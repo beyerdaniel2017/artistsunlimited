@@ -6,7 +6,7 @@ app.config(function($stateProvider) {
   });
 });
 
-app.controller('PremierSubmissionController', function($rootScope, $state, $scope, $http, AuthService, SessionService, $sce) {
+app.controller('PremierSubmissionController', function($rootScope, $state, $scope, $http, AuthService, SessionService, $sce, $window) {
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
   if (!SessionService.getUser()) {
     $state.go('admin');
@@ -32,6 +32,18 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   $scope.genre = "";
   $scope.skip = 0;
   $scope.limit = 5;
+  $scope.dynamicButton = [
+    { "name": "SONG URL", "appendText": " {SONGURL} " },
+    { "name": "EMAIL", "appendText": " {EMAIL} " },
+    { "name": "SONG NAME", "appendText": " {SONGNAME} " },
+    { "name": "ARTIST", "appendText": " {ARTIST} " },
+    { "name": "NAME", "appendText": " {NAME} " },
+    { "name": "NAME OF TRACK", "appendText": " {NAMEOFTRACK} " },
+    { "name": "TRACK COVER ART", "appendText": " {TRACKCOVERART} " },
+    { "name": "SUBMITTED CHANNEL", "appendText": " {SUBMITTEDCHANNEL} " },
+    { "name": "ACCEPTED CHANNEL LIST", "appendText": " {ACCEPTEDCHANNELLIST} " },
+    { "name": "TODAYS DATE", "appendText": " {TODAYSDATE} " }
+  ];
   $scope.genreArray = [
     'Alternative Rock',
     'Ambient',
@@ -216,10 +228,16 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     }    
     var body = (item.emailBody != undefined ? item.emailBody : "");
     if(body != ""){
-      body = body.replace('{name}', sub.name);
-      body = body.replace('{email}', sub.email);
-      body = body.replace('{title}', sub.title);
-      body = body.replace('{url}', sub.trackURL);
+      body = body.replace('{NAME}', sub.name);
+      body = body.replace('{SONGURL}', sub.trackURL);
+      body = body.replace('{EMAIL}', sub.email);
+      body = body.replace('{SONGNAME}', sub.title);
+      body = body.replace('{ARTIST}', sub.name);
+      body = body.replace('{NAMEOFTRACK}', sub.title);
+      body = body.replace('{TRACKCOVERART}', '<img src="'+sub.track_art_url+'"/>');
+      //body = body.replace('{SUBMITTEDCHANNEL}', sub.userID.name);
+      //body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);
+      body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
     }
     var link = "mailto:"+ toEmail
       + "?subject=" + escape(subject)
@@ -269,6 +287,76 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
       url: 'http://soundcloud.com/luxaudio'
     }]
   }
+
+  $scope.customEmailButtons = $scope.user.premierCustomEmailButtons.length > 0 ? $scope.user.premierCustomEmailButtons : [];
+  if($scope.customEmailButtons.length == 0){
+    $scope.customEmailButtons.push({
+      toEmail: '',
+      subject: '',
+      emailBody: '',
+      buttonText: '',
+      buttonBgColor: ''
+    });
+  }
+  $scope.saveSettings=function(){
+    var valid = true;
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    angular.forEach($scope.customEmailButtons, function(cb) {
+      if(cb.toEmail != "{email}"){
+        var validEmail = re.test(cb.toEmail);
+        if (!validEmail) {
+          valid = false;
+        }
+      }
+    });
+    if(!valid){
+      $.Zebra_Dialog('Please enter {email} or a well formatted email id in To Email field.');
+      return;
+    }
+    $scope.processing = true;
+    $scope.user.premierCustomEmailButtons = $scope.customEmailButtons;
+    $http.post('/api/database/updatePremierCustomEmailButtons', {
+      customEmailButtons: $scope.user.premierCustomEmailButtons,
+    }).then(function(res) {
+      $scope.processing = false;
+      SessionService.create(res.data);
+      $scope.user = SessionService.getUser();
+    });
+  }
+
+  $scope.addItem = function() {
+    $scope.customEmailButtons.push({
+      toEmail: '',
+      subject: '',
+      emailBody: '',
+      buttonText: '',
+      buttonBgColor: ''
+    });
+  }
+
+  $scope.removeItem = function(index) {
+    $scope.customEmailButtons.splice(index, 1);
+  }
+
+  $scope.addEventClass = function(index,type) {
+    $('textarea').removeClass("selectedBox");
+    $("." + type+index).addClass("selectedBox");
+  }
+
+  $scope.appendBody = function(btn) {
+    if ($('.selectedBox').length) {
+      var boxIndex = $('.selectedBox').attr("index");
+      var cursorPos = $('.selectedBox').prop('selectionStart');
+      var v = $('.selectedBox').val();
+      console.log('boxIndex',boxIndex);
+      var textBefore = v.substring(0, cursorPos);
+      var textAfter = v.substring(cursorPos, v.length);
+      var newtext = textBefore + btn.appendText + textAfter;
+      $scope.customEmailButtons[boxIndex].emailBody = newtext;
+      $('textarea').removeClass("selectedBox");
+    }
+  }
+
   $scope.loadSubmissions();
 });
 

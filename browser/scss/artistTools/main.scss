@@ -1498,6 +1498,14 @@ input[type=range]::-ms-track {
 
 @media screen and (min-device-width: 320px) and (max-device-width: 768px) { 
 
+.pr-paddin-right-0{
+  padding-right: 15px!important;
+}
+
+.left-side-profile{
+  margin: 20px auto;
+}
+
 .accpect, .decline{
   width: 100%;
 }
@@ -1530,7 +1538,7 @@ input[type=range]::-ms-track {
   position: relative!important;
 }
 .pr-padding-left-0{
-  padding-left: auto;
+  padding-left:15px !important;
 }
 .quick-trade {
     width: 100%;
@@ -2832,6 +2840,27 @@ label:hover:before {
 
 /*Login Admin css ::end*/
 
+/*reforRelist css::start*/
+ 
+.tropical:active, .tropical:focus, .tropical:hover, .tropical:visited{
+  background-color:#EEE;
+}
+.tropical.active {
+    background: #EEE;
+} 
+
+.refor-chate-box{
+  background-color: #FFF;
+  min-height: 47px;
+  padding: 11px 10px;
+  width: 99%;
+  border-top: 1px solid #E6E6E6;
+  margin: 0px auto;
+  position: absolute;
+  bottom: 0;
+}
+/*reforRelist css::end*/
+
 /*search organize css ::start*/
 
 
@@ -2988,10 +3017,11 @@ label:hover:before {
 
 .left-side-profile{
   position: fixed;
-  width: 16%;
-  z-index: 999;
-  float: left;
-  top: 24%;
+    width: 16.1%;
+    z-index: 1;
+    bottom: 0;
+    height: 81%;
+    background-color: white;
 }
 
 .left-side-profile .tropical{
@@ -3212,7 +3242,7 @@ label:hover:before {
 }
 
 .left-side-profile{
-   width:96%!important;
+   width:100%!important;
   position: relative!important;
 }
 
@@ -3318,6 +3348,11 @@ label:hover:before {
 	}*/
 }
 @media screen and (max-width: 480px) {
+
+.pr-paddin-right-0{
+  padding-right: 15px;
+}
+
 	.img-btn {
 		margin-left: 174px;
 	}
@@ -3513,6 +3548,15 @@ label:hover:before {
 
 }
 @media screen and (max-width: 320px) {
+
+
+.pr-paddin-right-0{
+  padding-right: 15px;
+}
+
+.left-side-profile{
+  margin: 20px auto;
+}
 
 .accpect, .decline{
   width: 100%;

@@ -833,12 +833,31 @@ router.post('/updateGroup', function(req, res, next) {
     });
 });
 
-router.post('/updateCustomEmailButtons', function(req, res, next) {
+router.post('/updateSubmissionsCustomEmailButtons', function(req, res, next) {
   User.findOneAndUpdate({
       _id: req.user._id
     }, {
       $set: {
-        customEmailButtons: req.body.customEmailButtons
+        submissionsCustomEmailButtons: req.body.customEmailButtons
+      }
+    }, {
+      new: true
+    })
+    .exec()
+    .then(function(user) {
+      res.send(user);
+    })
+    .then(null, function(err) {
+      next(err);
+    });
+});
+
+router.post('/updatePremierCustomEmailButtons', function(req, res, next) {
+  User.findOneAndUpdate({
+      _id: req.user._id
+    }, {
+      $set: {
+        premierCustomEmailButtons: req.body.customEmailButtons
       }
     }, {
       new: true

@@ -24,8 +24,9 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
   $scope.setView = function(view) {
     $scope.itemview = view;
   };
+  var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   $scope.listevents = repostEvent;
-  $scope.trackImage = repostEvent[0].trackInfo.artistUrl;
+  $scope.trackImage = repostEvent[0].trackInfo.trackArtUrl;
   $scope.dayIncr = 0;
   $scope.incrDay = function() {
     if ($scope.dayIncr < 21) $scope.dayIncr++;
@@ -47,7 +48,6 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
     if (repostEvent.type == 'empty') {
       return {}
     } else if (repostEvent.trackInfo.type == 'track' || repostEvent.trackInfo.type == 'queue') {
-      console.log('track');
       return {
         'background-color': '#67f967'
       }
@@ -76,6 +76,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
       var dayEvents = repostEvent.filter(function(ev) {
         return (new Date(ev.trackInfo.day).toLocaleDateString() == calDay.day.toLocaleDateString());
       });
+
       var eventArray = [];
       for (var j = 0; j < 24; j++) {
         eventArray[j] = {
@@ -93,6 +94,45 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
   };
 
   $scope.calendar = $scope.fillDateArrays(repostEvent);
+ 
+  $scope.clickedSlot = function(day, hour ,data) {
+   
+    if(data.trackInfo)
+    {
+       $scope.makeEvent={};
+     $scope.popup = true;
+     var makeDay = new Date(day);
+     makeDay.setHours(hour);
+     $scope.makeEvent.day = new Date(makeDay);
+     $scope.makeEvent.url = data.trackInfo.trackURL;
+     $scope.makeEvent.comment = data.trackInfo.comment;
+     $scope.makeEvent.unrepostHours =data.trackInfo.unrepostHours; 
+     $scope.makeEvent.timeGap =data.trackInfo.timeGap;
+     var d = new Date(day).getDay();
+     var channels = data.trackInfo.otherChannels;
+     $scope.displayChannels=[];
+     for(var i=0; i< repostEvent.length; i++)
+     {
+           if(channels.indexOf(repostEvent[i].userInfo.id) > -1){
+              $scope.displayChannels.push(repostEvent[i].userInfo.username);
+           }
+     }
+
+    $scope.showOverlay = true;
+    var calDay = {};
+    var calendarDay = $scope.calendar.find(function(calD) {
+      return calD.day.toLocaleDateString() == day.toLocaleDateString();
+    });
+    SC.oEmbed($scope.makeEvent.url, {
+        element: document.getElementById('scPopupPlayer'),
+         auto_play: false,
+         maxheight: 120
+      })
+      document.getElementById('scPopupPlayer').style.visibility = "visible";
+    }
+   
+  }
+ 
   $scope.fillDateArrays(repostEvent);
 
 });

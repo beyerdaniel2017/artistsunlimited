@@ -45,7 +45,7 @@ router.get('/getUserID', function(req, res, next) {
 
 router.get('/getUserByURL/:username/:page', function(req, res, next) {
   var query = {};
-  var url = rootURL+"/"+req.params.username+"/"+req.params.page;
+  var url = rootURL+"/custom/"+req.params.username+"/"+req.params.page;
   if(req.params.page.indexOf('submit') != -1){
     query = {'paidRepost.submissionUrl': url};
   }
