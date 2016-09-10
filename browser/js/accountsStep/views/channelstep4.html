@@ -70,10 +70,10 @@
                         <a href="/admin/channel/step5" role="tab" data-toggle="tab">5  Repost Preferences</a>
                     </li>
                   </ul>
-
+       
                   <div class="tab-content">
                   <!-- MY SCHEDULE : Start-->
-                    <div role="tabpanel" class="tab-pane fade in active" id="tab4">
+                    <div role="tabpanel" class="tab-pane fade in active" id="tab4"  ng-init="AccountsStepData.premier.type='Premiere'">
                       <div  class="submi-section">
                         <div class=""> 
                           <div class="col-md-12">
@@ -173,13 +173,13 @@
                                                   <div class="row margin-bottom-10">
                                                     <div class="col-md-12">
                                                     <label>Image</label>
-                                                      <input type="file" name="uploadpremier" id="uploadpremier" class="pull-right" style="width:200px">
+                                                      <input type="file" name="uploadpremier"  file-input="AccountsStepData.premier.logo.images" id="uploadpremier" class="pull-right" style="width:200px">
                                                     </div>
                                                   </div>
                                                   <div class="row margin-bottom-10">
                                                     <div class="col-md-12">
                                                      <label>Logo Position</label>
-                                                      <select class="form-control" ng-model="AccountsStepData.premier.logo.style.align" placeholder="Logo Position" ng-init="AccountsStepData.premier.logo.style.align='center'">
+                                                      <select class="form-control" ng-model="AccountsStepData.premier.logo.align" placeholder="Logo Position" ng-init="AccountsStepData.premier.logo.align='center'">
                                                         <option ng-selected="true" value="center">Center</option>
                                                         <option value="left">Left</option>
                                                         <option value="right">Right</option>
@@ -200,7 +200,7 @@
                                                   <div class="row margin-bottom-10">
                                                     <div class="col-md-12">
                                                     <label>Image</label>
-                                                      <input type="file" name="uploadpremierBackground" id="uploadpremierBackground"  class="pull-right" style="width:200px">
+                                                      <input type="file" name="uploadpremierBackground"  file-input="AccountsStepData.premier.background.images" id="uploadpremierBackground"  class="pull-right" style="width:200px">
                                                     </div>
                                                   </div>
                                                 </div>
@@ -328,7 +328,7 @@
                                           </div>
                                         </div>
                                         <div class="row" style="margin-bottom:10px;">
-                                          <div class="col-md-12" style="text-align:{{AccountsStepData.premier.logo.style.align}}">
+                                          <div class="col-md-12" style="text-align:{{AccountsStepData.premier.logo.align}}">
                                             <img class="text-center" style="width:150px;height:150px;" ng-if="AccountsStepData.premier.logo.images" id="templatepremierLogo" src="{{AccountsStepData.premier.logo.images}}">
                                             <img class="text-center" style="width:150px;height:150px;" ng-if="!AccountsStepData.premier.logo.images" id="templatepremierLogo">
                                           </div>
@@ -398,27 +398,33 @@
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
-  function readURL(input,element) {
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = function (e) {
-        if(element!="rightpremierTemplate"){
-          $('#'+element).attr('src', e.target.result).show();
-        }
-        else{
-          angular.element('#backgroundImage1').scope().addBackGroundImage(e.target.result,4);
-          $('#backgroundImage1').css('background-image', 'url(' + e.target.result + ')');
-        }          
-      }
-      reader.readAsDataURL(input.files[0]);
-    }
-  }    
+  // function readURL(input,element) {
+  //   if (input.files && input.files[0]) {
+  //     var reader = new FileReader();
+  //     reader.onload = function (e) {
+  //       if(element!="rightpremierTemplate"){
+  //         $('#'+element).attr('src', e.target.result).show();
+  //       }
+  //       else{
+  //         angular.element('#backgroundImage1').scope().addBackGroundImage(e.target.result,4);
+  //         $('#backgroundImage1').css('background-image', 'url(' + e.target.result + ')');
+  //       }          
+  //     }
+  //     reader.readAsDataURL(input.files[0]);
+  //   }
+  // }    
 
   $("#uploadpremier").change(function(){
-      readURL(this,'templatepremierLogo');
+    //readURL(this,'templatepremierLogo');
+    setTimeout(function(){
+      angular.element('#uploadpremier').scope().updateLOGOIMAGE(4);  
+    },500); 
   });
    $("#uploadpremierBackground").change(function(){
-      readURL(this,'rightpremierTemplate');
+    //readURL(this,'rightpremierTemplate');
+    setTimeout(function(){
+      angular.element('#uploadpremierBackground').scope().updateBackgroundIMAGE(4);  
+    },500); 
   });
  });
 </script>

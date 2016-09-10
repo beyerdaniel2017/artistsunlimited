@@ -46,6 +46,10 @@ text-align: justify;
 background:#fff;
 }
 
+.bgwhite {
+background:#fff;
+}
+
 .bold {
 font-weight: bold;
 }
@@ -80,12 +84,12 @@ margin-top: 10px;
 }
 .form-control {
 	border-radius: 8px;
-border-color: #F5D3B5;
-outline: none;
+    border-color: #F5D3B5;
+    outline: none;
 	-webkit-border-radius: 8px;
--webkit-box-shadow: none !important;
--moz-box-shadow: none !important;
-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
 }
 .navbar {
 min-height: 40px;
@@ -501,6 +505,7 @@ text-align: right;
 	}
 }
 /*************** Responsive Css End *************/
+
 /*Admin New Css*/
 
 .container-90 {
@@ -641,7 +646,7 @@ text-align: right;
     border-top-left-radius: 10px;
 }
 .acceptance-textareas{
-	min-height:100px;
+    height:140px;
 }
 .acceptance-signatur,
 {

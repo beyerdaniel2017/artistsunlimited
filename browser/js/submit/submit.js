@@ -4,11 +4,38 @@ app.config(function($stateProvider) {
     templateUrl: 'js/submit/submit.view.html',
     controller: 'SubmitSongController'
   });
+  $stateProvider.state('customsubmit', {
+    url: '/:username/:submitpart',
+    templateUrl: 'js/submit/submit.view.html',
+    controller: 'SubmitSongController',
+    resolve: {
+      getUserByURL: function($stateParams, $http, $window) {
+        var username = $stateParams.username;
+        var submitpart = $stateParams.submitpart;
+        return $http.get('/api/users/getUserByURL/'+ username+'/'+submitpart)
+        .then(function(res) {
+          if(res && res.data){
+            if(submitpart.indexOf('submit') != -1){
+              $window.location.href = '/submit?id='+res.data;
+            }
+            else{
+              $window.location.href = '/premiere?id='+res.data;
+            }
+          }
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("error getting your events");
+          return;
+        })
+      }
+    }
+  });
 });
 
-app.controller('SubmitSongController', function($rootScope, $state, $scope, $http) {
+app.controller('SubmitSongController', function($rootScope, $state, $scope, $http, customizeService,$location) {
   $scope.submission = {};
-  $scope.userID = "";
+  $scope.customizeSettings = null;
+  $scope.userID = $location.search().id;
   $scope.genreArray = [
     'Alternative Rock',
     'Ambient',
@@ -103,9 +130,24 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.getUserID = function() {
-    $http.get('/api/users/getUserID')
+    if($scope.userID == undefined){
+      $http.get('/api/users/getUserID')
       .then(function(res) {
         $scope.userID = res.data;
       });
+    }
   }
+
+  $scope.getCustomizeSettings=function()
+  {
+    var uid = $location.search().id;
+    if(uid != undefined){
+      customizeService.getCustomPageSettings(uid, 'submit')
+      .then(function(response){      
+        $scope.customizeSettings = response;
+      });
+    }   
+  }
+  $scope.getUserID();
+  $scope.getCustomizeSettings();
 });

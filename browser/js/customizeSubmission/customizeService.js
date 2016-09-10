@@ -17,10 +17,10 @@ app.service('customizeService', ['$http', function($http) {
 			return response.data;
 		});
 	}
-	function getCustomPageSettings(userID){
+	function getCustomPageSettings(userID, type){
 		return $http({
 			method: 'GET',
-			url: '/api/customsubmissions/getCustomSubmission/'+userID
+			url: '/api/customsubmissions/getCustomSubmission/'+userID+'/'+type
 		})
 		.then(function (response){
 			return response.data;

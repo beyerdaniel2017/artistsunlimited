@@ -47,7 +47,7 @@
                   </li>
               </ul>
               <div class="clearfix"></div>
-              </center>  
+    
               <!-- Nav tabs :End-->
               <!-- Tab panes :: Start-->
               <div class="tab-content">
@@ -173,13 +173,13 @@
                                                   <div class="row margin-bottom-10">
                                                     <div class="col-md-12">
                                                     <label>Image</label>
-                                                      <input type="file" name="uploadLogo" id="uploadLogo" class="pull-right" style="width:200px">
+                                                      <input type="file" name="uploadLogo" file-input="AccountsStepData.postData.logo.images" id="uploadLogo" class="pull-right" style="width:200px">                                
                                                     </div>
                                                   </div>
                                                   <div class="row margin-bottom-10">
                                                     <div class="col-md-12">
                                                      <label>Logo Position</label>
-                                                      <select class="form-control" ng-model="AccountsStepData.postData.logo.style.align" placeholder="Logo Position" ng-init="AccountsStepData.postData.logo.style.align='center'">
+                                                      <select class="form-control" ng-model="AccountsStepData.postData.logo.align" placeholder="Logo Position" ng-init="AccountsStepData.postData.logo.align='center'">
                                                         <option ng-selected="true" value="center">Center</option>
                                                         <option value="left">Left</option>
                                                         <option value="right">Right</option>
@@ -200,7 +200,7 @@
                                                   <div class="row margin-bottom-10">
                                                     <div class="col-md-12">
                                                     <label>Image</label>
-                                                      <input type="file" name="uploadBackground" id="uploadBackground"  class="pull-right" style="width:200px">
+                                                      <input type="file" name="uploadBackground" file-input="AccountsStepData.postData.background.images" id="uploadBackground"  class="pull-right" style="width:200px">
                                                     </div>
                                                   </div>
                                                 </div>
@@ -328,7 +328,7 @@
                                         </div>
                                       </div>
                                       <div class="row"  style="margin-bottom:10px;">
-                                        <div class="col-md-12" style="text-align:{{AccountsStepData.postData.logo.style.align}}">
+                                        <div class="col-md-12" style="text-align:{{AccountsStepData.postData.logo.align}}">
                                           <img class="text-center" style="width:150px;height:150px;" ng-if="AccountsStepData.postData.logo.images" id="templateLogo" src="{{AccountsStepData.postData.logo.images}}">
                                           <img class="text-center" style="width:150px;height:150px;" ng-if="!AccountsStepData.postData.logo.images" id="templateLogo">
                                           </p>
@@ -398,28 +398,34 @@
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
-  function readURL(input,element) {
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = function (e) {
-        if(element!="rightTemplate"){
-          $('#'+element).attr('src', e.target.result).show();
-        }
-        else{
-          angular.element('#backgroundImage').scope().addBackGroundImage(e.target.result,3);
-          $('#backgroundImage').css('background-image', 'url(' + e.target.result + ')');
-          // /setHeight();
-        }          
-      }
-      reader.readAsDataURL(input.files[0]);
-    }
-  }    
+  // function readURL(input,element) {
+  //   if (input.files && input.files[0]) {
+  //     var reader = new FileReader();
+  //     reader.onload = function (e) {
+  //       if(element!="rightTemplate"){
+  //         $('#'+element).attr('src', e.target.result).show();
+  //       }
+  //       else{
+  //         angular.element('#backgroundImage').scope().addBackGroundImage(e.target.result,3);
+  //         $('#backgroundImage').css('background-image', 'url(' + e.target.result + ')');
+  //         // /setHeight();
+  //       }          
+  //     }
+  //     reader.readAsDataURL(input.files[0]);
+  //   }
+  // }    
 
   $("#uploadLogo").change(function(){
-      readURL(this,'templateLogo');
+    //readURL(this,'templateLogo');
+    setTimeout(function(){
+      angular.element('#uploadLogo').scope().updateLOGOIMAGE(3);  
+    },500);    
   });
    $("#uploadBackground").change(function(){
-      readURL(this,'rightTemplate');
+    //readURL(this,'rightTemplate');
+     setTimeout(function(){
+      angular.element('#uploadBackground').scope().updateBackgroundIMAGE(3);  
+    },500);    
   });
  });
  //  $(window).resize(function() { 

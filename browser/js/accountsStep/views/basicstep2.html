@@ -25,21 +25,23 @@
                             </li>
                         </ul>
                         <div class="clearfix"></div>
-                         
                         <!-- Nav tabs :End-->
                         <!-- Tab panes :: Start-->
-                         <div class="tab-content">
+                        <div class="tab-content">
                             <!-- MY SCHEDULE : Start-->
                             <div role="tabpanel" class="tab-pane fade in active" id="step1">
                                 <ul class="nav nav-tabs" role="tablist">
-                                    <li class="active">
+                                    <li class="active" style="width:25%">
                                         <a href="/admin/basic/step1" role="tab" data-toggle="tab">1  Set General Info</a>
                                     </li>
-                                    <li class="active">
-                                        <a href="/admin/basic/step2" role="tab" data-toggle="tab">2  Customize E-mails</a>
+                                    <li class="active" style="width:25%">
+                                        <a href="/admin/basic/step2" role="tab" data-toggle="tab">2  Repost Submissions Customize E-mails</a>
                                     </li>
-                                    <li>
-                                        <a href="/admin/basic/step3" role="tab" data-toggle="tab">3  PayPal Info</a>
+                                    <li style="width:25%">
+                                        <a href="/admin/basic/step3" role="tab" data-toggle="tab">3  Premier Submissions Customize E-mails</a>
+                                    </li>
+                                    <li style="width:25%">
+                                        <a href="/admin/basic/step4" role="tab" data-toggle="tab">3  PayPal Info</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content">
@@ -47,23 +49,15 @@
                                     <div role="tabpanel" class="tab-pane fade in active" id="tab2">
                                         <div class="container-90">
                                             <div class="row">
-                                                <div class="col-xs-12 text-center">
-                                                    <h5 class="margin-40">ADD NEW CHANNEL</h5>
-                                                </div>
+                                               &nbsp; 
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-12 text-center">
-                                                    <div class="add-account text-center container-60">
-                                                        <div class="slidethamb-box">
-                                                            <p>When submissions are accepted or declined, an automatic email will be sent to the user, giving them an update on their submission. Our template emails can be seen below and are free to edit to your liking. If you would like to use the standard email responses, skip this step! If you would like to edit, click edi</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                               &nbsp; 
                                             </div>
                                             <!--row ::end-->
-                                            <div class="row" ng-repeat="custom in AccountsStepData.customizeemails track by $index">
+                                            <div class="row" ng-repeat="custom in AccountsStepData.repostCustomizeEmails track by $index">
                                                 <div class="col-md-6">
-                                                    <div class="container-60">
+                                                    <div class="container-90">
                                                         <h6 class="text-center" ng-show="!$index">{{custom.acceptance.title}}</h6>
                                                         <input ng-show="$index" class="acceptance-signatur" type="text" ng-model="custom.acceptance.title" placeholder="Title" style="margin-left:0px">
                                                         <div class="acceptance">
@@ -72,14 +66,14 @@
                                                                     <input type="text" ng-model="custom.acceptance.subject" placeholder="Subject..." class="acceptance-input">
                                                                 </div>
                                                                 <div class="check-list">
-                                                                    <textarea ng-model="custom.acceptance.body" index="{{$index}}" ng-click="addEventClass($index,'acceptance');" class="acceptance-textareas acceptance acceptance{{$index}}"></textarea>
+                                                                    <textarea ng-model="custom.acceptance.body" index="{{$index}}" ng-click="addEventClass($index,'acceptancebox');" class="acceptance-textareas acceptancebox"></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <div class="container-60">
+                                                    <div class="container-90">
                                                         <h6 class="text-center" ng-show="!$index">{{custom.decline.title}}</h6>
                                                         <input ng-show="$index" class="acceptance-signatur" type="text" ng-model="custom.decline.title" placeholder="Title" style="margin-left:0px">
                                                         <div class="acceptance">
@@ -88,7 +82,7 @@
                                                                     <input type="text" placeholder="Subject..." ng-model="custom.decline.subject" class="acceptance-input">
                                                                 </div>
                                                                 <div class="check-list">
-                                                                    <textarea ng-model="custom.decline.body" index="{{$index}}" ng-click="addEventClass($index,'decline');" class="acceptance-textareas decline decline{{$index}}">
+                                                                    <textarea ng-model="custom.decline.body" index="{{$index}}" ng-click="addEventClass($index,'declinebox');" class="acceptance-textareas declinebox">
                                                                     </textarea>
                                                                 </div>
                                                             </div>
@@ -96,14 +90,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!--row ::end-->
-                                            <center class="margin-20">
-                                                <input type="button" class="btn  border-black-btn" value="Add More Emails" ng-disabled="!(AccountsStepData.customizeemails[0].acceptance.subject && AccountsStepData.customizeemails[0].acceptance.body && AccountsStepData.customizeemails[0].decline.subject && AccountsStepData.customizeemails[0].decline.body)" ng-click="addCustomEmails();">
-                                            </center>
                                             <div class="">
                                                 <div class="col-md-12">
                                                     <div class="button-list text-center">
-                                                        <input ng-repeat="btn in stepButton " type="button" name="{{btn.name}}" class="btn organize-btn" style="margin-left:20px;" value="{{btn.name}}" ng-click="appendBody(btn)">
+                                                        <input ng-repeat="btn in stepButton " type="button" name="{{btn.name}}" class="btn organize-btn" style="margin-left:20px;" value="{{btn.name}}" ng-click="appendBody(btn,'repost')">
                                                     </div>
                                                 </div>
                                             </div>
@@ -112,11 +102,10 @@
                                                 <div class="col-md-12 text-center">
                                                     <div class="buttons margin-40">
                                                         <input type="button" name="back" value="Back" ng-click="nextStep(1,AccountsStepData,'basic')" class="btn active border-black-btn">
-                                                        <input type="button" name="Next" value="Next" ng-disabled="!(AccountsStepData.customizeemails[0].acceptance.subject && AccountsStepData.customizeemails[0].acceptance.body && AccountsStepData.customizeemails[0].decline.subject && AccountsStepData.customizeemails[0].decline.body)" ng-click="nextStep(3,AccountsStepData,'basic')" class="btn border-orange-btn">
+                                                        <input type="button" name="Next" value="Next" ng-disabled="!(AccountsStepData.repostCustomizeEmails[0].acceptance.subject && AccountsStepData.repostCustomizeEmails[0].acceptance.body && AccountsStepData.repostCustomizeEmails[0].decline.subject && AccountsStepData.repostCustomizeEmails[0].decline.body)" ng-click="nextStep(3,AccountsStepData,'basic')" class="btn border-orange-btn">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!--row ::end-->
                                         </div>
                                     </div>
                                     <div class="clearfix"></div>
@@ -125,12 +114,11 @@
                                 </div>
                             </div>
                         </div>
-                        </div>
-               </div>
-               </div>
-
-                <!--overlay-->
-                <ng-include src="'js/home/views/loader.html'"></ng-include>
+                    </div>
+                </div>
             </div>
+            <!--overlay-->
+            <ng-include src="'js/home/views/loader.html'"></ng-include>
         </div>
     </div>
+</div>
