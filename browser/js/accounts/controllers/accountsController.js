@@ -7,6 +7,7 @@ app.config(function($stateProvider) {
 });
 
 app.controller('accountsController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$sce,accountService) {
+     $scope.isLoggedIn = SessionService.getUser() ? true : false;
     if (!SessionService.getUser()) {
   	$state.go('admin');
     }
@@ -114,6 +115,18 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
     $http.get('/api/submissions/getPaidRepostAccounts').then(function(res) {
       $scope.paidRepostAccounts = res.data;
     });
+  }
+
+  $scope.editprice = function(index, userdata) {
+      $scope.processing = true;
+      $scope.user.paidRepost[index].price = userdata.price;
+      $http.post('/api/database/updateGroup', {
+        paidRepost: $scope.user.paidRepost,
+      }).then(function(res) {
+        $scope.processing = false;
+        SessionService.create(res.data);
+        $scope.user = SessionService.getUser();
+      });
   }
 
   $scope.getPaidRepostAccounts();
