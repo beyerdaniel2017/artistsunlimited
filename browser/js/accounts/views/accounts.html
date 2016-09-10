@@ -32,19 +32,19 @@
                   <div class="row">
                     <div class="col-md-5 col-sm-6 col-xs-12">
                       <!-- <button class="btn decline">DECLINE</button> -->
-          </div>
+                    </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                      <button class="btn decline" ui-sref="channelstep1">+&nbsp;ACCOUNT</button>
-          </div>
+                      <button class="btn decline" ng-click="addAccounts('Add');">+&nbsp;ACCOUNT</button>
+                    </div>
                     <div class="col-md-4 col-sm-6 col-xs-12">
                       <div class="">
                        <!--  <div class="icon-addon addon-md">
                           <input placeholder="Search by URL" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="txtSearchByArtistURL" ng-model="searchURL" style="" type="text">
                           <label for="txtSearchByArtistURL" class="organize-label glyphicon glyphicon-search" rel="tooltip" title="Search by URL" ng-click="searchCurrentTrade()"></label>
                         </div> -->
-                              </div>
-                            </div>
-                          </div>
+                      </div>
+                    </div>
+                  </div>
                   <br><br>
                   <div class="row" ng-repeat="userdata in paidRepostAccounts">
                     <div class="border-padding" style="padding-bottom:115px;">
@@ -70,15 +70,15 @@
                         </div>
                       </div>
                       <div class="col-md-2 col-sm-6 col-xs-8" style="padding-top:40px;">
-                       <a href="" style="color:red">Edit</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:void(0)" ng-click="deletePaidRepost($index)" style="color:red">Delete</a>
+                       <a href="javascript:void(0)" ng-click="addAccounts('Edit',userdata.userID);" style="color:red">Edit</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:void(0)" ng-click="deletePaidRepost($index)" style="color:red">Delete</a>
                       </div>
                     </div>
                   </div> 
                   <br>                                                                           
                 </div>
-                        </div>
-                        </div>                    
-                       </div> 
+              </div>
+            </div>                    
+          </div> 
         </div>
       </div>
     </div>

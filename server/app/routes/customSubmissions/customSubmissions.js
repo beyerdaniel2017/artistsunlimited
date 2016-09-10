@@ -38,3 +38,12 @@ router.get('/getCustomSubmission/:userID/:type', function(req, res, next) {
       res.send(cSubmission)
     });
 });
+router.get('/getCustomSubmissionAll/:userID', function(req, res, next) {
+  CustomSubmission.find({
+      userID: req.params.userID
+    })
+    .exec()
+    .then(function(cSubmission) {
+      res.send(cSubmission)
+    });
+});

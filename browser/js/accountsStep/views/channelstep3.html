@@ -40,7 +40,7 @@
 
               <ul class="nav nav-tabs" role="tablist">
                  <li class="active">
-                    <a href="/admin/basic/step1" role="tab" data-toggle="tab">1  Basic Info</a>
+                    <a>1  Basic Info</a>        
                   </li>
                   <li class="active">
                     <a href="/admin/channel/step1"  role="tab" data-toggle="tab">2  Set up your first Channel</a>
@@ -73,7 +73,7 @@
 
                   <div class="tab-content">
                   <!-- MY SCHEDULE : Start-->
-                    <div role="tabpanel" class="tab-pane fade in active" id="tab3"  ng-init="AccountsStepData.postData.type='Customize'">
+                    <div role="tabpanel" class="tab-pane fade in active" id="tab3"  ng-init="AccountsStepData.postData.type='submit'">
                       <div  class="submi-section">
                         <div class=""> 
                           <div class="col-md-12">
@@ -337,19 +337,19 @@
                                       <div class="row">
                                         <div class="col-md-12">
                                         <form role="form" >
-                                          <div class="row" ng-show="AccountsStepData.postData.inputFields">
+                                          <div class="row" >
                                             <div class="col-sm-6 col-sm-offset-3">
                                                 <input type="text" class="form-control" placeholder="Song URL" ng-model="url" ng-change="urlChange()" style="width:100%; height:34px; padding:5px; border:solid {{AccountsStepData.postData.inputFields.style.border}}px; border-radius:{{AccountsStepData.postData.inputFields.style.borderRadius}}px; border-color:{{AccountsStepData.postData.inputFields.style.borderColor}}" required/>
                                             </div>
                                           </div>
                                           </br>
-                                          <div class="row" ng-show="AccountsStepData.postData.inputFields">
+                                          <div class="row" >
                                             <div class="col-sm-6 col-sm-offset-3">
                                                 <input type="text" class="form-control" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{AccountsStepData.postData.inputFields.style.border}}px; border-radius:{{AccountsStepData.postData.inputFields.style.borderRadius}}px; border-color:{{AccountsStepData.postData.inputFields.style.borderColor}}" required/>
                                               </div>
                                           </div>
                                           </br>
-                                          <div class="row" ng-show="AccountsStepData.postData.inputFields">
+                                          <div class="row" >
                                             <div class="col-sm-6 col-sm-offset-3">
                                               <input type="email" class="form-control" placeholder="Email" ng-model="submission.email" style="width:100%; height:34px; padding:5px; border:solid {{AccountsStepData.postData.inputFields.style.border}}px; border-radius:{{AccountsStepData.postData.inputFields.style.borderRadius}}px;border-color:{{AccountsStepData.postData.inputFields.style.borderColor}}" required/>
                                             </div>

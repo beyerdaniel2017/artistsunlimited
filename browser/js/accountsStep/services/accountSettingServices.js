@@ -11,7 +11,6 @@ app.factory('AccountSettingServices', ['$http', function($http) {
     }
 
     function updatePaidRepost(data) {
-
         return $http.put('/api/users/updatePaidRepost', data);
     }
 
@@ -26,7 +25,6 @@ app.factory('AccountSettingServices', ['$http', function($http) {
     }
     
     function checkUsercount(data) {
-        console.log(data);
         return $http.post('/api/users/checkUsercount',data);
     }
 
@@ -51,7 +49,8 @@ app.factory('AccountSettingServices', ['$http', function($http) {
         uploadFile: uploadFile,
         checkUsercount:checkUsercount,
         addCustomize:addCustomize,
-        updateUserAvailableSlot:updateUserAvailableSlot
+        updateUserAvailableSlot:updateUserAvailableSlot,
+        updatePaidRepost:updatePaidRepost
 
     };
 }]);

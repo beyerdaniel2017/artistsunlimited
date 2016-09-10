@@ -205,6 +205,25 @@ router.get('/getPaidRepostAccounts', function(req, res) {
   next();
 });
 
+
+router.get('/getAccountsByIndex/:user_id', function(req, res) {
+  var user_id = req.params.user_id;
+  var results = [];
+  var paidRepost = req.user.paidRepost.find(function(pr){
+    return pr.userID = user_id;
+  });  
+  var accounts = paidRepost.toJSON();
+  User.findOne({_id: user_id}, function(e,u){        
+    if(u){
+      accounts.user = u.soundcloud;
+      res.send(accounts);
+    }
+  });
+});
+
+
+
+
 router.put('/save', function(req, res, next) {
   if (!req.user.role == 'admin') {
     next({
