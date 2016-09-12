@@ -59,23 +59,73 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     'Vocalists/Singer-Songwriter'
   ];
 
-  $scope.outstandingSearchString = "";
-  $scope.changedSearch = function() {
-    $scope.outstandingSearchString = $scope.searchString;
+  //search//
+  $scope.searchSelection = [];
+  $scope.changedSearch = function(kind) {
+    $scope.searchSelection = [];
+    $scope.searchError = undefined;
+    $scope.searching = true;
     if ($scope.searchString != "") {
       $http.post('/api/search', {
-        q: $scope.searchString
+        q: $scope.searchString,
+        kind: kind
       }).then(function(res) {
-        if ($scope.outstandingSearchString != res.body.searchString) {
-          if (res.body.track) {
-            $scope.selectedTrack(res.body.track);
+        $scope.searching = false;
+        if (res.data.item) {
+          if (res.data.item.kind != kind) {
+            console.log('search error');
+            $scope.serachError = "Please enter a " + kind + " URL.";
           } else {
-            $scope.searchSelection = res.body.collection;
+            $scope.selectedItem(res.data.item);
           }
+        } else {
+          $scope.searchSelection = res.data.collection;
+          $scope.searchSelection.forEach(function(item) {
+            $scope.setItemText(item)
+          })
         }
-      })
+      }).then(null, function(err) {
+        $scope.searching = false;
+        console.log(err)
+        console.log('We could not find a ' + kind);
+        $scope.searchError = "We could not find a " + kind + "."
+      });
     }
   }
+
+  $scope.setItemText = function(item) {
+    console.log(item);
+    switch (item.kind) {
+      case 'track':
+        item.displayName = item.title + ' - ' + item.user.username;
+        break;
+      case 'playlist':
+        item.displayName = item.title + ' - ' + item.user.username;
+        break;
+      case 'user':
+        item.displayName = user.username;
+        break;
+    }
+  }
+
+  $scope.selectedItem = function(item) {
+      $scope.searchSelection = [];
+      $scope.searchError = undefined;
+
+      //custom code to process item choice//
+      console.log(item);
+      $scope.submission.trackID = item.id;
+      $scope.submission.title = item.title;
+      $scope.submission.trackURL = item.permalink_url
+      SC.oEmbed($scope.submission.trackURL, {
+        element: document.getElementById('scPlayer'),
+        auto_play: false,
+        maxheight: 150
+      })
+      document.getElementById('scPlayer').style.visibility = "visible";
+      $scope.processing = false;
+    }
+    //end search//
 
   $scope.urlChange = function() {
     $http.post('/api/soundcloud/resolve', {
