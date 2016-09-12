@@ -69,15 +69,32 @@
                                                     </div>
                                                     <div class="margin-40">
                                                       <div class="margin-20">                                     
-                                                        <span>Price for each repost:<i style="position: absolute;
-                                                        top: 24.5%;left: 54%;">$</i>
-                                                        <input ng-model="AccountsStepData.price" placeholder="Enter Price for each repost"  class="price-input" type=""></span>                                                          
+                                                        <span>Price for each repost:&nbsp;$
+                                                        <input ng-model="AccountsStepData.price" placeholder="Enter Price for each repost"  class="price-input" type="">
+                                                        </span>                                                          
                                                       </div>                           
                                                     </div>
-                                                    <div class="container-40">
+                                                    <div class="container-60">
                                                       <div class="margin-20">                                     
                                                         <textarea ng-model="AccountsStepData.description" class="form-control" name="Description" placeholder="Description"></textarea>                         
                                                     </div>
+
+                                                    <div ng-if="AccountsStepData.formActions=='Add' || AccountsStepData.formActions=='Edit'">
+                                                      <table width="100%">
+                                                        <tr>
+                                                          <td><input type="text" name="group" id="group" class="form-control" ng-model="group"></td>
+                                                          <td><input type="button" class="btn btn-xs" value="Add group" ng-click="addGroup(group)" style="background:#ff7676;padding:6px;color:white;margin-bottom:0px;"></td>
+                                                        </tr>
+                                                      </table>
+                                                      <br />
+                                                      <table width="100%" class="table table-bordered" ng-repeat="group in AccountsStepData.submissionData.groups" style="margin-bottom:5px">  
+                                                        <tr>
+                                                          <td class="text-left" width="90%">{{group}}</td>
+                                                          <td class="text-center" width="10%"><img src="assets/images/x-gray.png" width="15px" height="15px;" style="cursor:pointer;" ng-click="removeGroup($index)"></td>
+                                                        </tr>
+                                                      </table>
+                                                    </div>
+
                                                     <div class="slidethamb-box">
                                                       <div class="container-40">
                                                         <div class="thumb-img-container margin-20">

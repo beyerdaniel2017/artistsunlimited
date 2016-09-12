@@ -11,7 +11,7 @@ app.factory('AccountSettingServices', ['$http', function($http) {
     }
 
     function updatePaidRepost(data) {
-        return $http.put('/api/users/updatePaidRepost', data);
+        return $http.post('/api/users/updatePaidRepost', data);
     }
 
     function getSaltPassword(data) {

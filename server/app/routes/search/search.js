@@ -56,7 +56,6 @@ router.post('/', function(req, res, next) {
     });
   }
 })
-
 function resolveURL(url) {
   return (new Promise(function(fulfill, reject) {
     SCResolve({

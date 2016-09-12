@@ -847,11 +847,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     $scope.trade.p1.accepted = $scope.trade.p2.accepted = true;
     $scope.trade.p1.slots = $scope.trade.p2.slots = [];
     $http.put('/api/trades', $scope.trade)
-      .then(function(res) {
-        console.log('done');
-        $state.go('manageTradedSlots');
-      })
-      .then(null, console.log);
+    .then(function(res) {
+      $state.go('reForReLists');
+    })
+    .then(null, console.log);
   }
 
   $scope.getStyle = function(event, date, day, hour) {
@@ -978,6 +977,15 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       $scope.promptForEmail();
     }
   }
+
+  $scope.remindTrade = function() {
+    $scope.sharelink = "https://localhost:1443/artistTools/reForReInteraction/"+trade._id;
+  }
+
+  $scope.sendMail = function(sharelink) {
+    $scope.fbMessageLink = sharelink;
+    $window.open("mailto:example@demo.com?body=" + sharelink, "_self");
+  };
 
   $scope.updateAlerts();
   $scope.verifyBrowser();

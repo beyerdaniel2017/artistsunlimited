@@ -337,7 +337,11 @@ router.post('/updateAdminProfile', function(req, res, next) {
 });
 
 router.post('/checkUsercount', function(req, res, next) {
-  User.find({"paidRepost.submissionUrl":req.body.url}).exec()
+  var query = {"paidRepost.submissionUrl":req.body.url};
+  if(req.body.action=="id")
+    query = {"paidRepost.userID":req.body.userID};
+      
+  User.find(query).exec()
   .then(function(user) {
     if(user)
       return res.json(user.length);
@@ -364,6 +368,29 @@ router.post('/updatePaidRepost', function(req, res, next) {
   .then(null, function(err) {
     next(err);
   });
+});
+
+router.get('/getUserPaidRepostAccounts', function(req, res) {
+  var accounts = req.user.paidRepost;
+  var results = [];
+  var i = -1;
+  var next = function() {
+    i++;
+    if (i < accounts.length) {
+      var acc = accounts[i];
+      User.findOne({_id: acc.userID}, function(e,u){        
+        if(u){
+          results.push(u);
+        }
+        next();
+      });
+    }
+    else {
+      console.log('results',results);
+      res.send(results);
+    }
+  }
+  next();
 });
 
 

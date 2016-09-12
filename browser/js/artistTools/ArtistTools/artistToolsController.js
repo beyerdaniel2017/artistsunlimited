@@ -58,6 +58,12 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       visible: false
     };
 
+      /* Apply page end */
+    $scope.gotoSettings = function(){
+      SessionService.addActionsfoAccount('Admin',$scope.user._id)
+      $state.go("basicstep1");
+    }
+   
     /* Init downloadGateway list */
 
     $scope.downloadGatewayList = [];
@@ -537,7 +543,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
 
     $scope.soundcloudLogin = function() {
       SC.connect()
-        .then(function(res) {
+        .then(function(res) {          
           // var find = $scope.userlinkedAccounts.find(function(acct) {
           //   return acct.soundcloud.token == res.oauth_token;
           // });

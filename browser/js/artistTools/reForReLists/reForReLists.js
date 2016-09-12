@@ -88,16 +88,29 @@ app.config(function($stateProvider) {
           } else {
             return [];
           }
+        },
+         repostEvent: function($http, SessionService) {
+          var user = SessionService.getUser();
+          if (user) {
+            return  $http.get("/api/events/getRepostEvents/"+user._id)
+           .then(function(repostEvent) {
+            var repostEvent = repostEvent.data;
+           return repostEvent;
+              });
+          } else {
+            return [];
+          }
         }
       }
-    })
+    });
 });
 
-app.controller("ReForReListsController", function($scope, $rootScope, currentTrades, favorites, openTrades, $http, SessionService, $state, $timeout) {
+app.controller("ReForReListsController", function($scope, $rootScope, currentTrades, favorites, openTrades, repostEvent, $http, SessionService, $state, $timeout, $window) {
   if (!SessionService.getUser()) {
     $state.go('login');
     return;
   }
+  $scope.listevents = repostEvent;
   $scope.favorites = favorites;
   $scope.state = 'reForReInteraction';
   $scope.user = SessionService.getUser();
@@ -156,11 +169,11 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   $scope.currentDate = new Date();
   var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
-  $scope.itemview = "calendar";
+  $scope.itemview = "calender";
   // $scope.setView = function(view) {
   //   $scope.itemview = view;
   // };
-
+  $scope.manageView = "calender";
   $scope.searchByFollowers = function() {
     $scope.searchURL = "";
     $scope.sendSearch();
@@ -303,9 +316,12 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
       if (['change', 'message'].includes(trade.user.alert)) return -1;
       else return 1
     })
-    console.log($scope.shownTrades);
-    console.log($scope.currentTrades);
   }
+
+  $scope.setManageView = function(type)
+  {
+    $scope.manageView = type;  
+  };
 
   $scope.loadMore = function() {
     searchTradeRange.skip += 12;
@@ -379,6 +395,15 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
       tradeID: trade._id
     })
   }
+
+  $scope.remindTrade = function(tradeID, index) {
+    $scope.sharelink = "https://localhost:1443/artistTools/reForReInteraction/"+tradeID;
+  }
+
+  $scope.sendMail = function(sharelink) {
+    $scope.fbMessageLink = sharelink;
+    $window.open("mailto:example@demo.com?body=" + sharelink, "_self");
+  };
 
   $scope.deleteTrade = function(tradeID, index) {
     $.Zebra_Dialog('Are you sure? You want to delete this trade.', {
@@ -460,10 +485,170 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
         $rootScope.userlinkedAccounts = networks.data;
       })
   }
+
+  $scope.dayIncr = 0;
+  $scope.incrDay = function() {
+    if ($scope.dayIncr < 21) $scope.dayIncr++;
+  }
+
+  $scope.decrDay = function() {
+    if ($scope.dayIncr > 0) $scope.dayIncr--;
+  }
+  
+   $scope.dayOfWeekAsString = function(date) {
+    var dayIndex = date.getDay();
+    if (screen.width > '744') {
+      return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
+    }
+    return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dayIndex];
+  }
+  
+  $scope.getEventStyle = function(repostEvent) {
+    if (repostEvent.type == 'empty') {
+      return {}
+    } else if (repostEvent.trackInfo.type == 'traded' && repostEvent.trackInfo.trackID) {
+      return {
+        'background-color': '#B22222'
+      }
+    } else if (repostEvent.trackInfo.type == 'traded' && !repostEvent.trackInfo.trackID) {
+      return {
+        'background-color': '#2b9fda'
+      }
+    } 
+    
+  }
+
+  repostEvent.forEach(function(ev) {
+    ev.day = new Date(ev.day);
+  });
+  $scope.events = repostEvent;
+  $scope.fillDateArrays = function(repostEvent) {
+    var calendar = [];
+    var today = new Date();
+    for (var i = 0; i < 29; i++) {
+      var calDay = {};
+      calDay.day = new Date()
+      calDay.day.setDate(today.getDate() + i);
+      var dayEvents = repostEvent.filter(function(ev) {
+        return (new Date(ev.trackInfo.day).toLocaleDateString() == calDay.day.toLocaleDateString());
+      });
+
+      var eventArray = [];
+      for (var j = 0; j < 24; j++) {
+        eventArray[j] = {
+          type: "empty"
+        };
+      }
+      dayEvents.forEach(function(ev) {
+        eventArray[new Date(ev.trackInfo.day).getHours()] = ev;
+      });
+
+      calDay.events = eventArray;
+      calendar.push(calDay);
+    }
+    return calendar;
+  };
+
+  $scope.calendar = $scope.fillDateArrays(repostEvent);
+ 
+  $scope.clickedSlot = function(day, hour ,data) {
+   
+    if(data.trackInfo)
+    {
+       $scope.makeEvent={};
+     var makeDay = new Date(day);
+     makeDay.setHours(hour);
+     $scope.makeEvent.day = new Date(makeDay);
+     $scope.makeEvent.url = data.trackInfo.trackURL;
+     $scope.makeEvent.comment = data.trackInfo.comment;
+     $scope.makeEvent.unrepostHours =data.trackInfo.unrepostHours; 
+     $scope.makeEvent.timeGap =data.trackInfo.timeGap;
+     var d = new Date(day).getDay();
+     var channels = data.trackInfo.otherChannels;
+     $scope.displayChannels=[];
+     for(var i=0; i< repostEvent.length; i++)
+     {
+           if(channels.indexOf(repostEvent[i].userInfo.id) > -1){
+              $scope.displayChannels.push(repostEvent[i].userInfo.username);
+           }
+     }
+
+    $scope.showOverlay = true;
+    var calDay = {};
+    var calendarDay = $scope.calendar.find(function(calD) {
+      return calD.day.toLocaleDateString() == day.toLocaleDateString();
+    });
+    SC.oEmbed($scope.makeEvent.url, {
+        element: document.getElementById('scPopupPlayer'),
+         auto_play: false,
+         maxheight: 120
+      })
+      document.getElementById('scPopupPlayer').style.visibility = "visible";
+    }
+   
+  }
+  $scope.changeURL = function() {
+    if ($scope.makeEvent.url) {
+      $scope.processing = true;
+      var player = (($scope.popup == false) ? document.getElementById('scPlayer') : document.getElementById('scPopupPlayer'));
+      $http.post('/api/soundcloud/resolve', {
+          url: $scope.makeEventURL
+        })
+        .then(function(res) {
+          if (!$scope.makeEvent) {
+            $scope.makeEvent = {};
+          }
+          $scope.makeEvent.type = "track";
+          $scope.trackArtistID = res.data.user.id;
+          $scope.trackType = res.data.kind;
+          if (res.data.kind != "playlist") {
+            if (res.data.user.id != $scope.user.soundcloud.id) {
+              $scope.makeEvent.trackID = res.data.id;
+              $scope.makeEvent.title = res.data.title;
+              $scope.makeEvent.trackURL = res.data.trackURL;
+              $scope.makeEvent.trackArtUrl = res.data.artwork_url;
+              if (res.data.user) {
+                $scope.makeEvent.artistName = res.data.user.username;
+              }
+
+              SC.oEmbed($scope.makeEventURL, {
+                element: player,
+                auto_play: false,
+                maxheight: 150
+              })
+              if ($scope.popup == false) {
+                player.style.visibility = "visible";
+              } else {
+                player.style.visibility = "visible";
+              }
+              $scope.notFound = false;
+              $scope.processing = false;
+            } else {
+              $scope.notFound = false;
+              $scope.processing = false;
+              $.Zebra_Dialog("You cannot repost your own track.");
+            }
+          } else {
+            $scope.notFound = false;
+            $scope.processing = false;
+            $.Zebra_Dialog("Sorry! We don't allow scheduling playlists here. Please enter a track url instead.");
+          }
+        }).then(null, function(err) {
+          $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
+          player.style.visibility = "hidden";
+          $scope.notFound = true;
+          $scope.processing = false;
+        });
+    }
+  }
+
+  $scope.fillDateArrays(repostEvent);
+  /*Manage Trades end*/
   $scope.getUserNetwork();
   $scope.verifyBrowser();
   $scope.checkNotification();
   $scope.sortResult($scope.sortby);
   $scope.loadMore();
   $scope.setView("inbox");
+
 });

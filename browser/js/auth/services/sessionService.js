@@ -11,15 +11,15 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		$window.localStorage.removeItem('addActionsfoAccountIndex');
 	}
 
-	function removeAccountusers() {
+	function removeAccountusers(){
 		$window.localStorage.removeItem('addActionsfoAccount');
 		$window.localStorage.removeItem('addActionsfoAccountIndex');
-		$window.localStorage.removeItem('AdminUser');
+		$window.localStorage.removeItem('AdminUser');	
 	}
 
-	function addActionsfoAccount(actions, index) {
-		$window.localStorage.setItem('addActionsfoAccount', actions);
-		$window.localStorage.setItem('addActionsfoAccountIndex', index);
+	function addActionsfoAccount(actions,index) {
+		$window.localStorage.setItem('addActionsfoAccount',actions);
+		$window.localStorage.setItem('addActionsfoAccountIndex',index);
 	}
 
 	function getActionsfoAccount() {
@@ -41,6 +41,22 @@ app.factory('SessionService', function($cookies, $http, $window) {
 
 	function createAdminUser(data) {
 		$window.localStorage.setItem('AdminUser', JSON.stringify(data));
+	}
+
+	function setUserPaidRepostAccounts(data) {
+		$window.localStorage.setItem('PaidRepostAccounts', JSON.stringify(data));
+	}
+
+	function getUserPaidRepostAccounts(id) {
+		if(id != undefined){
+			try {
+				var accounts = JSON.parse($window.localStorage.getItem('PaidRepostAccounts'));
+				var user = accounts.find(function(acc){
+					return acc._id = id;
+				})
+				return user;
+			} catch (e) {}
+		}		
 	}
 
 	function getAdminUser() {
@@ -69,9 +85,11 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		refreshUser: refreshUser,
 		createAdminUser: createAdminUser,
 		getAdminUser: getAdminUser,
-		removeAccountusers: removeAccountusers,
-		addActionsfoAccount: addActionsfoAccount,
-		getActionsfoAccount: getActionsfoAccount,
-		getActionsfoAccountIndex: getActionsfoAccountIndex
+		removeAccountusers:removeAccountusers,
+		addActionsfoAccount:addActionsfoAccount,
+		getActionsfoAccount:getActionsfoAccount,
+		getActionsfoAccountIndex:getActionsfoAccountIndex,
+		setUserPaidRepostAccounts:setUserPaidRepostAccounts,
+		getUserPaidRepostAccounts:getUserPaidRepostAccounts
 	};
 });

@@ -12,7 +12,17 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
   	  $state.go('admin');
     }
     SessionService.removeAccountusers();
-     $scope.paidRepostAccounts = [];
+
+    $scope.gotoSettings = function(){
+      SessionService.addActionsfoAccount('Admin',$scope.user._id)
+      $state.go("basicstep1");
+    }
+    
+    $scope.finishAdmin = function(){
+
+    }
+
+    $scope.paidRepostAccounts = [];
     $scope.user = SessionService.getUser();
     $scope.user.paidRepost.groups = $scope.user.paidRepost.groups ? $scope.user.paidRepost.groups : [];
     $scope.soundcloudLogin = function() {

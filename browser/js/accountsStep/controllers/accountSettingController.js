@@ -72,8 +72,12 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     if (!$scope.isLoggedIn) {
         $state.go('admin');
     }
+    
+   
+
     var formActions = SessionService.getActionsfoAccount() ? SessionService.getActionsfoAccount() : 0;
     if (!formActions && formActions != "Add" && formActions != "Edit") {
+
         $scope.user = SessionService.getUser();
         if ($state.current.url == "/admin/basic/step1") {
             if ($scope.AccountsStepData == undefined) {
@@ -88,27 +92,36 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                 SessionService.createAdminUser($scope.AccountsStepData);
             }
             if ($scope.AccountsStepData.profilePicture == undefined || $scope.AccountsStepData.profilePicture == "") {
-                $scope.AccountsStepData.profilePicture = "assets/images/info_button.png";
+                $scope.AccountsStepData.profilePicture = "https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg";
             }
         } else {
             $scope.AccountsStepData = SessionService.getAdminUser();
-
             $scope.AccountsStepData.formActions = '';
             $scope.AccountsStepData.newpassword = "";
         }
-    } else if (formActions == "Add") {
+    }
+    else if (formActions == "Admin") {
+        $scope.AccountsStepData = {};
+        if ($state.current.url == "/admin/basic/step1") {
+            $scope.AccountsStepData = SessionService.getUser();
+            $scope.AccountsStepData.formActions = formActions;
+        }
+        else
+            $scope.AccountsStepData = SessionService.getAdminUser();
+    }
+     else if (formActions == "Add") {
         $scope.AccountsStepData = SessionService.getAdminUser() ? SessionService.getAdminUser() : {};
         $scope.AccountsStepData.formActions = formActions;
     } else if (formActions == "Edit") {
+     
+        if ($scope.AccountsStepData == undefined)
+            $scope.AccountsStepData = {};
 
-      if ($scope.AccountsStepData == undefined)
-          $scope.AccountsStepData = {};
-      
-      $scope.AccountsStepData.formActions = formActions;
-      var user_id = SessionService.getActionsfoAccountIndex();
-      if (user_id != undefined && $scope.AccountsStepData.submissionData == undefined && $state.current.url == "/admin/channel/step1") {
-            var userId = "";
-            $http.get('/api/submissions/getAccountsByIndex/' + user_id)
+            $scope.AccountsStepData.formActions = formActions;
+            var user_id = SessionService.getActionsfoAccountIndex();
+            if (user_id != undefined && $scope.AccountsStepData.submissionData == undefined && $state.current.url == "/admin/channel/step1") {
+                var userId = "";
+                $http.get('/api/submissions/getAccountsByIndex/' + user_id)
                 .then(function(res) {
                 $scope.AccountsStepData.submissionData = res.data;
                 $scope.AccountsStepData.submissionData.username = res.data.user.username;
@@ -145,13 +158,15 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                         });
                     })
                 });
-      }
-      else{
-
-        $scope.AccountsStepData = SessionService.getAdminUser();
-      }
+        }
+        else{
+            $scope.AccountsStepData = SessionService.getAdminUser();
+        }
     }
 
+    $scope.finishAdmin = function(){
+        $state.go("accounts");
+    }
 
     $scope.generateRandomNumber = function() {
         var min = 0.01,
@@ -185,6 +200,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     ];
 
     $scope.customBox = { "acceptance": { "title": "", "subject": "", "body": "" }, "decline": { "title": "", "subject": "", "body": "" } };
+    
     $scope.addEventClass = function(index, type) {
         $('textarea').removeClass("selectedBox");
         $("." + type).addClass("selectedBox");
@@ -198,91 +214,99 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     $scope.nextStep = function(step, currentData, type) {
       if (type == "basic") {
         switch (step) {
-          case 1:
-            $state.go("basicstep1");
-            break;
-          case 2:
-            var next = true;
-            var body = {};
-            if ($scope.AccountsStepData.email == "") {
-                next = false;
-            } else if ($scope.AccountsStepData.email != "") {
-                body.email = $scope.AccountsStepData.email;
-            }
+            case 1:
+                $state.go("basicstep1");
+                break;
+            case 2:
+                var next = true;
+                var body = {};
+                if ($scope.AccountsStepData.email == "") {
+                    next = false;
+                    $.Zebra_Dialog('Error: Enter email address');
+                } else if ($scope.AccountsStepData.email != "") {
+                    body.email = $scope.AccountsStepData.email;
+                }
 
-            if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword != $scope.AccountsStepData.newpassword) {
-                next = false;
-            } else if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword == $scope.AccountsStepData.newpassword) {
-                body.password = $scope.AccountsStepData.newpassword;
-            }
+                if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword != $scope.AccountsStepData.newpassword) {
+                    next = false;
+                    $.Zebra_Dialog('Error: Password doesn’t match');
+                } else if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword == $scope.AccountsStepData.newpassword) {
+                    body.password = $scope.AccountsStepData.newpassword;
+                }
 
-            if ($scope.AccountsStepData.profilePicture != "") {
-                body.profilePicture = $scope.AccountsStepData.profilePicture;
-            }
+                if ($scope.AccountsStepData.profilePicture != "") {
+                    body.profilePicture = $scope.AccountsStepData.profilePicture;
+                }
 
-            if (next) {
-                AccountSettingServices.updateAdminProfile(body)
+                if (next) {
+                    AccountSettingServices.updateAdminProfile(body)
                     .then(function(res) {
-                        $scope.AccountsStepData.newpassword = "";
-                        SessionService.createAdminUser($scope.AccountsStepData);
+                        $scope.AccountsStepData.newpassword = "";  
+                        $scope.AccountsStepData.newconfirmpassword = "";                        
                         $scope.processing = false;
                     })
                     .catch(function() {});
-                $scope.AccountsStepData.repostCustomizeEmails = (($scope.AccountsStepData.repostCustomizeEmails.length > 0) ? $scope.AccountsStepData.repostCustomizeEmails : [{ "acceptance": { "title": "ACCEPTANCE  EMAIL", "subject": "Congratulations on your Submission -", "body": "Hey {NAME}!\n\nFirst of all thank you so much for submitting your track The Story of Future R&B to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.\nTo maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.\nAll the best,\n\nEdward Sanchez\nPeninsula MGMT Team\nwww.facebook.com/edwardlatropical\n", "buttonText": "Accept", "buttonBgColor": "#592e2e" }, "decline": { "title": "DECLINE  EMAIL", "subject": "Music Submission", "body": "Hey {NAME},\n\nFirst of all thank you so much for submitting your track <a href='{SONGURL}'>{SONGNAME}</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.\n\n We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.\n\nGoodluck and stay true to the art,\n\nEdward Sanchez\n Peninsula MGMT Team \nwww.facebook.com/edwardlatropical", "buttonText": "Decline", "buttonBgColor": "#592e2e" } }]);
-                $state.go("basicstep2");
-            } else {
-                return;
-            }
-            break;
-          case 3:
-            AccountSettingServices.updateAdminProfile({
-              repostCustomizeEmails: $scope.AccountsStepData.repostCustomizeEmails
-            })
-            .then(function(res) {
-              $scope.processing = false;
-            })
-            .catch(function() {});
-            $scope.AccountsStepData.premierCustomizeEmails = (($scope.AccountsStepData.premierCustomizeEmails.length > 0) ? $scope.AccountsStepData.premierCustomizeEmails : [{ "acceptance": { "title": "ACCEPTANCE  EMAIL", "subject": "Congratulations on your Submission -", "body": "Hey {NAME}!\n\nFirst of all thank you so much for submitting your track The Story of Future R&B to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.\nTo maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.\nAll the best,\n\nEdward Sanchez\nPeninsula MGMT Team\nwww.facebook.com/edwardlatropical\n", "buttonText": "Accept", "buttonBgColor": "#592e2e" }, "decline": { "title": "DECLINE  EMAIL", "subject": "Music Submission", "body": "Hey {NAME},\n\nFirst of all thank you so much for submitting your track <a href='{SONGURL}'>{SONGNAME}</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.\n\n We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.\n\nGoodluck and stay true to the art,\n\nEdward Sanchez\n Peninsula MGMT Team \nwww.facebook.com/edwardlatropical", "buttonText": "Decline", "buttonBgColor": "#592e2e" } }]);
-            SessionService.createAdminUser($scope.AccountsStepData);
-            $state.go("basicstep3");
-            break;
-          case 4:
-          AccountSettingServices.updateAdminProfile({
-                  premierCustomizeEmails: $scope.AccountsStepData.premierCustomizeEmails
-              })
-              .then(function(res) {
+                    $scope.AccountsStepData.repostCustomizeEmails = (($scope.AccountsStepData.repostCustomizeEmails.length > 0) ? $scope.AccountsStepData.repostCustomizeEmails : [{ "acceptance": { "title": "ACCEPTANCE  EMAIL", "subject": "Congratulations on your Submission -", "body": "Hey {NAME}!\n\nFirst of all thank you so much for submitting your track The Story of Future R&B to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.\nTo maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.\nAll the best,\n\nEdward Sanchez\nPeninsula MGMT Team\nwww.facebook.com/edwardlatropical\n", "buttonText": "Accept", "buttonBgColor": "#592e2e" }, "decline": { "title": "DECLINE  EMAIL", "subject": "Music Submission", "body": "Hey {NAME},\n\nFirst of all thank you so much for submitting your track <a href='{SONGURL}'>{SONGNAME}</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.\n\n We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.\n\nGoodluck and stay true to the art,\n\nEdward Sanchez\n Peninsula MGMT Team \nwww.facebook.com/edwardlatropical", "buttonText": "Decline", "buttonBgColor": "#592e2e" } }]);
+                    setTimeout(function(){
+                        SessionService.createAdminUser($scope.AccountsStepData);
+                        $state.go("basicstep2");
+                    },500);
+                } 
+                else {
+                    return;
+                }
+                break;
+            case 3:
+                AccountSettingServices.updateAdminProfile({
+                  repostCustomizeEmails: $scope.AccountsStepData.repostCustomizeEmails
+                })
+                .then(function(res) {
                   $scope.processing = false;
-              })
-              .catch(function() {});
+                })
+                .catch(function() {});
+                $scope.AccountsStepData.premierCustomizeEmails = (($scope.AccountsStepData.premierCustomizeEmails.length > 0) ? $scope.AccountsStepData.premierCustomizeEmails : [{ "acceptance": { "title": "ACCEPTANCE  EMAIL", "subject": "Congratulations on your Submission -", "body": "Hey {NAME}!\n\nFirst of all thank you so much for submitting your track The Story of Future R&B to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.\nTo maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.\nAll the best,\n\nEdward Sanchez\nPeninsula MGMT Team\nwww.facebook.com/edwardlatropical\n", "buttonText": "Accept", "buttonBgColor": "#592e2e" }, "decline": { "title": "DECLINE  EMAIL", "subject": "Music Submission", "body": "Hey {NAME},\n\nFirst of all thank you so much for submitting your track <a href='{SONGURL}'>{SONGNAME}</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.\n\n We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.\n\nGoodluck and stay true to the art,\n\nEdward Sanchez\n Peninsula MGMT Team \nwww.facebook.com/edwardlatropical", "buttonText": "Decline", "buttonBgColor": "#592e2e" } }]);
+                SessionService.createAdminUser($scope.AccountsStepData);
+                $state.go("basicstep3");
+                break;
+            case 4:
+                AccountSettingServices.updateAdminProfile({
+                    premierCustomizeEmails: $scope.AccountsStepData.premierCustomizeEmails
+                })
+                .then(function(res) {
+                    $scope.processing = false;
+                })
+                .catch(function() {});
 
-          SessionService.createAdminUser($scope.AccountsStepData);
-          $state.go("basicstep4");
-          break;
-          case 5:
-            AccountSettingServices.updateAdminProfile({
+                SessionService.createAdminUser($scope.AccountsStepData);
+                $state.go("basicstep4");
+                break;
+            case 5:
+                AccountSettingServices.updateAdminProfile({
                     notificationSettings: $scope.AccountsStepData.notificationSettings
                 })
                 .then(function(res) {
                     $scope.processing = false;
                 })
                 .catch(function() {});
-            $scope.errorverification = false;
-            SessionService.createAdminUser($scope.AccountsStepData);
-            if ($scope.AccountsStepData.paypal == undefined) {
-                $scope.AccountsStepData.paypal = {};
-                $scope.AccountsStepData.paypal.varify = false;
-                $scope.AccountsStepData.paypal.processchannel = false;
+                $scope.errorverification = false;
+                SessionService.createAdminUser($scope.AccountsStepData);
+                if ($scope.AccountsStepData.paypal == undefined) {
+                    $scope.AccountsStepData.paypal = {};
+                    $scope.AccountsStepData.paypal.varify = false;
+                    $scope.AccountsStepData.paypal.processchannel = false;
+                }
+                SessionService.createAdminUser($scope.AccountsStepData);
+                $state.go("basicstep5");
+                break;
             }
-            SessionService.createAdminUser($scope.AccountsStepData);
-            $state.go("basicstep5");
-            break;
-          }
-      }
+        }
 
 
         if (type == "channel") {
             switch (step) {
                 case 1:
+                  $http.get("/connect/logout?return_to=https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https://localhost:1443/callback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_5fead");
+                  //https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https%3A%2F%2Flocalhost%3A1443%2Fcallback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_4a6f8
                     $state.go("channelstep1");
                     break;
                 case 2:
@@ -291,23 +315,25 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                     break;
                 case 3:
                     var next = true;
-                    if ($scope.AccountsStepData.price == "" || $scope.AccountsStepData.price == undefined)
+                    if ($scope.AccountsStepData.price == "" || $scope.AccountsStepData.price == undefined){
                         next = false;
+                        $.Zebra_Dialog('Error: Enter Price');
+                    }
 
                     if (next) {
                         AccountSettingServices.updatePaidRepost({
-                                userID: $scope.AccountsStepData.submissionData.userID,
-                                price: $scope.AccountsStepData.price,
-                                description: $scope.AccountsStepData.description,
-                                groups: [],
-                                submissionUrl: $scope.AccountsStepData.submissionData.submissionUrl,
-                                premierUrl: $scope.AccountsStepData.submissionData.premierUrl
-                            })
-                            .then(function(res) {
-                                SessionService.createAdminUser($scope.AccountsStepData);
-                                $state.go("channelstep3");
-                            })
-                            .catch(function() {});
+                          userID: $scope.AccountsStepData.submissionData.userID,
+                          price: $scope.AccountsStepData.price,
+                          description: $scope.AccountsStepData.description,
+                          groups: $scope.AccountsStepData.submissionData.groups ? $scope.AccountsStepData.submissionData.groups:[],
+                          submissionUrl: $scope.AccountsStepData.submissionData.submissionUrl,
+                          premierUrl: $scope.AccountsStepData.submissionData.premierUrl
+                        })
+                        .then(function(res) {
+                            SessionService.createAdminUser($scope.AccountsStepData);
+                            $state.go("channelstep3");
+                        })
+                        .catch(function() {});
                     } else {
                         return;
                     }
@@ -362,6 +388,20 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                     $state.go("accounts");
                     break;
             }
+        }
+    }
+
+    $scope.addGroup = function(val){
+        $scope.group="";
+        $("#group").val('');
+        if($scope.AccountsStepData.submissionData.groups!=undefined && $scope.AccountsStepData.submissionData.groups.indexOf(val)==-1){
+            $scope.AccountsStepData.submissionData.groups.push(val);            
+        }
+    }
+
+    $scope.removeGroup = function(index){
+        if($scope.AccountsStepData.submissionData.groups.length >0 ){
+            $scope.AccountsStepData.submissionData.groups.splice(index,1);
         }
     }
 
@@ -454,38 +494,51 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
             })
             .then(function(res) {
                 var scInfo = {};
-                scInfo.userID = res.data.user._id;
-                scInfo.groups = [];
-                scInfo.description = "";
-                scInfo.price = 1;
-                $scope.AccountsStepData.submissionData = res.data.user.soundcloud;
-                $scope.AccountsStepData.submissionData.userID = res.data.user._id;
-                var url = 'https://artistsunlimited.com/custom/' + res.data.user.soundcloud.username + '/submit';
-                var premierurl = 'https://artistsunlimited.com/custom/' + res.data.user.soundcloud.username + '/premiere';
-                AccountSettingServices.checkUsercount({ "url": url })
-                    .then(function(result) {
-                        if (result.data) {
-                            url = 'https://artistsunlimited.com/custom/' + res.data.user.soundcloud.username + '/submit' + result.data;
-                            premierurl = 'https://artistsunlimited.com/custom/' + res.data.user.soundcloud.username + '/premiere' + result.data;
-                            $scope.AccountsStepData.submissionData.submissionUrl = url;
-                            $scope.AccountsStepData.submissionData.premierUrl = premierurl;
-                        } else {
-                            $scope.AccountsStepData.submissionData.submissionUrl = url;
-                            $scope.AccountsStepData.submissionData.premierUrl = premierurl;
-                        }
+                console.log(res);
 
-                        scInfo.submissionUrl = url;
-                        scInfo.premierUrl = premierurl;
-                        $http.post('/api/database/updateUserAccount', {
-                            soundcloudInfo: scInfo,
-                        }).then(function(user) {
-                            user.data.paidRepost.reverse();
-                            console.log(user.data.paidRepost);
-                            $scope.processing = false;
-                        });
-                        SessionService.createAdminUser($scope.AccountsStepData);
-                    })
-                    .catch(function() {});
+                scInfo.userID = res.data.user._id;
+                AccountSettingServices.checkUsercount({ "userID": scInfo.userID,'action':"id"})
+                  .then(function(result) {
+                  if (!result.data) {
+                    scInfo.groups = [];
+                    scInfo.description = "";
+                    scInfo.price = 1;
+                    $scope.AccountsStepData.submissionData = res.data.user.soundcloud;
+                    $scope.AccountsStepData.submissionData.userID = res.data.user._id;
+                    var url = 'https://artistsunlimited.com/custom/' + res.data.user.soundcloud.username + '/submit';
+                    var premierurl = 'https://artistsunlimited.com/custom/' + res.data.user.soundcloud.username + '/premiere';
+                    AccountSettingServices.checkUsercount({ "url": url ,'action':"url"})
+                        .then(function(result) {
+                            if (result.data) {
+                                url = 'https://artistsunlimited.com/custom/' + res.data.user.soundcloud.username + '/submit' + result.data;
+                                premierurl = 'https://artistsunlimited.com/custom/' + res.data.user.soundcloud.username + '/premiere' + result.data;
+                                $scope.AccountsStepData.submissionData.submissionUrl = url;
+                                $scope.AccountsStepData.submissionData.premierUrl = premierurl;
+                            } else {
+                                $scope.AccountsStepData.submissionData.submissionUrl = url;
+                                $scope.AccountsStepData.submissionData.premierUrl = premierurl;
+                            }
+
+                            scInfo.submissionUrl = url;
+                            scInfo.premierUrl = premierurl;
+
+                            $http.post('/api/database/updateUserAccount', {
+                                soundcloudInfo: scInfo,
+                            }).then(function(user) {
+                                user.data.paidRepost.reverse();
+                                console.log(user.data.paidRepost);
+                                $scope.processing = false;
+                            });
+                            SessionService.createAdminUser($scope.AccountsStepData);
+                        })
+                        .catch(function() {});
+                  }
+                  else{
+                      $.Zebra_Dialog('Error: This user already exists');
+                      $scope.processing = false;
+                      window.reload();
+                  }
+                });
             })
             .then(null, function(err) {
                 $.Zebra_Dialog('Error: Could not log in');
@@ -521,7 +574,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     }
 
     $scope.sendTrailAmount = function() {
-        var amountEmail = $scope.AccountsStepData.paypal.email;
+        var amountEmail = $scope.AccountsStepData.paypal_email;
         $scope.processing = true;
         $scope.errorverification = false;
         if ($scope.isValidEmailAddress(amountEmail)) {
