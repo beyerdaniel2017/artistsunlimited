@@ -40,13 +40,14 @@
   					<!--page-contant Start-->
   					<div class="scheduler-tabs">
   						<!-- Nav tabs :Start-->
-  						<ul class="nav nav-tabs" role="tablist">
+              <a ui-sref="reForReLists" href="javascript:void(0)" class="pull-right" style="margin-right:20px; margin-top:20px">X</a>
+  						<!-- <ul class="nav nav-tabs" role="tablist">
   							<li role="presentation"><a aria-controls="myschedule" ng-click='backToLists()'>
   								New Trade</a>
   							</li>
   							<li role="presentation"><a  aria-controls="organizeschedule" role="tab"> Incomplete Trade</a></li>
   							<li role="presentation"><a aria-controls="managereposts" role="tab"> Manage Trade</a></li>
-  						</ul>
+  						</ul> --> 
   						<!-- Nav tabs :End-->
   						<!-- Tab panes :: Start-->
   						<div class="tab-content">
@@ -77,6 +78,7 @@
   										</div>
   									</div>
   								</div>
+                  </div>
   								<!-- p1 calendar -->
   								<div ng-show="activeUser._id==trade.p1.user._id">
   									<div id="scheduler-container" ng-show="itemview == 'calender'">
