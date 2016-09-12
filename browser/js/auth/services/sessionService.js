@@ -30,7 +30,7 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		return $window.localStorage.getItem('addActionsfoAccountIndex');
 	}
 
-	function getUser(param) {
+	function getUser() {
 		try {
 			var user = JSON.parse($window.localStorage.getItem('user'));
 			if (user) {
