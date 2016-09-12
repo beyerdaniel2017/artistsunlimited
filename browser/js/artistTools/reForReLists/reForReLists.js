@@ -587,6 +587,10 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
     }
    
   }
+  $scope.closeModal = function()
+  {
+    $scope.showOverlay = false;
+  }
   $scope.changeURL = function() {
     if ($scope.makeEvent.url) {
       $scope.processing = true;
