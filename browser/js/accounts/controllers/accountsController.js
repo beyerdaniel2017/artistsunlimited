@@ -7,9 +7,11 @@ app.config(function($stateProvider) {
 });
 
 app.controller('accountsController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$sce,accountService) {
+     $scope.isLoggedIn = SessionService.getUser() ? true : false;
     if (!SessionService.getUser()) {
-  	$state.go('admin');
+  	  $state.go('admin');
     }
+    SessionService.removeAccountusers();
      $scope.paidRepostAccounts = [];
     $scope.user = SessionService.getUser();
     $scope.user.paidRepost.groups = $scope.user.paidRepost.groups ? $scope.user.paidRepost.groups : [];
@@ -40,12 +42,17 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
     });
 	};
 
+  $scope.addAccounts = function(actions,index){
+    SessionService.addActionsfoAccount(actions,index);
+    $state.go("channelstep1");
+  }
+
   $scope.deletePaidRepost = function(index) {
     $.Zebra_Dialog('Do you really want to delete this account?', {
       'buttons': [{
         caption: 'Yes',
         callback: function() {
-          var postRepost = $scope.user.paidRepost[index].userID;
+          var postRepost = $scope.paidRepostAccounts[index].userID;
           accountService.deleteUserAccount(postRepost)
           .then(function(res){
             $scope.paidRepostAccounts.splice(index, 1);
@@ -114,6 +121,18 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
     $http.get('/api/submissions/getPaidRepostAccounts').then(function(res) {
       $scope.paidRepostAccounts = res.data;
     });
+  }
+
+  $scope.editprice = function(index, userdata) {
+      $scope.processing = true;
+      $scope.user.paidRepost[index].price = userdata.price;
+      $http.post('/api/database/updateGroup', {
+        paidRepost: $scope.user.paidRepost,
+      }).then(function(res) {
+        $scope.processing = false;
+        SessionService.create(res.data);
+        $scope.user = SessionService.getUser();
+      });
   }
 
   $scope.getPaidRepostAccounts();

@@ -13,8 +13,10 @@ app.controller('PremierController', ['$rootScope',
   '$location',
   '$window',
   'PremierService',
-  function($rootScope, $state, $scope, $http, $location, $window, PremierService) {
-
+  'customizeService',
+  function($rootScope, $state, $scope, $http, $location, $window, PremierService, customizeService) {
+    $scope.customizeSettings = null;
+    $scope.userID = $location.search().id;
     $scope.genreArray = [
       'Alternative Rock',
       'Ambient',
@@ -54,6 +56,7 @@ app.controller('PremierController', ['$rootScope',
       for (var prop in $scope.premierObj) {
         data.append(prop, $scope.premierObj[prop]);
       }
+      data.append("userID", $scope.userID);
       PremierService
         .savePremier(data)
         .then(receiveResponse)
@@ -90,5 +93,27 @@ app.controller('PremierController', ['$rootScope',
         // };
       }
     };
+
+    $scope.getUserID = function() {
+      if($scope.userID == undefined){
+        $http.get('/api/users/getUserID')
+        .then(function(res) {
+          $scope.userID = res.data;
+        });
+      }
+    }
+
+    $scope.getCustomizeSettings=function()
+    {
+      var uid = $location.search().id;
+      if(uid != undefined){
+        customizeService.getCustomPageSettings(uid, 'premiere')
+        .then(function(response){      
+          $scope.customizeSettings = response;
+        });  
+      }  
+    }
+    $scope.getUserID();
+    $scope.getCustomizeSettings();
   }
 ]);

@@ -176,6 +176,9 @@ body {
 .bg-white {
   background: #fff; }
 
+.bgwhite {
+  background: #fff; }
+
 .bold {
   font-weight: bold; }
 
@@ -712,7 +715,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   border-top-left-radius: 10px; }
 
 .acceptance-textareas {
-  min-height: 100px; }
+  height: 140px; }
 
 .acceptance-signatur {
   border: 1px solid #C9C9C9;
@@ -2138,6 +2141,10 @@ input[type=range]:focus::-ms-fill-upper {
 
 /*Search Box scss--END*/
 @media screen and (min-device-width: 320px) and (max-device-width: 768px) {
+  .pr-paddin-right-0 {
+    padding-right: 15px !important; }
+  .left-side-profile {
+    margin: 20px auto; }
   .accpect, .decline {
     width: 100%; }
   .price-input {
@@ -2157,7 +2164,7 @@ input[type=range]:focus::-ms-fill-upper {
     width: 96%;
     position: relative !important; }
   .pr-padding-left-0 {
-    padding-left: auto; }
+    padding-left: 15px !important; }
   .quick-trade {
     width: 100%;
     margin: 20px auto;
@@ -3246,6 +3253,24 @@ label:hover:before {
   padding: 35px; }
 
 /*Login Admin css ::end*/
+/*reforRelist css::start*/
+.tropical:active, .tropical:focus, .tropical:hover, .tropical:visited {
+  background-color: #EEE; }
+
+.tropical.active {
+  background: #EEE; }
+
+.refor-chate-box {
+  background-color: #FFF;
+  min-height: 47px;
+  padding: 11px 10px;
+  width: 99%;
+  border-top: 1px solid #E6E6E6;
+  margin: 0px auto;
+  position: absolute;
+  bottom: 0; }
+
+/*reforRelist css::end*/
 /*search organize css ::start*/
 .pr-padding-left-0 {
   padding-left: 0; }
@@ -3373,10 +3398,11 @@ label:hover:before {
 /*Calendarview :start*/
 .left-side-profile {
   position: fixed;
-  width: 16%;
-  z-index: 999;
-  float: left;
-  top: 24%; }
+  width: 16.1%;
+  z-index: 1;
+  bottom: 0;
+  height: 81%;
+  background-color: white; }
 
 .left-side-profile .tropical {
   padding: 30px 0; }
@@ -3559,7 +3585,7 @@ label:hover:before {
   .available-popup-box {
     margin: 80px auto; }
   .left-side-profile {
-    width: 96% !important;
+    width: 100% !important;
     position: relative !important; }
   .payed-reposts li {
     text-align: center; }
@@ -3632,6 +3658,8 @@ label:hover:before {
 	}*/ }
 
 @media screen and (max-width: 480px) {
+  .pr-paddin-right-0 {
+    padding-right: 15px; }
   .img-btn {
     margin-left: 174px; }
   .organize-text {
@@ -3760,6 +3788,10 @@ label:hover:before {
     margin: 20px auto; } }
 
 @media screen and (max-width: 320px) {
+  .pr-paddin-right-0 {
+    padding-right: 15px; }
+  .left-side-profile {
+    margin: 20px auto; }
   .accpect, .decline {
     width: 100%; }
   .price-input {

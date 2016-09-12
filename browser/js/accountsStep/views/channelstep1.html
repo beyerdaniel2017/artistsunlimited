@@ -18,8 +18,8 @@
                         <!-- Nav tabs :Start-->
                         <div class="text-center" style="margin-top:30px;margin-bottom:30px;">SET UP YOUR ADMIN ACCOUNT</div>
                         <ul class="nav nav-tabs" role="tablist">
-                            <li class="active">
-                                <a href="/admin/basic/step1" role="tab" data-toggle="tab">1  Basic Info</a>
+                            <li >
+                                <a>1  Basic Info</a>                                
                             </li>
                             <li class="active">
                                 <a href="/admin/channel/step1" role="tab" data-toggle="tab">2  Set up your first Channel</a>
@@ -49,6 +49,7 @@
                                         <a href="/admin/channel/step5" role="tab" data-toggle="tab">5  Repost Preferences</a>
                                     </li>
                                 </ul>
+                                
                                 <div class="tab-content">
                                     <!-- MY SCHEDULE : Start-->
                                     <div role="tabpanel" class="tab-pane fade in active" id="tab1">
@@ -63,7 +64,7 @@
                                                     <div class="add-account text-center container-60">
                                                         <div class="container-60">
                                                             <div class="text-center">
-                                                                <button class="btn btn-default btn-enter cl-sound-btn" ng-click="soundcloudLogin()">Connect with SoundCloud</button>
+                                                                <button class="btn btn-default btn-enter cl-sound-btn" ng-click="soundcloudLogin()" ng-disabled="AccountsStepData.submissionData.username">Connect with SoundCloud</button>
                                                             </div>
                                                         </div>
                                                         <div class="slidethamb-box">
@@ -83,8 +84,8 @@
                                                             <p>We highly recomend creating a unique submission page for each of your channels, allowing you to have more reliable information on the perforance of each channel in your network, rather than your network as a whole.</p>
                                                         </div>
                                                         <div class="container-60">
-                                                            <div ng-show="AccountsStepData.submissionData.submitURL">
-                                                                <input class="form-control  margin-20" type="text" disabled="true" ng-model="AccountsStepData.submissionData.submitURL">
+                                                            <div ng-show="AccountsStepData.submissionData.submissionUrl">
+                                                                <input class="form-control  margin-20" type="text" disabled="true" ng-model="AccountsStepData.submissionData.submissionUrl">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -94,7 +95,7 @@
                                             <div class="row">
                                                 <div class="col-md-12 text-center">
                                                     <div class="buttons margin-40">
-                                                        <input type="button" name="back" value="Back" ng-click="nextStep(3,AccountsStepData,'basic')" class="btn active border-black-btn">
+                                                        <input type="button" name="back" ng-disabled="AccountsStepData.formActions=='Add' || AccountsStepData.formActions=='Edit'" value="Back" ng-click="nextStep(3,AccountsStepData,'basic')" class="btn active border-black-btn">
                                                         <input type="button" name="back" value="Next" ng-click="nextStep(2,AccountsStepData,'channel')" class="btn border-orange-btn">
                                                     </div>
                                                 </div>

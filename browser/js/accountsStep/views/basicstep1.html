@@ -31,15 +31,21 @@
                             <!-- MY SCHEDULE : Start-->
                             <div role="tabpanel" class="tab-pane fade in active" id="step1">
                                 <ul class="nav nav-tabs" role="tablist">
-                                    <li class="active">
+                                    <li class="active" style="width:20%">
                                         <a href="/admin/basic/step1" role="tab" data-toggle="tab">1  Set General Info</a>
                                     </li>
-                                    <li>
-                                        <a href="/admin/basic/step2" role="tab" data-toggle="tab">2  Customize E-mails</a>
+                                    <li style="width:20%">
+                                        <a href="/admin/basic/step2" role="tab" data-toggle="tab">2  Repost Submissions Customize E-mails</a>
                                     </li>
-                                    <li>
-                                        <a href="/admin/basic/step3" role="tab" data-toggle="tab">3  PayPal Info</a>
+                                    <li style="width:20%">
+                                        <a href="/admin/basic/step3" role="tab" data-toggle="tab">3  Premier Submissions Customize E-mails</a>
                                     </li>
+                                    <li style="width:20%">
+                                      <a href="/admin/basic/step4" role="tab" data-toggle="tab">4 Notification Settings</a>
+                                    </li>
+                                    <li style="width:20%">
+                                      <a href="/admin/basic/step5" role="tab" data-toggle="tab">5  PayPal Info</a>
+                                    </li> 
                                 </ul>
                                 <br />
                                 <div class="container-90">
@@ -49,6 +55,7 @@
                                         </div>
                                     </div>
                                     <!--row end-->
+                                
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="container-60 center">
@@ -58,18 +65,19 @@
                                                             <input class="form-control  margin-20" type="text" ng-model="AccountsStepData.email" placeholder="Email address">
                                                         </div>
                                                         <div class="form-group" style="">
-                                                            <input class="form-control margin-40" type="text" ng-model="AccountsStepData.newpassword" placeholder="Password">
+                                                            <input class="form-control margin-40" type="password" ng-model="AccountsStepData.newpassword" placeholder="Password">
                                                         </div>
                                                         <div class="form-group" style="">
-                                                            <input class="form-control" type="text" ng-model="AccountsStepData.newconfirmpassword" placeholder="Confirm Password">
+                                                            <input class="form-control" type="password" ng-model="AccountsStepData.newconfirmpassword" placeholder="Confirm Password">
                                                         </div>
                                                     </div>                                            
                                                     <div class="col-md-6">                                       
                                                       <br />
-                                                      <div class="text-right">
+                                                      <div class="text-right" style="margin-left:40px">
                                                           <img id="profilePicture" ng-if="!AccountsStepData.profilePictureData" src="{{AccountsStepData.profilePicture}}" class="img-responsive" alt="{{AccountsStepData.name}}" style="height: 240px;width:100%;">
                                                           <img id="profilePicture" class="img-responsive" ng-if="AccountsStepData.profilePictureData" src="{{AccountsStepData.profilePictureData}}" alt="{{AccountsStepData.name}}" style="height: 240px;width:100%;">
-                                                          <input type="file" id="uploadImage" name="uploadImage" value="Browse Image" style=" bottom: 20px;position: absolute;right: 90px;width:90px;">
+                                                          <div><input type="file" id="uploadImage" file-input="AccountsStepData.profilePicture" name="uploadImage" value="Browse Image" style=" bottom: 60px;position: relative;width:90px;margin:0 auto;">
+                                                          </div>
                                                       </div>
                                                       <div class="clearfix"></div>
                                                     </div>
@@ -83,7 +91,7 @@
                                     <br>
                                     <div class="row">
                                         <div class="col-md-12 text-center">
-                                            <div class="buttons">
+                                            <div class="buttons margin-40">
                                               <input type="button" name="BACK" value="BACK" disabled="true" class="active border-black-btn">
                                               <input type="button" name="NEXT" value="NEXT" ng-click="nextStep(2,AccountsStepData,'basic')" class="border-orange-btn">
                                             </div>
@@ -108,19 +116,22 @@
     </div>
 </div>
 <script type="text/javascript">
-function readURL(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
+// function readURL(input) {
+//     if (input.files && input.files[0]) {
+//         var reader = new FileReader();
 
-        reader.onload = function(e) {
-            $('#profilePicture').attr('src', e.target.result);
-        }
+//         reader.onload = function(e) {
+//             $('#profilePicture').attr('src', e.target.result);
+//         }
 
-        reader.readAsDataURL(input.files[0]);
-    }
-}
+//         reader.readAsDataURL(input.files[0]);
+//     }
+// }
 
 $("#uploadImage").change(function() {
-    readURL(this);
+    //readURL(this);
+    setTimeout(function(){
+      angular.element('#uploadImage').scope().updateLOGOIMAGE(1);  
+    },500);  
 });
 </script>

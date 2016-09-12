@@ -16,8 +16,30 @@ router.post('/addCustomSubmission', function(req, res, next) {
     });
 });
 
-router.get('/getCustomSubmission/:userID', function(req, res, next) {
+router.post('/addCustomSubmissions', function(req, res, next) {
+
+  CustomSubmission.update({userID:req.body.userID,type:req.body.type},req.body, {
+      new: true,
+      upsert: true
+    })
+    .exec()
+    .then(function(cSubmission) {
+      res.send(cSubmission)
+    });
+});
+
+router.get('/getCustomSubmission/:userID/:type', function(req, res, next) {
   CustomSubmission.findOne({
+      userID: req.params.userID,
+      type: req.params.type
+    })
+    .exec()
+    .then(function(cSubmission) {
+      res.send(cSubmission)
+    });
+});
+router.get('/getCustomSubmissionAll/:userID', function(req, res, next) {
+  CustomSubmission.find({
       userID: req.params.userID
     })
     .exec()

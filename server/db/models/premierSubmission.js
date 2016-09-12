@@ -3,6 +3,10 @@ var crypto = require('crypto');
 var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
+    userID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
     s3URL: {
         type: String
     },

@@ -5,10 +5,27 @@ app.factory('AccountSettingServices', ['$http', function($http) {
         return $http.post('/api/users/updateAdminProfile', data);
     }
 
+    function updateUserAvailableSlot(data) {
+
+        return $http.put('/api/users/updateuserRecord', data);
+    }
+
+    function updatePaidRepost(data) {
+        return $http.put('/api/users/updatePaidRepost', data);
+    }
+
     function getSaltPassword(data) {
 
         return $http.get('/api/users/getSaltPassword/pswd=' + data.password);
 
+    }
+
+    function addCustomize(data) {
+        return $http.post('/api/customsubmissions/addCustomSubmissions', data);
+    }
+    
+    function checkUsercount(data) {
+        return $http.post('/api/users/checkUsercount',data);
     }
 
     function uploadFile(data) {
@@ -29,7 +46,11 @@ app.factory('AccountSettingServices', ['$http', function($http) {
     return {
         getSaltPassword: getSaltPassword,
         updateAdminProfile: updateAdminProfile,
-        uploadFile: uploadFile
+        uploadFile: uploadFile,
+        checkUsercount:checkUsercount,
+        addCustomize:addCustomize,
+        updateUserAvailableSlot:updateUserAvailableSlot,
+        updatePaidRepost:updatePaidRepost
 
     };
 }]);

@@ -61,13 +61,34 @@ var schema = new mongoose.Schema({
         salt: String
     },
     linkedAccounts: [],
-    paidRepost: [],
-    customEmailButtons: [],
+    paidRepost: [{
+        userID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        price: String,
+        description: String,
+        groups: [],
+        submissionUrl: String,
+        premierUrl: String,
+        createdOn: Date
+    }],
+    submissionsCustomEmailButtons: [],
+    premierCustomEmailButtons: [],
     profilePicture: {
         type: String
     },
-    availableSlots: {},
-    repostSettings: {},
+    repostCustomizeEmails: [],
+    premierCustomizeEmails: [],
+    paypal_email: String,
+    availableSlots: {
+        type: Object,
+        default: {}
+    },
+    repostSettings: {
+        type: Object,
+        default: {}
+    },
     notificationSettings: {
         facebookMessenger: {
             tradeRequest: Boolean,

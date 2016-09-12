@@ -7,6 +7,27 @@ app.factory('SessionService', function($cookies, $http, $window) {
 	function deleteUser() {
 		$window.localStorage.removeItem('user');
 		$window.localStorage.removeItem('AdminUser');
+		$window.localStorage.removeItem('addActionsfoAccount');
+		$window.localStorage.removeItem('addActionsfoAccountIndex');
+	}
+
+	function removeAccountusers(){
+		$window.localStorage.removeItem('addActionsfoAccount');
+		$window.localStorage.removeItem('addActionsfoAccountIndex');
+		$window.localStorage.removeItem('AdminUser');	
+	}
+
+	function addActionsfoAccount(actions,index) {
+		$window.localStorage.setItem('addActionsfoAccount',actions);
+		$window.localStorage.setItem('addActionsfoAccountIndex',index);
+	}
+
+	function getActionsfoAccount() {
+		return $window.localStorage.getItem('addActionsfoAccount');
+	}
+
+	function getActionsfoAccountIndex() {
+		return $window.localStorage.getItem('addActionsfoAccountIndex');
 	}
 
 	function getUser() {
@@ -47,6 +68,10 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		getUser: getUser,
 		refreshUser: refreshUser,
 		createAdminUser: createAdminUser,
-		getAdminUser: getAdminUser
+		getAdminUser: getAdminUser,
+		removeAccountusers:removeAccountusers,
+		addActionsfoAccount:addActionsfoAccount,
+		getActionsfoAccount:getActionsfoAccount,
+		getActionsfoAccountIndex:getActionsfoAccountIndex
 	};
 });

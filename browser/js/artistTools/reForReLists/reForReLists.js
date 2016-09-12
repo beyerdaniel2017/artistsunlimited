@@ -21,6 +21,38 @@ app.config(function($stateProvider) {
             return [];
           }
         },
+        favorites: function($http, SessionService) {
+          var user = SessionService.getUser();
+          if (user) {
+            return $http.get('/api/trades/doneWithUser/' + user._id)
+              .then(function(res) {
+                var trades = res.data;
+                var favs = trades.map(function(trade) {
+                  return ((trade.p1.user._id == user._id) ? trade.p2.user : trade.p1.user)
+                });
+                // favs = favs.filter(function(favUser) {
+                //     var ok = true;
+                //     currentTrades.forEach(function(trade) {
+                //       if (trade.p1.user._id == favUser._id || trade.p2.user._id == favUser._id) {
+                //         ok = false;
+                //       }
+                //     })
+                //     return ok;
+                //   })
+                var favsNoDups = [];
+                favs.forEach(function(favUser) {
+                  var ok = true;
+                  favsNoDups.forEach(function(noDupUser) {
+                    if (favUser._id == noDupUser._id) ok = false;
+                  })
+                  if (ok) favsNoDups.push(favUser);
+                })
+                return favsNoDups;
+              }).then(null, console.log);
+          } else {
+            return [];
+          }
+        },
         openTrades: function($http, SessionService) {
           var user = SessionService.getUser();
           if (user) {
@@ -36,21 +68,22 @@ app.config(function($stateProvider) {
                 }
               })
               .then(function(res) {
-                console.log('search')
-                console.log(res.data)
-                return res.data;
-              }).then(null, console.log);
-          } else {
-            return [];
-          }
-        },
-        favorites: function($http, SessionService) {
-          var user = SessionService.getUser();
-          if (user) {
-            return $http.post('/api/users/withIDs', user.tradePartners)
-              .then(function(res) {
-                console.log(res.data);
-                return res.data;
+                var users = res.data;
+                // users = users.filter(function(openUser) {
+                //   var ok = true;
+                //   currentTrades.forEach(function(trade) {
+                //     if (trade.p1.user._id == openUser._id || trade.p2.user._id == openUser._id) {
+                //       ok = false;
+                //     }
+                //   })
+                //   favorites.forEach(function(favUser) {
+                //     if (favUser._id == user._id) {
+                //       ok = false;
+                //     }
+                //   })
+                //   return ok;
+                // })
+                return users;
               }).then(null, console.log);
           } else {
             return [];
@@ -84,7 +117,6 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
 
   $scope.minManageTradefollowers = Math.pow(1.1, $scope.sliderManageMin);
   $scope.maxManageTradefollowers = Math.pow(1.1, $scope.sliderManageMax);
-  $scope.itemView = "inbox";
   $scope.$watch(function() {
     return $scope.sliderSearchMin
   }, function(newVal, oldVal) {
@@ -113,6 +145,21 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
     skip: 0,
     limit: 12
   }
+
+  $scope.dayIncr = 0;
+  $scope.incrDay = function() {
+    if ($scope.dayIncr < 21) $scope.dayIncr++;
+  }
+  $scope.decrDay = function() {
+    if ($scope.dayIncr > 0) $scope.dayIncr--;
+  }
+  $scope.currentDate = new Date();
+  var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+  $scope.itemview = "calendar";
+  // $scope.setView = function(view) {
+  //   $scope.itemview = view;
+  // };
 
   $scope.searchByFollowers = function() {
     $scope.searchURL = "";
@@ -418,4 +465,5 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   $scope.checkNotification();
   $scope.sortResult($scope.sortby);
   $scope.loadMore();
+  $scope.setView("inbox");
 });

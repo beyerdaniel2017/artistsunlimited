@@ -11,9 +11,7 @@ var schema = new mongoose.Schema({
   },
   logo:{
     images:String,
-    style:{
       align:String
-    }
   },
   heading: {
     text: String,
@@ -51,6 +49,8 @@ var schema = new mongoose.Schema({
   },
   backgroundImage: {
     type: String
-  }
+  },
+  type:String
+
 });
 mongoose.model('CustomSubmission', schema);

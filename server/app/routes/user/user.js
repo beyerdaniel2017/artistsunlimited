@@ -9,6 +9,7 @@ var scWrapper = require("../../SCWrapper/SCWrapper.js");
 var Busboy = require('busboy');
 var AWS = require('aws-sdk');
 var awsConfig = require('./../../../env').AWS;
+var rootURL = require('./../../../env').ROOTURL;
 
 scWrapper.init({
   id: scConfig.clientID,
@@ -18,9 +19,9 @@ scWrapper.init({
 module.exports = router;
 
 router.get('/isUserAuthenticate', function(req, res, next) {
-  if (req.user && req.user._id != undefined) {
+  if(req.user && req.user._id != undefined){
     res.send(req.user);
-  } else {
+  }else{
     res.send(null);
   }
 });
@@ -51,6 +52,24 @@ router.get('/getUserID', function(req, res, next) {
     .then(function(user) {
       res.send(user._id);
     })
+});
+
+router.get('/getUserByURL/:username/:page', function(req, res, next) {
+  var query = {};
+  var url = rootURL+"/custom/"+req.params.username+"/"+req.params.page;
+  if(req.params.page.indexOf('submit') != -1){
+    query = {'paidRepost.submissionUrl': url};
+  }
+  else{
+    query = {'paidRepost.premierUrl': url};
+  } 
+  console.log('query',query);
+  User.findOne(query)
+  .exec()
+  .then(function(user) {
+    res.send(user._id);
+  })
+  .then(null, next);
 });
 
 router.post('/bySCURL', function(req, res, next) {
@@ -180,8 +199,8 @@ router.post('/bySCURL', function(req, res, next) {
 /*profile updateion*/
 router.post('/profilePicUpdate', function(req, res, next) {
   parseMultiPart()
-    .then(uploadToBucket)
-    .catch(errorHandler);
+  .then(uploadToBucket)
+  .catch(errorHandler);
   var body = {
     fields: {},
     file: {}
@@ -231,7 +250,7 @@ router.post('/profilePicUpdate', function(req, res, next) {
     });
   }
 
-  function uploadToBucket() {
+  function uploadToBucket() {  
     return new Promise(function(resolve, reject) {
       AWS.config.update({
         accessKeyId: awsConfig.accessKeyId,
@@ -251,15 +270,15 @@ router.post('/profilePicUpdate', function(req, res, next) {
         if (err) {
           reject(err);
           res.send({
-            success: false,
-            data: data
+            success:false,
+            data:data
           });
-        } else {
-
+        } else {  
+               
           resolve(data);
           res.send({
-            success: true,
-            data: data
+           success:true,
+           data:data
           });
         }
       });
@@ -279,10 +298,17 @@ router.put('/updateAdmin', function(req, res, next) {
     }).then(null, next);
 })
 
+
+router.put('/updateuserRecord', function(req, res, next) {
+  User.findByIdAndUpdate(req.body._id, req.body).exec()
+    .then(function(user) {
+      res.send(user);
+    }).then(null, next);
+})
 /*Admin profile update start*/
 router.post('/updateAdminProfile', function(req, res, next) {
   var body = req.body;
-  var updateObj = {};
+  var updateObj={};
   if (body.pictureUrl) {
     updateObj.profilePicture = body.pictureUrl
   }
@@ -293,24 +319,53 @@ router.post('/updateAdminProfile', function(req, res, next) {
     updateObj.password = User.encryptPassword(body.password, updateObj.salt);
   } else {
     updateObj = body;
-  }
+  } 
 
-  console.log(updateObj);
-
-  User.findOneAndUpdate({
-      '_id': req.user._id
-    }, {
-      $set: updateObj
-    }, {
-      new: true
-    }).exec()
-    .then(function(result) {
-      res.send(result);
-    })
-    .then(null, function(err) {
-      next(err);
-    });
+ User.findOneAndUpdate({
+    '_id': req.user._id
+  }, {
+    $set: updateObj
+  }, {
+    new: true
+  }).exec()
+  .then(function(result) {
+    res.send(result);
+  })
+  .then(null, function(err) {
+    next(err);
+  });
 });
+
+router.post('/checkUsercount', function(req, res, next) {
+  User.find({"paidRepost.submissionUrl":req.body.url}).exec()
+  .then(function(user) {
+    if(user)
+      return res.json(user.length);
+    else
+      return res.json(0);
+  })
+})
+
+/*Admin profile update start*/
+router.post('/updatePaidRepost', function(req, res, next) {
+  var body = req.body;
+  body.createdOn = new Date();
+  User.findOneAndUpdate({
+    '_id': req.user._id,
+    'paidRepost.userID': body.userID
+  }, {
+    $set: {'paidRepost.$': body}
+  }, {
+    new: true
+  }).exec()
+  .then(function(result) {
+    res.send(result);
+  })
+  .then(null, function(err) {
+    next(err);
+  });
+});
+
 
 // router.post('/syncSCEmails', function(req, res, next) {
 //   var sCount = 0;

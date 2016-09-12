@@ -26,6 +26,7 @@ router.get('/unaccepted', function(req, res, next) {
   }
   PremierSubmission
     .find(searchObj)
+  .populate('userID')
     .skip(skipcount)
     .limit(limitcount)
     .exec()
@@ -125,6 +126,7 @@ router.post('/', function(req, res, next) {
   function saveToDB(data) {
 
     var newPremierSubmission = new PremierSubmission({
+      userID: body.fields.userID,
       s3URL: data.Location,
       genre: body.fields.genre,
       email: body.fields.email,
