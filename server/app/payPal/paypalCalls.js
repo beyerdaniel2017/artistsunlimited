@@ -43,7 +43,6 @@ module.exports = {
         "description": nameString
       }]
     };
-    console.log(JSON.stringify(create_payment_json));
 
     return new Promise(function(fulfill, reject) {
       paypal.payment.create(create_payment_json, function(error, payment) {
@@ -66,51 +65,98 @@ module.exports = {
       });
     })
   },
-  // sendInvoice: function(submission, channelID) {
-  //   var index = submission.channelIDS.indexOf(channelID);
-  //   Channel.findOne({
-  //       channelID: channelID
-  //     }).exec()
-  //     .then(function(chan) {
-  //       var invoice_json = {
-  //         "merchant_info": {
-  //           "email": "kevinwzimmermann@gmail.com",
-  //           "first_name": "Kevin",
-  //           "last_name": "Zimmermann",
-  //           "business_name": "La Tropicál Distributions",
-  //           "phone": {
-  //             "country_code": "001",
-  //             "national_number": "6179906330"
-  //           },
-  //           "address": {
-  //             "line1": "4585 Ponce De Leon Blvd",
-  //             "city": "Coral Gables",
-  //             "state": "FL",
-  //             "postal_code": "33143",
-  //             "country_code": "US"
-  //           }
-  //         },
-  //         "billing_info": [{
-  //           "email": submission.email
-  //         }],
-  //         "items": [{
-  //           "name": submission.title + " repost on " + chan.displayName + ".",
-  //           "quantity": 1,
-  //           "unit_price": {
-  //             "currency": "USD",
-  //             "value": chan.price
-  //           }
-  //         }],
-  //         "note": submission.title + " repost on " + chan.displayName + ".",
-  //         "payment_term": {
-  //           "term_type": "NET_45"
-  //         },
-  //         "tax_inclusive": false,
-  //         "total_amount": {
-  //           "currency": "USD",
-  //           "value": chan.price
-  //         }
-  //       };
+  sendPayout: function(email, price, itemDescription, itemID) {
+    var sender_batch_id = Math.random().toString(36).substring(9);
+    var create_payout_json = {
+      "sender_batch_header": {
+        "sender_batch_id": sender_batch_id,
+        "email_subject": itemDescription
+      },
+      "items": [{
+        "recipient_type": "EMAIL",
+        "amount": {
+          "value": price,
+          "currency": "USD"
+        },
+        "receiver": email,
+        "note": itemDescription,
+        "sender_item_id": itemID
+      }]
+    };
+    var sync_mode = 'true';
+
+    return new Promise(function(fulfill, reject) {
+      paypal.payout.create(create_payout_json, sync_mode, function(error, payout) {
+        if (error) {
+          return reject(error);
+        } else {
+          return fulfill(payout);
+        }
+      });
+    });
+  },
+  sendRefund: function(amount, saleID) {
+      var data = {
+        "amount": {
+          "currency": "USD",
+          "total": amount.toString()
+        }
+      }
+      return new Promise(function(fulfill, reject) {
+        paypal.sale.refund(saleID, data, function(error, refund) {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(refund);
+          }
+        });
+      })
+    }
+    // sendInvoice: function(submission, channelID) {
+    //   var index = submission.channelIDS.indexOf(channelID);
+    //   Channel.findOne({
+    //       channelID: channelID
+    //     }).exec()
+    //     .then(function(chan) {
+    //       var invoice_json = {
+    //         "merchant_info": {
+    //           "email": "kevinwzimmermann@gmail.com",
+    //           "first_name": "Kevin",
+    //           "last_name": "Zimmermann",
+    //           "business_name": "La Tropicál Distributions",
+    //           "phone": {
+    //             "country_code": "001",
+    //             "national_number": "6179906330"
+    //           },
+    //           "address": {
+    //             "line1": "4585 Ponce De Leon Blvd",
+    //             "city": "Coral Gables",
+    //             "state": "FL",
+    //             "postal_code": "33143",
+    //             "country_code": "US"
+    //           }
+    //         },
+    //         "billing_info": [{
+    //           "email": submission.email
+    //         }],
+    //         "items": [{
+    //           "name": submission.title + " repost on " + chan.displayName + ".",
+    //           "quantity": 1,
+    //           "unit_price": {
+    //             "currency": "USD",
+    //             "value": chan.price
+    //           }
+    //         }],
+    //         "note": submission.title + " repost on " + chan.displayName + ".",
+    //         "payment_term": {
+    //           "term_type": "NET_45"
+    //         },
+    //         "tax_inclusive": false,
+    //         "total_amount": {
+    //           "currency": "USD",
+    //           "value": chan.price
+    //         }
+    //       };
 
   //       paypal.invoice.create(invoice_json, function(error, invoice) {
   //         if (error) {

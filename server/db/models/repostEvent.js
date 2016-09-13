@@ -48,9 +48,11 @@ var schema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  otherChannels:[],
-  timeGap:{},
-  unrepostHours:{}
+  price: Number,
+  payout: {},
+  otherChannels: [],
+  timeGap: {},
+  unrepostHours: {}
 });
 
 mongoose.model("RepostEvent", schema);

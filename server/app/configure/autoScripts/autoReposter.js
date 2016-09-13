@@ -34,6 +34,8 @@ function doRepost() {
             event.day = new Date(event.day);
             event.unrepostDate = new Date(event.unrepostDate);
             repostAndRemove(event, user, 0);
+            if (event.comment) postComment(event, user);
+            if (event.like) postLike(event, user);
           })
           .then(null, function(err) {
             console.log(err);
@@ -66,9 +68,9 @@ function repostAndRemove(event, user, repCount) {
         if (!err) {
           event.completed = true;
           event.save();
-          message.text = 'A track was reposted on ' + user.soundcloud.username;
-          putMessage(event, user, message);
           if (event.name && event.email) {
+            performStatBoosts(user, event.trackID);
+            distributeEarnings(user, event);
             sendMessage(err, event, user);
           }
         } else {
@@ -77,9 +79,13 @@ function repostAndRemove(event, user, repCount) {
           console.log(data);
           var now = new Date();
           if (now.getMinutes() >= 55) {
+            if (JSON.stringify(err).includes('too many reposts')) {
+              err = ((typeof err) == 'string' ? JSON.parse(err) : err)[0];
+              user.blockRelease = new Date(err.release_at);
+              user.save();
+            }
+            partialRefund(event);
             sendMessage(err, event, user);
-            message.text = 'There was an error reposting a track on ' + user.soundcloud.username;
-            putMessage(event, user, message);
           }
         }
       });
@@ -87,30 +93,30 @@ function repostAndRemove(event, user, repCount) {
     .then(null, function() {})
 }
 
-/*Update Message*/
-function putMessage(event, user, message) {
-  var query = {
-    $or: [{
-      'p2.user': user._id,
-      'p1.user': event.owner
-    }, {
-      'p2.user': event.owner,
-      'p1.user': user._id
-    }]
-  };
-  Trade.update(query, {
-      $addToSet: {
-        messages: message
-      }
-    })
-    .exec()
-    .then(function(data) {
-      //Success
-    })
-    .then(null, function(error) {
-      //Error
-    });
-}
+// /*Update Message*/
+// function putMessage(event, user, message) {
+//   var query = {
+//     $or: [{
+//       'p2.user': user._id,
+//       'p1.user': event.owner
+//     }, {
+//       'p2.user': event.owner,
+//       'p1.user': user._id
+//     }]
+//   };
+//   Trade.update(query, {
+//       $addToSet: {
+//         messages: message
+//       }
+//     })
+//     .exec()
+//     .then(function(data) {
+//       //Success
+//     })
+//     .then(null, function(error) {
+//       //Error
+//     });
+// }
 
 function getID(event, user) {
   return new Promise(function(resolve, reject) {
@@ -165,6 +171,7 @@ function getID(event, user) {
         });
       }
     }
+
     if (!event.trackID) {
       if (event.type == 'queue') {
         findAgain(user);
@@ -199,9 +206,51 @@ function sendMessage(err, event, user) {
   } else {
     if (event.email && event.name) {
       sendEmail(event.name, event.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + event.name + ",<br><br>We would just like to let you know the track <a href='" + event.trackURL + "'>" + event.title + "</a> has been reposted on <a href='" + user.soundcloud.permalinkURL + "'>" + user.soundcloud.username + "</a>! If you would like to do another round of reposts please resubmit your track to artistsunlimited.com/submit. We will get back to you ASAP and continue to do our best in making our submission process as quick and easy as possible.<br><br>How was this experience by the way? Feel free to email some feedback, suggestions or just positive reviews to feedback@peninsulamgmt.com.<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
-      performStatBoosts(user, event.trackID);
     }
   }
+}
+
+function postComment(event, user) {
+  scWrapper.request({
+    method: 'GET',
+    path: '/tracks/' + event.trackID,
+    qs: {
+      oauth_token: user.soundcloud.token
+    }
+  }, function(err, track) {
+    if (err) console.log(err);
+    else {
+      scWrapper.setToken(user.soundcloud.token);
+      var reqObj = {
+        method: 'POST',
+        path: '/tracks/' + event.trackID + '/comments',
+        qs: {
+          oauth_token: user.soundcloud.token,
+          'comment[body]': event.comment,
+          'comment[timestamp]': Math.floor((Math.random() * track.duration))
+        }
+      }
+      scWrapper.request(reqObj, function(err, response) {
+        if (err) console.log(err)
+        else console.log('success commenting');
+      });
+    }
+  })
+}
+
+function postLike(event, user) {
+  scWrapper.setToken(user.soundcloud.token);
+  var reqObj = {
+    method: 'PUT',
+    path: '/me/favorites/' + event.trackID,
+    qs: {
+      oauth_token: user.souncloud.token
+    }
+  };
+  scWrapper.request(reqObj, function(err, response) {
+    if (err) console.log(err);
+    else console.log(response);
+  })
 }
 
 function performStatBoosts(user, trackID) {
@@ -233,5 +282,23 @@ function performStatBoosts(user, trackID) {
         trackID: trackID
       }
     }, function(err, response, body) {})
+  }
+}
+
+function distributeEarnings(user, event) {
+  if (event.price) {
+    sendPayout(user.paypal_email, (event.price * 0.7).toFixed(2), "Repost on " + user.soundcloud.username + ".")
+      .then(function(payout) {
+        event.payout = payout;
+      }).then(null, console.log)
+  }
+}
+
+function partialRefund(event) {
+  if (event.price) {
+    sendRefund(event.price, event.saleID)
+      .then(function(refund) {
+        event.payout = refund;
+      }).then(null, console.log)
   }
 }

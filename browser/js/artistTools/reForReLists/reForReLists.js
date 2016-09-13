@@ -89,13 +89,13 @@ app.config(function($stateProvider) {
             return [];
           }
         },
-         repostEvent: function($http, SessionService) {
+        repostEvent: function($http, SessionService) {
           var user = SessionService.getUser();
           if (user) {
-            return  $http.get("/api/events/getRepostEvents/"+user._id)
-           .then(function(repostEvent) {
-            var repostEvent = repostEvent.data;
-           return repostEvent;
+            return $http.get("/api/events/getRepostEvents/" + user._id)
+              .then(function(repostEvent) {
+                var repostEvent = repostEvent.data;
+                return repostEvent;
               });
           } else {
             return [];
@@ -318,9 +318,8 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
     })
   }
 
-  $scope.setManageView = function(type)
-  {
-    $scope.manageView = type;  
+  $scope.setManageView = function(type) {
+    $scope.manageView = type;
   };
 
   $scope.loadMore = function() {
@@ -397,7 +396,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   }
 
   $scope.remindTrade = function(tradeID, index) {
-    $scope.sharelink = "https://localhost:1443/artistTools/reForReInteraction/"+tradeID;
+    $scope.sharelink = "https://localhost:1443/artistTools/reForReInteraction/" + tradeID;
   }
 
   $scope.sendMail = function(sharelink) {
@@ -494,15 +493,15 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   $scope.decrDay = function() {
     if ($scope.dayIncr > 0) $scope.dayIncr--;
   }
-  
-   $scope.dayOfWeekAsString = function(date) {
+
+  $scope.dayOfWeekAsString = function(date) {
     var dayIndex = date.getDay();
     if (screen.width > '744') {
       return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
     }
     return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dayIndex];
   }
-  
+
   $scope.getEventStyle = function(repostEvent) {
     if (repostEvent.type == 'empty') {
       return {}
@@ -514,8 +513,8 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
       return {
         'background-color': '#2b9fda'
       }
-    } 
-    
+    }
+
   }
 
   repostEvent.forEach(function(ev) {
@@ -550,45 +549,42 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   };
 
   $scope.calendar = $scope.fillDateArrays(repostEvent);
- 
-  $scope.clickedSlot = function(day, hour ,data) {
-   
-    if(data.trackInfo)
-    {
-       $scope.makeEvent={};
-     var makeDay = new Date(day);
-     makeDay.setHours(hour);
-     $scope.makeEvent.day = new Date(makeDay);
-     $scope.makeEvent.url = data.trackInfo.trackURL;
-     $scope.makeEvent.comment = data.trackInfo.comment;
-     $scope.makeEvent.unrepostHours =data.trackInfo.unrepostHours; 
-     $scope.makeEvent.timeGap =data.trackInfo.timeGap;
-     var d = new Date(day).getDay();
-     var channels = data.trackInfo.otherChannels;
-     $scope.displayChannels=[];
-     for(var i=0; i< repostEvent.length; i++)
-     {
-           if(channels.indexOf(repostEvent[i].userInfo.id) > -1){
-              $scope.displayChannels.push(repostEvent[i].userInfo.username);
-           }
-     }
 
-    $scope.showOverlay = true;
-    var calDay = {};
-    var calendarDay = $scope.calendar.find(function(calD) {
-      return calD.day.toLocaleDateString() == day.toLocaleDateString();
-    });
-    SC.oEmbed($scope.makeEvent.url, {
+  $scope.clickedSlot = function(day, hour, data) {
+
+    if (data.trackInfo) {
+      $scope.makeEvent = {};
+      var makeDay = new Date(day);
+      makeDay.setHours(hour);
+      $scope.makeEvent.day = new Date(makeDay);
+      $scope.makeEvent.url = data.trackInfo.trackURL;
+      $scope.makeEvent.comment = data.trackInfo.comment;
+      $scope.makeEvent.unrepostHours = data.trackInfo.unrepostHours;
+      $scope.makeEvent.timeGap = data.trackInfo.timeGap;
+      var d = new Date(day).getDay();
+      var channels = data.trackInfo.otherChannels;
+      $scope.displayChannels = [];
+      for (var i = 0; i < repostEvent.length; i++) {
+        if (channels.indexOf(repostEvent[i].userInfo.id) > -1) {
+          $scope.displayChannels.push(repostEvent[i].userInfo.username);
+        }
+      }
+
+      $scope.showOverlay = true;
+      var calDay = {};
+      var calendarDay = $scope.calendar.find(function(calD) {
+        return calD.day.toLocaleDateString() == day.toLocaleDateString();
+      });
+      SC.oEmbed($scope.makeEvent.url, {
         element: document.getElementById('scPopupPlayer'),
-         auto_play: false,
-         maxheight: 120
+        auto_play: false,
+        maxheight: 120
       })
       document.getElementById('scPopupPlayer').style.visibility = "visible";
     }
-   
+
   }
-  $scope.closeModal = function()
-  {
+  $scope.closeModal = function() {
     $scope.showOverlay = false;
   }
   $scope.changeURL = function() {

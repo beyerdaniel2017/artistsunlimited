@@ -78,12 +78,24 @@ var schema = new mongoose.Schema({
     profilePicture: {
         type: String
     },
+    blockRelease: {
+        type: Date,
+        default: new Date(0)
+    },
     repostCustomizeEmails: [],
     premierCustomizeEmails: [],
     paypal_email: String,
     availableSlots: {
         type: Object,
-        default: {}
+        default: {
+            'sunday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
+            'monday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
+            'tuesday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
+            'wednesday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
+            'thursday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
+            'friday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
+            'saturday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22]
+        }
     },
     repostSettings: {
         type: Object,
@@ -91,24 +103,50 @@ var schema = new mongoose.Schema({
     },
     notificationSettings: {
         facebookMessenger: {
-            tradeRequest: Boolean,
-            tradeAcceptance: Boolean,
-            trackRepost: Boolean,
-            trackUnrepost: Boolean,
-            dailyUnfilledTrade: Boolean,
+            tradeRequest: {
+                type: Boolean,
+                default: true
+            },
+            tradeAcceptance: {
+                type: Boolean,
+                default: true
+            },
+            trackRepost: {
+                type: Boolean,
+                default: false
+            },
+            trackUnrepost: {
+                type: Boolean,
+                default: false
+            },
+            dailyUnfilledTrade: {
+                type: Boolean,
+                default: true
+            }
         },
         email: {
-            tradeRequest: Boolean,
-            tradeAcceptance: Boolean,
-            trackRepost: Boolean,
-            trackUnrepost: Boolean,
-            dailyUnfilledTrade: Boolean,
+            tradeRequest: {
+                type: Boolean,
+                default: true
+            },
+            tradeAcceptance: {
+                type: Boolean,
+                default: true
+            },
+            trackRepost: {
+                type: Boolean,
+                default: false
+            },
+            trackUnrepost: {
+                type: Boolean,
+                default: false
+            },
+            dailyUnfilledTrade: {
+                type: Boolean,
+                default: true
+            }
         }
-    },
-    tradePartners: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }]
+    }
 });
 
 // method to remove sensitive information from user objects before sending them out

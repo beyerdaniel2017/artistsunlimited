@@ -61,7 +61,7 @@ var schema = new mongoose.Schema({
     type: Array,
     default: []
   },
-  ignoredBy:[]
+  ignoredBy: []
 });
 
 mongoose.model("Submission", schema);

@@ -1,3 +1,3 @@
 require('./autoAccessTokenChecker.js')();
-require('./autoPublicReposter.js')();
+require('./autoReposter.js')();
 require('./autoUnreposter.js')();

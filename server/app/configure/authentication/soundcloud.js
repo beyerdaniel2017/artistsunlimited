@@ -34,11 +34,11 @@ module.exports = function(app) {
                                 'id': data.id,
                                 'username': data.username,
                                 'permalinkURL': data.permalink_url,
-                                'avatarURL': data.avatar_url.replace('large', 't500x500'),
+                                'avatarURL': data.avatar_url.replace('large', 't200x200'),
                                 'token': req.body.token,
                                 'followers': data.followers_count
                             },
-                            'availableSlots': (user.availableSlots["monday"] ? user.availableSlots : {
+                            'availableSlots': (user.availableSlots.length > 0 ? user.availableSlots : {
                                 'sunday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
                                 'monday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
                                 'tuesday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
@@ -69,7 +69,7 @@ module.exports = function(app) {
                                 'id': data.id,
                                 'username': data.username,
                                 'permalinkURL': data.permalink_url,
-                                'avatarURL': data.avatar_url.replace('large', 't500x500'),
+                                'avatarURL': data.avatar_url.replace('large', 't200x200'),
                                 'token': req.body.token,
                                 'followers': data.followers_count,
                                 'role': 'user'

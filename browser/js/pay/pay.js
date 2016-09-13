@@ -87,7 +87,6 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
       })
   }
 
-
   $scope.addToCart = function(channel) {
     if (channel.addtocart) {
       $scope.total = $scope.total - parseFloat(channel.price);

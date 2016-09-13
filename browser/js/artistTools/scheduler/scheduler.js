@@ -430,6 +430,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.getChannels = function() {
     $scope.channels = ["Emil", "Tobias", "Linus"];
   }
+
   $scope.trackListChange = function(index) {
     $scope.newQueueSong = $scope.trackListObj.permalink_url;
     $scope.changeQueueSong();
@@ -696,8 +697,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     var blockEvents = $scope.events.filter(function(event) {
       event.day = new Date(event.day);
       event.unrepostDate = new Date(event.unrepostDate);
-      if (moment($scope.makeEvent.day).format('LLL') == moment(event.day).format('LLL') && $scope.makeEvent.trackID == event.trackID) return false;
-      return ($scope.makeEvent.trackID == event.trackID && event.unrepostDate.getTime() > $scope.makeEvent.day.getTime() - 24 * 3600000 && event.day.getTime() < $scope.makeEvent.unrepostDate.getTime() + 24 * 3600000);
+      return ($scope.makeEvent.trackID == event.trackID && (Math.abs(event.unrepostDate.getTime() - $scope.makeEvent.day.getTime()) < 24 * 3600000 || Math.abs(event.day.getTime() - $scope.makeEvent.unrepostDate.getTime()) < 24 * 3600000));
     })
     return blockEvents.length > 0;
   }
@@ -818,6 +818,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         });
     }
   }
+
   $scope.emailSlot = function() {
     var mailto_link = "mailto:?subject=Repost of " + $scope.makeEvent.title + '&body=Hey,\n\n I am reposting your song ' + $scope.makeEvent.title + ' on ' + $scope.user.soundcloud.username + ' on ' + $scope.makeEvent.day.toLocaleDateString() + '.\n\n Best, \n' + $scope.user.soundcloud.username;
     location.href = encodeURI(mailto_link);
@@ -829,7 +830,6 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.trackArtistID = 0;
     $scope.showOverlay = false;
   }
-
 
   $scope.removeQueueSong = function(index) {
     $scope.user.queue.splice(index, 1);
