@@ -83,7 +83,7 @@
                     <th width="50%">Track Name</th>
                     <th width="15%">Account</th>
                     <th width="15%">Date</th>
-                    <th width="10%"></th>
+                    <th width="10%">Type</th>
                     <th width="10%"></th>
                   </tr>
                 </thead>
@@ -239,8 +239,17 @@
                 <div class="col-md-12" ng-disabled="isEdit" ng-class="{'disabled': isEdit}">
                   <div class="row">                
                     <h1 class="title">AVAILABLE SLOT</h1>               
-                    <div class="col-md-6 col-xs-12">              
-                      <input style="" class="form-control ng-pristine ng-valid ng-empty ng-touched" placeholder="songScheduler" ng-model="makeEventURL" ng-change="changeURL();">
+                    <div class="col-md-6 col-xs-12 search">
+                      <div class="search-suggetion">
+                        <input class="form-control" type="text" placeholder="Song URL" ng-model="searchString"  required/>
+                        <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
+                          <li ng-show="searching && !searchError && searchSelection.length==0"><a href="#">One moment...</a></li>
+                          <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">{{item.displayName}}</a></li>
+                          <li ng-show="!!searchError">{{searchError}}</li>
+                          <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
+                        </ul>
+                        <a href="javascript:void(0)" class="link-add-btn" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+                      </div>
                       <label>Next Available Repost Time</label>
                       <div class="form-group">
                         <select class="form-control" ng-if="!isEdit" ng-model="selectedSlot" ng-change="clickAvailableSlots(selectedSlot);">                       
@@ -252,13 +261,6 @@
                         </select>
                         
                       </div>
-                       <!--  <li class="switch-btn">
-                          <label class="switch">
-                            <input checked="" type="checkbox" ng-model="autoFillSlot">
-                            <div class="slider round"></div>
-                          </label> 
-                          <span>Autofill slot</span>
-                        </li> -->
                         <ul>
                           <li class="switch-btn">
                             <label class="switch">
@@ -411,8 +413,17 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-md-12">
-                      <input style="" class="form-control ng-pristine ng-valid ng-empty ng-touched" placeholder="songScheduler" ng-model="makeEventURL" ng-change="changeURL();">
+                    <div class="col-md-12 search">
+                      <div class="search-suggetion">
+                        <input class="form-control" type="text" placeholder="Song URL" ng-model="searchString"  required/>
+                        <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
+                          <li ng-show="searching && !searchError && searchSelection.length==0"><a href="#">One moment...</a></li>
+                          <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">{{item.displayName}}</a></li>
+                          <li ng-show="!!searchError">{{searchError}}</li>
+                          <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
+                        </ul>
+                        <a href="javascript:void(0)" class="link-add-btn" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+                      </div>
                     </div>
                   </div>
                   <br>

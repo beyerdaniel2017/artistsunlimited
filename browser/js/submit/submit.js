@@ -114,6 +114,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
 
       //custom code to process item choice//
       console.log(item);
+    $scope.searchString = item.title;
       $scope.submission.trackID = item.id;
       $scope.submission.title = item.title;
       $scope.submission.trackURL = item.permalink_url
