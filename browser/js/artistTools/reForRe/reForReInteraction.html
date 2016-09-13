@@ -78,110 +78,109 @@
   										</div>
   									</div>
   								</div>
-                  </div>
-  								<!-- p1 calendar -->
-  								<div ng-show="activeUser._id==trade.p1.user._id">
-  									<div id="scheduler-container" ng-show="itemview == 'calender'">
-  										<div style="width:100%; height:35px; display:flex; flex-direction:row;margin-bottom: 10px; ">
-  											<button ng-show="!repeatOn" class="btn btn-default btn-scheduler" ng-click="decrp1()"><img src="/assets/images/left-arrow.png"/></button>
-  											<div ng-show="!repeatOn" class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendarp1[t+p1dayIncr].day).substring(0,3)}} {{calendarp1[t+p1dayIncr].day.getMonth()+1}}/{{calendarp1[t+p1dayIncr].day.getDate()}}</div>
-  											<button  ng-show="!repeatOn" class="btn btn-default btn-scheduler" ng-click="incrp1()" ><img id="scheduler-btn-back" src="/assets/images/right-arrow.png"/></button>
-  											<div ng-show="repeatOn" class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendarp1[t+p1dayIncr].day)}}</div>
-  										</div>
-  										<div style="width:100%; display:flex; flex-direction:row;">
-  											<div class="column-time">
-  												<div ng-repeat="i in ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16', '17', '18', '19', '20', '21', '22', '23']" class="cell-time bold">{{i}}</div>
-  											</div>   
-  											<div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
-  												<div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendarp1[l+p1dayIncr].events[p], calendarp1[l+p1dayIncr].day, l, p)" class="row-scheduler" ng-click="clickedSlot(calendarp1[l+p1dayIncr].day, l+p1dayIncr, p, calendarp1, trade.p1, calendarp1[l+p1dayIncr].events[p])" style="position:relative;">
-  													<div ng-style="getEventStyle(calendarp1[l+p1dayIncr].events[p])" style="width:100%; height:100%"></div>
-  													<!-- <img ng-show="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img>-->
-  												</div>
-  											</div>
-  										</div>
-  									</div>
-  									<div id="scheduler-container" ng-show="itemview == 'list'">
-  										<table class="table">
-  											<thead>
-  												<tr>
-  													<th width="50%">Track Name</th>
-  													<th width="15%">Account</th>
-  													<th width="15%">Date</th>
-  													<th width="10%"></th>
-  													<th width="10%"></th>
-  												</tr>
-  											</thead>
-  											<tbody>
-  												<tr ng-repeat="item in listeventsUser" ng-class='{grey : item.event.day < currentDate}'>
-  													<td class="text-left">{{item.event.title}}</td>
-  													<td class="text-left">{{user.soundcloud.username}}</td>
-  													<td class="text-left">{{item.date}}</td>
-  													<td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">{{item.event.type}}</button></td>
-  													<td class="text-left">
-  														<a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event">View</a>
-  														<a href="javascript:void(0)" style="color:#FF7676" ng-if="!item.event">Schedule</a></td>
-  													</tr>
-  												</tbody>
-  											</table>
-  										</div>
-  									</div>
-  								</div>
-  								<!-- p2 calendar -->
-  								<div ng-show="activeUser._id==trade.p2.user._id">
-  									<div id="scheduler-container" ng-show="itemview == 'calender'">
-  										<div style="width:100%; height:35px; display:flex; flex-direction:row;margin-bottom: 10px; ">
-  											<button ng-show="!repeatOn" class="btn btn-default btn-scheduler" ng-click="decrp2()"><img src="/assets/images/left-arrow.png"/></button>
-  											<div ng-show="!repeatOn" class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendarp2[t+p2dayIncr].day).substring(0,3)}} {{calendarp2[t+p2dayIncr].day.getMonth()+1}}/{{calendarp2[t+p2dayIncr].day.getDate()}}</div>
-  											<button  ng-show="!repeatOn" class="btn btn-default btn-scheduler" ng-click="incrp2()" ><img id="scheduler-btn-back" src="/assets/images/right-arrow.png"/></button>
-  											<div ng-show="repeatOn" class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendarp2[t+p2dayIncr].day)}}</div>
-  										</div>
-  										<div style="width:100%; display:flex; flex-direction:row;">
-  											<div class="column-time">
-  												<div ng-repeat="i in ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16', '17', '18', '19', '20', '21', '22', '23']" class="cell-time bold">{{i}}</div>
-  											</div>   
-  											<div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
-  												<div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendarp2[l+p2dayIncr].events[p], calendarp2[l+p2dayIncr].day, l, p)" class="row-scheduler" ng-click="clickedSlot(calendarp2[l+p2dayIncr].day, l+p2dayIncr, p, calendarp2, trade.p2, calendarp2[l+p2dayIncr].events[p])" style="position:relative;">
-  													<div ng-style="getEventStyle(calendarp2[l+p2dayIncr].events[p])" style="width:100%; height:100%"></div>
-  													<!-- <img ng-show="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img>-->
-  												</div>
-  											</div>
-  										</div>
-  									</div>
-  									<div id="scheduler-container" ng-show="itemview == 'list'">
-  										<table class="table">
-  											<thead>
-  												<tr>
-  													<th width="50%">Track Name</th>
-  													<th width="15%">Account</th>
-  													<th width="15%">Date</th>
-  													<th width="10%"></th>
-  													<th width="10%"></th>
-  												</tr>
-  											</thead>
-  											<tbody>
-  												<tr ng-repeat="item in listeventsOther" ng-class='{grey : item.event.day < currentDate}'>
-  													<td class="text-left">{{item.event.title}}</td>
-  													<td class="text-left">{{user.soundcloud.username}}</td>
-  													<td class="text-left">{{item.date}}</td>
-  													<td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">{{item.event.type}}</button></td>
-  													<td class="text-left">
-  														<a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event">View</a>
-  														<a href="javascript:void(0)" style="color:#FF7676" ng-if="!item.event">Schedule</a></td>
-  													</tr>
-  												</tbody>
-  											</table>
-  										</div>
-  									</div>
-  								</div>
-  							</div>
-  							<!-- MY SCHEDULE : End-->
-  							<!-- ORGANIZE SCHEDULE :Start -->
-  							<div role="tabpanel" class="tab-pane fade" id="organizeschedule">
-  							</div>
-  							<!-- ORGANIZE SCHEDULE :End -->
-  							<!-- MANAGE REPOSTS : Start -->
-  							<div role="tabpanel" class="tab-pane fade" id="managereposts">           
-  							</div> 
+                </div>
+                <!-- p1 calendar -->
+                <div ng-show="activeUser._id==trade.p1.user._id">
+                 <div id="scheduler-container" ng-show="itemview == 'calender'">
+                  <div style="width:100%; height:35px; display:flex; flex-direction:row;margin-bottom: 10px; ">
+                   <button ng-show="!repeatOn" class="btn btn-default btn-scheduler" ng-click="decrp1()"><img src="/assets/images/left-arrow.png"/></button>
+                   <div ng-show="!repeatOn" class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendarp1[t+p1dayIncr].day).substring(0,3)}} {{calendarp1[t+p1dayIncr].day.getMonth()+1}}/{{calendarp1[t+p1dayIncr].day.getDate()}}</div>
+                   <button  ng-show="!repeatOn" class="btn btn-default btn-scheduler" ng-click="incrp1()" ><img id="scheduler-btn-back" src="/assets/images/right-arrow.png"/></button>
+                   <div ng-show="repeatOn" class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendarp1[t+p1dayIncr].day)}}</div>
+                 </div>
+                 <div style="width:100%; display:flex; flex-direction:row;">
+                   <div class="column-time">
+                    <div ng-repeat="i in ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16', '17', '18', '19', '20', '21', '22', '23']" class="cell-time bold">{{i}}</div>
+                  </div>   
+                  <div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
+                    <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendarp1[l+p1dayIncr].events[p], calendarp1[l+p1dayIncr].day, l, p)" class="row-scheduler" ng-click="clickedSlot(calendarp1[l+p1dayIncr].day, l+p1dayIncr, p, calendarp1, trade.p1, calendarp1[l+p1dayIncr].events[p])" style="position:relative;">
+                     <div ng-style="getEventStyle(calendarp1[l+p1dayIncr].events[p])" style="width:100%; height:100%"></div>
+                     <!-- <img ng-show="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img>-->
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <div id="scheduler-container" ng-show="itemview == 'list'">
+              <table class="table">
+               <thead>
+                <tr>
+                 <th width="50%">Account</th>
+                 <th width="15%">Date</th>
+                 <th width="15%">UnrepostDate</th>
+                 <th width="10%"></th>
+                 <th width="10%"></th>
+               </tr>
+             </thead>
+             <tbody>
+               <tr ng-repeat="event in calendarp1" ng-show="showOnForList(event)" ng-class='{grey : item.day < currentDate}' >
+                 <td class="text-left">{{trade.p1.user.soundcloud.username}}</td>
+                 <td class="text-left">{{item.day}}</td>
+                 <td><button class="btn btn-default" ng-style="getEventStyle(item.event)" ng-click="changeEvent(item)">Toggle</button></td>
+                 <td class="text-left">
+                  <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event">View</a>
+                  <a href="javascript:void(0)" style="color:#FF7676" ng-if="!item.event">Schedule</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- p2 calendar -->
+      <div ng-show="activeUser._id==trade.p2.user._id">
+       <div id="scheduler-container" ng-show="itemview == 'calender'">
+        <div style="width:100%; height:35px; display:flex; flex-direction:row;margin-bottom: 10px; ">
+         <button ng-show="!repeatOn" class="btn btn-default btn-scheduler" ng-click="decrp2()"><img src="/assets/images/left-arrow.png"/></button>
+         <div ng-show="!repeatOn" class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendarp2[t+p2dayIncr].day).substring(0,3)}} {{calendarp2[t+p2dayIncr].day.getMonth()+1}}/{{calendarp2[t+p2dayIncr].day.getDate()}}</div>
+         <button  ng-show="!repeatOn" class="btn btn-default btn-scheduler" ng-click="incrp2()" ><img id="scheduler-btn-back" src="/assets/images/right-arrow.png"/></button>
+         <div ng-show="repeatOn" class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendarp2[t+p2dayIncr].day)}}</div>
+       </div>
+       <div style="width:100%; display:flex; flex-direction:row;">
+         <div class="column-time">
+          <div ng-repeat="i in ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16', '17', '18', '19', '20', '21', '22', '23']" class="cell-time bold">{{i}}</div>
+        </div>   
+        <div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
+          <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendarp2[l+p2dayIncr].events[p], calendarp2[l+p2dayIncr].day, l, p)" class="row-scheduler" ng-click="clickedSlot(calendarp2[l+p2dayIncr].day, l+p2dayIncr, p, calendarp2, trade.p2, calendarp2[l+p2dayIncr].events[p])" style="position:relative;">
+           <div ng-style="getEventStyle(calendarp2[l+p2dayIncr].events[p])" style="width:100%; height:100%"></div>
+           <!-- <img ng-show="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img>-->
+         </div>
+       </div>
+     </div>
+   </div>
+   <div id="scheduler-container" ng-show="itemview == 'list'">
+    <table class="table">
+     <thead>
+      <tr>
+       <th width="50%">Track Name</th>
+       <th width="15%">Account</th>
+       <th width="15%">Date</th>
+       <th width="10%"></th>
+       <th width="10%"></th>
+     </tr>
+   </thead>
+   <tbody>
+    <tr ng-repeat="item in listEventsp2" ng-class='{grey : item.event.day < currentDate}'>
+     <td class="text-left">{{item.event.title}}</td>
+     <td class="text-left">{{user.soundcloud.username}}</td>
+     <td class="text-left">{{item.date}}</td>
+     <td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">{{item.event.type}}</button></td>
+     <td class="text-left">
+      <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event">View</a>
+      <a href="javascript:void(0)" style="color:#FF7676" ng-if="!item.event">Schedule</a></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<!-- MY SCHEDULE : End-->
+<!-- ORGANIZE SCHEDULE :Start -->
+<div role="tabpanel" class="tab-pane fade" id="organizeschedule">
+</div>
+<!-- ORGANIZE SCHEDULE :End -->
+<!-- MANAGE REPOSTS : Start -->
+<div role="tabpanel" class="tab-pane fade" id="managereposts">           
+</div> 
               <!-- Tab panes :: End
             </div>
             <!-- overlay -->
