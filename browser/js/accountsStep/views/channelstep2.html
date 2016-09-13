@@ -13,7 +13,7 @@
             <div class="col-md-12">
                 <div class="page-content right-side">
                     <!--page-contant Start-->
-                    <div class="scheduler-tabs">
+          <div class="two-tabs">
                         <!-- Nav tabs :Start-->
                         <div class="text-center" style="margin-top:30px;margin-bottom:30px;">SET UP YOUR ADMIN ACCOUNT</div>
                         <ul class="nav nav-tabs" role="tablist">
@@ -25,7 +25,6 @@
                           </li>
                         </ul>
                         <div class="clearfix"></div>
-                 
                         <!-- Nav tabs :End-->
                         <!-- Tab panes :: Start-->
                         <div class="tab-content">
@@ -64,13 +63,14 @@
                                                       <p><strong>Set the price that each repost will cost for this channel</strong></p>
                                                       <div class="container-60">
                                                         <p class="small-text">Recommended: 1$ for every 3,000 followers
-                                                      60,000 followers  =  $20</p>
+                                  60,000 followers  =  $20
+                                </p>
                                                       </div>
                                                     </div>
                                                     <div class="margin-40">
                                                       <div class="margin-20">                                     
                                                         <span>Price for each repost:&nbsp;$
-                                                        <input ng-model="AccountsStepData.price" placeholder="Enter Price for each repost"  class="price-input" type="">
+                                <input ng-model="AccountsStepData.price" placeholder="0.00"  class="price-input" type="">
                                                         </span>                                                          
                                                       </div>                           
                                                     </div>
@@ -78,7 +78,6 @@
                                                       <div class="margin-20">                                     
                                                         <textarea ng-model="AccountsStepData.description" class="form-control" name="Description" placeholder="Description"></textarea>                         
                                                     </div>
-
                                                     <div ng-if="AccountsStepData.formActions=='Add' || AccountsStepData.formActions=='Edit'">
                                                       <table width="100%">
                                                         <tr>
@@ -94,7 +93,6 @@
                                                         </tr>
                                                       </table>
                                                     </div>
-
                                                     <div class="slidethamb-box">
                                                       <div class="container-40">
                                                         <div class="thumb-img-container margin-20">
@@ -125,7 +123,6 @@
                         <!-- Tab panes :: End-->
                     </div>
                     <!-- overlay -->                  
-                   
                     <br />
                     <div class="clearfix"></div>
                 </div>

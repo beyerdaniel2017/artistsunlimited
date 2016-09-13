@@ -50,8 +50,17 @@
                   <form role="form" ng-submit="submit()">
                   </br>
                   <div class="row">
-                    <div class="col-sm-6 col-sm-offset-3">
-                      <input class="form-control" type="text" placeholder="Song URL" ng-model="url" ng-change="urlChange()" required/>
+                    <div class="col-sm-6 col-sm-offset-3 search">
+                      <div class="search-suggetion">
+                        <input class="form-control" type="text" placeholder="Song URL" ng-model="searchString"  required/>
+                          <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
+                            <li ng-show="searching && !searchError && searchSelection.length==0"><a href="#">One moment...</a></li>
+                            <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">{{item.displayName}}</a></li>
+                            <li ng-show="!!searchError">{{searchError}}</li>
+                            <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
+                          </ul>
+                        <a href="#" class="link-add-btn" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+                      </div>
                     </div>
                   </div>
                 </br>
@@ -160,15 +169,4 @@
 </div>
 </div>
 </div>
-<!-- search -->
-<div>
-  <input type="text" ng-model="searchString"><button ng-click="changedSearch('track')">Search</button>
-  <div style="width:300px; max-height:300px; overflow-y:scroll; background-color:white;" ng-show="searching || searchError || searchSelection.length>0">
-    <button ng-repeat="item in searchSelection" style="width:100%" ng-click="selectedItem(item, 'track')" style="background-color:white; text-align:center">{{item.displayName}}</button>
-    <div ng-show="searching && !searchError && searchSelection.length==0" style="background-color:white; text-align:center">One moment...</div>
-    <div ng-show="!!searchError" style="background-color:white; text-align:center">{{searchError}}</div>
-    <div ng-show="searchSelection.length > 0 && !searchError" style="background-color:white; text-align:center">Or enter a Soundcloud URL</div>
-  </div>
-</div>
-<div style="width:100%; height:200px; background-color:white"></div>
 <ng-include src="'js/home/views/loader.html'"></ng-include>

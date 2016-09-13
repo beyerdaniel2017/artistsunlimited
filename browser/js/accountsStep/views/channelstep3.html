@@ -34,10 +34,9 @@
         <div class="col-md-12">
           <div class="page-content right-side">
             <!--page-contant Start-->
-            <div class="scheduler-tabs">
+  <div class="two-tabs">
               <!-- Nav tabs :Start-->
               <div class="text-center" style="margin-top:30px;margin-bottom:30px;">SET UP YOUR ADMIN ACCOUNT</div>
-
               <ul class="nav nav-tabs" role="tablist">
                  <li class="active">
                     <a>1  Basic Info</a>        
@@ -47,7 +46,6 @@
                   </li>
               </ul>
               <div class="clearfix"></div>
-    
               <!-- Nav tabs :End-->
               <!-- Tab panes :: Start-->
               <div class="tab-content">
@@ -70,7 +68,6 @@
                           <a href="/admin/channel/step5" role="tab" data-toggle="tab">5  Repost Preferences</a>
                       </li>
                   </ul>
-
                   <div class="tab-content">
                   <!-- MY SCHEDULE : Start-->
                     <div role="tabpanel" class="tab-pane fade in active" id="tab3"  ng-init="AccountsStepData.postData.type='submit'">
@@ -81,7 +78,7 @@
                                   <div class="col-md-4">                                    
                                       <br />
                                       <div class="row">
-                                        <div class="col-sm-12">
+                      <div class="col-sm-12 custom-submission-accordion">
                                           <div class="panel-group" id="accordion">
                                             <div class="panel panel-default">
                                               <div class="panel-heading">
@@ -268,7 +265,6 @@
                                                 </div>
                                               </div>
                                             </div> 
-                                            
                                             <div class="panel panel-default">
                                               <div class="panel-heading">
                                                 <h4 class="panel-title">
@@ -306,12 +302,9 @@
                                       </div>
                                       </br>
                                       </br>
-                             
                                   </div>
-                                  
                                   <div class="col-md-8" >
                                     <div id="backgroundImage" style="background-size:cover;background-image:url({{AccountsStepData.postData.background.images}}); filter: blur({{AccountsStepData.postData.background.blur}}px);-webkit-filter: blur({{AccountsStepData.postData.background.blur}}px);">
-                                      
                                     </div>
                                       <div id="rightTemplate" ng-show="AccountsStepData.postData" 
                                       style="margin-top:20px;padding:20px;border:1px solid #dcdcdc;border-radius:5px">
@@ -361,18 +354,14 @@
                                       </form>
                                     </div>
                                   </div>
-                             
                         <div class="clearfix"></div>            
                       </div>
                        <div class="clearfix"></div>          
                     </div>  
                   </div>
-                  
                 </div>
                 <!-- MY SCHEDULE : End-->
-               
                 <div class="clearfix"></div>     
-                           
   </div>
               <!-- Tab panes :: End-->
 </div>
@@ -392,8 +381,8 @@
   </div>
 </div>
       <!--overlay-->
-   
-<ng-include src="'js/home/views/loader.html'"></ng-include>    </div>
+      <ng-include src="'js/home/views/loader.html'"></ng-include>
+    </div>
   </div>
 </div>
 <script type="text/javascript">

@@ -489,6 +489,98 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
       $rootScope.userlinkedAccounts = networks.data;
     })
   }
+
+    //search//
+  $scope.searchSelection = [];
+  $scope.changedSearch = function(kind) {
+    $scope.searchSelection = [];
+    $scope.searchError = undefined;
+    $scope.searching = true;
+    if ($scope.searchString != "") {
+      $http.post('/api/search', {
+        q: $scope.searchString,
+        kind: kind
+      }).then(function(res) {
+        $scope.searching = false;
+        if (res.data.item) {
+          if (res.data.item.kind != kind) {
+            $scope.serachError = "Please enter a " + kind + " URL.";
+          } else {
+            $scope.selectedItem(res.data.item);
+          }
+        } else {
+          $scope.searchSelection = res.data.collection;
+          $scope.searchSelection.forEach(function(item) {
+            $scope.setItemText(item)
+          })
+        }
+      }).then(null, function(err) {
+        $scope.searching = false;
+        console.log(err)
+        console.log('We could not find a ' + kind);
+        $scope.searchError = "We could not find a " + kind + "."
+      });
+    }
+  }
+
+  $scope.setItemText = function(item) {
+    switch (item.kind) {
+      case 'track':
+        item.displayName = item.title + ' - ' + item.user.username;
+        break;
+      case 'playlist':
+        item.displayName = item.title + ' - ' + item.user.username;
+        break;
+      case 'user':
+        item.displayName = user.username;
+        break;
+    }
+  }
+
+  $scope.selectedItem = function(item) {
+    var player = document.getElementById('scPopupPlayer');
+    if($scope.tabSelected == false){
+      player = document.getElementById('scPlayer');
+    }
+    $scope.searchSelection = [];
+    $scope.searchError = undefined;
+    $scope.searchString = item.title;
+    $scope.track.trackTitle = item.title;
+    $scope.track.trackID = item.id;
+    $scope.track.artistID = item.user.id;
+    $scope.track.description = item.description;
+    $scope.track.trackArtworkURL = item.artwork_url ? item.artwork_url.replace('large.jpg', 't500x500.jpg') : '';
+    $scope.track.artistArtworkURL = item.user.avatar_url ? item.user.avatar_url.replace('large.jpg', 't500x500.jpg') : '';
+    $scope.track.artistURL = item.user.permalink_url;
+    $scope.track.artistUsername = item.user.username;
+    $scope.track.SMLinks = [];
+    SC.get('/users/' + $scope.track.artistID + '/web-profiles')
+    .then(handleWebProfiles)
+    .catch(handleError);
+
+    function handleWebProfiles(profiles) {
+      profiles.forEach(function(prof) {
+        if (['twitter', 'youtube', 'facebook', 'spotify', 'soundcloud', 'instagram'].indexOf(prof.service) != -1) {
+          $scope.track.SMLinks.push({
+            key: prof.service,
+            value: prof.url
+          });
+        }
+      });
+      $scope.isTrackAvailable = true;
+      $scope.processing = false;
+      $scope.$apply();
+    }
+
+    function handleError(err) {
+      $scope.track.trackID = null;
+      $.Zebra_Dialog('Song not found or forbidden');
+      $scope.processing = false;
+      $scope.$apply();
+    }
+  }
+  //end search//
+
   $scope.getUserNetwork();
   $scope.verifyBrowser();
 });

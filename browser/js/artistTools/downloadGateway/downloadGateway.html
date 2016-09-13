@@ -11,12 +11,22 @@
             <div class="row extrapadding">
                 <!-- Download Section Start -->
                 <div class="col-md-4">
-                    <div class="song-container">
+                    <div class="song-container search">
                         <h4>Song</h4>
-                        <div class="song-url">
-                            <input class="form-control" placeholder="Enter Song URL" ng-model="track.trackURL" ng-change="trackURLChange()" required/>
-                            <!-- <a class="close-ic" href="#"><img src="assets/images/close.png"></a> -->
+                        <div class="search-suggetion">
+                            <input class="form-control" type="text" placeholder="Song URL" ng-model="searchString" required/>
+                            <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
+                              <li ng-show="searching && !searchError && searchSelection.length==0"><a href="#">One moment...</a></li>
+                              <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">{{item.displayName}}</a></li>
+                              <li ng-show="!!searchError">{{searchError}}</li>
+                              <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
+                            </ul>
+                            <a href="javascript:void(0)" class="link-add-btn" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
                         </div>
+                        <br />
+                        <!-- <div class="song-url">
+                            <input class="form-control" placeholder="Enter Song URL" ng-model="track.trackURL" ng-change="trackURLChange()" required/>
+                        </div> -->
                         <select class="form-control" ng-model="trackListObj" ng-options="item.title for item in trackList" ng-change="trackListChange()" ng-show="trackList.length > 0">
                             <option value="" ng-disabled="!!trackListObj">-My Songs-</option>
                         </select>
