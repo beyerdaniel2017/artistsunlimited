@@ -58,7 +58,7 @@
                   <div class="">
                     <h3 style="text-align:center;">{{user.displayName}}</h3>
                     <div id="scheduler-container" ng-show="itemview == 'calender'">
-                      <div style="width:100%; height:35px; display:flex; flex-direction:row;margin-bottom: 10px; ">
+                    <div class="date-top-strip">
                         <button class="btn btn-default btn-scheduler" ng-click="decrDay()"><img src="/assets/images/left-arrow.png"/></button>
                         <div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendar[t+dayIncr].day).substring(0,3)}} {{calendar[t+dayIncr].day.getMonth()+1}}/{{calendar[t+dayIncr].day.getDate()}}
                         </div>
@@ -108,7 +108,7 @@
             <div class="">
               <h3 style="text-align:center;">{{user.displayName}}</h3>
               <div id="scheduler-container" >
-                <div style="width:100%; height:35px; display:flex; flex-direction:row;margin-bottom: 10px; ">                 
+                    <div class="date-top-strip">
                   <div class="bold cell-date" ng-repeat="t in ['Sunday','Monday','Tuesday','Wednesday','Thusday','Friday','Saturday']">{{t}}
                   </div>                   
                 </div>
@@ -225,9 +225,11 @@
                           </div>
                         </div>
                       </div>
-                    </div><!--row ::end-->
                   </div>
-                </div><!--row ::end-->
+                    <!--row ::end-->
+                  </div>
+                </div>
+                <!--row ::end-->
               </div>
             </div>
             <!-- MANAGE REPOSTS : End -->                
@@ -259,7 +261,6 @@
                         <select ng-if="isEdit" class="form-control">
                           <option>{{selectedSlot | date:'MMMM dd yyyy h:mma'}}</option>
                         </select>
-                        
                       </div>
                         <ul>
                           <li class="switch-btn">
@@ -269,7 +270,8 @@
                             </label> 
                             <span>Unrepost after<input  class="form-control input-hour" placeholder="1" ng-model="unrepostHours">hours</span>
                           </li>
-                        </ul><br/>
+                        </ul>
+                        <br/>
                         <div class="form-group" ng-if="!isEdit">
                           <div class="col-xs-12">
                             <label>Time between reposts:</label>
@@ -522,6 +524,7 @@
                         <div class="acceptance">
                           <div class="channel-check">
                             <textarea class="form-control" ng-disabled="disable" ng-model="eventComment">{{comment}}</textarea>
+                      </div>
                             <div class="next-previous">
                               <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
                               <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
@@ -529,7 +532,6 @@
                           </div>                         
                         </div>
                       </div>
-                    </div>
                     <div class="row">
                       <div class="col-md-12">
                         <div class="next-previous text-center available-slot-btn">
