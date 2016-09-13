@@ -361,10 +361,12 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     document.getElementById('scPlayer').style.visibility = "hidden";
   }
   $scope.isEdit = false;
-  $scope.EditNewSong = function(item) {
+  $scope.EditNewSong = function(item, editable) {
     $scope.editChannelArr = [];
     $scope.tabSelected = false;
+    if (!editable) {
     $scope.isEdit = true;
+    }
     var newObj = angular.copy(item);
     $scope.makeEventURL = newObj.event.trackURL;
     $scope.selectedSlot = newObj.event.day;
@@ -602,6 +604,12 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1) return;
     var today = new Date();
     if (today.toLocaleDateString() == day.toLocaleDateString() && today.getHours() > hour) return;
+    var makeDay = new Date(day);
+    makeDay.setHours(hour);
+    if ($scope.user.blockRelease && new Date($scope.user.blockRelease).getTime() > new Date(makeDay).getTime()) {
+      $.Zebra_Dialog("Sorry! You are blocked till date "+ moment($scope.user.blockRelease).format('LLL'));
+      return;
+    }
     $scope.showOverlay = true;
     var calDay = {};
     var calendarDay = $scope.calendar.find(function(calD) {
@@ -614,7 +622,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
     $scope.updateReach();
     if ($scope.makeEvent.type == "empty") {
-      var makeDay = new Date(day);
+      makeDay = new Date(day);
       makeDay.setHours(hour);
       $scope.makeEvent = {
         userID: $scope.user.soundcloud.id,

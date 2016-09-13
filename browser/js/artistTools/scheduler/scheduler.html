@@ -94,7 +94,7 @@
                     <td class="text-left">{{item.date}}</td>
                     <td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">{{item.event.type}}</button></td>
                     <td class="text-left">
-                      <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>
+                      <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>&nbsp;&nbsp;<a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item, 'editable');">Edit</a>
                       <a href="javascript:void(0)" style="color:#FF7676" ng-if="!item.event">Schedule</a></td>
                     </tr>
                   </tbody>
