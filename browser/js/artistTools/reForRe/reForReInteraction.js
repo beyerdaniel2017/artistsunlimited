@@ -115,6 +115,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.trackArtistID = 0;
   $scope.trackType = "";
   $scope.currentTrades = currentTrades;
+  $scope.listDayIncr = 0;
   $scope.selectTrade = currentTrades.find(function(el) {
     return el._id == $scope.trade._id;
   });
@@ -126,9 +127,14 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.currentDate = new Date();
   var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   $scope.itemview = "calender";
+
   $scope.setView = function(view) {
     $scope.itemview = view;
+    var personNum = $scope.activeUser._id == $scope.trade.p1.user._id ? 'p1' : 'p2';
+    $scope.getListEvents(personNum);
+    console.log($scope.listEvents)
   };
+
   $scope.trackList = [];
 
   $scope.activeUser = $scope.user;
@@ -365,28 +371,17 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.undo = function() {
-    $.Zebra_Dialog("Undo changes?", {
-      'type': 'confirmation',
-      'buttons': [{
-        caption: 'Undo',
-        callback: function() {
-          $http.get('/api/trades/byID/' + $stateParams.tradeID)
-            .then(function(res) {
-              $scope.trade = res.data;
-              $scope.trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
-              $scope.trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
-              $scope.fillCalendar();
-              $scope.showUndo = false;
-            }).then(null, console.log)
-        }
-      }, {
-        caption: 'Cancel',
-        callback: function() {
-          console.log('No was clicked');
-        }
-      }]
-    });
-  }
+    $scope.processing = true;
+    $http.get('/api/trades/byID/' + $stateParams.tradeID)
+      .then(function(res) {
+        $scope.processing = false;
+        $scope.trade = res.data;
+        $scope.trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
+        $scope.trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
+        $scope.fillCalendar();
+        $scope.showUndo = false;
+      }).then(null, console.log)
+  };
 
   $scope.saveEvent = function(event, person) {
     // if (!$scope.unrepostOverlap()) {
@@ -638,7 +633,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     if (message.tradeID == $stateParams.tradeID) {
       $scope.msgHistory.push(message);
       $scope.message = message.message;
-      $scope.trade.messages.push(message);
+      // $scope.trade.messages.push(message);
       if (message.type == "alert") {
         $scope.refreshCalendar();
       }
@@ -702,6 +697,8 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.fillCalendar = function() {
+    $scope.repeatOn = $scope.trade.repeatFor > 0;
+
     function setEventDays(arr) {
       arr.forEach(function(ev) {
         ev.day = new Date(ev.day);
@@ -847,10 +844,74 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     $scope.trade.p1.accepted = $scope.trade.p2.accepted = true;
     $scope.trade.p1.slots = $scope.trade.p2.slots = [];
     $http.put('/api/trades', $scope.trade)
-    .then(function(res) {
-      $state.go('reForReLists');
-    })
-    .then(null, console.log);
+      .then(function(res) {
+        $state.go('reForReLists');
+      })
+      .then(null, console.log);
+  }
+
+  function getshortdate(d) {
+    var YYYY = d.getFullYear();
+    var M = d.getMonth() + 1;
+    var D = d.getDate();
+    var MM = (M < 10) ? ('0' + M) : M;
+    var DD = (D < 10) ? ('0' + D) : D;
+    var result = MM + "/" + DD + "/" + YYYY;
+    return result;
+  }
+
+  $scope.getPreviousEvents = function() {
+    $scope.listDayIncr--;
+    var personNum = $scope.activeUser._id == $scope.trade.p1.user._id ? 'p1' : 'p2';
+    $scope.getListEvents(personNum);
+  }
+
+  $scope.getNextEvents = function() {
+    $scope.listDayIncr++;
+    var personNum = $scope.activeUser._id == $scope.trade.p1.user._id ? 'p1' : 'p2';
+    $scope.getListEvents(personNum);
+  }
+
+  $scope.toggleSlot = function(item) {
+    var personNum = $scope.activeUser._id == $scope.trade.p1.user._id ? 'p1' : 'p2';
+    $scope.clickedSlot(item.date, {}, item.date.getHours(), {}, $scope.trade[personNum], item.event);
+    $scope.getListEvents(personNum);
+  }
+
+  $scope.getListEvents = function(userNum) {
+    $scope.listEvents = [];
+    var currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + $scope.listDayIncr);
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(currentDate);
+      d.setDate(d.getDate() + i);
+      var currentDay = d.getDay();
+      var strDdate = getshortdate(d);
+      var slots = $scope.trade[userNum].user.availableSlots[daysArray[currentDay]];
+      slots = slots.sort(function(a, b) {
+        return a - b
+      });
+      angular.forEach(slots, function(hour) {
+        var item = new Object();
+        var calendarDay = $scope['calendar' + userNum].find(function(calD) {
+          return calD.day.toLocaleDateString() == d.toLocaleDateString();
+        });
+        var event = calendarDay.events.find(function(ev) {
+          return new Date(ev.day).getHours() == hour;
+        });
+
+        item.event = (event ? event : {
+          type: 'empty'
+        })
+        item.date = new Date(d);
+        item.date.setHours(hour);
+        $scope.listEvents.push(item);
+      });
+    }
+  }
+
+  $scope.getUnrepostDate = function(item) {
+    return new Date(item.date.getTime() + 24 * 60 * 60 * 1000)
   }
 
   $scope.getStyle = function(event, date, day, hour) {
@@ -868,7 +929,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.getEventStyle = function(event) {
-    if (event.type == 'trade') {
+    if (event && event.type == 'trade') {
       return {
         'background-color': '#ADD8E6'
       }
@@ -979,7 +1040,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.remindTrade = function() {
-    $scope.sharelink = "https://localhost:1443/artistTools/reForReInteraction/"+trade._id;
+    $scope.sharelink = "https://localhost:1443/artistTools/reForReInteraction/" + trade._id;
   }
 
   $scope.sendMail = function(sharelink) {

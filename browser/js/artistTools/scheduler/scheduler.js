@@ -115,7 +115,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     });
   }
 
-    //search//
+  //search//
   $scope.searchSelection = [];
   $scope.changedSearch = function(kind) {
     $scope.searchSelection = [];
@@ -163,26 +163,26 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.selectedItem = function(item) {
-    var player = document.getElementById('scPopupPlayer');
-    if($scope.tabSelected == false){
-      player = document.getElementById('scPlayer');
+      var player = document.getElementById('scPopupPlayer');
+      if ($scope.tabSelected == false) {
+        player = document.getElementById('scPlayer');
+      }
+      $scope.searchSelection = [];
+      $scope.searchError = undefined;
+      $scope.searchString = item.title;
+      $scope.makeEventURL = item.title;
+      $scope.makeEvent.trackID = item.id;
+      $scope.makeEvent.title = item.title;
+      $scope.makeEvent.trackURL = item.permalink_url
+      SC.oEmbed($scope.makeEvent.trackURL, {
+        element: player,
+        auto_play: false,
+        maxheight: 150
+      })
+      player.style.visibility = "visible";
+      $scope.processing = false;
     }
-    $scope.searchSelection = [];
-    $scope.searchError = undefined;
-    $scope.searchString = item.title;
-    $scope.makeEventURL = item.title;
-    $scope.makeEvent.trackID = item.id;
-    $scope.makeEvent.title = item.title;
-    $scope.makeEvent.trackURL = item.permalink_url
-    SC.oEmbed($scope.makeEvent.trackURL, {
-      element: player,
-      auto_play: false,
-      maxheight: 150
-    })
-    player.style.visibility = "visible";
-    $scope.processing = false;
-  }
-  //end search//
+    //end search//
 
   $scope.linkedAccounts = [];
   /*Get Linked Accounts*/
@@ -365,7 +365,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.editChannelArr = [];
     $scope.tabSelected = false;
     if (!editable) {
-    $scope.isEdit = true;
+      $scope.isEdit = true;
     }
     var newObj = angular.copy(item);
     $scope.makeEventURL = newObj.event.trackURL;
@@ -474,6 +474,9 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     var pushhour = parseInt(hour);
     if ($scope.availableSlots[daysArray[day]].indexOf(pushhour) > -1) {
       $scope.availableSlots[daysArray[day]].splice($scope.availableSlots[daysArray[day]].indexOf(pushhour), 1);
+    } else if ($scope.tooManyReposts(day, hour)) {
+      $.Zebra_Dialog("Cannot schedule slot. We only allow 8 reposts within 24 hours to prevent you from being repost blocked.");
+      return;
     } else {
       $scope.availableSlots[daysArray[day]].push(pushhour);
     }
@@ -484,7 +487,39 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       SessionService.create(res.data);
       $scope.user = SessionService.getUser();
       $scope.availableSlots = $scope.user.availableSlots;
-    });
+    }).then(null, console.log);
+  }
+
+  $scope.tooManyReposts = function(day, hour) {
+    var startDayInt = (day + 6) % 7;
+    var allSlots = []
+    var wouldBeSlots = JSON.parse(JSON.stringify($scope.availableSlots));
+    wouldBeSlots[daysArray[day]].push(hour);
+    for (var i = 0; i < 3; i++) {
+      wouldBeSlots[daysArray[(startDayInt + i) % 7]]
+        .forEach(function(slot) {
+          allSlots.push(slot + i * 24);
+        })
+    }
+    allSlots = allSlots.sort(function(a, b) {
+      return a - b;
+    })
+    var checkingSlots = [];
+    var status = false;
+    allSlots.forEach(function(slot) {
+      var i = 0;
+      while (i < checkingSlots.length) {
+        if (Math.abs(checkingSlots[i] - slot) > 24) checkingSlots.splice(i, 1);
+        else i++;
+      }
+      checkingSlots.push(slot);
+      if (checkingSlots.length > 8) {
+        console.log('errorSlots');
+        console.log(checkingSlots);
+        status = true;
+      }
+    })
+    return status;
   }
 
   $scope.setSlotStyle = function(day, hour) {
@@ -607,7 +642,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     var makeDay = new Date(day);
     makeDay.setHours(hour);
     if ($scope.user.blockRelease && new Date($scope.user.blockRelease).getTime() > new Date(makeDay).getTime()) {
-      $.Zebra_Dialog("Sorry! You are blocked till date "+ moment($scope.user.blockRelease).format('LLL'));
+      $.Zebra_Dialog("Sorry! You are blocked till date " + moment($scope.user.blockRelease).format('LLL'));
       return;
     }
     $scope.showOverlay = true;

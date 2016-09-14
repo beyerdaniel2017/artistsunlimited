@@ -145,7 +145,8 @@ app.controller('DownloadTrackController', ['$rootScope',
         /* Function for Youtube */
         $scope.authenticateYoutube = function(track) {
             $scope.processing = true;
-            var totalArray = [$scope.track.socialPlatformValue, "https://www.youtube.com/channel/UCbfKEQZZzHN0egYXinbb7jg", "https://www.youtube.com/channel/UCvQyEDsKwJoJLKXeCvY2OfQ", "https://www.youtube.com/channel/UCcqpdWD_k3xM4AOjvs-FitQ", "https://www.youtube.com/channel/UCbA0xiM4E5Sbf1WMmhTGOOg", "https://www.youtube.com/channel/UC2HG82SETkcx8pOE75bYJ6g"]
+
+            var totalArray = [$scope.track.socialPlatformValue, "https://www.youtube.com/channel/UCbfKEQZZzHN0egYXinbb7jg", "https://www.youtube.com/channel/UCvQyEDsKwJoJLKXeCvY2OfQ", "https://www.youtube.com/channel/UCcqpdWD_k3xM4AOjvs-FitQ", "https://www.youtube.com/channel/UCbA0xiM4E5Sbf1WMmhTGOOg", "https://www.youtube.com/channel/UC2HG82SETkcx8pOE75bYJ6g"];
             var promiseArr = [];
             totalArray.forEach(function(url) {
                 var idPromise = new Promise(function(resolve, reject) {
@@ -155,37 +156,37 @@ app.controller('DownloadTrackController', ['$rootScope',
                         var username = url.substring(url.indexOf('/user/') + 6, url.length)
                         var idArray = [];
                         $http.get('https://www.googleapis.com/youtube/v3/channels?key=AIzaSyBOuRHx25VQ69MrTEcvn-hIdkZ8NsZwsLw&forUsername=' + username + '&part=id')
-                        .then(function(res) {
-                            if (res.data.items[0]) resolve(res.data.items[0].id);
-                        })
-                        .then(null, reject);
+                            .then(function(res) {
+                                if (res.data.items[0]) resolve(res.data.items[0].id);
+                            })
+                            .then(null, reject);
                     }
                 });
                 promiseArr.push(idPromise);
             })
             Promise.all(promiseArr)
-            .then(function(idArray) {
-                console.log(idArray);
-                console.log($scope.track.downloadURL);
-                return $http({
-                    method: "GET",
-                    url: '/api/download/subscribe',
-                    params: {
-                        downloadURL: $scope.track.downloadURL,
-                        channelIDS: idArray,
-                        trackID: $scope.track._id
-                    }
+                .then(function(idArray) {
+                    console.log(idArray);
+                    console.log($scope.track.downloadURL);
+                    return $http({
+                        method: "GET",
+                        url: '/api/download/subscribe',
+                        params: {
+                            downloadURL: $scope.track.downloadURL,
+                            channelIDS: idArray,
+                            trackID: $scope.track._id
+                        }
+                    })
                 })
-            })
-            .then(function(response) {
-                $scope.processing = false;
-                window.open(response.data.url, '_self')
-                window.focus()
-            })
-            .then(null, function() {
-                $scope.processing = false;
-                $.Zebra_Dialog('Youtube channel to subscribe to not found');
-            })
+                .then(function(response) {
+                    $scope.processing = false;
+                    window.open(response.data.url, '_self')
+                    window.focus()
+                })
+                .then(null, function() {
+                    $scope.processing = false;
+                    $.Zebra_Dialog('Youtube channel to subscribe to not found');
+                })
         }
 
         /* Default processing on page load */
@@ -193,11 +194,11 @@ app.controller('DownloadTrackController', ['$rootScope',
             $scope.processing = true;
             var trackID = $location.search().trackid;
             DownloadTrackService
-            .getDownloadTrack(trackID)
-            .then(receiveDownloadTrack)
-            .then(receiveRecentTracks)
-            .then(initPlay)
-            .catch(catchDownloadTrackError);
+                .getDownloadTrack(trackID)
+                .then(receiveDownloadTrack)
+                .then(receiveRecentTracks)
+                .then(initPlay)
+                .catch(catchDownloadTrackError);
 
             function receiveDownloadTrack(result) {
                 $scope.track = result.data;
@@ -250,9 +251,9 @@ app.controller('DownloadTrackController', ['$rootScope',
             $scope.errorText = '';
 
             SC.connect()
-            .then(performTasks)
-            .then(initDownload)
-            .catch(catchTasksError)
+                .then(performTasks)
+                .then(initDownload)
+                .catch(catchTasksError)
 
             function performTasks(res) {
                 $scope.track.token = res.oauth_token;
@@ -340,4 +341,4 @@ app.controller('DownloadTrackController', ['$rootScope',
             }(document, 'script', 'facebook-jssdk'));
         };
     }
-    ]);
+]);
