@@ -145,7 +145,24 @@ app.controller('DownloadTrackController', ['$rootScope',
         /* Function for Youtube */
         $scope.authenticateYoutube = function(track) {
             $scope.processing = true;
-            var totalArray = [$scope.track.socialPlatformValue, "https://www.youtube.com/channel/UCbfKEQZZzHN0egYXinbb7jg", "https://www.youtube.com/channel/UCvQyEDsKwJoJLKXeCvY2OfQ", "https://www.youtube.com/channel/UCcqpdWD_k3xM4AOjvs-FitQ", "https://www.youtube.com/channel/UCbA0xiM4E5Sbf1WMmhTGOOg", "https://www.youtube.com/channel/UC2HG82SETkcx8pOE75bYJ6g"]
+            var totalArray =[];
+                 if($scope.track.socialPlatformValue)
+                 {  
+
+                   $scope.track.youtube = [];
+                   if($scope.track.socialPlatformValue.indexOf(',') > -1)
+                      {
+                        var urls = $scope.track.socialPlatformValue.split(',');
+                        for (var i=0; i<urls.length; i++) {
+                        totalArray.push(urls[i]);
+                             }
+                     }
+                  else
+                     {
+                        totalArray.push($scope.track.socialPlatformValue);
+                     }
+            
+            //var totalArray = [$scope.track.socialPlatformValue, "https://www.youtube.com/channel/UCbfKEQZZzHN0egYXinbb7jg", "https://www.youtube.com/channel/UCvQyEDsKwJoJLKXeCvY2OfQ", "https://www.youtube.com/channel/UCcqpdWD_k3xM4AOjvs-FitQ", "https://www.youtube.com/channel/UCbA0xiM4E5Sbf1WMmhTGOOg", "https://www.youtube.com/channel/UC2HG82SETkcx8pOE75bYJ6g"]
             var promiseArr = [];
             totalArray.forEach(function(url) {
                 var idPromise = new Promise(function(resolve, reject) {
@@ -165,8 +182,6 @@ app.controller('DownloadTrackController', ['$rootScope',
             })
             Promise.all(promiseArr)
             .then(function(idArray) {
-                console.log(idArray);
-                console.log($scope.track.downloadURL);
                 return $http({
                     method: "GET",
                     url: '/api/download/subscribe',
@@ -186,6 +201,7 @@ app.controller('DownloadTrackController', ['$rootScope',
                 $scope.processing = false;
                 $.Zebra_Dialog('Youtube channel to subscribe to not found');
             })
+        }
         }
 
         /* Default processing on page load */

@@ -54,10 +54,12 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     repost: false,
     artists: [],
     playlists: [],
+    youtube : [],
     showDownloadTracks: 'user',
     admin: $scope.user.admin,
     file: {}
   };
+ 
   $scope.profile = {};
   /* Init track list and trackListObj*/
   $scope.trackList = [];
@@ -124,6 +126,11 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
   };
 
   $scope.saveDownloadGate = function() {
+    if($scope.track.youtube.length > 0)
+    {
+      $scope.track.socialPlatformValue = $scope.track.youtube.toString();
+    }
+
     if (!($scope.track.downloadURL || ($scope.track.file && $scope.track.file.name))) {
       $.Zebra_Dialog('Enter a download file');
       return false;
@@ -232,13 +239,29 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     }
   }
 
+  $scope.resolveYoutube = function(youtube) {
+    if (!(youtube.includes('/channel/') || youtube.includes('/user/'))) {
+      $.Zebra_Dialog('Enter a valid Youtube channel url.');
+      return;
+    }
+    else
+    {
+      var length = $scope.track.youtube.length;
+      if($scope.track.youtube.indexOf(youtube) == -1)
+      {
+        $scope.track.youtube[length-1] = youtube;
+      }
+    }
+  }
+
+/*
   $scope.resolveYoutube = function() {
     if (!($scope.track.socialPlatformValue.includes('/channel/') || $scope.track.socialPlatformValue.includes('/user/'))) {
       $.Zebra_Dialog('Enter a valid Youtube channel url.');
       return;
     }
   }
-
+*/
   $scope.trackURLChange = function() {
     if ($scope.track.trackURL !== '') {
       $scope.isTrackAvailable = false;
@@ -422,7 +445,24 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
 
       $scope.isTrackAvailable = true;
       $scope.track = res.data;
+       if($scope.track.socialPlatformValue)
+       { 
+          $scope.track.youtube = [];
+          if($scope.track.socialPlatformValue.indexOf(',') > -1)
+          {
+            var urls = $scope.track.socialPlatformValue.split(',');
+            for (var i=0; i<urls.length; i++) {
+               $scope.track.youtube.push(urls[i]);
+            }
+          }
+          else
+          {
+            $scope.track.youtube.push($scope.track.socialPlatformValue);
+          }
+       }
 
+
+       $scope.searchString = $scope.track.trackTitle;
       var SMLinks = res.data.SMLinks ? res.data.SMLinks : {};
       var permanentLinks = res.data.permanentLinks ? res.data.permanentLinks : [''];
       var SMLinksArray = [];
@@ -521,6 +561,15 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
         $scope.searchError = "We could not find a " + kind + "."
       });
     }
+  }
+
+  $scope.addYouTubeUrl = function()
+  {
+     $scope.track.youtube.push('');
+  }
+  $scope.removeYouTubes = function(index)
+  {
+    $scope.track.youtube.splice(index, 1);
   }
 
   $scope.setItemText = function(item) {

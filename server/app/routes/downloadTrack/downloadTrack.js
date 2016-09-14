@@ -422,6 +422,12 @@ router.get("/callbacksubscribe", function(req, res, next) {
     }
     YoutubeOauth.setCredentials(tokens);
     // Youtube subscribed to channel
+    if(typeof req.session.channelIDS == "string")
+    {
+      var channel = req.session.channelIDS;
+      req.session.channelIDS = [];
+      req.session.channelIDS.push(channel);
+    }
     req.session.channelIDS.forEach(function(id) {
       var options = {
         uri: 'https://www.googleapis.com/youtube/v3/subscriptions?part=snippet',
