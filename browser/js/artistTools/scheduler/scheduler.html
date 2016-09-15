@@ -70,7 +70,7 @@
                         </div>   
                         <div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
                           <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendar[l+dayIncr].events[p], calendar[l+dayIncr].day, l, p)" class="row-scheduler" ng-click="clickedSlot(calendar[l+dayIncr].day, p,calendar[l+dayIncr].events[p])" style="position:relative;">
-                            <div ng-style="getEventStyle(calendar[l+dayIncr].events[p])" class="text-left">{{calendar[l+dayIncr].events[p].title}}</div>
+                            <div ng-style="getEventStyle(calendar[l+dayIncr].events[p])" class="text-left scheduler-yellow">{{calendar[l+dayIncr].events[p].title}}</div>
                      <img ng-show="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img>
                    </div>
                  </div>
@@ -80,6 +80,7 @@
               <table class="table">
                 <thead>
                   <tr>
+                    <th width="10%">Status</th>
                     <th width="50%">Track Name</th>
                     <th width="15%">Account</th>
                     <th width="15%">Date</th>
@@ -89,6 +90,7 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="item in listevents" ng-class='{grey : item.event.day < currentDate}'>
+                    <td class="text-left"><div class="div-dot" style="    width: 8px;border-radius: 10px;background: {{item.event.completed ? 'green':'red'}};height: 8px;">&nbsp;</div></i></td>
                     <td class="text-left">{{item.event.title}}</td>
                     <td class="text-left">{{user.soundcloud.username}}</td>
                     <td class="text-left">{{item.date}}</td>

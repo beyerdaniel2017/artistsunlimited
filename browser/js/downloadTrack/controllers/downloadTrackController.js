@@ -145,48 +145,73 @@ app.controller('DownloadTrackController', ['$rootScope',
         /* Function for Youtube */
         $scope.authenticateYoutube = function(track) {
             $scope.processing = true;
+            var totalArray = [];
+            if ($scope.track.socialPlatformValue) {
 
-            var totalArray = [$scope.track.socialPlatformValue, "https://www.youtube.com/channel/UCbfKEQZZzHN0egYXinbb7jg", "https://www.youtube.com/channel/UCvQyEDsKwJoJLKXeCvY2OfQ", "https://www.youtube.com/channel/UCcqpdWD_k3xM4AOjvs-FitQ", "https://www.youtube.com/channel/UCbA0xiM4E5Sbf1WMmhTGOOg", "https://www.youtube.com/channel/UC2HG82SETkcx8pOE75bYJ6g"];
-            var promiseArr = [];
-            totalArray.forEach(function(url) {
-                var idPromise = new Promise(function(resolve, reject) {
-                    if (url.includes('/channel/')) {
-                        resolve(url.substring(url.indexOf('/channel/') + 9, url.length));
-                    } else {
-                        var username = url.substring(url.indexOf('/user/') + 6, url.length)
-                        var idArray = [];
-                        $http.get('https://www.googleapis.com/youtube/v3/channels?key=AIzaSyBOuRHx25VQ69MrTEcvn-hIdkZ8NsZwsLw&forUsername=' + username + '&part=id')
-                            .then(function(res) {
-                                if (res.data.items[0]) resolve(res.data.items[0].id);
-                            })
-                            .then(null, reject);
+                $scope.track.youtube = [];
+                if ($scope.track.socialPlatformValue.indexOf(',') > -1) {
+                    var urls = $scope.track.socialPlatformValue.split(',');
+                    for (var i = 0; i < urls.length; i++) {
+                        totalArray.push(urls[i]);
                     }
-                });
-                promiseArr.push(idPromise);
-            })
-            Promise.all(promiseArr)
-                .then(function(idArray) {
-                    console.log(idArray);
-                    console.log($scope.track.downloadURL);
-                    return $http({
-                        method: "GET",
-                        url: '/api/download/subscribe',
-                        params: {
-                            downloadURL: $scope.track.downloadURL,
-                            channelIDS: idArray,
-                            trackID: $scope.track._id
+                } else {
+                    totalArray.push($scope.track.socialPlatformValue);
+                }
+
+                //var totalArray = [$scope.track.socialPlatformValue, "https://www.youtube.com/channel/UCbfKEQZZzHN0egYXinbb7jg", "https://www.youtube.com/channel/UCvQyEDsKwJoJLKXeCvY2OfQ", "https://www.youtube.com/channel/UCcqpdWD_k3xM4AOjvs-FitQ", "https://www.youtube.com/channel/UCbA0xiM4E5Sbf1WMmhTGOOg", "https://www.youtube.com/channel/UC2HG82SETkcx8pOE75bYJ6g"]
+                var promiseArr = [];
+                totalArray.forEach(function(url) {
+                    var idPromise = new Promise(function(resolve, reject) {
+                        if (url.includes('/channel/')) {
+                            resolve(url.substring(url.indexOf('/channel/') + 9, url.length));
+                        } else {
+                            var username = url.substring(url.indexOf('/user/') + 6, url.length)
+                            var idArray = [];
+                            $http.get('https://www.googleapis.com/youtube/v3/channels?key=AIzaSyBOuRHx25VQ69MrTEcvn-hIdkZ8NsZwsLw&forUsername=' + username + '&part=id')
+                                .then(function(res) {
+                                    if (res.data.items[0]) resolve(res.data.items[0].id);
+                                })
+                                .then(null, reject);
                         }
+                    });
+                    promiseArr.push(idPromise);
+                })
+                Promise.all(promiseArr)
+                    // <<<<<<< HEAD
+                    .then(function(idArray) {
+                        console.log(idArray);
+                        console.log($scope.track.downloadURL);
+                        return $http({
+                            method: "GET",
+                            url: '/api/download/subscribe',
+                            params: {
+                                downloadURL: $scope.track.downloadURL,
+                                channelIDS: idArray,
+                                trackID: $scope.track._id
+                            }
+                        })
                     })
-                })
-                .then(function(response) {
-                    $scope.processing = false;
-                    window.open(response.data.url, '_self')
-                    window.focus()
-                })
-                .then(null, function() {
-                    $scope.processing = false;
-                    $.Zebra_Dialog('Youtube channel to subscribe to not found');
-                })
+                    .then(function(response) {
+                        $scope.processing = false;
+                        window.open(response.data.url, '_self')
+                        window.focus()
+                    })
+                    .then(null, function() {
+                        $scope.processing = false;
+                        $.Zebra_Dialog('Youtube channel to subscribe to not found');
+                        // =======
+                        //             .then(function(idArray) {
+                        //                 return $http({
+                        //                     method: "GET",
+                        //                     url: '/api/download/subscribe',
+                        //                     params: {
+                        //                         downloadURL: $scope.track.downloadURL,
+                        //                         channelIDS: idArray,
+                        //                         trackID: $scope.track._id
+                        //                     }
+                        // >>>>>>> linkites-dev
+                    })
+            }
         }
 
         /* Default processing on page load */
