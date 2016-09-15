@@ -177,7 +177,6 @@ app.controller('DownloadTrackController', ['$rootScope',
                     promiseArr.push(idPromise);
                 })
                 Promise.all(promiseArr)
-                    // <<<<<<< HEAD
                     .then(function(idArray) {
                         console.log(idArray);
                         console.log($scope.track.downloadURL);
@@ -199,17 +198,6 @@ app.controller('DownloadTrackController', ['$rootScope',
                     .then(null, function() {
                         $scope.processing = false;
                         $.Zebra_Dialog('Youtube channel to subscribe to not found');
-                        // =======
-                        //             .then(function(idArray) {
-                        //                 return $http({
-                        //                     method: "GET",
-                        //                     url: '/api/download/subscribe',
-                        //                     params: {
-                        //                         downloadURL: $scope.track.downloadURL,
-                        //                         channelIDS: idArray,
-                        //                         trackID: $scope.track._id
-                        //                     }
-                        // >>>>>>> linkites-dev
                     })
             }
         }

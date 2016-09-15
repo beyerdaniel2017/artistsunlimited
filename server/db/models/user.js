@@ -120,7 +120,7 @@ var schema = new mongoose.Schema({
                 type: Boolean,
                 default: false
             },
-            dailyUnfilledTrade: {
+            failedRepost: {
                 type: Boolean,
                 default: true
             }
@@ -142,7 +142,7 @@ var schema = new mongoose.Schema({
                 type: Boolean,
                 default: false
             },
-            dailyUnfilledTrade: {
+            failedRepost: {
                 type: Boolean,
                 default: true
             }

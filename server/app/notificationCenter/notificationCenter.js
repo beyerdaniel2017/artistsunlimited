@@ -4,7 +4,7 @@ var messengerAPI = require('../messengerAPI/messengerAPI.js')
 var sendEmail = require('../mandrill/sendEmail.js')
 
 module.exports = {
-  sendNotifications: function(userID, message, type, heading, link) {
+  sendNotifications: function(userID, type, heading, message, link) {
     User.findById(userID).exec()
       .then(function(user) {
         if (user.notificationSettings.facebookMessenger[type]) {

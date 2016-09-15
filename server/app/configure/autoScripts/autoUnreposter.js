@@ -62,38 +62,39 @@ function unrepostEvent(event, user) {
   };
   scWrapper.request(reqObj, function(err, data) {
     if (!err) {
-      putMessage(event, user);
+      // putMessage(event, user);
+      notificationCenter.sendNotification(user._id, 'trackUnrepost', 'Track unrepost', 'A track was unreposted from ' + user.soundcloud.username + '.', 'https://artistsunlimited.co/login');
     }
   });
 }
 
-/*Update Message*/
-function putMessage(event, user) {
-  var query = {
-    $or: [{
-      'p1.user': event.owner,
-      'p2.user': user._id
-    }, {
-      'p2.user': event.owner,
-      'p1.user': user._id
-    }]
-  };
-  var message = {
-    type: 'alert',
-    text: 'A track was unreposted on ' + user.soundcloud.username,
-    senderId: event.owner,
-    date: new Date()
-  };
-  Trade.update(query, {
-      $addToSet: {
-        messages: message
-      }
-    })
-    .exec()
-    .then(function(data) {
-      //Success
-    })
-    .then(null, function(error) {
-      console.log(error);
-    });
-}
+// /*Update Message*/
+// function putMessage(event, user) {
+//   var query = {
+//     $or: [{
+//       'p1.user': event.owner,
+//       'p2.user': user._id
+//     }, {
+//       'p2.user': event.owner,
+//       'p1.user': user._id
+//     }]
+//   };
+//   var message = {
+//     type: 'alert',
+//     text: 'A track was unreposted on ' + user.soundcloud.username,
+//     senderId: event.owner,
+//     date: new Date()
+//   };
+//   Trade.update(query, {
+//       $addToSet: {
+//         messages: message
+//       }
+//     })
+//     .exec()
+//     .then(function(data) {
+//       //Success
+//     })
+//     .then(null, function(error) {
+//       console.log(error);
+//     });
+// }

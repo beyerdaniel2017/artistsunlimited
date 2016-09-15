@@ -6,6 +6,7 @@ var scWrapper = require("../../SCWrapper/SCWrapper.js");
 var scConfig = require('./../../../env').SOUNDCLOUD;
 var sendEmail = require('../../mandrill/sendEmail.js');
 var request = require('request');
+var notificationCenter = require('../../notificationCenter/notificationCenter.js');
 
 module.exports = doRepost;
 //executes every 5 min
@@ -73,6 +74,7 @@ function repostAndRemove(event, user, repCount) {
             distributeEarnings(user, event);
             sendMessage(err, event, user);
           }
+          notificationCenter.sendNotifications(user._id, 'trackRepost', 'Track repost', 'A track was reposted on ' + user.soundcloud.username, 'artistsunlimited.com/login');
         } else {
           console.log('error ------------------');
           console.log(err);
@@ -86,6 +88,7 @@ function repostAndRemove(event, user, repCount) {
             }
             partialRefund(event);
             sendMessage(err, event, user);
+            notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', 'A repost on ' + user.soundcloud.username + ' did not complete.', 'artistsunlimited.com/login');
           }
         }
       });
