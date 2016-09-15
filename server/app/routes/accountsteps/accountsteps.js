@@ -25,4 +25,9 @@ router.post('/sendVarificationAccount', function(req, res, next) {
     .then(function(payout) {
       res.send(payout);
     }).then(null, next);
-})
+})router.post('/sendTestEmail', function(req, res, next) {
+	var emailObj = req.body.emailObj;
+	var toEmail = req.body.email;
+  	sendEmail(toEmail, toEmail, "Edward Sanchez", "feedback@peninsulamgmt.com", emailObj.subject, emailObj.body);
+  	res.send({success: true});
+});

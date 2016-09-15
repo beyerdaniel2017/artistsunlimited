@@ -312,15 +312,20 @@ router.post('/updateAdminProfile', function(req, res, next) {
   if (body.pictureUrl) {
     updateObj.profilePicture = body.pictureUrl
   }
-  if (body.username) {
-    updateObj.name = body.username;
-  } else if (body.password) {
+  if(body.email){
+    updateObj.email = body.email;
+  }
+
+  if (body.password) {
     updateObj.salt = User.generateSalt();
     updateObj.password = User.encryptPassword(body.password, updateObj.salt);
-  } else {
-    updateObj = body;
   } 
 
+  User.findOne({'_id': {$ne : req.user._id}, email: body.email}, function(err,u){
+    if(u){
+      res.send({message: "Email already register."});
+    }
+    else{
  User.findOneAndUpdate({
     '_id': req.user._id
   }, {
@@ -334,6 +339,8 @@ router.post('/updateAdminProfile', function(req, res, next) {
   .then(null, function(err) {
     next(err);
   });
+    }
+  })
 });
 
 router.post('/checkUsercount', function(req, res, next) {

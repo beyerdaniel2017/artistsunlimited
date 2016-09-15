@@ -9,7 +9,7 @@ var User = mongoose.model('User');
 
 //----------Public Repost Events----------
 router.get('/forUser/:id', function(req, res, next) {
-  var date = moment().month(new Date().getMonth()).date(new Date().getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format();
+  var date = moment().month(new Date().getMonth()).date(new Date().getDate()-7).hours(0).minutes(0).seconds(0).milliseconds(0).format();
   RepostEvent.find({
       userID: req.params.id,
       day: {

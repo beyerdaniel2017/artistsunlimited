@@ -16,12 +16,12 @@
                     <div class="two-tabs">
                         <!-- Nav tabs :Start-->
                         <div class="text-center" style="margin-top:30px;margin-bottom:30px;">SET UP YOUR ADMIN ACCOUNT</div>
-                        <ul class="nav nav-tabs" role="tablist">
+                        <ul class="info-ui-tab" role="tablist">
                             <li class="active">
-                                <a href="admin/step1" role="tab" data-toggle="tab">1  Basic Info</a>
+                                <a href="javascript:void(0)" role="tab" data-toggle="tab">1  Basic Info</a>
                             </li>
                             <li>
-                                <a>2  Set up your first Channel</a>
+                                <a href="javascript:void(0)">2  Set up your first Channel</a>
                             </li>
                         </ul>
                         <div class="clearfix"></div>
@@ -30,21 +30,21 @@
                         <div class="tab-content">
                             <!-- MY SCHEDULE : Start-->
                             <div role="tabpanel" class="tab-pane fade in active" id="step1">
-                                <ul class="nav nav-tabs" role="tablist">
-                                    <li class="active" style="width:20%">
-                                        <a href="/admin/basic/step1" role="tab" data-toggle="tab">1  Set General Info</a>
+                                <ul class="admin-ui-tabs" role="tablist">
+                                    <li class="active">
+                                        <a href="javascript:void(0)" role="tab" data-toggle="tab">1  Set General Info</a>
                                     </li>
-                                    <li class="active" style="width:20%">
-                                        <a href="/admin/basic/step2" role="tab" data-toggle="tab">2  Repost Submissions Customize E-mails</a>
+                                    <li class="active">
+                                        <a href="javascript:void(0)" role="tab" data-toggle="tab">2  Repost Submissions Customize E-mails</a>
                                     </li>
-                                    <li  style="width:20%">
-                                        <a href="/admin/basic/step3" role="tab" data-toggle="tab">3  Premier Submissions Customize E-mails</a>
+                                    <li >
+                                        <a href="javascript:void(0)" role="tab" data-toggle="tab">3  Premier Submissions Customize E-mails</a>
                                     </li>
-                                    <li style="width:20%">
-                                        <a href="/admin/basic/step4" role="tab" data-toggle="tab">4 Notification Settings</a>
+                                    <li>
+                                        <a href="javascript:void(0)" role="tab" data-toggle="tab">4 Notification Settings</a>
                                     </li>
-                                    <li style="width:20%">
-                                        <a href="/admin/basic/step5" role="tab" data-toggle="tab">5  PayPal Info</a>
+                                    <li>
+                                        <a href="javascript:void(0)" role="tab" data-toggle="tab">5  PayPal Info</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content">
@@ -59,7 +59,7 @@
                                             </div>
                                             <!--row ::end-->
                                             <div class="row" ng-repeat="custom in AccountsStepData.repostCustomizeEmails track by $index">
-                                                <div class="col-md-6">
+                                                <div class="col-md-6 text-center">
                                                     <div class="container-90">
                                                         <h6 class="text-center" ng-show="!$index">{{custom.acceptance.title}}</h6>
                                                         <input ng-show="$index" class="acceptance-signatur" type="text" ng-model="custom.acceptance.title" placeholder="Title" style="margin-left:0px">
@@ -73,9 +73,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <button class="btn btn-default" ng-click="sendTestMail('repostaccept')">Send test mail</button>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-6 text-center">
                                                     <div class="container-90">
                                                         <h6 class="text-center" ng-show="!$index">{{custom.decline.title}}</h6>
                                                         <input ng-show="$index" class="acceptance-signatur" type="text" ng-model="custom.decline.title" placeholder="Title" style="margin-left:0px">
@@ -91,6 +92,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <button class="btn btn-default" ng-click="sendTestMail('repostdecline')">Send test mail</button>
                                                 </div>
                                             </div>
                                             <div class="">
@@ -121,6 +123,24 @@
                 </div>
             </div>
             <!--overlay-->
+            <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showTestEmailModal">
+            <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
+              <div class="modal-dialog modal-vertical-centered">    
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div style="text-align:center; padding:10px;">        
+                    <div style="text-align:center;padding-bottom:10px;">
+                      <form ng-submit="sendMail(modal.email)">
+                       <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="modal.email" required/>
+                       <button class="btn btn-default" ng-click="closeModal()">Close</button>
+                       <button class="btn btn-default btn-small" type="submit">Send Mail</button>
+                     </form>
+                   </div>
+                 </div>      
+               </div>
+             </div>
+           </div>
+         </div>
             <ng-include src="'js/home/views/loader.html'"></ng-include>
         </div>
     </div>

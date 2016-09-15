@@ -72,9 +72,10 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     if (!$scope.isLoggedIn) {
         $state.go('admin');
     }
-
-
-
+    $scope.showTestEmailModal=false;
+    $scope.errorverification = false;
+    $scope.verified = false;
+    $scope.waitoneminute = false;
     var formActions = SessionService.getActionsfoAccount() ? SessionService.getActionsfoAccount() : 0;
     if (!formActions && formActions != "Add" && formActions != "Edit") {
 
@@ -237,6 +238,54 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
             $scope.AccountsStepData.customizeemails.push($scope.customBox);
     }
 
+    $scope.sendTestMail = function(type){
+      $scope.testEmailType = type;
+      $scope.showTestEmailModal = true;
+      $('#emailModal').modal('show');
+    }
+
+    $scope.sendMail = function(email) {
+        if(email != ""){
+            var emailObj = ""; 
+            if($scope.testEmailType == "repostaccept"){
+                emailObj = $scope.AccountsStepData.repostCustomizeEmails[0].acceptance;
+            }
+            if($scope.testEmailType == "repostdecline"){
+                emailObj = $scope.AccountsStepData.repostCustomizeEmails[0].decline;
+            }
+            if($scope.testEmailType == "premieraccept"){
+                emailObj = $scope.AccountsStepData.premierCustomizeEmails[0].acceptance;
+            }
+            if($scope.testEmailType == "premierdecline"){
+                emailObj = $scope.AccountsStepData.premierCustomizeEmails[0].decline;
+            }
+            var mailObj = {};
+            mailObj.email = email;
+            mailObj.emailObj = emailObj;
+            $http.post('/api/accountsteps/sendTestEmail', mailObj)
+            .then(function(res) {
+                if (res.data.success) {
+                    $scope.showTestEmailModal = false;
+                    $('#emailModal').modal('hide');
+                    $.Zebra_Dialog('Mail sent successfully.');
+                }
+            })
+            .catch(function() {
+                if (res.data.success) {
+                    $scope.showTestEmailModal = false;
+                    $('#emailModal').modal('hide');
+                    $.Zebra_Dialog('Error in sending mail.');
+                }
+            })
+        }
+    }
+
+    $scope.closeModal = function() {
+       $scope.showTestEmailModal = false;
+       $('#emailModal').modal('hide');
+    }
+
+
     $scope.nextStep = function(step, currentData, type) {
         if (type == "basic") {
             switch (step) {
@@ -266,11 +315,13 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                     if (next) {
                         AccountSettingServices.updateAdminProfile(body)
                             .then(function(res) {
+                        if(res.data.message){
+                            $.Zebra_Dialog('Error: Email already register.');
+                        }
+                        else{
                                 $scope.AccountsStepData.newpassword = "";
                                 $scope.AccountsStepData.newconfirmpassword = "";
                                 $scope.processing = false;
-                            })
-                            .catch(function() {});
                         $scope.AccountsStepData.repostCustomizeEmails = (($scope.AccountsStepData.repostCustomizeEmails.length > 0) ? $scope.AccountsStepData.repostCustomizeEmails : [{
                             "acceptance": {
                                 "title": "ACCEPTANCE  EMAIL",
@@ -291,7 +342,13 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                             SessionService.createAdminUser($scope.AccountsStepData);
                             $state.go("basicstep2");
                         }, 500);
-                    } else {
+                        }
+                    })
+                    .catch(function() {
+                        $.Zebra_Dialog('Error: Error inprocessing the request.');
+                    });
+                } 
+                else {
                         return;
                     }
                     break;
@@ -345,6 +402,8 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                         })
                         .catch(function() {});
                     $scope.errorverification = false;
+                $scope.verified = false;
+                $scope.waitoneminute = false;
                     SessionService.createAdminUser($scope.AccountsStepData);
                     if ($scope.AccountsStepData.paypal == undefined) {
                         $scope.AccountsStepData.paypal = {};
@@ -654,6 +713,8 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                             .then(function(res) {
                                 if (res) {
                                     $scope.AccountsStepData.paypal.varify = true;
+                                    $scope.verified = false;
+                                    $scope.waitoneminute = true;
                                     $scope.processing = false;
                                 }
                             })
@@ -668,6 +729,8 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     $scope.varifyaccount = function() {
         $scope.processing = true;
         $scope.errorverification = false;
+        $scope.verified = false;
+        $scope.waitoneminute = false;
         var paypaldata = $scope.AccountsStepData.paypal;
         if ((paypaldata.price1 == paypaldata.pricea && paypaldata.price2 == paypaldata.priceb) || (paypaldata.price1 == paypaldata.priceb && paypaldata.price2 == paypaldata.pricea)) {
             $scope.AccountsStepData.paypal.processchannel = true;
@@ -676,6 +739,8 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                 })
                 .then(function(res) {
                     $scope.processing = false;
+                $scope.verified = true;
+                $scope.waitoneminute = false;
                     SessionService.createAdminUser($scope.AccountsStepData);
                 })
                 .catch(function() {});

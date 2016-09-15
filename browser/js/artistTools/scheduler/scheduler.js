@@ -582,10 +582,9 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       });
   }
 
-  $scope.dayIncr = 0;
-
+  $scope.dayIncr = 7;
   $scope.incrDay = function() {
-    if ($scope.dayIncr < 21) $scope.dayIncr++;
+    if ($scope.dayIncr < 49) $scope.dayIncr++;
   }
 
   $scope.decrDay = function() {
@@ -1075,8 +1074,9 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.fillDateArrays = function(events) {
     var calendar = [];
-    var today = new Date();
-    for (var i = 0; i < 29; i++) {
+    var todayDate = new Date();
+    var today = new Date(todayDate.setDate(todayDate.getDate() - 7));
+    for (var i = 0; i < 49; i++) {
       var calDay = {};
       calDay.day = new Date()
       calDay.day.setDate(today.getDate() + i);

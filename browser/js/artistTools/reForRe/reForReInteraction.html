@@ -16,14 +16,14 @@
   				<div class="left-side-profile">
   					<div class="left-profile active"  >
   						<button ng-click="changeActiveUser(user)">
-  							<div class="tropical" ng-style="(activeUser._id == user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.user.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.user.user.soundcloud.username}}</span></a><img class="img-responsive img-circle" ng-src="{{trade.user.user.soundcloud.avatarURL}}" style="width:100px;">
+  							<div class="tropical" ng-style="(activeUser._id == user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.user.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.user.user.soundcloud.username}}</span></a><img class="img-responsive img-circle" ng-src="{{trade.user.user.soundcloud.avatarURL}}" style="height:100px;">
   								<p class="ng-binding">{{trade.user.user.soundcloud.followers}} Followers</p>
   							</div>
   						</div><!--left-side-manu ::end-->
   					</button>
   					<div class="left-profile">
   						<button ng-click="changeActiveUser(trade.other.user)">
-  							<div class="tropical"  ng-style="(activeUser._id == trade.other.user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.other.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.other.user.soundcloud.username}}</span></a><img class="img-responsive img-circle" src="{{trade.other.user.soundcloud.avatarURL}}" style="width:100px;">
+  							<div class="tropical"  ng-style="(activeUser._id == trade.other.user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.other.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.other.user.soundcloud.username}}</span></a><img class="img-responsive img-circle" src="{{trade.other.user.soundcloud.avatarURL}}" style="height:100px;">
   								<p class="ng-binding">{{trade.other.user.soundcloud.followers}} Followers</p>
   							</div>
   						</button>

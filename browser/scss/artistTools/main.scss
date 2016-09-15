@@ -4,7 +4,7 @@ $light-gray: #dddddd;
 $mid-gray: #b3b3b3;
 $aurange: #F5BBBC;
 html {
-    height: 100%;
+    height: 100%
 }
 a:focus,
 a:after,
@@ -2120,9 +2120,9 @@ input:checked + .slider:before {
     color: rgb(138, 138, 138);
 }
 .check-list {
-    max-height: 140px;
+    /*    max-height: 140px;
     overflow-y: auto;
-    min-height: 140px;
+    min-height: 140px;*/
 }
 .songScheduler .title {
     font-size: 18px;
@@ -2160,12 +2160,12 @@ input:checked + .slider:before {
 }
 .channel-masege {
     border-bottom: 1px solid rgb(216, 216, 216);
-    padding: 10px 0px 0px 24px;
+    /*padding: 10px 0px 0px 24px;
     border-bottom: 1px solid #d8d8d8;
     padding: 10px 0px 0px 24px;
     min-height: 52px;
     overflow-y: auto;
-    max-height: 50px;
+    max-height: 50px;*/
 }
 .channel-masege ul li {
     display: inline-block;
@@ -2403,7 +2403,7 @@ input:checked + .slider:before {
 /*add-account css ::start*/
 
 .acceptance .channel-masege {
-    padding: 15px 0px;
+    padding: 0;
 }
 .acceptance .channel-check {
     border: 1px solid #E1E1E1;
@@ -2425,6 +2425,7 @@ input:checked + .slider:before {
 }
 .acceptance input {
     width: 100%;
+    padding: 12px;
 }
 .add-account .small-text {
     font-size: 11px;
@@ -3077,7 +3078,6 @@ td {
     width: 100%;
     padding: 3px 0;
 }
-
 .au-dropdown-list {
     max-width: 320px;
     margin: 0 auto;
@@ -3125,6 +3125,7 @@ td {
 }
 /* 13-9-2016  */
 /*** 14-9-2016 ***/
+
 .url-search-btn {
     position: absolute;
     right: 12px;
@@ -3151,10 +3152,60 @@ td {
     background: transparent;
     color: #888;
 }
-
 /*** 14-9-2016 ***/
+/*** 15-9-2016 ***/
 
-/*********** Media CSS **************/
+.padding-10 {
+    padding: 10px;
+}
+.btn {
+    margin-bottom: 5px;
+}
+.cl-sound-btn {
+    margin-top: 50px;
+}
+.chat-input {
+    height: 38px;
+}
+.margin-bottom-10 {
+    margin-bottom: 20px;
+}
+.admin-ui-tabs {
+    list-style: none;
+}
+.admin-ui-tabs > li {
+    float: left;
+    text-align: center;
+    width: 20%;
+}
+.admin-ui-tabs > li > a {
+    color: #cccccc;
+}
+.admin-ui-tabs > li.active > a,
+.admin-ui-tabs > li.active > a:hover,
+.admin-ui-tabs > li.active > a:focus {
+    color: #686868;
+    cursor: default;
+}
+.info-ui-tab {
+    list-style: none;
+}
+.info-ui-tab > li {
+    float: left;
+    text-align: center;
+    width: 50%;
+}
+.info-ui-tab > li > a {
+    color: #cccccc;
+}
+.info-ui-tab > li.active > a,
+.info-ui-tab > li.active > a:hover,
+.info-ui-tab > li.active > a:focus {
+    color: #686868;
+    cursor: default;
+}
+/*** 15-9-2016 ***/
+/******************************** Media CSS :: START ************************************/
 
 @media screen and (max-width: 1280px) {
     .min-ht {
@@ -3296,6 +3347,10 @@ td {
     }
     .download-group-btn button {
         padding: 10px 23px;
+    }
+    .admin-ui-tabs > li {
+        width: 100%;
+        padding: 10px 0;
     }
 }
 @media screen and (max-width: 667px) {
@@ -3469,6 +3524,9 @@ td {
     .submi-section {
         padding: 0;
         margin: 0;
+    }
+    .two-tabs .nav-tabs li {
+        width: 100%;
     }
 }
 @media screen and (max-width: 360px) {
@@ -3651,20 +3709,4 @@ td {
         padding: 10px 0px 0px 0;
     }
 }
-/** MEDIA CSS END **/
-
-.padding-10 {
-    padding: 10px;
-}
-.btn {
-    margin-bottom: 5px;
-}
-.cl-sound-btn {
-    margin-top: 50px;
-}
-.chat-input {
-    height: 38px;
-}
-.margin-bottom-10 {
-    margin-bottom: 20px;
-}
+/******************************** Media CSS :: END ************************************/
