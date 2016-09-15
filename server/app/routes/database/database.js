@@ -446,6 +446,11 @@ router.post('/downloadurl', function(req, res, next) {
       body.fields.admin = false;
     }
     body.fields.userid = req.user._id;
+
+    if(body.fields.adminaction=="admin"){
+      var users = JSON.parse(body.fields.user); 
+      body.fields.userid =users._id;  
+    }
     body.fields.downloadURL = (body.location !== '') ? body.location : body.fields.downloadURL;
     if (body.fields._id) {
       return DownloadTrack.findOneAndUpdate({
@@ -547,7 +552,22 @@ router.get('/downloadurl', function(req, res, next) {
       next(err);
     });
 });
-
+router.get('/downloadurladmin/:userid', function(req, res, next) {
+  var userID = req.params.userid;
+  DownloadTrack
+    .find({
+      userid: userID
+    })
+    .sort({
+      createdOn: -1
+    })
+    .then(function(tracks) {
+      res.send(tracks);
+    })
+    .then(null, function(err) {
+      next(err);
+    });
+});
 
 router.post('/paidrepost', function(req, res, next) {
 

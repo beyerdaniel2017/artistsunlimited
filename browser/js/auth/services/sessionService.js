@@ -9,17 +9,28 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		$window.localStorage.removeItem('AdminUser');
 		$window.localStorage.removeItem('addActionsfoAccount');
 		$window.localStorage.removeItem('addActionsfoAccountIndex');
+		$window.localStorage.removeItem('soundCloudId');
+		$window.localStorage.removeItem('PaidRepostAccounts');
+				
 	}
 
 	function removeAccountusers(){
 		$window.localStorage.removeItem('addActionsfoAccount');
 		$window.localStorage.removeItem('addActionsfoAccountIndex');
 		$window.localStorage.removeItem('AdminUser');	
+		$window.localStorage.removeItem('soundCloudId');
+		$window.localStorage.removeItem('PaidRepostAccounts');
 	}
 
-	function addActionsfoAccount(actions,index) {
+	function addActionsfoAccount(actions,index,soundCloudId) {
 		$window.localStorage.setItem('addActionsfoAccount',actions);
 		$window.localStorage.setItem('addActionsfoAccountIndex',index);
+		if(soundCloudId)
+			$window.localStorage.setItem('soundCloudId',soundCloudId);			
+	}
+
+	function removePaidRepostAccounts(){
+		$window.localStorage.removeItem('PaidRepostAccounts');
 	}
 
 	function getActionsfoAccount() {
@@ -28,6 +39,10 @@ app.factory('SessionService', function($cookies, $http, $window) {
 
 	function getActionsfoAccountIndex() {
 		return $window.localStorage.getItem('addActionsfoAccountIndex');
+	}
+
+	function getSoundCloudId(){
+		return $window.localStorage.getItem('soundCloudId');
 	}
 
 	function getUser() {
@@ -51,10 +66,16 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		if(id != undefined){
 			try {
 				var accounts = JSON.parse($window.localStorage.getItem('PaidRepostAccounts'));
+				if ((typeof accounts === "object") && (accounts !== null)) {
+					return accounts;
+				}
+				else{
 				var user = accounts.find(function(acc){
-					return acc._id = id;
-				})
+						return acc._id == id;
+					});
+					console.log("user",user);
 				return user;
+				}
 			} catch (e) {}
 		}		
 	}
@@ -90,6 +111,8 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		getActionsfoAccount:getActionsfoAccount,
 		getActionsfoAccountIndex:getActionsfoAccountIndex,
 		setUserPaidRepostAccounts:setUserPaidRepostAccounts,
-		getUserPaidRepostAccounts:getUserPaidRepostAccounts
+		getUserPaidRepostAccounts:getUserPaidRepostAccounts,
+		removePaidRepostAccounts:removePaidRepostAccounts,
+		getSoundCloudId:getSoundCloudId
 	};
 });

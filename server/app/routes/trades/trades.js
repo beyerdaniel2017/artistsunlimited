@@ -46,7 +46,11 @@ router.post('/new', function(req, res, next) {
 })
 
 router.put('/', function(req, res, next) {
-  if (req.user._id != req.body.p1.user._id && req.user._id != req.body.p2.user._id) {
+  var userid = req.user._id;
+  if(req.body.userid!=undefined)
+    userid = req.body.userid;
+  
+  if (userid != req.body.p1.user._id && userid != req.body.p2.user._id) {
     next({
       message: 'Forbidden',
       status: 403
@@ -75,6 +79,23 @@ router.get('/byID/:tradeID', function(req, res, next) {
   Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user').exec()
     .then(function(trade) {
       if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user._id) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user._id)) {
+        next({
+          message: 'Forbidden',
+          status: 403
+        })
+      } else {
+        res.send(trade);
+      }
+    })
+    .then(null, next);
+})
+
+router.get('/byID/:tradeID/:userId', function(req, res, next) {
+  var userid =req.params.userId;
+
+  Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user').exec()
+    .then(function(trade) {
+      if (userid != trade.p1.user._id && userid!= trade.p2.user._id) {
         next({
           message: 'Forbidden',
           status: 403

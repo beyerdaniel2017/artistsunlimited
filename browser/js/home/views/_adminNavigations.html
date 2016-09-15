@@ -1,18 +1,25 @@
 <div id="sidebar-wrapper">
   <div class="left-side">
-    <div class="tropical"><span>{{user.name}}</span><img class="img-responsive img-circle" src="{{user.profilePicture ? user.profilePicture : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="height:100px;">
+        <div class="tropical"><span>{{user.name}}</span><img class="img-responsive img-circle" src="{{user.profilePicture ? user.profilePicture : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="width:100px;">
+          <div class="clearfix"></div>
+          <div style="width:80%;margin:0 auto;" class="text-center" ng-show="{{paidUsers.length}}">
+            <select name="paidusers" class="form-control">
+              <option ng-repeat="paid in paidUsers" ng-click="getBehalfUserRecord(paid);" 
+              ng-selected="{{user._id!='' && paid._id==user._id}}" value="{{paid._id}}">{{paid.name}}</option>
+            </select> 
+          </div>
     </div>
     <!--tropical end-->
 		<div class="left-menus">
       <nav class="nav">
         <ul class="nav nav-navabar">
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ng-click="gotoSettings();">SETTINGS</a></li>
-          <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="scheduler">SCHEDULER</a></li>
-          <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="reposttraders">REPOST TRADER</a></li>
-          <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="submissions">REPOST SUBMISSION <div class="badge notification-bubble-submission-count" ng-show="submissionsCount > 0">{{submissionsCount}}</div></a></li>
+                    <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ng-click="gotoBehalfSetting('SCHEDULER');">SCHEDULER</a></li>
+                    <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ng-click="gotoBehalfSetting('REPOSTTRADES');">REPOST TRADER</a></li>
+                    <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)"   ui-sref="repostsubmissions" >REPOST SUBMISSION <div class="badge notification-bubble-submission-count" ng-show="submissionsCount > 0">{{submissionsCount}}</div></a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="premiersubmissions">PREMIER SUBMISSIONS</a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="accounts">ACCOUNTS</a></li>
-          <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="settings">DOWNLOAD GATEWAY</a></li>
+                    <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ng-click="gotoBehalfSetting('DOWNLOADGATEWAY');">DOWNLOAD GATEWAY</a></li>
          <!--  <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="customizesubmission">CUSTOM SUBMISSIONS</a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="customemailbuttons">CUSTOM EMAIL BUTTONS</a></li> -->
         </ul>

@@ -210,6 +210,42 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
             $scope.submissionsCount = res.data;
         });
     }
+
+    $scope.gotoSettings = function(){
+      $scope.user = SessionService.getUser();  
+      SessionService.addActionsfoAccount('Admin',$scope.user._id)
+      $state.go("basicstep1");
+    }
+    
+
+    $scope.getBehalfUserRecord = function(paid){
+        SessionService.removePaidRepostAccounts();  
+        SessionService.addActionsfoAccount('BehalfUser',paid._id,paid.soundcloud.id);
+        SessionService.setUserPaidRepostAccounts(paid);
+        console.log($state.current.url.indexOf("admin/reForReInteraction"));
+        if($state.current.url.indexOf("admin/reForReInteraction") !=-1)
+            window.location.href='/admin/reposttraders';        
+        else            
+            window.location.reload($state.current.url);        
+    }  
+
+    $scope.gotoBehalfSetting = function(actions){
+        console.log(actions);
+        if(actions=="SCHEDULER"){
+            //$state.go("scheduler");
+            window.location.href='/admin/scheduler';  
+        }
+        if(actions=="REPOSTTRADES"){
+            //$state.go("adminRepostTraders");
+            window.location.href='/admin/reposttraders';  
+        }
+        if(actions=="DOWNLOADGATEWAY"){
+            ///$state.go("adminDownloadGateway");
+            window.location.href='/admin/downloadGateway';
+        }
+    }
+
+
     $scope.checkNotification = function() {
         var user = SessionService.getUser();
         if (user) {

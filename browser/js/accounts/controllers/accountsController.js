@@ -13,14 +13,6 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
     }
     SessionService.removeAccountusers();
 
-    $scope.gotoSettings = function(){
-      SessionService.addActionsfoAccount('Admin',$scope.user._id)
-      $state.go("basicstep1");
-    }
-    
-    $scope.finishAdmin = function(){
-
-    }
 
     $scope.paidRepostAccounts = [];
     $scope.user = SessionService.getUser();
