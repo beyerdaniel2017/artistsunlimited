@@ -103,6 +103,7 @@ var schema = new mongoose.Schema({
     },
     notificationSettings: {
         facebookMessenger: {
+            messengerID: Number,
             tradeRequest: {
                 type: Boolean,
                 default: true

@@ -23,7 +23,7 @@ router.use('/posts/', require('./posts/posts.js'));
 router.use('/aws/', require('./aws.js'));
 router.use('/broadcast/', require('./broadcast.js'));
 router.use('/customsubmissions/', require('./customSubmissions/customSubmissions.js'));
-router.use('/facebookMessage', require('./facebookMessage/facebookMessage.js'));
+// router.use('/facebookMessage', require('./facebookMessage/facebookMessage.js'));
 router.use('/search/', require('./search/search.js'));
 
 
