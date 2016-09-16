@@ -3106,6 +3106,28 @@ td {
     height: 24px;
     padding: 3px;
 }
+
+.calendar-grid{
+    width: 98%;
+    margin: 1px auto;
+    height: 21px;
+    padding: 1px 5px;
+}
+
+.calendar-day-date{
+    width: 97%;
+    float: right;
+}
+
+.scheduler-song-tab tbody{
+    border: 1px solid #ddd;
+}
+
+.scheduler-song-tab tr td {
+    padding: 8px 0 8px 8px !important;
+    vertical-align: middle !important;    
+}
+
 .date-top-strip {
     width: 100%;
     height: 35px;

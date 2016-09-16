@@ -115,7 +115,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     });
   }
 
-  //search//
+    //search//
   $scope.searchSelection = [];
   $scope.changedSearch = function(kind) {
     $scope.searchSelection = [];
@@ -163,26 +163,26 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.selectedItem = function(item) {
-      var player = document.getElementById('scPopupPlayer');
-      if ($scope.tabSelected == false) {
-        player = document.getElementById('scPlayer');
-      }
-      $scope.searchSelection = [];
-      $scope.searchError = undefined;
-      $scope.searchString = item.title;
-      $scope.makeEventURL = item.title;
-      $scope.makeEvent.trackID = item.id;
-      $scope.makeEvent.title = item.title;
-      $scope.makeEvent.trackURL = item.permalink_url
-      SC.oEmbed($scope.makeEvent.trackURL, {
-        element: player,
-        auto_play: false,
-        maxheight: 150
-      })
-      player.style.visibility = "visible";
-      $scope.processing = false;
+    var player = document.getElementById('scPopupPlayer');
+    if($scope.tabSelected == false){
+      player = document.getElementById('scPlayer');
     }
-    //end search//
+    $scope.searchSelection = [];
+    $scope.searchError = undefined;
+    $scope.searchString = item.title;
+    $scope.makeEventURL = item.title;
+    $scope.makeEvent.trackID = item.id;
+    $scope.makeEvent.title = item.title;
+    $scope.makeEvent.trackURL = item.permalink_url
+    SC.oEmbed($scope.makeEvent.trackURL, {
+      element: player,
+      auto_play: false,
+      maxheight: 150
+    })
+    player.style.visibility = "visible";
+    $scope.processing = false;
+  }
+  //end search//
 
   $scope.linkedAccounts = [];
   /*Get Linked Accounts*/
@@ -274,21 +274,44 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     });
   }
 
-  $scope.saveComments = function(value, type) {
+  $scope.saveComments = function(value, type,index) {
+
     var comments = [];
-    if (type == 'schedule') {
+    if (type == 'schedule' && value) {
       comments = ($scope.user.repostSettings.schedule.comments ? $scope.user.repostSettings.schedule.comments : []);
+      if(index==undefined)
       comments.push(value);
+      else
+        comments[index] = value;
+
       $scope.user.repostSettings.schedule.comments = comments;
       $scope.saveRepostSettings();
       $scope.scheduleComment = "";
-    } else if (type == 'trade') {
+    } else if (type == 'trade' && value) {
       comments = ($scope.user.repostSettings.trade.comments ? $scope.user.repostSettings.trade.comments : []);
+      if(index==undefined)
       comments.push(value);
+      else
+        comments[index] = value;
       $scope.user.repostSettings.trade.comments = comments;
       $scope.saveRepostSettings();
       $scope.tradeComment = "";
     }
+    else{
+      $.Zebra_Dialog("Please enter comment");
+      return;
+    }
+  }
+
+  $scope.editComments = function(comment, type,index) {
+    $scope.scheduleCommentIndex=index;
+    if (type == 'schedule') {
+      $('#scheduleCommentModal').modal('show');      
+      $scope.scheduleComment = comment;
+    } else if (type == 'trade') {
+      $('#tradeCommentModal').modal('show');
+      $scope.tradeComment = comment;
+    } 
   }
 
   $scope.setActive = function(type) {
@@ -365,7 +388,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.editChannelArr = [];
     $scope.tabSelected = false;
     if (!editable) {
-      $scope.isEdit = true;
+    $scope.isEdit = true;
     }
     var newObj = angular.copy(item);
     $scope.makeEventURL = newObj.event.trackURL;
@@ -524,7 +547,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.setSlotStyle = function(day, hour) {
     var style = {};
-    if ($scope.availableSlots[daysArray[day]].indexOf(hour) > -1) {
+    if ($scope.availableSlots && $scope.availableSlots[daysArray[day]].indexOf(hour) > -1) {
       style = {
         'background-color': "#fff",
         'border-color': "#999"
@@ -641,7 +664,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     var makeDay = new Date(day);
     makeDay.setHours(hour);
     if ($scope.user.blockRelease && new Date($scope.user.blockRelease).getTime() > new Date(makeDay).getTime()) {
-      $.Zebra_Dialog("Sorry! You are blocked till date " + moment($scope.user.blockRelease).format('LLL'));
+      $.Zebra_Dialog("Sorry! You are blocked till date "+ moment($scope.user.blockRelease).format('LLL'));
       return;
     }
     $scope.showOverlay = true;
@@ -1193,6 +1216,25 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }
     }
     $scope.followCounts = count;
+  }
+
+  $scope.getTrackListFromSoundcloud = function() {
+    var profile = $scope.user;
+    if (profile.soundcloud) {
+      $scope.processing = true;
+      SC.get('/users/' + profile.soundcloud.id + '/tracks', {
+          filter: 'public'
+        })
+        .then(function(tracks) {
+          $scope.trackList = tracks;
+          $scope.processing = false;
+          $scope.$apply();
+        })
+        .catch(function(response) {
+          $scope.processing = false;
+          $scope.$apply();
+        });
+    }
   }
 
   $scope.sendMail = function(id) {

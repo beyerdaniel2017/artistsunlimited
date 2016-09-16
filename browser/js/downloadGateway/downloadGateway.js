@@ -17,8 +17,8 @@ app.config(function($stateProvider) {
         return $http.get('/api/users/getUserPaidRepostAccounts')
         .then(function(res) {
           if(res.data.length >0){
-            var PaidUserId = SessionService.getActionsfoAccountIndex();
-            if(res.data[0]!=undefined && PaidUserId==null){
+            var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+            if(res.data[0]!=undefined && (PaidUserId==null || PaidUserId==undefined || PaidUserId=="undefined")){
               SessionService.addActionsfoAccount('BehalfUser',res.data[0]._id,res.data[0].soundcloud.id);
               SessionService.setUserPaidRepostAccounts(res.data[0]);
             }
@@ -48,6 +48,13 @@ app.config(function($stateProvider) {
       paidReposts: function($http, $window, SessionService) {
         return $http.get('/api/users/getUserPaidRepostAccounts')
         .then(function(res) {
+          if(res.data.length >0){
+            var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+            if(res.data[0]!=undefined && (PaidUserId==null || PaidUserId==undefined || PaidUserId=="undefined")){
+              SessionService.addActionsfoAccount('BehalfUser',res.data[0]._id,res.data[0].soundcloud.id);
+              SessionService.setUserPaidRepostAccounts(res.data[0]);
+            }
+          }  
           return res.data;
         })
         .then(null, function(err) {
@@ -75,6 +82,13 @@ app.config(function($stateProvider) {
       paidReposts: function($http, $window, SessionService) {
         return $http.get('/api/users/getUserPaidRepostAccounts')
         .then(function(res) {
+          if(res.data.length >0){
+            var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+            if(res.data[0]!=undefined && (PaidUserId==null || PaidUserId==undefined || PaidUserId=="undefined")){
+              SessionService.addActionsfoAccount('BehalfUser',res.data[0]._id,res.data[0].soundcloud.id);
+              SessionService.setUserPaidRepostAccounts(res.data[0]);
+            }
+          }  
           return res.data;
         })
         .then(null, function(err) {
@@ -95,6 +109,13 @@ app.config(function($stateProvider) {
         paidReposts: function($http, $window, SessionService) {
           return $http.get('/api/users/getUserPaidRepostAccounts')
           .then(function(res) {
+            if(res.data.length >0){
+              var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+              if(res.data[0]!=undefined && (PaidUserId==null || PaidUserId==undefined || PaidUserId=="undefined")){
+                SessionService.addActionsfoAccount('BehalfUser',res.data[0]._id,res.data[0].soundcloud.id);
+                SessionService.setUserPaidRepostAccounts(res.data[0]);
+              }
+            }  
             return res.data;
           })
           .then(null, function(err) {
@@ -110,22 +131,12 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
   /* Init Download Gateway form data */
   
   var formActions = SessionService.getActionsfoAccount();
-  var PaidUserId = SessionService.getActionsfoAccountIndex();
+  var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
   var soundcloudId = SessionService.getSoundCloudId();
   $scope.paidUsers=[];
-  var i=-1;
-  var nextFun = function(){
-    i++;
-    if(i < paidReposts.length){
-      var pdata= paidReposts[i];
-      $scope.paidUsers.push(pdata);
-      nextFun();
-    }
-    else{              
-      return $scope.paidUsers;
-    }            
-  }
-  nextFun();
+  paidReposts.forEach(function(pr){
+    $scope.paidUsers.push(pr);
+  })
 
   if(PaidUserId==undefined && formActions==undefined && $scope.paidUsers.length>0){
     PaidUserId= $scope.paidUsers[0]._id;
@@ -135,7 +146,7 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
     $.Zebra_Dialog('Error: There is no any user record found.');
     return;
   }
-  //console.log(formActions+'==========='+$scope.PaidUserId);
+
 
     $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
      //overlay autofill track start//

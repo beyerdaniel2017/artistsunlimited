@@ -220,27 +220,26 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
 
     $scope.getBehalfUserRecord = function(paid){
         SessionService.removePaidRepostAccounts();  
+        setTimeout(function(){
         SessionService.addActionsfoAccount('BehalfUser',paid._id,paid.soundcloud.id);
         SessionService.setUserPaidRepostAccounts(paid);
-        console.log($state.current.url.indexOf("admin/reForReInteraction"));
         if($state.current.url.indexOf("admin/reForReInteraction") !=-1)
             window.location.href='/admin/reposttraders';        
         else            
             window.location.reload($state.current.url);        
+        },500);
+           
     }  
 
     $scope.gotoBehalfSetting = function(actions){
-        console.log(actions);
+        
         if(actions=="SCHEDULER"){
-            //$state.go("scheduler");
             window.location.href='/admin/scheduler';  
         }
         if(actions=="REPOSTTRADES"){
-            //$state.go("adminRepostTraders");
             window.location.href='/admin/reposttraders';  
         }
         if(actions=="DOWNLOADGATEWAY"){
-            ///$state.go("adminDownloadGateway");
             window.location.href='/admin/downloadGateway';
         }
     }
@@ -272,19 +271,19 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
     $scope.linkedUsersChange = function(authToken) {
         $scope.processing = true;
         $http.post('/api/login/soundCloudLogin', {
-                token: authToken,
-                password: 'test'
-            })
-            .then(function(res) {
-                $scope.processing = false;
-                SessionService.create(res.data.user);
-                $window.location.reload();
+            token: authToken,
+            password: 'test'
+        })
+        .then(function(res) {
+            $scope.processing = false;
+            SessionService.create(res.data.user);
+            $window.location.reload();
 
-            })
-            .then(null, function(err) {
-                $.Zebra_Dialog('Error: Could not log in');
-                $scope.processing = false;
-            });
+        })
+        .then(null, function(err) {
+            $.Zebra_Dialog('Error: Could not log in');
+            $scope.processing = false;
+        });
     }
 
     $scope.swithUser = function(isadmin){

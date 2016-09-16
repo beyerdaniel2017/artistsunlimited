@@ -110,58 +110,59 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     } else if (formActions == "Add") {
         $scope.AccountsStepData = SessionService.getAdminUser() ? SessionService.getAdminUser() : {};
         $scope.AccountsStepData.formActions = formActions;
-    } else if (formActions == "Edit") {
+    } else if (formActions == "Edit") {     
 
         if ($scope.AccountsStepData == undefined)
             $scope.AccountsStepData = {};
 
-        $scope.AccountsStepData.formActions = formActions;
-        var user_id = SessionService.getActionsfoAccountIndex();
-        if (user_id != undefined && $scope.AccountsStepData.submissionData == undefined && $state.current.url == "/admin/channel/step1") {
-            var userId = "";
-            $http.get('/api/submissions/getAccountsByIndex/' + user_id)
+            $scope.AccountsStepData.formActions = formActions;
+            var user_id = SessionService.getActionsfoAccountIndex();
+            if (user_id != undefined && $scope.AccountsStepData.submissionData == undefined && $state.current.url == "/admin/channel/step1") {
+                var userId = "";
+                $http.get('/api/submissions/getAccountsByIndex/' + user_id)
                 .then(function(res) {
-                    $scope.AccountsStepData.submissionData = res.data;
-                    $scope.AccountsStepData.submissionData.username = res.data.user.username;
-                    $scope.AccountsStepData.submissionData.avatarURL = res.data.user.avatarURL;
-                    $scope.AccountsStepData.submissionData.followers = res.data.user.followers;
-                    $scope.AccountsStepData.submissionData.userID = res.data.userID;
-                    userId = res.data.userID;
-                    $scope.AccountsStepData.price = res.data.price;
-                    $scope.AccountsStepData.description = res.data.description;
-                    $scope.AccountsStepData.availableSlots = [];
-                    $http.get('/api/users/byId/' + userId)
-                        .then(function(response) {
-                            if (response.data) {
-                                $scope.AccountsStepData.availableSlots = response.data.availableSlots;
-                            }
-                            $http.get('/api/customsubmissions/getCustomSubmissionAll/' + userId)
-                                .then(function(response) {
-                                    var i = -1;
-                                    var nextFun = function() {
-                                        i++;
-                                        if (i < response.data.length) {
-                                            var loopdata = response.data[i];
-                                            if (loopdata.type == "submit") {
-                                                $scope.AccountsStepData.postData = loopdata;
-                                            } else if (loopdata.type == "premiere") {
-                                                $scope.AccountsStepData.premier = loopdata;
-                                            }
-                                            nextFun();
-                                        } else {
-                                            SessionService.createAdminUser($scope.AccountsStepData);
-                                        }
+                $scope.AccountsStepData.submissionData = res.data;
+                $scope.AccountsStepData.submissionData.submissionUrl = res.data.submissionUrl.replace(/ /g,'');
+                $scope.AccountsStepData.submissionData.username = res.data.user.username;
+                $scope.AccountsStepData.submissionData.avatarURL = res.data.user.avatarURL;
+                $scope.AccountsStepData.submissionData.followers = res.data.user.followers;
+                $scope.AccountsStepData.submissionData.userID = res.data.userID;
+                userId = res.data.userID;
+                $scope.AccountsStepData.price = res.data.price;
+                $scope.AccountsStepData.description = res.data.description;
+                $scope.AccountsStepData.availableSlots = [];
+                $http.get('/api/users/byId/' + userId)
+                    .then(function(response) {
+                      if (response.data) {
+                          $scope.AccountsStepData.availableSlots = response.data.availableSlots;
+                      }
+                      $http.get('/api/customsubmissions/getCustomSubmissionAll/' + userId)
+                          .then(function(response) {
+                            var i = -1;
+                            var nextFun = function() {
+                                i++;
+                                if (i < response.data.length) {
+                                    var loopdata = response.data[i];
+                                    if (loopdata.type == "submit") {
+                                        $scope.AccountsStepData.postData = loopdata;
+                                    } else if (loopdata.type == "premiere") {
+                                        $scope.AccountsStepData.premier = loopdata;
                                     }
                                     nextFun();
-                                });
-                        })
+                                } else {
+                                    SessionService.createAdminUser($scope.AccountsStepData);
+                                }
+                            }
+                            nextFun();
+                        });
+                    })
                 });
         } else {
             $scope.AccountsStepData = SessionService.getAdminUser();
         }
     }
 
-    $scope.finishAdmin = function() {
+    $scope.finishAdmin = function(){
         $state.go("accounts");
     }
 
@@ -227,7 +228,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
             "body": ""
         }
     };
-
+    
     $scope.addEventClass = function(index, type) {
         $('textarea').removeClass("selectedBox");
         $("." + type).addClass("selectedBox");
@@ -287,42 +288,45 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
 
 
     $scope.nextStep = function(step, currentData, type) {
-        if (type == "basic") {
-            switch (step) {
-                case 1:
-                    $state.go("basicstep1");
-                    break;
-                case 2:
-                    var next = true;
-                    var body = {};
-                    if ($scope.AccountsStepData.email == "") {
-                        next = false;
-                        $.Zebra_Dialog('Error: Enter email address');
-                    } else if ($scope.AccountsStepData.email != "") {
-                        body.email = $scope.AccountsStepData.email;
-                    }
-                    if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword != $scope.AccountsStepData.newpassword) {
-                        next = false;
-                        $.Zebra_Dialog('Error: Password doesn’t match');
-                    } else if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword == $scope.AccountsStepData.newpassword) {
-                        body.password = $scope.AccountsStepData.newpassword;
-                    }
+      if (type == "basic") {
+        switch (step) {
+            case 1:
+                $state.go("basicstep1");
+                break;
+            case 2:
+                var next = true;
+                var body = {};
+                if ($scope.AccountsStepData.email == "") {
+                    next = false;
+                    $.Zebra_Dialog('Error: Enter email address');
+                } else if ($scope.AccountsStepData.email != "") {
+                    body.email = $scope.AccountsStepData.email;
+                }
+                if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword != $scope.AccountsStepData.newpassword) {
+                    next = false;
+                    $.Zebra_Dialog('Error: Password doesn’t match');
+                } else if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword == $scope.AccountsStepData.newpassword) {
+                    body.password = $scope.AccountsStepData.newpassword;
+                }
+                if ($scope.AccountsStepData.profilePicture == "https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg") {
+                    next = false;
+                    $.Zebra_Dialog('Error: Please upload your profile image');
+                }
+                if ($scope.AccountsStepData.profilePicture != "") {
+                    body.profilePicture = $scope.AccountsStepData.profilePicture;
+                }
 
-                    if ($scope.AccountsStepData.profilePicture != "") {
-                        body.profilePicture = $scope.AccountsStepData.profilePicture;
-                    }
-
-                    if (next) {
-                        AccountSettingServices.updateAdminProfile(body)
-                            .then(function(res) {
+                if (next) {
+                    AccountSettingServices.updateAdminProfile(body)
+                    .then(function(res) {
                         if(res.data.message){
                             $.Zebra_Dialog('Error: Email already register.');
                         }
                         else{
-                                $scope.AccountsStepData.newpassword = "";
-                                $scope.AccountsStepData.newconfirmpassword = "";
-                                $scope.processing = false;
-                        $scope.AccountsStepData.repostCustomizeEmails = (($scope.AccountsStepData.repostCustomizeEmails.length > 0) ? $scope.AccountsStepData.repostCustomizeEmails : [{
+                            $scope.AccountsStepData.newpassword = "";  
+                            $scope.AccountsStepData.newconfirmpassword = "";                        
+                            $scope.processing = false;
+                            $scope.AccountsStepData.repostCustomizeEmails = (($scope.AccountsStepData.repostCustomizeEmails.length > 0) ? $scope.AccountsStepData.repostCustomizeEmails : [{
                             "acceptance": {
                                 "title": "ACCEPTANCE  EMAIL",
                                 "subject": "Congratulations on your Submission -",
@@ -338,10 +342,10 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                                 "buttonBgColor": "#592e2e"
                             }
                         }]);
-                        setTimeout(function() {
-                            SessionService.createAdminUser($scope.AccountsStepData);
-                            $state.go("basicstep2");
-                        }, 500);
+                            setTimeout(function(){
+                                SessionService.createAdminUser($scope.AccountsStepData);
+                                $state.go("basicstep2");
+                            },500);
                         }
                     })
                     .catch(function() {
@@ -349,17 +353,17 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                     });
                 } 
                 else {
-                        return;
-                    }
-                    break;
-                case 3:
-                    AccountSettingServices.updateAdminProfile({
-                            repostCustomizeEmails: $scope.AccountsStepData.repostCustomizeEmails
-                        })
-                        .then(function(res) {
-                            $scope.processing = false;
-                        })
-                        .catch(function() {});
+                    return;
+                }
+                break;
+            case 3:
+                AccountSettingServices.updateAdminProfile({
+                  repostCustomizeEmails: $scope.AccountsStepData.repostCustomizeEmails
+                })
+                .then(function(res) {
+                  $scope.processing = false;
+                })
+                .catch(function() {});
                     $scope.AccountsStepData.premierCustomizeEmails = (($scope.AccountsStepData.premierCustomizeEmails.length > 0) ? $scope.AccountsStepData.premierCustomizeEmails : [{
                         "acceptance": {
                             "title": "ACCEPTANCE  EMAIL",
@@ -376,43 +380,43 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                             "buttonBgColor": "#592e2e"
                         }
                     }]);
-                    SessionService.createAdminUser($scope.AccountsStepData);
-                    $state.go("basicstep3");
-                    break;
-                case 4:
-                    AccountSettingServices.updateAdminProfile({
-                            premierCustomizeEmails: $scope.AccountsStepData.premierCustomizeEmails
-                        })
-                        .then(function(res) {
-                            $scope.processing = false;
-                        })
-                        .catch(function() {});
+                SessionService.createAdminUser($scope.AccountsStepData);
+                $state.go("basicstep3");
+                break;
+            case 4:
+                AccountSettingServices.updateAdminProfile({
+                    premierCustomizeEmails: $scope.AccountsStepData.premierCustomizeEmails
+                })
+                .then(function(res) {
+                    $scope.processing = false;
+                })
+                .catch(function() {});
 
-                    SessionService.createAdminUser($scope.AccountsStepData);
-                    $state.go("basicstep4");
-                    break;
-                case 5:
+                SessionService.createAdminUser($scope.AccountsStepData);
+                $state.go("basicstep4");
+                break;
+            case 5:
 
-                    AccountSettingServices.updateAdminProfile({
+                AccountSettingServices.updateAdminProfile({
                             notificationSettings: $scope.AccountsStepData.notificationSettings,
                             email: $scope.AccountsStepData.email
-                        })
-                        .then(function(res) {
-                            $scope.processing = false;
-                        })
-                        .catch(function() {});
-                    $scope.errorverification = false;
+                })
+                .then(function(res) {
+                    $scope.processing = false;
+                })
+                .catch(function() {});
+                $scope.errorverification = false;
                 $scope.verified = false;
                 $scope.waitoneminute = false;
-                    SessionService.createAdminUser($scope.AccountsStepData);
-                    if ($scope.AccountsStepData.paypal == undefined) {
-                        $scope.AccountsStepData.paypal = {};
-                        $scope.AccountsStepData.paypal.varify = false;
-                        $scope.AccountsStepData.paypal.processchannel = false;
-                    }
-                    SessionService.createAdminUser($scope.AccountsStepData);
-                    $state.go("basicstep5");
-                    break;
+                SessionService.createAdminUser($scope.AccountsStepData);
+                if ($scope.AccountsStepData.paypal == undefined) {
+                    $scope.AccountsStepData.paypal = {};
+                    $scope.AccountsStepData.paypal.varify = false;
+                    $scope.AccountsStepData.paypal.processchannel = false;
+                }
+                SessionService.createAdminUser($scope.AccountsStepData);
+                $state.go("basicstep5");
+                break;
             }
         }
 
@@ -420,8 +424,8 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
         if (type == "channel") {
             switch (step) {
                 case 1:
-                    $http.get("/connect/logout?return_to=https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https://localhost:1443/callback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_5fead");
-                    //https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https%3A%2F%2Flocalhost%3A1443%2Fcallback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_4a6f8
+                  $http.get("/connect/logout?return_to=https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https://localhost:1443/callback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_5fead");
+                  //https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https%3A%2F%2Flocalhost%3A1443%2Fcallback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_4a6f8
                     $state.go("channelstep1");
                     break;
                 case 2:
@@ -430,25 +434,25 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                     break;
                 case 3:
                     var next = true;
-                    if ($scope.AccountsStepData.price == "" || $scope.AccountsStepData.price == undefined) {
+                    if ($scope.AccountsStepData.price == "" || $scope.AccountsStepData.price == undefined){
                         next = false;
                         $.Zebra_Dialog('Error: Enter Price');
                     }
 
                     if (next) {
                         AccountSettingServices.updatePaidRepost({
-                                userID: $scope.AccountsStepData.submissionData.userID,
-                                price: $scope.AccountsStepData.price,
-                                description: $scope.AccountsStepData.description,
-                                groups: $scope.AccountsStepData.submissionData.groups ? $scope.AccountsStepData.submissionData.groups : [],
-                                submissionUrl: $scope.AccountsStepData.submissionData.submissionUrl,
-                                premierUrl: $scope.AccountsStepData.submissionData.premierUrl
-                            })
-                            .then(function(res) {
-                                SessionService.createAdminUser($scope.AccountsStepData);
-                                $state.go("channelstep3");
-                            })
-                            .catch(function() {});
+                          userID: $scope.AccountsStepData.submissionData.userID,
+                          price: $scope.AccountsStepData.price,
+                          description: $scope.AccountsStepData.description,
+                          groups: $scope.AccountsStepData.submissionData.groups ? $scope.AccountsStepData.submissionData.groups:[],
+                          submissionUrl: $scope.AccountsStepData.submissionData.submissionUrl,
+                          premierUrl: $scope.AccountsStepData.submissionData.premierUrl
+                        })
+                        .then(function(res) {
+                            SessionService.createAdminUser($scope.AccountsStepData);
+                            $state.go("channelstep3");
+                        })
+                        .catch(function() {});
                     } else {
                         return;
                     }
@@ -483,8 +487,8 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                         })
                         .then(function(res) {
                             if ($scope.AccountsStepData.availableSlots == undefined)
-                                $scope.AccountsStepData.availableSlots = defaultAvailableSlots;
-
+                              $scope.AccountsStepData.availableSlots = defaultAvailableSlots;
+ 
                             SessionService.createAdminUser($scope.AccountsStepData);
                             $state.go("channelstep5");
                         })
@@ -506,17 +510,17 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
         }
     }
 
-    $scope.addGroup = function(val) {
-        $scope.group = "";
+    $scope.addGroup = function(val){
+        $scope.group="";
         $("#group").val('');
-        if ($scope.AccountsStepData.submissionData.groups != undefined && $scope.AccountsStepData.submissionData.groups.indexOf(val) == -1) {
-            $scope.AccountsStepData.submissionData.groups.push(val);
+        if($scope.AccountsStepData.submissionData.groups!=undefined && $scope.AccountsStepData.submissionData.groups.indexOf(val)==-1){
+            $scope.AccountsStepData.submissionData.groups.push(val);            
         }
     }
 
-    $scope.removeGroup = function(index) {
-        if ($scope.AccountsStepData.submissionData.groups.length > 0) {
-            $scope.AccountsStepData.submissionData.groups.splice(index, 1);
+    $scope.removeGroup = function(index){
+        if($scope.AccountsStepData.submissionData.groups.length >0 ){
+            $scope.AccountsStepData.submissionData.groups.splice(index,1);
         }
     }
 
@@ -609,56 +613,53 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
             })
             .then(function(res) {
                 var scInfo = {};
-                console.log(res);
-
                 scInfo.userID = res.data.user._id;
                 AccountSettingServices.checkUsercount({
                         "userID": scInfo.userID,
                         'action': "id"
                     })
-                    .then(function(result) {
-                        if (!result.data) {
-                            scInfo.groups = [];
-                            scInfo.description = "";
-                            scInfo.price = 1;
-                            $scope.AccountsStepData.submissionData = res.data.user.soundcloud;
-                            $scope.AccountsStepData.submissionData.userID = res.data.user._id;
-                            var url = 'https://artistsunlimited.com/custom/' + res.data.user.soundcloud.username + '/submit';
-                            var premierurl = 'https://artistsunlimited.com/custom/' + res.data.user.soundcloud.username + '/premiere';
+                  .then(function(result) {
+                  if (!result.data) {
+                    scInfo.groups = [];
+                    scInfo.description = "";
+                    scInfo.price = 1;
+                    $scope.AccountsStepData.submissionData = res.data.user.soundcloud;
+                    $scope.AccountsStepData.submissionData.userID = res.data.user._id;
+                    var usernames = res.data.user.soundcloud.username.replace(" ","");
+                    var url = 'https://artistsunlimited.com/custom/' + usernames + '/submit';
+                    var premierurl = 'https://artistsunlimited.com/custom/' + usernames + '/premiere';
                             AccountSettingServices.checkUsercount({
                                     "url": url,
                                     'action': "url"
                                 })
-                                .then(function(result) {
-                                    if (result.data) {
-                                        url = 'https://artistsunlimited.com/custom/' + res.data.user.soundcloud.username + '/submit' + result.data;
-                                        premierurl = 'https://artistsunlimited.com/custom/' + res.data.user.soundcloud.username + '/premiere' + result.data;
-                                        $scope.AccountsStepData.submissionData.submissionUrl = url;
-                                        $scope.AccountsStepData.submissionData.premierUrl = premierurl;
-                                    } else {
-                                        $scope.AccountsStepData.submissionData.submissionUrl = url;
-                                        $scope.AccountsStepData.submissionData.premierUrl = premierurl;
-                                    }
+                        .then(function(result) {
+                            if (result.data) {
+                                url = 'https://artistsunlimited.com/custom/' + usernames + '/submit' + result.data;
+                                premierurl = 'https://artistsunlimited.com/custom/' + usernames + '/premiere' + result.data;
+                                $scope.AccountsStepData.submissionData.submissionUrl = url;
+                                $scope.AccountsStepData.submissionData.premierUrl = premierurl;
+                            } else {
+                                $scope.AccountsStepData.submissionData.submissionUrl = url;
+                                $scope.AccountsStepData.submissionData.premierUrl = premierurl;
+                            }
 
-                                    scInfo.submissionUrl = url;
-                                    scInfo.premierUrl = premierurl;
-
-                                    $http.post('/api/database/updateUserAccount', {
-                                        soundcloudInfo: scInfo,
-                                    }).then(function(user) {
-                                        user.data.paidRepost.reverse();
-                                        console.log(user.data.paidRepost);
-                                        $scope.processing = false;
-                                    });
-                                    SessionService.createAdminUser($scope.AccountsStepData);
-                                })
-                                .catch(function() {});
+                            scInfo.submissionUrl = url;
+                            scInfo.premierUrl = premierurl;
+                            $http.post('/api/database/updateUserAccount', {
+                                soundcloudInfo: scInfo,
+                            }).then(function(user) {
+                                user.data.paidRepost.reverse();
+                                $scope.processing = false;
+                            });
+                            SessionService.createAdminUser($scope.AccountsStepData);
+                        })
+                        .catch(function() {});
                         } else {
-                            $.Zebra_Dialog('Error: This user already exists');
-                            $scope.processing = false;
-                            window.reload();
-                        }
-                    });
+                      $.Zebra_Dialog('Error: This user already exists');
+                      $scope.processing = false;
+                      location.reload(); 
+                  }
+                });
             })
             .then(null, function(err) {
                 $.Zebra_Dialog('Error: Could not log in');
@@ -735,15 +736,15 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
         if ((paypaldata.price1 == paypaldata.pricea && paypaldata.price2 == paypaldata.priceb) || (paypaldata.price1 == paypaldata.priceb && paypaldata.price2 == paypaldata.pricea)) {
             $scope.AccountsStepData.paypal.processchannel = true;
             AccountSettingServices.updateAdminProfile({
-                    paypal_email: paypaldata.email
-                })
-                .then(function(res) {
-                    $scope.processing = false;
+                paypal_email: paypaldata.email
+            })
+            .then(function(res) {
+                $scope.processing = false;
                 $scope.verified = true;
                 $scope.waitoneminute = false;
-                    SessionService.createAdminUser($scope.AccountsStepData);
-                })
-                .catch(function() {});
+                SessionService.createAdminUser($scope.AccountsStepData);
+            })
+            .catch(function() {});
             $scope.processing = false;
         } else {
             $scope.errorverification = true;

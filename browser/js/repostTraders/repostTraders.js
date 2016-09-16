@@ -9,8 +9,8 @@ app.config(function($stateProvider) {
           return $http.get('/api/users/getUserPaidRepostAccounts')
           .then(function(res) {
             if(res.data.length >0){
-              var PaidUserId = SessionService.getActionsfoAccountIndex();
-              if(res.data[0]!=undefined && PaidUserId==null){
+              var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+              if(res.data[0]!=undefined && (PaidUserId==null || PaidUserId==undefined || PaidUserId=="undefined")){
                 SessionService.addActionsfoAccount('BehalfUser',res.data[0]._id,res.data[0].soundcloud.id);
                 SessionService.setUserPaidRepostAccounts(res.data[0]);
               }
@@ -19,7 +19,7 @@ app.config(function($stateProvider) {
           });
         },
         currentTrades: function($http, SessionService) {
-          var PaidUserId = SessionService.getActionsfoAccountIndex();
+          var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
           var user =  SessionService.getUser();
           if(PaidUserId!=null)
             user = SessionService.getUserPaidRepostAccounts(PaidUserId);
@@ -39,7 +39,7 @@ app.config(function($stateProvider) {
           }
         },
         favorites: function($http, SessionService) {
-          var PaidUserId = SessionService.getActionsfoAccountIndex();
+          var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
           var user =  SessionService.getUser();
           
           if(PaidUserId!=undefined && PaidUserId!=null)
@@ -68,7 +68,7 @@ app.config(function($stateProvider) {
           }
         },
         openTrades: function($http, SessionService) {
-          var PaidUserId = SessionService.getActionsfoAccountIndex();
+          var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
           var user =  SessionService.getUser();
           
           if(PaidUserId!=undefined && PaidUserId!=null)
@@ -107,7 +107,7 @@ app.config(function($stateProvider) {
           }
         },
         repostEvent: function($http, SessionService) {
-          var PaidUserId = SessionService.getActionsfoAccountIndex();
+          var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
           var user =  SessionService.getUser();
           if(PaidUserId!=undefined && PaidUserId!=null)
             user = SessionService.getUserPaidRepostAccounts(PaidUserId);
@@ -136,22 +136,13 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
   $scope.favorites = favorites;
   $scope.state = 'reForReInteraction';
   var formActions = SessionService.getActionsfoAccount();
-  var PaidUserId = SessionService.getActionsfoAccountIndex();
+  var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
   var soundcloudId = SessionService.getSoundCloudId();
   $scope.paidUsers=[];
-  var i=-1;
-  var nextFun = function(){
-    i++;
-    if(i < paidReposts.length){
-      var pdata= paidReposts[i];
-      $scope.paidUsers.push(pdata);
-      nextFun();
-    }
-    else{              
-      return $scope.paidUsers;
-    }            
-  }
-  nextFun();
+  paidReposts.forEach(function(pr){
+    $scope.paidUsers.push(pr);
+  })
+  
 
   if(PaidUserId==undefined && formActions==undefined && $scope.paidUsers.length>0){
     PaidUserId= $scope.paidUsers[0]._id;
@@ -494,7 +485,8 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
         callback: function() {
           $scope.processing = true;
           $http.post('/api/trades/delete', {
-              id: tradeID
+              id: tradeID,
+              action:'admin'
             })
             .then(function(res) {
               $scope.processing = false;

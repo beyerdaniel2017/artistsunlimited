@@ -9,8 +9,8 @@ app.config(function($stateProvider) {
           return $http.get('/api/users/getUserPaidRepostAccounts')
           .then(function(res) {
             if(res.data.length >0){
-              var PaidUserId = SessionService.getActionsfoAccountIndex();
-              if(res.data[0]!=undefined && PaidUserId==null){
+              var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+              if(res.data[0]!=undefined && (PaidUserId==null || PaidUserId==undefined || PaidUserId=="undefined")){
                 SessionService.addActionsfoAccount('BehalfUser',res.data[0]._id,res.data[0].soundcloud.id);
                 SessionService.setUserPaidRepostAccounts(res.data[0]);
               }
@@ -24,9 +24,9 @@ app.config(function($stateProvider) {
             $window.localStorage.setItem('tid', $stateParams.tradeID);
             $window.location.href = '/login';
           }
-          var PaidUserId = SessionService.getActionsfoAccountIndex();
+          var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
           var user =  SessionService.getUser();
-          if(PaidUserId!=null)
+          if(PaidUserId!=null && PaidUserId!=undefined)
             user = SessionService.getUserPaidRepostAccounts(PaidUserId);
 
          return $http.get('/api/trades/byID/' + $stateParams.tradeID+'/'+user._id)
@@ -43,9 +43,9 @@ app.config(function($stateProvider) {
             $window.localStorage.setItem('returnstate', 'artistToolsScheduler');
             $window.location.href = '/login';
           }
-          var PaidUserId = SessionService.getActionsfoAccountIndex();
+          var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
           var user =  SessionService.getUser();
-          if(PaidUserId!=null)
+          if(PaidUserId!=null && PaidUserId!=undefined)
             user = SessionService.getUserPaidRepostAccounts(PaidUserId);
 
           return $http.get('/api/events/forUser/' + user.soundcloud.id)
@@ -83,9 +83,9 @@ app.config(function($stateProvider) {
             Requested: true,
             TradePartners: true
           };
-          var PaidUserId = SessionService.getActionsfoAccountIndex();
+          var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
           var user =  SessionService.getUser();
-          if(PaidUserId!=null)
+          if(PaidUserId!=null && PaidUserId!=undefined)
             user = SessionService.getUserPaidRepostAccounts(PaidUserId);
 
           return $http.get('/api/trades/withUser/' + user._id + '?tradeType=' + JSON.stringify(tradeType))
@@ -110,8 +110,13 @@ app.config(function($stateProvider) {
         }
       },
       onExit: function($http, $stateParams, SessionService, socket) {
+        var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+        var user =  SessionService.getUser();
+        if(PaidUserId!=null && PaidUserId!=undefined)
+          user = SessionService.getUserPaidRepostAccounts(PaidUserId);
         $http.put('/api/trades/offline', {
-          tradeID: $stateParams.tradeID
+          tradeID: $stateParams.tradeID,
+          userid:user._id
         });
         socket.disconnect();
       }
@@ -128,23 +133,13 @@ app.controller("AdminReForReInteractionController", function($rootScope, $state,
   }
 
   var formActions = SessionService.getActionsfoAccount();
-  var PaidUserId = SessionService.getActionsfoAccountIndex();
+  var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
   var soundcloudId = SessionService.getSoundCloudId();
 
   $scope.paidUsers=[];
-  var i=-1;
-  var nextFun = function(){
-    i++;
-    if(i < paidReposts.length){
-      var pdata= paidReposts[i];
-      $scope.paidUsers.push(pdata);
-      nextFun();
-    }
-    else{              
-      return $scope.paidUsers;
-    }            
-  }
-  nextFun();
+  paidReposts.forEach(function(pr){
+    $scope.paidUsers.push(pr);
+  })
 
   if(PaidUserId==undefined && formActions==undefined && $scope.paidUsers.length>0){
     PaidUserId= $scope.paidUsers[0]._id;
@@ -870,25 +865,25 @@ console.log("queue",$scope.user.queue);
         return slot.day < endDate;
       })
       for (var i = 0; i < $scope.trade.repeatFor; i++) {
-        console.log(p1WeekSlots);
+
         p1WeekSlots.forEach(function(slot) {
           var event = JSON.parse(JSON.stringify(slot));
           event.type = 'traded';
           event.owner = $scope.trade.p2.user._id;
           event.day = new Date((new Date(slot.day)).getTime() + i * 7 * 24 * 60 * 60 * 1000);
           event.unrepostDate = new Date(event.day.getTime() + 24 * 60 * 60 * 1000);
-          console.log(event)
+
           $http.post('/api/events/repostEvents', event)
             .then(console.log, console.log);
         })
-        console.log(p2WeekSlots);
+
         p2WeekSlots.forEach(function(slot) {
           var event = JSON.parse(JSON.stringify(slot));
           event.type = 'traded';
           event.owner = $scope.trade.p1.user._id
           event.day = new Date((new Date(slot.day)).getTime() + i * 7 * 24 * 60 * 60 * 1000);
           event.unrepostDate = new Date(event.day.getTime() + 24 * 60 * 60 * 1000);
-          console.log(event)
+
           $http.post('/api/events/repostEvents', event)
             .then(console.log, console.log);
         })
@@ -910,6 +905,7 @@ console.log("queue",$scope.user.queue);
     $scope.trade.p1.accepted = $scope.trade.p2.accepted = true;
     $scope.trade.p1.slots = $scope.trade.p2.slots = [];
     $scope.trade.userid = $scope.user._id;
+
     $http.put('/api/trades', $scope.trade)
     .then(function(res) {
       $state.go('adminRepostTraders');

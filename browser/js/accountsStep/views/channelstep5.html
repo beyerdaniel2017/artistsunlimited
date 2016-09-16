@@ -13,12 +13,17 @@
         <div class="col-md-12">
           <div class="page-content right-side">
             <!--page-contant Start-->
-            <div class="two-tabs">
+             <div class="scheduler-tabs" ng-show="AccountsStepData.formActions=='Add' || AccountsStepData.formActions=='Edit'">
               <!-- Nav tabs :Start-->
+                <ul class="nav nav-tabs" role="tablist" >
+                <li role="presentation" class="active" style="width:100%"><a href="javascript:void(0)" style=" background: #f5f5f5 none repeat scroll 0 0;opacity:0.6;"><img src="assets/images/managereposts.png" />MANAGE ACCOUNTS</a></li>
+                </ul>
+              </div>  
+                <!-- Nav tabs :Start-->
+            <div ng-hide="AccountsStepData.formActions=='Add' || AccountsStepData.formActions=='Edit'">
               <div class="text-center" style="margin-top:30px;margin-bottom:30px;">SET UP YOUR ADMIN ACCOUNT</div>
-
               <ul class="info-ui-tab" role="tablist">
-                 <li class="active">
+                <li>
                     <a href="javascript:void(0)">1  Basic Info</a>        
                   </li>
                   <li class="active">
@@ -26,27 +31,34 @@
                   </li>
               </ul>
               <div class="clearfix"></div>
-              </center>  
+              <br/>
+            </div>  
               <!-- Nav tabs :End-->
+
               <!-- Tab panes :: Start-->
               <div class="tab-content">
                 <!-- MY SCHEDULE : Start-->
                 <div role="tabpanel" class="tab-pane fade in active" id="step2">
+                  <div class="row">
+                    <div class="col-xs-12 text-center">
+                      <h5 class="margin-40">ADD NEW CHANNEL</h5>
+                    </div>
+                  </div>
                   <ul class="admin-ui-tabs" role="tablist">
                    <li class="active">
-                        <a href="javascript:void(0)" role="tab" data-toggle="tab">1  Set Submission URL</a>
+                      <a href="javascript:void(0)"><span style="color:red;font-size:14px;">1</span>&nbsp;&nbsp;Set Submission URL</a>
                     </li>
                     <li  class="active">
-                        <a href="javascript:void(0)" role="tab" data-toggle="tab">2  Set Price</a>
+                      <a href="javascript:void(0)"><span style="color:red;font-size:14px;">2</span>&nbsp;&nbsp;Set Price</a>
                     </li>
                     <li class="active">
-                        <a href="javascript:void(0)" role="tab" data-toggle="tab">3  Customize Submission Page</a>
+                      <a href="javascript:void(0)"><span style="color:red;font-size:14px;">3</span>&nbsp;&nbsp;  Customize Submission Page</a>
                     </li>
                     <li  class="active">
-                        <a href="javascript:void(0)" role="tab" data-toggle="tab">4  Premier Submission Page</a>
+                      <a href="javascript:void(0)"><span style="color:red;font-size:14px;">4</span>&nbsp;&nbsp;Premier Submission Page</a>
                     </li>
                     <li class="active">
-                        <a href="javascript:void(0)" role="tab" data-toggle="tab">5  Repost Preferences</a>
+                      <a href="javascript:void(0)"><span style="color:red;font-size:14px;">5</span>&nbsp;&nbsp;Repost Preferences</a>
                     </li>
                   </ul>
 
@@ -77,7 +89,6 @@
                       </div>
                        <div class="clearfix"></div>          
                     </div>  
-                  </div>
                   
                 </div>
                 <!-- MY SCHEDULE : End-->

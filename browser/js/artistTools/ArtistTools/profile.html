@@ -33,28 +33,6 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-              <hr/>
-              <div class="permanent-links" style="text-align: center;">
-                <h4 class="bold">Permanent Artists:</h4>
-                <small>These artists will be followed on all of your Download Gates</small>
-                <br/>
-                <input class="form-control" placeholder="Artist Soundcloud Url" ng-model="linkUrl" ng-change="permanentLinkURLChange()" />
-                <br/>
-                <br/>
-                <div class="col-md-12 text-center">
-                  <button type="submit" class="btn btn-default btn-small" ng-click="saveProfileInfo()">Add to list</button>
-                </div>
-                <br/>
-                <br/>
-                <div ng-repeat="permanentLink in user.permanentLinks" style="padding:10px; color:#000; text-align: center;">
-                  <a href="{{permanentLink.url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{permanentLink.avatar}}">{{' ' + permanentLink.username}}</a>&nbsp;&nbsp;&nbsp;
-                  <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePermanentLink($index)"></a> 
-                </div>
-              </div>
-            </div>
-          </div>
           <br/>
           <!---Third party access-->
           <!-- <div class="row">
@@ -97,31 +75,6 @@
             </div>
           </div>
           <br>
-          <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-              <hr/>
-              <div class="permanent-links" style="text-align: center;">
-                <h4 class="bold">Auto-fill Tracks</h4>
-                <input class="form-control" placeholder="Soundcloud Track Url" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()" />
-                <br/>
-                <select class="form-control" ng-model="trackListObj" ng-options="item.title for item in trackList" ng-change="trackListChange()">
-                  <option value="" ng-disabled="!!trackListObj" ng-show="trackList.length > 0">-My Songs-</option>
-                </select>
-                <br/>
-                <span>{{newQueue.title}}</span>
-                <br>
-                <div class="col-md-12 text-center">
-                  <button class="btn btn-default btn-small" ng-click="addSong()">Add</button>
-                </div>
-                <br/>
-                <br/>
-                <div ng-repeat="song in autoFillTracks" style="padding:10px; color:#000; text-align: center;">
-                  <a href="{{song.permalink_url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{song.artwork_url}}">{{' ' + song.title}}</a>&nbsp;&nbsp;&nbsp;
-                  <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeQueueSong(user.queue.indexOf(song))"></a> 
-                </div>                             
-              </div>
-            </div>
-          </div>
           <!-- overlay -->
           <div class="overlay" ng-show="showOverlay">
             <div class="label-scheduler label-smaller slot-box">
