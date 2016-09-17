@@ -660,7 +660,9 @@ router.post('/paidrepost', function(req, res, next) {
 });
 
 router.put('/profile', function(req, res, next) {
-  User.findByIdAndUpdate(req.body._id, req.body, {
+  var id= req.body._id;
+  delete req.body._id;
+  User.findByIdAndUpdate(id, req.body, {
       new: true
     }).exec()
     .then(function(user) {
@@ -914,24 +916,33 @@ router.put('/deleteUserAccount/:id', function(req, res, next) {
 });
 router.post('/profile/edit', function(req, res, next) {
   var body = req.body;
+  var uid = req.user._id;
   var updateObj = {};
-  if (body.name !== '') {
+  if (body.name !== '' && body.name!=undefined) {
     updateObj['soundcloud.username'] = body.name;
-  } else if (body.password !== '') {
+  } else if (body.password !== ''  && body.password!=undefined) {
     updateObj.salt = User.generateSalt();
     updateObj.password = User.encryptPassword(body.password, updateObj.salt);
-  } else if (body.email !== '') {
+  } else if (body.email !== '' && body.email!=undefined) {
     updateObj.email = body.email;
   }
-
+  else if (body.admin !== '' && body.admin!=undefined) {
+    updateObj.admin = true;
+  }
+  else if(body.permanentLinks!="" && body.permanentLinks!=undefined){
   try {
     updateObj.permanentLinks = JSON.parse(body.permanentLinks);
   } catch (err) {
     next(err);
   }
+  }
+
+  if(body.userID){
+    uid = body.userID;
+  }
 
   User.findOneAndUpdate({
-      '_id': req.user._id
+      '_id': uid
     }, {
       $set: updateObj
     }, {
@@ -948,10 +959,10 @@ router.post('/profile/edit', function(req, res, next) {
 router.post('/profile/soundcloud', function(req, res, next) {
   if (req.user) {
     getUserSCInfo()
-      .then(checkIfUser)
-      .then(updateUser)
-      .then(sendResponse)
-      .then(null, handleError);
+    .then(checkIfUser)
+    .then(updateUser)
+    .then(sendResponse)
+    .then(null, handleError);
   } else {
     return res.json({
       "success": false,
@@ -1176,19 +1187,19 @@ router.post('/networkaccount', function(req, res, next) {
 });
 
 router.get('/userNetworks', function(req, res, next) {
-  var userID = req.user._id;
+  var userID = req.user._id;  
   NetworkAccounts.findOne({
-      channels: userID
-    })
-    .populate('channels')
-    .exec()
-    .then(function(una) {
-      if (una) {
-        res.send(una.channels)
-      } else {
-        res.send([]);
-      }
-    });
+    channels: userID
+  })
+  .populate('channels')
+  .exec()
+  .then(function(una) {
+    if (una) {
+      res.send(una.channels)
+    } else {
+      res.send([]);
+    }
+  });
 });
 
 router.put('/updateRepostSettings', function(req, res, next) {

@@ -17,35 +17,35 @@
               <!-- Nav tabs :Start-->
               <div class="text-center" style="margin-top:30px;margin-bottom:30px;">SET UP YOUR ADMIN ACCOUNT</div>
 
-              <ul class="info-ui-tab" role="tablist">
+             <ul class="info-ui-tab" role="tablist" ng-hide="AccountsStepData.formActions=='Add' || AccountsStepData.formActions=='Edit'">
                 <li class="active">
-                  <a href="javascript:void(0)" aria-controls="mysubmissions" role="tab" data-toggle="tab">1  Basic Info</a>
+                      <a href="javascript:void(0)"><span style="color:red;font-size:14px;">1</span>&nbsp;&nbsp;Basic Info</a>
                 </li>
                 <li>
-                  <a href="javascript:void(0)">2  Set up your first Channel</a>
+                      <a href="javascript:void(0)" role="tab" data-toggle="tab"><span style="color:red;font-size:14px;">2</span>&nbsp;&nbsp;Set up your first Channel</a>
                   </li>
               </ul>
               <div class="clearfix"></div>
               <!-- Nav tabs :End-->
               <!-- Tab panes :: Start-->
-              <div class="tab-content">
+              <div class="tab-content  margin-20">
                 <!-- MY SCHEDULE : Start-->
                 <div role="tabpanel" class="tab-pane fade in active" id="step1">
-                  <ul class="admin-ui-tabs" role="tablist">
+                  <ul class="admin-ui-tabs" >
                       <li class="active">
-                          <a href="javascript:void(0)" role="tab" data-toggle="tab">1  Set General Info</a>
+                          <a href="javascript:void(0)" ><span style="color:red;font-size:14px;">1</span>&nbsp;&nbsp;Set General Info</a>
                       </li>
                       <li class="active">
-                          <a href="javascript:void(0)" role="tab" data-toggle="tab">2  Repost Submissions Customize E-mails</a>
+                          <a href="javascript:void(0)" ><span style="color:red;font-size:14px;">2</span>&nbsp;&nbsp;Repost Submissions Customize E-mails</a>
                       </li>
                       <li class="active">
-                          <a href="javascript:void(0)" role="tab" data-toggle="tab">3  Premier Submissions Customize E-mails</a>
+                          <a href="javascript:void(0)" ><span style="color:red;font-size:14px;">3</span>&nbsp;&nbsp;Premier Submissions Customize E-mails</a>
                       </li>
                       <li class="active">
-                        <a href="javascript:void(0)" role="tab" data-toggle="tab">4 Notification Settings</a>
+                          <a href="javascript:void(0)" ><span style="color:red;font-size:14px;">4</span>&nbsp;&nbsp;Notification Settings</a>
                       </li>
                       <li >
-                        <a href="javascript:void(0)" role="tab" data-toggle="tab">5  PayPal Info</a>
+                          <a href="javascript:void(0)" ><span style="color:red;font-size:14px;">5</span>&nbsp;&nbsp;PayPal Info</a>
                       </li>                  
                   </ul>
                     <div class="container-90">
@@ -59,13 +59,10 @@
                             <div class="col-md-8 col-md-offset-2">
                               <div style="text-align: center;">
                                 <h5 class="bold">Facebook Messenger Notifications</h5>
-                        <div class="fb-send-to-messenger" messenger_app_id="1771378846475599" page_id="499383536933941" data-ref="{{AccountsStepData._id}}" color="blue" size="standard">
-                        </div>                        
-                        <script>
-                          FB.Event.subscribe('send_to_messenger', function(e) {
-                            console.log(e);
-                          });
-                        </script>
+                                <div class="fb-messengermessageus" messenger_app_id="1771378846475599" page_id="499383536933941" color="blue" size="large" data-ref="{{AccountsStepData._id}}">
+                                </div>                        
+		                        <br />
+		                        <br />
                                 <label class="with-square-checkbox">
                                   <input type="checkbox" ng-model="AccountsStepData.notificationSettings.facebookMessenger.tradeRequest" >
                                   <span>Trade Request</span>
@@ -172,5 +169,25 @@
   $("#uploadImage").change(function(){
       readURL(this);
   });
+
+</script><script>
+$(document).ready(function(){
+  FB.init({
+      appId: '1771378846475599',
+      xfbml: true,
+      version: 'v2.6'
+  });
+
+  (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {
+          return;
+      }
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+})
 
 </script>

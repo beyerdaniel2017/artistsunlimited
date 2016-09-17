@@ -14,23 +14,28 @@
                 <!--left-side-manu ::start-->
                 <div class="left-side-profile">
                     <div class="left-profile active">
-                        <button ng-click="changeActiveUser(user)">
-                            <div class="tropical" ng-style="(activeUser._id == user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.user.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.user.user.soundcloud.username}}</span></a><img class="img-responsive img-circle" ng-src="{{trade.user.user.soundcloud.avatarURL}}" style="width:100px;">
-                                <p class="ng-binding">{{trade.user.user.soundcloud.followers}} Followers</p>
+                        <a ng-click="changeActiveUser(user)">
+                            <div class="tropical-2" ng-style="(activeUser._id == user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.user.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.user.user.soundcloud.username}}</span></a>
+                            <img class="profile-avtar-100 img-responsive img-circle" ng-src="{{trade.user.user.soundcloud.avatarURL}}" style="width:100px;">
+                                <p class="ng-binding">
+                                <small>Total Reach:</small><br/>
+                                {{trade.user.user.soundcloud.followers}} Followers</p>
                             </div>
-                        </button>    
+                        </a>    
                     </div>                  
                     <div class="left-profile">
-                        <button ng-click="changeActiveUser(trade.other.user)">
-                            <div class="tropical" ng-style="(activeUser._id == trade.other.user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.other.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.other.user.soundcloud.username}}</span></a><img class="img-responsive img-circle" src="{{trade.other.user.soundcloud.avatarURL}}" style="width:100px;">
-                                <p class="ng-binding">{{trade.other.user.soundcloud.followers}} Followers</p>
+                        <a ng-click="changeActiveUser(trade.other.user)">
+                            <div class="tropical-2" ng-style="(activeUser._id == trade.other.user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.other.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.other.user.soundcloud.username}}</span></a><img class="img-responsive img-circle" src="{{trade.other.user.soundcloud.avatarURL}}" style="width:100px;">
+                                <p class="ng-binding">
+                                <small>Total Reach:</small><br/>
+                                {{trade.other.user.soundcloud.followers}} Followers</p>
                             </div>
-                        </button>
+                        </a>
                     </div>
                     <!--left-side-manu ::end-->
                     <div class="refor-chate-box">
-                        <span class="pull-left"><button ng-click="remindTrade()" data-toggle="modal" data-target="#remindModal">Remind</button></span>
-                        <span class="pull-right"><button ng-click="openChat()">Chat</button></span>
+                        <span class="pull-left"><button class="btn btn-pink btn-sm margin-0" ng-click="remindTrade()" data-toggle="modal" data-target="#remindModal">Remind</button></span>
+                        <span class="pull-right"><button class="btn btn-pink btn-sm margin-0" ng-click="openChat()">Chat</button></span>
                     </div>
                 </div>
             </div>
@@ -46,17 +51,16 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
                                 <div class="container-90">
-                                    <div class="col-md-3 col-xs-6 pull-left">
+                                    <div class="col-md-5 col-xs-6 pull-left">
                                         <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
                                             <a class="btn btn-default" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
                                             <a class="btn btn-default" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
                                         </div>
+                                        <button class="btn btn-pink" ng-click="saveTrade()" ng-if="(trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && showUndo">Request</button>
+                                        <button class="btn btn-pink" ng-click="acceptTrade()" ng-if="!showUndo && (trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && !trade.user.accepted">Accept</button>
+                                        <button class="btn btn-pink" ng-click="undo()" ng-if="showUndo">Undo</button>
                                     </div>
-                                    <div class="col-md-3 col-xs-6">
-                                        <button ng-click="saveTrade()" ng-if="(trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && showUndo">Request</button>
-                                        <button ng-click="acceptTrade()" ng-if="!showUndo && (trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && !trade.user.accepted">Accept</button>
-                                        <button ng-click="undo()" ng-if="showUndo">Undo</button>
-                                    </div>
+                                    
                                     <div class="col-md-5 col-xs-12 pull-right">
                                         <label class="switch" style="vertical-align: middle;">
                                             <input type="checkbox" ng-checked="repeatOn" ng-click="changeRepeatOn()">
@@ -64,7 +68,7 @@
                                         </label>
                                         <span>Repeat trade for<input class="form-control input-hour" type="tel" ng-model="trade.repeatFor" ng-change="changeRepeatFor()">weeks</span>
                                     </div>
-                                    <div class="col-md-4 col-xs-6 pull-right text-right">
+                                    <div class="col-md-2 col-xs-6 pull-right text-right">
                                         <div class="btn-group" role="group" aria-label="...">
                                             <a class="btn btn-default" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.png" /></a>
                                             <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>

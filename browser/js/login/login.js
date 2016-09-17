@@ -14,12 +14,13 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
   var userData = SessionService.getUser();
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
   if($scope.isLoggedIn){
-    if(userData.paypal_email==undefined || userData.paypal_email=="")
-    $state.go('basicstep1');
+    if(userData.paypal_email==undefined || userData.paypal_email==""){
+      $state.go('basicstep1');
+    }    
     else{
       SessionService.removeAccountusers();
       $state.go('accounts');
-  }
+    }
   }
 
   $scope.login = function() {

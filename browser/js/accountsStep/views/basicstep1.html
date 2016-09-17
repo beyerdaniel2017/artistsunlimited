@@ -16,35 +16,35 @@
           <div class="two-tabs">
                         <!-- Nav tabs :Start-->
                         <div class="text-center" style="margin-top:30px;margin-bottom:30px;">SET UP YOUR ADMIN ACCOUNT</div>
-                        <ul class="info-ui-tab" role="tablist">
+                        <ul class="info-ui-tab" role="tablist" ng-hide="AccountsStepData.formActions=='Admin'">
                             <li class="active">
-                                <a href="javascript:void(0)" aria-controls="mysubmissions" role="tab" data-toggle="tab">1  Basic Info</a>
+                              <a href="javascript:void(0)"><span style="color:red;font-size:14px;">1</span>&nbsp;&nbsp;Basic Info</a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)">2  Set up your first Channel</a>
+                              <a href="javascript:void(0)" role="tab" data-toggle="tab"><span style="color:red;font-size:14px;">2</span>&nbsp;&nbsp;Set up your first Channel</a>
                             </li>
                         </ul>
                         <div class="clearfix"></div>
                         <!-- Nav tabs :End-->
                         <!-- Tab panes :: Start-->
-                        <div class="tab-content">
+                        <div class="tab-content margin-20">
                             <!-- MY SCHEDULE : Start-->
-                            <div role="tabpanel" class="tab-pane fade in active" id="step1">
-                                <ul class="admin-ui-tabs" role="tablist">
+                            <div class="tab-pane fade in active" id="step1">
+                                <ul class="admin-ui-tabs" >
                                     <li class="active">
-                                        <a href="javascript:void(0)" role="tab" data-toggle="tab">1  Set General Info</a>
+                                        <a href="javascript:void(0)" ><span style="color:red;font-size:14px;">1</span>&nbsp;&nbsp;Set General Info</a>
                                     </li>
                                     <li >
-                                        <a href="javascript:void(0)" role="tab" data-toggle="tab">2  Repost Submissions Customize E-mails</a>
+                                        <a href="javascript:void(0)" ><span style="color:red;font-size:14px;">2</span>&nbsp;&nbsp;Repost Submissions Customize E-mails</a>
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0)" role="tab" data-toggle="tab">3  Premier Submissions Customize E-mails</a>
+                                        <a href="javascript:void(0)" ><span style="color:red;font-size:14px;">3</span>&nbsp;&nbsp;Premier Submissions Customize E-mails</a>
                                     </li>
                                     <li>
-                                      <a href="javascript:void(0)" role="tab" data-toggle="tab">4 Notification Settings</a>
+                                        <a href="javascript:void(0)" ><span style="color:red;font-size:14px;">4</span>&nbsp;&nbsp;Notification Settings</a>
                                     </li>
                                     <li>
-                                      <a href="javascript:void(0)" role="tab" data-toggle="tab">5  PayPal Info</a>
+                                        <a href="javascript:void(0)" ><span style="color:red;font-size:14px;">5</span>&nbsp;&nbsp;PayPal Info</a>
                                     </li> 
                                 </ul>
                                 <br />
@@ -75,7 +75,8 @@
                             <div class="text-right">
                                                           <img id="profilePicture" ng-if="!AccountsStepData.profilePictureData" src="{{AccountsStepData.profilePicture}}" class="img-responsive" alt="{{AccountsStepData.name}}" style="height: 240px;width:100%;">
                                                           <img id="profilePicture" class="img-responsive" ng-if="AccountsStepData.profilePictureData" src="{{AccountsStepData.profilePictureData}}" alt="{{AccountsStepData.name}}" style="height: 240px;width:100%;">
-                                                          <div><input type="file" id="uploadImage" file-input="AccountsStepData.profilePicture" name="uploadImage" value="Browse Image" style=" bottom: 60px;position: relative;width:90px;margin:0 auto;">
+                                                            <div>
+                                                                <input type="file" id="uploadImage" file-input="AccountsStepData.profilePicture" name="uploadImage" value="Browse Image" style=" bottom: 60px;position: relative;width:90px;margin:0 auto;">
                                                           </div>
                                                       </div>
                                                       <div class="clearfix"></div>

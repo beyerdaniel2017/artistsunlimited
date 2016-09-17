@@ -9,6 +9,7 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		$window.localStorage.removeItem('AdminUser');
 		$window.localStorage.removeItem('addActionsfoAccount');
 		$window.localStorage.removeItem('addActionsfoAccountIndex');
+		$window.localStorage.removeItem('addActionsfoAccountIndexSRD');
 		$window.localStorage.removeItem('soundCloudId');
 		$window.localStorage.removeItem('PaidRepostAccounts');
 				
@@ -17,6 +18,7 @@ app.factory('SessionService', function($cookies, $http, $window) {
 	function removeAccountusers(){
 		$window.localStorage.removeItem('addActionsfoAccount');
 		$window.localStorage.removeItem('addActionsfoAccountIndex');
+		$window.localStorage.removeItem('addActionsfoAccountIndexSRD');
 		$window.localStorage.removeItem('AdminUser');	
 		$window.localStorage.removeItem('soundCloudId');
 		$window.localStorage.removeItem('PaidRepostAccounts');
@@ -25,8 +27,10 @@ app.factory('SessionService', function($cookies, $http, $window) {
 	function addActionsfoAccount(actions,index,soundCloudId) {
 		$window.localStorage.setItem('addActionsfoAccount',actions);
 		$window.localStorage.setItem('addActionsfoAccountIndex',index);
-		if(soundCloudId)
+   		if(soundCloudId){
+   			$window.localStorage.setItem('addActionsfoAccountIndexSRD',index);
 			$window.localStorage.setItem('soundCloudId',soundCloudId);			
+	}
 	}
 
 	function removePaidRepostAccounts(){
@@ -39,6 +43,10 @@ app.factory('SessionService', function($cookies, $http, $window) {
 
 	function getActionsfoAccountIndex() {
 		return $window.localStorage.getItem('addActionsfoAccountIndex');
+	}
+
+	function addActionsfoAccountIndexSRD() {
+		return $window.localStorage.getItem('addActionsfoAccountIndexSRD');
 	}
 
 	function getSoundCloudId(){
@@ -113,6 +121,7 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		setUserPaidRepostAccounts:setUserPaidRepostAccounts,
 		getUserPaidRepostAccounts:getUserPaidRepostAccounts,
 		removePaidRepostAccounts:removePaidRepostAccounts,
-		getSoundCloudId:getSoundCloudId
+		getSoundCloudId:getSoundCloudId,
+		addActionsfoAccountIndexSRD:addActionsfoAccountIndexSRD
 	};
 });

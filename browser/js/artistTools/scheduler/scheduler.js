@@ -115,15 +115,15 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     });
   }
 
-  //search//
+    //search//
   $scope.searchSelection = [];
   $scope.changedSearch = function(kind) {
     $scope.searchSelection = [];
     $scope.searchError = undefined;
     $scope.searching = true;
-    if ($scope.searchString != "") {
+    if ($scope.makeEventURL != "") {
       $http.post('/api/search', {
-        q: $scope.searchString,
+        q: $scope.makeEventURL,
         kind: kind
       }).then(function(res) {
         $scope.searching = false;
@@ -134,10 +134,15 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
             $scope.selectedItem(res.data.item);
           }
         } else {
-          $scope.searchSelection = res.data.collection;
-          $scope.searchSelection.forEach(function(item) {
-            $scope.setItemText(item)
-          })
+          if(res.data.collection.length > 0){
+            $scope.searchSelection = res.data.collection;
+            $scope.searchSelection.forEach(function(item) {
+              $scope.setItemText(item)
+            })
+          }
+          else{
+            $scope.searchError = "We could not find a " + kind + "."
+          } 
         }
       }).then(null, function(err) {
         $scope.searching = false;
@@ -163,26 +168,26 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   }
 
   $scope.selectedItem = function(item) {
-      var player = document.getElementById('scPopupPlayer');
-      if ($scope.tabSelected == false) {
-        player = document.getElementById('scPlayer');
-      }
-      $scope.searchSelection = [];
-      $scope.searchError = undefined;
-      $scope.searchString = item.title;
-      $scope.makeEventURL = item.title;
-      $scope.makeEvent.trackID = item.id;
-      $scope.makeEvent.title = item.title;
-      $scope.makeEvent.trackURL = item.permalink_url
-      SC.oEmbed($scope.makeEvent.trackURL, {
-        element: player,
-        auto_play: false,
-        maxheight: 150
-      })
-      player.style.visibility = "visible";
-      $scope.processing = false;
+    var player = document.getElementById('scPopupPlayer');
+    if($scope.tabSelected == false){
+      player = document.getElementById('scPlayer');
     }
-    //end search//
+    $scope.searchSelection = [];
+    $scope.searchError = undefined;
+    $scope.searchString = item.title;
+    $scope.makeEventURL = item.title;
+    $scope.makeEvent.trackID = item.id;
+    $scope.makeEvent.title = item.title;
+    $scope.makeEvent.trackURL = item.permalink_url
+    SC.oEmbed($scope.makeEvent.trackURL, {
+      element: player,
+      auto_play: false,
+      maxheight: 150
+    })
+    player.style.visibility = "visible";
+    $scope.processing = false;
+  }
+  //end search//
 
   $scope.linkedAccounts = [];
   /*Get Linked Accounts*/
@@ -274,21 +279,44 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     });
   }
 
-  $scope.saveComments = function(value, type) {
+  $scope.saveComments = function(value, type,index) {
+
     var comments = [];
-    if (type == 'schedule') {
+    if (type == 'schedule' && value) {
       comments = ($scope.user.repostSettings.schedule.comments ? $scope.user.repostSettings.schedule.comments : []);
+      if(index==undefined)
       comments.push(value);
+      else
+        comments[index] = value;
+
       $scope.user.repostSettings.schedule.comments = comments;
       $scope.saveRepostSettings();
       $scope.scheduleComment = "";
-    } else if (type == 'trade') {
+    } else if (type == 'trade' && value) {
       comments = ($scope.user.repostSettings.trade.comments ? $scope.user.repostSettings.trade.comments : []);
+      if(index==undefined)
       comments.push(value);
+      else
+        comments[index] = value;
       $scope.user.repostSettings.trade.comments = comments;
       $scope.saveRepostSettings();
       $scope.tradeComment = "";
     }
+    else{
+      $.Zebra_Dialog("Please enter comment");
+      return;
+    }
+  }
+
+  $scope.editComments = function(comment, type,index) {
+    $scope.scheduleCommentIndex=index;
+    if (type == 'schedule') {
+      $('#scheduleCommentModal').modal('show');      
+      $scope.scheduleComment = comment;
+    } else if (type == 'trade') {
+      $('#tradeCommentModal').modal('show');
+      $scope.tradeComment = comment;
+    } 
   }
 
   $scope.setActive = function(type) {
@@ -364,9 +392,9 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.EditNewSong = function(item, editable) {
     $scope.editChannelArr = [];
     $scope.tabSelected = false;
-    if (!editable) {
-      $scope.isEdit = true;
-    }
+    /*if (!editable) {*/
+    $scope.isEdit = true;
+    //}
     var newObj = angular.copy(item);
     $scope.makeEventURL = newObj.event.trackURL;
     $scope.selectedSlot = newObj.event.day;
@@ -392,6 +420,17 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     })
     document.getElementById('scPlayer').style.visibility = "visible";
     $scope.followersCount();
+    $scope.makeEvent={};
+    $scope.newEvent =false;
+    var selectedSlot =$scope.selectedSlot;
+    var day = new Date(selectedSlot.getTime() - selectedSlot.getTimezoneOffset() * 60000).toISOString();
+    var hour = ConvertStringTimeToUTC(selectedSlot.getHours());
+    var makeDay = new Date(day);
+    makeDay.setHours(hour);
+    $scope.makeEvent.day = makeDay;
+    $scope.makeEvent._id = newObj.event._id;
+    $scope.makeEvent.trackURL = $scope.makeEventURL;
+    $scope.makeEvent.title = newObj.event.title;
   }
 
   $scope.addNewSongCancel = function() {
@@ -428,6 +467,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       slots = slots.sort(function(a, b) {
         return a - b
       });
+
       angular.forEach(slots, function(s) {
         var item = new Object();
         var h = s;
@@ -448,7 +488,22 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
         item.event = event;
         item.date = strDdate + " " + time;
+
+        if(!item.event && new Date(item.date).getDate() == new Date().getDate())
+        {
+          var eventTime = new Date(item.date).getHours();
+          var currTime = new Date().getDate();
+    
+              if(eventTime > currTime)
+                {
+                   $scope.listevents.push(item);
+                }
+         }
+         else
+         {
         $scope.listevents.push(item);
+         }
+  
         if (event == undefined && new Date(item.date) > new Date()) {
           item.slotdate = d;
           item.slottime = time;
@@ -524,7 +579,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
 
   $scope.setSlotStyle = function(day, hour) {
     var style = {};
-    if ($scope.availableSlots[daysArray[day]].indexOf(hour) > -1) {
+    if ($scope.availableSlots && $scope.availableSlots[daysArray[day]].indexOf(hour) > -1) {
       style = {
         'background-color': "#fff",
         'border-color': "#999"
@@ -625,6 +680,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     }
     document.getElementById('scPlayer').style.visibility = "hidden";
     document.getElementById('scPlayer').innerHTML = "";
+
     $scope.newEvent = true;
     var makeDay = new Date(selectedSlot.slotdate);
     makeDay.setHours(hour);
@@ -641,7 +697,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     var makeDay = new Date(day);
     makeDay.setHours(hour);
     if ($scope.user.blockRelease && new Date($scope.user.blockRelease).getTime() > new Date(makeDay).getTime()) {
-      $.Zebra_Dialog("Sorry! You are blocked till date " + moment($scope.user.blockRelease).format('LLL'));
+      $.Zebra_Dialog("Sorry! You are blocked till date "+ moment($scope.user.blockRelease).format('LLL'));
       return;
     }
     $scope.showOverlay = true;
@@ -893,12 +949,13 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         $scope.otherChannels = [];
         $scope.timeGap = '1';
       } else {
-        var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
+        var req = $http.put('/api/events/repostEvents', $scope.makeEvent);
       }
       req
         .then(function(res) {
           if (res) {
             $scope.repostResponse = res.data._id;
+            $('#saveAndShareModal').modal('show');
           }
           $scope.makeEventURL = "";
           $scope.makeEvent = null;
@@ -914,6 +971,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         .then(function(res) {
           if (res) {
             $scope.repostResponse = res.data._id;
+            $('#saveAndShareModal').modal('show');
           }
           $scope.makeEventURL = "";
           $scope.makeEvent = null;
@@ -1046,11 +1104,11 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       return {}
     } else if (event.type == 'track' || event.type == 'queue') {
       return {
-        'background-color': '#67f967'
+        'background-color': '#FF0000'
       }
     } else if (event.type == 'traded') {
       return {
-        'background-color': '#FFDA97'
+        'background-color': '#FF6347'
       }
     } else if (event.type == 'paid') {
       return {
@@ -1193,6 +1251,25 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }
     }
     $scope.followCounts = count;
+  }
+
+  $scope.getTrackListFromSoundcloud = function() {
+    var profile = $scope.user;
+    if (profile.soundcloud) {
+      $scope.processing = true;
+      SC.get('/users/' + profile.soundcloud.id + '/tracks', {
+          filter: 'public'
+        })
+        .then(function(tracks) {
+          $scope.trackList = tracks;
+          $scope.processing = false;
+          $scope.$apply();
+        })
+        .catch(function(response) {
+          $scope.processing = false;
+          $scope.$apply();
+        });
+    }
   }
 
   $scope.sendMail = function(id) {

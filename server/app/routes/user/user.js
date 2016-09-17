@@ -63,11 +63,27 @@ router.get('/getUserByURL/:username/:page', function(req, res, next) {
   else{
     query = {'paidRepost.premierUrl': url};
   } 
-  console.log('query',query);
   User.findOne(query)
   .exec()
   .then(function(user) {
-    res.send(user._id);
+    if(user && user.paidRepost.length > 0){
+      if(req.params.page.indexOf('submit') != -1){
+        var u = user.paidRepost.find(function(pr){
+          console.log(pr.submissionUrl +"=="+ url);
+          return pr.submissionUrl == url;
+        })
+        res.send(u.userID);
+      }
+      else{
+        var u = user.paidRepost.forEach(function(pr){
+          return pr.premierUrl == url;
+        })
+        res.send(u.userID);
+      }
+    }
+    else{
+      res.send(null);
+    }    
   })
   .then(null, next);
 });
@@ -300,7 +316,9 @@ router.put('/updateAdmin', function(req, res, next) {
 
 
 router.put('/updateuserRecord', function(req, res, next) {
-  User.findByIdAndUpdate(req.body._id, req.body).exec()
+  var id= req.body._id;
+  delete req.body._id;
+  User.findByIdAndUpdate(id, req.body).exec()
     .then(function(user) {
       res.send(user);
     }).then(null, next);
@@ -308,39 +326,54 @@ router.put('/updateuserRecord', function(req, res, next) {
 /*Admin profile update start*/
 router.post('/updateAdminProfile', function(req, res, next) {
   var body = req.body;
-  var updateObj={};
-  if (body.pictureUrl) {
+  var updateObj=body;
+  if (updateObj.pictureUrl) {
     updateObj.profilePicture = body.pictureUrl
   }
-  if(body.email){
+  if(updateObj.email){
     updateObj.email = body.email;
   }
-
-  if (body.password) {
+  if(updateObj.password) {
     updateObj.salt = User.generateSalt();
     updateObj.password = User.encryptPassword(body.password, updateObj.salt);
   } 
-
+  if(updateObj.email != "" && updateObj.email != undefined){
   User.findOne({'_id': {$ne : req.user._id}, email: body.email}, function(err,u){
     if(u){
       res.send({message: "Email already register."});
     }
     else{
- User.findOneAndUpdate({
-    '_id': req.user._id
-  }, {
-    $set: updateObj
-  }, {
-    new: true
-  }).exec()
-  .then(function(result) {
-    res.send(result);
-  })
-  .then(null, function(err) {
-    next(err);
-  });
+      User.findOneAndUpdate({
+        '_id': req.user._id
+      }, {
+        $set: updateObj
+      }, {
+        new: true
+      }).exec()
+      .then(function(result) {
+        res.send(result);
+      })
+      .then(null, function(err) {
+        next(err);
+      });
     }
   })
+}
+else{
+User.findOneAndUpdate({
+        '_id': req.user._id
+      }, {
+        $set: updateObj
+      }, {
+        new: true
+      }).exec()
+      .then(function(result) {
+        res.send(result);
+      })
+      .then(null, function(err) {
+        next(err);
+      });
+}
 });
 
 router.post('/checkUsercount', function(req, res, next) {

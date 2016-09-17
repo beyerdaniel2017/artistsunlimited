@@ -67,7 +67,7 @@
                     <div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
                       <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendar[l+dayIncr].events[p], calendar[l+dayIncr].day, l, p)" class="row-scheduler" ng-click="clickedSlot(calendar[l+dayIncr].day, p,calendar[l+dayIncr].events[p])" style="position:relative;">
                         <div ng-style="getEventStyle(calendar[l+dayIncr].events[p])" class="text-left">{{calendar[l+dayIncr].events[p].title}}</div>
-                        <img ng-show="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img>
+                        <!-- <img ng-show="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img> -->
                </div>
              </div>
            </div>
@@ -101,8 +101,7 @@
       <!-- MY SCHEDULE : End-->
       <!-- ORGANIZE SCHEDULE :Start -->
       <div role="tabpanel" class="tab-pane fade" id="organizeschedule">
-        <div class="">
-          <h3 style="text-align:center;">{{user.displayName}}</h3>
+        <div class="">          
           <div id="scheduler-container" >
             <div style="width:100%; height:35px; display:flex; flex-direction:row;margin-bottom: 10px; ">                 
               <div class="bold cell-date" ng-repeat="t in ['Sunday','Monday','Tuesday','Wednesday','Thusday','Friday','Saturday']">{{t}}
@@ -170,7 +169,7 @@
                           </ul>
                         </div>
                         <br>
-                        <button type="button" class="btn payed-reposts-btn pull-right" data-toggle="modal" data-target="#scheduleCommentModal">+ COMMENT</button>
+                        <button type="button" class="btn payed-reposts-btn pull-right" data-toggle="modal" data-target="#scheduleCommentModal" ng-click="scheduleCommentIndex=undefined">+ COMMENT</button>
                       </div>                           
                     </div>
                     <div class="col-md-4 text-center"> 
@@ -195,7 +194,7 @@
                           </ul>
                         </div>
                         <br>
-                        <button type="button" class="btn payed-reposts-btn pull-right" data-toggle="modal" data-target="#tradeCommentModal">+ COMMENT</button>
+                        <button type="button" class="btn payed-reposts-btn pull-right" data-toggle="modal" data-target="#tradeCommentModal" ng-click="scheduleCommentIndex=undefined">+ COMMENT</button>
                       </div>                           
                     </div>                         
                   </div><!--row ::end-->                
@@ -231,7 +230,8 @@
                         <input class="form-control" type="text" placeholder="Song URL" id="searchString" ng-model="searchStringVal.searchString"  required/>
                           <ul class="results" ng-show="searchStringVal.searching || searchStringVal.searchError || searchStringVal.searchSelection.length > 0">
                             <li ng-show="searchStringVal.searching && !searchStringVal.searchError && searchStringVal.searchSelection.length==0"><a href="#">One moment...</a></li>
-                            <li ng-repeat="item in searchStringVal.searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">{{item.displayName}}</a></li>
+                            <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
+                            <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
                             <li ng-show="!!searchStringVal.searchError">{{searchError}}</li>
                             <li ng-show="searchStringVal.searchSelection.length > 0 && !searchStringVal.searchError"><a href="#">Or enter a Soundcloud URL</a></li>
                           </ul>
@@ -393,7 +393,8 @@
                         <input class="form-control" type="text" placeholder="Song URL" id="searchString1" ng-model="searchStringVal.searchString"  required/>
                           <ul class="results" ng-show="searchStringVal.searching || searchStringVal.searchError || searchStringVal.searchSelection.length > 0">
                             <li ng-show="searchStringVal.searching && !searchStringVal.searchError && searchStringVal.searchSelection.length==0"><a href="#">One moment...</a></li>
-                            <li ng-repeat="item in searchStringVal.searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">{{item.displayName}}</a></li>
+                            <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
+                            <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
                             <li ng-show="!!searchStringVal.searchError">{{searchError}}</li>
                             <li ng-show="searchStringVal.searchSelection.length > 0 && !searchStringVal.searchError"><a href="#">Or enter a Soundcloud URL</a></li>
                           </ul>
@@ -539,6 +540,7 @@
    </div>
  </div>
  <!-- ManageRepost paidComment overlay start -->
+ <!-- ManageRepost paidComment overlay start -->
  <div class="modal fade" id="scheduleCommentModal" role="dialog">
   <div class="modal-dialog">    
     <!-- Modal content-->
@@ -552,7 +554,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="saveComments(scheduleComment,'schedule')">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="saveComments(scheduleComment,'schedule',scheduleCommentIndex)">Save</button>
       </div>
     </div>
   </div>
@@ -572,7 +574,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="saveComments(tradeComment,'trade')">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="saveComments(tradeComment,'trade',scheduleCommentIndex)">Save</button>
       </div>
     </div>
   </div>

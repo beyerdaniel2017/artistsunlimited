@@ -415,13 +415,11 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
 
     // remove linked accounts
     $scope.removeLinkedAccount = function(account) {
-      console.log(account);
       $scope.userlinkedAccounts.splice($scope.userlinkedAccounts.indexOf(account), 1);
       $http.put('/api/database/networkaccount', $scope.userlinkedAccounts)
-        .then(function(res) {
-          console.log(res.data);
-          $scope.userlinkedAccounts = res.data.channels;
-        })
+      .then(function(res) {
+        $scope.userlinkedAccounts = res.data.channels;
+      })
     }
 
     $scope.removePermanentLink = function(index) {
