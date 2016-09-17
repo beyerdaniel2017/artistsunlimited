@@ -13,19 +13,26 @@ app.config(function($stateProvider) {
         var username = $stateParams.username;
         var submitpart = $stateParams.submitpart;
         return $http.get('/api/users/getUserByURL/' + username + '/' + submitpart)
-          .then(function(res) {
-            if (res && res.data) {
-              if (submitpart.indexOf('submit') != -1) {
-                $window.location.href = '/submit?id=' + res.data;
-              } else {
-                $window.location.href = '/premiere?id=' + res.data;
-              }
+        .then(function(res) {
+          if (res && res.data) {
+            if (submitpart.indexOf('submit') != -1) {
+              $window.location.href = '/submit?id=' + res.data;
+            } else {
+              $window.location.href = '/premiere?id=' + res.data;
             }
-          })
-          .then(null, function(err) {
-            $.Zebra_Dialog("error getting your events");
-            return;
-          })
+          }
+          else{
+            if (submitpart.indexOf('submit') != -1) {
+              $window.location.href = '/submit';
+            } else {
+              $window.location.href = '/premiere';
+            }
+          }
+        })
+        .then(null, function(err) {
+          $.Zebra_Dialog("error getting your events");
+          return;
+        })
       }
     }
   });
@@ -73,20 +80,23 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
         $scope.searching = false;
         if (res.data.item) {
           if (res.data.item.kind != kind) {
-            console.log('search error');
             $scope.serachError = "Please enter a " + kind + " URL.";
           } else {
             $scope.selectedItem(res.data.item);
           }
         } else {
-          $scope.searchSelection = res.data.collection;
-          $scope.searchSelection.forEach(function(item) {
-            $scope.setItemText(item)
-          })
+          if(res.data.collection.length > 0){
+            $scope.searchSelection = res.data.collection;
+            $scope.searchSelection.forEach(function(item) {
+              $scope.setItemText(item)
+            })
+          }
+          else{
+            $scope.searchError = "We could not find a " + kind + "."
+          }          
         }
       }).then(null, function(err) {
         $scope.searching = false;
-        console.log(err)
         console.log('We could not find a ' + kind);
         $scope.searchError = "We could not find a " + kind + "."
       });
@@ -94,7 +104,6 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.setItemText = function(item) {
-    console.log(item);
     switch (item.kind) {
       case 'track':
         item.displayName = item.title + ' - ' + item.user.username;
@@ -109,24 +118,24 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.selectedItem = function(item) {
-      $scope.searchSelection = [];
-      $scope.searchError = undefined;
+    $scope.searchSelection = [];
+    $scope.searchError = undefined;
 
-      //custom code to process item choice//
-      console.log(item);
+    //custom code to process item choice//
+    console.log(item);
     $scope.searchString = item.title;
-      $scope.submission.trackID = item.id;
-      $scope.submission.title = item.title;
-      $scope.submission.trackURL = item.permalink_url
-      SC.oEmbed($scope.submission.trackURL, {
-        element: document.getElementById('scPlayer'),
-        auto_play: false,
-        maxheight: 150
-      })
-      document.getElementById('scPlayer').style.visibility = "visible";
-      $scope.processing = false;
-    }
-    //end search//
+    $scope.submission.trackID = item.id;
+    $scope.submission.title = item.title;
+    $scope.submission.trackURL = item.permalink_url
+    SC.oEmbed($scope.submission.trackURL, {
+      element: document.getElementById('scPlayer'),
+      auto_play: false,
+      maxheight: 150
+    })
+    document.getElementById('scPlayer').style.visibility = "visible";
+    $scope.processing = false;
+  }
+  //end search//
 
   // $scope.urlChange = function() {
   //   $http.post('/api/soundcloud/resolve', {

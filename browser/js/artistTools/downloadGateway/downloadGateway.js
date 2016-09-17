@@ -530,7 +530,7 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     })
   }
 
-    //search//
+  //search//
   $scope.searchSelection = [];
   $scope.changedSearch = function(kind) {
     $scope.searchSelection = [];
@@ -549,10 +549,15 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
             $scope.selectedItem(res.data.item);
           }
         } else {
-          $scope.searchSelection = res.data.collection;
-          $scope.searchSelection.forEach(function(item) {
-            $scope.setItemText(item)
-          })
+          if(res.data.collection.length > 0){
+            $scope.searchSelection = res.data.collection;
+            $scope.searchSelection.forEach(function(item) {
+              $scope.setItemText(item)
+            })
+          }
+          else{
+            $scope.searchError = "We could not find a " + kind + "."
+          } 
         }
       }).then(null, function(err) {
         $scope.searching = false;
@@ -561,15 +566,6 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
         $scope.searchError = "We could not find a " + kind + "."
       });
     }
-  }
-
-  $scope.addYouTubeUrl = function()
-  {
-     $scope.track.youtube.push('');
-  }
-  $scope.removeYouTubes = function(index)
-  {
-    $scope.track.youtube.splice(index, 1);
   }
 
   $scope.setItemText = function(item) {
@@ -629,6 +625,15 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     }
   }
   //end search//
+
+  $scope.addYouTubeUrl = function()
+  {
+    $scope.track.youtube.push('');
+  }
+  $scope.removeYouTubes = function(index)
+  {
+    $scope.track.youtube.splice(index, 1);
+  }
 
   $scope.getUserNetwork();
   $scope.verifyBrowser();

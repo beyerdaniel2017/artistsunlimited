@@ -230,7 +230,8 @@
                         <input class="form-control" type="text" placeholder="Song URL" id="searchString" ng-model="searchStringVal.searchString"  required/>
                           <ul class="results" ng-show="searchStringVal.searching || searchStringVal.searchError || searchStringVal.searchSelection.length > 0">
                             <li ng-show="searchStringVal.searching && !searchStringVal.searchError && searchStringVal.searchSelection.length==0"><a href="#">One moment...</a></li>
-                            <li ng-repeat="item in searchStringVal.searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">{{item.displayName}}</a></li>
+                            <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
+                            <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
                             <li ng-show="!!searchStringVal.searchError">{{searchError}}</li>
                             <li ng-show="searchStringVal.searchSelection.length > 0 && !searchStringVal.searchError"><a href="#">Or enter a Soundcloud URL</a></li>
                           </ul>
@@ -392,7 +393,8 @@
                         <input class="form-control" type="text" placeholder="Song URL" id="searchString1" ng-model="searchStringVal.searchString"  required/>
                           <ul class="results" ng-show="searchStringVal.searching || searchStringVal.searchError || searchStringVal.searchSelection.length > 0">
                             <li ng-show="searchStringVal.searching && !searchStringVal.searchError && searchStringVal.searchSelection.length==0"><a href="#">One moment...</a></li>
-                            <li ng-repeat="item in searchStringVal.searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">{{item.displayName}}</a></li>
+                            <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
+                            <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
                             <li ng-show="!!searchStringVal.searchError">{{searchError}}</li>
                             <li ng-show="searchStringVal.searchSelection.length > 0 && !searchStringVal.searchError"><a href="#">Or enter a Soundcloud URL</a></li>
                           </ul>

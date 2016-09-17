@@ -72,6 +72,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     if (!$scope.isLoggedIn) {
         $state.go('admin');
     }
+    $scope.user = SessionService.getUser();
     $scope.showTestEmailModal=false;
     $scope.errorverification = false;
     $scope.verified = false;
@@ -313,7 +314,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                     $.Zebra_Dialog('Error: Please upload your profile image');
                 }
                 if ($scope.AccountsStepData.profilePicture != "") {
-                    body.profilePicture = $scope.AccountsStepData.profilePicture;
+                    body.pictureUrl = $scope.AccountsStepData.profilePicture;
                 }
 
                 if (next) {
@@ -513,6 +514,9 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     $scope.addGroup = function(val){
         $scope.group="";
         $("#group").val('');
+        if($scope.AccountsStepData.submissionData.groups==undefined)
+            $scope.AccountsStepData.submissionData.groups=[];
+
         if($scope.AccountsStepData.submissionData.groups!=undefined && $scope.AccountsStepData.submissionData.groups.indexOf(val)==-1){
             $scope.AccountsStepData.submissionData.groups.push(val);            
         }
@@ -645,13 +649,21 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
 
                             scInfo.submissionUrl = url;
                             scInfo.premierUrl = premierurl;
+
                             $http.post('/api/database/updateUserAccount', {
                                 soundcloudInfo: scInfo,
                             }).then(function(user) {
                                 user.data.paidRepost.reverse();
-                                $scope.processing = false;
                             });
+                            $http.post('/api/database/profile/edit', {
+                                userID:scInfo.userID,
+                                admin:true
+                            }).then(function(user) {                                
+                                
+                            });
+
                             SessionService.createAdminUser($scope.AccountsStepData);
+                            $scope.processing = false;
                         })
                         .catch(function() {});
                         } else {
@@ -736,7 +748,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
         if ((paypaldata.price1 == paypaldata.pricea && paypaldata.price2 == paypaldata.priceb) || (paypaldata.price1 == paypaldata.priceb && paypaldata.price2 == paypaldata.pricea)) {
             $scope.AccountsStepData.paypal.processchannel = true;
             AccountSettingServices.updateAdminProfile({
-                paypal_email: paypaldata.email
+                paypal_email: $scope.AccountsStepData.paypal_email
             })
             .then(function(res) {
                 $scope.processing = false;

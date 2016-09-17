@@ -1,14 +1,17 @@
 <div id="sidebar-wrapper">
   <div class="left-side">
-        <div class="tropical"><span>{{user.name}}</span><img class="img-responsive img-circle" src="{{user.profilePicture ? user.profilePicture : (user.soundcloud.avatarURL ? user.soundcloud.avatarURL :'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg')}}" style="width:100px;">
+        <div class="tropical" style="padding-top:0px;"><span>{{user.name}}</span><img class="img-responsive img-circle" src="{{user.profilePicture ? user.profilePicture : (user.soundcloud.avatarURL ? user.soundcloud.avatarURL :'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg')}}" style="width:100px;">
           <div class="clearfix"></div>
-          <div style="width:80%;margin:0 auto;" class="text-center" ng-show="{{paidUsers.length}}">
-            <select name="paidusers" class="form-control">
-              <option ng-repeat="paid in paidUsers" ng-click="getBehalfUserRecord(paid);" 
-              ng-selected="{{user._id!='' && paid._id==user._id}}" value="{{paid._id}}">{{paid.name}}</option>
+            <div ng-if="paidUsers.length">
+                <input type="hidden" id="paidusersId" value="{{paidusersId}}">
+                <div style="width:80%;margin:0 auto;" class="text-center">
+                    <select id="paidusers" class="form-control" ng-model="paidusersRec" ng-change="getBehalfUserRecord(paidusersRec)">
+                        <option ng-repeat="paid in paidUsers" value="{{paid}}">{{paid.name}}
+                        </option>
             </select> 
           </div>
     </div>
+        </div>
     <!--tropical end-->
 		<div class="left-menus">
       <nav class="nav">
@@ -33,5 +36,22 @@ $(document).ready(function(){
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
     });
+    setTimeout(function(){
+        if($("#paidusers").length){
+            $('#paidusers option').each(function(){
+                var vals= $(this).val();
+                if(vals.indexOf("object")==-1){
+                    var data = JSON.parse($(this).val());
+                    if(data._id==$("#paidusersId").val()){
+                        $(this).prop('selected','selected');
+                    }
+                }
+                else{
+                    $(this).remove();
+                }
+            });   
+        } 
+    },500);
+    
   });
 </script>

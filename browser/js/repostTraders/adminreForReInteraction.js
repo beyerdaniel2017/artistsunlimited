@@ -150,8 +150,13 @@ app.controller("AdminReForReInteractionController", function($rootScope, $state,
     return;
   }
   //console.log(formActions+'==========='+$scope.PaidUserId);
+  $scope.isLoggedIn = $scope.user ? true : false;
+
+  $scope.paidusersId = PaidUserId;
 
   $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
+ 
+  $scope.paidusersRec = $scope.user;
  
   $scope.change = false;
   $scope.showUndo = false;

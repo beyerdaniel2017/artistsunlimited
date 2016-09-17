@@ -55,7 +55,8 @@
                         <input class="form-control" type="text" placeholder="Song URL" ng-model="searchString"  required/>
                           <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
                             <li ng-show="searching && !searchError && searchSelection.length==0"><a href="#">One moment...</a></li>
-                            <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">{{item.displayName}}</a></li>
+                            <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
+                            <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
                             <li ng-show="!!searchError">{{searchError}}</li>
                             <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
                           </ul>
@@ -123,8 +124,18 @@
     <form role="form" ng-submit="submit()">
     </br>
     <div class="row">
-      <div class="col-sm-6 col-sm-offset-3">
-        <input type="text" placeholder="Song URL" ng-model="url" ng-change="urlChange()" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
+      <div class="col-sm-6 col-sm-offset-3 search">
+        <div class="search-suggetion">
+          <input class="form-control" type="text" placeholder="Song URL" ng-model="searchString"  required style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}"/>
+            <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
+              <li ng-show="searching && !searchError && searchSelection.length==0"><a href="#">One moment...</a></li>
+              <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
+              <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
+              <li ng-show="!!searchError">{{searchError}}</li>
+              <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
+            </ul>
+          <a href="#" class="link-add-btn" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+        </div>
       </div>
     </div>
   </br>

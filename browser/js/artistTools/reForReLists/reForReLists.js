@@ -89,13 +89,13 @@ app.config(function($stateProvider) {
             return [];
           }
         },
-        repostEvent: function($http, SessionService) {
+         repostEvent: function($http, SessionService) {
           var user = SessionService.getUser();
           if (user) {
-            return $http.get("/api/events/getRepostEvents/" + user._id)
-              .then(function(repostEvent) {
-                var repostEvent = repostEvent.data;
-                return repostEvent;
+            return  $http.get("/api/events/getRepostEvents/"+user._id)
+           .then(function(repostEvent) {
+            var repostEvent = repostEvent.data;
+           return repostEvent;
               });
           } else {
             return [];
@@ -320,7 +320,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
 
   $scope.setManageView = function(type)
   {
-    $scope.manageView = type;
+    $scope.manageView = type;  
   };
 
   $scope.loadMore = function() {
@@ -397,7 +397,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   }
 
   $scope.remindTrade = function(tradeID, index) {
-    $scope.sharelink = "https://localhost:1443/artistTools/reForReInteraction/" + tradeID;
+    $scope.sharelink = "https://localhost:1443/artistTools/reForReInteraction/"+tradeID;
   }
 
   $scope.sendMail = function(sharelink) {
@@ -494,7 +494,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   $scope.decrDay = function() {
     if ($scope.dayIncr > 0) $scope.dayIncr--;
   }
-
+  
   $scope.dayOfWeekAsString = function(date) {
     var dayIndex = date.getDay();
     if (screen.width > '744') {
@@ -502,7 +502,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
     }
     return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dayIndex];
   }
-
+  
   $scope.getEventStyle = function(repostEvent) {
     if (repostEvent.type == 'empty') {
       return {}
@@ -514,7 +514,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
       return {
         'background-color': '#2b9fda'
       }
-    }
+    }     
   }
 
   repostEvent.forEach(function(ev) {
@@ -549,19 +549,19 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   };
 
   $scope.calendar = $scope.fillDateArrays(repostEvent);
-
-  $scope.clickedSlot = function(day, hour, data) {
+ 
+  $scope.clickedSlot = function(day, hour, data) {   
     if(data.trackInfo)
     {
       document.getElementById('scPopupPlayer').style.visibility = "hidden";
       document.getElementById('scPopupPlayer').innerHTML = "";
-      $scope.makeEvent = {};
+      $scope.makeEvent={};
       var makeDay = new Date(day);
       makeDay.setHours(hour);
       $scope.makeEvent._id = data.trackInfo._id;
       $scope.makeEvent.day = new Date(data.trackInfo.day);
       $scope.makeEvent.url = data.trackInfo.trackURL;
-      $scope.makeEvent.comment = data.trackInfo.comment;
+      $scope.makeEvent.comment = data.trackInfo.comment;      
       $scope.makeEvent.timeGap = data.trackInfo.timeGap;
       $scope.makeEvent.artist = data.userInfo;
       var repostDate = new Date(data.trackInfo.day);
@@ -570,10 +570,10 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
       $scope.makeEvent.unrepostHours = diff; 
       var d = new Date(day).getDay();
       var channels = data.trackInfo.otherChannels;
-      $scope.displayChannels = [];
+      $scope.displayChannels=[];
       for(var i=0; i< repostEvent.length; i++)
       {
-        if (channels.indexOf(repostEvent[i].userInfo.id) > -1) {
+        if(channels.indexOf(repostEvent[i].userInfo.id) > -1){
           $scope.displayChannels.push(repostEvent[i].userInfo.username);
         }
       }
@@ -584,11 +584,11 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
       });
       SC.oEmbed($scope.makeEvent.url, {
         element: document.getElementById('scPopupPlayer'),
-        auto_play: false,
-        maxheight: 120
+         auto_play: false,
+         maxheight: 120
       })
       document.getElementById('scPopupPlayer').style.visibility = "visible";
-    }
+    }   
   }
 
   $scope.closeModal = function()
@@ -688,21 +688,23 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
         $scope.searching = false;
         if (res.data.item) {
           if (res.data.item.kind != kind) {
-            console.log('search error');
             $scope.serachError = "Please enter a " + kind + " URL.";
           } else {
             $scope.selectedItem(res.data.item);
           }
         } else {
-          $scope.searchSelection = res.data.collection;
-          $scope.searchSelection.forEach(function(item) {
-            $scope.setItemText(item)
-          })
+          if(res.data.collection.length > 0){
+            $scope.searchSelection = res.data.collection;
+            $scope.searchSelection.forEach(function(item) {
+              $scope.setItemText(item)
+            })
+          }
+          else{
+            $scope.searchError = "We could not find a " + kind + "."
+          } 
         }
       }).then(null, function(err) {
         $scope.searching = false;
-        console.log(err)
-        console.log('We could not find a ' + kind);
         $scope.searchError = "We could not find a " + kind + "."
       });
     }
@@ -717,7 +719,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
         item.displayName = item.title + ' - ' + item.user.username;
         break;
       case 'user':
-        item.displayName = user.username;
+        item.displayName = item.username;
         break;
     }
   }
@@ -725,22 +727,11 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   $scope.selectedItem = function(item) {
     $scope.searchSelection = [];
     $scope.searchError = undefined;
-    var player = document.getElementById('scPopupPlayer');
-    if($scope.manageView == "newsong"){
-      player = document.getElementById('scPlayer');
-    }
-    //custom code to process item choice//
-    $scope.searchString = item.title;
-    $scope.makeEvent.trackID = item.id;
-    $scope.makeEvent.title = item.title;
-    $scope.makeEvent.trackURL = item.permalink_url
-    SC.oEmbed($scope.makeEvent.trackURL, {
-      element: player,
-      auto_play: false,
-      maxheight: 150
-    })
-    player.style.visibility = "visible";
-    $scope.processing = false;
+   $scope.searchString = "";
+   $scope.searchString =  item.permalink_url;
+   $scope.searchURL = item.permalink_url;
+   $scope.sendSearch();
+ 
   }
   //end search//
 

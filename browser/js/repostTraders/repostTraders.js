@@ -154,7 +154,14 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
   }
   //console.log(formActions+'==========='+$scope.PaidUserId);
 
+  $scope.isLoggedIn = $scope.user ? true : false;
+
+  $scope.paidusersId = PaidUserId;
+
   $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
+  
+  $scope.paidusersRec = $scope.user;
+  
   $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
   $scope.currentTrades = currentTrades;
   $scope.currentTradesCopy = currentTrades;

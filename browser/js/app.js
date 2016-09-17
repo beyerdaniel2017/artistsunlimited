@@ -219,16 +219,16 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
     
 
     $scope.getBehalfUserRecord = function(paid){
+        paid = JSON.parse(paid);
         SessionService.removePaidRepostAccounts();  
         setTimeout(function(){
-        SessionService.addActionsfoAccount('BehalfUser',paid._id,paid.soundcloud.id);
-        SessionService.setUserPaidRepostAccounts(paid);
-        if($state.current.url.indexOf("admin/reForReInteraction") !=-1)
-            window.location.href='/admin/reposttraders';        
-        else            
-            window.location.reload($state.current.url);        
+            SessionService.addActionsfoAccount('BehalfUser', paid._id, paid.soundcloud.id);
+            SessionService.setUserPaidRepostAccounts(paid);
+            if($state.current.url.indexOf("admin/reForReInteraction") !=-1)
+                window.location.href='/admin/reposttraders';        
+            else            
+                window.location.reload($state.current.url);        
         },500);
-           
     }  
 
     $scope.gotoBehalfSetting = function(actions){

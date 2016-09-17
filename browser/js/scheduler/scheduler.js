@@ -76,8 +76,11 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     $.Zebra_Dialog('Error: There is no any user record found.');
     return;
   }
+  $scope.paidusersId = PaidUserId;
 
   $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
+
+  $scope.paidusersRec = $scope.user;
 
   $scope.months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -117,7 +120,12 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   $scope.selectedSlot = {};
   $scope.unrepostHours = 1;
   var commentIndex = 0;
-  $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
+  $scope.eventComment = ($scope.user.repostSettings!=undefined ? 
+      (
+        $scope.user.repostSettings.schedule && 
+        $scope.user.repostSettings.schedule.comments && 
+        $scope.user.repostSettings.schedule.comments.length > 0
+       ? $scope.user.repostSettings.schedule.comments[0] : '') : '');
   var defaultAvailableSlots = {
     sunday: [],
     monday: [],
@@ -146,9 +154,9 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
   $scope.getLinkedAccounts = function() {
     setTimeout(function() {
-      var linked = $rootScope.userlinkedAccounts;
+      var linked = $rootScope.userlinkedAccounts ? $rootScope.userlinkedAccounts:[];
       for (var i = 0; i < linked.length; i++) {
-        if (linked[i]._id != $scope.user._id) {
+        if (linked[i]!=undefined && linked[i]._id != $scope.user._id) {
           $scope.linkedAccounts.push(linked[i]);
         }
       }
@@ -342,7 +350,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     $scope.makeEvent = {};
     $scope.submission={};
     $scope.searchStringVal.timeGap = "";
-    $scope.searchStringVal.eventComment = $scope.user.repostSettings.schedule.comments.length ? $scope.user.repostSettings.schedule.comments[0] : "";
+    $scope.searchStringVal.eventComment = $scope.user.repostSettings ? ($scope.user.repostSettings.schedule.comments.length ? $scope.user.repostSettings.schedule.comments[0] : "") : "";
     $scope.searchStringVal.channelArr = [];
     $scope.searchStringVal.selectedSlot = ""; 
     var hour = ConvertStringTimeToUTC();
@@ -371,17 +379,21 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
       }).then(function(res) {
         $scope.searchStringVal.searching = false;
         if (res.data.item) {
-
           if (res.data.item.kind != kind) {
             $scope.searchStringVal.serachError = "Please enter a " + kind + " URL.";
           } else {
             $scope.selectedItem(res.data.item);
           }
         } else {
-          $scope.searchStringVal.searchSelection = res.data.collection;
-          $scope.searchStringVal.searchSelection.forEach(function(item) {
-            $scope.setItemText(item)
-          })
+          if(res.data.collection.length > 0){
+            $scope.searchStringVal.searchSelection = res.data.collection;
+            $scope.searchStringVal.searchSelection.forEach(function(item) {
+              $scope.setItemText(item)
+            })
+          }
+          else{
+            $scope.searchError = "We could not find a " + kind + "."
+          }
         }
       }).then(null, function(err) {
         $scope.searchStringVal.searching = false;
