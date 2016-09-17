@@ -147,7 +147,8 @@ var schema = new mongoose.Schema({
                 default: true
             }
         }
-    }
+    },
+    admin:Boolean
 });
 
 // method to remove sensitive information from user objects before sending them out
