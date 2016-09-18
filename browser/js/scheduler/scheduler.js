@@ -10,34 +10,32 @@ app.config(function($stateProvider) {
           $window.location.href = '/admin';
         }
         return $http.get('/api/users/getUserPaidRepostAccounts')
-        .then(function(res) {
-          if(res.data.length >0){
-            var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
-            if(res.data[0]!=undefined && (PaidUserId==null || PaidUserId==undefined || PaidUserId=="undefined")){
-              SessionService.addActionsfoAccount('BehalfUser',res.data[0]._id,res.data[0].soundcloud.id);
-              SessionService.setUserPaidRepostAccounts(res.data[0]);
-            }
-          }          
-          return res.data;
-        })
-        .then(null, function(err) {
-          $.Zebra_Dialog("error getting the paidReposts");
-          return;
-        })
-      },
-      events: function($http, paidReposts, SessionService) {       
-        if(paidReposts.length > 0){
-          var soundcloudId = SessionService.getSoundCloudId();
-          return $http.get('/api/events/forUser/' + soundcloudId)
           .then(function(res) {
+            if (res.data.length > 0) {
+              var PaidUserId = SessionService.getActionsfoAccountIndex();
+              if (res.data[0] != undefined && PaidUserId == null) {
+                SessionService.addActionsfoAccount('BehalfUser', res.data[0]._id, res.data[0].soundcloud.id);
+                SessionService.setUserPaidRepostAccounts(res.data[0]);
+              }
+            }
             return res.data;
           })
           .then(null, function(err) {
-            $.Zebra_Dialog("error getting your events");
+            $.Zebra_Dialog("error getting the paidReposts");
             return;
           })
-        }   
-        else{
+      },
+      events: function($http, paidReposts) {
+        if (paidReposts.length > 0) {
+          return $http.get('/api/events/forUser/' + paidReposts[0].soundcloud.id)
+            .then(function(res) {
+              return res.data;
+            })
+            .then(null, function(err) {
+              $.Zebra_Dialog("error getting your events");
+              return;
+            })
+        } else {
           return [];
         }
       }
@@ -49,38 +47,42 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
-  $scope.isLoggedIn = SessionService.getUser() ? true : false;
+
   $scope.searchString = "";
   var formActions = SessionService.getActionsfoAccount();
-  var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+  var PaidUserId = SessionService.getActionsfoAccountIndex();
   var soundcloudId = SessionService.getSoundCloudId();
-  $scope.paidUsers=[];
-  paidReposts.forEach(function(pr){
-    $scope.paidUsers.push(pr);
-  })
-  
-  // if(PaidUserId!=undefined && formActions!=undefined && $scope.paidUsers.length>0 && soundcloudId!=undefined){
-  //   $http.get('/api/events/forUser/' + soundcloudId,function(error,res){
-  //     if(res){
-  //       events = [];
-  //       events = res.data;
-  //     }
-  //   });
-  // }
-  // else
-  if(PaidUserId==undefined && formActions==undefined && $scope.paidUsers.length>0){
-    PaidUserId= $scope.paidUsers[0]._id;
-  } 
-  
-  if($scope.paidUsers.length==0){
+  $scope.paidUsers = [];
+  var i = -1;
+  var nextFun = function() {
+    i++;
+    if (i < paidReposts.length) {
+      var pdata = paidReposts[i];
+      $scope.paidUsers.push(pdata);
+      nextFun();
+    } else {
+      return $scope.paidUsers;
+    }
+  }
+  nextFun();
+
+  if (PaidUserId != undefined && formActions != undefined && $scope.paidUsers.length > 0 && soundcloudId != undefined) {
+    $http.get('/api/events/forUser/' + soundcloudId, function(error, res) {
+      if (res) {
+        events = [];
+        events = res.data;
+      }
+    });
+  } else if (PaidUserId == undefined && formActions == undefined && $scope.paidUsers.length > 0) {
+    PaidUserId = $scope.paidUsers[0]._id;
+  }
+
+  if ($scope.paidUsers.length == 0) {
     $.Zebra_Dialog('Error: There is no any user record found.');
     return;
   }
-  $scope.paidusersId = PaidUserId;
 
   $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
-
-  $scope.paidusersRec = $scope.user;
 
   $scope.months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -95,7 +97,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     ev.day = new Date(ev.day);
   });
   $scope.events = events;
-  
+
   $scope.hideall = false;
   $scope.itemview = "calender";
   $scope.dayIncr = 0;
@@ -120,12 +122,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   $scope.selectedSlot = {};
   $scope.unrepostHours = 1;
   var commentIndex = 0;
-  $scope.eventComment = ($scope.user.repostSettings!=undefined ? 
-      (
-        $scope.user.repostSettings.schedule && 
-        $scope.user.repostSettings.schedule.comments && 
-        $scope.user.repostSettings.schedule.comments.length > 0
-       ? $scope.user.repostSettings.schedule.comments[0] : '') : '');
+  $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
   var defaultAvailableSlots = {
     sunday: [],
     monday: [],
@@ -135,7 +132,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     friday: [],
     saturday: []
   };
-  $scope.searchStringVal="";
+  $scope.searchStringVal = "";
   $scope.channelArr = [];
   $scope.groupArr = [];
   $scope.selectedGroups = {};
@@ -154,9 +151,9 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
   $scope.getLinkedAccounts = function() {
     setTimeout(function() {
-      var linked = $rootScope.userlinkedAccounts ? $rootScope.userlinkedAccounts:[];
+      var linked = $rootScope.userlinkedAccounts;
       for (var i = 0; i < linked.length; i++) {
-        if (linked[i]!=undefined && linked[i]._id != $scope.user._id) {
+        if (linked[i]._id != $scope.user._id) {
           $scope.linkedAccounts.push(linked[i]);
         }
       }
@@ -243,43 +240,20 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     });
   }
 
-  $scope.saveComments = function(value, type,index) {
-
+  $scope.saveComments = function(value, type) {
     var comments = [];
-    if (type == 'schedule' && value) {
+    if (type == 'schedule') {
       comments = ($scope.user.repostSettings.schedule.comments ? $scope.user.repostSettings.schedule.comments : []);
-      if(index==undefined)
       comments.push(value);
-      else
-        comments[index] = value;
-
       $scope.user.repostSettings.schedule.comments = comments;
       $scope.saveRepostSettings();
       $scope.scheduleComment = "";
-    } else if (type == 'trade' && value) {
-      comments = ($scope.user.repostSettings.trade.comments ? $scope.user.repostSettings.trade.comments : []);
-      if(index==undefined)
-      comments.push(value);
-      else
-        comments[index] = value;
-      $scope.user.repostSettings.trade.comments = comments;
-      $scope.saveRepostSettings();
-      $scope.tradeComment = "";
-    }
-    else{
-      $.Zebra_Dialog("Please enter comment");
-      return;
-    }
-  }
-
-  $scope.editComments = function(comment, type,index) {
-    $scope.scheduleCommentIndex=index;
-    if (type == 'schedule') {
-      $('#scheduleCommentModal').modal('show');      
-      $scope.scheduleComment = comment;
     } else if (type == 'trade') {
-      $('#tradeCommentModal').modal('show');
-      $scope.tradeComment = comment;
+      comments = ($scope.user.repostSettings.trade.comments ? $scope.user.repostSettings.trade.comments : []);
+      comments.push(value);
+      $scope.user.repostSettings.trade.comments = comments;
+      $scope.tradeComment = "";
+      $scope.saveRepostSettings();
     }
   }
 
@@ -344,15 +318,15 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     $scope.isEdit = false;
     $scope.tabSelected = false;
     $scope.makeEventURL = "";
-    $scope.searchStringVal={};
+    $scope.searchStringVal = {};
     $scope.searchStringVal.searchSelection = [];
-    $scope.searchStringVal.unrepostHours="1";
+    $scope.searchStringVal.unrepostHours = "1";
     $scope.makeEvent = {};
-    $scope.submission={};
+    $scope.submission = {};
     $scope.searchStringVal.timeGap = "";
-    $scope.searchStringVal.eventComment = $scope.user.repostSettings ? ($scope.user.repostSettings.schedule.comments.length ? $scope.user.repostSettings.schedule.comments[0] : "") : "";
+    $scope.searchStringVal.eventComment = $scope.user.repostSettings.schedule.comments.length ? $scope.user.repostSettings.schedule.comments[0] : "";
     $scope.searchStringVal.channelArr = [];
-    $scope.searchStringVal.selectedSlot = ""; 
+    $scope.searchStringVal.selectedSlot = "";
     var hour = ConvertStringTimeToUTC();
     var makeDay = new Date();
     makeDay.setHours(hour);
@@ -367,7 +341,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
   $scope.changedSearch = function(kind) {
     $("#searchString,#searchString1").next("ul").show();
-    
+
     $scope.searchStringVal.searchString;
     $scope.searchStringVal.searchSelection = [];
     $scope.searchStringVal.searchError = false;
@@ -379,21 +353,17 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
       }).then(function(res) {
         $scope.searchStringVal.searching = false;
         if (res.data.item) {
+
           if (res.data.item.kind != kind) {
             $scope.searchStringVal.serachError = "Please enter a " + kind + " URL.";
           } else {
             $scope.selectedItem(res.data.item);
           }
         } else {
-          if(res.data.collection.length > 0){
-            $scope.searchStringVal.searchSelection = res.data.collection;
-            $scope.searchStringVal.searchSelection.forEach(function(item) {
-              $scope.setItemText(item)
-            })
-          }
-          else{
-            $scope.searchError = "We could not find a " + kind + "."
-          }
+          $scope.searchStringVal.searchSelection = res.data.collection;
+          $scope.searchStringVal.searchSelection.forEach(function(item) {
+            $scope.setItemText(item)
+          })
         }
       }).then(null, function(err) {
         $scope.searchStringVal.searching = false;
@@ -436,7 +406,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
       document.getElementById('scPlayer').style.visibility = "visible";
       $scope.processing = false;
-       $scope.searchStringVal.searching = false;
+      $scope.searchStringVal.searching = false;
       $scope.searchStringVal.searchError = false;
     }
     //end search//
@@ -511,15 +481,15 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
 
   $scope.isEdit = false;
-  $scope.EditNewSong = function(item,action) {
+  $scope.EditNewSong = function(item, action) {
     $scope.editChannelArr = [];
     $scope.tabSelected = false;
 
     var newObj = item;
 
-    $scope.searchStringVal={};
+    $scope.searchStringVal = {};
     $scope.searchStringVal.searchString = newObj.event.trackURL;
-     if(action=="view")
+    if (action == "view")
       $scope.isEdit = true;
 
     $scope.searchStringVal.selectedSlot = newObj.event.day;
@@ -762,7 +732,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   $scope.clickedSlot = function(day, hour, data) {
 
     $scope.popup = true;
-     $scope.searchStringVal={};
+    $scope.searchStringVal = {};
     var d = new Date(day).getDay();
 
     if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1) return;
@@ -786,7 +756,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
         day: makeDay,
         type: "track"
       };
-      $scope.searchStringVal.unrepostDate = (data.day!=undefined ? new Date(data.day.getTime() + 24 * 60 * 60 * 1000) : new Date(new Date().getTime() + 24 * 60 * 60 * 1000));
+      $scope.searchStringVal.unrepostDate = (data.day != undefined ? new Date(data.day.getTime() + 24 * 60 * 60 * 1000) : new Date(new Date().getTime() + 24 * 60 * 60 * 1000));
       $scope.searchStringVal.unrepost = true;
       $scope.newEvent = true;
       document.getElementById('scPopupPlayer').style.visibility = "hidden";
@@ -804,7 +774,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
         $scope.searchStringVal.channelArr = $scope.editChannelArr;
       }
 
-      if(data._id!=undefined)
+      if (data._id != undefined)
         $scope.searchStringVal._id = data._id;
 
       $scope.searchStringVal.unrepostHours = data.unrepostHours;
@@ -832,8 +802,8 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   //   $scope.makeEvent.trackID = null;
   //   $scope.makeEventURL = null;
   // }
-   //search//
- 
+  //search//
+
   $scope.log = function() {
     //console.log($scope.otherChannels);
   }
@@ -841,7 +811,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   $scope.changeURL = function() {
 
 
-    
+
     if ($scope.makeEventURL) {
       $scope.processing = true;
       var player = (($scope.popup == false) ? document.getElementById('scPlayer') : document.getElementById('scPopupPlayer'));
@@ -987,7 +957,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   }
 
   $scope.saveEvent = function() {
-    $scope.makeEvent={};
+    $scope.makeEvent = {};
     var otherChannels = $scope.otherChannelsAndGroups();
     if (otherChannels.length > 0) {
       $scope.makeEvent.otherChannels = otherChannels;
@@ -1008,17 +978,17 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     $scope.makeEvent.timeGap = $scope.searchStringVal.timeGap;
     $scope.makeEvent.comment = ($scope.commentEvent == true ? $scope.searchStringVal.eventComment : '');
     $scope.makeEvent.unrepostEnable = $scope.searchStringVal.unrepostEnable;
-    
+
     $scope.makeEvent.trackID = $scope.searchStringVal.trackID;
     $scope.makeEvent.trackURL = $scope.searchStringVal.trackURL;
     $scope.makeEvent.trackArtUrl = $scope.searchStringVal.trackArtUrl;
-    $scope.makeEvent.title=$scope.searchStringVal.title;
-    $scope.makeEvent.name= $scope.searchStringVal.name;
-    $scope.makeEvent.day= $scope.searchStringVal.day;
-    $scope.makeEvent.owner= $scope.user._id;
-    $scope.makeEvent.email= $scope.user.email;
-    
-    
+    $scope.makeEvent.title = $scope.searchStringVal.title;
+    $scope.makeEvent.name = $scope.searchStringVal.name;
+    $scope.makeEvent.day = $scope.searchStringVal.day;
+    $scope.makeEvent.owner = $scope.user._id;
+    $scope.makeEvent.email = $scope.user.email;
+
+
 
     if ($scope.trackType == "playlist") {
       $.Zebra_Dialog("Sorry! We don't currently allow playlist reposting. Please enter a track url instead.");
@@ -1181,18 +1151,19 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   $scope.getStyle = function(event, date, day, hour) {
     var style = {};
     var currentDay = new Date(date).getDay();
+
     var date = (new Date(date)).setHours(hour)
     if ($scope.availableSlots[daysArray[currentDay]] && $scope.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date())) {
       style = {
         'background-color': '#fff',
-        'border-color': "#999"
+        'border-color': "#999",
+        'border-width': '1px'
       }
     }
     return style;
   }
 
   $scope.getEventStyle = function(event) {
-
     if (event.type == 'empty') {
       return {}
     } else if (event.type == 'track' || event.type == 'queue') {
@@ -1232,7 +1203,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
       calDay.day = new Date()
       calDay.day.setDate(today.getDate() + i);
       var dayEvents = events.filter(function(ev) {
-        if(soundcloudId==ev.userID)
+        if (soundcloudId == ev.userID)
           return (ev.day.toLocaleDateString() == calDay.day.toLocaleDateString());
       });
       var eventArray = [];
@@ -1261,7 +1232,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
       return $http.put('/api/database/profile', $scope.user)
         .then(function(res) {
-           SessionService.setUserPaidRepostAccounts(res.data);
+          SessionService.setUserPaidRepostAccounts(res.data);
           //SessionService.create(res.data);
           //$scope.user = SessionService.getUser();
           $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
@@ -1287,8 +1258,8 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     if (!$scope.user.email) {
       $scope.showEmailModal = true;
       setTimeout(function() {
-      $('#emailModal').modal('show');
-      },300);
+        $('#emailModal').modal('show');
+      }, 300);
     }
   }
   $scope.verifyBrowser = function() {
@@ -1364,8 +1335,8 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   $scope.updateReach();
   $scope.getUserNetwork();
   $scope.verifyBrowser();
- // $scope.fillDateArrays(events);
-  
+  // $scope.fillDateArrays(events);
+
 
 
 });

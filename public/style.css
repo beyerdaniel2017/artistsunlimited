@@ -234,10 +234,13 @@ padding: 10px 45px;
 .navbar-fixed-top {
   border-width: 0; }
 
-a:hover, a:focus {
+a:hover,
+a:focus {
   text-decoration: none; }
 
-.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
   color: #000;
   background-color: transparent;
   border-bottom: 1px solid #000; }
@@ -773,12 +776,14 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   overflow-x: hidden; }
 
 .search .results li {
-  display: block; }
+  display: inline-block;
+  width: 100%; }
 
 .search .results li:first-child {
   margin-top: -1px; }
 
-.search .results li:first-child:before, .search .results li:first-child:after {
+.search .results li:first-child:before,
+.search .results li:first-child:after {
   display: block;
   content: '';
   width: 0;
@@ -796,46 +801,29 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   border-bottom: 5px solid #fdfdfd;
   top: -10px; }
 
-.search .results li:first-child:hover:before, .search .results li:first-child:hover:after {
+.search .results li:first-child:hover:before,
+.search .results li:first-child:hover:after {
   display: none; }
 
 .search .results li:last-child {
   margin-bottom: -1px; }
 
 .search .results a {
-  display: block;
+  display: inline-block;
   position: relative;
-  margin: 0 -1px;
-  padding: 6px 40px 6px 10px;
+  padding: 5px;
   color: #808394;
   font-weight: 500;
-  text-shadow: 0 1px #fff;
-  border: 1px solid transparent;
-  border-radius: 3px; }
+  border-bottom: 1px solid #eee;
+  width: 100%; }
 
 .search .results a span {
   font-weight: 200; }
 
-.search .results a:before {
-  content: '';
-  width: 18px;
-  height: 18px;
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  margin-top: -9px; }
-
 .search .results a:hover {
   text-decoration: none;
   color: #fff;
-  text-shadow: 0 -1px rgba(0, 0, 0, 0.3);
-  border-color: #2380dd #2179d5 #1a60aa;
-  background-color: #338cdf;
-  -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.2), 0 1px rgba(0, 0, 0, 0.08);
-  -moz-box-shadow: inset 0 1px rgba(255, 255, 255, 0.2), 0 1px rgba(0, 0, 0, 0.08);
-  -ms-box-shadow: inset 0 1px rgba(255, 255, 255, 0.2), 0 1px rgba(0, 0, 0, 0.08);
-  -o-box-shadow: inset 0 1px rgba(255, 255, 255, 0.2), 0 1px rgba(0, 0, 0, 0.08);
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.2), 0 1px rgba(0, 0, 0, 0.08); }
+  background-color: #FF7676; }
 
 .lt-ie9 .search input {
   line-height: 26px; }
@@ -2352,9 +2340,6 @@ input[type=range]:focus::-ms-fill-upper {
     display: inline-block;
     width: 100%;
     text-align: center; }
-  .slidethamb-box img {
-    width: 50%;
-    margin: 0 auto; }
   .nav-tabs .nav > li {
     width: 100%; }
   .tropical {
@@ -3063,9 +3048,8 @@ input:checked + .slider:before {
   list-style: none; }
 
 .input-hour {
-  width: 45px;
+  width: 65px;
   margin: 0px 10px;
-  text-align: center;
   display: inline; }
 
 /*submissions css ::start*/
@@ -3159,7 +3143,7 @@ input:checked + .slider:before {
 .tropical img {
   width: 45%;
   text-align: center;
-  margin: 20px auto; }
+  margin: 15px auto; }
 
 .tropical-slect {
   display: inline-flex;
@@ -3463,7 +3447,7 @@ label:hover:before {
 .refor-chate-box {
   background-color: #FFF;
   min-height: 47px;
-  padding: 11px 10px;
+  padding: 10px;
   width: 99%;
   border-top: 1px solid #E6E6E6;
   margin: 0px auto;
@@ -3603,7 +3587,9 @@ label:hover:before {
   z-index: 1;
   bottom: 0;
   height: 81%;
-  background-color: white; }
+  background-color: white;
+  border-top-left-radius: 10px;
+  overflow: hidden; }
 
 .left-side-profile .tropical {
   padding: 30px 0; }
@@ -3875,8 +3861,24 @@ td {
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
-  height: 24px;
+  height: 20.7px;
   padding: 3px; }
+
+.calendar-grid {
+  width: 98%;
+  margin: 1px auto;
+  height: 21px;
+  padding: 1px 5px; }
+
+.calendar-day-date {
+  width: 97%;
+  float: right; }
+
+.scheduler-song-tab tbody {
+  border: 1px solid #ddd; }
+
+.scheduler-song-tab tr td {
+  vertical-align: middle !important; }
 
 .date-top-strip {
   width: 100%;
@@ -3975,6 +3977,80 @@ td {
   cursor: default; }
 
 /*** 15-9-2016 ***/
+/*** 17-9-2016 ***/
+.scheduler-status {
+  height: 8px;
+  width: 8px;
+  border-radius: 10px;
+  display: inline-block;
+  vertical-align: middle; }
+
+.margin-0 {
+  margin: 0; }
+
+.profile-avtar-100 {
+  width: 100px;
+  height: 100px;
+  background: #EDEDED; }
+
+.avtar-200 {
+  width: 200px;
+  height: 200px;
+  margin: 0px auto; }
+
+.thumb-img-container {
+  width: 200px;
+  margin: 0 auto; }
+
+.thumb-img-container .img-btn-box {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  margin-left: 46px;
+  opacity: 0; }
+
+.thumb-img-container:hover .img-btn-box {
+  opacity: 1; }
+
+.tropical-2 {
+  text-align: center;
+  margin: 0 auto;
+  font-size: 13px;
+  color: #8a8a8a;
+  letter-spacing: 1px;
+  background-color: #EDEDED;
+  padding: 22px 0;
+  font-weight: normal; }
+
+.tropical-2 img {
+  margin: 15px auto; }
+
+.result-seach-img {
+  height: 40px;
+  width: 40px;
+  margin-right: 8px; }
+
+.vertical-container {
+  border-bottom: 1px solid #cccccc;
+  padding: 10px 0; }
+
+.vertical-container ul {
+  list-style: outside none none;
+  padding: 0px;
+  margin: 0px; }
+
+.vertical-container li {
+  width: 19%;
+  display: inline-block;
+  vertical-align: middle; }
+
+.vertical-container li > .list-img-container img {
+  height: 115px; }
+
+.vertical-text {
+  margin: 10px 0; }
+
+/*** 17-9-2016 ***/
 /******************************** Media CSS :: START ************************************/
 @media screen and (max-width: 1280px) {
   .min-ht {
@@ -4209,6 +4285,8 @@ td {
     padding: 0;
     margin: 0; }
   .two-tabs .nav-tabs li {
+    width: 100%; }
+  .vertical-container li {
     width: 100%; } }
 
 @media screen and (max-width: 360px) {

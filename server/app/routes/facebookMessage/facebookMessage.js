@@ -50,6 +50,7 @@ function receivedAuthentication(message) {
         .then(function(user) {
             user.notificationSettings.facebookMessenger.messengerID = message.sender.id;
             user.save();
+            console.log(user);
         }).then(null, console.log);
 }
 
