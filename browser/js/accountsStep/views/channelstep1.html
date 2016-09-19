@@ -68,7 +68,7 @@
                       <div class="container-90">
                         <div class="row">
                           <div class="col-md-12 text-center">
-                            <div class="add-account text-center container-60">
+                            <div class="add-account text-center">
                               <div class="container-60">
                                 <div class="text-center">
                                   <button class="btn btn-default btn-enter cl-sound-btn" ng-click="soundcloudLogin()" ng-disabled="AccountsStepData.submissionData.username">Connect with SoundCloud</button>
@@ -87,12 +87,19 @@
                                     </div>
                                   </div>
                                 </div>
-                                <p>For this channel, you are allowed the option of having a customizable music submission page. If you would like to skip this, leave the URL blank and your submission page for this channel will be "*adminusername*.artistsunlimited.co/." </p>
-                                <p>We highly recomend creating a unique submission page for each of your channels, allowing you to have more reliable information on the perforance of each channel in your network, rather than your network as a whole.</p>
                               </div>
+                              <br />
+                              <div class="clearfix"></div>
                               <div class="container-60">
                                 <div ng-show="AccountsStepData.submissionData.submissionUrl">
-                                  <input class="form-control  margin-20" type="text" disabled="true" ng-model="AccountsStepData.submissionData.submissionUrl">
+                                  <lable>Repost Submission Url : {{AccountsStepData.submissionData.submissionUrl}} </lable>
+                                </div>
+                              </div>
+                              <br />
+                              <div class="clearfix"></div>
+                              <div class="container-60">
+                                <div ng-show="AccountsStepData.submissionData.premierUrl">
+                                  <lable>Premier Submission Url: {{AccountsStepData.submissionData.premierUrl}}</lable>
                                 </div>
                               </div>
                             </div>

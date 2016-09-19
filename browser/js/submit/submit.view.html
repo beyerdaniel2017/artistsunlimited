@@ -12,7 +12,6 @@
   position: absolute;
   right: 0;
   width: 100%;
-  margin-bottom:60px;
   z-index: 1;
 }
 #rightpremierTemplate{
@@ -24,8 +23,17 @@
 .submi-section{
  padding-bottom:60px;
 }
+.custom-settings {
+ position: absolute;
+ top: 0px;
+ left: 0px;
+ right: 0;
+ height: 100%;
+ bottom: 0;
+ width: 100%;
+}
 </style>
-<ng-include src="'js/home/views/navigation.html'"></ng-include>
+<ng-include src="'js/home/views/navigation.html'" ng-if="!customizeSettings"></ng-include>
 <!-- Content Start  -->
 <div class="container">
   <div class="row">
@@ -96,7 +104,18 @@
 </div>
 </div>
 </div>
-<div class="row" style="background-color:transparent !important;" ng-show="customizeSettings">
+    
+    </div>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <span ng-if="notFound">Track not found.<br>If a private track, please email it to: edward@peninsulamgmt.com</span>
+        <div id="scPlayer" style="margin:10px 0; position:relative; z-index:1;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="custom-settings" style="background-color:transparent !important;" ng-show="customizeSettings">
   <div id="backgroundImage1" style="background-size:cover;background-image:url({{customizeSettings.background.images}}); filter: blur({{customizeSettings.background.blur}}px);-webkit-filter: blur({{customizeSettings.background.blur}}px);">
   </div>
   <div id="rightpremierTemplate" class="col-md-12">
@@ -169,13 +188,5 @@
 </div>
 </div>
 </div>
-</div>
-<div class="row">
-  <div class="col-md-12 text-center">
-    <span ng-if="notFound">Track not found.<br>If a private track, please email it to: edward@peninsulamgmt.com</span>
-    <div id="scPlayer" style="margin:10px 0; position:relative; z-index:1;"></div>
-  </div>
-</div>
-</div>
-</div>
+
 <ng-include src="'js/home/views/loader.html'"></ng-include>

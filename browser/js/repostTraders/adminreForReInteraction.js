@@ -195,7 +195,6 @@ app.controller("AdminReForReInteractionController", function($rootScope, $state,
     $scope.activeUser = user;
     $scope.$digest();
   }
-  console.log($scope.trade);
 
   $scope.changeRepeatOn = function() {
     $scope.showUndo = true;
@@ -717,11 +716,7 @@ console.log("queue",$scope.user.queue);
   });
 
   $scope.emitMessage = function(message, type) {
-    // if($scope.trade.p1.user._id == $scope.user._id && $scope.trade.p2.online == false){
-    //   $scope.trade.p2.alert = "change";
-    // } else if ($scope.trade.p2.user._id == $scope.user._id && $scope.trade.p1.online == false) {
-    //   $scope.trade.p1.alert = "change";
-    // }  
+
     socket.emit('send:message', {
       message: message,
       type: type,
@@ -1044,7 +1039,7 @@ console.log("queue",$scope.user.queue);
   }
 
   $scope.remindTrade = function() {
-    $scope.sharelink = "https://localhost:1443/artistTools/reForReInteraction/"+trade._id;
+    $scope.sharelink = "https://"+window.location.host+"/artistTools/reForReInteraction/"+trade._id;
   }
 
   $scope.sendMail = function(sharelink) {
@@ -1056,7 +1051,7 @@ console.log("queue",$scope.user.queue);
   $scope.verifyBrowser();
 });
 
-
+/*
 app.directive('timeSlot', function(moment) {
   return {
     restrict: 'E',
@@ -1113,4 +1108,4 @@ app.directive('timeSlot', function(moment) {
     return strTime;
   }
   
-});
+});  */

@@ -1040,7 +1040,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   }
 
   $scope.remindTrade = function() {
-    $scope.sharelink = "https://localhost:1443/artistTools/reForReInteraction/" + trade._id;
+    $scope.sharelink = "https://"+window.location.host+"/artistTools/reForReInteraction/"+trade._id;
   }
 
   $scope.sendMail = function(sharelink) {

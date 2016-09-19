@@ -17,12 +17,12 @@
       <nav class="nav">
         <ul class="nav nav-navabar">
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ng-click="gotoSettings();">SETTINGS</a></li>
-                    <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ng-click="gotoBehalfSetting('SCHEDULER');">SCHEDULER</a></li>
-                    <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ng-click="gotoBehalfSetting('REPOSTTRADES');">REPOST TRADER</a></li>
+                    <li ui-sref-active-eq="left-menu-active" class="border-bottom SCHEDULER"><a href="javascript:void(0)" ng-click="gotoBehalfSetting('SCHEDULER');">SCHEDULER</a></li>
+                    <li ui-sref-active-eq="left-menu-active" class="border-bottom REPOSTTRADES"><a href="javascript:void(0)" ng-click="gotoBehalfSetting('REPOSTTRADES');">REPOST TRADER</a></li>
                     <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)"   ui-sref="submissions" >REPOST SUBMISSION <div class="badge notification-bubble-submission-count" ng-show="submissionsCount > 0">{{submissionsCount}}</div></a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="premiersubmissions">PREMIER SUBMISSIONS</a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="accounts">ACCOUNTS</a></li>
-                    <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ng-click="gotoBehalfSetting('DOWNLOADGATEWAY');">DOWNLOAD GATEWAY</a></li>
+                    <li ui-sref-active-eq="left-menu-active" class="border-bottom DOWNLOADGATEWAY"><a href="javascript:void(0)" ng-click="gotoBehalfSetting('DOWNLOADGATEWAY');">DOWNLOAD GATEWAY</a></li>
          <!--  <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="customizesubmission">CUSTOM SUBMISSIONS</a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="customemailbuttons">CUSTOM EMAIL BUTTONS</a></li> -->
         </ul>
@@ -36,6 +36,17 @@ $(document).ready(function(){
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
     });
+    switch (window.location.pathname) {
+        case "/admin/scheduler":
+            $(".SCHEDULER").addClass("left-menu-active");
+            break;
+        case "/admin/reposttraders":
+            $(".REPOSTTRADES").addClass("left-menu-active");
+            break;
+        case "/admin/downloadGateway":
+            $(".DOWNLOADGATEWAY").addClass("left-menu-active");
+            break;
+    }
     setTimeout(function(){
         if($("#paidusers").length){
             $('#paidusers option').each(function(){
@@ -45,8 +56,7 @@ $(document).ready(function(){
                     if(data._id==$("#paidusersId").val()){
                         $(this).prop('selected','selected');
                     }
-                }
-                else{
+                } else {
                     $(this).remove();
                 }
             });   

@@ -6,16 +6,14 @@
 </style>
 <ng-include src="'js/home/views/_adminHeaderNavigation.html'"></ng-include>
 <!-- Content Start  -->
-<div id="wrapper">
-    <ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
     <div class="container-fluid height-100pr">
           <div class="row">
             <div class="col-md-2 col-sm-12 col-xs-12 pr-paddin-right-0 pr-margin-right-0">
                 <!--left-side-manu ::start-->
                 <div class="left-side-profile">
                     <div class="left-profile active">
-                        <a ng-click="changeActiveUser(user)">
-                            <div class="tropical-2" ng-style="(activeUser._id == user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.user.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.user.user.soundcloud.username}}</span></a>
+                        <a ng-click="changeActiveUser(trade.user.user)">
+                            <div class="tropical-2" ng-style="(activeUser._id == trade.user.user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.user.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.user.user.soundcloud.username}}</span></a>
                             <img class="profile-avtar-100 img-responsive img-circle" ng-src="{{trade.user.user.soundcloud.avatarURL}}" style="width:100px;">
                                 <p class="ng-binding">
                                 <small>Total Reach:</small><br/>
@@ -45,7 +43,7 @@
                     <!--page-contant Start-->
                     <div class="scheduler-tabs">
                         <!-- Nav tabs :Start-->
-                        <a ui-sref="reForReLists" href="javascript:void(0)" class="pull-right" style="margin-right:20px; margin-top:20px">X</a>
+                        <a ui-sref="adminRepostTraders" href="javascript:void(0)" class="pull-right" style="margin-right:20px; margin-top:20px">X</a>
                         <!-- Nav tabs :End-->
                         <!-- Tab panes :: Start-->
                         <div class="tab-content">
@@ -257,7 +255,7 @@
         </div>
     </div>
     <ng-include src="'js/home/views/loader.html'"></ng-include>
-</div>
+
 
 <div class="modal fade" id="remindModal" role="dialog">
     <div class="modal-dialog">

@@ -162,10 +162,16 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
   $scope.currentTrades = currentTrades;
   $scope.currentTradesCopy = currentTrades;
   $scope.otherUsers = [];
-  $scope.searchUser = openTrades;
+  var users=[];
+  for (var i = 0; i < openTrades.length; i++) {
+    var data = openTrades[i];
+    if(data._id!=PaidUserId)
+      users.push(data);   
+  }
+  $scope.searchUser = users;
 
   $scope.currentTab = "SearchTrade";
-  $scope.searchURL = "";
+  //$scope.searchURL = "";
   $scope.sliderSearchMin = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers / 2) : 0)) / Math.log(1.1);
   $scope.sliderSearchMax = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers * 2) : 200000000)) / Math.log(1.1);
   $scope.minSearchTradefollowers = Math.pow(1.1, $scope.sliderSearchMin);
@@ -278,7 +284,69 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
   $scope.hello = function(obj) {
     $state.go('reForReInteraction', obj);
   }
+  /*search*/
+   $scope.searchSelection = [];
+  $scope.changedSearch = function(kind,searchURL) {
+    console.log('called',searchURL);
+    $scope.searchSelection = [];
+    $scope.searchError = undefined;
+    $scope.searching = true;
+    if (searchURL!= "") {
+       console.log('inside');
+      $http.post('/api/search', {
+        q: searchURL,
+        kind: kind
+      }).then(function(res) {
+        console.log('res',res);
+        $scope.searching = false;
+        if (res.data.item) {
+          if (res.data.item.kind != kind) {
+            $scope.serachError = "Please enter a " + kind + " URL.";
+          } else {
+            $scope.selectedItem(res.data.item);
+          }
+        } else {
+          if(res.data.collection.length > 0){
+            $scope.searchSelection = res.data.collection;
+            $scope.searchSelection.forEach(function(item) {
+              $scope.setItemText(item)
+            })
+          }
+          else{
+            $scope.searchError = "We could not find a " + kind + "."
+          } 
+        }
+      }).then(null, function(err) {
+        $scope.searching = false;
+        $scope.searchError = "We could not find a " + kind + "."
+      });
+    }
+  }
 
+  $scope.setItemText = function(item) {
+    switch (item.kind) {
+      case 'track':
+        item.displayName = item.title + ' - ' + item.user.username;
+        break;
+      case 'playlist':
+        item.displayName = item.title + ' - ' + item.user.username;
+        break;
+      case 'user':
+        item.displayName = item.username;
+        break;
+    }
+  }
+
+  $scope.selectedItem = function(item) {
+    $scope.searchSelection = [];
+    $scope.searchError = undefined;
+   $scope.searchURL = "";
+   $scope.searchURL =  item.permalink_url;
+   $scope.searchURL = item.permalink_url;
+   $scope.sendSearch();
+ 
+  }
+  //end search//
   $scope.searchCurrentTrade = function() {
     var cTrades = [];
     $scope.currentTrades = [];
@@ -296,7 +364,7 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
       }
     });
     $scope.currentTrades = cTrades;
-    $scope.$apply();
+    //$scope.$apply();
   }
 
   $scope.tradeType = {

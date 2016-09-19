@@ -425,8 +425,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
         if (type == "channel") {
             switch (step) {
                 case 1:
-                  $http.get("/connect/logout?return_to=https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https://localhost:1443/callback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_5fead");
-                  //https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https%3A%2F%2Flocalhost%3A1443%2Fcallback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_4a6f8
+                  $http.get("/connect/logout?return_to=https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https://"+window.location.host+"/callback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_5fead");
                     $state.go("channelstep1");
                     break;
                 case 2:
@@ -642,7 +641,8 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                                 premierurl = 'https://artistsunlimited.com/custom/' + usernames + '/premiere' + result.data;
                                 $scope.AccountsStepData.submissionData.submissionUrl = url;
                                 $scope.AccountsStepData.submissionData.premierUrl = premierurl;
-                            } else {
+                            } 
+                            else {
                                 $scope.AccountsStepData.submissionData.submissionUrl = url;
                                 $scope.AccountsStepData.submissionData.premierUrl = premierurl;
                             }
