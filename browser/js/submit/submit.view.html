@@ -26,7 +26,6 @@
 }
 </style>
 <ng-include src="'js/home/views/navigation.html'"></ng-include>
-
 <!-- Content Start  -->
 <div class="container">
   <div class="row">
@@ -64,21 +63,21 @@
                       </div>
                     </div>
                   </div>
-                </br>
+                    <!-- <br />
                 <div class="row">
                   <div class="col-sm-6 col-sm-offset-3">
                     <select class="form-control" ng-options="item for item in genreArray" ng-model="submission.genre" ng-init="submission.genre = null" required>
                       <option value="" ng-disabled="!!submission.genre">--Select Genre--</option>
                     </select>
                   </div>
-                </div>
-              </br>
+                    </div> -->
+                    <br />
               <div class="row">
                 <div class="col-sm-6 col-sm-offset-3">
                   <input class="form-control" type="text" placeholder="Name"ng-model="submission.name" required/>
                 </div>
               </div>
-            </br>
+                    <br />
             <div class="row">
               <div class="col-sm-6 col-sm-offset-3">
                 <input class="form-control" type="email" placeholder="Email" ng-model="submission.email" required/>
@@ -138,14 +137,14 @@
         </div>
       </div>
     </div>
-  </br>
+                  <!-- </br>
   <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
       <select ng-options="item for item in genreArray" ng-model="submission.genre" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" ng-init="submission.genre = null" required>
         <option value="" ng-disabled="!!submission.genre">--Select Genre--</option>
       </select>
     </div>
-  </div>
+                  </div> -->
 </br>
 <div class="row">
   <div class="col-sm-6 col-sm-offset-3">
@@ -163,7 +162,6 @@
   <button class="btn btn-default" style="color:{{customizeSettings.button.style.fontColor}}; font-size:{{customizeSettings.button.style.fontSize}}px; background-color:{{customizeSettings.button.style.bgColor}};">{{customizeSettings.button.text}}</button>
   <br/>
   <br/>
-  <!-- <p ng-show="message.visible" class="text-center">{{message.val}}</p> -->
 </div>
 </div>
 </form>

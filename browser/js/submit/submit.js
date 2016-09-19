@@ -42,29 +42,29 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   $scope.submission = {};
   $scope.customizeSettings = null;
   $scope.userID = $location.search().id;
-  $scope.genreArray = [
-    'Alternative Rock',
-    'Ambient',
-    'Creative',
-    'Chill',
-    'Classical',
-    'Country',
-    'Dance & EDM',
-    'Dancehall',
-    'Deep House',
-    'Disco',
-    'Drum & Bass',
-    'Dubstep',
-    'Electronic',
-    'Festival',
-    'Folk',
-    'Hip-Hop/RNB',
-    'House',
-    'Indie/Alternative',
-    'Latin',
-    'Trap',
-    'Vocalists/Singer-Songwriter'
-  ];
+  // $scope.genreArray = [
+  //   'Alternative Rock',
+  //   'Ambient',
+  //   'Creative',
+  //   'Chill',
+  //   'Classical',
+  //   'Country',
+  //   'Dance & EDM',
+  //   'Dancehall',
+  //   'Deep House',
+  //   'Disco',
+  //   'Drum & Bass',
+  //   'Dubstep',
+  //   'Electronic',
+  //   'Festival',
+  //   'Folk',
+  //   'Hip-Hop/RNB',
+  //   'House',
+  //   'Indie/Alternative',
+  //   'Latin',
+  //   'Trap',
+  //   'Vocalists/Singer-Songwriter'
+  // ];
 
   //search//
   $scope.searchSelection = [];
@@ -122,7 +122,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     $scope.searchError = undefined;
 
     //custom code to process item choice//
-    console.log(item);
+    //console.log(item);
     $scope.searchString = item.title;
     $scope.submission.trackID = item.id;
     $scope.submission.title = item.title;
@@ -174,7 +174,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   // }
 
   $scope.submit = function() {
-    if (!$scope.submission.email || !$scope.submission.name || !scope.submission.trackID) {
+    if (!$scope.submission.email || !$scope.submission.name || !$scope.submission.trackID) {
       $.Zebra_Dialog("Please fill in all fields")
     } else {
       $scope.processing = true;
@@ -187,7 +187,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
           channelIDS: [],
           invoiceIDS: [],
           userID: $scope.userID,
-          genre: $scope.submission.genre
+        genre: ''
         })
         .then(function(res) {
           $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");

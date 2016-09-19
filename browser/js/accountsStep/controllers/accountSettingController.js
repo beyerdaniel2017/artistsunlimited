@@ -745,7 +745,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
         $scope.verified = false;
         $scope.waitoneminute = false;
         var paypaldata = $scope.AccountsStepData.paypal;
-        if ((paypaldata.price1 == paypaldata.pricea && paypaldata.price2 == paypaldata.priceb) || (paypaldata.price1 == paypaldata.priceb && paypaldata.price2 == paypaldata.pricea)) {
+        if ((paypaldata.price1 == parseFloat(paypaldata.pricea) && paypaldata.price2 == parseFloat(paypaldata.priceb)) || (paypaldata.price1 == parseFloat(paypaldata.priceb) && paypaldata.price2 == parseFloat(paypaldata.pricea))) {
             $scope.AccountsStepData.paypal.processchannel = true;
             AccountSettingServices.updateAdminProfile({
                 paypal_email: $scope.AccountsStepData.paypal_email

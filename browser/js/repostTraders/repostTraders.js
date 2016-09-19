@@ -126,12 +126,11 @@ app.config(function($stateProvider) {
 });
 
 app.controller("adminrepostTradersController", function($scope, $rootScope, currentTrades, favorites, openTrades, repostEvent, $http, SessionService, $state, $timeout, $window,paidReposts) {
- 
-
   if (!SessionService.getUser()) {
     $state.go('login');
     return;
   }
+  $scope.isLoggedIn = SessionService.getUser() ? true : false;
   $scope.listevents = repostEvent;
   $scope.favorites = favorites;
   $scope.state = 'reForReInteraction';
@@ -143,7 +142,6 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
     $scope.paidUsers.push(pr);
   })
   
-
   if(PaidUserId==undefined && formActions==undefined && $scope.paidUsers.length>0){
     PaidUserId= $scope.paidUsers[0]._id;
   } 
@@ -153,8 +151,6 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
     return;
   }
   //console.log(formActions+'==========='+$scope.PaidUserId);
-
-  $scope.isLoggedIn = $scope.user ? true : false;
 
   $scope.paidusersId = PaidUserId;
 
@@ -229,7 +225,6 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
   }
 
   $scope.viewSoundcloud = function(user) {
-
     window.location.href = user.soundcloud.permalinkURL;
   }
 
@@ -258,7 +253,6 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
             var data= res.data[i];    
             if(data._id!=$scope.user._id)
             users.push(data);
-
           nextfuns();
         }
         else

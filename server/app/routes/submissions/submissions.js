@@ -44,9 +44,15 @@ router.get('/unaccepted', function(req, res, next) {
     var skipcount = req.query.skip;
     var limitcount = req.query.limit;
     var genre = req.query.genre ? req.query.genre : undefined;
+    var paidRepostIds =[];
+    if(req.user.paidRepost.length > 0){
+      req.user.paidRepost.forEach(function(acc){
+        paidRepostIds.push(acc.userID);
+      })
+    }    
     var query = {
       channelIDS: [],
-      userID: req.user._id,
+      userID: {$in: paidRepostIds},
       status: "submitted"
     };
     if (genre != undefined && genre != 'null') {
