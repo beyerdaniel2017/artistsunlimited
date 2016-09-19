@@ -174,6 +174,7 @@ app.controller("AdminReForReInteractionController", function($rootScope, $state,
   $scope.trackArtistID = 0;
   $scope.trackType = "";
   $scope.currentTrades = currentTrades;
+  $scope.listDayIncr = 0;
   $scope.selectTrade = currentTrades.find(function(el) {
     return el._id == $scope.trade._id;
   });
@@ -187,13 +188,16 @@ app.controller("AdminReForReInteractionController", function($rootScope, $state,
   $scope.itemview = "calender";
   $scope.setView = function(view) {
     $scope.itemview = view;
+    var personNum = $scope.activeUser._id == $scope.trade.p1.user._id ? 'p1' : 'p2';
+    $scope.getListEvents(personNum);
   };
   $scope.trackList = [];
 
   $scope.activeUser = $scope.user;
   $scope.changeActiveUser = function(user) {
     $scope.activeUser = user;
-    $scope.$digest();
+    var personNum = $scope.activeUser._id == $scope.trade.p1.user._id ? 'p1' : 'p2';
+    $scope.getListEvents(personNum);
   }
 
   $scope.changeRepeatOn = function() {
@@ -760,6 +764,8 @@ console.log("queue",$scope.user.queue);
   }
 
   $scope.fillCalendar = function() {
+    $scope.repeatOn = $scope.trade.repeatFor > 0;
+
     function setEventDays(arr) {
       arr.forEach(function(ev) {
         ev.day = new Date(ev.day);
@@ -911,6 +917,73 @@ console.log("queue",$scope.user.queue);
       $state.go('adminRepostTraders');
     })
     .then(null, console.log);
+  }
+
+  function getshortdate(d) {
+    var YYYY = d.getFullYear();
+    var M = d.getMonth() + 1;
+    var D = d.getDate();
+    var MM = (M < 10) ? ('0' + M) : M;
+    var DD = (D < 10) ? ('0' + D) : D;
+    var result = MM + "/" + DD + "/" + YYYY;
+    return result;
+  }
+
+  $scope.getPreviousEvents = function() {
+    $scope.listDayIncr--;
+    var personNum = $scope.activeUser._id == $scope.trade.p1.user._id ? 'p1' : 'p2';
+    $scope.getListEvents(personNum);
+  }
+
+  $scope.getNextEvents = function() {
+    $scope.listDayIncr++;
+    var personNum = $scope.activeUser._id == $scope.trade.p1.user._id ? 'p1' : 'p2';
+    $scope.getListEvents(personNum);
+  }
+
+  $scope.toggleSlot = function(item) {
+    var personNum = $scope.activeUser._id == $scope.trade.p1.user._id ? 'p1' : 'p2';
+    $scope.clickedSlot(item.date, {}, item.date.getHours(), {}, $scope.trade[personNum], item.event);
+    $scope.getListEvents(personNum);
+  }
+
+  $scope.getListEvents = function(userNum) {
+    console.log("userNum",userNum);
+    $scope.listEvents = [];
+    var currentDate = new Date();
+    
+    currentDate.setDate(currentDate.getDate() + $scope.listDayIncr);
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(currentDate);
+      d.setDate(d.getDate() + i);
+      var currentDay = d.getDay();
+      var strDdate = getshortdate(d);
+      var slots = $scope.trade[userNum].user.availableSlots[daysArray[currentDay]];
+      slots = slots.sort(function(a, b) {
+        return a - b
+      });
+      angular.forEach(slots, function(hour) {
+        var item = new Object();
+        var calendarDay = $scope['calendar' + userNum].find(function(calD) {
+          return calD.day.toLocaleDateString() == d.toLocaleDateString();
+        });
+        var event = calendarDay.events.find(function(ev) {
+          return new Date(ev.day).getHours() == hour;
+        });
+
+        item.event = (event ? event : {
+          type: 'empty'
+        })
+        item.date = new Date(d);
+        item.date.setHours(hour);
+
+        $scope.listEvents.push(item);
+      });
+    }
+  }
+
+  $scope.getUnrepostDate = function(item) {
+    return new Date(item.date.getTime() + 24 * 60 * 60 * 1000)
   }
 
   $scope.getStyle = function(event, date, day, hour) {
@@ -1107,5 +1180,6 @@ app.directive('timeSlot', function(moment) {
     var strTime = hours + ':' + minutes + ' ' + ampm;
     return strTime;
   }
-  
-});  */
+
+});
+  */

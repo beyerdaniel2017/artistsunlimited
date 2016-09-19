@@ -388,6 +388,29 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.checkLikeEnable();
     document.getElementById('scPlayer').style.visibility = "hidden";
   }
+  
+  $scope.isSchedule = false;
+  $scope.scheduleSong = function(date)
+  {
+    $scope.isSchedule = true;
+    $scope.tabSelected = false;
+    $scope.newEvent = true;
+    $scope.makeEvent = {
+        userID: $scope.user.soundcloud.id,
+        type: "track"
+      };
+    $scope.selectedSlot = date;
+    var selectedSlot = new Date($scope.selectedSlot);
+    var day = new Date(selectedSlot.getTime() - selectedSlot.getTimezoneOffset() * 60000).toISOString();
+    var hour = ConvertStringTimeToUTC(selectedSlot.getHours());
+    var makeDay = new Date(day);
+    makeDay.setHours(hour);
+    $scope.makeEvent.day = makeDay;
+    $scope.selectedSlot = new Date(date);
+    
+  }
+
+
   $scope.isEdit = false;
   $scope.EditNewSong = function(item, editable) {
     $scope.editChannelArr = [];

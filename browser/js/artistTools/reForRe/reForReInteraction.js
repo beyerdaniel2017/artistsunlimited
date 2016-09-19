@@ -12,13 +12,13 @@ app.config(function($stateProvider) {
             $window.location.href = '/login';
           }
           return $http.get('/api/trades/byID/' + $stateParams.tradeID)
-            .then(function(res) {
-              var user = SessionService.getUser('subAdmin');
-              var trade = res.data;
-              trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
-              trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
-              return trade;
-            }).then(null, console.log)
+          .then(function(res) {
+            var user = SessionService.getUser('subAdmin');
+            var trade = res.data;
+            trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
+            trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
+            return trade;
+          }).then(null, console.log)
         },
         events: function($http, $window, SessionService) {
           if (!SessionService.getUser()) {
@@ -132,7 +132,6 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     $scope.itemview = view;
     var personNum = $scope.activeUser._id == $scope.trade.p1.user._id ? 'p1' : 'p2';
     $scope.getListEvents(personNum);
-    console.log($scope.listEvents)
   };
 
   $scope.trackList = [];
@@ -372,15 +371,15 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
 
   $scope.undo = function() {
     $scope.processing = true;
-    $http.get('/api/trades/byID/' + $stateParams.tradeID)
-      .then(function(res) {
+          $http.get('/api/trades/byID/' + $stateParams.tradeID)
+            .then(function(res) {
         $scope.processing = false;
-        $scope.trade = res.data;
-        $scope.trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
-        $scope.trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
-        $scope.fillCalendar();
-        $scope.showUndo = false;
-      }).then(null, console.log)
+              $scope.trade = res.data;
+              $scope.trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
+              $scope.trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
+              $scope.fillCalendar();
+              $scope.showUndo = false;
+            }).then(null, console.log)
   };
 
   $scope.saveEvent = function(event, person) {
@@ -649,11 +648,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   });
 
   $scope.emitMessage = function(message, type) {
-    // if($scope.trade.p1.user._id == $scope.user._id && $scope.trade.p2.online == false){
-    //   $scope.trade.p2.alert = "change";
-    // } else if ($scope.trade.p2.user._id == $scope.user._id && $scope.trade.p1.online == false) {
-    //   $scope.trade.p1.alert = "change";
-    // }  
+
     socket.emit('send:message', {
       message: message,
       type: type,
@@ -804,25 +799,25 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         return slot.day < endDate;
       })
       for (var i = 0; i < $scope.trade.repeatFor; i++) {
-        console.log(p1WeekSlots);
+
         p1WeekSlots.forEach(function(slot) {
           var event = JSON.parse(JSON.stringify(slot));
           event.type = 'traded';
           event.owner = $scope.trade.p2.user._id;
           event.day = new Date((new Date(slot.day)).getTime() + i * 7 * 24 * 60 * 60 * 1000);
           event.unrepostDate = new Date(event.day.getTime() + 24 * 60 * 60 * 1000);
-          console.log(event)
+
           $http.post('/api/events/repostEvents', event)
             .then(console.log, console.log);
         })
-        console.log(p2WeekSlots);
+
         p2WeekSlots.forEach(function(slot) {
           var event = JSON.parse(JSON.stringify(slot));
           event.type = 'traded';
           event.owner = $scope.trade.p1.user._id
           event.day = new Date((new Date(slot.day)).getTime() + i * 7 * 24 * 60 * 60 * 1000);
           event.unrepostDate = new Date(event.day.getTime() + 24 * 60 * 60 * 1000);
-          console.log(event)
+
           $http.post('/api/events/repostEvents', event)
             .then(console.log, console.log);
         })
@@ -844,10 +839,10 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
     $scope.trade.p1.accepted = $scope.trade.p2.accepted = true;
     $scope.trade.p1.slots = $scope.trade.p2.slots = [];
     $http.put('/api/trades', $scope.trade)
-      .then(function(res) {
-        $state.go('reForReLists');
-      })
-      .then(null, console.log);
+    .then(function(res) {
+      $state.go('reForReLists');
+    })
+    .then(null, console.log);
   }
 
   function getshortdate(d) {
@@ -1051,7 +1046,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
   $scope.updateAlerts();
   $scope.verifyBrowser();
 });
-
+/*
 
 app.directive('timeSlot', function(moment) {
   return {
@@ -1108,4 +1103,4 @@ app.directive('timeSlot', function(moment) {
     var strTime = hours + ':' + minutes + ' ' + ampm;
     return strTime;
   }
-});
+});*/

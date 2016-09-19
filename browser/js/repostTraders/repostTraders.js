@@ -133,15 +133,15 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
   $scope.listevents = repostEvent;
   $scope.favorites = favorites;
-  $scope.state = 'reForReInteraction';
+  $scope.state = 'adminreForReInteraction';
   var formActions = SessionService.getActionsfoAccount();
   var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
   var soundcloudId = SessionService.getSoundCloudId();
   $scope.paidUsers=[];
   paidReposts.forEach(function(pr){
     $scope.paidUsers.push(pr);
-  })
-  
+  }) 
+
   if(PaidUserId==undefined && formActions==undefined && $scope.paidUsers.length>0){
     PaidUserId= $scope.paidUsers[0]._id;
   } 
@@ -192,17 +192,6 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
     $scope.maxSearchTradefollowers = Math.pow(1.1, newVal);
   })
 
-  $scope.$watch(function() {
-    return $scope.sliderManageMin
-  }, function(newVal, oldVal) {
-    $scope.minManageTradefollowers = Math.pow(1.1, newVal)
-  })
-  $scope.$watch(function() {
-    return $scope.sliderManageMax
-  }, function(newVal, oldVal) {
-    $scope.maxManageTradefollowers = Math.pow(1.1, newVal);
-  })
-
   $scope.sortby = "Recent Alert";
   $scope.sort_order = "ascending";
   var searchTradeRange = {
@@ -241,44 +230,44 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
       $scope.searchURL =searchURL;
 
     $http.post('/api/users/bySCURL/', {
-        url: $scope.searchURL,
-        minFollower: $scope.minSearchTradefollowers,
-        maxFollower: $scope.maxSearchTradefollowers,
-        recordRange: {
-          skip: 0,
-          limit: 12
-        }
-      })
-      .then(function(res) {
-        $scope.processing = false;
-        var users=[];
-        var i=-1;
-        var nextfuns = function(){
-          i++;
-          if(i < res.data.length){
-            var data= res.data[i];    
-            if(data._id!=$scope.user._id)
-            users.push(data);
+      url: $scope.searchURL,
+      minFollower: $scope.minSearchTradefollowers,
+      maxFollower: $scope.maxSearchTradefollowers,
+      recordRange: {
+        skip: 0,
+        limit: 12
+      }
+    })
+    .then(function(res) {
+      $scope.processing = false;
+      var users=[];
+      var i=-1;
+      var nextfuns = function(){
+        i++;
+        if(i < res.data.length){
+          var data= res.data[i];    
+          if(data._id!=$scope.user._id)
+          users.push(data);
           nextfuns();
         }
         else
           $scope.searchUser = users;
         }
 
-        nextfuns();                  
-      })
-      .then(undefined, function(err) {
-        $scope.success = false;
-        $scope.processing = false;
-        $scope.searchUser = [];
-        $.Zebra_Dialog("Please enter Artist url.");
-      })
-      .then(null, function(err) {
-        $scope.success = false;
-        $scope.processing = false;
-        $scope.searchUser = [];
-        $.Zebra_Dialog("Did not find user.");
-      });
+      nextfuns();                  
+    })
+    .then(undefined, function(err) {
+      $scope.success = false;
+      $scope.processing = false;
+      $scope.searchUser = [];
+      $.Zebra_Dialog("Please enter Artist url.");
+    })
+    .then(null, function(err) {
+      $scope.success = false;
+      $scope.processing = false;
+      $scope.searchUser = [];
+      $.Zebra_Dialog("Did not find user.");
+    });
   }
 
   $scope.hello = function(obj) {
@@ -794,7 +783,7 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
   $scope.verifyBrowser();
   $scope.checkNotification();
   $scope.sortResult($scope.sortby);
- // $scope.loadMore();
+  $scope.loadMore();
   $scope.setView("inbox");
 
 });

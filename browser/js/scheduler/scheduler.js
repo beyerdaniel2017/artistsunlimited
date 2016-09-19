@@ -510,12 +510,42 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     }
   }
 
+  $scope.isSchedule = false;
+  $scope.scheduleSong = function(item)
+  {
+    console.log(item);
+    document.getElementById('scPlayer').style.visibility = "hidden";
+    $scope.isSchedule = true;
+    $scope.tabSelected = false;
+    $scope.newEvent = true;
+    $scope.makeEvent = {
+        userID: $scope.user.soundcloud.id,
+        type: "track"
+      };
+    $scope.selectedSlot = item.date;
+    var selectedSlot = new Date($scope.selectedSlot);
+    var day = new Date(selectedSlot.getTime() - selectedSlot.getTimezoneOffset() * 60000).toISOString();
+    var hour = ConvertStringTimeToUTC(selectedSlot.getHours());
+    var makeDay = new Date(day);
+    makeDay.setHours(hour);
+    $scope.makeEvent.day = makeDay;
+    $scope.selectedSlot = new Date(item.date);
+    SC.oEmbed($scope.searchStringVal.searchString, {
+      element: document.getElementById('scPlayer'),
+      auto_play: false,
+      maxheight: 120
+    })
+    document.getElementById('scPlayer').style.visibility = "visible";
+    $scope.followersCount();
+    
+  }
 
   $scope.isEdit = false;
   $scope.EditNewSong = function(item,action) {
     $scope.editChannelArr = [];
     $scope.tabSelected = false;
-
+    $scope.isEdit = false;
+    $scope.searchStringVal={};
     var newObj = item;
 
     $scope.searchStringVal={};
@@ -619,7 +649,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
          }
          else
          {
-        $scope.listevents.push(item);
+            $scope.listevents.push(item);
          }
          
         if (event == undefined && new Date(item.date) > new Date()) {
@@ -772,7 +802,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     var makeDay = new Date(selectedSlot.slotdate);
     makeDay.setHours(hour);
     $scope.searchStringVal.day = makeDay;
-    $scope.searchStringVal.searchString = $scope.searchStringVal.trackURL;
+    $scope.searchStringVal.searchString = $scope.searchStringVal.trackURL!="" ? $scope.searchStringVal.trackURL:$scope.searchStringVal.searchString;
   }
 
   $scope.clickedSlot = function(day, hour, data) {
