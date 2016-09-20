@@ -24,7 +24,7 @@
                                 </div> -->
                                 <div class="search">
                                   <div class="search-suggetion">
-                                    <input class="form-control" type="text" placeholder="Song URL" id="searchString" ng-model="track.trackURL"  required/>
+                                    <input class="form-control" type="text" placeholder="Track Search" id="searchString" ng-model="track.trackURL"  required/>
                                       <ul class="results" ng-show="track.searching || track.searchError || track.searchSelection.length > 0">
                                         <li ng-show="track.searching && !track.searchError && track.searchSelection.length==0"><a href="#">One moment...</a></li>
                                         <li ng-repeat="item in track.searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
@@ -62,7 +62,7 @@
                                 <div class="social-container">
                                     <h4>Social Media Links</h4>
                                     <div class="social-media-links" ng-repeat="item in track.SMLinks">
-                                        <input class="form-control" type="text" placeholder="Link" ng-model="item.value" ng-change="SMLinkChange($index)" />
+                                        <input class="form-control" type="text" placeholder="Social Media Link" ng-model="item.value" ng-change="SMLinkChange($index)" />
                                         <span class="{{item.key}}"></span>
                                         <a class="close-ic-rel" href="#" ng-click="removeSMLink($index)"><img src="assets/images/close.png"></a>
                                     </div>

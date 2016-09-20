@@ -89,7 +89,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.tradeCommentsArr = [];
   $scope.popup = false;
   $scope.selectedSlot = {};
-  $scope.unrepostHours = 1;
+  $scope.unrepostHours = 24;
   var commentIndex = 0;
   $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
   var defaultAvailableSlots = {
@@ -378,7 +378,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.tabSelected = false;
     $scope.makeEventURL = "";
     $scope.makeEvent = {};
-    $scope.unrepostHours = "";
+    $scope.unrepostHours = 24;
     $scope.timeGap = "";
     $scope.eventComment = "";
     $scope.channelArr = [];
@@ -733,6 +733,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.makeEventURL = "";
     $scope.trackListSlotObj = undefined;
     $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
+    $scope.unrepostHours = 24;
     $scope.updateReach();
     if ($scope.makeEvent.type == "empty") {
       makeDay = new Date(day);
