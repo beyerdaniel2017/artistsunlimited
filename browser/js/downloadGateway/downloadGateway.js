@@ -340,15 +340,15 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
   }
   $scope.showProfileInfo = function() {
     $scope.profile.data = $scope.user;
-    if (($scope.profile.data.permanentLinks && $scope.profile.data.permanentLinks.length === 0) || !$scope.profile.data.permanentLinks) {
-      $scope.profile.data.permanentLinks = [{
-        url: '',
-        avatar: '',
-        username: '',
-        id: -1,
-        permanentLink: true
-      }];
-    };
+    // if (($scope.profile.data.permanentLinks && $scope.profile.data.permanentLinks.length === 0) || !$scope.profile.data.permanentLinks) {
+    //   $scope.profile.data.permanentLinks = [{
+    //     url: '',
+    //     avatar: '',
+    //     username: '',
+    //     id: -1,
+    //     permanentLink: true
+    //   }];
+    // };
     $scope.profile.isAvailable = {};
     $scope.profile.isAvailable.email = $scope.profile.data.email ? true : false;
     $scope.profile.isAvailable.password = $scope.profile.data.password ? true : false;
@@ -430,13 +430,13 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
       return false;
     }
 
-    $scope.profile.data.permanentLinks.push({
-      url: '',
-      avatar: '',
-      username: '',
-      id: -1,
-      permanentLink: true
-    });
+    // $scope.profile.data.permanentLinks.push({
+    //   url: '',
+    //   avatar: '',
+    //   username: '',
+    //   id: -1,
+    //   permanentLink: true
+    // });
   };
 
   $scope.permanentLinkURLChange = function() {
@@ -1141,6 +1141,7 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
         $scope.track.trackTitle = item.title;
         $scope.track.trackID = item.id;
         $scope.track.artistID = item.user.id;
+        $scope.track.trackURL = item.title;
         $scope.track.playlists=[];
         $scope.track.downloadURL="";
         $scope.track.like=false;

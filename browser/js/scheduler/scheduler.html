@@ -269,7 +269,7 @@
                             <li ng-show="!!searchStringVal.searchError">{{searchError}}</li>
                             <li ng-show="searchStringVal.searchSelection.length > 0 && !searchStringVal.searchError"><a href="#">Or enter a Soundcloud URL</a></li>
                           </ul>
-                        <a href="#" class="link-add-btn" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+                        <a href="#" class="url-search-btn-small " ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
                       </div>
                     </div>
       
@@ -435,7 +435,7 @@
                             <li ng-show="!!searchStringVal.searchError">{{searchError}}</li>
                             <li ng-show="searchStringVal.searchSelection.length > 0 && !searchStringVal.searchError"><a href="#">Or enter a Soundcloud URL</a></li>
                           </ul>
-                          <a href="javascript:void(0)" class="link-add-btn" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+                          <a href="javascript:void(0)" class="url-search-btn-small " ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
                       </div>
                     </div>
                 </div>
@@ -488,12 +488,12 @@
                       </div>
                     </div>
                     <br>
-                    <span style="font-size:11px;">Total Reach: {{followCounts}} followers</span>
+                    <span style="font-size: 12px; letter-spacing: 2px;">Total Reach: {{followCounts}} followers</span>
                     <div class="row">
                       <div class="col-md-12 text-left">
                         <li class="switch-btn" style="font-size: 10px;vertical-align: middle;
                         list-style: outside none none;">
-                        <label class="switch" style="vertical-align: top;">
+                        <label class="switch" style="vertical-align: middle;">
                           <input checked="" type="checkbox">
                           <div class="slider round"></div>
                         </label> 
@@ -532,6 +532,7 @@
                     <div class="acceptance">
                       <div class="channel-check">
                         <textarea class="form-control" ng-disabled="disable" ng-model="searchStringVal.eventComment">{{comment}}</textarea>
+                      </div>
                         <div class="next-previous">
                           <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
                           <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
@@ -539,7 +540,6 @@
                       </div>                         
                     </div>
                   </div>
-                </div>
                 <div class="row">
                   <div class="col-md-12">
                     <div class="next-previous text-center available-slot-btn">
@@ -641,26 +641,3 @@
 <!-- Save And Share overlay end -->
 </div>  
 <ng-include src="'js/home/views/loader.html'"></ng-include>
-<script>
-setTimeout(function(){
-
-    $(document).ready(function(){
-      FB.init({
-          appId: '1576897469267996',
-          xfbml: true,
-          version: 'v2.7'
-      });
-
-      (function(d, s, id) {
-          var js, fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) {
-              return;
-          }
-          js = d.createElement(s);
-          js.id = id;
-          js.src = "//connect.facebook.net/en_US/sdk.js";
-          fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    })
-},200);
-</script>

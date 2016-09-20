@@ -50,7 +50,7 @@
                 </div>
                 <br/>
                 <br/>
-                <div ng-repeat="permanentLink in user.permanentLinks" style="padding:10px; color:#000; text-align: center;">
+                <div ng-repeat="permanentLink in profile.data.permanentLinks" style="padding:10px; color:#000; text-align: center;">
                     <a href="{{permanentLink.url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{permanentLink.avatar}}">{{' ' + permanentLink.username}}</a>&nbsp;&nbsp;&nbsp;
                     <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePermanentLink($index)"></a> 
                 </div>

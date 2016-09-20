@@ -42,6 +42,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   $scope.submission = {};
   $scope.customizeSettings = null;
   $scope.userID = $location.search().id;
+  $scope.searchString = "";
   // $scope.genreArray = [
   //   'Alternative Rock',
   //   'Ambient',
@@ -117,10 +118,10 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     }
   }
 
-  $scope.selectedItem = function(item) {
+  $scope.selectedItem = function(item, type) {
     $scope.searchSelection = [];
     $scope.searchError = undefined;
-
+    var player = (type == "normal" ? document.getElementById('scPlayer') : document.getElementById('scPlayerCustom'))
     //custom code to process item choice//
     //console.log(item);
     $scope.searchString = item.title;
@@ -128,11 +129,11 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     $scope.submission.title = item.title;
     $scope.submission.trackURL = item.permalink_url
     SC.oEmbed($scope.submission.trackURL, {
-      element: document.getElementById('scPlayer'),
+      element: player,
       auto_play: false,
       maxheight: 150
     })
-    document.getElementById('scPlayer').style.visibility = "visible";
+    player.style.visibility = "visible";
     $scope.processing = false;
   }
   //end search//
@@ -179,37 +180,37 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     } else {
       $scope.processing = true;
       $http.post('/api/submissions', {
-          email: $scope.submission.email,
-          trackID: $scope.submission.trackID,
-          name: $scope.submission.name,
-          title: $scope.submission.title,
-          trackURL: $scope.submission.trackURL,
-          channelIDS: [],
-          invoiceIDS: [],
-          userID: $scope.userID,
+        email: $scope.submission.email,
+        trackID: $scope.submission.trackID,
+        name: $scope.submission.name,
+        title: $scope.submission.title,
+        trackURL: $scope.submission.trackURL,
+        channelIDS: [],
+        invoiceIDS: [],
+        userID: $scope.userID,
         genre: ''
-        })
-        .then(function(res) {
-          $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
-          $scope.processing = false;
-          $scope.notFound = false;
-          $scope.submission = {};
-          document.getElementById('scPlayer').style.visibility = "hidden";
-          $scope.url = "";
-        })
-        .then(null, function(err) {
-          $scope.processing = false;
-          $.Zebra_Dialog("Error: Could not submit song.");
-        });
+      })
+      .then(function(res) {
+        $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
+        $scope.processing = false;
+        $scope.notFound = false;
+        $scope.submission = {};
+        document.getElementById('scPlayer').style.visibility = "hidden";
+        $scope.url = "";
+      })
+      .then(null, function(err) {
+        $scope.processing = false;
+        $.Zebra_Dialog("Error: Could not submit song.");
+      });
     }
   }
 
   $scope.getUserID = function() {
     if ($scope.userID == undefined) {
       $http.get('/api/users/getUserID')
-        .then(function(res) {
-          $scope.userID = res.data;
-        });
+      .then(function(res) {
+        $scope.userID = res.data;
+      });
     }
   }
 
@@ -217,9 +218,9 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     var uid = $location.search().id;
     if (uid != undefined) {
       customizeService.getCustomPageSettings(uid, 'submit')
-        .then(function(response) {
-          $scope.customizeSettings = response;
-        });
+      .then(function(response) {
+        $scope.customizeSettings = response;
+      });
     }
   }
   $scope.getUserID();

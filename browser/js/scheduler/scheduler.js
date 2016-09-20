@@ -76,10 +76,8 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     $.Zebra_Dialog('Error: There is no any user record found.');
     return;
   }
-  $scope.paidusersId = PaidUserId;
-
+  $scope.paidusersId = PaidUserId;  
   $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
-
   $scope.paidusersRec = $scope.user;
 
   $scope.months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -1232,13 +1230,13 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
       style = {
         'background-color': '#fff',
         'border-color': "#999",
+        'border-width' : '1px'
       }
     }
     return style;
   }
 
   $scope.getEventStyle = function(event) {
-
     if (event.type == 'empty') {
       return {}
     } else if (event.type == 'track' || event.type == 'queue') {
