@@ -47,7 +47,8 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
-
+  $scope.isLoggedIn = SessionService.getUser() ? true : false;
+  $scope.admin = SessionService.getUser();
   $scope.searchString = "";
   var formActions = SessionService.getActionsfoAccount();
   var PaidUserId = SessionService.getActionsfoAccountIndex();
@@ -81,8 +82,9 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     $.Zebra_Dialog('Error: There is no any user record found.');
     return;
   }
-
+  $scope.paidusersId = PaidUserId;
   $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
+  $scope.paidusersRec = $scope.user;
 
   $scope.months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -120,7 +122,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   $scope.tradeCommentsArr = [];
   $scope.popup = false;
   $scope.selectedSlot = {};
-  $scope.unrepostHours = 1;
+  $scope.unrepostHours = 24;
   var commentIndex = 0;
   $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
   var defaultAvailableSlots = {
@@ -139,8 +141,8 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   $scope.selectedChannel = {};
   $scope.uniqueGroup = [];
 
-  for (var i = 0; i < $scope.user.paidRepost.length; i++) {
-    $scope.user.paidRepost[i].groups.forEach(function(acc) {
+  for (var i = 0; i < $scope.admin.paidRepost.length; i++) {
+    $scope.admin.paidRepost[i].groups.forEach(function(acc) {
       if (acc != "" && $scope.uniqueGroup.indexOf(acc) === -1) {
         $scope.uniqueGroup.push(acc);
       }
@@ -321,7 +323,8 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     $scope.makeEventURL = "";
     $scope.searchStringVal = {};
     $scope.searchStringVal.searchSelection = [];
-    $scope.searchStringVal.unrepostHours = "1";
+
+    $scope.searchStringVal.unrepostHours = "24";
     $scope.makeEvent = {};
     $scope.submission = {};
     $scope.searchStringVal.timeGap = "";
@@ -832,6 +835,8 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
         day: makeDay,
         type: "track"
       };
+
+      $scope.searchStringVal.unrepostHours = "24";
       $scope.searchStringVal.unrepostDate = (data.day != undefined ? new Date(data.day.getTime() + 24 * 60 * 60 * 1000) : new Date(new Date().getTime() + 24 * 60 * 60 * 1000));
       $scope.searchStringVal.unrepost = true;
       $scope.newEvent = true;
@@ -998,38 +1003,31 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   }
 
   $scope.otherChannelsAndGroups = function() {
-
     $scope.selectedGroupChannelIDS = [];
-    if ($scope.role == 'admin') {
-      $scope.groupAndChannel = $scope.searchStringVal.channelArr.concat($scope.groupArr);
-      $scope.groupAndChannel.forEach(function(g) {
-        $scope.user.paidRepost.forEach(function(acc) {
-          if (acc.groups.indexOf(g) != -1) {
-            if ($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1) {
-              $scope.selectedGroupChannelIDS.push(acc.id);
-            }
-          } else {
-            if (acc.username == g) {
-              if ($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1) {
-                $scope.selectedGroupChannelIDS.push(acc.id);
+    $scope.groupAndChannel = $scope.channelArr.concat($scope.groupArr);
+    $scope.groupAndChannel.forEach(function(g) {
+      $scope.admin.paidRepost.forEach(function(acc) {
+        if (acc.groups.indexOf(g) != -1) {
+          for (var i = 0; i < $scope.paidUsers.length; i++) {
+            if (acc.userID == $scope.paidUsers[i]._id) {
+              if ($scope.selectedGroupChannelIDS.indexOf($scope.paidUsers[i].soundcloud.id) == -1) {
+                $scope.selectedGroupChannelIDS.push($scope.paidUsers[i].soundcloud.id);
               }
             }
           }
-        });
-      });
-      return $scope.selectedGroupChannelIDS;
-    } else {
-      $scope.channelArr.forEach(function(ch) {
-        $scope.linkedAccounts.forEach(function(acc) {
-          if (acc.soundcloud && acc.soundcloud.username == ch) {
-            if ($scope.selectedGroupChannelIDS.indexOf(acc.soundcloud.id) == -1) {
-              $scope.selectedGroupChannelIDS.push(acc.soundcloud.id);
+        } else {
+
+          for (var i = 0; i < $scope.paidUsers.length; i++) {
+            if (g == $scope.paidUsers[i].name) {
+              if ($scope.selectedGroupChannelIDS.indexOf($scope.paidUsers[i].soundcloud.id) == -1) {
+                $scope.selectedGroupChannelIDS.push($scope.paidUsers[i].soundcloud.id);
+              }
             }
           }
-        });
+        }
       });
-      return $scope.selectedGroupChannelIDS;
-    }
+    });
+    return $scope.selectedGroupChannelIDS;
   }
 
   $scope.saveEvent = function() {
@@ -1101,7 +1099,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
           $scope.eventComment = "";
           document.getElementById('scPlayer').style.visibility = "hidden";
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
-          $scope.searchStringVal.unrepostHours = 1;
+          $scope.searchStringVal.unrepostHours = 24;
           $scope.tabSelected = true;
           $scope.searchStringVal.trackType = "";
           $scope.trackArtistID = 0;
@@ -1116,7 +1114,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
           $scope.eventComment = "";
           document.getElementById('scPlayer').style.visibility = "hidden";
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
-          $scope.searchStringVal.unrepostHours = 1;
+          $scope.searchStringVal.unrepostHours = 24;
           $scope.tabSelected = true;
           $scope.showOverlay = false;
           $scope.processing = false;
@@ -1233,7 +1231,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
       style = {
         'background-color': '#fff',
         'border-color': "#999",
-        'border-width': '1px'
+        'border': "1px solid",
       }
     }
     return style;
@@ -1382,20 +1380,12 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   }
 
   $scope.followersCount = function() {
-
     var count = $scope.user.soundcloud.followers;
+    var selectedUser = $scope.user.soundcloud.id;
     var channels = $scope.otherChannelsAndGroups();
-    if ($scope.role == 'admin') {
-      for (var i = 0; i < $scope.user.paidRepost.length; i++) {
-        if (channels.indexOf($scope.user.paidRepost[i].id) > -1) {
-          count = count + $scope.user.paidRepost[i].followers;
-        }
-      }
-    } else {
-      for (var i = 0; i < $scope.linkedAccounts.length; i++) {
-        if (channels.indexOf($scope.linkedAccounts[i].soundcloud.id) > -1) {
-          count = count + $scope.linkedAccounts[i].soundcloud.followers;
-        }
+    for (var i = 0; i < $scope.paidUsers.length; i++) {
+      if (channels.indexOf($scope.paidUsers[i].soundcloud.id) > -1 && $scope.paidUsers[i].soundcloud.id != selectedUser) {
+        count = count + $scope.paidUsers[i].soundcloud.followers;
       }
     }
     $scope.followCounts = count;

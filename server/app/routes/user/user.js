@@ -69,16 +69,25 @@ router.get('/getUserByURL/:username/:page', function(req, res, next) {
     if(user && user.paidRepost.length > 0){
       if(req.params.page.indexOf('submit') != -1){
         var u = user.paidRepost.find(function(pr){
-          console.log(pr.submissionUrl +"=="+ url);
           return pr.submissionUrl == url;
         })
-        res.send(u.userID);
+        if(u){
+          res.send(u.userID);
+        }
+        else{
+          res.send(null);
+        }
       }
       else{
-        var u = user.paidRepost.forEach(function(pr){
+        var u = user.paidRepost.find(function(pr){
           return pr.premierUrl == url;
         })
-        res.send(u.userID);
+        if(u){
+          res.send(u.userID);
+        }
+        else{
+          res.send(null);
+        }
       }
     }
     else{
@@ -379,7 +388,7 @@ User.findOneAndUpdate({
 router.post('/checkUsercount', function(req, res, next) {
   var query = {"paidRepost.submissionUrl":req.body.url};
   if(req.body.action=="id")
-    query = {"paidRepost.userID":req.body.userID};
+    query = {"paidRepost.userID":req.body.userID,"_id":req.user._id};
       
   User.find(query).exec()
   .then(function(user) {

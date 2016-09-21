@@ -66,7 +66,6 @@ app.directive('scsearch', function($http) {
       }
 
       $scope.keypress = function(keyEvent) {
-        console.log(keyEvent);
         if (keyEvent.which === 13) {
           $scope.sendSearch();
           keyEvent.stopPropagation();

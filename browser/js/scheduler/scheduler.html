@@ -226,7 +226,7 @@
               <div class="col-md-8 col-md-offset-2">
                 <div class="permanent-links" style="text-align: center;">
                   <h4 class="bold">Auto-fill Tracks</h4>
-                  <input class="form-control" placeholder="Soundcloud Track Url" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()" />
+                  <input class="form-control" placeholder="Track Search" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()" />
                   <br/>
                   <select class="form-control" ng-model="trackListObj" ng-options="item.title for item in trackList" ng-change="trackListChange()">
                     <option value="" ng-disabled="!!trackListObj" ng-show="trackList.length > 0">-My Songs-</option>
@@ -261,7 +261,7 @@
                 <div class="col-md-6 col-xs-12">            
                    <div class="search">
                       <div class="search-suggetion">
-                        <input class="form-control" type="text" placeholder="Song URL" id="searchString" ng-model="searchStringVal.searchString"  required/>
+                        <input class="form-control" type="text" placeholder="Track Search" id="searchString" ng-model="searchStringVal.searchString"  required/>
                           <ul class="results" ng-show="searchStringVal.searching || searchStringVal.searchError || searchStringVal.searchSelection.length > 0">
                             <li ng-show="searchStringVal.searching && !searchStringVal.searchError && searchStringVal.searchSelection.length==0"><a href="#">One moment...</a></li>
                             <li ng-repeat="item in searchStringVal.searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
@@ -269,7 +269,7 @@
                             <li ng-show="!!searchStringVal.searchError">{{searchError}}</li>
                             <li ng-show="searchStringVal.searchSelection.length > 0 && !searchStringVal.searchError"><a href="#">Or enter a Soundcloud URL</a></li>
                           </ul>
-                        <a href="#" class="link-add-btn" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+                        <a href="#" class="url-search-btn-small " ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
                       </div>
                     </div>
       
@@ -294,7 +294,7 @@
                           <input checked="" type="checkbox" ng-model="searchStringVal.unrepostEnable">
                           <div class="slider round"></div>
                         </label> 
-                        <label>Unrepost after<input  class="form-control input-hour" placeholder="1" style="width:100px;" ng-model="searchStringVal.unrepostHours">hours</label>
+                        <label>Unrepost after<input  class="form-control input-hour" placeholder="24" style="width:100px;" ng-model="searchStringVal.unrepostHours">hours</label>
                       </li>
                     </ul><br/>
                     <div class="form-group" ng-show="linkedAccounts.length > 0" ng-if="!isEdit && !isSchedule">
@@ -317,41 +317,41 @@
                     </div>
                   </div>
                   <div class="col-md-6 col-xs-12">              
-                    <div class="btn-group channel-group" ng-if="user.role == 'admin'" role="group" aria-label="...">
+                    <div class="btn-group channel-group" ng-if="admin.role == 'admin'" role="group" aria-label="...">
                       <a class="btn btn-default active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setView('calendar');setActive('channel')">Channels</a>
                       <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
                     </div>
                     <div class="channel-check">
                       <div class="channel-masege">
                         <ul>
-                          <li class="" ng-show="searchStringVal.channelArr.length > 0" ng-repeat="chan in searchStringVal.channelArr">{{chan}}<span></span></li>
-                          <li class="" ng-show="searchStringVal.groupArr.length > 0" ng-repeat="group in searchStringVal.groupArr">{{group}}<span></span></li>
+                          <li class="" ng-show="channelArr.length > 0" ng-repeat="chan in channelArr">{{chan}}<span></span></li>
+                          <li class="" ng-show="groupArr.length > 0" ng-repeat="group in groupArr">{{group}}<span></span></li>
                         </ul>
                       </div>
                       <div class="check-list">
-                        <div class="checkbox demo-radio-btn" ng-show="searchStringVal.displayType == 'group'" ng-repeat="group in searchStringVal.uniqueGroup">
+                        <div class="checkbox demo-radio-btn" ng-show="displayType == 'group'" ng-repeat="group in uniqueGroup">
                           <p>
                             <label class="with-square-checkbox">
                               <input style="" id="{{group}}" ng-click="setGroup(group);" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" >
                               <span>{{group}}</span> </label>
                             </p>
                           </div>
-                          <div class="checkbox demo-radio-btn" ng-show="user.role == 'admin'" ng-show="searchStringVal.displayType == 'channel'" ng-repeat="channel in user.paidRepost">
+                          <div class="checkbox demo-radio-btn"  ng-show="displayType == 'channel'" ng-repeat="channel in paidUsers">
                             <p>
                               <label class="with-square-checkbox">
-                                <input style="" id="{{channel.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(channel.username);" type="checkbox">
-                                <span>{{channel.username}}</span> 
+                                <input style="" id="{{channel.name}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(channel.name);" type="checkbox">
+                                <span>{{channel.name}}</span> 
                               </label>
                             </p>
                           </div>
-                          <div class="checkbox demo-radio-btn" ng-show="user.role == 'user'" ng-show="searchStringVal.displayType == 'channel'" ng-repeat="u in linkedAccounts">
+                         <!--  <div class="checkbox demo-radio-btn" ng-show="user.role == 'user'" ng-show="searchStringVal.displayType == 'channel'" ng-repeat="u in linkedAccounts">
                             <p>
                               <label class="with-square-checkbox">
                                 <input style="" id="{{u.soundcloud.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(u.soundcloud.username);" type="checkbox" ng-checked="searchStringVal.channelArr.indexOf(u.soundcloud.username) >-1">
                                 <span>{{u.soundcloud.username}}</span> 
                               </label>
                             </p>
-                          </div>
+                          </div> -->
                         </div>
                       </div>
                       <div class="form-group">
@@ -435,7 +435,7 @@
                             <li ng-show="!!searchStringVal.searchError">{{searchError}}</li>
                             <li ng-show="searchStringVal.searchSelection.length > 0 && !searchStringVal.searchError"><a href="#">Or enter a Soundcloud URL</a></li>
                           </ul>
-                          <a href="javascript:void(0)" class="link-add-btn" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+                          <a href="javascript:void(0)" class="url-search-btn-small " ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
                       </div>
                     </div>
                 </div>
@@ -448,26 +448,26 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <div class="btn-group channel-group" ng-if="user.role == 'admin'" role="group" aria-label="...">
-                        <a class="btn btn-default active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setView('calendar');setActive('channel')">Channels</a>
-                        <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
+                      <div class="btn-group channel-group" ng-if="admin.role == 'admin'" role="group" aria-label="...">
+                        <a class="btn btn-default active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setActive('channel')">Channels</a>
+                        <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setActive('group')">Groups</a>
                       </div>
                       <div class="channel-check" style="font-size: 11px;">
                         <div class="channel-masege">
                           <ul>
-                            <li class="" ng-show="searchStringVal.channelArr.length > 0" ng-repeat="chan in searchStringVal.channelArr">{{chan}}<span></span></li>
-                            <li class="" ng-show="searchStringVal.groupArr.length > 0" ng-repeat="group in searchStringVal.groupArr">{{group}}<span></span></li>
+                            <li class="" ng-show="channelArr.length > 0" ng-repeat="chan in channelArr">{{chan}}<span></span></li>
+                            <li class="" ng-show="groupArr.length > 0" ng-repeat="group in groupArr">{{group}}<span></span></li>
                           </ul>
                         </div>
                         <div class="check-list text-left">
-                          <div class="checkbox demo-radio-btn" ng-show="searchStringVal.displayType == 'group'" ng-repeat="group in uniqueGroup">
+                          <div class="checkbox demo-radio-btn" ng-show="displayType == 'group'" ng-repeat="group in uniqueGroup">
                             <p>
                               <label class="with-square-checkbox">
                                 <input style="" id="{{group}}" ng-click="setGroup(group);" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" >
                                 <span>{{group}}</span> </label>
                               </p>
                             </div>
-                            <div class="checkbox demo-radio-btn" ng-show="user.role == 'admin'" ng-show="searchStringVal.displayType == 'channel'" ng-repeat="channel in user.paidRepost">
+                            <div class="checkbox demo-radio-btn" ng-show="user.role == 'admin'" ng-show="displayType == 'channel'" ng-repeat="channel in user.paidRepost">
                               <p>
                                 <label class="with-square-checkbox">
                                   <input style="" id="{{channel.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(channel.username);" type="checkbox">
@@ -475,10 +475,10 @@
                                 </label>
                               </p>
                             </div>
-                            <div class="checkbox demo-radio-btn" ng-show="user.role == 'user'" ng-show="searchStringVal.displayType == 'channel'" ng-repeat="u in linkedAccounts">
+                            <div class="checkbox demo-radio-btn" ng-show="user.role == 'user'" ng-show="displayType == 'channel'" ng-repeat="u in linkedAccounts">
                               <p>
                                 <label class="with-square-checkbox">
-                                  <input style="" id="{{u.soundcloud.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(u.soundcloud.username);" type="checkbox" ng-checked="searchStringVal.channelArr.indexOf(u.soundcloud.username) >-1">
+                                  <input style="" id="{{u.soundcloud.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(u.soundcloud.username);" type="checkbox" ng-checked="channelArr.indexOf(u.soundcloud.username) >-1">
                                   <span>{{u.soundcloud.username}}</span> 
                                 </label>
                               </p>
@@ -493,11 +493,11 @@
                       <div class="col-md-12 text-left">
                         <li class="switch-btn" style="font-size: 10px;vertical-align: middle;
                         list-style: outside none none;">
-                        <label class="switch" style="vertical-align: top;">
-                          <input checked="" type="checkbox">
+                        <label class="switch" style="vertical-align: middle;">
+                          <input checked="" type="checkbox" ng-model="searchStringVal.unrepostEnable">
                           <div class="slider round"></div>
                         </label> 
-                        <label>Unrepost after<input  class="form-control input-hour" style="width:50px;" placeholder="1" ng-model="searchStringVal.unrepostHours">hours</label>
+                        <label>Unrepost after<input  class="form-control input-hour" style="width:50px;color: #868686;" placeholder="24" ng-model="searchStringVal.unrepostHours">hours</label>
                       </li>
                     </div>
                     <div class="col-xs-12" style="font-size:10px;">
@@ -532,6 +532,7 @@
                     <div class="acceptance">
                       <div class="channel-check">
                         <textarea class="form-control" ng-disabled="disable" ng-model="searchStringVal.eventComment">{{comment}}</textarea>
+                      </div>
                         <div class="next-previous">
                           <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
                           <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
@@ -641,26 +642,3 @@
 <!-- Save And Share overlay end -->
 </div>  
 <ng-include src="'js/home/views/loader.html'"></ng-include>
-<script>
-setTimeout(function(){
-
-    $(document).ready(function(){
-      FB.init({
-          appId: '1576897469267996',
-          xfbml: true,
-          version: 'v2.7'
-      });
-
-      (function(d, s, id) {
-          var js, fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) {
-              return;
-          }
-          js = d.createElement(s);
-          js.id = id;
-          js.src = "//connect.facebook.net/en_US/sdk.js";
-          fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    })
-},200);
-</script>

@@ -27,7 +27,7 @@
           <div class="container-90">
             <div class="row">
               <div class="col-md-12">
-                <div class="organize-list">
+                <div class="">
                   <br>                           
                   <div class="row">
                     <div class="col-md-3 col-md-offset-4 col-sm-6 col-xs-12">
@@ -44,34 +44,42 @@
                   </div>
                   <br><br>
                   <div class="row" ng-repeat="userdata in paidRepostAccounts">
-                    <div class="border-padding" style="padding-bottom:115px;">
-                      <div class="col-md-2 col-sm-3 col-xs-12">
-                        <div class="thumb-img-container text-left">
-                         <div class="organize-thumb-img">
-                           <img src="{{userdata.user.avatarURL}}" class="responsive">
-                         </div>
+                    <div class="col-md-12">
+                        <div class="account-vertical-container">
+                          <ul>
+                            <li>
+                              <div class="list-img-container">
+                                 <img src="{{userdata.user.avatarURL}}" class="img-responsive">
+                               </div>
+                            </li>
+                              <li>
+                                <div class="text-center">
+                                  <p><strong>{{userdata.user.username}}</strong></p>
+                                  <p>{{userdata.user.followers}} Followers</p>
+                                  <p><a href="{{userdata.submissionUrl}}" target="_blank">{{userdata.submissionUrl}}</a></p>
+                                  <p><a href="{{userdata.premierUrl}}" target="_blank">{{userdata.premierUrl}}</a></p>
+                                </div>
+                              </li>
+                               <li>
+                                <div class="price-box vertical-text text-center" >
+                                    <div style="display: inline-block;">
+                                      <span class="pull-left" style="margin-right: 10px; padding-top: 7px; font-size: 13px;">Price for each repost: $</span>
+                                        <span class="pull-right" style="position: relative;"> <input type="" name="" placeholder="price" class="price-input-box price-input" ng-model="userdata.price" ng-blur="editprice($index, userdata)"></span>
+                                    </div>
+                                    <p class="small-text" style="font-size:11px; color:#c2c2c2;">Recommended: 1$ for every 3,000 followers
+                                    60,000 followers  =  $20</p>       
+                                </div>
+                              </li>
+                              <li> 
+                               <div  class="text-center vertical-text">
+                                 <a class="btn btn-pink" href="javascript:void(0)" ng-click="addAccounts('Edit',userdata.userID);">Edit</a> 
+                                 <a class="btn btn-pink" href="javascript:void(0)" ng-click="deletePaidRepost($index)">Delete</a>
+                               </div>
+                              </li> 
+                          </ul>
                         </div>
-                      </div>
-                      <div class="col-md-4 col-sm-12 col-xs-12">
-                        <div class="margin-top-4">
-                          <p><strong>{{userdata.user.username}}</strong></p>
-                          <p>{{userdata.user.followers}} Followers</p>
-                          <p><a href="{{userdata.submissionUrl}}" target="_blank">{{userdata.submissionUrl}}</a></p>
-                          <!-- <p>Added <time am-time-ago="user.createdOn"></time></p> -->
-                        </div>
-                      </div>                                                             
-                      <div class="col-md-4 col-sm-12 col-xs-12 text-center">
-                        <div class="price-box margin-20">
-                            <span style="position: relative;">Price for each repost: $ <input type="" name="" placeholder="price" class="price-input-box price-input" ng-model="userdata.price" ng-blur="editprice($index, userdata)"></span>
-                            <p class="small-text" style="font-size:11px; color:#c2c2c2;">Recommended: 1$ for every 3,000 followers
-                            60,000 followers  =  $20</p>       
-                        </div>
-                      </div>
-                      <div class="col-md-2 col-sm-6 col-xs-8" style="padding-top:40px;">
-                       <a href="javascript:void(0)" ng-click="addAccounts('Edit',userdata.userID);" style="color:red">Edit</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:void(0)" ng-click="deletePaidRepost($index)" style="color:red">Delete</a>
-                      </div>
                     </div>
-                  </div> 
+                  </div>
                   <br>                                                                           
                 </div>
               </div>

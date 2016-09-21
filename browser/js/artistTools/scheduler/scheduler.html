@@ -276,32 +276,32 @@
                         <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
                           <li ng-show="searching && !searchError && searchSelection.length==0"><a href="#">One moment...</a></li>
                           <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
-                            <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
-                            <li ng-show="!!searchError">{{searchError}}</li>
-                            <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
-                          </ul>
-                          <a href="javascript:void(0)" class="link-add-btn" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
-                        </div>
-                        <label class="text-block">Next Available Repost Time</label>
-                        <div class="form-group">
-                          <select class="form-control" ng-if="!isEdit && !isSchedule" ng-model="selectedSlot" ng-change="clickAvailableSlots(selectedSlot);">                       
-                            <option style="color:black;text:center;" ng-repeat="slot in listAvailableSlots"
-                            value="{{slot}}">{{slot.slotdate.toString().split(' ')[1] + ' ' +slot.slotdate.toString().split(' ')[2] + ' ' + slot.slotdate.toString().split(' ')[3]}} {{slot.slottime}}</option>
-                          </select>
-                          <select ng-if="isEdit" class="form-control">
-                            <option>{{selectedSlot | date:'MMMM dd yyyy h:mma'}}</option>
-                          </select>
-                          <select ng-if="isSchedule" class="form-control">
-                            <option>{{selectedSlot | date:'MMMM dd yyyy h:mma'}}</option>
-                          </select>
-                        </div>
+                          <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
+                          <li ng-show="!!searchError">{{searchError}}</li>
+                          <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
+                        </ul>
+                        <a href="javascript:void(0)" class="url-search-btn-small  ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+                      </div>
+                      <label class="text-block">Next Available Repost Time</label>
+                      <div class="form-group">
+                        <select class="form-control" ng-if="!isEdit && !isSchedule" ng-model="selectedSlot" ng-change="clickAvailableSlots(selectedSlot);">                       
+                          <option style="color:black;text:center;" ng-repeat="slot in listAvailableSlots"
+                          value="{{slot}}">{{slot.slotdate.toString().split(' ')[1] + ' ' +slot.slotdate.toString().split(' ')[2] + ' ' + slot.slotdate.toString().split(' ')[3]}} {{slot.slottime}}</option>
+                        </select>
+                        <select ng-if="isEdit" class="form-control">
+                          <option>{{selectedSlot | date:'MMMM dd yyyy h:mma'}}</option>
+                        </select>
+                         <select ng-if="isSchedule" class="form-control">
+                          <option>{{selectedSlot | date:'MMMM dd yyyy h:mma'}}</option>
+                        </select>
+                      </div>
                         <ul>
                           <li class="switch-btn">
                             <label class="switch">
                               <input checked="" type="checkbox" ng-model="unrepostEnable">
                               <div class="slider round"></div>
                             </label> 
-                            <label>Unrepost after<input  class="artistTools/reForReListsform-control input-hour" placeholder="1" ng-model="unrepostHours">hours</label>
+                            <label>Unrepost after<input  class="artistTools/reForReListsform-control input-hour" placeholder="24" ng-model="unrepostHours">hours</label>
                           </li>
                         </ul>
                         <br/>
@@ -454,12 +454,12 @@
                         <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
                           <li ng-show="searching && !searchError && searchSelection.length==0"><a href="#">One moment...</a></li>
                           <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
-                            <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
-                            <li ng-show="!!searchError">{{searchError}}</li>
-                            <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
-                          </ul>
-                          <a href="javascript:void(0)" class="link-add-btn" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
-                        </div>
+                          <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
+                          <li ng-show="!!searchError">{{searchError}}</li>
+                          <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
+                        </ul>
+                        <a href="javascript:void(0)" class="url-search-btn-small " ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+
                       </div>
                     </div>
                     <br>
@@ -519,11 +519,11 @@
                           <div class="col-md-12 text-left">
                             <li class="switch-btn" style="font-size: 10px;vertical-align: middle;
                             list-style: outside none none;">
-                            <label class="switch" style="vertical-align: top;">
-                              <input checked="" type="checkbox">
+                            <label class="switch" style="vertical-align: middle;">
+                              <input checked="" type="checkbox" ng-model="unrepostEnable">
                               <div class="slider round"></div>
                             </label> 
-                            <label>Unrepost after<input  class="form-control input-hour" placeholder="1" ng-model="unrepostHours">hours</label>
+                            <label>Unrepost after<input  class="form-control input-hour" style="color: #868686;" placeholder="24" ng-model="unrepostHours">hours</label>
                           </li>
                         </div>
                         <div class="col-xs-12" style="font-size:10px;" ng-show="linkedAccounts.length > 0">

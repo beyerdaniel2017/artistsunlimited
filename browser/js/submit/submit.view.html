@@ -35,12 +35,12 @@
 </style>
 <ng-include src="'js/home/views/navigation.html'" ng-if="!customizeSettings"></ng-include>
 <!-- Content Start  -->
-<div class="container">
+<div class="container" ng-show="!customizeSettings">
   <div class="row">
     <div class="col-md-12">
       <div class="content-area" ng-class="{bgwhite: !customizeSettings}">
         <div class="row">
-          <div class="col-md-12" ng-show="!customizeSettings">
+          <div class="col-md-12">
             <h1 class="bold text-center">Submission for Promotion</h1>
             <div class="internal-content">
             </br>
@@ -52,23 +52,16 @@
                   <p><span>If you are confident that your music has what it takes to be promoted to an audience of over 500,000 followers, as well as various record labels, talent agencies, and headliner DJs—consider presenting it to us.</span></p>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <form role="form" ng-submit="submit()">
-                  </br>
-                  <div class="row">
-                    <div class="col-sm-6 col-sm-offset-3 search">
-                      <scsearch kind='track' returnitem='choseTrack(item)'></scsearch>
-                    </div>
-                  </div>
-                    <!-- <br />
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <form role="form" ng-submit="submit()">
+                </br>
                 <div class="row">
-                  <div class="col-sm-6 col-sm-offset-3">
-                    <select class="form-control" ng-options="item for item in genreArray" ng-model="submission.genre" ng-init="submission.genre = null" required>
-                      <option value="" ng-disabled="!!submission.genre">--Select Genre--</option>
-                    </select>
+                  <div class="col-sm-6 col-sm-offset-3 search">
+                    <scsearch kind='track' returnitem='choseTrack(item)'></scsearch>
                   </div>
-                </div> -->
+                </div>
                 <br />
                 <div class="row">
                   <div class="col-sm-6 col-sm-offset-3">
@@ -103,10 +96,8 @@
   </div>
 </div>
 </div>
-</div>
-
-<div class="custom-settings" style="background-color:transparent !important;" ng-show="customizeSettings">
-  <div id="backgroundImage1" style="background-size:cover;background-image:url({{customizeSettings.background.images}}); filter: blur({{customizeSettings.background.blur}}px);-webkit-filter: blur({{customizeSettings.background.blur}}px);">
+<div class="custom-settings" style="background-color:transparent !important;"  ng-show="customizeSettings">
+  <div id="backgroundImage1" style="background-size:cover;background-image:url( {{customizeSettings.background.images}}); filter: blur({{customizeSettings.background.blur}}px);-webkit-filter: blur({{customizeSettings.background.blur}}px);">
   </div>
   <div id="rightpremierTemplate" class="col-md-12">
     <p class="text-center" style="color:{{customizeSettings.heading.style.fontColor}};
@@ -117,7 +108,8 @@
   </br>
   <div class="row">
     <div class="col-md-12">
-      <p class="text-center" style="color:{{customizeSettings.subHeading.style.fontColor}};font-size:{{customizeSettings.subHeading.style.fontSize}}px;font-weight:{{customizeSettings.subHeading.style.fontWeight}}" ng-bind-html="customizeSettings.subHeading.text"></p>
+      <p class="text-center" style="color:{{customizeSettings.subHeading.style.fontColor}};font-size:{{customizeSettings.subHeading.style.fontSize}}px;font-weight:{{customizeSettings.subHeading.style.fontWeight}}" ng-bind-html="customizeSettings.subHeading.text">
+      </p>
     </div>
   </div>
 </br>
@@ -134,49 +126,55 @@
     <div class="row">
       <div class="col-sm-6 col-sm-offset-3 search">
         <div class="search-suggetion">
-          <input class="form-control" type="text" placeholder="Song URL" ng-model="searchString"  required style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}"/>
+          <input class="form-control" type="text" placeholder="Track Search" 
+          ng-model="searchString" required style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}"/>
           <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
             <li ng-show="searching && !searchError && searchSelection.length==0"><a href="#">One moment...</a></li>
-            <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
+            <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track', 'custom')">
               <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
               <li ng-show="!!searchError">{{searchError}}</li>
               <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
             </ul>
-            <a href="#" class="link-add-btn" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+            <a href="javascript:void(0)" class="link-add-btn" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
           </div>
         </div>
       </div>
-                  <!-- </br>
-  <div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
-      <select ng-options="item for item in genreArray" ng-model="submission.genre" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" ng-init="submission.genre = null" required>
-        <option value="" ng-disabled="!!submission.genre">--Select Genre--</option>
-      </select>
+            <!-- </br>
+            <div class="row">
+              <div class="col-sm-6 col-sm-offset-3">
+                <select ng-options="item for item in genreArray" ng-model="submission.genre" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" ng-init="submission.genre = null" required>
+                  <option value="" ng-disabled="!!submission.genre">--Select Genre--</option>
+                </select>
+              </div>
+            </div> -->
+          </br>
+          <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+              <input type="text" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
+            </div>
+          </div>
+        </br>
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <input type="email" placeholder="Email" ng-model="submission.email" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px;border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
+          </div>
+        </div>
+      </br>
+      <div class="text-center">
+        <button class="btn btn-default" style="color:{{customizeSettings.button.style.fontColor}}; font-size:{{customizeSettings.button.style.fontSize}}px; background-color:{{customizeSettings.button.style.bgColor}};">{{customizeSettings.button.text}}</button>
+        <br/>
+        <br/>
+      </div>
+      <div class="text-center">
+        <div class="col-md-12 text-center">
+          <div id="scPlayerCustom" style="width:97%; position:relative; z-index:1;"></div>
+        </div>
+      </div>
     </div>
-  </div> -->
-</br>
-<div class="row">
-  <div class="col-sm-6 col-sm-offset-3">
-    <input type="text" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
-  </div>
-</div>
-</br>
-<div class="row">
-  <div class="col-sm-6 col-sm-offset-3">
-    <input type="email" placeholder="Email" ng-model="submission.email" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px;border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
-  </div>
-</div>
-</br>
-<div class="text-center">
-  <button class="btn btn-default" style="color:{{customizeSettings.button.style.fontColor}}; font-size:{{customizeSettings.button.style.fontSize}}px; background-color:{{customizeSettings.button.style.bgColor}};">{{customizeSettings.button.text}}</button>
-  <br/>
-  <br/>
-</div>
-</div>
-</form>
+  </form>
 </div>
 </div>
 </div>
 </div>
-
+</div>
 <ng-include src="'js/home/views/loader.html'"></ng-include>

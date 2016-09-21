@@ -41,6 +41,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   $scope.submission = {};
   $scope.customizeSettings = null;
   $scope.userID = $location.search().id;
+  $scope.searchString = "";
   // $scope.genreArray = [
   //   'Alternative Rock',
   //   'Ambient',
@@ -65,62 +66,13 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   //   'Vocalists/Singer-Songwriter'
   // ];
 
-  //search//
-  $scope.searchSelection = [];
-  $scope.changedSearch = function(kind) {
-    $scope.searchSelection = [];
-    $scope.searchError = undefined;
-    $scope.searching = true;
-    if ($scope.searchString != "") {
-      $http.post('/api/search', {
-        q: $scope.searchString,
-        kind: kind
-      }).then(function(res) {
-        $scope.searching = false;
-        if (res.data.item) {
-          if (res.data.item.kind != kind) {
-            $scope.serachError = "Please enter a " + kind + " URL.";
-          } else {
-            $scope.selectedItem(res.data.item);
-          }
-        } else {
-          if (res.data.collection.length > 0) {
-            $scope.searchSelection = res.data.collection;
-            $scope.searchSelection.forEach(function(item) {
-              $scope.setItemText(item)
-            })
-          } else {
-            $scope.searchError = "We could not find a " + kind + "."
-          }
-        }
-      }).then(null, function(err) {
-        $scope.searching = false;
-        console.log('We could not find a ' + kind);
-        $scope.searchError = "We could not find a " + kind + "."
-      });
-    }
-  }
-
-  $scope.setItemText = function(item) {
-    switch (item.kind) {
-      case 'track':
-        item.displayName = item.title + ' - ' + item.user.username;
-        break;
-      case 'playlist':
-        item.displayName = item.title + ' - ' + item.user.username;
-        break;
-      case 'user':
-        item.displayName = user.username;
-        break;
-    }
-  }
-
   $scope.choseTrack = function(track) {
     console.log(track);
     $scope.searchString = track.title;
     $scope.submission.trackID = track.id;
     $scope.submission.title = track.title;
     $scope.submission.trackURL = track.permalink_url
+      // var player = (type == "normal" ? document.getElementById('scPlayer') : document.getElementById('scPlayerCustom'))
     SC.oEmbed($scope.submission.trackURL, {
       element: document.getElementById('scPlayer'),
       auto_play: false,

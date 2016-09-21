@@ -1032,7 +1032,11 @@ select {
   cursor: pointer;
   vertical-align: middle;
   overflow: hidden;
-  margin: 0px; }
+  margin: 0px;
+  display: -moz-inline-flex;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex; }
 
 .column-day:last-child {
   border-right: 1px solid #d2d2d2; }
@@ -1080,7 +1084,7 @@ select {
 .label-scheduler {
   text-transform: uppercase;
   font-size: 1.5em;
-  letter-spacing: 3px; }
+  letter-spacing: 2px; }
 
 .label-smaller {
   font-size: 1.25em; }
@@ -1822,7 +1826,6 @@ h3 {
 
 .left-menus ul li {
   padding: 0px 0px;
-  /* background-color: #ECECEC; */
   margin: 2px 0;
   border-right: 2px solid #fff; }
 
@@ -1831,7 +1834,8 @@ h3 {
   font-weight: normal;
   font-size: 10px;
   letter-spacing: 2px;
-  padding: 20px 0px; }
+  padding: 20px;
+  margin: 0; }
 
 .left-menus ul li a:hover {
   background: none; }
@@ -3434,6 +3438,15 @@ label:hover:before {
 
 /*Login Admin css ::end*/
 /*reforRelist css::start*/
+.left-side .tropical:active,
+.left-side .tropical:focus,
+.left-side .tropical:hover,
+.left-side .tropical:visited {
+  background-color: transparent; }
+
+.left-side .tropical.active {
+  background: #F8F8F8; }
+
 .tropical:active,
 .tropical:focus,
 .tropical:hover,
@@ -3862,7 +3875,7 @@ td {
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
-  height: 20.7px;
+  /*height: 20.7px;*/
   padding: 3px; }
 
 .calendar-grid {
@@ -4051,6 +4064,37 @@ td {
 .vertical-text {
   margin: 10px 0; }
 
+.price-input-box {
+  border-radius: 10px;
+  border: 1px solid #999999;
+  padding: 7px;
+  margin-left: 0;
+  width: 70px;
+  text-align: center; }
+
+.account-vertical-container {
+  border-bottom: 1px solid #cccccc;
+  padding: 10px 0; }
+
+.account-vertical-container ul {
+  list-style: outside none none;
+  padding: 0px;
+  margin: 0px; }
+
+.account-vertical-container li {
+  width: 24.33333%;
+  display: inline-block;
+  vertical-align: middle; }
+
+.account-vertical-container li:first-child {
+  width: 11%; }
+
+.account-vertical-container li:nth-child(2) {
+  width: 38%; }
+
+.account-vertical-container li > .list-img-container img {
+  height: 115px; }
+
 /*** 17-9-2016 ***/
 /******************************** Media CSS :: START ************************************/
 @media screen and (max-width: 1280px) {
@@ -4158,7 +4202,14 @@ td {
     padding: 10px 23px; }
   .admin-ui-tabs > li {
     width: 100%;
-    padding: 10px 0; } }
+    padding: 10px 0; }
+  .account-vertical-container li {
+    width: 100%;
+    text-align: center; }
+  .account-vertical-container li:first-child {
+    width: 100%; }
+  .account-vertical-container li:nth-child(2) {
+    width: 100%; } }
 
 @media screen and (max-width: 667px) {
   .img-btn {

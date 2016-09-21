@@ -116,8 +116,8 @@
                                                 <td class="text-left">{{item.event.title}}</td>
                                                 <td class="text-left">{{trade.p1.user.soundcloud.username}}</td>
                                                 <td class="text-left">{{getUnrepostDate(item)}}</td>
-                                                <td>
-                                                    <button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">{{item.event.type}}</button>
+                                                <td>{{item.event.type}}
+                                                    <!-- <button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">{{item.event.type}}</button> -->
                                                 </td>
                                                 <td class="text-left">
                                                     <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event">View</a>
@@ -167,9 +167,7 @@
                                             <td class="text-left">{{item.event.title}}</td>
                                             <td class="text-left">{{trade.p2.user.soundcloud.username}}</td>
                                             <td class="text-left">{{getUnrepostDate(item)}}</td>
-                                            <td>
-                                                <button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">{{item.event.type}}</button>
-                                            </td>
+                                            <td>{{item.event.type}}</td>
                                             <td class="text-left">
                                                 <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event">View</a>
                                                 <a href="javascript:void(0)" style="color:#FF7676" ng-if="!item.event">Schedule</a> -->
@@ -287,26 +285,3 @@
         </div>
     </div>
 </div>
-<script>
-setTimeout(function(){
-
-    $(document).ready(function(){
-      FB.init({
-          appId: '1576897469267996',
-          xfbml: true,
-          version: 'v2.7'
-      });
-
-(function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) {
-              return;
-          }
-    js = d.createElement(s);
-    js.id = id;
-          js.src = "//connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-    })
-},200);
-</script>
