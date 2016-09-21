@@ -67,7 +67,6 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   // ];
 
   $scope.choseTrack = function(track) {
-    console.log(track);
     $scope.searchString = track.title;
     $scope.submission.trackID = track.id;
     $scope.submission.title = track.title;
@@ -78,7 +77,19 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
       maxheight: 150
     })
     document.getElementById('scPlayer').style.visibility = "visible";
-    $scope.processing = false;
+  }
+
+  $scope.choseTrack1 = function(track) {
+    $scope.searchString = track.title;
+    $scope.submission.trackID = track.id;
+    $scope.submission.title = track.title;
+    $scope.submission.trackURL = track.permalink_url;
+    SC.oEmbed($scope.submission.trackURL, {
+      element: document.getElementById('scPlayerCustom'),
+      auto_play: false,
+      maxheight: 150
+    })
+    document.getElementById('scPlayerCustom').style.visibility = "visible";
   }
 
   // $scope.urlChange = function() {
