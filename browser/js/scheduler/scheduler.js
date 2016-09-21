@@ -12,8 +12,8 @@ app.config(function($stateProvider) {
         return $http.get('/api/users/getUserPaidRepostAccounts')
           .then(function(res) {
             if (res.data.length > 0) {
-              var PaidUserId = SessionService.getActionsfoAccountIndex();
-              if (res.data[0] != undefined && PaidUserId == null) {
+            var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+            if(res.data[0]!=undefined && (PaidUserId==null || PaidUserId==undefined || PaidUserId=="undefined")){
                 SessionService.addActionsfoAccount('BehalfUser', res.data[0]._id, res.data[0].soundcloud.id);
                 SessionService.setUserPaidRepostAccounts(res.data[0]);
               }
@@ -25,9 +25,10 @@ app.config(function($stateProvider) {
             return;
           })
       },
-      events: function($http, paidReposts) {
+      events: function($http, paidReposts, SessionService) {       
         if (paidReposts.length > 0) {
-          return $http.get('/api/events/forUser/' + paidReposts[0].soundcloud.id)
+          var soundcloudId = SessionService.getSoundCloudId();
+          return $http.get('/api/events/forUser/' + soundcloudId)
             .then(function(res) {
               return res.data;
             })
@@ -35,7 +36,8 @@ app.config(function($stateProvider) {
               $.Zebra_Dialog("error getting your events");
               return;
             })
-        } else {
+        }   
+        else{
           return [];
         }
       }
@@ -51,30 +53,23 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   $scope.admin = SessionService.getUser();
   $scope.searchString = "";
   var formActions = SessionService.getActionsfoAccount();
-  var PaidUserId = SessionService.getActionsfoAccountIndex();
+  var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
   var soundcloudId = SessionService.getSoundCloudId();
   $scope.paidUsers = [];
-  var i = -1;
-  var nextFun = function() {
-    i++;
-    if (i < paidReposts.length) {
-      var pdata = paidReposts[i];
-      $scope.paidUsers.push(pdata);
-      nextFun();
-    } else {
-      return $scope.paidUsers;
-    }
-  }
-  nextFun();
+  paidReposts.forEach(function(pr){
+    $scope.paidUsers.push(pr);
+  })
 
-  if (PaidUserId != undefined && formActions != undefined && $scope.paidUsers.length > 0 && soundcloudId != undefined) {
-    $http.get('/api/events/forUser/' + soundcloudId, function(error, res) {
-      if (res) {
-        events = [];
-        events = res.data;
-      }
-    });
-  } else if (PaidUserId == undefined && formActions == undefined && $scope.paidUsers.length > 0) {
+  // if(PaidUserId!=undefined && formActions!=undefined && $scope.paidUsers.length>0 && soundcloudId!=undefined){
+  //   $http.get('/api/events/forUser/' + soundcloudId,function(error,res){
+  //     if(res){
+  //       events = [];
+  //       events = res.data;
+  //     }
+  //   });
+  // }
+  // else
+  if(PaidUserId==undefined && formActions==undefined && $scope.paidUsers.length>0){
     PaidUserId = $scope.paidUsers[0]._id;
   }
 
@@ -124,7 +119,12 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   $scope.selectedSlot = {};
   $scope.unrepostHours = 24;
   var commentIndex = 0;
-  $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
+  $scope.eventComment = ($scope.user.repostSettings!=undefined ? 
+      (
+        $scope.user.repostSettings.schedule && 
+        $scope.user.repostSettings.schedule.comments && 
+        $scope.user.repostSettings.schedule.comments.length > 0
+       ? $scope.user.repostSettings.schedule.comments[0] : '') : '');
   var defaultAvailableSlots = {
     sunday: [],
     monday: [],
@@ -153,9 +153,9 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
   $scope.getLinkedAccounts = function() {
     setTimeout(function() {
-      var linked = $rootScope.userlinkedAccounts;
+      var linked = $rootScope.userlinkedAccounts ? $rootScope.userlinkedAccounts:[];
       for (var i = 0; i < linked.length; i++) {
-        if (linked[i]._id != $scope.user._id) {
+        if (linked[i]!=undefined && linked[i]._id != $scope.user._id) {
           $scope.linkedAccounts.push(linked[i]);
         }
       }
@@ -243,20 +243,43 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     });
   }
 
-  $scope.saveComments = function(value, type) {
+  $scope.saveComments = function(value, type,index) {
+
     var comments = [];
-    if (type == 'schedule') {
+    if (type == 'schedule' && value) {
       comments = ($scope.user.repostSettings.schedule.comments ? $scope.user.repostSettings.schedule.comments : []);
+      if(index==undefined)
       comments.push(value);
+      else
+        comments[index] = value;
+
       $scope.user.repostSettings.schedule.comments = comments;
       $scope.saveRepostSettings();
       $scope.scheduleComment = "";
-    } else if (type == 'trade') {
+    } else if (type == 'trade' && value) {
       comments = ($scope.user.repostSettings.trade.comments ? $scope.user.repostSettings.trade.comments : []);
+      if(index==undefined)
       comments.push(value);
+      else
+        comments[index] = value;
       $scope.user.repostSettings.trade.comments = comments;
-      $scope.tradeComment = "";
       $scope.saveRepostSettings();
+      $scope.tradeComment = "";
+    }
+    else{
+      $.Zebra_Dialog("Please enter comment");
+      return;
+    }
+  }
+
+  $scope.editComments = function(comment, type,index) {
+    $scope.scheduleCommentIndex=index;
+    if (type == 'schedule') {
+      $('#scheduleCommentModal').modal('show');      
+      $scope.scheduleComment = comment;
+    } else if (type == 'trade') {
+      $('#tradeCommentModal').modal('show');
+      $scope.tradeComment = comment;
     }
   }
 
@@ -323,12 +346,11 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     $scope.makeEventURL = "";
     $scope.searchStringVal = {};
     $scope.searchStringVal.searchSelection = [];
-
     $scope.searchStringVal.unrepostHours = "24";
     $scope.makeEvent = {};
     $scope.submission = {};
     $scope.searchStringVal.timeGap = "";
-    $scope.searchStringVal.eventComment = $scope.user.repostSettings.schedule.comments.length ? $scope.user.repostSettings.schedule.comments[0] : "";
+    $scope.searchStringVal.eventComment = $scope.user.repostSettings ? ($scope.user.repostSettings.schedule.comments.length ? $scope.user.repostSettings.schedule.comments[0] : "") : "";
     $scope.searchStringVal.channelArr = [];
     $scope.searchStringVal.selectedSlot = "";
     var hour = ConvertStringTimeToUTC();
@@ -357,17 +379,21 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
       }).then(function(res) {
         $scope.searchStringVal.searching = false;
         if (res.data.item) {
-
           if (res.data.item.kind != kind) {
             $scope.searchStringVal.serachError = "Please enter a " + kind + " URL.";
           } else {
             $scope.selectedItem(res.data.item);
           }
         } else {
+          if(res.data.collection.length > 0){
           $scope.searchStringVal.searchSelection = res.data.collection;
           $scope.searchStringVal.searchSelection.forEach(function(item) {
             $scope.setItemText(item)
           })
+        }
+          else{
+            $scope.searchError = "We could not find a " + kind + "."
+          }
         }
       }).then(null, function(err) {
         $scope.searchStringVal.searching = false;
@@ -484,7 +510,8 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   }
 
   $scope.isSchedule = false;
-  $scope.scheduleSong = function(item) {
+  $scope.scheduleSong = function(item)
+  {
     console.log(item);
     document.getElementById('scPlayer').style.visibility = "hidden";
     $scope.isSchedule = true;

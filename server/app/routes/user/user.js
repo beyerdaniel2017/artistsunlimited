@@ -34,6 +34,16 @@ router.get('/byId/:id', function(req, res, next) {
     }).then(null, next)
 });
 
+router.get('/bySoundcloudID/:id', function(req, res, next) {
+  User.findOne({
+    'soundcloud.id': parseInt(req.params.id)
+  }).exec()
+    .then(function(user) {
+      //if (user.soundcloud.token) user.soundcloud.token = undefined;
+      res.send(user);
+    }).then(null, next)
+});
+
 router.post('/withIDs', function(req, res, next) {
   User.find({
       _id: {

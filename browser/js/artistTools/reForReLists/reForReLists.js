@@ -592,61 +592,6 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
     $scope.showOverlay = false;
   }
 
-  $scope.changeURL = function() {
-    if ($scope.makeEvent.url) {
-      $scope.processing = true;
-      var player = (($scope.popup == false) ? document.getElementById('scPlayer') : document.getElementById('scPopupPlayer'));
-      $http.post('/api/soundcloud/resolve', {
-          url: $scope.makeEventURL
-        })
-        .then(function(res) {
-          if (!$scope.makeEvent) {
-            $scope.makeEvent = {};
-          }
-          $scope.makeEvent.type = "track";
-          $scope.trackArtistID = res.data.user.id;
-          $scope.trackType = res.data.kind;
-          if (res.data.kind != "playlist") {
-            if (res.data.user.id != $scope.user.soundcloud.id) {
-              $scope.makeEvent.trackID = res.data.id;
-              $scope.makeEvent.title = res.data.title;
-              $scope.makeEvent.trackURL = res.data.trackURL;
-              $scope.makeEvent.trackArtUrl = res.data.artwork_url;
-              if (res.data.user) {
-                $scope.makeEvent.artistName = res.data.user.username;
-              }
-
-              SC.oEmbed($scope.makeEventURL, {
-                element: player,
-                auto_play: false,
-                maxheight: 150
-              })
-              if ($scope.popup == false) {
-                player.style.visibility = "visible";
-              } else {
-                player.style.visibility = "visible";
-              }
-              $scope.notFound = false;
-              $scope.processing = false;
-            } else {
-              $scope.notFound = false;
-              $scope.processing = false;
-              $.Zebra_Dialog("You cannot repost your own track.");
-            }
-          } else {
-            $scope.notFound = false;
-            $scope.processing = false;
-            $.Zebra_Dialog("Sorry! We don't allow scheduling playlists here. Please enter a track url instead.");
-          }
-        }).then(null, function(err) {
-          $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
-          player.style.visibility = "hidden";
-          $scope.notFound = true;
-          $scope.processing = false;
-        });
-    }
-  }
-
   $scope.saveEvent = function() {
     var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
       .then(function(res) {
@@ -676,134 +621,56 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
       });
   }
 
-  //search//
-  $scope.searchSelection = [];
-  $scope.changedSearch = function(kind) {
-    $scope.searchSelection = [];
-    $scope.searchError = undefined;
-    $scope.searching = true;
-    if ($scope.searchString != "") {
-      $http.post('/api/search', {
-        q: $scope.searchString,
-        kind: kind
-      }).then(function(res) {
-        $scope.searching = false;
-        if (res.data.item) {
-          if (res.data.item.kind != kind) {
-            $scope.serachError = "Please enter a " + kind + " URL.";
-          } else {
-            $scope.selectedItem(res.data.item);
-          }
-        } else {
-          if (res.data.collection.length > 0) {
-            $scope.searchSelection = res.data.collection;
-            $scope.searchSelection.forEach(function(item) {
-              $scope.setItemText(item)
+  $scope.choseArtist = function(user) {
+    console.log('user')
+    // $scope.searchString = track.title;
+    // $scope.makeEvent.trackID = track.id;
+    // $scope.makeEvent.title = track.title;
+    // $scope.makeEvent.trackURL = track.permalink_url;
+    // $scope.makeEvent.trackArtUrl = track.artwork_url;
+    // SC.oEmbed( $scope.makeEvent.trackURL, {
+    //   element: document.getElementById('scPopupPlayer'),
+    //   auto_play: false,
+    //   maxheight: 150
+    // })
+    // document.getElementById('scPopupPlayer').style.visibility = "visible";
+  }
+
+  $scope.choseTrack = function(track) {
+    $scope.searchString = track.title;
+    $scope.makeEvent.trackID = track.id;
+    $scope.makeEvent.title = track.title;
+    $scope.makeEvent.trackURL = track.permalink_url;
+    $scope.makeEvent.trackArtUrl = track.artwork_url;
+    SC.oEmbed( $scope.makeEvent.trackURL, {
+      element: document.getElementById('scPopupPlayer'),
+      auto_play: false,
+      maxheight: 150
+    })
+    document.getElementById('scPopupPlayer').style.visibility = "visible";
+  }
+
+  $scope.choseTrack1 = function(track) {
+    $scope.searchString = track.title;
+    $scope.makeEvent.trackID = track.id;
+    $scope.makeEvent.title = track.title;
+    $scope.makeEvent.trackURL = track.permalink_url;
+    $scope.makeEvent.trackArtUrl = track.artwork_url;
+    SC.oEmbed( $scope.makeEvent.trackURL, {
+      element: document.getElementById('scPlayer'),
+      auto_play: false,
+      maxheight: 150
             })
-          } else {
-            $scope.searchError = "We could not find a " + kind + "."
-          }
-        }
-      }).then(null, function(err) {
-        $scope.searching = false;
-        $scope.searchError = "We could not find a " + kind + "."
-      });
-    }
+    document.getElementById('scPlayer').style.visibility = "visible";
   }
 
-  $scope.setItemText = function(item) {
-    switch (item.kind) {
-      case 'track':
-        item.displayName = item.title + ' - ' + item.user.username;
-        break;
-      case 'playlist':
-        item.displayName = item.title + ' - ' + item.user.username;
-        break;
-      case 'user':
-        item.displayName = item.username;
-        break;
-    }
-  }
-
-  $scope.selectedItem = function(item) {
-    $scope.searchSelection = [];
-    $scope.searchError = undefined;
-    $scope.searchString = "";
-    $scope.searchString = item.permalink_url;
-    $scope.searchURL = item.permalink_url;
-    $scope.sendSearch();
-  }
-
-  $scope.changedSearchSlot = function(kind) {
-    $scope.searchSelection = [];
-    $scope.searchError = undefined;
-    $scope.searching = true;
-    if ($scope.searchString != "") {
-      $http.post('/api/search', {
-        q: $scope.searchString,
-        kind: kind
-      }).then(function(res) {
-        $scope.searching = false;
-        if (res.data.item) {
-          if (res.data.item.kind != kind) {
-            $scope.serachError = "Please enter a " + kind + " URL.";
-          } else {
-            $scope.selectedItem(res.data.item);
-          }
-        } else {
-          if (res.data.collection.length > 0) {
-            $scope.searchSelection = res.data.collection;
-            $scope.searchSelection.forEach(function(item) {
-              $scope.setItemText(item)
-            })
-          } else {
-            $scope.searchError = "We could not find a " + kind + "."
-          }
-        }
-      }).then(null, function(err) {
-        $scope.searching = false;
-        $scope.searchError = "We could not find a " + kind + "."
-      });
-    }
-  }
-
-  $scope.setItemTextSlot = function(item) {
-    switch (item.kind) {
-      case 'track':
-        item.displayName = item.title + ' - ' + item.user.username;
-        break;
-      case 'playlist':
-        item.displayName = item.title + ' - ' + item.user.username;
-        break;
-      case 'user':
-        item.displayName = item.username;
-        break;
-    }
-  }
-
-  $scope.selectedItemSlot = function(item) {
-      $scope.searchSelection = [];
-      $scope.searchError = undefined;
-      $scope.searchString = "";
-      $scope.searchString = item.permalink_url;
-      $scope.makeEvent.trackID = item.id;
-      $scope.makeEvent.title = item.title;
-      $scope.makeEvent.trackURL = item.permalink_url;
-      $scope.makeEvent.trackArtUrl = item.artwork_url;
-      var player = (($scope.popup == false) ? document.getElementById('scPlayer') : document.getElementById('scPopupPlayer'));
-      SC.oEmbed(item.permalink_url, {
-        element: player,
-        auto_play: false,
-        maxheight: 150
-      })
-    }
-    //end search//
 
   $scope.editRepostEvent = function(data) {
     if (data.trackInfo) {
       $scope.manageView = "newsong";
       document.getElementById('scPlayer').style.visibility = "hidden";
       document.getElementById('scPlayer').innerHTML = "";
+      var day = new Date(data.trackInfo.day);
       $scope.makeEvent = {};
       $scope.makeEvent._id = data.trackInfo._id;
       $scope.makeEvent.day = new Date(data.trackInfo.day);

@@ -9,7 +9,6 @@ function doPoolSent() {
     doPoolSent();
   }, 300000);
   var currentDate = new Date(); 
-  currentDate.setDate(new Date(currentDate).getDate() - 2);
   Submission.find({
     $where: "this.pooledChannelIDS.length > 0",
     pooledSendDate: {

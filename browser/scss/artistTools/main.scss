@@ -172,7 +172,6 @@ select {
     margin: 10px auto;
 }
 .label-scheduler {
-    text-transform: uppercase;
     font-size: 1.5em;
     letter-spacing: 2px;
 }
@@ -2160,6 +2159,8 @@ input:checked + .slider:before {
 }
 .channel-masege {
     border-bottom: 1px solid rgb(216, 216, 216);
+    height: 40px;
+    overflow: auto;   
     /*padding: 10px 0px 0px 24px;
     border-bottom: 1px solid #d8d8d8;
     padding: 10px 0px 0px 24px;

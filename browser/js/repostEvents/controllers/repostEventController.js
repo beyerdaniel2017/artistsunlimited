@@ -49,11 +49,11 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
       return {}
     } else if (repostEvent.trackInfo.type == 'track' || repostEvent.trackInfo.type == 'queue') {
       return {
-        'background-color': '#67f967'
+        'background-color': '#FF0000'
       }
     } else if (repostEvent.trackInfo.type == 'traded') {
       return {
-        'background-color': '#FFDA97'
+        'background-color': '#FF6347'
       }
     } else if (repostEvent.trackInfo.type == 'paid') {
       return {

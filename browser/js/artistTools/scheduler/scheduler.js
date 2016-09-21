@@ -115,79 +115,42 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     });
   }
 
-    //search//
-  $scope.searchSelection = [];
-  $scope.changedSearch = function(kind) {
-    $scope.searchSelection = [];
-    $scope.searchError = undefined;
-    $scope.searching = true;
-    if ($scope.makeEventURL != "") {
-      $http.post('/api/search', {
-        q: $scope.makeEventURL,
-        kind: kind
-      }).then(function(res) {
-        $scope.searching = false;
-        if (res.data.item) {
-          if (res.data.item.kind != kind) {
-            $scope.serachError = "Please enter a " + kind + " URL.";
-          } else {
-            $scope.selectedItem(res.data.item);
-          }
-        } else {
-          if(res.data.collection.length > 0){
-            $scope.searchSelection = res.data.collection;
-            $scope.searchSelection.forEach(function(item) {
-              $scope.setItemText(item)
-            })
+  $scope.setRepostHours = function(){
+    if($scope.unrepostEnable){
+      $scope.unrepostHours = "24";
           }
           else{
-            $scope.searchError = "We could not find a " + kind + "."
-          } 
-        }
-      }).then(null, function(err) {
-        $scope.searching = false;
-        console.log(err)
-        console.log('We could not find a ' + kind);
-        $scope.searchError = "We could not find a " + kind + "."
-      });
+      $scope.unrepostHours = "";
     }
   }
 
-  $scope.setItemText = function(item) {
-    switch (item.kind) {
-      case 'track':
-        item.displayName = item.title + ' - ' + item.user.username;
-        break;
-      case 'playlist':
-        item.displayName = item.title + ' - ' + item.user.username;
-        break;
-      case 'user':
-        item.displayName = user.username;
-        break;
-    }
-  }
-
-  $scope.selectedItem = function(item) {
-    var player = document.getElementById('scPopupPlayer');
-    if($scope.tabSelected == false){
-      player = document.getElementById('scPlayer');
-    }
-    $scope.searchSelection = [];
-    $scope.searchError = undefined;
-    $scope.searchString = item.title;
-    $scope.makeEventURL = item.title;
-    $scope.makeEvent.trackID = item.id;
-    $scope.makeEvent.title = item.title;
-    $scope.makeEvent.trackURL = item.permalink_url
-    SC.oEmbed($scope.makeEvent.trackURL, {
-      element: player,
+  $scope.choseTrack = function(track) {
+    $scope.searchString = track.title;
+    $scope.makeEventURL = track.permalink_url;
+    $scope.makeEvent.trackID = track.id;
+    $scope.makeEvent.title = track.title;
+    $scope.makeEvent.trackURL = track.permalink_url
+    SC.oEmbed( $scope.makeEvent.trackURL, {
+      element: document.getElementById('scPlayer'),
       auto_play: false,
       maxheight: 150
     })
-    player.style.visibility = "visible";
-    $scope.processing = false;
+    document.getElementById('scPlayer').style.visibility = "visible";
   }
-  //end search//
+
+  $scope.choseTrack1 = function(track) {
+    $scope.searchString = track.title;
+    $scope.makeEventURL = track.permalink_url;
+    $scope.makeEvent.trackID = track.id;
+    $scope.makeEvent.title = track.title;
+    $scope.makeEvent.trackURL = track.permalink_url
+    SC.oEmbed($scope.makeEvent.trackURL, {
+      element: document.getElementById('scPopupPlayer'),
+      auto_play: false,
+      maxheight: 150
+    })
+    document.getElementById('scPopupPlayer').style.visibility = "visible";
+  }
 
   $scope.linkedAccounts = [];
   /*Get Linked Accounts*/
@@ -212,6 +175,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       } else {
         $scope.disable = false;
         $scope.commentEvent = true;
+        $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
         $scope.commentSrc = 'assets/images/comment.png';
       }
     }
@@ -378,7 +342,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.tabSelected = false;
     $scope.makeEventURL = "";
     $scope.makeEvent = {};
-    $scope.unrepostHours = 24;
+    $scope.unrepostHours = "";
     $scope.timeGap = "";
     $scope.eventComment = "";
     $scope.channelArr = [];
@@ -728,12 +692,13 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     var calendarDay = $scope.calendar.find(function(calD) {
       return calD.day.toLocaleDateString() == day.toLocaleDateString();
     });
+
     document.getElementById('scPopupPlayer').style.visibility = "hidden";
     document.getElementById('scPopupPlayer').innerHTML = "";
     $scope.makeEventURL = "";
     $scope.trackListSlotObj = undefined;
     $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
-    $scope.unrepostHours = 24;
+    $scope.unrepostHours = "";
     $scope.updateReach();
     if ($scope.makeEvent.type == "empty") {
       makeDay = new Date(day);
@@ -760,9 +725,12 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         }
         $scope.channelArr = $scope.editChannelArr;
       }
-      $scope.unrepostHours = data.unrepostHours;
       $scope.timeGap = data.timeGap;
       $scope.followersCount();
+      var repostDate = new Date($scope.makeEvent.day);
+      var unrepostDate = new Date($scope.makeEvent.unrepostDate);
+      var diff = Math.abs(new Date(unrepostDate).getTime() - new Date(repostDate).getTime())/ 3600000;
+      $scope.makeEvent.unrepostHours = diff; 
       $scope.makeEvent.day = new Date($scope.makeEvent.day);
       $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
       $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
@@ -773,6 +741,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         maxheight: 150
       });
       $scope.newEvent = false;
+      document.getElementById('scPopupPlayer').style.visibility = "visible";
     }
   }
 
@@ -1132,7 +1101,9 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       }
     } else if (event.type == 'traded') {
       return {
-        'background-color': '#FF6347'
+        'background-color': '#FF6347',
+        'margin' : '2px',
+        'height' : '19px'
       }
     } else if (event.type == 'paid') {
       return {

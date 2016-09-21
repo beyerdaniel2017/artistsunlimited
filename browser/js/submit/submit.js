@@ -71,8 +71,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     $scope.searchString = track.title;
     $scope.submission.trackID = track.id;
     $scope.submission.title = track.title;
-    $scope.submission.trackURL = track.permalink_url
-      // var player = (type == "normal" ? document.getElementById('scPlayer') : document.getElementById('scPlayerCustom'))
+    $scope.submission.trackURL = track.permalink_url;
     SC.oEmbed($scope.submission.trackURL, {
       element: document.getElementById('scPlayer'),
       auto_play: false,
@@ -139,7 +138,9 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
           $scope.processing = false;
           $scope.notFound = false;
           $scope.submission = {};
+        $scope.searchString = "";
           document.getElementById('scPlayer').style.visibility = "hidden";
+        document.getElementById('scPlayerCustom').style.visibility = "hidden";
           $scope.url = "";
         })
         .then(null, function(err) {

@@ -119,9 +119,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
           d.selectedChannelName = [];
           d.selectedChannelIDS = [];
           d.selectedGroups = [];
-          var pooldate = new Date(d.pooledSendDate);
-          pooldate.setDate(pooldate.getDate() + 2); 
-          d.pooledSendDate = new Date(pooldate);
+          d.pooledSendDate = new Date(d.pooledSendDate);
           $scope.marketSubmissions.push(d)
         });
       }

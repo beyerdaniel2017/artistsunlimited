@@ -126,7 +126,7 @@
                           <div ng-repeat="i in ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16', '17', '18', '19', '20', '21', '22', '23']" class="cell-time bold">{{i}}</div>
                         </div>   
                         <div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">                        
-                          <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="setSlotStyle(l,p)" class="row-scheduler" ng-click="clickedSlotsave(l, p)" style="position:relative;">
+                    <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="setSlotStyle(l,p)" class="row-scheduler" ng-click="clickedSlotsave(l, p)" style="position:relative; border-width:1px 1px 1px 1px;">
                           </div>
                         </div>
                       </div>
@@ -271,17 +271,7 @@
                   <div class="row">                
                     <h1 class="title">AVAILABLE SLOT</h1>               
                     <div class="col-md-6 col-xs-12 search">
-                      <div class="search-suggetion">
-                        <input class="form-control" type="text" placeholder="Song URL" ng-model="makeEventURL"  required/>
-                        <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
-                          <li ng-show="searching && !searchError && searchSelection.length==0"><a href="#">One moment...</a></li>
-                          <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
-                          <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
-                          <li ng-show="!!searchError">{{searchError}}</li>
-                          <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
-                        </ul>
-                        <a href="javascript:void(0)" class="url-search-btn-small  ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
-                      </div>
+                      <scsearch kind='track' returnitem='choseTrack(item)'></scsearch>
                       <label class="text-block">Next Available Repost Time</label>
                       <div class="form-group">
                         <select class="form-control" ng-if="!isEdit && !isSchedule" ng-model="selectedSlot" ng-change="clickAvailableSlots(selectedSlot);">                       
@@ -289,28 +279,28 @@
                           value="{{slot}}">{{slot.slotdate.toString().split(' ')[1] + ' ' +slot.slotdate.toString().split(' ')[2] + ' ' + slot.slotdate.toString().split(' ')[3]}} {{slot.slottime}}</option>
                         </select>
                         <select ng-if="isEdit" class="form-control">
-                          <option>{{selectedSlot | date:'MMMM dd yyyy h:mma'}}</option>
+                          <option>{{selectedSlot | date:'EEE MM/dd h:mma'}}</option>
                         </select>
                          <select ng-if="isSchedule" class="form-control">
-                          <option>{{selectedSlot | date:'MMMM dd yyyy h:mma'}}</option>
+                          <option>{{selectedSlot | date:'EEE MM/dd h:mma'}}</option>
                         </select>
                       </div>
                         <ul>
                           <li class="switch-btn">
                             <label class="switch">
-                              <input checked="" type="checkbox" ng-model="unrepostEnable">
+                              <input checked="" type="checkbox" ng-model="unrepostEnable" ng-click="setRepostHours()">
                               <div class="slider round"></div>
                             </label> 
-                            <label>Unrepost after<input  class="artistTools/reForReListsform-control input-hour" placeholder="24" ng-model="unrepostHours">hours</label>
+                            <label>Unrepost after<input  class="form-control input-hour text-center" placeholder="24" ng-model="unrepostHours">hours</label>
                           </li>
                         </ul>
                         <br/>
                         <div class="form-group" ng-show="linkedAccounts.length > 0"  ng-if="!isEdit && !isSchedule">
                           <div class="col-xs-12">
-                            <label>Time between reposts:</label>
+                            <label>Time between reposts:
                             <select class="form-control input-hour" ng-model="timeGap">
                               <option ng-repeat="n in [0,1,2,3,4,5,6,7,8,9,10,11,12]" value="{{n}}">{{n}}</option>
-                            </select> hours
+                            </select> hours</label>
                           </div>
                         </div>
                         <div class="form-group" ng-show="linkedAccounts.length > 0"  ng-if="isEdit || isSchedule">
@@ -449,27 +439,13 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12 search">
-                      <div class="search-suggetion">
-                        <input class="form-control" type="text" placeholder="Song URL" ng-model="makeEventURL"  required/>
-                        <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
-                          <li ng-show="searching && !searchError && searchSelection.length==0"><a href="#">One moment...</a></li>
-                          <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
-                          <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
-                          <li ng-show="!!searchError">{{searchError}}</li>
-                          <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
-                        </ul>
-                        <a href="javascript:void(0)" class="url-search-btn-small " ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
-
+                      <scsearch kind='track' returnitem='choseTrack1(item)'></scsearch>
                       </div>
                     </div>
                     <br>
                     <div class="row">
                       <div class="col-md-12 col-xs-12">   
-                        <span>{{makeEvent.day | date:'MMMM dd yyyy h:mma'}}</span>
-                        <!-- <select class="form-control" ng-model="selectedSlot" ng-change="clickAvailableSlots(selectedSlot);">                       
-                          <option style="color:black;text:center;" ng-repeat="slot in listAvailableSlots"
-                            value="{{slot}}">{{slot.slotdate.toString().split(' ')[1] + ' ' +slot.slotdate.toString().split(' ')[2] + ' ' + slot.slotdate.toString().split(' ')[3]}} {{slot.slottime}}</option>
-                          </select> -->
+                      <span>{{makeEvent.day | date:'EEE MM/dd h:mma'}}</span>
                         </div>
                       </div>
                       <div class="row">
@@ -520,17 +496,17 @@
                             <li class="switch-btn" style="font-size: 10px;vertical-align: middle;
                             list-style: outside none none;">
                             <label class="switch" style="vertical-align: middle;">
-                              <input checked="" type="checkbox" ng-model="unrepostEnable">
+                          <input checked="" type="checkbox" ng-model="unrepostEnable" ng-click="setRepostHours()">
                               <div class="slider round"></div>
                             </label> 
                             <label>Unrepost after<input  class="form-control input-hour" style="color: #868686;" placeholder="24" ng-model="unrepostHours">hours</label>
                           </li>
                         </div>
                         <div class="col-xs-12" style="font-size:10px;" ng-show="linkedAccounts.length > 0">
-                          <label>Time between reposts:</label>
+                      <label>Time between reposts:
                           <select class="form-control input-hour" ng-model="timeGap">
                             <option ng-repeat="n in [0,1,2,3,4,5,6,7,8,9,10,11,12]" value="{{n}}">{{n}}</option>
-                          </select> hours
+                      </select> hours</label>
                         </div>
                       </div>
                       <div class="row">
@@ -559,7 +535,7 @@
                           <div class="channel-check">
                             <textarea class="form-control" ng-disabled="disable" ng-model="eventComment">{{comment}}</textarea>
                           </div>
-                          <div class="next-previous">
+                            <div>
                             <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
                             <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
                           </div>
@@ -567,9 +543,12 @@
                       </div>
                     </div>
                     <div class="row">
+                      <br />
                       <div class="col-md-12">
-                        <div class="next-previous text-center available-slot-btn">
-                          <!-- <button class="btn border-black-btn" style="width:100%;">SKIP TO NEXT AUTOFILL</button> -->
+                        <div class="col-md-6">
+                          <button class="btn organize-btn" style="width:100%;" ng-click="backEvent();">CANCEL</button>
+                        </div>
+                        <div class="col-md-6">
                           <button class="btn organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE &amp; SHARE</button>
                         </div>
                       </div>

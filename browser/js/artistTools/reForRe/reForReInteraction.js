@@ -839,13 +839,13 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         var event = slot;
         event.type = 'traded';
         event.owner = $scope.trade.p2.user._id;
-        $http.post('/api/events/repostEvents', event);
+        $scope.createEventWithUserTradeSettings(event, slot.userID);        
       })
       $scope.trade.p2.slots.forEach(function(slot) {
         var event = slot;
         event.type = 'traded';
         event.owner = $scope.trade.p1.user._id;
-        $http.post('/api/events/repostEvents', event);
+        $scope.createEventWithUserTradeSettings(event, slot.userID);
       })
     }
     $scope.trade.p1.accepted = $scope.trade.p2.accepted = true;
@@ -855,6 +855,27 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         $state.go('reForReLists');
       })
       .then(null, console.log);
+  }
+
+  $scope.createEventWithUserTradeSettings = function(event, userID){
+    $http.get('/api/users/bySoundcloudID/'+userID)
+    .then(function(res){
+      var user = res.data;
+      if(user){
+        event.like = user.repostSettings.trade.like;
+        var userTradeComments = user.repostSettings.trade.comments;
+        if(user.repostSettings.trade.comment && userTradeComments.length > 0){
+          event.comment = userTradeComments[Math.floor(Math.random()*userTradeComments.length)];
+        }
+        $http.post('/api/events/repostEvents', event);
+      }
+      else{
+        $http.post('/api/events/repostEvents', event);
+      }
+    })
+    .then(null,function(err){
+      $http.post('/api/events/repostEvents', event);
+    });
   }
 
   function getshortdate(d) {
