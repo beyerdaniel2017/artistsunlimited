@@ -90,7 +90,6 @@
             </div>
                 </div>
             <div role="tabpanel" class="tab-pane fade" id="organizeschedule">
-              <br>
               <div class="organize-list">
                 <br>                           
                 <div class="row">
@@ -158,14 +157,14 @@
                     <a class="btn btn-default" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
                   </div>
                 </div>                  
-                <div class="col-md-4 col-xs-6 pull-right text-right">
+                    <div class="col-md-9 col-xs-6 text-right">
                       <div class="btn-group" role="group" aria-label="..." ng-show="manageView != 'newsong'">
                     <a class="btn btn-default" ng-class="{active : manageView == 'calender'}" href="javascript:void(0)" ng-click="setManageView('calender')"><img src="assets/images/box-view.png" /></a>
                     <a class="btn btn-default" ng-class="{active : manageView == 'list'}" href="javascript:void(0)" ng-click="setManageView('list')"><img src="assets/images/list-view.png" /></a>
                   </div>
                 </div>          
                 <div class="">                
-                  <div id="scheduler-container" ng-show="manageView == 'calender'">
+                      <div id="scheduler-container" ng-show="manageView == 'calender'" style="width:100%;">
                    <div class="calendar-day-date">
                     <div class="date-top-strip">
                       <div style="width:100%; height:35px; display:flex; flex-direction:row;margin-bottom: 10px; ">
@@ -182,32 +181,32 @@
                     </div>   
                     <div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
                       <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendar[l+dayIncr].events[p], calendar[l+dayIncr].day, l, p)" class="row-scheduler" ng-click="clickedSlot(calendar[l+dayIncr].day, p,calendar[l+dayIncr].events[p])" style="position:relative;">
-                            <div ng-style="getEventStyle(calendar[l+dayIncr].events[p])" class="text-left" style="width:100%;"><img ng-if="calendar[l+dayIncr].events[p].userInfo" src="{{calendar[l+dayIncr].events[p].userInfo.avatarURL}}" style="height:25px;width:25px;">&nbsp;&nbsp;<span style="color:#fff;">{{calendar[l+dayIncr].events[p].userInfo.username}}</span></div>
+                            <div ng-style="getEventStyle(calendar[l+dayIncr].events[p])" class="text-left scheduler-yellow" style="width:100%;"><img ng-if="calendar[l+dayIncr].events[p].userInfo" src="{{calendar[l+dayIncr].events[p].userInfo.avatarURL}}" style="height:17px;width:17px;">&nbsp;&nbsp;<span style="color:#fff;">{{calendar[l+dayIncr].events[p].userInfo.username}}</span></div>
                         <!--  <img ng-show="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img> -->
                       </div>
                     </div>
                   </div>
                 </div>
-                <div id="scheduler-container" ng-show="manageView == 'list'">
-                  <table class="table">
+                      <div id="scheduler-container" ng-show="manageView == 'list'" style="width:100%;">
+                      <table class="table  scheduler-song-tab">
                     <thead>
                       <tr>
-                        <th width="10%">Status</th>
-                              <th width="30%">Track Name</th>
-                              <th width="15%">Account</th>
-                        <th width="20%">Date</th>
-                              <th width="15%">Type</th>
-                              <th width="10%"></th>
+                              <th width="8%" class="text-center">Status</th>
+                              <th width="30%" class="text-center">Track Name</th>
+                              <th width="15%" class="text-center">Account</th>
+                              <th width="20%" class="text-center">Date</th>
+                              <th width="15%" class="text-center">Type</th>
+                              <th width="10%" class="text-center"></th>
                       </tr>
                     </thead>
                     <tbody>
                             <tr ng-repeat="item in listevents" style="cursor:pointer;">
-                        <td class="text-left"><div class="div-dot" style="    width: 8px;border-radius: 10px;background: {{item.trackInfo.completed ? 'green':'red'}};height: 8px;">&nbsp;</div></i></td>
-                        <td class="text-left">{{item.trackInfo.title}}</td>
-                        <td class="text-left">{{item.userInfo.username}}</td>
-                        <td class="text-left">{{item.trackInfo.day | date: 'MMM dd yyyy hh:mm a'}}</td>
-                              <td class="text-left"><span ng-if="item.trackInfo" style="color:{{item.trackInfo.type == 'traded' && item.trackInfo.trackID ? '#B22222' : '#2b9fda'}}">{{item.trackInfo.type}}</span></td>
-                              <td class="text-left"><a class="btn btn-pink btn-block btn-sm margin-0" href="javascript:void(0)" ng-if="item.trackInfo.type == 'traded' && !item.trackInfo.trackID" ng-click="scheduleRepostEvent(item)">Schedule</a></td>
+                              <td class="text-center"><div class="div-dot scheduler-status" style="    width: 8px;border-radius: 10px;background: {{item.trackInfo.completed ? 'green':'red'}};height: 8px;">&nbsp;</div></i></td>
+                              <td class="text-center">{{item.trackInfo.title}}</td>
+                              <td class="text-center">{{item.userInfo.username}}</td>
+                              <td class="text-center">{{item.trackInfo.day | date: 'MMM dd yyyy hh:mm a'}}</td>
+                              <td class="text-center"><span ng-if="item.trackInfo" style="color:{{item.trackInfo.type == 'traded' && item.trackInfo.trackID ? '#B22222' : '#2b9fda'}}">{{item.trackInfo.type}}</span></td>
+                              <td class="text-center"><a class="btn btn-pink btn-block btn-sm margin-0" href="javascript:void(0)" ng-if="item.trackInfo.type == 'traded' && !item.trackInfo.trackID" ng-click="scheduleRepostEvent(item)">Schedule</a></td>
                       </tr>
                     </tbody>
                   </table>
@@ -215,19 +214,19 @@
                 <div class="col-md-12" ng-show="manageView == 'newsong'">
                   <div class="songScheduler">
                     <div class="row extrapadding">
-                            <div class="col-md-12 label-scheduler label-smaller" ng-disabled="isEdit" ng-class="{'disabled': isEdit}">
+                            <div class="col-md-12" ng-disabled="isEdit" ng-class="{'disabled': isEdit}">
                         <div class="row">              
                           <h1 class="title">{{makeEvent.artist.username}}</h1>               
                           <div class="col-md-12 col-xs-12">              
-                            <div class="col-md-12 search">
+                                  <div class="search">
                                     <scsearch kind='track' returnitem='choseTrack1(item)'></scsearch>
                               </div>
-                                  <div class="col-md-12 col-xs-12 text-center">   
-                                    <br/>
-                                    <span>{{makeEvent.day | date:'EEE MM/dd h:mma'}}</span>
+                                <div class="row">
+                                  <div class="col-md-12 col-xs-12">
+                                    <br>   
+                                    <p class="text-center" style="font-size: 1.5em;">{{makeEvent.day | date:'EEE MM/dd h:mma'}}</p>
+                                  </div>
                             </div>
-                                  <div class="col-md-12 col-xs-12 text-center"> 
-                            <br/>
                             <ul>
                               <li class="switch-btn">
                                 <label class="switch">
@@ -238,7 +237,6 @@
                               </li>
                             </ul><br/>
                           </div>                              
-                          </div>
                         </div><!--row end-->
                         <div class="row">
                           <div class="col-xs-12">
@@ -290,13 +288,12 @@
                 <span>{{makeEvent.day | date:'EEE MM/dd h:mma'}}</span>
               </div>
             </div>
-            <br>
             <!-- <span style="font-size:11px;">Total Reach: {{followCounts}} followers</span> -->
             <div class="row">
               <div class="col-md-13 text-center">
-                <li class="switch-btn" style="font-size: 10px;vertical-align: middle;
+              <li class="switch-btn" style="font-size: 14px;vertical-align: middle;
                 list-style: outside none none;">
-                <label class="switch" style="vertical-align: center;">
+                <label class="switch" style="vertical-align: middle;">
                   <input ng-disabled="true" checked="makeEvent.day < makeEvent.unrepostDate" type="checkbox">
                   <div class="slider round"></div>
                 </label> 
@@ -309,7 +306,6 @@
               <div id="scPopupPlayer" style="margin:10px 0; width:100%;"></div>      
             </div>
           </div><!--row end-->
-          <br> 
 <!--         <div class="row">
             <div class="col-xs-12">
               <div class="pull-right">

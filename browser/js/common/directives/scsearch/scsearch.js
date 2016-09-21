@@ -4,7 +4,8 @@ app.directive('scsearch', function($http) {
     restrict: 'E',
     scope: {
       kind: '@',
-      returnitem: '&'
+      returnitem: '&',
+      customstyle: '@'
     },
     controller: ['$scope', function scSearchController($scope) {
       $scope.searchSelection = [];

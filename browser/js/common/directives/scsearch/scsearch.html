@@ -1,5 +1,5 @@
 <div class="search-suggetion">
-  <input class="form-control" type="text" placeholder="{{kind | capitalize}}" ng-model="searchString" ng-keypress="keypress($event)"/>
+  <input class="form-control" type="text" placeholder="{{kind | capitalize}}" ng-model="searchString" ng-keypress="keypress($event)" style="{{customstyle}}"/>
   <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
     <li ng-show="searching && !searchError && searchSelection.length==0"><a>One moment...</a></li>
     <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item)">

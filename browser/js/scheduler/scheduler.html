@@ -269,7 +269,7 @@
                             <li ng-show="!!searchStringVal.searchError">{{searchError}}</li>
                             <li ng-show="searchStringVal.searchSelection.length > 0 && !searchStringVal.searchError"><a href="#">Or enter a Soundcloud URL</a></li>
                           </ul>
-                        <a href="#" class="url-search-btn-small " ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+                        <a href="#" class="url-search-btn-big" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
                       </div>
                     </div>
       
@@ -336,7 +336,7 @@
                               <span>{{group}}</span> </label>
                             </p>
                           </div>
-                          <div class="checkbox demo-radio-btn"  ng-show="displayType == 'channel'" ng-repeat="channel in paidUsers">
+                          <div class="checkbox demo-radio-btn" style="margin-top: 3px;" ng-show="displayType == 'channel'" ng-repeat="channel in paidUsers">
                             <p>
                               <label class="with-square-checkbox">
                                 <input style="" id="{{channel.name}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(channel.name);" type="checkbox">
@@ -388,12 +388,12 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <textarea class="form-control" ng-disabled="disable" ng-model="searchStringVal.eventComment">{{comment}}</textarea>
+                          </div>
                             <div class="next-previous">
                               <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
                               <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
                             </div>
                           </div>
-                        </div>
                       </div><!--row end-->
                       <div class="row">
                         <div class="col-md-12">
@@ -488,10 +488,10 @@
                       </div>
                     </div>
                     <br>
-                    <span style="font-size:11px;">Total Reach: {{followCounts}} followers</span>
+                    <span style="font-size:14px;">Total Reach: {{followCounts}} followers</span>
                     <div class="row">
                       <div class="col-md-12 text-left">
-                        <li class="switch-btn" style="font-size: 10px;vertical-align: middle;
+                        <li class="switch-btn" style="font-size: 14px;vertical-align: middle;
                         list-style: outside none none;">
                         <label class="switch" style="vertical-align: middle;">
                           <input checked="" type="checkbox" ng-model="searchStringVal.unrepostEnable">
@@ -500,7 +500,7 @@
                         <label>Unrepost after<input  class="form-control input-hour" style="width:50px;color: #868686;" placeholder="24" ng-model="searchStringVal.unrepostHours">hours</label>
                       </li>
                     </div>
-                    <div class="col-xs-12" style="font-size:10px;">
+                    <div class="col-xs-12" style="font-size:14px;">
                       <label>Time between reposts:</label>
                       <select class="form-control input-hour" ng-model="searchStringVal.timeGap" style="width:50px;">
                         <option ng-repeat="n in [0,1,2,3,4,5,6,7,8,9,10,11,12]" value="{{n}}" ng-selected="{{n==searchStringVal.checkgap}}">{{n}}</option>

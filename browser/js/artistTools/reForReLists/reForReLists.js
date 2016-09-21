@@ -665,7 +665,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   }
 
 
-  $scope.editRepostEvent = function(data) {
+  $scope.scheduleRepostEvent = function(data){
     if (data.trackInfo) {
       $scope.manageView = "newsong";
       document.getElementById('scPlayer').style.visibility = "hidden";
