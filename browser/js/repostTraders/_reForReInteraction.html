@@ -6,31 +6,35 @@
 </style>
 <ng-include src="'js/home/views/_adminHeaderNavigation.html'"></ng-include>
 <!-- Content Start  -->
-<div id="wrapper">
-    <ng-include src="'js/home/views/_adminNavigations.html'"></ng-include>
     <div class="container-fluid height-100pr">
           <div class="row">
             <div class="col-md-2 col-sm-12 col-xs-12 pr-paddin-right-0 pr-margin-right-0">
                 <!--left-side-manu ::start-->
                 <div class="left-side-profile">
                     <div class="left-profile active">
-                        <a ng-click="changeActiveUser(user)">
-                            <div class="tropical-2" ng-style="(activeUser._id == user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.user.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.user.user.soundcloud.username}}</span></a>
+                        <div ng-click="changeActiveUser(trade.user.user)">
+                            <div class="tropical-2" ng-style="(activeUser._id == trade.user.user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}">
+                            <a href="{{trade.user.user.soundcloud.permalinkURL}}" style="color:#8a8a8a">
+                                <span class="ng-binding">{{trade.user.user.soundcloud.username}}</span>
+                            </a>
                             <img class="profile-avtar-100 img-responsive img-circle" ng-src="{{trade.user.user.soundcloud.avatarURL}}" style="width:100px;">
                                 <p class="ng-binding">
                                 <small>Total Reach:</small><br/>
                                 {{trade.user.user.soundcloud.followers}} Followers</p>
                             </div>
-                        </a>    
+                        </div>    
+                        <div class="clearfix"></div>
                     </div>                  
                     <div class="left-profile">
-                        <a ng-click="changeActiveUser(trade.other.user)">
-                            <div class="tropical-2" ng-style="(activeUser._id == trade.other.user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.other.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.other.user.soundcloud.username}}</span></a><img class="img-responsive img-circle" src="{{trade.other.user.soundcloud.avatarURL}}" style="width:100px;">
+                        <div ng-click="changeActiveUser(trade.other.user)">
+                            <div class="tropical-2" ng-style="(activeUser._id == trade.other.user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}">
+                            <a href="{{trade.other.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.other.user.soundcloud.username}}</span>
+                            </a><img class="img-responsive img-circle" src="{{trade.other.user.soundcloud.avatarURL}}" style="width:100px;">
                                 <p class="ng-binding">
                                 <small>Total Reach:</small><br/>
                                 {{trade.other.user.soundcloud.followers}} Followers</p>
                             </div>
-                        </a>
+                        </div>
                     </div>
                     <!--left-side-manu ::end-->
                     <div class="refor-chate-box">
@@ -45,7 +49,7 @@
                     <!--page-contant Start-->
                     <div class="scheduler-tabs">
                         <!-- Nav tabs :Start-->
-                        <a ui-sref="reForReLists" href="javascript:void(0)" class="pull-right" style="margin-right:20px; margin-top:20px">X</a>
+                        <a ui-sref="adminRepostTraders" href="javascript:void(0)" class="pull-right" style="margin-right:20px; margin-top:20px">X</a>
                         <!-- Nav tabs :End-->
                         <!-- Tab panes :: Start-->
                         <div class="tab-content">
@@ -104,20 +108,22 @@
                                                 <th width="15%">Account</th>
                                                 <th width="15%">Date</th>
                                                 <th width="10%"></th>
-                                                <th width="10%"></th>
+                                                <th width="20%"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="item in listeventsUser" ng-class='{grey : item.event.day < currentDate}'>
+                                            <tr ng-repeat="item in listEvents" ng-hide="!(item.event.type=='trade' || item.event.type=='empty') || (item.event.type=='empty' && item.date < currentDate)" ng-class='{grey : item.date < currentDate}' ng-style="getEventStyle(item.event)">
                                                 <td class="text-left">{{item.event.title}}</td>
-                                                <td class="text-left">{{user.soundcloud.username}}</td>
-                                                <td class="text-left">{{item.date}}</td>
+                                                <td class="text-left">{{trade.p1.user.soundcloud.username}}</td>
+                                                <td class="text-left">{{getUnrepostDate(item)}}</td>
                                                 <td>
                                                     <button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">{{item.event.type}}</button>
                                                 </td>
                                                 <td class="text-left">
-                                                    <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event">View</a>
-                                                    <a href="javascript:void(0)" style="color:#FF7676" ng-if="!item.event">Schedule</a></td>
+                                                    <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event">View</a>
+                                                    <a href="javascript:void(0)" style="color:#FF7676" ng-if="!item.event">Schedule</a> -->
+                                                    <a href="javascript:void(0)" style="color:#FF7676" ng-click="toggleSlot(item)" ng-hide="item.date < currentDate">Toggle</a>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -157,16 +163,18 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="item in listeventsOther" ng-class='{grey : item.event.day < currentDate}'>
+                                        <tr ng-repeat="item in listEvents" ng-hide="!(item.event.type=='trade' || item.event.type=='empty') || (item.event.type=='empty' && item.date < currentDate)" ng-class='{grey : item.date < currentDate}' ng-style="getEventStyle(item.event)">
                                             <td class="text-left">{{item.event.title}}</td>
-                                            <td class="text-left">{{user.soundcloud.username}}</td>
-                                            <td class="text-left">{{item.date}}</td>
+                                            <td class="text-left">{{trade.p2.user.soundcloud.username}}</td>
+                                            <td class="text-left">{{getUnrepostDate(item)}}</td>
                                             <td>
                                                 <button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">{{item.event.type}}</button>
                                             </td>
                                             <td class="text-left">
-                                                <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event">View</a>
-                                                <a href="javascript:void(0)" style="color:#FF7676" ng-if="!item.event">Schedule</a></td>
+                                                <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event">View</a>
+                                                <a href="javascript:void(0)" style="color:#FF7676" ng-if="!item.event">Schedule</a> -->
+                                                 <a href="javascript:void(0)" style="color:#FF7676" ng-click="toggleSlot(item)" ng-hide="item.date < currentDate">Toggle</a>
+                                                </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -257,7 +265,7 @@
         </div>
     </div>
     <ng-include src="'js/home/views/loader.html'"></ng-include>
-</div>
+
 
 <div class="modal fade" id="remindModal" role="dialog">
     <div class="modal-dialog">
@@ -280,12 +288,25 @@
     </div>
 </div>
 <script>
+setTimeout(function(){
+
+    $(document).ready(function(){
+      FB.init({
+          appId: '1576897469267996',
+          xfbml: true,
+          version: 'v2.7'
+      });
+
 (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
+          if (d.getElementById(id)) {
+              return;
+          }
     js = d.createElement(s);
     js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.7&appId=1576897469267996";
+          js.src = "//connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
+    })
+},200);
 </script>

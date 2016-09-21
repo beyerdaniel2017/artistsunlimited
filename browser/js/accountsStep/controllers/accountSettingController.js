@@ -135,7 +135,19 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                     $http.get('/api/users/byId/' + userId)
                         .then(function(response) {
                             if (response.data) {
-                                $scope.AccountsStepData.availableSlots = response.data.availableSlots;
+                                if (response.data.availableSlots) {
+                                    $scope.AccountsStepData.availableSlots = response.data.availableSlots;
+                                } else {
+                                    $scope.AccountsStepData.availableSlots = {
+                                        'sunday': [1, 4, 8, 11, 14, 17, 20],
+                                        'monday': [1, 4, 8, 11, 14, 17, 20],
+                                        'tuesday': [1, 4, 8, 11, 14, 17, 20],
+                                        'wednesday': [1, 4, 8, 11, 14, 17, 20],
+                                        'thursday': [1, 4, 8, 11, 14, 17, 20],
+                                        'friday': [1, 4, 8, 11, 14, 17, 20],
+                                        'saturday': [1, 4, 8, 11, 14, 17, 20]
+                                    }
+                                }
                             }
                             $http.get('/api/customsubmissions/getCustomSubmissionAll/' + userId)
                                 .then(function(response) {
@@ -422,8 +434,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
         if (type == "channel") {
             switch (step) {
                 case 1:
-                    $http.get("/connect/logout?return_to=https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https://localhost:1443/callback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_5fead");
-                    //https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https%3A%2F%2Flocalhost%3A1443%2Fcallback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_4a6f8
+                    $http.get("/connect/logout?return_to=https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https://" + window.location.host + "/callback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_5fead");
                     $state.go("channelstep1");
                     break;
                 case 2:
@@ -741,7 +752,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
         $scope.verified = false;
         $scope.waitoneminute = false;
         var paypaldata = $scope.AccountsStepData.paypal;
-        if ((paypaldata.price1 == paypaldata.pricea && paypaldata.price2 == paypaldata.priceb) || (paypaldata.price1 == paypaldata.priceb && paypaldata.price2 == paypaldata.pricea)) {
+        if ((paypaldata.price1 == parseFloat(paypaldata.pricea) && paypaldata.price2 == parseFloat(paypaldata.priceb)) || (paypaldata.price1 == parseFloat(paypaldata.priceb) && paypaldata.price2 == parseFloat(paypaldata.pricea))) {
             $scope.AccountsStepData.paypal.processchannel = true;
             AccountSettingServices.updateAdminProfile({
                     paypal_email: $scope.AccountsStepData.paypal_email
@@ -776,10 +787,46 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
         return style;
     }
 
+    $scope.tooManyReposts = function(day, hour) {
+        var startDayInt = (day + 6) % 7;
+        var allSlots = []
+        var wouldBeSlots = JSON.parse(JSON.stringify($scope.AccountsStepData.availableSlots));
+        wouldBeSlots[daysArray[day]].push(hour);
+        for (var i = 0; i < 3; i++) {
+            wouldBeSlots[daysArray[(startDayInt + i) % 7]]
+                .forEach(function(slot) {
+                    allSlots.push(slot + i * 24);
+                })
+        }
+        allSlots = allSlots.sort(function(a, b) {
+            return a - b;
+        })
+        var checkingSlots = [];
+        var status = false;
+        allSlots.forEach(function(slot) {
+            var i = 0;
+            while (i < checkingSlots.length) {
+                if (Math.abs(checkingSlots[i] - slot) > 24) checkingSlots.splice(i, 1);
+                else i++;
+            }
+            checkingSlots.push(slot);
+            if (checkingSlots.length > 8) {
+                console.log('errorSlots');
+                console.log(checkingSlots);
+                status = true;
+            }
+        })
+        return status;
+    }
+
     $scope.clickedSlotsave = function(day, hour) {
         var pushhour = parseInt(hour);
+
         if ($scope.AccountsStepData.availableSlots != undefined && $scope.AccountsStepData.availableSlots[daysArray[day]].indexOf(pushhour) > -1) {
             $scope.AccountsStepData.availableSlots[daysArray[day]].splice($scope.AccountsStepData.availableSlots[daysArray[day]].indexOf(pushhour), 1);
+        } else if ($scope.tooManyReposts(day, hour)) {
+            $.Zebra_Dialog("Cannot enable slot. We only allow 8 reposts within 24 hours to prevent you from being repost blocked.");
+            return;
         } else if ($scope.AccountsStepData.availableSlots != undefined) {
             $scope.AccountsStepData.availableSlots[daysArray[day]].push(pushhour);
         }

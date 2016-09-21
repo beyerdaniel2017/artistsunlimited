@@ -35,12 +35,16 @@
                                         </div>
                                         <!--search-trad End-->
                                         <div class="col-md-1"></div>
-                                        <div class="col-md-4 col-sm-4 col-xs-10">
-                                            <div class="form-group">
-                                                <div class="icon-addon addon-md">
-                                                    <input placeholder="Search by URL" class="form-control ng-pristine ng-untouched ng-valid ng-empty" id="txtSearchByURL" ng-model="searchURL" type="text">
-                                                    <a for="txtSearchByURL" class="url-search-btn" rel="tooltip" title="Search by URL" ng-disable="!applicationObj.firstName" ng-click="sendSearch(searchURL)"><i class="glyphicon glyphicon-search"></i></a>
-                                                </div>
+                                            <div class="col-md-4 col-sm-4 col-xs-10 search">
+                                                <div class="search-suggetion">
+                                                <input class="form-control" type="text" placeholder="Artist URL" ng-model="searchURL"  required/>
+                                                  <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
+                                                    <li ng-show="searching && !searchError && searchSelection.length==0"><a href="#">One moment...</a></li>
+                                                    <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'user')"><img ng-if="item.avatar_url" src="{{item.avatar_url}}" style="height:50px;width:30px;"/>{{item.displayName}}</a></li>
+                                                    <li ng-show="!!searchError">{{searchError}}</li>
+                                                    <li ng-show="searchSelection.length > 0 && !searchError"><a href="#">Or enter a Soundcloud URL</a></li>
+                                                  </ul>
+                                                <a href="#" class="link-add-btn" ng-click="changedSearch('user',searchURL)"><i class="glyphicon glyphicon-search"></i></a>
                                             </div>
                                             <!--search-trad End-->
                                         </div>
@@ -109,12 +113,12 @@
                                     <div class="col-md-4 col-sm-6 col-xs-12">
                                     </div>
                                     <div class="col-md-4 col-sm-6 col-xs-12">
-                                        <div class="">
+                                        <!-- <div class="">
                                             <div class="icon-addon addon-md">
                                                 <input placeholder="Search by URL" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="txtSearchByArtistURL" ng-model="searchURL" style="" type="text">
                                                 <a for="txtSearchByArtistURL" class="url-search-btn-small" rel="tooltip" title="Search by URL" ng-click="searchCurrentTrade()"><i class="glyphicon glyphicon-search"></i></a>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 <br>

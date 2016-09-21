@@ -24,10 +24,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.login = function() {
-    $scope.message = {
-      val: '',
-      visible: false
-    };
+    $scope.signinError = "";
     AuthService
       .login($scope.loginObj)
       .then(handleLoginResponse)
@@ -44,20 +41,13 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
           SessionService.removeAccountusers();
           $state.go('accounts');
         }
-
       } else {
-        $scope.message = {
-          val: res.data.message,
-          visible: true
-        };
+        $scope.signinError = "Invalid Email or Password.";
       }
     }
 
     function handleLoginError(res) {
-      $scope.message = {
-        val: 'Error in processing your request',
-        visible: true
-      };
+      $scope.signinError = "Error in processing your request";
     }
   };
   $scope.logout = function() {
@@ -69,5 +59,4 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         $.Zebra_Dialog('Wrong Password');
       });
     }
-   
 });

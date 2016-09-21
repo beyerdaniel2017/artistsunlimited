@@ -13,26 +13,25 @@ app.config(function($stateProvider) {
         var username = $stateParams.username;
         var submitpart = $stateParams.submitpart;
         return $http.get('/api/users/getUserByURL/' + username + '/' + submitpart)
-        .then(function(res) {
-          if (res && res.data) {
-            if (submitpart.indexOf('submit') != -1) {
-              $window.location.href = '/submit?id=' + res.data;
+          .then(function(res) {
+            if (res && res.data) {
+              if (submitpart.indexOf('submit') != -1) {
+                $window.location.href = '/submit?id=' + res.data;
+              } else {
+                $window.location.href = '/premiere?id=' + res.data;
+              }
             } else {
-              $window.location.href = '/premiere?id=' + res.data;
+              if (submitpart.indexOf('submit') != -1) {
+                $window.location.href = '/submit';
+              } else {
+                $window.location.href = '/premiere';
+              }
             }
-          }
-          else{
-            if (submitpart.indexOf('submit') != -1) {
-              $window.location.href = '/submit';
-            } else {
-              $window.location.href = '/premiere';
-            }
-          }
-        })
-        .then(null, function(err) {
-          $.Zebra_Dialog("error getting your events");
-          return;
-        })
+          })
+          .then(null, function(err) {
+            $.Zebra_Dialog("error getting your events");
+            return;
+          })
       }
     }
   });
@@ -42,29 +41,29 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   $scope.submission = {};
   $scope.customizeSettings = null;
   $scope.userID = $location.search().id;
-  $scope.genreArray = [
-    'Alternative Rock',
-    'Ambient',
-    'Creative',
-    'Chill',
-    'Classical',
-    'Country',
-    'Dance & EDM',
-    'Dancehall',
-    'Deep House',
-    'Disco',
-    'Drum & Bass',
-    'Dubstep',
-    'Electronic',
-    'Festival',
-    'Folk',
-    'Hip-Hop/RNB',
-    'House',
-    'Indie/Alternative',
-    'Latin',
-    'Trap',
-    'Vocalists/Singer-Songwriter'
-  ];
+  // $scope.genreArray = [
+  //   'Alternative Rock',
+  //   'Ambient',
+  //   'Creative',
+  //   'Chill',
+  //   'Classical',
+  //   'Country',
+  //   'Dance & EDM',
+  //   'Dancehall',
+  //   'Deep House',
+  //   'Disco',
+  //   'Drum & Bass',
+  //   'Dubstep',
+  //   'Electronic',
+  //   'Festival',
+  //   'Folk',
+  //   'Hip-Hop/RNB',
+  //   'House',
+  //   'Indie/Alternative',
+  //   'Latin',
+  //   'Trap',
+  //   'Vocalists/Singer-Songwriter'
+  // ];
 
   //search//
   $scope.searchSelection = [];
@@ -85,15 +84,14 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
             $scope.selectedItem(res.data.item);
           }
         } else {
-          if(res.data.collection.length > 0){
+          if (res.data.collection.length > 0) {
             $scope.searchSelection = res.data.collection;
             $scope.searchSelection.forEach(function(item) {
               $scope.setItemText(item)
             })
-          }
-          else{
+          } else {
             $scope.searchError = "We could not find a " + kind + "."
-          }          
+          }
         }
       }).then(null, function(err) {
         $scope.searching = false;
@@ -117,16 +115,12 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     }
   }
 
-  $scope.selectedItem = function(item) {
-    $scope.searchSelection = [];
-    $scope.searchError = undefined;
-
-    //custom code to process item choice//
-    console.log(item);
-    $scope.searchString = item.title;
-    $scope.submission.trackID = item.id;
-    $scope.submission.title = item.title;
-    $scope.submission.trackURL = item.permalink_url
+  $scope.choseTrack = function(track) {
+    console.log(track);
+    $scope.searchString = track.title;
+    $scope.submission.trackID = track.id;
+    $scope.submission.title = track.title;
+    $scope.submission.trackURL = track.permalink_url
     SC.oEmbed($scope.submission.trackURL, {
       element: document.getElementById('scPlayer'),
       auto_play: false,
@@ -135,7 +129,6 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     document.getElementById('scPlayer').style.visibility = "visible";
     $scope.processing = false;
   }
-  //end search//
 
   // $scope.urlChange = function() {
   //   $http.post('/api/soundcloud/resolve', {
@@ -174,7 +167,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   // }
 
   $scope.submit = function() {
-    if (!$scope.submission.email || !$scope.submission.name || !scope.submission.trackID) {
+    if (!$scope.submission.email || !$scope.submission.name || !$scope.submission.trackID) {
       $.Zebra_Dialog("Please fill in all fields")
     } else {
       $scope.processing = true;
@@ -187,7 +180,7 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
           channelIDS: [],
           invoiceIDS: [],
           userID: $scope.userID,
-          genre: $scope.submission.genre
+          genre: ''
         })
         .then(function(res) {
           $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");

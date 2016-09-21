@@ -42,7 +42,7 @@
                     <a class="btn btn-default" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
                   </div>
                 </div>
-                <div class="col-md-5 col-xs-12 pull-right">
+                <div class="col-md-4 col-xs-12 pull-right">
                   <form >
                     <div class="schedule-newsong">
                       <button type="button" class="form-control" ng-click="addNewSong();">SCHEDULE NEW SONG</button>  
@@ -102,7 +102,7 @@
                     <td class="text-center">
                       <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>&nbsp;&nbsp; -->
                       <a class="btn btn-pink btn-block btn-sm margin-0" href="javascript:void(0)" ng-if="item.event" ng-click="EditNewSong(item, 'editable');">Edit</a>
-                      <a class="btn btn-pink btn-block btn-sm margin-0" href="javascript:void(0)" ng-if="!item.event">Schedule</a>
+                       <a class="btn btn-pink btn-block btn-sm margin-0" href="javascript:void(0)" ng-if="!item.event" ng-click="scheduleSong(item)">Schedule</a>
                     </td>
                     </tr>
               </tbody>
@@ -264,7 +264,7 @@
                         <input class="form-control" type="text" placeholder="Song URL" id="searchString" ng-model="searchStringVal.searchString"  required/>
                           <ul class="results" ng-show="searchStringVal.searching || searchStringVal.searchError || searchStringVal.searchSelection.length > 0">
                             <li ng-show="searchStringVal.searching && !searchStringVal.searchError && searchStringVal.searchSelection.length==0"><a href="#">One moment...</a></li>
-                            <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
+                            <li ng-repeat="item in searchStringVal.searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
                             <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
                             <li ng-show="!!searchStringVal.searchError">{{searchError}}</li>
                             <li ng-show="searchStringVal.searchSelection.length > 0 && !searchStringVal.searchError"><a href="#">Or enter a Soundcloud URL</a></li>
@@ -275,13 +275,16 @@
       
                   <label>Next Available Repost Time</label>
                   <div class="form-group">
-                    <select class="form-control" ng-if="!isEdit" ng-model="searchStringVal.selectedSlot" ng-change="clickAvailableSlots(searchStringVal.selectedSlot);">                       
+                    <select class="form-control" ng-if="!isEdit && !isSchedule" ng-model="searchStringVal.selectedSlot" ng-change="clickAvailableSlots(searchStringVal.selectedSlot);">                       
                       <option style="color:black;text:center;" ng-repeat="slot in listAvailableSlots"
                       value="{{slot}}">{{slot.slotdate.toString().split(' ')[1] + ' ' +slot.slotdate.toString().split(' ')[2] + ' ' + slot.slotdate.toString().split(' ')[3]}} {{slot.slottime}}</option>
                     </select>
                     <select ng-if="isEdit" class="form-control">
                       <option>{{searchStringVal.selectedSlot | date:'MMMM dd yyyy h:mma'}}</option>
                     </select>
+                     <select ng-if="isSchedule" class="form-control">
+                          <option>{{selectedSlot | date:'MMMM dd yyyy h:mma'}}</option>
+                        </select>
                     
                   </div>
 
@@ -294,7 +297,7 @@
                         <label>Unrepost after<input  class="form-control input-hour" placeholder="1" style="width:100px;" ng-model="searchStringVal.unrepostHours">hours</label>
                       </li>
                     </ul><br/>
-                    <div class="form-group" ng-if="!isEdit">
+                    <div class="form-group" ng-show="linkedAccounts.length > 0" ng-if="!isEdit && !isSchedule">
                       <div class="col-xs-12">
                         <label>Time between reposts:</label>
 
@@ -304,7 +307,7 @@
                       </div>
                     </div>
 
-                    <div class="form-group" ng-if="isEdit">
+                    <div class="form-group" ng-show="linkedAccounts.length > 0" ng-if="isEdit || isSchedule">
                       <div class="col-xs-12">
                         <label>Time between reposts:</label>
                         <select class="form-control input-hour" style="width:100px;">
@@ -638,3 +641,26 @@
 <!-- Save And Share overlay end -->
 </div>  
 <ng-include src="'js/home/views/loader.html'"></ng-include>
+<script>
+setTimeout(function(){
+
+    $(document).ready(function(){
+      FB.init({
+          appId: '1576897469267996',
+          xfbml: true,
+          version: 'v2.7'
+      });
+
+      (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) {
+              return;
+          }
+          js = d.createElement(s);
+          js.id = id;
+          js.src = "//connect.facebook.net/en_US/sdk.js";
+          fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    })
+},200);
+</script>

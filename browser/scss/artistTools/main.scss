@@ -1902,6 +1902,8 @@ input[type=range]:focus::-ms-fill-upper {
     border-radius: 0;
     color: #ccc;
     outline: 0;
+    height: 68px;
+    letter-spacing: 1px;
 }
 .scheduler-tabs .nav > li > a:hover,
 .scheduler-tabs .nav > li > a:focus {
@@ -1916,7 +1918,6 @@ input[type=range]:focus::-ms-fill-upper {
     background-color: #fff;
     border: 0px solid transparent;
     border-bottom-color: transparent;
-    letter-spacing: 1px;
 }
 .scheduler-tabs .nav-tabs li img {
     display: inline-block;
@@ -2430,10 +2431,9 @@ input:checked + .slider:before {
     border-radius: 10px;
     border: 1px solid #999999;
     padding: 7px;
-    padding-left: 30px;
     margin-left: 10px;
     width: 90px;
-    box-shadow: -1px 1px 0px #AEAEAE;
+    text-align: center;
 }
 .price-box i {
     position: absolute;
@@ -2761,11 +2761,11 @@ label:hover:before {
 .key-icon i {
     background-image: url(../assets/images/key.png);
     background-repeat: no-repeat;
-    background-size: 90% 100%;
-    width: 20px;
-    height: 13px;
+    background-size: 100%;
+    width: 17px;
+    height: 20px;
     position: absolute;
-    left: 10px;
+    left: 13px;
     top: 11px;
 }
 .sms-icon,
@@ -2977,6 +2977,8 @@ td {
     border-radius: 0;
     color: #ccc;
     outline: 0;
+    height: 68px;
+    letter-spacing: 1px;
 }
 .two-tabs .nav-tabs > li.active > a,
 .two-tabs .nav-tabs > li.active > a:hover,
@@ -3226,7 +3228,7 @@ td {
 .scheduler-status {
     height: 8px;
     width: 8px;
-    border-radius: 10px;
+    border-radius: 100px;
     display: inline-block;
     vertical-align: middle;
 }
@@ -3295,7 +3297,9 @@ td {
 .vertical-text{
     margin: 10px 0;
 }
+.price-input-box{
 
+}
 /*** 17-9-2016 ***/
 /******************************** Media CSS :: START ************************************/
 

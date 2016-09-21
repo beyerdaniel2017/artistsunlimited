@@ -15,8 +15,15 @@ router.get('/unaccepted', function(req, res, next) {
   var genre = req.query.genre ? req.query.genre : undefined;
   var skipcount = req.query.skip;
   var limitcount = req.query.limit;
+  var paidRepostIds =[];
+  if(req.user.paidRepost.length > 0){
+    req.user.paidRepost.forEach(function(acc){
+      paidRepostIds.push(acc.userID);
+    })
+  }  
   var searchObj = {
-    status: 'new'
+    status: 'new',
+    userID: {$in: paidRepostIds}
   };
   if (genre != undefined && genre != 'null') {
     searchObj = {

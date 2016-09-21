@@ -161,7 +161,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   }
 
   $scope.checkCommentEnable = function() {
-    if ($scope.user.repostSettings && $scope.user.repostSettings.schedule) {
+    if ($scope.user.repostSettings != undefined && $scope.user.repostSettings.schedule != undefined) {
       if ($scope.user.repostSettings.schedule.comment == false) {
         $scope.disable = true;
         $scope.commentEvent = false;
@@ -175,7 +175,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     }
   }
   $scope.checkLikeEnable = function() {
-    if ($scope.user.repostSettings && $scope.user.repostSettings.schedule) {
+    if ($scope.user.repostSettings != undefined && $scope.user.repostSettings.schedule != undefined) {
       if ($scope.user.repostSettings.schedule.like == false) {
         $scope.likeSrc = 'assets/images/like.png';
         $scope.likeEvent = false;
@@ -205,23 +205,24 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
         $scope.commentEvent = true;
         $scope.disable = false;
         commentIndex = 0;
-        $scope.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
+        $scope.eventComment = $scope.user.repostSettings != undefined ? $scope.user.repostSettings.schedule.comments[commentIndex] : "";
       }
     }
     //$scope.saveRepostSettings();
   }
 
   $scope.getPrevNextComment = function(type) {
-
-    if (type == 'next') {
-      if (commentIndex < $scope.user.repostSettings.schedule.comments.length - 1) {
-        commentIndex = commentIndex + 1;
-        $scope.searchStringVal.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
-      }
-    } else {
-      if (commentIndex >= 1) {
-        commentIndex = commentIndex - 1;
-        $scope.searchStringVal.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
+    if ($scope.user.repostSettings != undefined) {
+      if (type == 'next') {
+        if (commentIndex < $scope.user.repostSettings.schedule.comments.length - 1) {
+          commentIndex = commentIndex + 1;
+          $scope.searchStringVal.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
+        }
+      } else {
+        if (commentIndex >= 1) {
+          commentIndex = commentIndex - 1;
+          $scope.searchStringVal.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
+        }
       }
     }
   }
@@ -479,12 +480,41 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     }
   }
 
+  $scope.isSchedule = false;
+  $scope.scheduleSong = function(item) {
+    console.log(item);
+    document.getElementById('scPlayer').style.visibility = "hidden";
+    $scope.isSchedule = true;
+    $scope.tabSelected = false;
+    $scope.newEvent = true;
+    $scope.makeEvent = {
+      userID: $scope.user.soundcloud.id,
+      type: "track"
+    };
+    $scope.selectedSlot = item.date;
+    var selectedSlot = new Date($scope.selectedSlot);
+    var day = new Date(selectedSlot.getTime() - selectedSlot.getTimezoneOffset() * 60000).toISOString();
+    var hour = ConvertStringTimeToUTC(selectedSlot.getHours());
+    var makeDay = new Date(day);
+    makeDay.setHours(hour);
+    $scope.makeEvent.day = makeDay;
+    $scope.selectedSlot = new Date(item.date);
+    SC.oEmbed($scope.searchStringVal.searchString, {
+      element: document.getElementById('scPlayer'),
+      auto_play: false,
+      maxheight: 120
+    })
+    document.getElementById('scPlayer').style.visibility = "visible";
+    $scope.followersCount();
+
+  }
 
   $scope.isEdit = false;
   $scope.EditNewSong = function(item, action) {
     $scope.editChannelArr = [];
     $scope.tabSelected = false;
-
+    $scope.isEdit = false;
+    $scope.searchStringVal = {};
     var newObj = item;
 
     $scope.searchStringVal = {};
@@ -575,7 +605,18 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
         item.event = event;
         item.date = strDdate + " " + time;
-        $scope.listevents.push(item);
+
+        if (!item.event && new Date(item.date).getDate() == new Date().getDate()) {
+          var eventTime = new Date(item.date).getHours();
+          var currTime = new Date().getDate();
+
+          if (eventTime > currTime) {
+            $scope.listevents.push(item);
+          }
+        } else {
+          $scope.listevents.push(item);
+        }
+
         if (event == undefined && new Date(item.date) > new Date()) {
           item.slotdate = d;
           item.slottime = time;
@@ -601,6 +642,9 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     var pushhour = parseInt(hour);
     if ($scope.availableSlots[daysArray[day]].indexOf(pushhour) > -1) {
       $scope.availableSlots[daysArray[day]].splice($scope.availableSlots[daysArray[day]].indexOf(pushhour), 1);
+    } else if ($scope.tooManyReposts(day, hour)) {
+      $.Zebra_Dialog("Cannot schedule slot. We only allow 8 reposts within 24 hours to prevent you from being repost blocked.");
+      return;
     } else {
       $scope.availableSlots[daysArray[day]].push(pushhour);
     }
@@ -614,6 +658,38 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
       //$scope.user = SessionService.getUser();
       $scope.availableSlots = $scope.user.availableSlots;
     });
+  }
+
+  $scope.tooManyReposts = function(day, hour) {
+    var startDayInt = (day + 6) % 7;
+    var allSlots = []
+    var wouldBeSlots = JSON.parse(JSON.stringify($scope.availableSlots));
+    wouldBeSlots[daysArray[day]].push(hour);
+    for (var i = 0; i < 3; i++) {
+      wouldBeSlots[daysArray[(startDayInt + i) % 7]]
+        .forEach(function(slot) {
+          allSlots.push(slot + i * 24);
+        })
+    }
+    allSlots = allSlots.sort(function(a, b) {
+      return a - b;
+    })
+    var checkingSlots = [];
+    var status = false;
+    allSlots.forEach(function(slot) {
+      var i = 0;
+      while (i < checkingSlots.length) {
+        if (Math.abs(checkingSlots[i] - slot) > 24) checkingSlots.splice(i, 1);
+        else i++;
+      }
+      checkingSlots.push(slot);
+      if (checkingSlots.length > 8) {
+        console.log('errorSlots');
+        console.log(checkingSlots);
+        status = true;
+      }
+    })
+    return status;
   }
 
   $scope.setSlotStyle = function(day, hour) {
@@ -677,10 +753,10 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
       });
   }
 
-  $scope.dayIncr = 0;
 
+  $scope.dayIncr = 7;
   $scope.incrDay = function() {
-    if ($scope.dayIncr < 21) $scope.dayIncr++;
+    if ($scope.dayIncr < 49) $scope.dayIncr++;
   }
 
   $scope.decrDay = function() {
@@ -726,7 +802,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     var makeDay = new Date(selectedSlot.slotdate);
     makeDay.setHours(hour);
     $scope.searchStringVal.day = makeDay;
-    $scope.searchStringVal.searchString = $scope.searchStringVal.trackURL;
+    $scope.searchStringVal.searchString = $scope.searchStringVal.trackURL != "" ? $scope.searchStringVal.trackURL : $scope.searchStringVal.searchString;
   }
 
   $scope.clickedSlot = function(day, hour, data) {
@@ -784,7 +860,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
       $scope.searchStringVal.unrepostDate = new Date(data.unrepostDate);
       $scope.searchStringVal.unrepost = (data.unrepostDate > new Date());
       $scope.searchStringVal.searchString = data.trackURL;
-      $scope.searchStringVal.eventComment = $scope.user.repostSettings.schedule.comments.length ? $scope.user.repostSettings.schedule.comments[0] : "";
+      $scope.searchStringVal.eventComment = ($scope.user.repostSettings != undefined && $scope.user.repostSettings.schedule != undefined) ? ($scope.user.repostSettings.schedule.comments != undefined && $scope.user.repostSettings.schedule.comments.length ? $scope.user.repostSettings.schedule.comments[0] : "") : "";
       $scope.followersCount();
       SC.oEmbed($scope.searchStringVal.trackURL, {
         element: document.getElementById('scPopupPlayer'),
@@ -1168,11 +1244,11 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
       return {}
     } else if (event.type == 'track' || event.type == 'queue') {
       return {
-        'background-color': '#67f967'
+        'background-color': '#FF0000'
       }
     } else if (event.type == 'traded') {
       return {
-        'background-color': '#FFDA97'
+        'background-color': '#FF6347'
       }
     } else if (event.type == 'paid') {
       return {
@@ -1197,14 +1273,14 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
   $scope.fillDateArrays = function(events) {
     var calendar = [];
-    var today = new Date();
-    for (var i = 0; i < 29; i++) {
+    var todayDate = new Date();
+    var today = new Date(todayDate.setDate(todayDate.getDate() - 7));
+    for (var i = 0; i < 49; i++) {
       var calDay = {};
       calDay.day = new Date()
       calDay.day.setDate(today.getDate() + i);
       var dayEvents = events.filter(function(ev) {
-        if (soundcloudId == ev.userID)
-          return (ev.day.toLocaleDateString() == calDay.day.toLocaleDateString());
+        return (ev.day.toLocaleDateString() == calDay.day.toLocaleDateString());
       });
       var eventArray = [];
       for (var j = 0; j < 24; j++) {

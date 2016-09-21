@@ -88,13 +88,13 @@ var schema = new mongoose.Schema({
     availableSlots: {
         type: Object,
         default: {
-            'sunday': [1, 4, 8, 11, 14, 17, 20, 23],
-            'monday': [1, 4, 8, 11, 14, 17, 20, 23],
-            'tuesday': [1, 4, 8, 11, 14, 17, 20, 23],
-            'wednesday': [1, 4, 8, 11, 14, 17, 20, 23],
-            'thursday': [1, 4, 8, 11, 14, 17, 20, 23],
-            'friday': [1, 4, 8, 11, 14, 17, 20, 23],
-            'saturday': [1, 4, 8, 11, 14, 17, 20, 23]
+            'sunday': [1, 4, 8, 11, 14, 17, 20],
+            'monday': [1, 4, 8, 11, 14, 17, 20],
+            'tuesday': [1, 4, 8, 11, 14, 17, 20],
+            'wednesday': [1, 4, 8, 11, 14, 17, 20],
+            'thursday': [1, 4, 8, 11, 14, 17, 20],
+            'friday': [1, 4, 8, 11, 14, 17, 20],
+            'saturday': [1, 4, 8, 11, 14, 17, 20]
         }
     },
     repostSettings: {
@@ -148,7 +148,7 @@ var schema = new mongoose.Schema({
             }
         }
     },
-    admin:Boolean
+    admin: Boolean
 });
 
 // method to remove sensitive information from user objects before sending them out

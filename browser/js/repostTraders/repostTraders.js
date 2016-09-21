@@ -126,23 +126,21 @@ app.config(function($stateProvider) {
 });
 
 app.controller("adminrepostTradersController", function($scope, $rootScope, currentTrades, favorites, openTrades, repostEvent, $http, SessionService, $state, $timeout, $window,paidReposts) {
- 
-
   if (!SessionService.getUser()) {
     $state.go('login');
     return;
   }
+  $scope.isLoggedIn = SessionService.getUser() ? true : false;
   $scope.listevents = repostEvent;
   $scope.favorites = favorites;
-  $scope.state = 'reForReInteraction';
+  $scope.state = 'adminreForReInteraction';
   var formActions = SessionService.getActionsfoAccount();
   var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
   var soundcloudId = SessionService.getSoundCloudId();
   $scope.paidUsers=[];
   paidReposts.forEach(function(pr){
     $scope.paidUsers.push(pr);
-  })
-  
+  }) 
 
   if(PaidUserId==undefined && formActions==undefined && $scope.paidUsers.length>0){
     PaidUserId= $scope.paidUsers[0]._id;
@@ -154,8 +152,6 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
   }
   //console.log(formActions+'==========='+$scope.PaidUserId);
 
-  $scope.isLoggedIn = $scope.user ? true : false;
-
   $scope.paidusersId = PaidUserId;
 
   $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
@@ -166,10 +162,16 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
   $scope.currentTrades = currentTrades;
   $scope.currentTradesCopy = currentTrades;
   $scope.otherUsers = [];
-  $scope.searchUser = openTrades;
+  var users=[];
+  for (var i = 0; i < openTrades.length; i++) {
+    var data = openTrades[i];
+    if(data._id!=PaidUserId)
+      users.push(data);   
+  }
+  $scope.searchUser = users;
 
   $scope.currentTab = "SearchTrade";
-  $scope.searchURL = "";
+  //$scope.searchURL = "";
   $scope.sliderSearchMin = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers / 2) : 0)) / Math.log(1.1);
   $scope.sliderSearchMax = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers * 2) : 200000000)) / Math.log(1.1);
   $scope.minSearchTradefollowers = Math.pow(1.1, $scope.sliderSearchMin);
@@ -188,17 +190,6 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
     return $scope.sliderSearchMax
   }, function(newVal, oldVal) {
     $scope.maxSearchTradefollowers = Math.pow(1.1, newVal);
-  })
-
-  $scope.$watch(function() {
-    return $scope.sliderManageMin
-  }, function(newVal, oldVal) {
-    $scope.minManageTradefollowers = Math.pow(1.1, newVal)
-  })
-  $scope.$watch(function() {
-    return $scope.sliderManageMax
-  }, function(newVal, oldVal) {
-    $scope.maxManageTradefollowers = Math.pow(1.1, newVal);
   })
 
   $scope.sortby = "Recent Alert";
@@ -229,7 +220,6 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
   }
 
   $scope.viewSoundcloud = function(user) {
-
     window.location.href = user.soundcloud.permalinkURL;
   }
 
@@ -240,51 +230,112 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
       $scope.searchURL =searchURL;
 
     $http.post('/api/users/bySCURL/', {
-        url: $scope.searchURL,
-        minFollower: $scope.minSearchTradefollowers,
-        maxFollower: $scope.maxSearchTradefollowers,
-        recordRange: {
-          skip: 0,
-          limit: 12
-        }
-      })
-      .then(function(res) {
-        $scope.processing = false;
-        var users=[];
-        var i=-1;
-        var nextfuns = function(){
-          i++;
-          if(i < res.data.length){
-            var data= res.data[i];    
-            if(data._id!=$scope.user._id)
-            users.push(data);
-
+      url: $scope.searchURL,
+      minFollower: $scope.minSearchTradefollowers,
+      maxFollower: $scope.maxSearchTradefollowers,
+      recordRange: {
+        skip: 0,
+        limit: 12
+      }
+    })
+    .then(function(res) {
+      $scope.processing = false;
+      var users=[];
+      var i=-1;
+      var nextfuns = function(){
+        i++;
+        if(i < res.data.length){
+          var data= res.data[i];    
+          if(data._id!=$scope.user._id)
+          users.push(data);
           nextfuns();
         }
         else
           $scope.searchUser = users;
         }
 
-        nextfuns();                  
-      })
-      .then(undefined, function(err) {
-        $scope.success = false;
-        $scope.processing = false;
-        $scope.searchUser = [];
-        $.Zebra_Dialog("Please enter Artist url.");
-      })
-      .then(null, function(err) {
-        $scope.success = false;
-        $scope.processing = false;
-        $scope.searchUser = [];
-        $.Zebra_Dialog("Did not find user.");
-      });
+      nextfuns();                  
+    })
+    .then(undefined, function(err) {
+      $scope.success = false;
+      $scope.processing = false;
+      $scope.searchUser = [];
+      $.Zebra_Dialog("Please enter Artist url.");
+    })
+    .then(null, function(err) {
+      $scope.success = false;
+      $scope.processing = false;
+      $scope.searchUser = [];
+      $.Zebra_Dialog("Did not find user.");
+    });
   }
 
   $scope.hello = function(obj) {
     $state.go('reForReInteraction', obj);
   }
+  /*search*/
+   $scope.searchSelection = [];
+  $scope.changedSearch = function(kind,searchURL) {
+    console.log('called',searchURL);
+    $scope.searchSelection = [];
+    $scope.searchError = undefined;
+    $scope.searching = true;
+    if (searchURL!= "") {
+       console.log('inside');
+      $http.post('/api/search', {
+        q: searchURL,
+        kind: kind
+      }).then(function(res) {
+        console.log('res',res);
+        $scope.searching = false;
+        if (res.data.item) {
+          if (res.data.item.kind != kind) {
+            $scope.serachError = "Please enter a " + kind + " URL.";
+          } else {
+            $scope.selectedItem(res.data.item);
+          }
+        } else {
+          if(res.data.collection.length > 0){
+            $scope.searchSelection = res.data.collection;
+            $scope.searchSelection.forEach(function(item) {
+              $scope.setItemText(item)
+            })
+          }
+          else{
+            $scope.searchError = "We could not find a " + kind + "."
+          } 
+        }
+      }).then(null, function(err) {
+        $scope.searching = false;
+        $scope.searchError = "We could not find a " + kind + "."
+      });
+    }
+  }
 
+  $scope.setItemText = function(item) {
+    switch (item.kind) {
+      case 'track':
+        item.displayName = item.title + ' - ' + item.user.username;
+        break;
+      case 'playlist':
+        item.displayName = item.title + ' - ' + item.user.username;
+        break;
+      case 'user':
+        item.displayName = item.username;
+        break;
+    }
+  }
+
+  $scope.selectedItem = function(item) {
+    $scope.searchSelection = [];
+    $scope.searchError = undefined;
+   $scope.searchURL = "";
+   $scope.searchURL =  item.permalink_url;
+   $scope.searchURL = item.permalink_url;
+   $scope.sendSearch();
+ 
+  }
+  //end search//
   $scope.searchCurrentTrade = function() {
     var cTrades = [];
     $scope.currentTrades = [];
@@ -302,7 +353,7 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
       }
     });
     $scope.currentTrades = cTrades;
-    $scope.$apply();
+    //$scope.$apply();
   }
 
   $scope.tradeType = {
@@ -732,7 +783,7 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
   $scope.verifyBrowser();
   $scope.checkNotification();
   $scope.sortResult($scope.sortby);
- // $scope.loadMore();
+  $scope.loadMore();
   $scope.setView("inbox");
 
 });
