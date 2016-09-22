@@ -13,11 +13,10 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
   $scope.loginObj = {};
   var userData = SessionService.getUser();
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
-  if($scope.isLoggedIn){
-    if(userData.paypal_email==undefined || userData.paypal_email==""){
+  if ($scope.isLoggedIn) {
+    if (userData.paypal_email == undefined || userData.paypal_email == "") {
       $state.go('basicstep1');
-    }    
-    else{
+    } else {
       SessionService.removeAccountusers();
       $state.go('accounts');
     }
@@ -35,12 +34,19 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         var userData = res.data.user;
         userData.isAdmin = true;
         SessionService.create(userData);
-        if(userData.paypal_email==undefined || userData.paypal_email=="")
-        $state.go('basicstep1');
-        else{
-          SessionService.removeAccountusers();
-          $state.go('accounts');
-        }
+        userData.loginInfo = $scope.loginObj;
+        $window.localStorage.setItem('adminUser', JSON.stringify(userData));
+        $http.get('/api/users/byId/' + userData.paidRepost[0].userID)
+          .then(function(res) {
+            $window.localStorage.setItem('prevATUser', JSON.stringify(res.data));
+            if (userData.paypal_email == undefined || userData.paypal_email == "")
+              $state.go('basicstep1');
+            else {
+              SessionService.removeAccountusers();
+              $state.go('accounts');
+            }
+          })
+          .then(console.debug);
       } else {
         $scope.signinError = "Invalid Email or Password.";
       }
@@ -49,14 +55,15 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
     function handleLoginError(res) {
       $scope.signinError = "Error in processing your request";
     }
-  };
+  }
+
   $scope.logout = function() {
-      $http.get('/api/logout').then(function() {
-        SessionService.deleteUser();
-        window.location.href = '/admin';
-      }).catch(function(err) {
-        $scope.processing = false;
-        $.Zebra_Dialog('Wrong Password');
-      });
-    }
+    $http.get('/api/logout').then(function() {
+      SessionService.deleteUser();
+      window.location.href = '/admin';
+    }).catch(function(err) {
+      $scope.processing = false;
+      $.Zebra_Dialog('Wrong Password');
+    });
+  }
 });

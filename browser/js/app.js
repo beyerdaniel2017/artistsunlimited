@@ -90,57 +90,23 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
         } else {
             $rootScope.state = true;
         }
-        // if(toState = 'artistTools') {
-        //     var user = SessionService.getUser();
-        //     console.log(user);
-        // }
-        // console.log('reached here');
-        // if (!destinationStateRequiresAuth(toState)) {
-        //     // The destination state does not require authentication
-        //     // Short circuit with return.
-        //     return;
-        // }
 
-        // if (AuthService.isAuthenticated()) {
-        //     // The user is authenticated.
-        //     // Short circuit with return.
-        //     return;
-        // }
-
-        // // Cancel navigating to new state.
-        // event.preventDefault();
-
-        // AuthService.getLoggedInUser().then(function (user) {
-        //     // If a user is retrieved, then renavigate to the destination
-        //     // (the second time, AuthService.isAuthenticated() will work)
-        //     // otherwise, if no user is logged in, go to "login" state.
-        //     if (user) {
-        //         $state.go(toState.name, toParams);
-        //     } else {
-        //         $state.go('login');
-        //     }
-        // });
-
-        if ($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin') != -1) {
-            var user = SessionService.getUser();
-            if (user) {
-                var redirectPath = (user.role != undefined ? "/admin" : "/login");
-                if ($window.location.pathname.indexOf('admin') != -1 && user.role == undefined) {
-                    $http.post('/api/logout').then(function() {
+        var user = SessionService.getUser();
+        if (!user) {
+            if ($window.location.pathname.indexOf('admin/') != -1) {
+                $http.post('/api/logout').then(function() {
+                    SessionService.deleteUser();
+                    $window.location.href = '/admin';
+                });
+            } else if ($window.location.pathname.indexOf('artistTools/') != -1) {
+                $http.get('/api/users/isUserAuthenticate').then(function(res) {
+                    if (!res.data) {
                         SessionService.deleteUser();
-                        $state.go('admin');
-                        //window.location.href = '/admin';
-                    });
-                } else {
-                    $http.get('/api/users/isUserAuthenticate').then(function(res) {
-                        if (!res.data) {
-                            SessionService.deleteUser();
-                            $window.location.href = redirectPath;
-                        }
-                    });
-                }
+                        $window.location.href = '/login';
+                    }
+                });
             }
-        };
+        }
     });
     SessionService.refreshUser();
 });
@@ -192,7 +158,7 @@ app.directive('fbLike', [
     }
 ])
 
-app.controller('FullstackGeneratedController', function($stateParams, $window, $scope, $state, $http, mainService, SessionService) {
+app.controller('FullstackGeneratedController', function($stateParams, $window, $scope, $state, $http, mainService, SessionService, AuthService) {
     /*Load More*/
     $scope.loadList = function() {
         $scope.$broadcast('loadTrades');
@@ -211,36 +177,35 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
         });
     }
 
-    $scope.gotoSettings = function(){
-      $scope.user = SessionService.getUser();  
-      SessionService.addActionsfoAccount('Admin',$scope.user._id)
-      $state.go("basicstep1");
+    $scope.gotoSettings = function() {
+        $scope.user = SessionService.getUser();
+        SessionService.addActionsfoAccount('Admin', $scope.user._id)
+        $state.go("basicstep1");
     }
-    
 
-    $scope.getBehalfUserRecord = function(paid){
+    $scope.getBehalfUserRecord = function(paid) {
+        console.log(paid);
         paid = JSON.parse(paid);
-        SessionService.removePaidRepostAccounts();  
-        setTimeout(function(){
+        SessionService.removePaidRepostAccounts();
+        setTimeout(function() {
             SessionService.addActionsfoAccount('BehalfUser', paid._id, paid.soundcloud.id);
             SessionService.setUserPaidRepostAccounts(paid);
-            if($state.current.url.indexOf("admin/reForReInteraction") !=-1)
-                window.location.href='/admin/reposttraders';        
-            else            
-                window.location.reload($state.current.url);        
-        },500);
-    }  
+            if ($state.current.url.indexOf("admin/reForReInteraction") != -1)
+                window.location.href = '/admin/reposttraders';
+            else
+                window.location.reload($state.current.url);
+        }, 500);
+    }
 
-    $scope.gotoBehalfSetting = function(actions){
-        
-        if(actions=="SCHEDULER"){
-            window.location.href='/admin/scheduler';  
+    $scope.gotoBehalfSetting = function(actions) {
+        if (actions == "SCHEDULER") {
+            window.location.href = '/admin/scheduler';
         }
-        if(actions=="REPOSTTRADES"){
-            window.location.href='/admin/reposttraders';  
+        if (actions == "REPOSTTRADES") {
+            window.location.href = '/admin/reposttraders';
         }
-        if(actions=="DOWNLOADGATEWAY"){
-            window.location.href='/admin/downloadGateway';
+        if (actions == "DOWNLOADGATEWAY") {
+            window.location.href = '/admin/downloadGateway';
         }
     }
 
@@ -267,30 +232,100 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
         }
     }
 
+    $scope.changeUserAdmin = function(param, location) {
+        console.log(param, location);
+        if (param == 'user') {
+            var prevATUser = JSON.parse($window.localStorage.getItem('prevATUser'));
+            console.log(prevATUser);
+            if (SessionService.getUser()._id != prevATUser._id) {
+                $scope.processing = true;
+                $http.post('/api/login/soundCloudLogin', {
+                        token: prevATUser.soundcloud.token,
+                        password: 'test'
+                    })
+                    .then(function(res) {
+                        $scope.processing = false;
+                        SessionService.create(res.data.user);
+                        console.log(SessionService.getUser());
+                        if (location) window.location.href = location;
+                        else $state.reload();
+                    })
+                    .then(null, function(err) {
+                        $.Zebra_Dialog('Error: Could not log in');
+                        $scope.processing = false;
+                    });
+            } else {
+                if (location) window.location.href = location;
+                else $state.reload();
+            }
+        } else if (param == 'admin') {
+            var adminUser = JSON.parse($window.localStorage.getItem('adminUser'));
+            console.log(adminUser);
+            if (SessionService.getUser()._id != adminUser._id) {
+                $window.localStorage.setItem('prevATUser', JSON.stringify(SessionService.getUser()))
+                $scope.processing = true;
+                AuthService
+                    .login(adminUser.loginInfo)
+                    .then(handleLoginResponse)
+                    .catch(console.log);
+
+                function handleLoginResponse(res) {
+                    console.log('res.data');
+                    if (res.status === 200 && res.data.success) {
+                        var userData = res.data.user;
+                        userData.isAdmin = true;
+                        SessionService.create(userData);
+                        $scope.processing = false;
+                        console.log(SessionService.getUser());
+                        if (location) window.location.href = location;
+                        else $state.reload();
+                    } else console.log("Invalid Email or Password.");
+                }
+            } else {
+                if (location) window.location.href = location;
+                else $state.reload();
+            }
+        } else {
+            $scope.processing = true;
+            $http.post('/api/login/soundCloudLogin', {
+                    token: param.soundcloud.token,
+                    password: 'test'
+                })
+                .then(function(res) {
+                    $scope.processing = false;
+                    SessionService.create(res.data.user);
+                    $window.localStorage.setItem('prevATUser', JSON.stringify(SessionService.getUser()))
+                    console.log(SessionService.getUser());
+                    $state.reload();
+                })
+                .then(null, function(err) {
+                    $.Zebra_Dialog('Error: Could not log in');
+                    $scope.processing = false;
+                });
+        }
+    }
 
     $scope.linkedUsersChange = function(authToken) {
         $scope.processing = true;
         $http.post('/api/login/soundCloudLogin', {
-            token: authToken,
-            password: 'test'
-        })
-        .then(function(res) {
-            $scope.processing = false;
-            SessionService.create(res.data.user);
-            $window.location.reload();
-
-        })
-        .then(null, function(err) {
-            $.Zebra_Dialog('Error: Could not log in');
-            $scope.processing = false;
-        });
+                token: authToken,
+                password: 'test'
+            })
+            .then(function(res) {
+                $scope.processing = false;
+                SessionService.create(res.data.user);
+                $state.reload();
+            })
+            .then(null, function(err) {
+                $.Zebra_Dialog('Error: Could not log in');
+                $scope.processing = false;
+            });
     }
 
-    $scope.swithUser = function(isadmin){
-        if(isadmin){
+    $scope.swithUser = function(isadmin) {
+        if (isadmin) {
             mainService.logout();
-        }
-        else{
+        } else {
             mainService.adminlogout();
         }
     }

@@ -818,7 +818,6 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
           event.owner = $scope.trade.p2.user._id;
           event.day = new Date((new Date(slot.day)).getTime() + i * 7 * 24 * 60 * 60 * 1000);
           event.unrepostDate = new Date(event.day.getTime() + 24 * 60 * 60 * 1000);
-
           $http.post('/api/events/repostEvents', event)
             .then(console.log, console.log);
         })
@@ -839,7 +838,7 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
         var event = slot;
         event.type = 'traded';
         event.owner = $scope.trade.p2.user._id;
-        $scope.createEventWithUserTradeSettings(event, slot.userID);        
+        $scope.createEventWithUserTradeSettings(event, slot.userID);
       })
       $scope.trade.p2.slots.forEach(function(slot) {
         var event = slot;
@@ -857,25 +856,24 @@ app.controller("ReForReInteractionController", function($rootScope, $state, $sco
       .then(null, console.log);
   }
 
-  $scope.createEventWithUserTradeSettings = function(event, userID){
-    $http.get('/api/users/bySoundcloudID/'+userID)
-    .then(function(res){
-      var user = res.data;
-      if(user){
-        event.like = user.repostSettings.trade.like;
-        var userTradeComments = user.repostSettings.trade.comments;
-        if(user.repostSettings.trade.comment && userTradeComments.length > 0){
-          event.comment = userTradeComments[Math.floor(Math.random()*userTradeComments.length)];
+  $scope.createEventWithUserTradeSettings = function(event, userID) {
+    $http.get('/api/users/bySoundcloudID/' + userID)
+      .then(function(res) {
+        var user = res.data;
+        if (user) {
+          event.like = user.repostSettings.trade.like;
+          var userTradeComments = user.repostSettings.trade.comments;
+          if (user.repostSettings.trade.comment && userTradeComments.length > 0) {
+            event.comment = userTradeComments[Math.floor(Math.random() * userTradeComments.length)];
+          }
+          $http.post('/api/events/repostEvents', event);
+        } else {
+          $http.post('/api/events/repostEvents', event);
         }
+      })
+      .then(null, function(err) {
         $http.post('/api/events/repostEvents', event);
-      }
-      else{
-        $http.post('/api/events/repostEvents', event);
-      }
-    })
-    .then(null,function(err){
-      $http.post('/api/events/repostEvents', event);
-    });
+      });
   }
 
   function getshortdate(d) {
