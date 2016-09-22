@@ -10,13 +10,13 @@ app.config(function($stateProvider) {
             $window.location.href = '/login';
           }
           return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
-            .then(function(res) {
-              return res.data;
-            })
-            .then(null, function(err) {
-              $.Zebra_Dialog("error getting your events");
-              return;
-            })
+          .then(function(res) {
+            return res.data;
+          })
+          .then(null, function(err) {
+            $.Zebra_Dialog("error getting your events");
+            return;
+          })
         }
       }
     })
@@ -31,13 +31,13 @@ app.config(function($stateProvider) {
             $window.location.href = '/login';
           }
           return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
-            .then(function(res) {
-              return res.data;
-            })
-            .then(null, function(err) {
-              $.Zebra_Dialog("error getting your events");
-              return;
-            })
+          .then(function(res) {
+            return res.data;
+          })
+          .then(null, function(err) {
+            $.Zebra_Dialog("error getting your events");
+            return;
+          })
         }
       }
     });
@@ -118,8 +118,8 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
   $scope.setRepostHours = function(){
     if($scope.unrepostEnable){
       $scope.unrepostHours = "24";
-          }
-          else{
+    }
+    else{
       $scope.unrepostHours = "";
     }
   }
@@ -144,7 +144,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
     $scope.makeEvent.trackID = track.id;
     $scope.makeEvent.title = track.title;
     $scope.makeEvent.trackURL = track.permalink_url
-    SC.oEmbed($scope.makeEvent.trackURL, {
+    SC.oEmbed( $scope.makeEvent.trackURL, {
       element: document.getElementById('scPopupPlayer'),
       auto_play: false,
       maxheight: 150
@@ -474,22 +474,21 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
         });
 
         item.event = event;
-        item.date = strDdate + " " + time;
-
-        if(!item.event && new Date(item.date).getDate() == new Date().getDate())
+        var dt = new Date(strDdate);
+        dt.setHours(s);
+        item.date = new Date(dt);
+        //item.date = strDdate + " " + time;
+        if(!item.event)
+        {  
+          if(new Date(item.date).getTime() > new Date().getTime())
+          {
+            $scope.listevents.push(item);
+          }
+        }
+        else if(item.event)
         {
-          var eventTime = new Date(item.date).getHours();
-          var currTime = new Date().getDate();
-    
-              if(eventTime > currTime)
-                {
-                   $scope.listevents.push(item);
-                }
-         }
-         else
-         {
-        $scope.listevents.push(item);
-         }
+          $scope.listevents.push(item);
+        }
   
         if (event == undefined && new Date(item.date) > new Date()) {
           item.slotdate = d;
@@ -735,6 +734,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
       $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
       $scope.makeEventURL = $scope.makeEvent.trackURL;
+      $scope.eventComment= $scope.makeEvent.comment;
       SC.oEmbed($scope.makeEvent.trackURL, {
         element: document.getElementById('scPopupPlayer'),
         auto_play: false,
@@ -1103,7 +1103,7 @@ app.controller('ATSchedulerController', function($rootScope, $state, $scope, $ht
       return {
         'background-color': '#FF6347',
         'margin' : '2px',
-        'height' : '19px'
+        'height' : '18px'
       }
     } else if (event.type == 'paid') {
       return {

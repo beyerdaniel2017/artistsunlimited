@@ -63,7 +63,7 @@
                                                         <img class="avtar-200 img-responsive" src="{{otherUser.soundcloud.avatarURL ? otherUser.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}">
                                                        <div class="img-btn-box">
                                                             <button class="btn btn-pink btn-sm btn-block" ng-click="openTrade(otherUser)">OPEN TRADE</button>
-                                                            <button class="btn btn-pink btn-sm btn-block" ng-click="viewSoundcloud(otherUser)">SOUNDCLOUD</button>
+                                                            <button class="btn btn-border btn-sm btn-block" ng-click="viewSoundcloud(otherUser)">SOUNDCLOUD</button>
                                                        </div>
                                                         </a>
                                                     </div>
@@ -83,7 +83,7 @@
                                                         <img class="avtar-200 img-responsive" src="{{otherUser.soundcloud.avatarURL ? otherUser.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}">
                                                         <div class="img-btn-box">
                                                         <button class="btn btn-pink btn-sm btn-block" ng-click="openTrade(otherUser)">OPEN TRADE</button>
-                                                        <button class="btn btn-pink btn-sm btn-block" ng-click="viewSoundcloud(otherUser)">SOUNDCLOUD</button>
+                                                        <button class="btn btn-boder btn-sm btn-block" ng-click="viewSoundcloud(otherUser)">SOUNDCLOUD</button>
                                                         </div>
                                                         </a>
                                                     </div>
@@ -106,8 +106,8 @@
                                 <div class="row">
                                     <div class="col-md-4 col-sm-6 col-xs-12">
                                         <div class="btn-group channel-group" role="group" aria-label="...">
-                                            <a class="btn btn-default active" ng-class="{active : itemView == 'inbox'}" href="javascript:void(0)" ng-click="setView('inbox')">Inbox</a>
-                                            <a class="btn btn-default" ng-class="{active : itemView == 'sent'}" href="javascript:void(0)" ng-click="setView('sent')">Sent</a>
+                                            <a class="btn btn-default b-radius-10 active" ng-class="{active : itemView == 'inbox'}" href="javascript:void(0)" ng-click="setView('inbox')">Inbox</a>
+                                            <a class="btn btn-default b-radius-10" ng-class="{active : itemView == 'sent'}" href="javascript:void(0)" ng-click="setView('sent')">Sent</a>
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6 col-xs-12">
@@ -200,14 +200,14 @@
                             <div class="container-90">
                                 <div class="col-md-3 col-xs-6">
                                     <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
-                                        <a class="btn btn-default" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
-                                        <a class="btn btn-default" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
+                                        <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
+                                        <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-xs-6 pull-right text-right">
                                     <div class="btn-group" role="group" aria-label="...">
-                                        <a class="btn btn-default" ng-class="{active : manageView == 'calender'}" href="javascript:void(0)" ng-click="setManageView('calender')"><img src="assets/images/box-view.png" /></a>
-                                        <a class="btn btn-default" ng-class="{active : manageView == 'list'}" href="javascript:void(0)" ng-click="setManageView('list')"><img src="assets/images/list-view.png" /></a>
+                                        <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'calender'}" href="javascript:void(0)" ng-click="setManageView('calender')"><img src="assets/images/box-view.png" /></a>
+                                        <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'list'}" href="javascript:void(0)" ng-click="setManageView('list')"><img src="assets/images/list-view.png" /></a>
                                     </div>
                                 </div>
                                 <div class="">
@@ -340,8 +340,8 @@
                                     <div class="channel-check">
                                         <textarea class="form-control" ng-disabled="disable">{{makeEvent.comment}}</textarea>
                                         <div class="next-previous">
-                                            <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
-                                            <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
+                                            <button class="btn btn-border b-radius-10 pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
+                                            <button class="btn btn-border b-radius-10 pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
                                         </div>
                                     </div>
                                 </div>
@@ -350,8 +350,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="next-previous text-center available-slot-btn">
-                                    <button class="btn organize-btn" style="width:100%;" ng-click="closeModal();">BACK</button>
-                                    <button class="btn organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE &amp; SHARE</button>
+                                    <button  class="btn btn-border b-radius-10 organize-btn" style="width:100%;" ng-click="closeModal();">BACK</button>
+                                    <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE &amp; SHARE</button>
                                 </div>
                             </div>
                         </div>

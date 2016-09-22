@@ -33,14 +33,14 @@
   							</div>
   					</div><!--left-side-manu ::end-->
   					<div class="refor-chate-box">
-  						<span class="pull-left"><button class="btn btn-pink" ng-click="remindTrade()" data-toggle="modal" data-target="#remindModal">Remind</button></span>
-  						<span class="pull-right"><button class="btn btn-pink" ng-click="openChat()">Chat</button></span>
+  						<span class="pull-left"><button class="btn btn-pink margin-0" ng-click="remindTrade()" data-toggle="modal" data-target="#remindModal">Remind</button></span>
+  						<span class="pull-right"><button class="btn btn-pink margin-0" ng-click="openChat()">Chat</button></span>
   					</div>
   				</div>
   			</div>
   			<!-- calendar side -->
   			<div class="col-md-10 col-sm-12 col-xs-12 pr-margin-left-0 pr-padding-left-0 pr-paddin-right-0" ng-init="getCurrentDate();getCurrentdateEvents();">
-  				<div class="page-content right-side">
+  				<div class="page-content right-side left-profile-content">
   					<!--page-contant Start-->
   					<div class="scheduler-tabs">
   						<!-- Nav tabs :Start-->
@@ -52,8 +52,8 @@
   								<div class="container-90">
                     <div class="col-md-5 col-xs-6 pull-left">
                       <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
-                        <a class="btn btn-default" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
-                        <a class="btn btn-default" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
+                        <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
+                        <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
                       </div>
                       <button class="btn btn-pink" ng-click="saveTrade()" ng-if="(trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && showUndo" style="margin-right:5px;">Request</button>
                       <button class="btn btn-pink" ng-click="acceptTrade()" ng-if="!showUndo && (trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && !trade.user.accepted">Accept</button>
@@ -61,8 +61,8 @@
                     </div>
                     <div class="col-md-6 col-xs-12 pull-right text-right">
                       <div class="btn-group" role="group" aria-label="..." style="margin-right:10px;">
-                        <a class="btn btn-default" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.png" /></a>
-                        <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
+                        <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.png" /></a>
+                        <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
                       </div>
                       <label class="switch" style="vertical-align: middle;">
                         <input type="checkbox" ng-checked="repeatOn" ng-click="changeRepeatOn()">
@@ -103,7 +103,7 @@
   								<div ng-show="activeUser._id==trade.p1.user._id">
   									<div id="scheduler-container" ng-show="itemview == 'calender'">
                       <div class="space-10"></div>
-  										<div style="width:100%; height:35px; display:flex; flex-direction:row;margin-bottom: 10px; ">
+  										<div style="width:100%; height:35px; display:flex; flex-direction:row;margin-bottom: 10px; margin-left: 20px;">
   											<button ng-show="!repeatOn" class="btn btn-default btn-scheduler" ng-click="decrp1()"><img src="/assets/images/left-arrow.png"/></button>
   											<div ng-show="!repeatOn" class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendarp1[t+p1dayIncr].day).substring(0,3)}} {{calendarp1[t+p1dayIncr].day.getMonth()+1}}/{{calendarp1[t+p1dayIncr].day.getDate()}}</div>
   											<button  ng-show="!repeatOn" class="btn btn-default btn-scheduler" ng-click="incrp1()" ><img id="scheduler-btn-back" src="/assets/images/right-arrow.png"/></button>
@@ -126,30 +126,30 @@
   										<table class="table scheduler-song-tab">
   											<thead>
   												<tr>
-                        <th width="30%" class="text-center">Account</th>
-                        <th width="15%" class="text-center">Date</th>
-                        <th width="15%" class="text-center">UnrepostDate</th>
-                        <th width="5%" class="text-center">&nbsp;</th>
-                 
+                            <th width="30%" class="text-center">Track</th>
+                            <th width="20%" class="text-center">Account</th>
+                            <th width="20%" class="text-center">Date</th>
+                            <th width="20%" class="text-center">Unrepost Date</th>
+                            <th width="10%" class="text-center">&nbsp;</th>
   												</tr>
   											</thead>
   											<tbody>
-               <tr ng-repeat="item in listEvents" ng-hide="!(item.event.type=='trade' || item.event.type=='empty') || (item.event.type=='empty' && item.date < currentDate)" ng-class='{grey : item.date < currentDate}' ng-style="getEventStyle(item.event)">
-                        <td class="text-center">{{trade.p1.user.soundcloud.username}}</td>
-                        <td class="text-center">{{item.date}}</td>
-                        <td class="text-center">{{getUnrepostDate(item)}}</td>
-                 <!-- <td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">Toggle</button></td> -->
-                        <td class="text-center">
-                  <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>&nbsp;&nbsp;<a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item, 'editable');">Edit</a> -->
-                          <a href="javascript:void(0)" class="btn btn-pink btn-block btn-sm margin-0" ng-click="toggleSlot(item)" ng-hide="item.date < currentDate">Toggle</a>
-                        </td>
-                   
-  													</tr>
-  												</tbody>
-  											</table>
-  										</div>
-  									</div>
-  								</div>
+                          <tr ng-repeat="item in listEvents" ng-hide="!(item.event.type=='trade' || item.event.type=='empty') || (item.event.type=='empty' && item.date < currentDate)" ng-class='{grey : item.date < currentDate}' ng-style="getEventStyle(item.event)">
+                            <td class="text-center">{{item.event.title}}</td>
+                            <td class="text-center">{{trade.p1.user.soundcloud.username}}</td>
+                            <td class="text-center">{{item.date | date: 'EEE MM/dd h:mma'}}</td>
+                            <td class="text-center">{{getUnrepostDate(item) | date: 'EEE MM/dd h:mma'}}</td>
+                            <!-- <td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">Toggle</button></td> -->
+                            <td class="text-center">
+                              <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>&nbsp;&nbsp;<a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item, 'editable');">Edit</a> -->
+                              <a href="javascript:void(0)" class="btn btn-pink btn-block btn-sm margin-0" ng-click="toggleSlot(item)" ng-hide="item.date < currentDate">Toggle</a>
+                            </td>                   
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
   								<!-- p2 calendar -->
   								<div ng-show="activeUser._id==trade.p2.user._id">
   									<div id="scheduler-container" ng-show="itemview == 'calender'">
@@ -172,33 +172,36 @@
   										</div>
   									</div>
   									<div id="scheduler-container" ng-show="itemview == 'list'">
-  										<table class="table">
+  										<div class="space-10"></div>
+                      <table class="table scheduler-song-tab">
   											<thead>
   												<tr>
-  													<th width="50%">Track Name</th>
-  													<th width="15%">Account</th>
-  													<th width="15%">Date</th>
-  													<th width="10%"></th>
-  													<th width="10%"></th>
-  												</tr>
+                            <th width="30%" class="text-center">Track</th>
+                            <th width="20%" class="text-center">Account</th>
+                            <th width="20%" class="text-center">Date</th>
+                            <th width="20%" class="text-center">Unrepost Date</th>
+                            <th width="10%" class="text-center">&nbsp;</th>
+                          </tr>
   											</thead>
   											<tbody>
-     <tr ng-repeat="item in listEvents" ng-hide="!(item.event.type=='trade' || item.event.type=='empty') || (item.event.type=='empty' && item.date < currentDate)" ng-class='{grey : item.date < currentDate}' ng-style="getEventStyle(item.event)">
-<td class="text-left">{{item.event.title}}</td>
-       <td class="text-left">{{trade.p2.user.soundcloud.username}}</td>
-  													<td class="text-left">{{item.date}}</td>
-       <td class="text-left">{{getUnrepostDate(item)}}</td>
-       <!-- <td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">Toggle</button></td> -->
-  													<td class="text-left">
-        <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>&nbsp;&nbsp;<a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item, 'editable');">Edit</a> -->
-        <a href="javascript:void(0)" style="color:#FF7676" ng-click="toggleSlot(item)" ng-hide="item.date < currentDate">Toggle</a></td>
-  													</tr>
-  												</tbody>
-  											</table>
-  										</div>
-  									</div>
-  								</div>
-  							</div>
+                          <tr ng-repeat="item in listEvents" ng-hide="!(item.event.type=='trade' || item.event.type=='empty') || (item.event.type=='empty' && item.date < currentDate)" ng-class='{grey : item.date < currentDate}' ng-style="getEventStyle(item.event)">
+                            <td class="text-center">{{item.event.title}}</td>
+                            <td class="text-center">{{trade.p2.user.soundcloud.username}}</td>
+  													<td class="text-center">{{item.date | date: 'EEE MM/dd h:mma'}}</td>
+                            <td class="text-center">{{getUnrepostDate(item) | date: 'EEE MM/dd h:mma'}}</td>
+                            <!-- <td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">Toggle</button></td> -->
+  													<td class="text-center">
+                              <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>&nbsp;&nbsp;<a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item, 'editable');">Edit</a> -->
+                              <a href="javascript:void(0)" class="btn btn-pink btn-block btn-sm margin-0" ng-click="toggleSlot(item)" ng-hide="item.date < currentDate">Toggle</a>
+                            </td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+                <div class="space-20"></div>
+							</div>
   							<!-- MY SCHEDULE : End-->
   							<!-- ORGANIZE SCHEDULE :Start -->
   							<div role="tabpanel" class="tab-pane fade" id="organizeschedule">

@@ -24,15 +24,7 @@
                                 </div> -->
                                 <div class="search">
                                   <div class="search-suggetion">
-                                    <input class="form-control" type="text" placeholder="Track Search" id="searchString" ng-model="track.trackURL"  required/>
-                                      <ul class="results" ng-show="track.searching || track.searchError || track.searchSelection.length > 0">
-                                        <li ng-show="track.searching && !track.searchError && track.searchSelection.length==0"><a href="#">One moment...</a></li>
-                                        <li ng-repeat="item in track.searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
-                                        <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
-                                        <li ng-show="!!track.searchError">{{searchError}}</li>
-                                        <li ng-show="track.searchSelection.length > 0 && !track.searchError"><a href="#">Or enter a Soundcloud URL</a></li>
-                                      </ul>
-                                    <a href="#" class="url-search-btn-small" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+                                      <scsearch kind='track' returnitem='choseTrack(item)'></scsearch>
                                   </div>
                                 </div>
                                 
@@ -67,14 +59,14 @@
                                         <a class="close-ic-rel" href="#" ng-click="removeSMLink($index)"><img src="assets/images/close.png"></a>
                                     </div>
                                     <a href="#" ng-click="addSMLink()">+ Social Media</a> </div>
-                                <div class="artist-follow" ng-if="user.admin">
-                                    <h4>Playlist URLs</h4>
-                                    <div class="input-box" ng-repeat="playlist in track.playlists">
-                                        <input class="form-control" placeholder="URL" ng-model="playlist.url" ng-change="playlistURLChange($index)" />
-                                        <a class="pro-icon" href="{{playlist.url}}" target="_blank" ng-show="playlist.avatar != ''"><img class="profile-icon" ng-src="{{playlist.avatar}}"></a>
+                                    <div class="artist-follow search">
+                                                    <h4>Playlist</h4>
+                                                     <scsearch kind='playlist' returnitem='chosePlaylist(item)'></scsearch>
+                                                   <div ng-repeat="playlist in track.playlists" style="padding:10px; color:#000; text-align: center;">
+                                                    <a href="{{playlist.url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{playlist.avatar}}">{{' ' + playlist.title}}</a>&nbsp;&nbsp;&nbsp;
                                         <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePlaylist($index)"></a>
                                     </div>
-                                    <a href="#" ng-click="addPlaylist()">+ Playlist</a> </div>
+                                            </div>
                                 <div class="social-container">
                                     <h4>Download File</h4>
                                     <div>
@@ -156,14 +148,14 @@
                                     <br/>
                                     <br/>
                                     <div ng-if="track.socialPlatform == 'actionsOnSoundcloud'">
-                                        <div class="artist-follow">
+                                         <div class="artist-follow search">
                                             <h4>Artists to Follow</h4>
-                                            <div class="input-box" ng-repeat="artist in track.artists" ng-show="!artist.permanentLink">
-                                                <input class="form-control" placeholder="URL" ng-model="artist.url" ng-change="artistURLChange($index)" />
-                                                <a class="pro-icon" href="{{artist.url}}" target="_blank" ng-show="artist.avatar !== ''"><img class="profile-icon" ng-src="{{artist.avatar}}"></a>
+                                                     <scsearch kind='user' returnitem='choseArtistNew(item)'></scsearch>
+                                                   <div ng-repeat="artist in track.artists" style="padding:10px; color:#000; text-align: center;">
+                                                    <a href="{{artist.url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{artist.avatar}}">{{' ' + artist.username}}</a>&nbsp;&nbsp;&nbsp;
                                                 <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeArtist($index)"></a>
                                             </div>
-                                            <a href="#" ng-click="addArtist()" ng-hide="track.artists.length > 2 && !user.admin">+ Artist</a> </div>
+                                            </div>
                                         <div class="social-container">
                                             <h4>Actions</h4>
                                             <small class="orange-text">To download the user will:</small>
@@ -190,7 +182,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-12 text-center" style="margin-top:20px;"> <a href="#" class="btn btn-default btn-enter" ui-sref="adminDownloadGateway">Back</a> <a class="btn btn-default btn-enter" href="javascript:void(0)" ng-click="preview(track)" target="_blank">Preview</a>
+                            <div class="col-md-12 text-center" style="margin-top:20px;"> <a href="#" class="btn btn-border b-radius-10 btn-enter" ui-sref="adminDownloadGateway">Back</a> <a class="btn btn-border b-radius-10 btn-enter" href="javascript:void(0)" ng-click="preview(track)" target="_blank">Preview</a>
                                 <button type="submit" class="btn btn-default btn-enter">Save</button>
                             </div>
                             <!-- Download Section End -->

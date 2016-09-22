@@ -339,16 +339,17 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
     $scope.openThankYouModal.thankYou($stateParams.submission._id);
   }
   $scope.showProfileInfo = function() {
+    $scope.userdata =  $scope.user;
     $scope.profile.data = $scope.user;
-    // if (($scope.profile.data.permanentLinks && $scope.profile.data.permanentLinks.length === 0) || !$scope.profile.data.permanentLinks) {
-    //   $scope.profile.data.permanentLinks = [{
-    //     url: '',
-    //     avatar: '',
-    //     username: '',
-    //     id: -1,
-    //     permanentLink: true
-    //   }];
-    // };
+    if (($scope.profile.data.permanentLinks && $scope.profile.data.permanentLinks.length === 0) || !$scope.profile.data.permanentLinks) {
+      /*$scope.profile.data.permanentLinks = [{
+        url: '',
+        avatar: '',
+        username: '',
+        id: -1,
+        permanentLink: true
+      }];*/
+    };
     $scope.profile.isAvailable = {};
     $scope.profile.isAvailable.email = $scope.profile.data.email ? true : false;
     $scope.profile.isAvailable.password = $scope.profile.data.password ? true : false;
@@ -361,7 +362,7 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
       value: '',
       visible: false
     };
-    var permanentLinks = $scope.profile.data.permanentLinks.filter(function(item) {
+    var permanentLinks = $scope.permanentLinks.filter(function(item) {
       return item.id !== -1;
     }).map(function(item) {
       delete item['$$hashKey'];
@@ -416,7 +417,7 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
   }
 
   $scope.removePermanentLink = function(index) {
-    $scope.profile.data.permanentLinks.splice(index, 1);
+    $scope.permanentLinks.splice(index, 1);
     $scope.saveProfileInfo();
   };
 
@@ -430,13 +431,6 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
       return false;
     }
 
-    // $scope.profile.data.permanentLinks.push({
-    //   url: '',
-    //   avatar: '',
-    //   username: '',
-    //   id: -1,
-    //   permanentLink: true
-    // });
   };
 
   $scope.permanentLinkURLChange = function() {
@@ -462,6 +456,37 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
     });
   };
 
+   $scope.permanentLinks = [];
+   $scope.choseArtist = function(artist) {
+      var permanentLink = {};
+      $scope.permanentLinks.push({
+          url: artist.permalink_url,
+          avatar: artist.avatar_url ? artist.avatar_url : '',
+          username: artist.username,
+          id: artist.id,
+          permanentLink: true
+       });
+    }
+
+    $scope.choseArtistNew = function(artist) {
+      var permanentLink = {};
+        $scope.track.artists.push({
+          url: artist.permalink_url,
+          avatar: artist.avatar_url ? artist.avatar_url : '',
+          username: artist.username,
+          id: artist.id,
+          permanentLink: true
+       });
+    }
+    $scope.chosePlaylist = function(playlist) {
+      var permanentLink = {};
+      $scope.track.playlists.push({
+          url: playlist.permalink_url,
+          avatar: playlist.avatar_url ? playlist.avatar_url : '',
+          title: playlist.title,
+          id: playlist.id,
+       });
+    }
   $scope.saveSoundCloudAccountInfo = function() {
     SC.connect()
     .then(saveInfo)
@@ -1130,9 +1155,49 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
         break;
     }
   }
+$scope.choseTrack = function(item) {
+     var player = document.getElementById('scPopupPlayer');
+    if($scope.tabSelected == false){
+      player = document.getElementById('scPlayer');
+    }
+    $scope.searchSelection = [];
+    $scope.searchError = undefined;
+    $scope.searchString = item.displayName;
+    $scope.track.trackTitle = item.displayName;
+    $scope.track.trackID = item.id;
+    $scope.track.artistID = item.user.id;
+    $scope.track.description = item.description;
+    $scope.track.trackArtworkURL = item.artwork_url ? item.artwork_url.replace('large.jpg', 't500x500.jpg') : '';
+    $scope.track.artistArtworkURL = item.user.avatar_url ? item.user.avatar_url.replace('large.jpg', 't500x500.jpg') : '';
+    $scope.track.artistURL = item.user.permalink_url;
+    $scope.track.artistUsername = item.user.username;
+    $scope.track.SMLinks = [];
+    SC.get('/users/' + $scope.track.artistID + '/web-profiles')
+    .then(handleWebProfiles)
+    .catch(handleError);
 
+    function handleWebProfiles(profiles) {
+      profiles.forEach(function(prof) {
+        if (['twitter', 'youtube', 'facebook', 'spotify', 'soundcloud', 'instagram'].indexOf(prof.service) != -1) {
+          $scope.track.SMLinks.push({
+            key: prof.service,
+            value: prof.url
+          });
+        }
+      });
+      $scope.isTrackAvailable = true;
+      $scope.processing = false;
+      $scope.$apply();
+  }
+
+    function handleError(err) {
+      $scope.track.trackID = null;
+      $.Zebra_Dialog('Song not found or forbidden');
+      $scope.processing = false;
+      $scope.$apply();
+    }
+}
   $scope.selectedItem = function(item) {
-
       $scope.track.searching = false;
       $scope.track.searchError = false;
       $("#searchString,#searchString1").next("ul").hide();

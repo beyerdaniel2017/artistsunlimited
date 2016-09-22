@@ -89,13 +89,13 @@ app.config(function($stateProvider) {
             return [];
           }
         },
-        repostEvent: function($http, SessionService) {
+         repostEvent: function($http, SessionService) {
           var user = SessionService.getUser();
           if (user) {
-            return $http.get("/api/events/getRepostEvents/" + user._id)
-              .then(function(repostEvent) {
-                var repostEvent = repostEvent.data;
-                return repostEvent;
+            return  $http.get("/api/events/getRepostEvents/"+user._id)
+           .then(function(repostEvent) {
+            var repostEvent = repostEvent.data;
+           return repostEvent;
               });
           } else {
             return [];
@@ -319,7 +319,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   }
 
   $scope.setManageView = function(type) {
-    $scope.manageView = type;
+    $scope.manageView = type;  
   };
 
   $scope.loadMore = function() {
@@ -396,7 +396,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   }
 
   $scope.remindTrade = function(tradeID, index) {
-    $scope.sharelink = "https://localhost:1443/artistTools/reForReInteraction/" + tradeID;
+    $scope.sharelink = "https://localhost:1443/artistTools/reForReInteraction/"+tradeID;
   }
 
   $scope.sendMail = function(sharelink) {
@@ -493,7 +493,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   $scope.decrDay = function() {
     if ($scope.dayIncr > 0) $scope.dayIncr--;
   }
-
+  
   $scope.dayOfWeekAsString = function(date) {
     var dayIndex = date.getDay();
     if (screen.width > '744') {
@@ -501,7 +501,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
     }
     return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dayIndex];
   }
-
+  
   $scope.getEventStyle = function(repostEvent) {
     if (repostEvent.type == 'empty') {
       return {}
@@ -513,7 +513,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
       return {
         'background-color': '#2b9fda'
       }
-    }
+    }     
   }
 
   repostEvent.forEach(function(ev) {
@@ -548,29 +548,29 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   };
 
   $scope.calendar = $scope.fillDateArrays(repostEvent);
-
-  $scope.clickedSlot = function(day, hour, data) {
+ 
+  $scope.clickedSlot = function(day, hour, data) {   
     if (data.trackInfo) {
       document.getElementById('scPopupPlayer').style.visibility = "hidden";
       document.getElementById('scPopupPlayer').innerHTML = "";
-      $scope.makeEvent = {};
+      $scope.makeEvent={};
       var makeDay = new Date(day);
       makeDay.setHours(hour);
       $scope.makeEvent._id = data.trackInfo._id;
       $scope.makeEvent.day = new Date(data.trackInfo.day);
       $scope.makeEvent.url = data.trackInfo.trackURL;
-      $scope.makeEvent.comment = data.trackInfo.comment;
+      $scope.makeEvent.comment = data.trackInfo.comment;      
       $scope.makeEvent.timeGap = data.trackInfo.timeGap;
       $scope.makeEvent.artist = data.userInfo;
       var repostDate = new Date(data.trackInfo.day);
       var unrepostDate = new Date(data.trackInfo.unrepostDate);
-      var diff = Math.abs(new Date(unrepostDate).getTime() - new Date(repostDate).getTime()) / 3600000;
-      $scope.makeEvent.unrepostHours = diff;
+      var diff = Math.abs(new Date(unrepostDate).getTime() - new Date(repostDate).getTime())/ 3600000;
+      $scope.makeEvent.unrepostHours = diff; 
       var d = new Date(day).getDay();
       var channels = data.trackInfo.otherChannels;
-      $scope.displayChannels = [];
+      $scope.displayChannels=[];
       for (var i = 0; i < repostEvent.length; i++) {
-        if (channels.indexOf(repostEvent[i].userInfo.id) > -1) {
+        if(channels.indexOf(repostEvent[i].userInfo.id) > -1){
           $scope.displayChannels.push(repostEvent[i].userInfo.username);
         }
       }
@@ -581,11 +581,11 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
       });
       SC.oEmbed($scope.makeEvent.url, {
         element: document.getElementById('scPopupPlayer'),
-        auto_play: false,
-        maxheight: 120
+         auto_play: false,
+         maxheight: 120
       })
       document.getElementById('scPopupPlayer').style.visibility = "visible";
-    }
+    }   
   }
 
   $scope.closeModal = function() {
@@ -594,46 +594,36 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
 
   $scope.saveEvent = function() {
     var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
-      .then(function(res) {
+    .then(function(res) {
         console.log(res);
-        $scope.makeEventURL = "";
-        $scope.makeEvent = null;
-        $scope.eventComment = "";
-        document.getElementById('scPlayer').style.visibility = "hidden";
-        document.getElementById('scPopupPlayer').style.visibility = "hidden";
-        $scope.unrepostHours = 1;
-        $scope.tabSelected = true;
-        $scope.trackType = "";
-        $scope.trackArtistID = 0;
-        $.Zebra_Dialog("Event created successfully.");
-        if ($scope.manageView == "newsong") {
-          $scope.manageView = "list";
-        }
+      $scope.makeEventURL = "";
+      $scope.makeEvent = null;
+      $scope.eventComment = "";
+      document.getElementById('scPlayer').style.visibility = "hidden";
+      document.getElementById('scPopupPlayer').style.visibility = "hidden";
+      $scope.unrepostHours = 1;
+      $scope.tabSelected = true;
+      $scope.trackType = "";
+      $scope.trackArtistID = 0;
+      $.Zebra_Dialog("Event created successfully.");
+      if($scope.manageView == "newsong"){
+        $scope.manageView = "list";
+      }
         $http.get("/api/events/getRepostEvents/" + $scope.user._id)
           .then(function(res) {
             $scope.calendar = $scope.fillDateArrays(res.data);
           });
         $scope.showOverlay = false;
-      })
-      .then(null, function(err) {
-        $scope.processing = false;
-        $.Zebra_Dialog("ERROR: Did not save.");
-      });
+    })
+    .then(null, function(err) {
+      $scope.processing = false;
+      $.Zebra_Dialog("ERROR: Did not save.");
+    });
   }
 
   $scope.choseArtist = function(user) {
-    console.log('user')
-    // $scope.searchString = track.title;
-    // $scope.makeEvent.trackID = track.id;
-    // $scope.makeEvent.title = track.title;
-    // $scope.makeEvent.trackURL = track.permalink_url;
-    // $scope.makeEvent.trackArtUrl = track.artwork_url;
-    // SC.oEmbed( $scope.makeEvent.trackURL, {
-    //   element: document.getElementById('scPopupPlayer'),
-    //   auto_play: false,
-    //   maxheight: 150
-    // })
-    // document.getElementById('scPopupPlayer').style.visibility = "visible";
+    $scope.searchURL = user.permalink_url,
+    $scope.sendSearch();
   }
 
   $scope.choseTrack = function(track) {
@@ -660,33 +650,32 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
       element: document.getElementById('scPlayer'),
       auto_play: false,
       maxheight: 150
-            })
+    })
     document.getElementById('scPlayer').style.visibility = "visible";
   }
-
-
-  $scope.scheduleRepostEvent = function(data){
+  
+  $scope.editRepostEvent = function(data){
     if (data.trackInfo) {
       $scope.manageView = "newsong";
       document.getElementById('scPlayer').style.visibility = "hidden";
       document.getElementById('scPlayer').innerHTML = "";
       var day = new Date(data.trackInfo.day);
-      $scope.makeEvent = {};
+      $scope.makeEvent={};
       $scope.makeEvent._id = data.trackInfo._id;
       $scope.makeEvent.day = new Date(data.trackInfo.day);
       $scope.makeEvent.url = data.trackInfo.trackURL;
-      $scope.makeEvent.comment = data.trackInfo.comment;
+      $scope.makeEvent.comment = data.trackInfo.comment;      
       $scope.makeEvent.timeGap = data.trackInfo.timeGap;
       $scope.makeEvent.artist = data.userInfo;
       var repostDate = new Date(data.trackInfo.day);
       var unrepostDate = new Date(data.trackInfo.unrepostDate);
-      var diff = Math.abs(new Date(unrepostDate).getTime() - new Date(repostDate).getTime()) / 3600000;
-      $scope.makeEvent.unrepostHours = diff;
+      var diff = Math.abs(new Date(unrepostDate).getTime() - new Date(repostDate).getTime())/ 3600000;
+      $scope.makeEvent.unrepostHours = diff; 
       var d = new Date(day).getDay();
       var channels = data.trackInfo.otherChannels;
-      $scope.displayChannels = [];
+      $scope.displayChannels=[];
       for (var i = 0; i < repostEvent.length; i++) {
-        if (channels.indexOf(repostEvent[i].userInfo.id) > -1) {
+        if(channels.indexOf(repostEvent[i].userInfo.id) > -1){
           $scope.displayChannels.push(repostEvent[i].userInfo.username);
         }
       }
@@ -700,10 +689,10 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
         maxheight: 120
       })
       document.getElementById('scPlayer').style.visibility = "visible";
-    }
+    } 
   }
 
-  $scope.addNewSongCancel = function() {
+  $scope.addNewSongCancel = function(){
     $scope.manageView = "list";
   }
 

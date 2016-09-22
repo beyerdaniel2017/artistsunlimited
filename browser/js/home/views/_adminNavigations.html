@@ -1,6 +1,6 @@
 <div id="sidebar-wrapper">
   <div class="left-side">
-        <div class="tropical" style="padding-top:0px;"><span>{{user.email}}</span><img class="img-responsive img-circle" src="{{user.profilePicture ? user.profilePicture : (user.soundcloud.avatarURL ? user.soundcloud.avatarURL :'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg')}}" style="width: 100px;height: 100px;">
+        <div class="tropical"><span>{{user.email}}</span><img class="img-responsive img-circle" src="{{user.profilePicture ? user.profilePicture : (user.soundcloud.avatarURL ? user.soundcloud.avatarURL :'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg')}}" style="width: 100px;height: 100px;">
       <div class="clearfix"></div>
       <div ng-if="paidUsers.length">
         <input type="hidden" id="paidusersId" value="{{paidusersId}}">

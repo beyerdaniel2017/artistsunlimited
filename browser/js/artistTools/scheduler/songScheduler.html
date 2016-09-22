@@ -39,8 +39,8 @@
                   </div>
                   <div class="col-md-6 col-xs-12">              
                     <div class="btn-group channel-group" role="group" aria-label="...">
-                      <a class="btn btn-default active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender');setActive('channel')">Channels</a>
-                      <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
+                      <a class="btn btn-default b-radius-10 active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender');setActive('channel')">Channels</a>
+                      <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
                     </div>
                     <div class="channel-check">
                       <div class="channel-masege">
@@ -127,8 +127,8 @@
                           <div class="form-group">
                             <textarea class="form-control" placeholder="Awesome track!"></textarea>
                             <div class="next-previous">
-                              <button class="btn pull-left">Previous</button>
-                              <button class="btn pull-right">Next</button>
+                              <button class="btn btn-border b-radius-10 pull-left">Previous</button>
+                              <button class="btn btn-border b-radius-10 pull-right">Next</button>
                             </div>
                           </div>
                         </div>
@@ -136,9 +136,9 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="next-previous text-center">
-                            <button class="btn active">SKIP TO NEXT AUTOFILL</button>
-                            <button class="btn">CANCEL</button>
-                            <button class="btn save-share" ng-click="saveEvent();">SAVE & SHARE</button>
+                            <button class="btn btn-border b-radius-10 active">SKIP TO NEXT AUTOFILL</button>
+                            <button class="btn btn-border b-radius-10">CANCEL</button>
+                            <button class="btn btn-pink b-radius-10 save-share" ng-click="saveEvent();">SAVE & SHARE</button>
                           </div>
                         </div>
                       </div><!--row end-->

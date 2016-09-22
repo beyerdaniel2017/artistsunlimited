@@ -38,8 +38,8 @@
               <div class="container-90">
                 <div class="col-md-3 col-xs-6">
                   <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
-                    <a class="btn btn-default" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
-                    <a class="btn btn-default" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
+                    <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
+                    <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
                   </div>
                 </div>
                 <div class="col-md-4 col-xs-12 pull-right">
@@ -51,8 +51,8 @@
                 </div>
                 <div class="col-md-4 col-xs-6 pull-right text-right">
                   <div class="btn-group" role="group" aria-label="...">
-                    <a class="btn btn-default" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setView('calendar')"><img src="assets/images/box-view.png" /></a>
-                    <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
+                    <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setView('calendar')"><img src="assets/images/box-view.png" /></a>
+                    <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
                   </div>
                 </div>
               </div>
@@ -97,7 +97,7 @@
                     </td>
                     <td class="text-center">{{item.event.title}}</td>
                     <td class="text-center">{{user.soundcloud.username}}</td>
-                    <td class="text-center">{{item.date}}</td>
+                    <td class="text-center">{{item.date | date:'EEE MM/dd h:mma'}}</td>
                     <td><span ng-if="item.event" style="color:{{item.event.type == 'track'? '#FF0000' : '#FF6347'}}">{{item.event.type}}</span></td>
                     <td class="text-center">
                       <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>&nbsp;&nbsp; -->
@@ -261,16 +261,7 @@
                 <div class="col-md-6 col-xs-12">            
                    <div class="search">
                       <div class="search-suggetion">
-                        <input class="form-control" type="text" placeholder="Track Search" id="searchString" ng-model="searchStringVal.searchString"  required/>
-                          <ul class="results" ng-show="searchStringVal.searching || searchStringVal.searchError || searchStringVal.searchSelection.length > 0">
-                            <li ng-show="searchStringVal.searching && !searchStringVal.searchError && searchStringVal.searchSelection.length==0"><a href="#">One moment...</a></li>
-                            <li ng-repeat="item in searchStringVal.searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
-                            <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
-                            <li ng-show="!!searchStringVal.searchError">{{searchError}}</li>
-                            <li ng-show="searchStringVal.searchSelection.length > 0 && !searchStringVal.searchError"><a href="#">Or enter a Soundcloud URL</a></li>
-                          </ul>
-                        <a href="#" class="url-search-btn-big" ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
-                      </div>
+                       <scsearch kind='track' returnitem='choseTrack(item)'></scsearch>
                     </div>
       
                   <label>Next Available Repost Time</label>
@@ -318,8 +309,8 @@
                   </div>
                   <div class="col-md-6 col-xs-12">              
                     <div class="btn-group channel-group" ng-if="admin.role == 'admin'" role="group" aria-label="...">
-                      <a class="btn btn-default active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setView('calendar');setActive('channel')">Channels</a>
-                      <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
+                      <a class="btn btn-default b-radius-10 active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setView('calendar');setActive('channel')">Channels</a>
+                      <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
                     </div>
                     <div class="channel-check">
                       <div class="channel-masege">
@@ -390,16 +381,16 @@
                             <textarea class="form-control" ng-disabled="disable" ng-model="searchStringVal.eventComment">{{comment}}</textarea>
                           </div>
                             <div class="next-previous">
-                              <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
-                              <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
+                              <button class="btn btn-border b-radius-10 pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
+                              <button class="btn btn-border b-radius-10 pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
                             </div>
                           </div>
                       </div><!--row end-->
                       <div class="row">
                         <div class="col-md-12">
                           <div class="next-previous text-center">
-                           <button class="btn" ng-click="addNewSongCancel()">CANCEL</button>
-                           <button class="btn save-share" data-toggle="modal" data-target="#saveAndShareModal" ng-click="saveEvent();">SAVE & SHARE</button>
+                           <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
+                           <button class="btn btn-pink b-radius-10 save-share" data-toggle="modal" data-target="#saveAndShareModal" ng-click="saveEvent();">SAVE & SHARE</button>
                          </div>
                        </div>
                      </div><!--row end-->                    
@@ -426,16 +417,7 @@
                 <div class="col-md-12">
                   <div class="search">
                       <div class="search-suggetion">
-
-                        <input class="form-control" type="text" placeholder="Song URL" id="searchString1" ng-model="searchStringVal.searchString"  required/>
-                          <ul class="results" ng-show="searchStringVal.searching || searchStringVal.searchError || searchStringVal.searchSelection.length > 0">
-                            <li ng-show="searchStringVal.searching && !searchStringVal.searchError && searchStringVal.searchSelection.length==0"><a href="#">One moment...</a></li>
-                            <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item, 'track')">
-                            <div class="pull-left"><img class="result-seach-img" ng-if="item.artwork_url" src="{{item.artwork_url}}"/></div> {{item.displayName}}</a></li>
-                            <li ng-show="!!searchStringVal.searchError">{{searchError}}</li>
-                            <li ng-show="searchStringVal.searchSelection.length > 0 && !searchStringVal.searchError"><a href="#">Or enter a Soundcloud URL</a></li>
-                          </ul>
-                          <a href="javascript:void(0)" class="url-search-btn-small " ng-click="changedSearch('track')"><i class="glyphicon glyphicon-search"></i></a>
+                           <scsearch kind='track' returnitem='choseTrack1(item)'></scsearch>
                       </div>
                     </div>
                 </div>
@@ -449,8 +431,8 @@
                   <div class="row">
                     <div class="col-md-12">
                       <div class="btn-group channel-group" ng-if="admin.role == 'admin'" role="group" aria-label="...">
-                        <a class="btn btn-default active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setActive('channel')">Channels</a>
-                        <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setActive('group')">Groups</a>
+                        <a class="btn btn-default b-radius-10 active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setActive('channel')">Channels</a>
+                        <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setActive('group')">Groups</a>
                       </div>
                       <div class="channel-check" style="font-size: 11px;">
                         <div class="channel-masege">
@@ -534,8 +516,8 @@
                         <textarea class="form-control" ng-disabled="disable" ng-model="searchStringVal.eventComment">{{comment}}</textarea>
                       </div>
                         <div class="next-previous">
-                          <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
-                          <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
+                          <button class="btn btn-border b-radius-10 pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
+                          <button class="btn btn-border b-radius-10 pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
                         </div>
                       </div>                         
                     </div>
@@ -545,7 +527,7 @@
                   <div class="col-md-12">
                     <div class="next-previous text-center available-slot-btn">
                       <!-- <button class="btn border-black-btn" style="width:100%;">SKIP TO NEXT AUTOFILL</button> -->
-                      <button class="btn organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE &amp; SHARE</button>
+                      <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE &amp; SHARE</button>
                     </div>
                   </div>
                 </div><!--row end-->                  

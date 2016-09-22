@@ -52,7 +52,7 @@ app.directive('scsearch', function($http) {
             item.displayName = item.title + ' - ' + item.user.username;
             break;
           case 'user':
-            item.displayName = user.username;
+            item.displayName = item.username;
             break;
         }
       }
@@ -64,6 +64,7 @@ app.directive('scsearch', function($http) {
         $scope.returnitem({
           item: item
         });
+        $scope.searchString = "";
       }
 
       $scope.keypress = function(keyEvent) {

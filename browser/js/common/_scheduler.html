@@ -33,8 +33,8 @@
               <div class="container-90">
                 <div class="col-md-3 col-xs-6">
                   <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
-                    <a class="btn btn-default" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
-                    <a class="btn btn-default" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
+                    <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
+                    <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
                   </div>
                 </div>
                 <div class="col-md-4 col-xs-12 pull-right">
@@ -46,8 +46,8 @@
                 </div>
                 <div class="col-md-4 col-xs-6 pull-right text-right">
                   <div class="btn-group" role="group" aria-label="...">
-                    <a class="btn btn-default" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setView('calendar')"><img src="assets/images/box-view.png" /></a>
-                    <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
+                    <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setView('calendar')"><img src="assets/images/box-view.png" /></a>
+                    <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
                   </div>
                 </div>
               </div>
@@ -281,8 +281,8 @@
                   </div>
                   <div class="col-md-6 col-xs-12">              
                     <div class="btn-group channel-group" ng-if="user.role == 'admin'" role="group" aria-label="...">
-                      <a class="btn btn-default active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setView('calendar');setActive('channel')">Channels</a>
-                      <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
+                      <a class="btn btn-default b-radius-10 active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setView('calendar');setActive('channel')">Channels</a>
+                      <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
                     </div>
                     <div class="channel-check">
                       <div class="channel-masege">
@@ -352,8 +352,8 @@
                           <div class="form-group">
                             <textarea class="form-control" ng-disabled="disable" ng-model="searchStringVal.eventComment">{{comment}}</textarea>
                             <div class="next-previous">
-                              <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
-                              <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
+                              <button class="btn btn-border b-radius-10 pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
+                              <button class="btn btn-border b-radius-10 pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
                             </div>
                           </div>
                         </div>
@@ -361,8 +361,8 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="next-previous text-center">
-                           <button class="btn" ng-click="addNewSongCancel()">CANCEL</button>
-                           <button class="btn save-share" data-toggle="modal" data-target="#saveAndShareModal" ng-click="saveEvent();">SAVE & SHARE</button>
+                           <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
+                           <button class="btn btn-pink b-radius-10 save-share" data-toggle="modal" data-target="#saveAndShareModal" ng-click="saveEvent();">SAVE & SHARE</button>
                          </div>
                        </div>
                      </div><!--row end-->                    
@@ -412,8 +412,8 @@
                   <div class="row">
                     <div class="col-md-12">
                       <div class="btn-group channel-group" ng-if="user.role == 'admin'" role="group" aria-label="...">
-                        <a class="btn btn-default active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setView('calendar');setActive('channel')">Channels</a>
-                        <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
+                        <a class="btn btn-default b-radius-10 active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calendar'}" href="javascript:void(0)" ng-click="setView('calendar');setActive('channel')">Channels</a>
+                        <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
                       </div>
                       <div class="channel-check" style="font-size: 11px;">
                         <div class="channel-masege">
@@ -496,8 +496,8 @@
                       <div class="channel-check">
                         <textarea class="form-control" ng-disabled="disable" ng-model="searchStringVal.eventComment">{{comment}}</textarea>
                         <div class="next-previous">
-                          <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
-                          <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
+                          <button class="btn btn-border b-radius-10 pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
+                          <button class="btn btn-border b-radius-10 pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
                         </div>
                       </div>                         
                     </div>
@@ -507,7 +507,7 @@
                   <div class="col-md-12">
                     <div class="next-previous text-center available-slot-btn">
                       <!-- <button class="btn border-black-btn" style="width:100%;">SKIP TO NEXT AUTOFILL</button> -->
-                      <button class="btn organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE &amp; SHARE</button>
+                      <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE &amp; SHARE</button>
                     </div>
                   </div>
                 </div><!--row end-->                  

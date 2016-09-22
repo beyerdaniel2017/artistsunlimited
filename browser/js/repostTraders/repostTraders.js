@@ -311,7 +311,11 @@ app.controller("adminrepostTradersController", function($scope, $rootScope, curr
       });
     }
   }
-
+  $scope.choseArtist = function(user) {
+      $scope.searchURL = user.permalink_url,
+      $scope.sendSearch();
+      $scope.searchURL = "";
+    }
   $scope.setItemText = function(item) {
     switch (item.kind) {
       case 'track':
