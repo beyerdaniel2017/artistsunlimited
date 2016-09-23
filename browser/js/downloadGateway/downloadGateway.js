@@ -1,148 +1,148 @@
 app.config(function($stateProvider) {
   $stateProvider
-  .state('adminDownloadGateway', {
-    url: '/admin/downloadGateway',
-    templateUrl: 'js/downloadGateway/downloadGateway.list.html',
-    controller: 'AdminDownloadGatewayController',
-    resolve: {
-      isLoggedIn: function($stateParams, $window, SessionService) {
-        if (!SessionService.getUser()) {
-          $window.localStorage.setItem('returnstate', 'adminDownloadGateway');
-          $window.localStorage.setItem('tid', $stateParams.gatewayID);
-          $window.location.href = '/login';
+    .state('adminDownloadGateway', {
+      url: '/admin/downloadGateway',
+      templateUrl: 'js/downloadGateway/downloadGateway.list.html',
+      controller: 'AdminDownloadGatewayController',
+      resolve: {
+        isLoggedIn: function($stateParams, $window, SessionService) {
+          if (!SessionService.getUser()) {
+            $window.localStorage.setItem('returnstate', 'adminDownloadGateway');
+            $window.localStorage.setItem('tid', $stateParams.gatewayID);
+            $window.location.href = '/login';
+          }
+          return true;
+        },
+        paidReposts: function($http, $window, SessionService) {
+          return $http.get('/api/users/getUserPaidRepostAccounts')
+            .then(function(res) {
+              if (res.data.length > 0) {
+                var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+                if (res.data[0] != undefined && (PaidUserId == null || PaidUserId == undefined || PaidUserId == "undefined")) {
+                  SessionService.addActionsfoAccount('BehalfUser', res.data[0]._id, res.data[0].soundcloud.id);
+                  SessionService.setUserPaidRepostAccounts(res.data[0]);
+                }
+              }
+              return res.data;
+            })
+            .then(null, function(err) {
+              $.Zebra_Dialog("error getting the paidReposts");
+              return;
+            })
         }
-        return true;
-      },
-      paidReposts: function($http, $window, SessionService) {
-        return $http.get('/api/users/getUserPaidRepostAccounts')
-        .then(function(res) {
-          if(res.data.length >0){
-            var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
-            if(res.data[0]!=undefined && (PaidUserId==null || PaidUserId==undefined || PaidUserId=="undefined")){
-              SessionService.addActionsfoAccount('BehalfUser',res.data[0]._id,res.data[0].soundcloud.id);
-              SessionService.setUserPaidRepostAccounts(res.data[0]);
-            }
-          }  
-          return res.data;
-        })
-        .then(null, function(err) {
-          $.Zebra_Dialog("error getting the paidReposts");
-          return;
-        })
       }
-    }
-  })
-  .state('adminDownloadGatewayEdit', {
-    url: '/admin/downloadGateway/edit/:gatewayID',
-    templateUrl: 'js/downloadGateway/downloadGateway.html',
-    controller: 'AdminDownloadGatewayController',
-    resolve: {
-      isLoggedIn: function($stateParams, $window, SessionService) {
-        if (!SessionService.getUser()) {
-          $window.localStorage.setItem('returnstate', 'adminDownloadGatewayEdit');
-          $window.localStorage.setItem('tid', $stateParams.gatewayID);
-          $window.location.href = '/login';
+    })
+    .state('adminDownloadGatewayEdit', {
+      url: '/admin/downloadGateway/edit/:gatewayID',
+      templateUrl: 'js/downloadGateway/downloadGateway.html',
+      controller: 'AdminDownloadGatewayController',
+      resolve: {
+        isLoggedIn: function($stateParams, $window, SessionService) {
+          if (!SessionService.getUser()) {
+            $window.localStorage.setItem('returnstate', 'adminDownloadGatewayEdit');
+            $window.localStorage.setItem('tid', $stateParams.gatewayID);
+            $window.location.href = '/login';
+          }
+          return true;
+        },
+        paidReposts: function($http, $window, SessionService) {
+          return $http.get('/api/users/getUserPaidRepostAccounts')
+            .then(function(res) {
+              if (res.data.length > 0) {
+                var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+                if (res.data[0] != undefined && (PaidUserId == null || PaidUserId == undefined || PaidUserId == "undefined")) {
+                  SessionService.addActionsfoAccount('BehalfUser', res.data[0]._id, res.data[0].soundcloud.id);
+                  SessionService.setUserPaidRepostAccounts(res.data[0]);
+                }
+              }
+              return res.data;
+            })
+            .then(null, function(err) {
+              $.Zebra_Dialog("error getting the paidReposts");
+              return;
+            })
         }
-        return true;
-      },
-      paidReposts: function($http, $window, SessionService) {
-        return $http.get('/api/users/getUserPaidRepostAccounts')
-        .then(function(res) {
-          if(res.data.length >0){
-            var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
-            if(res.data[0]!=undefined && (PaidUserId==null || PaidUserId==undefined || PaidUserId=="undefined")){
-              SessionService.addActionsfoAccount('BehalfUser',res.data[0]._id,res.data[0].soundcloud.id);
-              SessionService.setUserPaidRepostAccounts(res.data[0]);
-            }
-          }  
-          return res.data;
-        })
-        .then(null, function(err) {
-          $.Zebra_Dialog("error getting the paidReposts");
-          return;
-        })
       }
-    }
-  })
-  .state('adminDownloadGatewayNew', {
-    url: '/admin/downloadGateway/new',
-    params: {
-      submission: null
-    },
-    templateUrl: 'js/downloadGateway/downloadGateway.html',
-    controller: 'AdminDownloadGatewayController',
-    resolve: {
-      isLoggedIn: function($stateParams, $window, SessionService) {
-        if (!SessionService.getUser()) {
-          $window.localStorage.setItem('returnstate', 'adminDownloadGatewayNew');
-          $window.location.href = '/login';
+    })
+    .state('adminDownloadGatewayNew', {
+      url: '/admin/downloadGateway/new',
+      params: {
+        submission: null
+      },
+      templateUrl: 'js/downloadGateway/downloadGateway.html',
+      controller: 'AdminDownloadGatewayController',
+      resolve: {
+        isLoggedIn: function($stateParams, $window, SessionService) {
+          if (!SessionService.getUser()) {
+            $window.localStorage.setItem('returnstate', 'adminDownloadGatewayNew');
+            $window.location.href = '/login';
+          }
+          return true;
+        },
+        paidReposts: function($http, $window, SessionService) {
+          return $http.get('/api/users/getUserPaidRepostAccounts')
+            .then(function(res) {
+              if (res.data.length > 0) {
+                var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+                if (res.data[0] != undefined && (PaidUserId == null || PaidUserId == undefined || PaidUserId == "undefined")) {
+                  SessionService.addActionsfoAccount('BehalfUser', res.data[0]._id, res.data[0].soundcloud.id);
+                  SessionService.setUserPaidRepostAccounts(res.data[0]);
+                }
+              }
+              return res.data;
+            })
+            .then(null, function(err) {
+              $.Zebra_Dialog("error getting the paidReposts");
+              return;
+            })
         }
-        return true;
-      },
-      paidReposts: function($http, $window, SessionService) {
-        return $http.get('/api/users/getUserPaidRepostAccounts')
-        .then(function(res) {
-          if(res.data.length >0){
-            var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
-            if(res.data[0]!=undefined && (PaidUserId==null || PaidUserId==undefined || PaidUserId=="undefined")){
-              SessionService.addActionsfoAccount('BehalfUser',res.data[0]._id,res.data[0].soundcloud.id);
-              SessionService.setUserPaidRepostAccounts(res.data[0]);
-            }
-          }  
-          return res.data;
-        })
-        .then(null, function(err) {
-          $.Zebra_Dialog("error getting the paidReposts");
-          return;
-        })
       }
-    }
-  })
-  .state('adminDownloadGatewayPreview', {
+    })
+    .state('adminDownloadGatewayPreview', {
       url: '/admin/downloadGateway/preview',
       params: {
-          submission: null
+        submission: null
       },
       templateUrl: 'js/downloadGateway/preview.html',
       controller: 'AdminDownloadGatewayController',
       resolve: {
         paidReposts: function($http, $window, SessionService) {
           return $http.get('/api/users/getUserPaidRepostAccounts')
-          .then(function(res) {
-            if(res.data.length >0){
-              var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
-              if(res.data[0]!=undefined && (PaidUserId==null || PaidUserId==undefined || PaidUserId=="undefined")){
-                SessionService.addActionsfoAccount('BehalfUser',res.data[0]._id,res.data[0].soundcloud.id);
-                SessionService.setUserPaidRepostAccounts(res.data[0]);
+            .then(function(res) {
+              if (res.data.length > 0) {
+                var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+                if (res.data[0] != undefined && (PaidUserId == null || PaidUserId == undefined || PaidUserId == "undefined")) {
+                  SessionService.addActionsfoAccount('BehalfUser', res.data[0]._id, res.data[0].soundcloud.id);
+                  SessionService.setUserPaidRepostAccounts(res.data[0]);
+                }
               }
-            }  
-            return res.data;
-          })
-          .then(null, function(err) {
-            $.Zebra_Dialog("error getting the paidReposts");
-            return;
-          })
+              return res.data;
+            })
+            .then(null, function(err) {
+              $.Zebra_Dialog("error getting the paidReposts");
+              return;
+            })
         }
       }
-  })
+    })
 });
 
-app.controller('AdminDownloadGatewayController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, AdminToolsService, AdminDLGateService,paidReposts,DownloadTrackService) {
+app.controller('AdminDownloadGatewayController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, AdminToolsService, AdminDLGateService, paidReposts, DownloadTrackService) {
   /* Init Download Gateway form data */
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
   var formActions = SessionService.getActionsfoAccount();
   var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
   var soundcloudId = SessionService.getSoundCloudId();
-  $scope.paidUsers=[];
-  paidReposts.forEach(function(pr){
+  $scope.paidUsers = [];
+  paidReposts.forEach(function(pr) {
     $scope.paidUsers.push(pr);
   })
 
-  if(PaidUserId==undefined && formActions==undefined && $scope.paidUsers.length>0){
-    PaidUserId= $scope.paidUsers[0]._id;
-  } 
-  
-  if($scope.paidUsers.length==0){
+  if (PaidUserId == undefined && formActions == undefined && $scope.paidUsers.length > 0) {
+    PaidUserId = $scope.paidUsers[0]._id;
+  }
+
+  if ($scope.paidUsers.length == 0) {
     $.Zebra_Dialog('Error: There is no any user record found.');
     return;
   }
@@ -150,10 +150,10 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
   $scope.paidusersId = PaidUserId;
 
   $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
-  
+
   $scope.paidusersRec = $scope.user;
 
-   //overlay autofill track start//
+  //overlay autofill track start//
   $scope.linkedAccounts = [];
   $scope.autoFillTracks = [];
   $scope.trackList = [];
@@ -162,7 +162,7 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
   $scope.tracksQueue = [];
   $scope.profile = {};
   $scope.trackList = [];
-  $scope.trackListObj = null;    
+  $scope.trackListObj = null;
 
 
   $scope.linkedAccountData = {};
@@ -192,7 +192,7 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
         scope: $scope
       });
     }
-  };   
+  };
 
   $scope.changeQueueSong = function() {
     if ($scope.newQueueSong != "") {
@@ -339,7 +339,7 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
     $scope.openThankYouModal.thankYou($stateParams.submission._id);
   }
   $scope.showProfileInfo = function() {
-    $scope.userdata =  $scope.user;
+    $scope.userdata = $scope.user;
     $scope.profile.data = $scope.user;
     if (($scope.profile.data.permanentLinks && $scope.profile.data.permanentLinks.length === 0) || !$scope.profile.data.permanentLinks) {
       /*$scope.profile.data.permanentLinks = [{
@@ -370,7 +370,7 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
     });
 
     var sendObj = {
-      userID : $scope.profile.data._id,
+      userID: $scope.profile.data._id,
       permanentLinks: JSON.stringify(permanentLinks)
     }
     if ($scope.profile.field === 'name') {
@@ -383,37 +383,37 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
 
     $scope.processing = true;
     AdminToolsService
-    .saveProfileInfo(sendObj)
-    .then(function(res) {
-      $scope.processing = false;
-      if (res.data === 'Email Error') {
-        $scope.message = {
-          value: 'Email already exists!',
-          visible: true
-        };
-        return;
-      }
-      if (permanentLinks != "") {
-        $scope.linkUrl = "";
-      }
-      SessionService.setUserPaidRepostAccounts(res.data);
-      $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
-      $scope.closeEditProfileModal();
-    })
-    .catch(function(res) {
-      $scope.processing = false;
-      $.Zebra_Dialog('error saving');
-    });
+      .saveProfileInfo(sendObj)
+      .then(function(res) {
+        $scope.processing = false;
+        if (res.data === 'Email Error') {
+          $scope.message = {
+            value: 'Email already exists!',
+            visible: true
+          };
+          return;
+        }
+        if (permanentLinks != "") {
+          $scope.linkUrl = "";
+        }
+        SessionService.setUserPaidRepostAccounts(res.data);
+        $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
+        $scope.closeEditProfileModal();
+      })
+      .catch(function(res) {
+        $scope.processing = false;
+        $.Zebra_Dialog('error saving');
+      });
   };
 
   // remove linked accounts
   $scope.removeLinkedAccount = function(account) {
-    $scope.userlinkedAccounts.splice($scope.userlinkedAccounts.indexOf(account), 1);
-    $http.put('/api/database/networkaccount', $scope.userlinkedAccounts)
-    .then(function(res) {
-      console.log(res.data);
-      $scope.userlinkedAccounts = res.data.channels;
-    })
+    $rootScope.userlinkedAccounts.splice($rootScope.userlinkedAccounts.indexOf(account), 1);
+    $http.put('/api/database/networkaccount', $rootScope.userlinkedAccounts)
+      .then(function(res) {
+        console.log(res.data);
+        $rootScope.userlinkedAccounts = res.data.channels;
+      })
   }
 
   $scope.removePermanentLink = function(index) {
@@ -437,61 +437,61 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
     var permanentLink = {};
     $scope.processing = true;
     AdminToolsService
-    .resolveData({
-      url: $scope.linkUrl
-    })
-    .then(function(res) {
-      $scope.profile.data.permanentLinks.push({
-        url: res.data.permalink_url,
-        avatar: res.data.avatar_url ? res.data.avatar_url : '',
-        username: res.data.username,
-        id: res.data.id,
-        permanentLink: true
+      .resolveData({
+        url: $scope.linkUrl
+      })
+      .then(function(res) {
+        $scope.profile.data.permanentLinks.push({
+          url: res.data.permalink_url,
+          avatar: res.data.avatar_url ? res.data.avatar_url : '',
+          username: res.data.username,
+          id: res.data.id,
+          permanentLink: true
+        });
+        $scope.processing = false;
+      })
+      .catch(function(err) {
+        $.Zebra_Dialog('Artists not found');
+        $scope.processing = false;
       });
-      $scope.processing = false;
-    })
-    .catch(function(err) {
-      $.Zebra_Dialog('Artists not found');
-      $scope.processing = false;
-    });
   };
 
-   $scope.permanentLinks = [];
-   $scope.choseArtist = function(artist) {
-      var permanentLink = {};
-      $scope.permanentLinks.push({
-          url: artist.permalink_url,
-          avatar: artist.avatar_url ? artist.avatar_url : '',
-          username: artist.username,
-          id: artist.id,
-          permanentLink: true
-       });
-    }
+  $scope.permanentLinks = [];
+  $scope.choseArtist = function(artist) {
+    var permanentLink = {};
+    $scope.permanentLinks.push({
+      url: artist.permalink_url,
+      avatar: artist.avatar_url ? artist.avatar_url : '',
+      username: artist.username,
+      id: artist.id,
+      permanentLink: true
+    });
+  }
 
-    $scope.choseArtistNew = function(artist) {
-      var permanentLink = {};
-        $scope.track.artists.push({
-          url: artist.permalink_url,
-          avatar: artist.avatar_url ? artist.avatar_url : '',
-          username: artist.username,
-          id: artist.id,
-          permanentLink: true
-       });
-    }
-    $scope.chosePlaylist = function(playlist) {
-      var permanentLink = {};
-      $scope.track.playlists.push({
-          url: playlist.permalink_url,
-          avatar: playlist.avatar_url ? playlist.avatar_url : '',
-          title: playlist.title,
-          id: playlist.id,
-       });
-    }
+  $scope.choseArtistNew = function(artist) {
+    var permanentLink = {};
+    $scope.track.artists.push({
+      url: artist.permalink_url,
+      avatar: artist.avatar_url ? artist.avatar_url : '',
+      username: artist.username,
+      id: artist.id,
+      permanentLink: true
+    });
+  }
+  $scope.chosePlaylist = function(playlist) {
+    var permanentLink = {};
+    $scope.track.playlists.push({
+      url: playlist.permalink_url,
+      avatar: playlist.avatar_url ? playlist.avatar_url : '',
+      title: playlist.title,
+      id: playlist.id,
+    });
+  }
   $scope.saveSoundCloudAccountInfo = function() {
     SC.connect()
-    .then(saveInfo)
-    .then(handleResponse)
-    .catch(handleError);
+      .then(saveInfo)
+      .then(handleResponse)
+      .catch(handleError);
 
     function saveInfo(res) {
       return AdminToolsService.saveSoundCloudAccountInfo({
@@ -522,19 +522,19 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
 
   $scope.getDownloadList = function() {
     AdminToolsService
-    .getDownloadList($scope.user._id)
-    .then(handleResponse)
-    .catch(handleError);
+      .getDownloadList($scope.user._id)
+      .then(handleResponse)
+      .catch(handleError);
 
     function handleResponse(res) {
       $scope.downloadGatewayList = [];
-      var i=-1;
-      var nextFunc = function(){
+      var i = -1;
+      var nextFunc = function() {
         i++;
-        if(i< res.data.length){
+        if (i < res.data.length) {
           var data = res.data[i];
           $scope.downloadGatewayList.push(data);
-          nextFunc();            
+          nextFunc();
         }
       }
       nextFunc();
@@ -550,11 +550,11 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
       var downloadGateWayID = $scope.downloadGatewayList[index]._id;
       $scope.processing = true;
       AdminToolsService
-      .deleteDownloadGateway({
-        id: downloadGateWayID
-      })
-      .then(handleResponse)
-      .catch(handleError);
+        .deleteDownloadGateway({
+          id: downloadGateWayID
+        })
+        .then(handleResponse)
+        .catch(handleError);
 
       function handleResponse(res) {
         $scope.processing = false;
@@ -569,43 +569,40 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
 
   $scope.soundcloudLogin = function() {
     SC.connect()
-    .then(function(res) {          
-      // var find = $scope.userlinkedAccounts.find(function(acct) {
-      //   return acct.soundcloud.token == res.oauth_token;
-      // });
-      if (res.oauth_token == SessionService.getUser().soundcloud.token) {
-        throw new Error('already added');
-      } else {
-        $scope.processing = true;
-        $rootScope.accessToken = res.oauth_token;
-        return $http.post('/api/login/soundCloudAuthentication', {
-          token: res.oauth_token
-        });
-      }
-    })
-    .then(function(res) {
-      var linkedAccountID = res.data.user._id;
-      $http.post("/api/database/networkaccount", {
-        userID: $scope.user._id,
-        linkedAccountID: linkedAccountID
+      .then(function(res) {
+        if (res.oauth_token == SessionService.getUser().soundcloud.token) {
+          throw new Error('already added');
+        } else {
+          $scope.processing = true;
+          $rootScope.accessToken = res.oauth_token;
+          return $http.post('/api/login/soundCloudAuthentication', {
+            token: res.oauth_token
+          });
+        }
       })
       .then(function(res) {
-        $.Zebra_Dialog(res.data.message);
-        $scope.userlinkedAccounts = res.data.data.channels;
+        var linkedAccountID = res.data.user._id;
+        $http.post("/api/database/networkaccount", {
+            userID: $scope.user._id,
+            linkedAccountID: linkedAccountID
+          })
+          .then(function(res) {
+            $.Zebra_Dialog(res.data.message);
+            $rootScope.userlinkedAccounts = res.data.data.channels;
+            setTimeout(function() {
+              window.location.reload();
+            }, 1000);
+          });
+      })
+      .then(null, function(err) {
+        console.log(err);
+        $scope.processing = false;
+        $.Zebra_Dialog('Please retry in 1 second.');
         setTimeout(function() {
           window.location.reload();
         }, 1000);
       });
-    })
-    .then(null, function(err) {
-      console.log(err);
-      $scope.processing = false;
-      $.Zebra_Dialog('Please retry in 1 second.');
-      setTimeout(function() {
-        window.location.reload();
-      }, 1000);
-    });
-  };   
+  };
 
   $scope.showTitle = [];
   $scope.track = {
@@ -627,8 +624,8 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
     $scope.isTrackAvailable = false;
     $scope.processing = true;
     var track = index;
-    if($scope.trackListObj)
-      var track = $scope.trackListObj;   
+    if ($scope.trackListObj)
+      var track = $scope.trackListObj;
 
     $scope.track.trackURL = track.permalink_url;
     $scope.track.trackTitle = track.title;
@@ -642,8 +639,8 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
     $scope.track.SMLinks = [];
 
     SC.get('/users/' + $scope.track.artistID + '/web-profiles')
-    .then(handleWebProfiles)
-    .catch(handleError);
+      .then(handleWebProfiles)
+      .catch(handleError);
 
     function handleWebProfiles(profiles) {
       profiles.forEach(function(prof) {
@@ -730,33 +727,32 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
     };
 
     $http(options)
-    .then(function(res) {
-      $scope.processing = false;
-      if ($stateParams.submission) {
-        $state.go('adminDownloadGateway', {
-          'submission': $stateParams.submission
-        });
-      } else {
-        if ($scope.user.soundcloud.id == $scope.track.artistID) {
-          $.Zebra_Dialog('Download gateway was saved and added to the track.');
+      .then(function(res) {
+        $scope.processing = false;
+        if ($stateParams.submission) {
+          $state.go('adminDownloadGateway', {
+            'submission': $stateParams.submission
+          });
         } else {
-          $.Zebra_Dialog('Download gateway saved.');
+          if ($scope.user.soundcloud.id == $scope.track.artistID) {
+            $.Zebra_Dialog('Download gateway was saved and added to the track.');
+          } else {
+            $.Zebra_Dialog('Download gateway saved.');
+          }
+          $state.go('adminDownloadGateway');
         }
-        $state.go('adminDownloadGateway');
-      }
-    })
-    .then(null, function(err) {
-      $scope.processing = false;
-      $.Zebra_Dialog("ERROR: Error in saving url");
-      $scope.processing = false;
-    });
+      })
+      .then(null, function(err) {
+        $scope.processing = false;
+        $.Zebra_Dialog("ERROR: Error in saving url");
+        $scope.processing = false;
+      });
   };
 
   $scope.checkIfEdit = function() {
     if ($stateParams.gatewayID) {
       $scope.getDownloadGateway($stateParams.gatewayID);
-    }
-    else{
+    } else {
       $scope.showTitle = [];
       $scope.track = {
         artistUsername: '',
@@ -782,17 +778,17 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
     if (profile.soundcloud) {
       $scope.processing = true;
       SC.get('/users/' + profile.soundcloud.id + '/tracks', {
-        filter: 'public'
-      })
-      .then(function(tracks) {
-        $scope.trackList = tracks;
-        $scope.processing = false;
-        $scope.$apply();
-      })
-      .catch(function(response) {
-        $scope.processing = false;
-        $scope.$apply();
-      });
+          filter: 'public'
+        })
+        .then(function(tracks) {
+          $scope.trackList = tracks;
+          $scope.processing = false;
+          $scope.$apply();
+        })
+        .catch(function(response) {
+          $scope.processing = false;
+          $scope.$apply();
+        });
     }
   }
 
@@ -939,19 +935,19 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
   $scope.playlistURLChange = function(index) {
     $scope.processing = true;
     AdminDLGateService
-    .resolveData({
-      url: $scope.track.playlists[index].url
-    })
-    .then(function(res) {
-      $scope.track.playlists[index].avatar = res.data.artwork_url;
-      $scope.track.playlists[index].title = res.data.title;
-      $scope.track.playlists[index].id = res.data.id;
-      $scope.processing = false;
-    })
-    .then(null, function(err) {
-      $.Zebra_Dialog('Playlist not found');
-      $scope.processing = false;
-    })
+      .resolveData({
+        url: $scope.track.playlists[index].url
+      })
+      .then(function(res) {
+        $scope.track.playlists[index].avatar = res.data.artwork_url;
+        $scope.track.playlists[index].title = res.data.title;
+        $scope.track.playlists[index].id = res.data.id;
+        $scope.processing = false;
+      })
+      .then(null, function(err) {
+        $.Zebra_Dialog('Playlist not found');
+        $scope.processing = false;
+      })
   }
 
   function resetDownloadGateway() {
@@ -988,11 +984,11 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
     // resetDownloadGateway();
     $scope.processing = true;
     AdminToolsService
-    .getDownloadGateway({
-      id: downloadGateWayID
-    })
-    .then(handleResponse)
-    .catch(handleError);
+      .getDownloadGateway({
+        id: downloadGateWayID
+      })
+      .then(handleResponse)
+      .catch(handleError);
 
     function handleResponse(res) {
 
@@ -1059,29 +1055,24 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
       }
     }
   }
-  $scope.getUserNetwork = function(){
-    $http.get("/api/database/userNetworks")
-    .then(function(networks){
-      $rootScope.userlinkedAccounts = networks.data;
-    })
-  }
+
   $scope.getUserNetwork();
   $scope.verifyBrowser();
   $scope.recentTracks = [];
   var track = JSON.parse(window.localStorage.getItem('trackPreviewData'));
-  if(track!="" && track!=null && track!=undefined){
+  if (track != "" && track != null && track != undefined) {
     if (!track.trackTitle) {
-        $.Zebra_Dialog('Track Not Found');
-        $state.go("adminDownloadGatewayList");
-        return false;
+      $.Zebra_Dialog('Track Not Found');
+      $state.go("adminDownloadGatewayList");
+      return false;
     }
 
     $scope.track = track;
     $scope.player = {};
     SC.stream('/tracks/' + $scope.track.trackID)
-    .then(function(p) {
-      $scope.player = p;
-    })
+      .then(function(p) {
+        $scope.player = p;
+      })
 
     $scope.toggle = true;
     $scope.togglePlay = function() {
@@ -1096,17 +1087,17 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
       $.Zebra_Dialog('No download in preview mode.')
     }
 
-    $scope.getRecentTracks = function(){
+    $scope.getRecentTracks = function() {
       if ($scope.track && $scope.track.showDownloadTracks === 'user') {
         DownloadTrackService.getRecentTracks({
-          userID: $scope.track.userid,
-          trackID: $scope.track._id
-        })
-        .then(function(res){
-          if ((typeof res === 'object') && res.data) {
-            $scope.recentTracks = res.data;
-          }
-        })
+            userID: $scope.track.userid,
+            trackID: $scope.track._id
+          })
+          .then(function(res) {
+            if ((typeof res === 'object') && res.data) {
+              $scope.recentTracks = res.data;
+            }
+          })
       }
     }
     $scope.getRecentTracks();
@@ -1115,7 +1106,7 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
 
   $scope.changedSearch = function(kind) {
     $("#searchString,#searchString1").next("ul").show();
-    
+
     $scope.track.searchSelection = [];
     $scope.track.searchError = false;
     $scope.track.searching = true;
@@ -1127,7 +1118,7 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
         $scope.track.searching = false;
         if (res.data.item) {
 
-           $scope.selectedItem(res.data.item);
+          $scope.selectedItem(res.data.item);
         } else {
           $scope.track.searchSelection = res.data.collection;
           $scope.track.searchSelection.forEach(function(item) {
@@ -1155,9 +1146,9 @@ app.controller('AdminDownloadGatewayController', function($rootScope, $state, $s
         break;
     }
   }
-$scope.choseTrack = function(item) {
-     var player = document.getElementById('scPopupPlayer');
-    if($scope.tabSelected == false){
+  $scope.choseTrack = function(item) {
+    var player = document.getElementById('scPopupPlayer');
+    if ($scope.tabSelected == false) {
       player = document.getElementById('scPlayer');
     }
     $scope.searchSelection = [];
@@ -1173,8 +1164,8 @@ $scope.choseTrack = function(item) {
     $scope.track.artistUsername = item.user.username;
     $scope.track.SMLinks = [];
     SC.get('/users/' + $scope.track.artistID + '/web-profiles')
-    .then(handleWebProfiles)
-    .catch(handleError);
+      .then(handleWebProfiles)
+      .catch(handleError);
 
     function handleWebProfiles(profiles) {
       profiles.forEach(function(prof) {
@@ -1188,7 +1179,7 @@ $scope.choseTrack = function(item) {
       $scope.isTrackAvailable = true;
       $scope.processing = false;
       $scope.$apply();
-  }
+    }
 
     function handleError(err) {
       $scope.track.trackID = null;
@@ -1196,29 +1187,29 @@ $scope.choseTrack = function(item) {
       $scope.processing = false;
       $scope.$apply();
     }
-}
+  }
   $scope.selectedItem = function(item) {
       $scope.track.searching = false;
       $scope.track.searchError = false;
       $("#searchString,#searchString1").next("ul").hide();
 
-      if(item.trackURL!=""){
+      if (item.trackURL != "") {
         $scope.track.trackTitle = item.title;
         $scope.track.trackID = item.id;
         $scope.track.artistID = item.user.id;
         $scope.track.trackURL = item.title;
-        $scope.track.playlists=[];
-        $scope.track.downloadURL="";
-        $scope.track.like=false;
-        $scope.track.repost=false;
-        $scope.track.comment=false;
+        $scope.track.playlists = [];
+        $scope.track.downloadURL = "";
+        $scope.track.like = false;
+        $scope.track.repost = false;
+        $scope.track.comment = false;
         $scope.track.description = item.description;
         $scope.track.trackArtworkURL = item.artwork_url ? item.artwork_url.replace('large.jpg', 't500x500.jpg') : '';
         $scope.track.artistArtworkURL = item.user.avatar_url ? item.user.avatar_url.replace('large.jpg', 't500x500.jpg') : '';
         $scope.track.artistURL = item.user.permalink_url;
         $scope.track.artistUsername = item.user.username;
         $scope.track.SMLinks = [];
-        SC.get('/users/' + $scope.track.artistID + '/web-profiles',function(profiles) {
+        SC.get('/users/' + $scope.track.artistID + '/web-profiles', function(profiles) {
           profiles.forEach(function(prof) {
             if (['twitter', 'youtube', 'facebook', 'spotify', 'soundcloud', 'instagram'].indexOf(prof.service) != -1) {
               $scope.track.SMLinks.push({
@@ -1233,8 +1224,7 @@ $scope.choseTrack = function(item) {
         $scope.processing = false;
         $scope.track.searching = false;
         $scope.track.searchError = false;
-      }
-      else{
+      } else {
         $scope.track.trackID = null;
         $.Zebra_Dialog('Song not found or forbidden');
         $scope.processing = false;
@@ -1252,7 +1242,7 @@ $scope.choseTrack = function(item) {
         $scope.track.title = res.data.title;
         $scope.track.trackURL = res.data.trackURL;
         $scope.track.artistArtworkURL = item.artwork_url;
-       
+
         $scope.processing = false;
         $scope.notFound = false;
       }).then(null, function(err) {
@@ -1261,7 +1251,7 @@ $scope.choseTrack = function(item) {
           $scope.notFound = true;
         } else {
           $scope.track.trackURL = $scope.url;
-        
+
         }
         $scope.track.trackID = null;
         $scope.processing = false;

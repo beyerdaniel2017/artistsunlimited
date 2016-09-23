@@ -740,15 +740,6 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 .search {
   position: relative; }
 
-.search input:focus {
-  outline: none;
-  border-color: #66b1ee;
-  -webkit-box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
-  -moz-box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
-  -ms-box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
-  -o-box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
-  box-shadow: 0 0 2px rgba(85, 168, 236, 0.9); }
-
 .search input:focus + .results {
   display: block; }
 
@@ -812,9 +803,12 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   position: relative;
   padding: 5px;
   color: #808394;
+  font-size: 12px;
   font-weight: 500;
   border-bottom: 1px solid #eee;
-  width: 100%; }
+  width: 100%;
+  text-align: left;
+  text-transform: none; }
 
 .search .results a span {
   font-weight: 200; }
@@ -952,16 +946,14 @@ select {
   background-repeat: no-repeat;
   background-position: right; }
 
+label {
+  font-weight: normal; }
+
 .form-control:focus {
   border-color: #FF7676;
   outline: 0;
   -webkit-box-shadow: none;
   box-shadow: none; }
-
-#scheduler-container {
-  text-align: center;
-  width: 90%;
-  margin: 60px auto; }
 
 .unrepost-symbol {
   width: 14px;
@@ -973,6 +965,12 @@ select {
   border-radius: 4px;
   padding: 2px 2px; }
 
+#scheduler-container {
+  text-align: center;
+  width: 90%;
+  /*margin: 60px auto;*/
+  margin: 15px auto; }
+
 .unrepost-symbol-scheduler {
   width: 20px;
   height: 20px;
@@ -983,12 +981,19 @@ select {
   border-radius: 4px;
   padding: 2px 2px; }
 
+/*.btn-scheduler {
+    background: transparent;
+    border-color: transparent;
+    border-radius: 0px;
+    padding: 3px;
+    width: 4.5%;
+    height: 100%
+}*/
 .btn-scheduler {
   background: transparent;
   border-color: transparent;
   border-radius: 0px;
   padding: 3px;
-  width: 4.5%;
   height: 100%; }
 
 .btn-small {
@@ -1053,11 +1058,18 @@ select {
 .row-light {
   background-color: #f2f2f2; }
 
+/*.cell-date {
+    width: 14.2857142857%;
+    color: #b3b3b3;
+    font-size: 12px;
+    line-height: 35px;
+}*/
 .cell-date {
-  width: 14.2857142857%;
+  width: 100%;
   color: #b3b3b3;
   font-size: 12px;
-  line-height: 35px; }
+  line-height: 35px;
+  text-align: center; }
 
 .column-day {
   width: 14.2857142857%;
@@ -1084,7 +1096,7 @@ select {
 .label-scheduler {
   text-transform: uppercase;
   font-size: 1.5em;
-  letter-spacing: 2px; }
+  letter-spacing: 1px; }
 
 .label-smaller {
   font-size: 1.25em; }
@@ -1825,9 +1837,7 @@ h3 {
   margin: 0 auto; }
 
 .left-menus ul li {
-  padding: 0px 0px;
-  margin: 2px 0;
-  border-right: 2px solid #fff; }
+  padding: 0px 0px; }
 
 .left-menus ul li a {
   color: #5c5252;
@@ -2683,7 +2693,7 @@ input[type=range]:focus::-ms-fill-upper {
 
 /*Scheduler Tabs CSS : START */
 .scheduler-tabs #myschedule {
-  padding: 30px 0px; }
+  /* padding: 30px 0px;*/ }
 
 .scheduler-tabs .nav-tabs li {
   width: 33.3333333333%;
@@ -2944,10 +2954,12 @@ input:checked + .slider:before {
   border-radius: 10px;
   display: inline-block;
   width: 100%;
-  margin: 15px 0; }
+  margin: 15px 0 5px 0; }
 
 .channel-masege {
   border-bottom: 1px solid #d8d8d8;
+  height: 40px;
+  overflow: auto;
   /*padding: 10px 0px 0px 24px;
     border-bottom: 1px solid #d8d8d8;
     padding: 10px 0px 0px 24px;
@@ -3457,13 +3469,12 @@ label:hover:before {
   background: #EEE; }
 
 .refor-chate-box {
-  background-color: #FFF;
+  background-color: #EEEEEE;
   min-height: 47px;
   padding: 10px;
-  width: 99%;
+  width: 100%;
   border-top: 1px solid #E6E6E6;
   margin: 0px auto;
-  position: absolute;
   bottom: 0; }
 
 /*reforRelist css::end*/
@@ -3594,14 +3605,14 @@ label:hover:before {
 /*organize-list::end*/
 /*Calendarview :start*/
 .left-side-profile {
-  position: fixed;
-  width: 16.1%;
-  z-index: 1;
-  bottom: 0;
-  height: 81%;
+  position: absolute;
+  width: 100%;
+  /*z-index: 1;*/
+  top: 40px;
   background-color: white;
   border-top-left-radius: 10px;
-  overflow: hidden; }
+  overflow: hidden;
+  border-bottom-left-radius: 10px; }
 
 .left-side-profile .tropical {
   padding: 30px 0; }
@@ -3773,14 +3784,14 @@ td {
 
 /*Btn Pink */
 .btn-pink {
-  color: #fff;
+  color: #f9f9f9;
   background-color: #FF7676;
   border-color: #FF7676; }
 
 .btn-pink:hover {
   color: #fff;
-  background-color: #FF7676;
-  border-color: #FF7676; }
+  background-color: RGBA(255, 118, 118, 0.92);
+  border-color: RGBA(255, 118, 118, 0.92); }
 
 .btn-pink:active,
 .btn-pink.active,
@@ -3794,6 +3805,32 @@ td {
   border-color: #FF7676; }
 
 /*Btn Pink */
+/*Btn Border */
+.btn-border {
+  color: #8a8a8a;
+  border: 1px solid #727272;
+  box-shadow: 0 0px 1px #AEAEAE;
+  background: #FFFFFF; }
+
+.btn-border:hover {
+  color: #333;
+  border: 1px solid #333; }
+
+.btn-border:active,
+.btn-border.active,
+.open > .dropdown-toggle.btn-border {
+  background-image: none; }
+
+.btn-border:focus,
+.btn-border.focus {
+  color: #8a8a8a;
+  border: 1px solid #727272;
+  box-shadow: 0 0px 1px #AEAEAE; }
+
+/*Btn Border */
+.b-radius-10 {
+  border-radius: 10px; }
+
 .text-pink {
   color: #FF7676 !important; }
 
@@ -3913,29 +3950,29 @@ td {
 
 /* 13-9-2016  */
 /*** 14-9-2016 ***/
-.url-search-btn {
-  position: absolute;
-  right: 12px;
-  cursor: pointer;
-  font-size: 16px;
-  width: 20px;
-  margin-left: -2.5px;
-  text-align: center;
-  padding: 15px 0;
-  top: 0;
-  background: transparent;
-  color: #888; }
-
 .url-search-btn-small {
   position: absolute;
   right: 12px;
   cursor: pointer;
   font-size: 16px;
+  height: 20px;
   width: 20px;
   margin-left: -2.5px;
   text-align: center;
-  padding: 6px 0;
-  top: 0;
+  top: 6px;
+  background: transparent;
+  color: #888; }
+
+.url-search-btn-big {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  height: 20px;
+  width: 20px;
+  margin-left: -2.5px;
+  text-align: center;
+  top: 13px;
   background: transparent;
   color: #888; }
 
@@ -4010,7 +4047,8 @@ td {
 .avtar-200 {
   width: 200px;
   height: 200px;
-  margin: 0px auto; }
+  margin: 0px auto;
+  border-radius: 10px; }
 
 .thumb-img-container {
   width: 200px;
@@ -4095,7 +4133,32 @@ td {
 .account-vertical-container li > .list-img-container img {
   height: 115px; }
 
+.space-10 {
+  height: 10px;
+  clear: both; }
+
+.space-20 {
+  height: 20px;
+  clear: both; }
+
+.space-30 {
+  height: 30px;
+  clear: both; }
+
+.space-30 {
+  height: 40px;
+  clear: both; }
+
 /*** 17-9-2016 ***/
+/*** 22-9-2016 ***/
+.left-profile-content {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  margin-bottom: 40px; }
+
+/*** 22-9-2016 ***/
 /******************************** Media CSS :: START ************************************/
 @media screen and (max-width: 1280px) {
   .min-ht {

@@ -447,9 +447,9 @@ router.post('/downloadurl', function(req, res, next) {
     }
     body.fields.userid = req.user._id;
 
-    if(body.fields.adminaction=="admin"){
-      var users = JSON.parse(body.fields.user); 
-      body.fields.userid =users._id;  
+    if (body.fields.adminaction == "admin") {
+      var users = JSON.parse(body.fields.user);
+      body.fields.userid = users._id;
     }
     body.fields.downloadURL = (body.location !== '') ? body.location : body.fields.downloadURL;
     if (body.fields._id) {
@@ -523,6 +523,17 @@ router.post('/downloadurl/delete', function(req, res, next) {
       next(err);
     });
 });
+
+router.get('/adminUserNetwork/:id', function(req, res, next) {
+  User.findById(req.params.id).populate('paidRepost.userID').exec()
+    .then(function(user) {
+      var network = [];
+      user.paidRepost.forEach(function(pr) {
+        network.push(pr.userID);
+      })
+      res.send(network);
+    })
+})
 
 router.get('/downloadurl/:id', function(req, res, next) {
 
@@ -660,7 +671,7 @@ router.post('/paidrepost', function(req, res, next) {
 });
 
 router.put('/profile', function(req, res, next) {
-  var id= req.body._id;
+  var id = req.body._id;
   delete req.body._id;
   User.findByIdAndUpdate(id, req.body, {
       new: true
@@ -918,26 +929,24 @@ router.post('/profile/edit', function(req, res, next) {
   var body = req.body;
   var uid = req.user._id;
   var updateObj = {};
-  if (body.name !== '' && body.name!=undefined) {
+  if (body.name !== '' && body.name != undefined) {
     updateObj['soundcloud.username'] = body.name;
-  } else if (body.password !== ''  && body.password!=undefined) {
+  } else if (body.password !== '' && body.password != undefined) {
     updateObj.salt = User.generateSalt();
     updateObj.password = User.encryptPassword(body.password, updateObj.salt);
-  } else if (body.email !== '' && body.email!=undefined) {
+  } else if (body.email !== '' && body.email != undefined) {
     updateObj.email = body.email;
-  }
-  else if (body.admin !== '' && body.admin!=undefined) {
+  } else if (body.admin !== '' && body.admin != undefined) {
     updateObj.admin = true;
-  }
-  else if(body.permanentLinks!="" && body.permanentLinks!=undefined){
-  try {
-    updateObj.permanentLinks = JSON.parse(body.permanentLinks);
-  } catch (err) {
-    next(err);
-  }
+  } else if (body.permanentLinks != "" && body.permanentLinks != undefined) {
+    try {
+      updateObj.permanentLinks = JSON.parse(body.permanentLinks);
+    } catch (err) {
+      next(err);
+    }
   }
 
-  if(body.userID){
+  if (body.userID) {
     uid = body.userID;
   }
 
@@ -959,10 +968,10 @@ router.post('/profile/edit', function(req, res, next) {
 router.post('/profile/soundcloud', function(req, res, next) {
   if (req.user) {
     getUserSCInfo()
-    .then(checkIfUser)
-    .then(updateUser)
-    .then(sendResponse)
-    .then(null, handleError);
+      .then(checkIfUser)
+      .then(updateUser)
+      .then(sendResponse)
+      .then(null, handleError);
   } else {
     return res.json({
       "success": false,
@@ -1187,36 +1196,36 @@ router.post('/networkaccount', function(req, res, next) {
 });
 
 router.get('/userNetworks', function(req, res, next) {
-  var userID = req.user._id;  
+  var userID = req.user._id;
   NetworkAccounts.findOne({
-    channels: userID
-  })
-  .populate('channels')
-  .exec()
-  .then(function(una) {
-    if (una) {
-      res.send(una.channels)
-    } else {
-      res.send([]);
-    }
-  });
+      channels: userID
+    })
+    .populate('channels')
+    .exec()
+    .then(function(una) {
+      if (una) {
+        res.send(una.channels)
+      } else {
+        res.send([]);
+      }
+    });
 });
 
 router.put('/updateRepostSettings', function(req, res, next) {
   var repostSettings = req.body.repostSettings;
   User.findOneAndUpdate({
-    '_id': req.body.id
-  }, {
-    $set: {
-      repostSettings: repostSettings
-    }
-  }, {
-    new: true
-  }).exec()
-  .then(function(result) {
-    res.send(result);
-  })
-  .then(null, function(err) {
-    next(err);
-  });
+      '_id': req.body.id
+    }, {
+      $set: {
+        repostSettings: repostSettings
+      }
+    }, {
+      new: true
+    }).exec()
+    .then(function(result) {
+      res.send(result);
+    })
+    .then(null, function(err) {
+      next(err);
+    });
 });

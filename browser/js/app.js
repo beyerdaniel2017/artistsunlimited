@@ -192,7 +192,7 @@ app.directive('fbLike', [
     }
 ])
 
-app.controller('FullstackGeneratedController', function($stateParams, $window, $scope, $state, $http, mainService, SessionService) {
+app.controller('FullstackGeneratedController', function($stateParams, $window, $rootScope, $scope, $state, $http, mainService, SessionService) {
     /*Load More*/
     $scope.loadList = function() {
         $scope.$broadcast('loadTrades');
@@ -211,36 +211,36 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
         });
     }
 
-    $scope.gotoSettings = function(){
-      $scope.user = SessionService.getUser();  
-      SessionService.addActionsfoAccount('Admin',$scope.user._id)
-      $state.go("basicstep1");
+    $scope.gotoSettings = function() {
+        $scope.user = SessionService.getUser();
+        SessionService.addActionsfoAccount('Admin', $scope.user._id)
+        $state.go("basicstep1");
     }
-    
 
-    $scope.getBehalfUserRecord = function(paid){
+
+    $scope.getBehalfUserRecord = function(paid) {
         paid = JSON.parse(paid);
-        SessionService.removePaidRepostAccounts();  
-        setTimeout(function(){
+        SessionService.removePaidRepostAccounts();
+        setTimeout(function() {
             SessionService.addActionsfoAccount('BehalfUser', paid._id, paid.soundcloud.id);
             SessionService.setUserPaidRepostAccounts(paid);
-            if($state.current.url.indexOf("admin/reForReInteraction") !=-1)
-                window.location.href='/admin/reposttraders';        
-            else            
-                window.location.reload($state.current.url);        
-        },500);
-    }  
+            if ($state.current.url.indexOf("admin/reForReInteraction") != -1)
+                window.location.href = '/admin/reposttraders';
+            else
+                window.location.reload($state.current.url);
+        }, 500);
+    }
 
-    $scope.gotoBehalfSetting = function(actions){
-        
-        if(actions=="SCHEDULER"){
-            window.location.href='/admin/scheduler';  
+    $scope.gotoBehalfSetting = function(actions) {
+
+        if (actions == "SCHEDULER") {
+            window.location.href = '/admin/scheduler';
         }
-        if(actions=="REPOSTTRADES"){
-            window.location.href='/admin/reposttraders';  
+        if (actions == "REPOSTTRADES") {
+            window.location.href = '/admin/reposttraders';
         }
-        if(actions=="DOWNLOADGATEWAY"){
-            window.location.href='/admin/downloadGateway';
+        if (actions == "DOWNLOADGATEWAY") {
+            window.location.href = '/admin/downloadGateway';
         }
     }
 
@@ -271,27 +271,42 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
     $scope.linkedUsersChange = function(authToken) {
         $scope.processing = true;
         $http.post('/api/login/soundCloudLogin', {
-            token: authToken,
-            password: 'test'
-        })
-        .then(function(res) {
-            $scope.processing = false;
-            SessionService.create(res.data.user);
-            $window.location.reload();
+                token: authToken,
+                password: 'test'
+            })
+            .then(function(res) {
+                $scope.processing = false;
+                SessionService.create(res.data.user);
+                $window.location.reload();
 
-        })
-        .then(null, function(err) {
-            $.Zebra_Dialog('Error: Could not log in');
-            $scope.processing = false;
-        });
+            })
+            .then(null, function(err) {
+                $.Zebra_Dialog('Error: Could not log in');
+                $scope.processing = false;
+            });
     }
 
-    $scope.swithUser = function(isadmin){
-        if(isadmin){
+    $scope.swithUser = function(isadmin) {
+        if (isadmin) {
             mainService.logout();
-        }
-        else{
+        } else {
             mainService.adminlogout();
+        }
+    }
+
+    $scope.getUserNetwork = function() {
+        console.log('connected');
+        if ($window.location.pathname.includes('admin/')) {
+            var adminUser = JSON.parse($window.localStorage.getItem('adminUser'));
+            $http.get("/api/database/adminUserNetwork/" + adminUser._id)
+                .then(function(res) {
+                    $rootScope.userlinkedAccounts = res.data;
+                })
+        } else {
+            $http.get("/api/database/userNetworks")
+                .then(function(networks) {
+                    $rootScope.userlinkedAccounts = networks.data;
+                })
         }
     }
 

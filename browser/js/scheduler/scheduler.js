@@ -10,34 +10,33 @@ app.config(function($stateProvider) {
           $window.location.href = '/admin';
         }
         return $http.get('/api/users/getUserPaidRepostAccounts')
-        .then(function(res) {
-          if(res.data.length >0){
-            var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
-            if(res.data[0]!=undefined && (PaidUserId==null || PaidUserId==undefined || PaidUserId=="undefined")){
-              SessionService.addActionsfoAccount('BehalfUser',res.data[0]._id,res.data[0].soundcloud.id);
-              SessionService.setUserPaidRepostAccounts(res.data[0]);
-            }
-          }          
-          return res.data;
-        })
-        .then(null, function(err) {
-          $.Zebra_Dialog("error getting the paidReposts");
-          return;
-        })
-      },
-      events: function($http, paidReposts, SessionService) {       
-        if(paidReposts.length > 0){
-          var soundcloudId = SessionService.getSoundCloudId();
-          return $http.get('/api/events/forUser/' + soundcloudId)
           .then(function(res) {
+            if (res.data.length > 0) {
+              var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
+              if (res.data[0] != undefined && (PaidUserId == null || PaidUserId == undefined || PaidUserId == "undefined")) {
+                SessionService.addActionsfoAccount('BehalfUser', res.data[0]._id, res.data[0].soundcloud.id);
+                SessionService.setUserPaidRepostAccounts(res.data[0]);
+              }
+            }
             return res.data;
           })
           .then(null, function(err) {
-            $.Zebra_Dialog("error getting your events");
+            $.Zebra_Dialog("error getting the paidReposts");
             return;
           })
-        }   
-        else{
+      },
+      events: function($http, paidReposts, SessionService) {
+        if (paidReposts.length > 0) {
+          var soundcloudId = SessionService.getSoundCloudId();
+          return $http.get('/api/events/forUser/' + soundcloudId)
+            .then(function(res) {
+              return res.data;
+            })
+            .then(null, function(err) {
+              $.Zebra_Dialog("error getting your events");
+              return;
+            })
+        } else {
           return [];
         }
       }
@@ -55,11 +54,11 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   var formActions = SessionService.getActionsfoAccount();
   var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
   var soundcloudId = SessionService.getSoundCloudId();
-  $scope.paidUsers=[];
-  paidReposts.forEach(function(pr){
+  $scope.paidUsers = [];
+  paidReposts.forEach(function(pr) {
     $scope.paidUsers.push(pr);
   })
-  
+
   // if(PaidUserId!=undefined && formActions!=undefined && $scope.paidUsers.length>0 && soundcloudId!=undefined){
   //   $http.get('/api/events/forUser/' + soundcloudId,function(error,res){
   //     if(res){
@@ -69,15 +68,15 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   //   });
   // }
   // else
-  if(PaidUserId==undefined && formActions==undefined && $scope.paidUsers.length>0){
-    PaidUserId= $scope.paidUsers[0]._id;
-  } 
-  
-  if($scope.paidUsers.length==0){
+  if (PaidUserId == undefined && formActions == undefined && $scope.paidUsers.length > 0) {
+    PaidUserId = $scope.paidUsers[0]._id;
+  }
+
+  if ($scope.paidUsers.length == 0) {
     $.Zebra_Dialog('Error: There is no any user record found.');
     return;
   }
-  $scope.paidusersId = PaidUserId;  
+  $scope.paidusersId = PaidUserId;
   $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
   $scope.paidusersRec = $scope.user;
 
@@ -94,7 +93,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     ev.day = new Date(ev.day);
   });
   $scope.events = events;
-  
+
   $scope.hideall = false;
   $scope.itemview = "calender";
   $scope.dayIncr = 0;
@@ -119,12 +118,11 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   $scope.selectedSlot = {};
   $scope.unrepostHours = 24;
   var commentIndex = 0;
-  $scope.eventComment = ($scope.user.repostSettings!=undefined ? 
-      (
-        $scope.user.repostSettings.schedule && 
-        $scope.user.repostSettings.schedule.comments && 
-        $scope.user.repostSettings.schedule.comments.length > 0
-       ? $scope.user.repostSettings.schedule.comments[0] : '') : '');
+  $scope.eventComment = ($scope.user.repostSettings != undefined ?
+    (
+      $scope.user.repostSettings.schedule &&
+      $scope.user.repostSettings.schedule.comments &&
+      $scope.user.repostSettings.schedule.comments.length > 0 ? $scope.user.repostSettings.schedule.comments[0] : '') : '');
   var defaultAvailableSlots = {
     sunday: [],
     monday: [],
@@ -134,7 +132,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     friday: [],
     saturday: []
   };
-  $scope.searchStringVal="";
+  $scope.searchStringVal = "";
   $scope.channelArr = [];
   $scope.groupArr = [];
   $scope.selectedGroups = {};
@@ -153,9 +151,9 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
   $scope.getLinkedAccounts = function() {
     setTimeout(function() {
-      var linked = $rootScope.userlinkedAccounts ? $rootScope.userlinkedAccounts:[];
+      var linked = $rootScope.userlinkedAccounts ? $rootScope.userlinkedAccounts : [];
       for (var i = 0; i < linked.length; i++) {
-        if (linked[i]!=undefined && linked[i]._id != $scope.user._id) {
+        if (linked[i] != undefined && linked[i]._id != $scope.user._id) {
           $scope.linkedAccounts.push(linked[i]);
         }
       }
@@ -163,7 +161,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   }
 
   $scope.checkCommentEnable = function() {
-    if ($scope.user.repostSettings!=undefined && $scope.user.repostSettings.schedule!=undefined) {
+    if ($scope.user.repostSettings != undefined && $scope.user.repostSettings.schedule != undefined) {
       if ($scope.user.repostSettings.schedule.comment == false) {
         $scope.disable = true;
         $scope.commentEvent = false;
@@ -177,7 +175,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     }
   }
   $scope.checkLikeEnable = function() {
-    if ($scope.user.repostSettings!=undefined && $scope.user.repostSettings.schedule!=undefined) {
+    if ($scope.user.repostSettings != undefined && $scope.user.repostSettings.schedule != undefined) {
       if ($scope.user.repostSettings.schedule.like == false) {
         $scope.likeSrc = 'assets/images/like.png';
         $scope.likeEvent = false;
@@ -207,26 +205,26 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
         $scope.commentEvent = true;
         $scope.disable = false;
         commentIndex = 0;
-        $scope.eventComment = $scope.user.repostSettings!=undefined ? $scope.user.repostSettings.schedule.comments[commentIndex]:"";
+        $scope.eventComment = $scope.user.repostSettings != undefined ? $scope.user.repostSettings.schedule.comments[commentIndex] : "";
       }
     }
     //$scope.saveRepostSettings();
   }
 
   $scope.getPrevNextComment = function(type) {
-    if($scope.user.repostSettings!=undefined){
-    if (type == 'next') {
-      if (commentIndex < $scope.user.repostSettings.schedule.comments.length - 1) {
-        commentIndex = commentIndex + 1;
-        $scope.searchStringVal.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
-      }
-    } else {
-      if (commentIndex >= 1) {
-        commentIndex = commentIndex - 1;
-        $scope.searchStringVal.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
+    if ($scope.user.repostSettings != undefined) {
+      if (type == 'next') {
+        if (commentIndex < $scope.user.repostSettings.schedule.comments.length - 1) {
+          commentIndex = commentIndex + 1;
+          $scope.searchStringVal.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
+        }
+      } else {
+        if (commentIndex >= 1) {
+          commentIndex = commentIndex - 1;
+          $scope.searchStringVal.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
+        }
       }
     }
-  }
   }
 
   $scope.saveRepostSettings = function() {
@@ -243,13 +241,13 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     });
   }
 
-  $scope.saveComments = function(value, type,index) {
+  $scope.saveComments = function(value, type, index) {
 
     var comments = [];
     if (type == 'schedule' && value) {
       comments = ($scope.user.repostSettings.schedule.comments ? $scope.user.repostSettings.schedule.comments : []);
-      if(index==undefined)
-      comments.push(value);
+      if (index == undefined)
+        comments.push(value);
       else
         comments[index] = value;
 
@@ -258,24 +256,23 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
       $scope.scheduleComment = "";
     } else if (type == 'trade' && value) {
       comments = ($scope.user.repostSettings.trade.comments ? $scope.user.repostSettings.trade.comments : []);
-      if(index==undefined)
-      comments.push(value);
+      if (index == undefined)
+        comments.push(value);
       else
         comments[index] = value;
       $scope.user.repostSettings.trade.comments = comments;
       $scope.saveRepostSettings();
       $scope.tradeComment = "";
-    }
-    else{
+    } else {
       $.Zebra_Dialog("Please enter comment");
       return;
     }
   }
 
-  $scope.editComments = function(comment, type,index) {
-    $scope.scheduleCommentIndex=index;
+  $scope.editComments = function(comment, type, index) {
+    $scope.scheduleCommentIndex = index;
     if (type == 'schedule') {
-      $('#scheduleCommentModal').modal('show');      
+      $('#scheduleCommentModal').modal('show');
       $scope.scheduleComment = comment;
     } else if (type == 'trade') {
       $('#tradeCommentModal').modal('show');
@@ -344,15 +341,15 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     $scope.isEdit = false;
     $scope.tabSelected = false;
     $scope.makeEventURL = "";
-    $scope.searchStringVal={};
+    $scope.searchStringVal = {};
     $scope.searchStringVal.searchSelection = [];
-    $scope.searchStringVal.unrepostHours="24";
+    $scope.searchStringVal.unrepostHours = "24";
     $scope.makeEvent = {};
-    $scope.submission={};
+    $scope.submission = {};
     $scope.searchStringVal.timeGap = "";
     $scope.searchStringVal.eventComment = $scope.user.repostSettings ? ($scope.user.repostSettings.schedule.comments.length ? $scope.user.repostSettings.schedule.comments[0] : "") : "";
     $scope.searchStringVal.channelArr = [];
-    $scope.searchStringVal.selectedSlot = ""; 
+    $scope.searchStringVal.selectedSlot = "";
     var hour = ConvertStringTimeToUTC();
     var makeDay = new Date();
     makeDay.setHours(hour);
@@ -367,7 +364,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
   $scope.changedSearch = function(kind) {
     $("#searchString,#searchString1").next("ul").show();
-    
+
     $scope.searchStringVal.searchString;
     $scope.searchStringVal.searchSelection = [];
     $scope.searchStringVal.searchError = false;
@@ -385,13 +382,12 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
             $scope.selectedItem(res.data.item);
           }
         } else {
-          if(res.data.collection.length > 0){
+          if (res.data.collection.length > 0) {
             $scope.searchStringVal.searchSelection = res.data.collection;
             $scope.searchStringVal.searchSelection.forEach(function(item) {
               $scope.setItemText(item)
             })
-          }
-          else{
+          } else {
             $scope.searchError = "We could not find a " + kind + "."
           }
         }
@@ -436,7 +432,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
       document.getElementById('scPlayer').style.visibility = "visible";
       $scope.processing = false;
-       $scope.searchStringVal.searching = false;
+      $scope.searchStringVal.searching = false;
       $scope.searchStringVal.searchError = false;
     }
     //end search//
@@ -510,17 +506,16 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   }
 
   $scope.isSchedule = false;
-  $scope.scheduleSong = function(item)
-  {
+  $scope.scheduleSong = function(item) {
     console.log(item);
     document.getElementById('scPlayer').style.visibility = "hidden";
     $scope.isSchedule = true;
     $scope.tabSelected = false;
     $scope.newEvent = true;
     $scope.makeEvent = {
-        userID: $scope.user.soundcloud.id,
-        type: "track"
-      };
+      userID: $scope.user.soundcloud.id,
+      type: "track"
+    };
     $scope.selectedSlot = item.date;
     var selectedSlot = new Date($scope.selectedSlot);
     var day = new Date(selectedSlot.getTime() - selectedSlot.getTimezoneOffset() * 60000).toISOString();
@@ -536,20 +531,20 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     })
     document.getElementById('scPlayer').style.visibility = "visible";
     $scope.followersCount();
-    
+
   }
 
   $scope.isEdit = false;
-  $scope.EditNewSong = function(item,action) {
+  $scope.EditNewSong = function(item, action) {
     $scope.editChannelArr = [];
     $scope.tabSelected = false;
     $scope.isEdit = false;
-    $scope.searchStringVal={};
+    $scope.searchStringVal = {};
     var newObj = item;
 
-    $scope.searchStringVal={};
+    $scope.searchStringVal = {};
     $scope.searchStringVal.searchString = newObj.event.trackURL;
-     if(action=="view")
+    if (action == "view")
       $scope.isEdit = true;
 
     $scope.searchStringVal.selectedSlot = newObj.event.day;
@@ -638,18 +633,14 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
         dt.setHours(s);
         item.date = new Date(dt);
 
-        if(!item.event)
-        {  
-          if(new Date(item.date).getTime() > new Date().getTime())
-          {
+        if (!item.event) {
+          if (new Date(item.date).getTime() > new Date().getTime()) {
             $scope.listevents.push(item);
           }
-        }
-        else if(item.event)
-        {
+        } else if (item.event) {
           $scope.listevents.push(item);
         }
-         
+
         if (event == undefined && new Date(item.date) > new Date()) {
           item.slotdate = d;
           item.slottime = time;
@@ -835,13 +826,13 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     var makeDay = new Date(selectedSlot.slotdate);
     makeDay.setHours(hour);
     $scope.searchStringVal.day = makeDay;
-    $scope.searchStringVal.searchString = $scope.searchStringVal.trackURL!="" ? $scope.searchStringVal.trackURL:$scope.searchStringVal.searchString;
+    $scope.searchStringVal.searchString = $scope.searchStringVal.trackURL != "" ? $scope.searchStringVal.trackURL : $scope.searchStringVal.searchString;
   }
 
   $scope.clickedSlot = function(day, hour, data) {
 
     $scope.popup = true;
-     $scope.searchStringVal={};
+    $scope.searchStringVal = {};
     var d = new Date(day).getDay();
 
     if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1) return;
@@ -866,8 +857,8 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
         type: "track"
       };
 
-      $scope.searchStringVal.unrepostHours="24";
-      $scope.searchStringVal.unrepostDate = (data.day!=undefined ? new Date(data.day.getTime() + 24 * 60 * 60 * 1000) : new Date(new Date().getTime() + 24 * 60 * 60 * 1000));
+      $scope.searchStringVal.unrepostHours = "24";
+      $scope.searchStringVal.unrepostDate = (data.day != undefined ? new Date(data.day.getTime() + 24 * 60 * 60 * 1000) : new Date(new Date().getTime() + 24 * 60 * 60 * 1000));
       $scope.searchStringVal.unrepost = true;
       $scope.newEvent = true;
       document.getElementById('scPopupPlayer').style.visibility = "hidden";
@@ -885,7 +876,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
         $scope.searchStringVal.channelArr = $scope.editChannelArr;
       }
 
-      if(data._id!=undefined)
+      if (data._id != undefined)
         $scope.searchStringVal._id = data._id;
 
       $scope.searchStringVal.unrepostHours = data.unrepostHours;
@@ -895,7 +886,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
       $scope.searchStringVal.unrepostDate = new Date(data.unrepostDate);
       $scope.searchStringVal.unrepost = (data.unrepostDate > new Date());
       $scope.searchStringVal.searchString = data.trackURL;
-      $scope.searchStringVal.eventComment = ($scope.user.repostSettings!=undefined && $scope.user.repostSettings.schedule!=undefined)  ? ($scope.user.repostSettings.schedule.comments!=undefined && $scope.user.repostSettings.schedule.comments.length ? $scope.user.repostSettings.schedule.comments[0] : "") : "";
+      $scope.searchStringVal.eventComment = ($scope.user.repostSettings != undefined && $scope.user.repostSettings.schedule != undefined) ? ($scope.user.repostSettings.schedule.comments != undefined && $scope.user.repostSettings.schedule.comments.length ? $scope.user.repostSettings.schedule.comments[0] : "") : "";
       $scope.followersCount();
       SC.oEmbed($scope.searchStringVal.trackURL, {
         element: document.getElementById('scPopupPlayer'),
@@ -913,8 +904,8 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   //   $scope.makeEvent.trackID = null;
   //   $scope.makeEventURL = null;
   // }
-   //search//
- 
+  //search//
+
   $scope.log = function() {
     //console.log($scope.otherChannels);
   }
@@ -922,7 +913,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   $scope.changeURL = function() {
 
 
-    
+
     if ($scope.makeEventURL) {
       $scope.processing = true;
       var player = (($scope.popup == false) ? document.getElementById('scPlayer') : document.getElementById('scPopupPlayer'));
@@ -1034,34 +1025,34 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
   $scope.otherChannelsAndGroups = function() {
     $scope.selectedGroupChannelIDS = [];
-      $scope.groupAndChannel = $scope.channelArr.concat($scope.groupArr);
-      $scope.groupAndChannel.forEach(function(g) {
+    $scope.groupAndChannel = $scope.channelArr.concat($scope.groupArr);
+    $scope.groupAndChannel.forEach(function(g) {
       $scope.admin.paidRepost.forEach(function(acc) {
-          if (acc.groups.indexOf(g) != -1) {
+        if (acc.groups.indexOf(g) != -1) {
           for (var i = 0; i < $scope.paidUsers.length; i++) {
             if (acc.userID == $scope.paidUsers[i]._id) {
-                  if ($scope.selectedGroupChannelIDS.indexOf($scope.paidUsers[i].soundcloud.id) == -1) {
-                  $scope.selectedGroupChannelIDS.push($scope.paidUsers[i].soundcloud.id);
-                }
+              if ($scope.selectedGroupChannelIDS.indexOf($scope.paidUsers[i].soundcloud.id) == -1) {
+                $scope.selectedGroupChannelIDS.push($scope.paidUsers[i].soundcloud.id);
               }
             }
-          } else {
+          }
+        } else {
 
           for (var i = 0; i < $scope.paidUsers.length; i++) {
             if (g == $scope.paidUsers[i].name) {
               if ($scope.selectedGroupChannelIDS.indexOf($scope.paidUsers[i].soundcloud.id) == -1) {
-                       $scope.selectedGroupChannelIDS.push($scope.paidUsers[i].soundcloud.id);
+                $scope.selectedGroupChannelIDS.push($scope.paidUsers[i].soundcloud.id);
               }
             }
           }
-          }
-        });
+        }
       });
-      return $scope.selectedGroupChannelIDS;
-    }
+    });
+    return $scope.selectedGroupChannelIDS;
+  }
 
   $scope.saveEvent = function() {
-    $scope.makeEvent={};
+    $scope.makeEvent = {};
     var otherChannels = $scope.otherChannelsAndGroups();
     if (otherChannels.length > 0) {
       $scope.makeEvent.otherChannels = otherChannels;
@@ -1082,17 +1073,17 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     $scope.makeEvent.timeGap = $scope.searchStringVal.timeGap;
     $scope.makeEvent.comment = ($scope.commentEvent == true ? $scope.searchStringVal.eventComment : '');
     $scope.makeEvent.unrepostEnable = $scope.searchStringVal.unrepostEnable;
-    
+
     $scope.makeEvent.trackID = $scope.searchStringVal.trackID;
     $scope.makeEvent.trackURL = $scope.searchStringVal.trackURL;
     $scope.makeEvent.trackArtUrl = $scope.searchStringVal.trackArtUrl;
-    $scope.makeEvent.title=$scope.searchStringVal.title;
-    $scope.makeEvent.name= $scope.searchStringVal.name;
-    $scope.makeEvent.day= $scope.searchStringVal.day;
-    $scope.makeEvent.owner= $scope.user._id;
-    $scope.makeEvent.email= $scope.user.email;
-    
-    
+    $scope.makeEvent.title = $scope.searchStringVal.title;
+    $scope.makeEvent.name = $scope.searchStringVal.name;
+    $scope.makeEvent.day = $scope.searchStringVal.day;
+    $scope.makeEvent.owner = $scope.user._id;
+    $scope.makeEvent.email = $scope.user.email;
+
+
 
     if ($scope.trackType == "playlist") {
       $.Zebra_Dialog("Sorry! We don't currently allow playlist reposting. Please enter a track url instead.");
@@ -1277,8 +1268,8 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     } else if (event.type == 'traded') {
       return {
         'background-color': '#FF6347',
-        'margin' : '2px',
-        'height' : '18px'
+        'margin': '2px',
+        'height': '18px'
       }
     } else if (event.type == 'paid') {
       return {
@@ -1310,7 +1301,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
       calDay.day = new Date()
       calDay.day.setDate(today.getDate() + i);
       var dayEvents = events.filter(function(ev) {
-          return (ev.day.toLocaleDateString() == calDay.day.toLocaleDateString());
+        return (ev.day.toLocaleDateString() == calDay.day.toLocaleDateString());
       });
       var eventArray = [];
       for (var j = 0; j < 24; j++) {
@@ -1338,7 +1329,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
 
       return $http.put('/api/database/profile', $scope.user)
         .then(function(res) {
-           SessionService.setUserPaidRepostAccounts(res.data);
+          SessionService.setUserPaidRepostAccounts(res.data);
           //SessionService.create(res.data);
           //$scope.user = SessionService.getUser();
           $scope.user = SessionService.getUserPaidRepostAccounts(PaidUserId);
@@ -1364,8 +1355,8 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     if (!$scope.user.email) {
       $scope.showEmailModal = true;
       setTimeout(function() {
-      $('#emailModal').modal('show');
-      },300);
+        $('#emailModal').modal('show');
+      }, 300);
     }
   }
   $scope.verifyBrowser = function() {
@@ -1391,19 +1382,12 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     }
   }
 
-  $scope.getUserNetwork = function() {
-    $http.get("/api/database/userNetworks")
-      .then(function(networks) {
-        $rootScope.userlinkedAccounts = networks.data;
-      })
-  }
-
   $scope.updateReach = function() {
     $scope.repostReach = 0;
     $scope.repostReach = $scope.user.soundcloud.followers;
     for (var key in $scope.otherChannels) {
       if ($scope.otherChannels[key]) {
-        var acct = $scope.userlinkedAccounts.find(function(acct) {
+        var acct = $rootScope.userlinkedAccounts.find(function(acct) {
           return acct.soundcloud.id == key;
         })
         $scope.repostReach += acct.soundcloud.followers;
@@ -1417,7 +1401,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
     var channels = $scope.otherChannelsAndGroups();
     for (var i = 0; i < $scope.paidUsers.length; i++) {
       if (channels.indexOf($scope.paidUsers[i].soundcloud.id) > -1 && $scope.paidUsers[i].soundcloud.id != selectedUser) {
-          count = count + $scope.paidUsers[i].soundcloud.followers;
+        count = count + $scope.paidUsers[i].soundcloud.followers;
       }
     }
     $scope.followCounts = count;
@@ -1433,8 +1417,5 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   $scope.updateReach();
   $scope.getUserNetwork();
   $scope.verifyBrowser();
- // $scope.fillDateArrays(events);
-  
-
-
+  // $scope.fillDateArrays(events);
 });

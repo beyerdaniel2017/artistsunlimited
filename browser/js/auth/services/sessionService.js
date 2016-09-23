@@ -12,28 +12,28 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		$window.localStorage.removeItem('addActionsfoAccountIndexSRD');
 		$window.localStorage.removeItem('soundCloudId');
 		$window.localStorage.removeItem('PaidRepostAccounts');
-				
+
 	}
 
-	function removeAccountusers(){
+	function removeAccountusers() {
 		$window.localStorage.removeItem('addActionsfoAccount');
 		$window.localStorage.removeItem('addActionsfoAccountIndex');
 		$window.localStorage.removeItem('addActionsfoAccountIndexSRD');
-		$window.localStorage.removeItem('AdminUser');	
+		$window.localStorage.removeItem('AdminUser');
 		$window.localStorage.removeItem('soundCloudId');
 		$window.localStorage.removeItem('PaidRepostAccounts');
 	}
 
-	function addActionsfoAccount(actions,index,soundCloudId) {
-		$window.localStorage.setItem('addActionsfoAccount',actions);
-		$window.localStorage.setItem('addActionsfoAccountIndex',index);
-   		if(soundCloudId){
-   			$window.localStorage.setItem('addActionsfoAccountIndexSRD',index);
-			$window.localStorage.setItem('soundCloudId',soundCloudId);			
-	}
+	function addActionsfoAccount(actions, index, soundCloudId) {
+		$window.localStorage.setItem('addActionsfoAccount', actions);
+		$window.localStorage.setItem('addActionsfoAccountIndex', index);
+		if (soundCloudId) {
+			$window.localStorage.setItem('addActionsfoAccountIndexSRD', index);
+			$window.localStorage.setItem('soundCloudId', soundCloudId);
+		}
 	}
 
-	function removePaidRepostAccounts(){
+	function removePaidRepostAccounts() {
 		$window.localStorage.removeItem('PaidRepostAccounts');
 	}
 
@@ -49,7 +49,7 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		return $window.localStorage.getItem('addActionsfoAccountIndexSRD');
 	}
 
-	function getSoundCloudId(){
+	function getSoundCloudId() {
 		return $window.localStorage.getItem('soundCloudId');
 	}
 
@@ -71,21 +71,20 @@ app.factory('SessionService', function($cookies, $http, $window) {
 	}
 
 	function getUserPaidRepostAccounts(id) {
-		if(id != undefined){
+		if (id != undefined) {
 			try {
 				var accounts = JSON.parse($window.localStorage.getItem('PaidRepostAccounts'));
 				if ((typeof accounts === "object") && (accounts !== null)) {
 					return accounts;
-				}
-				else{
-				var user = accounts.find(function(acc){
+				} else {
+					var user = accounts.find(function(acc) {
 						return acc._id == id;
 					});
-					console.log("user",user);
-				return user;
+					console.log("user", user);
+					return user;
 				}
 			} catch (e) {}
-		}		
+		}
 	}
 
 	function getAdminUser() {
@@ -114,14 +113,14 @@ app.factory('SessionService', function($cookies, $http, $window) {
 		refreshUser: refreshUser,
 		createAdminUser: createAdminUser,
 		getAdminUser: getAdminUser,
-		removeAccountusers:removeAccountusers,
-		addActionsfoAccount:addActionsfoAccount,
-		getActionsfoAccount:getActionsfoAccount,
-		getActionsfoAccountIndex:getActionsfoAccountIndex,
-		setUserPaidRepostAccounts:setUserPaidRepostAccounts,
-		getUserPaidRepostAccounts:getUserPaidRepostAccounts,
-		removePaidRepostAccounts:removePaidRepostAccounts,
-		getSoundCloudId:getSoundCloudId,
-		addActionsfoAccountIndexSRD:addActionsfoAccountIndexSRD
+		removeAccountusers: removeAccountusers,
+		addActionsfoAccount: addActionsfoAccount,
+		getActionsfoAccount: getActionsfoAccount,
+		getActionsfoAccountIndex: getActionsfoAccountIndex,
+		setUserPaidRepostAccounts: setUserPaidRepostAccounts,
+		getUserPaidRepostAccounts: getUserPaidRepostAccounts,
+		removePaidRepostAccounts: removePaidRepostAccounts,
+		getSoundCloudId: getSoundCloudId,
+		addActionsfoAccountIndexSRD: addActionsfoAccountIndexSRD
 	};
 });

@@ -58,12 +58,12 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       visible: false
     };
 
-      /* Apply page end */
-    $scope.gotoSettings = function(){
-      SessionService.addActionsfoAccount('Admin',$scope.user._id)
+    /* Apply page end */
+    $scope.gotoSettings = function() {
+      SessionService.addActionsfoAccount('Admin', $scope.user._id)
       $state.go("basicstep1");
     }
-   
+
     /* Init downloadGateway list */
 
     $scope.downloadGatewayList = [];
@@ -415,11 +415,12 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
 
     // remove linked accounts
     $scope.removeLinkedAccount = function(account) {
-      $scope.userlinkedAccounts.splice($scope.userlinkedAccounts.indexOf(account), 1);
-      $http.put('/api/database/networkaccount', $scope.userlinkedAccounts)
-      .then(function(res) {
-        $scope.userlinkedAccounts = res.data.channels;
-      })
+      $rootScope.userlinkedAccounts.splice($rootScope.userlinkedAccounts.indexOf(account), 1);
+      $http.put('/api/database/networkaccount', $rootScope.userlinkedAccounts)
+        .then(function(res) {
+          $rootScope.userlinkedAccounts = res.data.channels;
+          $rootScope.userlinkedAccounts = res.data.channels;
+        })
     }
 
     $scope.removePermanentLink = function(index) {
@@ -541,10 +542,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
 
     $scope.soundcloudLogin = function() {
       SC.connect()
-        .then(function(res) {          
-          // var find = $scope.userlinkedAccounts.find(function(acct) {
-          //   return acct.soundcloud.token == res.oauth_token;
-          // });
+        .then(function(res) {
           if (res.oauth_token == SessionService.getUser().soundcloud.token) {
             throw new Error('already added');
           } else {
@@ -563,7 +561,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
             })
             .then(function(res) {
               $.Zebra_Dialog(res.data.message);
-              $scope.userlinkedAccounts = res.data.data.channels;
+              $rootScope.userlinkedAccounts = res.data.data.channels;
               setTimeout(function() {
                 window.location.reload();
               }, 1000);
@@ -598,12 +596,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       }
     }
 
-    $scope.getUserNetwork = function() {
-      $http.get("/api/database/userNetworks")
-        .then(function(res) {
-          $rootScope.userlinkedAccounts = res.data;
-        })
-    }
     $scope.getUserNetwork();
     $scope.verifyBrowser();
   })
