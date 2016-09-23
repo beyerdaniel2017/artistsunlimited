@@ -36,17 +36,17 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         SessionService.create(userData);
         userData.loginInfo = $scope.loginObj;
         $window.localStorage.setItem('adminUser', JSON.stringify(userData));
-        $http.get('/api/users/byId/' + userData.paidRepost[0].userID)
-          .then(function(res) {
-            $window.localStorage.setItem('prevATUser', JSON.stringify(res.data));
-            if (userData.paypal_email == undefined || userData.paypal_email == "")
-              $state.go('basicstep1');
-            else {
+        if (userData.paypal_email == undefined || userData.paypal_email == "" || !userData.paidRepost[0])
+          $state.go('basicstep1');
+        else {
+          $http.get('/api/users/byId/' + userData.paidRepost[0].userID)
+            .then(function(res) {
+              $window.localStorage.setItem('prevATUser', JSON.stringify(res.data));
               SessionService.removeAccountusers();
               $state.go('accounts');
-            }
-          })
-          .then(console.debug);
+            })
+            .then(console.debug);
+        }
       } else {
         $scope.signinError = "Invalid Email or Password.";
       }
