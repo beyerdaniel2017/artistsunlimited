@@ -3,17 +3,17 @@
   <div class="scheduler-tabs">
     <!-- Nav tabs :Start-->
     <ul class="nav nav-tabs" role="tablist">
-      <li role="presentation" class="active"><a href="#myschedule" aria-controls="myschedule" role="tab" data-toggle="tab">
+      <li role="presentation" ng-class="{active: activeTab == '1'}"><a href="#myschedule" aria-controls="myschedule" role="tab" data-toggle="tab">
         <img src="assets/images/myschedule.png" />NEW TRADE</a>
       </li>
-      <li role="presentation"><a href="#organizeschedule" aria-controls="organizeschedule" role="tab" data-toggle="tab"> <img src="assets/images/organizeschedule.png"/>INCOMPLETE TRADES</a></li>
-      <li role="presentation"><a href="#managereposts" aria-controls="managereposts" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.png"/>MANAGE TRADED SLOTS</a></li>
+      <li role="presentation" ng-class="{active: activeTab == '2'}"><a href="#organizeschedule" aria-controls="organizeschedule" role="tab" data-toggle="tab"> <img src="assets/images/organizeschedule.png"/>INCOMPLETE TRADES</a></li>
+      <li role="presentation" ng-class="{active: activeTab == '3'}"><a href="#managereposts" aria-controls="managereposts" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.png"/>MANAGE TRADED SLOTS</a></li>
     </ul>
     <!-- Nav tabs :End-->
     <!-- Tab panes :: Start-->
     <div class="tab-content">
       <!-- MY SCHEDULE : Start-->
-      <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
+      <div role="tabpanel" class="tab-pane fade" ng-class="{in: activeTab == '1', active: activeTab == '1'}" id="myschedule">
         <div class="container-90"> 
           <div class="manage-bar">  
             <div class="row padding30">                      
@@ -45,11 +45,11 @@
                         <img class="avtar-200 img-responsive" src="{{otherUser.soundcloud.avatarURL ? otherUser.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}"> 
                         <div class="img-btn-box">
                           <button class="btn btn-pink btn-sm btn-block" ng-click="openTrade(otherUser)">OPEN TRADE</button>
-                          <button class="btn btn-pink btn-sm btn-block" ng-click="viewSoundcloud(otherUser)">SOUNDCLOUD</button></a>
+                                      <button class="btn btn-border btn-sm btn-block" ng-click="viewSoundcloud(otherUser)">SOUNDCLOUD</button></a>
                         </div>
                       </div>
                       <p class="ng-binding new-trade-ingtexst"><a href="{{otherUser.soundcloud.permalinkURL}}" target="_blank">{{otherUser.soundcloud.username}}</a></p>
-                      <p class="ng-binding new-trade-ingtexst">{{otherUser.soundcloud.followers}}</p>
+                      <p class="ng-binding new-trade-ingtexst">{{otherUser.soundcloud.followers}} Followers</p>
                     </div>
                   </div>
                 </div><!--row ::end-->
@@ -63,11 +63,11 @@
                         <img class="avtar-200 img-responsive" src="{{otherUser.soundcloud.avatarURL ? otherUser.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" > 
                         <div class="img-btn-box">
                           <button class="btn btn-pink btn-sm btn-block" ng-click="openTrade(otherUser)">OPEN TRADE</button>
-                          <button class="btn btn-pink btn-sm btn-block" ng-click="viewSoundcloud(otherUser)">SOUNDCLOUD</button></a>
+                          <button class="btn btn-border btn-sm btn-block" ng-click="viewSoundcloud(otherUser)">SOUNDCLOUD</button></a>
                         </div>
                       </div>
                       <p class="ng-binding new-trade-ingtexst"><a href="{{otherUser.soundcloud.permalinkURL}}" target="_blank">{{otherUser.soundcloud.username}}</a></p>
-                      <p class="ng-binding new-trade-ingtexst">{{otherUser.soundcloud.followers}}</p>
+                      <p class="ng-binding new-trade-ingtexst">{{otherUser.soundcloud.followers}} Followers</p>
                     </div>
                   </div>
                 </div><!--row ::end-->
@@ -76,14 +76,14 @@
           </div><!--container-90 ::end-->
         </div>
       </div>
-      <div role="tabpanel" class="tab-pane fade" id="organizeschedule">
+      <div role="tabpanel" class="tab-pane fade" ng-class="{in: activeTab == '2', active: activeTab == '2'}" id="organizeschedule">
         <div class="organize-list">
           <br>                           
           <div class="row">
             <div class="col-md-4 col-sm-6 col-xs-12">
               <div class="btn-group channel-group" role="group" aria-label="...">
-                <a class="btn btn-default active" ng-class="{active : itemView == 'inbox'}" href="javascript:void(0)" ng-click="setView('inbox')">Inbox</a>
-                <a class="btn btn-default" ng-class="{active : itemView == 'sent'}" href="javascript:void(0)" ng-click="setView('sent')">Sent</a>
+                <a class="btn btn-default b-radius-10 active" ng-class="{active : itemView == 'inbox'}" href="javascript:void(0)" ng-click="setView('inbox')">Inbox</a>
+                <a class="btn btn-default b-radius-10" ng-class="{active : itemView == 'sent'}" href="javascript:void(0)" ng-click="setView('sent')">Sent</a>
               </div>
             </div>
             <div class="col-md-4 col-sm-6 col-xs-12"></div>                            
@@ -136,22 +136,22 @@
 <br>                                                     
 </div><!-- ORGANIZE SCHEDULE :End -->        
 <!-- MANAGE REPOSTS : Start -->
-<div role="tabpanel" class="tab-pane fade" id="managereposts"> 
+<div role="tabpanel" class="tab-pane fade" ng-class="{in: activeTab == '3', active: activeTab == '3'}" id="managereposts"> 
   <div class="container-90">            
     <div class="col-md-3 col-xs-6">
       <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
-        <a class="btn btn-default" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
-        <a class="btn btn-default" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
+        <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
+        <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
       </div>
     </div>                  
     <div class="col-md-9 col-xs-6 text-right">
       <div class="btn-group" role="group" aria-label="..." ng-show="manageView != 'newsong'">
-        <a class="btn btn-default" ng-class="{active : manageView == 'calender'}" href="javascript:void(0)" ng-click="setManageView('calender')"><img src="assets/images/box-view.png" /></a>
-        <a class="btn btn-default" ng-class="{active : manageView == 'list'}" href="javascript:void(0)" ng-click="setManageView('list')"><img src="assets/images/list-view.png" /></a>
+        <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'calendar'}" href="javascript:void(0)" ng-click="setManageView('calendar')"><img src="assets/images/box-view.png" /></a>
+        <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'list'}" href="javascript:void(0)" ng-click="setManageView('list')"><img src="assets/images/list-view.png" /></a>
       </div>
     </div>          
     <div class="">                
-      <div id="scheduler-container" ng-show="manageView == 'calender'" style="width:100%;">
+      <div id="scheduler-container" ng-show="manageView == 'calendar'" style="width:100%;">
        <div class="calendar-day-date">
         <div class="date-top-strip">
           <div style="width:100%; height:35px; display:flex; flex-direction:row;margin-bottom: 10px; ">
@@ -234,8 +234,8 @@
               <div class="col-md-12">
                 <div class="next-previous text-center">
                   <!--  <button class="btn active">SKIP TO NEXT AUTOFILL</button> -->
-                  <button class="btn" ng-click="addNewSongCancel()">CANCEL</button>
-                  <button class="btn save-share" data-toggle="modal" data-target="#saveAndShareModal" ng-click="saveEvent();">SAVE & SHARE</button>
+                                    <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
+                                    <button class="btn btn-pink b-radius-10 save-share" data-toggle="modal" data-target="#saveAndShareModal" ng-click="saveEvent();">SAVE & SHARE</button>
                 </div>
               </div>
             </div><!--row end-->                    
@@ -323,10 +323,10 @@
           <div class="row">
             <div class="col-md-12">
               <div class="col-md-6">
-                <button class="btn organize-btn" style="width:100%;" ng-click="closeModal();">CANCEL</button>
+              <button class="btn btn-border b-radius-10 organize-btn" style="width:100%;" ng-click="closeModal();">CANCEL</button>
               </div>
               <div class="col-md-6">
-                <button class="btn organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE</button>
+              <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE</button>
               </div>
             </div>
           </div><!--row end-->                  

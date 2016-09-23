@@ -91,22 +91,22 @@
                             <br />
                             <div class="row margin-bottom-10" ng-repeat="item in customEmailButtons track by $index" style="border-bottom: solid 1px #dcdcdc;">
                               <div class="col-md-12">
-                              <div class="col-md-1 margin-bottom-10">&nbsp;</div>
-                              <div class="col-md-5 margin-bottom-10">
-                                <label>To Email</label>
-                                <input type="text" ng-model="item.toEmail" class="form-control" placeholder="To Email">
-                                <br/>
-                                <label>Subject</label>
-                                <input type="text" ng-model="item.subject" class="form-control" placeholder="Subject">
+                                <div class="col-md-1 margin-bottom-10">&nbsp;</div>
+                                <div class="col-md-5 margin-bottom-10">
+                                  <label>To Email</label>
+                                  <input type="text" ng-model="item.toEmail" class="form-control" placeholder="To Email">
+                                  <br/>
+                                  <label>Subject</label>
+                                  <input type="text" ng-model="item.subject" class="form-control" placeholder="Subject">
+                                </div>
+                                <div class="col-md-5 margin-bottom-10">
+                                  <label>Title</label>
+                                  <input type="text" ng-model="item.buttonText" class="form-control" placeholder="Title">
+                                </div>
+                                <div class="col-md-1 margin-bottom-10">
+                                  <span ng-click="removeItem($index)">X</span>
+                                </div>
                               </div>
-                              <div class="col-md-5 margin-bottom-10">
-                                <label>Title</label>
-                                <input type="text" ng-model="item.buttonText" class="form-control" placeholder="Title">
-                              </div>
-                              <div class="col-md-1 margin-bottom-10">
-                                <span ng-click="removeItem($index)">X</span>
-                              </div>
-                            </div>
                               <div class="col-md-12 margin-bottom-10">
                                 <div class="col-md-1">&nbsp;</div>
                                 <div class="col-md-10">
@@ -115,23 +115,22 @@
                                 </div>
                                 <div class="col-md-1">&nbsp;</div>
                               </div>
+                              <br/>
+                              <div class="col-md-12">
+                                <div class="button-list text-center">
+                                  <input ng-repeat="btn in dynamicButton " type="button" name="{{btn.name}}" class="btn btn-border organize-btn" style="margin-left:20px;" value="{{btn.name}}" ng-click="appendBody(btn)">
+                                </div>
+                              </div>
+                              <div class="space-20">&nbsp;</div>
                             </div>
                             <br/>
                             <div class="text-center margin-bottom-10">
-                              <a href="#" class="btn btn-default" ng-click="addItem()">+ Add More</a>
+                              <a href="#" class="btn btn-pink btn-enter" ng-click="addItem()">+ Add More</a>
                             </div> 
                             <br/>
                             <div class="">
-                              <div class="col-md-12">
-                                <div class="button-list text-center">
-                                  <input ng-repeat="btn in dynamicButton " type="button" name="{{btn.name}}" class="btn organize-btn" style="margin-left:20px;" value="{{btn.name}}" ng-click="appendBody(btn)">
-                                </div>
-                              </div>
-                            </div>
-                            <br/>
-                            <div class="">
                               <div class="col-md-12 text-center" style="padding-top:20px;">
-                                <button type="submit" class="btn btn-default btn-enter">Save Settings</button>
+                                <button type="submit" class="btn btn-pink btn-enter">Save Settings</button>
                               </div>
                             </div>
                             </br>

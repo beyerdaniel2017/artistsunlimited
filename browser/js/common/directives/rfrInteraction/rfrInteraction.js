@@ -4,7 +4,15 @@ app.directive('rfrinteraction', function($http) {
     restrict: 'E',
     scope: false,
     controller: function rfrInteractionController($rootScope, $state, $scope, $http, AuthService, $window, SessionService, socket) {
-      console.log('loaded');
+      var path = window.location.pathname;
+      $window.localStorage.setItem('activetab', '1');
+      $scope.isAdminRoute = false;
+      if (path.indexOf("admin/") != -1) {
+        $scope.isAdminRoute = true
+      }
+      else{
+        $scope.isAdminRoute = false;
+      }
       $scope.change = false;
       $scope.showUndo = false;
       $scope.showEmailModal = false;
@@ -549,7 +557,6 @@ app.directive('rfrinteraction', function($http) {
       });
 
       $scope.emitMessage = function(message, type) {
-
         socket.emit('send:message', {
           message: message,
           type: type,
@@ -613,8 +620,8 @@ app.directive('rfrinteraction', function($http) {
         // var lastString = op1String;
         // do {
         //   lastString = op1String;
-        console.log($scope.trade.p1.slots);
-        console.log($scope.p1Events);
+        //console.log($scope.trade.p1.slots);
+        //console.log($scope.p1Events);
         $scope.trade.p1.slots = $scope.trade.p1.slots.filter(function(slot) {
           // return !(slot.day < now);
           if (slot.day < now) {
@@ -640,8 +647,8 @@ app.directive('rfrinteraction', function($http) {
         // var op2String = JSON.stringify($scope.trade.p2.slots)
         // do {
         // lastString = op2String;
-        console.log($scope.trade.p2.slots);
-        console.log($scope.p2Events);
+        //console.log($scope.trade.p2.slots);
+        //console.log($scope.p2Events);
         $scope.trade.p2.slots = $scope.trade.p2.slots.filter(function(slot) {
           // return !(slot.day < now);
           if (slot.day < now) {
@@ -749,7 +756,12 @@ app.directive('rfrinteraction', function($http) {
         $scope.trade.p1.slots = $scope.trade.p2.slots = [];
         $http.put('/api/trades', $scope.trade)
           .then(function(res) {
-            $state.go('reForReLists');
+            $window.localStorage.setItem('activetab', '3');
+            if($scope.isAdminRoute){
+              $state.go('adminRepostTraders');
+            } else{
+              $state.go('reForReLists');
+            }            
           })
           .then(null, console.log);
       }

@@ -70,7 +70,7 @@
                       
                     </div>
                     <div class="form-group"  ng-show="!AccountsStepData.paypal.varify">
-                      <input class="btn border-orange-btn" ng-disabled="!AccountsStepData.paypal_email" style="margin-left: 18px;" type="button" value="Send Trail Amount" ng-click="sendTrailAmount()">
+                      <input class="btn btn-pink b-radius-10 border-orange-btn" ng-disabled="!AccountsStepData.paypal_email" style="margin-left: 18px;" type="button" value="Send Trail Amount" ng-click="sendTrailAmount()">
                     </div>
 
                     <div class="clearfix"></div>
@@ -97,8 +97,8 @@
               <!-- " -->
               <input type="button" name="back" value="Back" ng-click="nextStep(4,AccountsStepData,'basic')" class="btn active border-black-btn">
               
-              <input type="button" name="back" value="Next" ng-disabled="!AccountsStepData.paypal.processchannel"  ng-click="nextStep(1,AccountsStepData,'channel')" class="btn border-orange-btn" ng-if="AccountsStepData.formActions!='Admin'">
-              <input type="button" name="back" value="Finish" ng-disabled="!AccountsStepData.paypal_email"  ng-click="finishAdmin()" class="btn border-orange-btn" ng-if="AccountsStepData.formActions=='Admin'">
+              <input type="button" name="back" value="Next" ng-disabled="!AccountsStepData.paypal.processchannel"  ng-click="nextStep(1,AccountsStepData,'channel')" class="btn btn-pink b-radius-10 border-orange-btn" ng-if="AccountsStepData.formActions!='Admin'">
+              <input type="button" name="back" value="Finish" ng-disabled="!AccountsStepData.paypal_email"  ng-click="finishAdmin()" class="btn btn-pink b-radius-10 border-orange-btn" ng-if="AccountsStepData.formActions=='Admin'">
             </div>
           </div>
         </div>

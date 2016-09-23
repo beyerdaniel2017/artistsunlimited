@@ -5,10 +5,23 @@ app.directive('reforrelists', function($http) {
     scope: false,
     controller: function rfrListsController($scope, $rootScope, $http, SessionService, $state, $timeout, $window) {
       $scope.state = 'reForReInteraction';
+      $scope.activeTab = ($window.localStorage.getItem('activetab') ? $window.localStorage.getItem('activetab') : '1');
       $scope.user = SessionService.getUser();
       $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
       $scope.otherUsers = [];
-
+      var path = window.location.pathname;
+      $scope.isAdminRoute = false;
+      if (path.indexOf("admin/") != -1) {
+        $scope.isAdminRoute = true
+      }
+      else{
+        $scope.isAdminRoute = false;
+      }
+      $scope.itemview = "calendar";
+      $scope.manageView = "calendar";
+      if($scope.activeTab == "3"){
+        $window.localStorage.setItem('activetab', '1');
+      }
       $scope.currentTab = "SearchTrade";
       $scope.searchURL = "";
       $scope.sliderSearchMin = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers / 2) : 0)) / Math.log(1.1);
@@ -59,11 +72,6 @@ app.directive('reforrelists', function($http) {
       $scope.currentDate = new Date();
       var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
-      $scope.itemview = "calender";
-      // $scope.setView = function(view) {
-      //   $scope.itemview = view;
-      // };
-      $scope.manageView = "calender";
       $scope.searchByFollowers = function() {
         $scope.searchURL = "";
         $scope.sendSearch();
@@ -269,9 +277,19 @@ app.directive('reforrelists', function($http) {
         $http.post('/api/trades/new', trade)
           .then(function(res) {
             $scope.processing = false;
+            if($scope.isAdminRoute)
+            {
+               $state.go('adminreForReInteraction', {
+                 tradeID: res.data._id
+               })
+            }
+            else
+            {
             $state.go('reForReInteraction', {
               tradeID: res.data._id
             })
+            }
+           
           })
           .then(null, function(err) {
             $scope.processing = false;
@@ -481,7 +499,6 @@ app.directive('reforrelists', function($http) {
       $scope.saveEvent = function() {
         var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
           .then(function(res) {
-            console.log(res);
             $scope.makeEventURL = "";
             $scope.makeEvent = null;
             $scope.eventComment = "";

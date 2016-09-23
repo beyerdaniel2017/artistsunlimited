@@ -5,6 +5,7 @@ app.directive('dlgate', function($http) {
     scope: false,
     controller: function dlGateController($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, ArtistToolsService, AdminDLGateService) {
       $scope.showTitle = [];
+      $scope.user = SessionService.getUser();
       $scope.track = {
         artistUsername: '',
         trackTitle: '',
@@ -20,6 +21,15 @@ app.directive('dlgate', function($http) {
         admin: $scope.user.admin,
         file: {}
       };
+
+      var path = $window.location.pathname;
+      $scope.isAdminRoute = false;
+      if (path.indexOf("admin/") != -1) {
+        $scope.isAdminRoute = true
+      }
+      else{
+        $scope.isAdminRoute = false;
+      }
 
       $scope.profile = {};
       /* Init track list and trackListObj*/
@@ -142,16 +152,33 @@ app.directive('dlgate', function($http) {
           .then(function(res) {
             $scope.processing = false;
             if ($stateParams.submission) {
+              if($scope.isAdminRoute)
+              {
+                $state.go('adminDownloadGatewayList', {
+                'submission': $stateParams.submission
+              });
+              }
+              else
+              {
               $state.go('artistToolsDownloadGatewayList', {
                 'submission': $stateParams.submission
               });
+              }
+              
             } else {
               if ($scope.user.soundcloud.id == $scope.track.artistID) {
                 $.Zebra_Dialog('Download gateway was saved and added to the track.');
               } else {
                 $.Zebra_Dialog('Download gateway saved.');
               }
+             if($scope.isAdminRoute)
+              {
+                 $state.go('adminDownloadGateway');
+              }
+              else
+              {
               $state.go('artistToolsDownloadGatewayList');
+            }
             }
           })
           .then(null, function(err) {
@@ -516,7 +543,8 @@ app.directive('dlgate', function($http) {
 
       $scope.preview = function(track) {
         window.localStorage.setItem('trackPreviewData', JSON.stringify(track));
-        var url = $state.href('artistToolsDownloadGatewayPreview');
+        var url = $scope.isAdminRoute ? $state.href('adminDownloadGatewayPreview') : $state.href('artistToolsDownloadGatewayPreview');
+        //var url = $state.href('artistToolsDownloadGatewayPreview');
         $window.open(url, '_blank');
       }
 

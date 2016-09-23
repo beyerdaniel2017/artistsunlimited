@@ -98,7 +98,7 @@
                                             <div class="">
                                                 <div class="col-md-12">
                                                     <div class="button-list text-center">
-                                                        <input ng-repeat="btn in stepButton " type="button" name="{{btn.name}}" class="btn organize-btn" style="margin-left:20px;" value="{{btn.name}}" ng-click="appendBody(btn,'repost')">
+                                                        <input ng-repeat="btn in stepButton " type="button" name="{{btn.name}}" class="btn btn-border b-radius-10 organize-btn" style="margin-left:5px;" value="{{btn.name}}" ng-click="appendBody(btn,'repost')">
                                                     </div>
                                                 </div>
                                             </div>
@@ -107,7 +107,7 @@
                                                 <div class="col-md-12 text-center">
                                                     <div class="buttons margin-40">
                                                         <input type="button" name="back" value="Back" ng-click="nextStep(1,AccountsStepData,'basic')" class="btn active border-black-btn">
-                                                        <input type="button" name="Next" value="Next" ng-disabled="!(AccountsStepData.repostCustomizeEmails[0].acceptance.subject && AccountsStepData.repostCustomizeEmails[0].acceptance.body && AccountsStepData.repostCustomizeEmails[0].decline.subject && AccountsStepData.repostCustomizeEmails[0].decline.body)" ng-click="nextStep(3,AccountsStepData,'basic')" class="btn border-orange-btn">
+                                                        <input type="button" name="Next" value="Next" ng-disabled="!(AccountsStepData.repostCustomizeEmails[0].acceptance.subject && AccountsStepData.repostCustomizeEmails[0].acceptance.body && AccountsStepData.repostCustomizeEmails[0].decline.subject && AccountsStepData.repostCustomizeEmails[0].decline.body)" ng-click="nextStep(3,AccountsStepData,'basic')" class="btn btn-pink b-radius-10 border-orange-btn">
                                                     </div>
                                                 </div>
                                             </div>

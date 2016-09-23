@@ -235,7 +235,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
         console.log(param, location);
         if (param == 'user') {
             var prevATUser = JSON.parse($window.localStorage.getItem('prevATUser'));
-            console.log(prevATUser);
+        
             if (SessionService.getUser()._id != prevATUser._id) {
                 $scope.processing = true;
                 $http.post('/api/login/soundCloudLogin', {
