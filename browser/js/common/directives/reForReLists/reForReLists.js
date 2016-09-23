@@ -3,8 +3,7 @@ app.directive('reforrelists', function($http) {
     templateUrl: 'js/common/directives/reForReLists/reForReLists.html',
     restrict: 'E',
     scope: false,
-    controller: function scSearchController($scope, $rootScope, $http, SessionService, $state, $timeout, $window) {
-      console.log($scope);
+    controller: function rfrListsController($scope, $rootScope, $http, SessionService, $state, $timeout, $window) {
       $scope.state = 'reForReInteraction';
       $scope.user = SessionService.getUser();
       $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);

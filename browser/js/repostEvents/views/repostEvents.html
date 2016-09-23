@@ -24,8 +24,8 @@
             <div class="container-90 col-md-12" style="margin-bottom:20px;">
               <div class="col-md-5 pull-left text-left" style="margin-left:40px;">
                 <div class="btn-group" role="group" aria-label="...">
-                  <a class="btn btn-default" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.png" /></a>
-                  <a class="btn btn-default" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
+                  <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.png" /></a>
+                  <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
                 </div>
               </div>
               <div class="col-md-5 text-left">
@@ -68,7 +68,7 @@
                   </thead>
                   <tbody>
                     <tr ng-repeat="item in listevents">
-                      <td class="text-left"><div class="div-dot" style="    width: 8px;border-radius: 10px;background: {{item.trackInfo.completed ? 'green':'red'}};height: 8px;">&nbsp;</div></i></td>
+                      <td class="text-left"><div class="div-dot" style="width: 8px;border-radius: 10px;background: {{item.trackInfo.completed ? 'green':'red'}};height: 8px;">&nbsp;</div></i></td>
                       <td class="text-left">{{item.trackInfo.title}}</td>
                       <td class="text-left">{{item.userInfo.username}}</td>
                       <td class="text-left">{{item.trackInfo.day | date: 'MMM dd yyyy hh:mm a'}}</td>
@@ -195,8 +195,8 @@
                            
                           </div>  
                             <div class="next-previous">
-                              <button class="btn pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
-                              <button class="btn pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
+                              <button class="btn btn-border b-radius-10 pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
+                              <button class="btn btn-border b-radius-10 pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
                             </div>
                           </div>                         
                         </div>
@@ -205,7 +205,7 @@
                       <div class="col-md-12">
                         <div class="next-previous text-center available-slot-btn">
                           <!-- <button class="btn border-black-btn" style="width:100%;">SKIP TO NEXT AUTOFILL</button> -->
-                          <button class="btn organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE &amp; SHARE</button>
+                          <button class="btn btn-border b-radius-10 organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE &amp; SHARE</button>
                         </div>
                       </div>
                     </div><!--row end-->                  

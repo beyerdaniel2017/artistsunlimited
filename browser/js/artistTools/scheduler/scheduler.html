@@ -15,34 +15,13 @@
   <!-- Content Start  -->
   <div id="wrapper">
     <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-    <ng-include src="'js/artistTools/scheduler/schedulerPartial.html'"></ng-include>
-    <!-- Save And Share overlay end -->
-
-    <ng-include src="'js/home/views/loader.html'"></ng-include>
+    <div class="container-fluid height-100pr" ng-init="checkCommentEnable();getListEvents();getLinkedAccounts();">
+      <div class="row">
+        <div class="col-md-12">
+          <scheduler></scheduler>
+          <!-- Save And Share overlay end -->
+          <ng-include src="'js/home/views/loader.html'"></ng-include>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-</div>
-
-<script>
-  setTimeout(function(){
-
-    $(document).ready(function(){
-      FB.init({
-        appId: '1576897469267996',
-        xfbml: true,
-        version: 'v2.7'
-      });
-
-      (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {
-          return;
-        }
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "//connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    })
-  },200);
-</script>

@@ -19,7 +19,7 @@
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin'); gotoSettings();">SETTINGS</a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom SCHEDULER"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/scheduler');">SCHEDULER</a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom REPOSTTRADES"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/reposttraders');">REPOST TRADER</a></li>
-          <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="submissions" ng-click="changeUserAdmin('admin', '/admin/repostsubmissions');">REPOST SUBMISSION <div class="badge notification-bubble-submission-count" ng-show="submissionsCount > 0">{{submissionsCount}}</div></a></li>
+          <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="submissions" ng-click="changeUserAdmin('admin', '/admin/submissions');">REPOST SUBMISSION <div class="badge notification-bubble-submission-count" ng-show="submissionsCount > 0">{{submissionsCount}}</div></a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin', '/admin/premiersubmissions');">PREMIER SUBMISSIONS</a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="accounts" ng-click="changeUserAdmin('admin', '/admin/accounts');">ACCOUNTS</a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom DOWNLOADGATEWAY"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/downloadGateway');">DOWNLOAD GATEWAY</a></li>
@@ -63,24 +63,5 @@
         });   
       } 
     },500);    
-    
-    setTimeout(function(){
-      FB.init({
-        appId: '1576897469267996',
-        xfbml: true,
-        version: 'v2.7'
-      });
-
-      (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {
-          return;
-        }
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "//connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    },5000);
   });
 </script>

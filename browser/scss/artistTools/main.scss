@@ -2172,10 +2172,10 @@ input:checked + .slider:before {
     border-radius: 10px;
     display: inline-block;
     width: 100%;
-    margin: 15px 0;
+    margin: 15px 0 5px 0;
 }
 .channel-masege {
-    border-bottom: 1px solid rgb(216, 216, 216);
+    border-bottom: 1px solid rgb(216, 216, 216); 
     height: 40px;
     overflow: auto;   
     /*padding: 10px 0px 0px 24px;
@@ -2705,13 +2705,12 @@ label:hover:before {
     background: #EEE;
 }
 .refor-chate-box {
-    background-color: #FFF;
+    background-color: #EEEEEE;
     min-height: 47px;
     padding: 10px;
-    width: 99%;
+    width: 100%;
     border-top: 1px solid #E6E6E6;
     margin: 0px auto;
-    position: absolute;
     bottom: 0;
 }
 /*reforRelist css::end*/
@@ -2845,14 +2844,14 @@ label:hover:before {
 /*Calendarview :start*/
 
 .left-side-profile {
-    position: fixed;
-    width: 16.1%;
-    z-index: 1;
-    bottom: 0;
-    height: 81%;
+    position: absolute;
+    width: 100%;
+    /*z-index: 1;*/
+    top: 40px;
     background-color: white;
     border-top-left-radius: 10px;
     overflow: hidden;
+    border-bottom-left-radius: 10px;
 }
 .left-side-profile .tropical {
     padding: 30px 0;
@@ -3028,14 +3027,14 @@ td {
 /*Btn Pink */
 
 .btn-pink {
-    color: #fff;
+    color: #f9f9f9;
     background-color: #FF7676;
     border-color: #FF7676;
 }
 .btn-pink:hover {
     color: #fff;
-    background-color: #FF7676;
-    border-color: #FF7676;
+    background-color: RGBA(255, 118, 118, 0.92);
+    border-color: RGBA(255, 118, 118, 0.92);
 }
 .btn-pink:active,
 .btn-pink.active,
@@ -3050,6 +3049,33 @@ td {
 }
 /*Btn Pink */
 
+/*Btn Border */
+
+.btn-border {
+    color: #8a8a8a;
+    border: 1px solid #727272;
+    box-shadow: 0 0px 1px #AEAEAE;
+    background: #FFFFFF;
+}
+.btn-border:hover {
+    color: #333;
+    border: 1px solid #333;
+}
+.btn-border:active,
+.btn-border.active,
+.open > .dropdown-toggle.btn-border {
+    background-image: none;
+}
+.btn-border:focus,
+.btn-border.focus {
+    color: #8a8a8a;
+    border: 1px solid #727272;
+    box-shadow: 0 0px 1px #AEAEAE;
+}
+/*Btn Border */
+.b-radius-10{
+     border-radius: 10px;
+}
 .text-pink {
     color: #FF7676 !important;
 }
@@ -3183,7 +3209,7 @@ td {
     width: 20px;
     margin-left: -2.5px;
     text-align: center;
-    top: 8px;
+    top: 6px;
     background: transparent;
     color: #888;
 }
@@ -3273,6 +3299,7 @@ td {
     width: 200px;
     height: 200px;
     margin: 0px auto;
+    border-radius: 10px;
 }
 .thumb-img-container {
     width: 200px;
@@ -3374,6 +3401,16 @@ td {
     clear: both;
 }
 /*** 17-9-2016 ***/
+/*** 22-9-2016 ***/
+.left-profile-content {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin-bottom: 40px;
+}
+/*** 22-9-2016 ***/
+
 /******************************** Media CSS :: START ************************************/
 
 @media screen and (max-width: 1280px) {

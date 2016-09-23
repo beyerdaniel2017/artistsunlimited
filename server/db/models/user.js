@@ -4,7 +4,8 @@ var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
     role: {
-        type: String
+        type: String,
+        default: 'user'
     },
     name: {
         type: String

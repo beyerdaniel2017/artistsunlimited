@@ -194,6 +194,7 @@ router.get('/getRepostEvents/:id', function(req, res, next) {
     owner: req.params.id,
     type: 'traded'
   })
+  .sort({day: 1})
   .exec()
   .then(function(tracks) {      
     var i= -1;

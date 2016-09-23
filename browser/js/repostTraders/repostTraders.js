@@ -69,20 +69,6 @@ app.config(function($stateProvider) {
               })
               .then(function(res) {
                 var users = res.data;
-                // users = users.filter(function(openUser) {
-                //   var ok = true;
-                //   currentTrades.forEach(function(trade) {
-                //     if (trade.p1.user._id == openUser._id || trade.p2.user._id == openUser._id) {
-                //       ok = false;
-                //     }
-                //   })
-                //   favorites.forEach(function(favUser) {
-                //     if (favUser._id == user._id) {
-                //       ok = false;
-                //     }
-                //   })
-                //   return ok;
-                // })
                 return users;
               }).then(null, console.log);
           } else {
@@ -119,5 +105,4 @@ app.controller("adminReForReListsController", function($scope, $rootScope, curre
     ev.day = new Date(ev.day);
   });
   $scope.events = repostEvents;
-  console.log($scope);
 });

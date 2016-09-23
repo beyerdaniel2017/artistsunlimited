@@ -158,7 +158,7 @@ app.directive('fbLike', [
     }
 ])
 
-app.controller('FullstackGeneratedController', function($stateParams, $window, $scope, $state, $http, mainService, SessionService, AuthService) {
+app.controller('FullstackGeneratedController', function($stateParams, $window, $rootScope, $scope, $state, $http, mainService, SessionService, AuthService) {
     /*Load More*/
     $scope.loadList = function() {
         $scope.$broadcast('loadTrades');
@@ -184,7 +184,6 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
     }
 
     $scope.getBehalfUserRecord = function(paid) {
-        console.log(paid);
         paid = JSON.parse(paid);
         SessionService.removePaidRepostAccounts();
         setTimeout(function() {
@@ -327,6 +326,21 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
             mainService.logout();
         } else {
             mainService.adminlogout();
+        }
+    }
+
+    $scope.getUserNetwork = function() {
+        if ($window.location.pathname.includes('admin/')) {
+            var adminUser = JSON.parse($window.localStorage.getItem('adminUser'));
+            $http.get("/api/database/adminUserNetwork/" + adminUser._id)
+                .then(function(res) {
+                    $rootScope.userlinkedAccounts = res.data;
+                })
+        } else {
+            $http.get("/api/database/userNetworks")
+                .then(function(networks) {
+                    $rootScope.userlinkedAccounts = networks.data;
+                })
         }
     }
 
