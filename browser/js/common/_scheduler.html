@@ -73,23 +73,23 @@
            </div>
          </div>
          <div id="scheduler-container" ng-show="itemview == 'list'">
-          <table class="table">
+          <table class="table scheduler-song-tab">
             <thead>
               <tr>
-                <th width="50%">Track Name</th>
-                <th width="15%">Account</th>
-                <th width="15%">Date</th>
-                <th width="10%"></th>
-                <th width="10%"></th>
+                <th width="50%" class="text-center">Track Name</th>
+                <th width="15%" class="text-center">Account</th>
+                <th width="15%" class="text-center">Date</th>
+                <th width="10%" class="text-center"></th>
+                <th width="10%" class="text-center"></th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="item in listevents" ng-class='{grey : item.event.day < currentDate}'>
-                <td class="text-left">{{item.event.title}}</td>
-                <td class="text-left">{{user.soundcloud.username}}</td>
-                <td class="text-left">{{item.date}}</td>
+                <td class="text-center">{{item.event.title}}</td>
+                <td class="text-center">{{user.soundcloud.username}}</td>
+                <td class="text-center">{{item.date}}</td>
                 <td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">{{item.event.type}}</button></td>
-                <td class="text-left">
+                <td class="text-center">
                   <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item,'view');">View</a>
                   <a href="javascript:void(0)" style="color:#FF7676" ng-if="!item.event">Schedule</a></td>
                 </tr>

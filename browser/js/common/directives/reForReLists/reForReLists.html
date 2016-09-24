@@ -26,7 +26,7 @@
                 </div>                                               
               </div><!--search-trad End-->
               <div class="col-md-1"></div>
-              <div class="col-md-4 col-sm-4 col-xs-12 search">
+              <div class="col-md-4 col-sm-6 col-xs-12 search">
                 <div class="search-suggetion">
                   <scsearch kind='user' returnitem='choseArtist(item)'></scsearch>
                 </div>
@@ -168,7 +168,7 @@
         </div>   
         <div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
           <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendar[l+dayIncr].events[p], calendar[l+dayIncr].day, l, p)" class="row-scheduler" ng-click="clickedSlot(calendar[l+dayIncr].day, p,calendar[l+dayIncr].events[p])" style="position:relative;">
-            <div ng-style="getEventStyle(calendar[l+dayIncr].events[p])" class="text-left scheduler-yellow" style="width:100%;"><img ng-if="calendar[l+dayIncr].events[p].userInfo" src="{{calendar[l+dayIncr].events[p].userInfo.avatarURL}}" style="height:17px;width:17px;">&nbsp;&nbsp;<span style="color:#fff;">{{calendar[l+dayIncr].events[p].userInfo.username}}</span></div>
+            <div ng-style="getEventStyle(calendar[l+dayIncr].events[p])" class="text-left scheduler-yellow calendar-grid" style="width:100%;"><img ng-if="calendar[l+dayIncr].events[p].userInfo" src="{{calendar[l+dayIncr].events[p].userInfo.avatarURL}}" style="height:17px;width:17px;">&nbsp;&nbsp;<span style="color:#fff;">{{calendar[l+dayIncr].events[p].userInfo.username}}</span></div>
             <!--  <img ng-show="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img> -->
           </div>
         </div>
@@ -278,7 +278,7 @@
         <!-- <span style="font-size:11px;">Total Reach: {{followCounts}} followers</span> -->
         <div class="row">
           <div class="col-md-13 text-center">
-            <li class="switch-btn" style="font-size: 14px;vertical-align: middle;
+            <li class="switch-btn" style="font-size: 12px;vertical-align: middle;
             list-style: outside none none;">
             <label class="switch" style="vertical-align: middle;">
               <input ng-disabled="true" checked="makeEvent.day < makeEvent.unrepostDate" type="checkbox">
