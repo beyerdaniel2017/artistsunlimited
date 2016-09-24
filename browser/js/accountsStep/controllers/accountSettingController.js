@@ -131,7 +131,19 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                     userId = res.data.userID;
                     $scope.AccountsStepData.price = res.data.price;
                     $scope.AccountsStepData.description = res.data.description;
-                    $scope.AccountsStepData.availableSlots = [];
+                    if (res.data.availableSlots) {
+                        $scope.AccountsStepData.availableSlots = res.data.availableSlots;
+                    } else {
+                        $scope.AccountsStepData.availableSlots = {
+                            'sunday': [1, 4, 8, 11, 14, 17, 20],
+                            'monday': [1, 4, 8, 11, 14, 17, 20],
+                            'tuesday': [1, 4, 8, 11, 14, 17, 20],
+                            'wednesday': [1, 4, 8, 11, 14, 17, 20],
+                            'thursday': [1, 4, 8, 11, 14, 17, 20],
+                            'friday': [1, 4, 8, 11, 14, 17, 20],
+                            'saturday': [1, 4, 8, 11, 14, 17, 20]
+                        }
+                    }
                     $http.get('/api/users/byId/' + userId)
                         .then(function(response) {
                             if (response.data) {
@@ -188,13 +200,13 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
     var defaultAvailableSlots = {
-        sunday: [],
-        monday: [],
-        tuesday: [],
-        wednesday: [],
-        thursday: [],
-        friday: [],
-        saturday: []
+        'sunday': [1, 4, 8, 11, 14, 17, 20],
+        'monday': [1, 4, 8, 11, 14, 17, 20],
+        'tuesday': [1, 4, 8, 11, 14, 17, 20],
+        'wednesday': [1, 4, 8, 11, 14, 17, 20],
+        'thursday': [1, 4, 8, 11, 14, 17, 20],
+        'friday': [1, 4, 8, 11, 14, 17, 20],
+        'saturday': [1, 4, 8, 11, 14, 17, 20]
     };
 
     $scope.stepButton = [{
@@ -495,8 +507,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                             button: $scope.AccountsStepData.premier.button
                         })
                         .then(function(res) {
-                            if ($scope.AccountsStepData.availableSlots == undefined)
-                                $scope.AccountsStepData.availableSlots = defaultAvailableSlots;
+                            if ($scope.AccountsStepData.availableSlots == undefined) $scope.AccountsStepData.availableSlots = defaultAvailableSlots;
 
                             SessionService.createAdminUser($scope.AccountsStepData);
                             $state.go("channelstep5");

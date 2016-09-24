@@ -8,15 +8,15 @@ module.exports = {
     "callbackURL": "https://localhost:1443/callback.html"
   },
   "PAYPAL": {
-    "clientID": "AQOFIdlz-RFeZbx6i4W5l_PUvhEdn7IRhIt3FSv7YXj5Ga3SNlzXuSHfVAkqX6xkbLVhv0boh9lx3GHi",
-    "clientSecret": "EFGXm6BiNeucSWhFIOcj5yDr9vUqRHKBJuZ1951zFYE2oS71y_yxlH7WRzyLOJ7-SHFun06hg6sRp55w",
+    "clientID": "AY-Ctvy_b96xnMiP5XTHl42lJEfKowCCBrC9Od8aAF83GWg2Mia-eyziJftfe9OFbT6ci7ksCuP_hzDe",
+    "clientSecret": "EFGHOjkVjqwJwj08hdmb4umNTtSbCHJBZlsMyM-LqB-6u9yO79rluo4zeGgs3qJifa7IRyEbbqbokggu",
     "mode": "sandbox"
   },
   "AWS": {
     "bucketName": "premiersubmissions",
     "prplanBucketName": "prplans",
     "mixingmasteringBucketName": "mixingmastering",
-    "profileimageBucketName" :"auprofileimages",
+    "profileimageBucketName": "auprofileimages",
     "accessKeyId": "AKIAIYT7INNPUXKJSNEA",
     "secretAccessKey": "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"
   },

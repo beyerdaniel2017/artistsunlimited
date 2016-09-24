@@ -4,7 +4,6 @@ var Submission = mongoose.model('Submission');
 var Channel = mongoose.model('Channel');
 var paypal = require('paypal-rest-sdk');
 var ppConfig = require('./../../env').PAYPAL;
-var rootURL = require('./../../env').ROOTURL;
 var Promise = require('promise');
 paypal.configure({
   'mode': ppConfig.mode,
@@ -12,35 +11,31 @@ paypal.configure({
   'client_secret': ppConfig.clientSecret,
 });
 module.exports = {
-  makePayment: function(price, submission, channels) {
-    var nameString = "Reposts on: ";
-    channels.forEach(function(ch) {
-      nameString += ch.username + " - ";
-    });
+  makePayment: function(price, itemName, returnURL, cancelURL) {
     var create_payment_json = {
       "intent": "sale",
       "payer": {
         "payment_method": "paypal"
       },
       "redirect_urls": {
-        "return_url": rootURL + "/complete",
-        "cancel_url": rootURL + "/pay/" + submission._id
+        "return_url": returnURL,
+        "cancel_url": cancelURL
       },
       "transactions": [{
         "item_list": {
           "items": [{
-            "name": nameString,
+            "name": itemName,
             "sku": "reposts",
-            "price": price,
+            "price": parseFloat(price).toFixed(2),
             "currency": "USD",
             "quantity": 1
           }]
         },
         "amount": {
           "currency": "USD",
-          "total": price.toString()
+          "total": parseFloat(price).toFixed(2).toString()
         },
-        "description": nameString
+        "description": itemName
       }]
     };
 

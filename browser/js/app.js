@@ -160,6 +160,7 @@ app.directive('fbLike', [
 
 app.controller('FullstackGeneratedController', function($stateParams, $window, $rootScope, $scope, $state, $http, mainService, SessionService, AuthService) {
     /*Load More*/
+
     $scope.loadList = function() {
         $scope.$broadcast('loadTrades');
     }
@@ -231,11 +232,15 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
         }
     }
 
+    $scope.setCurUser = function() {
+        $scope.curATUser = JSON.stringify(SessionService.getUser());
+    }
+
     $scope.changeUserAdmin = function(param, location) {
-        console.log(param, location);
+        if (typeof param == 'string' && param.length > 15) param = JSON.parse(param);
+        console.log(param);
         if (param == 'user') {
             var prevATUser = JSON.parse($window.localStorage.getItem('prevATUser'));
-        
             if (SessionService.getUser()._id != prevATUser._id) {
                 $scope.processing = true;
                 $http.post('/api/login/soundCloudLogin', {
@@ -245,7 +250,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                     .then(function(res) {
                         $scope.processing = false;
                         SessionService.create(res.data.user);
-                        console.log(SessionService.getUser());
+                        $scope.curATUser = JSON.stringify(SessionService.getUser())
                         if (location) window.location.href = location;
                         else $state.reload();
                     })
@@ -294,7 +299,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                     $scope.processing = false;
                     SessionService.create(res.data.user);
                     $window.localStorage.setItem('prevATUser', JSON.stringify(SessionService.getUser()))
-                    console.log(SessionService.getUser());
+                    $scope.curATUser = JSON.stringify(SessionService.getUser())
                     $state.reload();
                 })
                 .then(null, function(err) {

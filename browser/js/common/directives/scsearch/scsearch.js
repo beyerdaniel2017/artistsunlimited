@@ -64,7 +64,6 @@ app.directive('scsearch', function($http) {
         $scope.returnitem({
           item: item
         });
-        $scope.searchString = "";
       }
 
       $scope.keypress = function(keyEvent) {

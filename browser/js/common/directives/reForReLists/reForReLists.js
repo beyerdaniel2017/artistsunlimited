@@ -13,15 +13,15 @@ app.directive('reforrelists', function($http) {
       $scope.isAdminRoute = false;
       if (path.indexOf("admin/") != -1) {
         $scope.isAdminRoute = true
-      }
-      else{
+      } else {
         $scope.isAdminRoute = false;
       }
       $scope.itemview = "calendar";
       $scope.manageView = "calendar";
-      if($scope.activeTab == "3"){
+      if ($scope.activeTab == "3") {
         $window.localStorage.setItem('activetab', '1');
       }
+      console.log($scope.user);
       $scope.currentTab = "SearchTrade";
       $scope.searchURL = "";
       $scope.sliderSearchMin = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers / 2) : 0)) / Math.log(1.1);
@@ -277,19 +277,16 @@ app.directive('reforrelists', function($http) {
         $http.post('/api/trades/new', trade)
           .then(function(res) {
             $scope.processing = false;
-            if($scope.isAdminRoute)
-            {
-               $state.go('adminreForReInteraction', {
-                 tradeID: res.data._id
-               })
+            if ($scope.isAdminRoute) {
+              $state.go('adminreForReInteraction', {
+                tradeID: res.data._id
+              })
+            } else {
+              $state.go('reForReInteraction', {
+                tradeID: res.data._id
+              })
             }
-            else
-            {
-            $state.go('reForReInteraction', {
-              tradeID: res.data._id
-            })
-            }
-           
+
           })
           .then(null, function(err) {
             $scope.processing = false;

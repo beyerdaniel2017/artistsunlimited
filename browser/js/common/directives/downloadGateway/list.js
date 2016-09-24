@@ -20,8 +20,7 @@ app.directive('dllist', function($http) {
       $scope.isAdminRoute = false;
       if (path.indexOf("admin/") != -1) {
         $scope.isAdminRoute = true
-      }
-      else{
+      } else {
         $scope.isAdminRoute = false;
       }
       $scope.linkedAccountData = {};
@@ -84,17 +83,17 @@ app.directive('dllist', function($http) {
         $scope.hasThirdPartyFields = true;
       }
 
-    $scope.permanentLinks = [];
-    $scope.choseArtist = function(artist) {
-      var permanentLink = {};
-      $scope.profile.data.permanentLinks.push({
+      $scope.permanentLinks = [];
+      $scope.choseArtist = function(artist) {
+        var permanentLink = {};
+        $scope.profile.data.permanentLinks.push({
           url: artist.permalink_url,
           avatar: artist.avatar_url ? artist.avatar_url : '',
           username: artist.username,
           id: artist.id,
           permanentLink: true
-       });
-    }
+        });
+      }
       $scope.addSong = function() {
         if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
         if ($scope.tracksQueue.length > 0) {

@@ -74,6 +74,76 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2 text-center">
+              <hr/>
+              <h4 class="bold">Notification Settings</h4>
+            </div>
+          </div>
+          <!--row end-->
+          <div class="row margin-40">
+            <div class="col-md-8 col-md-offset-2">
+              <div style="text-align: center;">
+                <h5 class="bold">Facebook Messenger Notifications</h5>
+                <div class="fb-send-to-messenger" messenger_app_id="1771378846475599" page_id="499383536933941" color="blue" size="large" data-ref="{{profile.data._id}}">
+                </div>
+                <div ng-if="profile.data.notificationSettings.facebookMessenger.messengerID">Linked</div>                       
+                <br />
+                <br />
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.facebookMessenger.tradeRequest" ng-change="saveNotifications()">
+                  <span>Trade Request</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.facebookMessenger.tradeAcceptance" ng-change="saveNotifications()">
+                  <span>Trade Acceptance</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.facebookMessenger.trackRepost" ng-change="saveNotifications()">
+                  <span>Track Repost</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.facebookMessenger.trackUnrepost" ng-change="saveNotifications()">
+                  <span>Track Unrepost</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.facebookMessenger.dailyUnfilledTrade" ng-change="saveNotifications()">
+                  <span>Unfilled Traded Slots Tomorrow</span>
+                </label>
+                <br>
+                <h5 class="bold">Email Notifications</h5>
+                <h4>{{profile.data.email}}</h4>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.email.tradeRequest" ng-change="saveNotifications()">
+                  <span>Trade Request</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.email.tradeAcceptance" ng-change="saveNotifications()">
+                  <span>Trade Acceptance</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.email.trackRepost" ng-change="saveNotifications()">
+                  <span>Track Repost</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.email.trackUnrepost" ng-change="saveNotifications()">
+                  <span>Track Unrepost</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.email.dailyUnfilledTrade" ng-change="saveNotifications()">
+                  <span>Unfilled Traded Slots Tomorrow</span>
+                </label>
+              </div>
+            </div>
+          </div>
           <br>
           <!-- overlay -->
           <div class="overlay" ng-show="showOverlay">

@@ -965,6 +965,22 @@ router.post('/profile/edit', function(req, res, next) {
     });
 });
 
+router.put('/profile/notifications', function(req, res, next) {
+  User.findOneAndUpdate({
+      '_id': req.body._id
+    }, {
+      $set: req.body
+    }, {
+      new: true
+    }).exec()
+    .then(function(result) {
+      res.send(result);
+    })
+    .then(null, function(err) {
+      next(err);
+    });
+})
+
 router.post('/profile/soundcloud', function(req, res, next) {
   if (req.user) {
     getUserSCInfo()
