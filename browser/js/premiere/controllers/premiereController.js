@@ -13,9 +13,7 @@ app.controller('PremierController', ['$rootScope',
   '$location',
   '$window',
   'PremierService',
-  'customizeService',
-  function($rootScope, $state, $scope, $http, $location, $window, PremierService, customizeService) {
-    $scope.customizeSettings = null;
+  function($rootScope, $state, $scope, $http, $location, $window, PremierService) {
     $scope.userID = $location.search().id;
     $scope.genreArray = [
       'Alternative Rock',
@@ -102,18 +100,6 @@ app.controller('PremierController', ['$rootScope',
         });
       }
     }
-
-    $scope.getCustomizeSettings=function()
-    {
-      var uid = $location.search().id;
-      if(uid != undefined){
-        customizeService.getCustomPageSettings(uid, 'premiere')
-        .then(function(response){      
-          $scope.customizeSettings = response;
-        });  
-      }  
-    }
     $scope.getUserID();
-    $scope.getCustomizeSettings();
   }
 ]);

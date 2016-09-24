@@ -108,7 +108,7 @@ app.directive('scheduler', function($http) {
               $scope.linkedAccounts.push(linked[i]);
             }
           }
-        }, 1000);
+        }, 2000);
       }
 
       $scope.checkCommentEnable = function() {
@@ -190,7 +190,6 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.saveComments = function(value, type, index) {
-
         var comments = [];
         if (type == 'schedule' && value) {
           comments = ($scope.user.repostSettings.schedule.comments ? $scope.user.repostSettings.schedule.comments : []);
@@ -1036,11 +1035,13 @@ app.directive('scheduler', function($http) {
           return {}
         } else if (event.type == 'track' || event.type == 'queue') {
           return {
-            'background-color': '#FF0000'
+            'background-color': '#FF7676',
+            'margin' : '2px',
+            'height': '18px'
           }
         } else if (event.type == 'traded') {
           return {
-            'background-color': '#FF6347',
+            'background-color': '#FFD450',
             'margin': '2px',
             'height': '18px'
           }
@@ -1203,12 +1204,13 @@ app.directive('scheduler', function($http) {
         $scope.fbMessageLink = "https://localhost:1443/repostevents?id=" + id;
         $window.open("mailto:example@demo.com?body=" + $scope.fbMessageLink, "_self");
       };
+      $scope.getUserNetwork();
       $scope.followersCount();
       $scope.checkCommentEnable();
       $scope.checkLikeEnable();
       $scope.updateReach();
-      $scope.getUserNetwork();
       $scope.verifyBrowser();
+      $scope.getLinkedAccounts();
     }
   }
 })

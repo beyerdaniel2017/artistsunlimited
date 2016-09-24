@@ -33,6 +33,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
       if (res.status === 200 && res.data.success) {
         var userData = res.data.user;
         userData.isAdmin = true;
+        $window.localStorage.setItem('isAdminAuthenticate', true);
         SessionService.create(userData);
         userData.loginInfo = $scope.loginObj;
         $window.localStorage.setItem('adminUser', JSON.stringify(userData));

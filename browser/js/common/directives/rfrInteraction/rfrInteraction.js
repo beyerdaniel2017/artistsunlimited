@@ -767,10 +767,10 @@ app.directive('rfrinteraction', function($http) {
       }
 
       $scope.createEventWithUserTradeSettings = function(event, user) {
-        if (user) {
-          event.like = user.repostSettings.trade.like;
-          var userTradeComments = user.repostSettings.trade.comments;
-          if (user.repostSettings.trade.comment && userTradeComments.length > 0) {
+        if (user && user.repostSettings) {
+          event.like = ((user.repostSettings.trade && user.repostSettings.trade.like) ? user.repostSettings.trade.like : false);
+          var userTradeComments = ((user.repostSettings.trade && user.repostSettings.trade.comments) ? user.repostSettings.trade.comments : []);
+          if (userTradeComments.length > 0) {
             event.comment = userTradeComments[Math.floor(Math.random() * userTradeComments.length)];
           }
           $http.post('/api/events/repostEvents', event);

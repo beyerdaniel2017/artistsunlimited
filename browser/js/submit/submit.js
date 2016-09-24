@@ -4,7 +4,7 @@ app.config(function($stateProvider) {
     templateUrl: 'js/submit/submit.view.html',
     controller: 'SubmitSongController'
   });
-  $stateProvider.state('customsubmit', {
+  $stateProvider.state('customsubmits', {
     url: '/custom/:username/:submitpart',
     templateUrl: 'js/submit/submit.view.html',
     controller: 'SubmitSongController',
@@ -12,34 +12,18 @@ app.config(function($stateProvider) {
       getUserByURL: function($stateParams, $http, $window) {
         var username = $stateParams.username;
         var submitpart = $stateParams.submitpart;
-        return $http.get('/api/users/getUserByURL/' + username + '/' + submitpart)
-          .then(function(res) {
-            if (res && res.data) {
               if (submitpart.indexOf('submit') != -1) {
-                $window.location.href = '/submit?id=' + res.data;
+          $window.location.href = '/customsubmit/' + username + '/' + submitpart;
               } else {
-                $window.location.href = '/premiere?id=' + res.data;
-              }
-            } else {
-              if (submitpart.indexOf('submit') != -1) {
-                $window.location.href = '/submit';
-              } else {
-                $window.location.href = '/premiere';
+          $window.location.href = '/custompremiere/' + username + '/' + submitpart;
               }
             }
-          })
-          .then(null, function(err) {
-            $.Zebra_Dialog("error getting your events");
-            return;
-          })
-      }
     }
   });
 });
 
-app.controller('SubmitSongController', function($rootScope, $state, $scope, $http, customizeService, $location) {
+app.controller('SubmitSongController', function($rootScope, $state, $scope, $http, $location) {
   $scope.submission = {};
-  $scope.customizeSettings = null;
   $scope.userID = $location.search().id;
   $scope.searchString = "";
   // $scope.genreArray = [
@@ -78,55 +62,6 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     })
     document.getElementById('scPlayer').style.visibility = "visible";
   }
-
-  $scope.choseTrack1 = function(track) {
-    $scope.searchString = track.title;
-    $scope.submission.trackID = track.id;
-    $scope.submission.title = track.title;
-    $scope.submission.trackURL = track.permalink_url;
-    SC.oEmbed($scope.submission.trackURL, {
-      element: document.getElementById('scPlayerCustom'),
-      auto_play: false,
-      maxheight: 150
-    })
-    document.getElementById('scPlayerCustom').style.visibility = "visible";
-  }
-
-  // $scope.urlChange = function() {
-  //   $http.post('/api/soundcloud/resolve', {
-  //       url: $scope.url
-  //     })
-  //     .then(function(res) {
-  //       if (res.data.kind != "track") throw (new Error(''));
-  //       $scope.submission.trackID = res.data.id;
-  //       $scope.submission.title = res.data.title;
-  //       $scope.submission.trackURL = res.data.trackURL;
-  //       SC.oEmbed($scope.submission.trackURL, {
-  //         element: document.getElementById('scPlayer'),
-  //         auto_play: false,
-  //         maxheight: 150
-  //       })
-  //       document.getElementById('scPlayer').style.visibility = "visible";
-  //       $scope.processing = false;
-  //       $scope.notFound = false;
-  //     }).then(null, function(err) {
-  //       if (err.status != 403) {
-  //         $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
-  //         $scope.notFound = true;
-  //       } else {
-  //         $scope.submission.trackURL = $scope.url;
-  //         SC.oEmbed($scope.submission.trackURL, {
-  //           element: document.getElementById('scPlayer'),
-  //           auto_play: false,
-  //           maxheight: 150
-  //         })
-  //       }
-  //       $scope.submission.trackID = null;
-
-  //       $scope.processing = false;
-  //       document.getElementById('scPlayer').style.visibility = "hidden";
-  //     });
-  // }
 
   $scope.submit = function() {
     if (!$scope.submission.email || !$scope.submission.name || !$scope.submission.trackID) {
@@ -170,15 +105,5 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     }
   }
 
-  $scope.getCustomizeSettings = function() {
-    var uid = $location.search().id;
-    if (uid != undefined) {
-      customizeService.getCustomPageSettings(uid, 'submit')
-        .then(function(response) {
-          $scope.customizeSettings = response;
-        });
-    }
-  }
   $scope.getUserID();
-  $scope.getCustomizeSettings();
 });

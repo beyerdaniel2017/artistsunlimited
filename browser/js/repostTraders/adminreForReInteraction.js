@@ -99,6 +99,7 @@ app.controller("AdminReForReInteractionController", function($rootScope, $state,
     $window.localStorage.removeItem('returnstate');
     $window.localStorage.removeItem('tid');
   }
+  $scope.isLoggedIn = SessionService.getUser() ? true : false;
   $scope.trade = trade;
   $scope.msgHistory = trade.messages;
   $scope.currentTrades = currentTrades;

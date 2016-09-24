@@ -91,6 +91,28 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
             $rootScope.state = true;
         }
 
+        if($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin') != -1){
+            var user = SessionService.getUser();
+            if(user){
+                var isAdminAuthenticate = ($window.localStorage.getItem('isAdminAuthenticate') ? $window.localStorage.getItem('isAdminAuthenticate') : false);
+                var redirectPath = (isAdminAuthenticate ?  "/admin" : "/login");
+                if($window.location.pathname.indexOf('admin') != -1 && !isAdminAuthenticate){
+                    $http.post('/api/logout').then(function() {
+                        SessionService.deleteUser();
+                        $state.go('admin');
+                        //window.location.href = '/admin';
+                    });
+                } else if($window.location.pathname.indexOf('artistTools') != -1 && isAdminAuthenticate){
+                    $http.get('/api/users/isUserAuthenticate').then(function(res) {
+                        if(!res.data){
+                            SessionService.deleteUser();
+                            $window.location.href = redirectPath;
+                        }
+                    });
+                }
+            }
+        };
+
         var user = SessionService.getUser();
         if (!user) {
             if ($window.location.pathname.indexOf('admin/') != -1) {
@@ -250,7 +272,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                     .then(function(res) {
                         $scope.processing = false;
                         SessionService.create(res.data.user);
-                        $scope.curATUser = JSON.stringify(SessionService.getUser())
+                        $scope.curATUser = SessionService.getUser()
                         if (location) window.location.href = location;
                         else $state.reload();
                     })
@@ -280,7 +302,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                         userData.isAdmin = true;
                         SessionService.create(userData);
                         $scope.processing = false;
-                        console.log(SessionService.getUser());
+                        $scope.curATUser = SessionService.getUser()
                         if (location) window.location.href = location;
                         else $state.reload();
                     } else console.log("Invalid Email or Password.");
@@ -299,7 +321,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                     $scope.processing = false;
                     SessionService.create(res.data.user);
                     $window.localStorage.setItem('prevATUser', JSON.stringify(SessionService.getUser()))
-                    $scope.curATUser = JSON.stringify(SessionService.getUser())
+                    $scope.curATUser = SessionService.getUser()
                     $state.reload();
                 })
                 .then(null, function(err) {
@@ -446,6 +468,7 @@ app.service('mainService', function($http, SessionService) {
     this.adminlogout = function() {
         $http.post('/api/logout').then(function() {
             SessionService.deleteUser();
+            window.localStorage.removeItem('isAdminAuthenticate');
             window.location.href = '/admin';
         });
     }

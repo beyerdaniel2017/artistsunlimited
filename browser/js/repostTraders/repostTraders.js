@@ -96,6 +96,7 @@ app.controller("adminReForReListsController", function($scope, $rootScope, curre
     $state.go('login');
     return;
   }
+  $scope.isLoggedIn = SessionService.getUser() ? true : false;
   $scope.listevents = repostEvents;
   $scope.currentTrades = currentTrades;
   $scope.currentTradesCopy = currentTrades;
@@ -105,4 +106,5 @@ app.controller("adminReForReListsController", function($scope, $rootScope, curre
     ev.day = new Date(ev.day);
   });
   $scope.events = repostEvents;
+
 });

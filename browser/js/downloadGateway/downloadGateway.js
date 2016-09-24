@@ -59,7 +59,7 @@ app.config(function($stateProvider) {
 
 app.controller('AdminDownloadGatewayController', function($rootScope, $state, $stateParams, $scope, $http, $location, $window, $uibModal, $timeout, SessionService, AdminToolsService, AdminDLGateService, DownloadTrackService) {
   // /* Init Download Gateway form data */
-  // $scope.isLoggedIn = SessionService.getUser() ? true : false;
+  $scope.isLoggedIn = SessionService.getUser() ? true : false;
   // var formActions = SessionService.getActionsfoAccount();
   // var PaidUserId = SessionService.addActionsfoAccountIndexSRD();
   // var soundcloudId = SessionService.getSoundCloudId();

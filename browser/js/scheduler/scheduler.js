@@ -31,5 +31,7 @@ app.controller('adminSchedulerController', function($rootScope, $state, $scope, 
   events.forEach(function(ev) {
     ev.day = new Date(ev.day);
   });
+  $scope.curATUser = SessionService.getUser();
   $scope.events = events;
+  $scope.isLoggedIn = SessionService.getUser() ? true : false;
 });

@@ -110,6 +110,7 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
     $state.go('login');
     return;
   }
+  $scope.user = SessionService.getUser();
   $scope.currentTrades = currentTrades;
   $scope.currentTradesCopy = currentTrades;
   $scope.favorites = favorites;
@@ -118,4 +119,5 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
     ev.day = new Date(ev.day);
   });
   $scope.events = repostEvents;
+  $scope.listevents = repostEvents;
 });

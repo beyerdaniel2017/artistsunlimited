@@ -5,10 +5,10 @@
       <div ng-if="user.role!='admin'">
         <div style="width:80%;margin:0 auto;" class="text-center">
           <select id="paidusers" class="form-control" ng-model="curATUser" ng-change="changeUserAdmin(curATUser)">
-            <option value="{{user}}">{{user.soundcloud.username}}</option>
-            <option ng-repeat="atUser in userlinkedAccounts" ng-if='atUser._id != user._id' value="{{atUser}}">{{atUser.soundcloud.username}}</option>
+            <option ng-repeat="atUser in userlinkedAccounts" value="{{atUser}}">{{atUser.soundcloud.username}}</option>
           </select> 
         </div>
+        <input type="hidden" id="hfuid" value="{{user._id}}"/>
       </div>
     </div>
     <!--tropical end-->
@@ -59,7 +59,7 @@
           var vals= $(this).val();
           if(vals.indexOf("object")==-1){
             var data = JSON.parse($(this).val());
-            if(data._id==$("#paidusersId").val()){
+            if(data._id.toString()==$("#hfuid").val()){
               $(this).prop('selected','selected');
             }
           } else {

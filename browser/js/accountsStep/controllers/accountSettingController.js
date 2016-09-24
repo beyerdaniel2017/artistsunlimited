@@ -110,6 +110,27 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
             $scope.AccountsStepData = SessionService.getAdminUser();
     } else if (formActions == "Add") {
         $scope.AccountsStepData = SessionService.getAdminUser() ? SessionService.getAdminUser() : {};
+            $scope.AccountsStepData.postData = {
+                heading : 
+                { text : "",
+                 style : 
+                      {fontSize: 18}
+                },
+                subHeading :{text : ""}
+            }
+            $scope.AccountsStepData.premier = {
+                  heading : 
+                { text : "",
+                 style : 
+                      {fontSize: 18}
+                },
+                subHeading :{text : ""}
+            }
+          
+             $scope.AccountsStepData.postData.heading.text = "Submission for Promotion";
+             $scope.AccountsStepData.postData.subHeading.text = "Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.";
+             $scope.AccountsStepData.premier.heading.text = "Premier Submission for Promotion";
+             $scope.AccountsStepData.premier.subHeading.text = "Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.";
         $scope.AccountsStepData.formActions = formActions;
     } else if (formActions == "Edit") {
 

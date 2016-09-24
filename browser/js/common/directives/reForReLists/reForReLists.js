@@ -21,7 +21,7 @@ app.directive('reforrelists', function($http) {
       if ($scope.activeTab == "3") {
         $window.localStorage.setItem('activetab', '1');
       }
-      console.log($scope.user);
+      
       $scope.currentTab = "SearchTrade";
       $scope.searchURL = "";
       $scope.sliderSearchMin = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers / 2) : 0)) / Math.log(1.1);
@@ -383,12 +383,12 @@ app.directive('reforrelists', function($http) {
           }
         }
       }
-      $scope.getUserNetwork = function() {
-        $http.get("/api/database/userNetworks")
-          .then(function(networks) {
-            $rootScope.userlinkedAccounts = networks.data;
-          })
-      }
+      // $scope.getUserNetwork = function() {
+      //   $http.get("/api/database/userNetworks")
+      //     .then(function(networks) {
+      //       $rootScope.userlinkedAccounts = networks.data;
+      //     })
+      // }
 
       $scope.dayIncr = 0;
       $scope.incrDay = function() {
@@ -522,18 +522,8 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.choseArtist = function(user) {
-        console.log('user')
-          // $scope.searchString = track.title;
-          // $scope.makeEvent.trackID = track.id;
-          // $scope.makeEvent.title = track.title;
-          // $scope.makeEvent.trackURL = track.permalink_url;
-          // $scope.makeEvent.trackArtUrl = track.artwork_url;
-          // SC.oEmbed( $scope.makeEvent.trackURL, {
-          //   element: document.getElementById('scPopupPlayer'),
-          //   auto_play: false,
-          //   maxheight: 150
-          // })
-          // document.getElementById('scPopupPlayer').style.visibility = "visible";
+        $scope.searchURL = user.permalink_url;
+        $scope.sendSearch();
       }
 
       $scope.choseTrack = function(track) {
