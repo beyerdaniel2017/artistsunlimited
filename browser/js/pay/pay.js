@@ -15,9 +15,9 @@ app.config(function($stateProvider) {
       },
       track: function(submission) {
         return SC.get('/tracks/' + submission.trackID)
-        .then(function(track) {
-          return track;
-        });
+          .then(function(track) {
+            return track;
+          });
       }
     }
   });
@@ -29,27 +29,26 @@ app.filter('calculateDiscount', function() {
   };
 });
 
-app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track, $state, $uibModal,AppConfig) {
+app.controller('PayController', function($scope, $rootScope, $http, channels, submission, track, $state, $uibModal, AppConfig) {
   $rootScope.submission = submission;
   $scope.auDLLink = false;
-  if (submission.paid) $state.go('home');
   $scope.track = track;
   AppConfig.fetchConfig().then(function(res) {
     AppConfig.setConfig(res.data)
-    .then(function(){
-      SC.oEmbed(submission.trackURL, {
-        element: document.getElementById('scPlayer'),
-        auto_play: false,
-        maxheight: 150
+      .then(function() {
+        SC.oEmbed(submission.trackURL, {
+          element: document.getElementById('scPlayer'),
+          auto_play: false,
+          maxheight: 150
+        });
       });
-    });
   })
-  
+
   $scope.total = 0;
   $scope.showTotal = 0;
   $scope.channels = channels;
   $scope.auDLLink = $scope.track.purchase_url ? ($scope.track.purchase_url.indexOf("artistsunlimited.co") != -1) : false;
-  
+
   $scope.goToLogin = function() {
     $state.go('login', {
       'submission': $rootScope.submission

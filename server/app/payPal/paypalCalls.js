@@ -94,7 +94,7 @@ module.exports = {
       var data = {
         "amount": {
           "currency": "USD",
-          "total": amount.toString()
+          "total": amount.toFixed(2).toString()
         }
       }
       return new Promise(function(fulfill, reject) {
@@ -102,7 +102,7 @@ module.exports = {
           if (error) {
             reject(error);
           } else {
-            resolve(refund);
+            fulfill(refund);
           }
         });
       })

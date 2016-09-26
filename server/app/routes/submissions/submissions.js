@@ -307,7 +307,7 @@ router.put('/save', function(req, res, next) {
               body = body.replace(/\n/g, "<br />");
               //var emailBody = '<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:0"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse"><tr><td><table border="0" cellpadding="0" cellspacing="0" width="100%" style="background:url(' + 'https://artistsunlimited.com' + '/assets/images/fade-background.png) no-repeat;color:white;background-size:cover;background-position:center;"><tr><td align="left" style="padding:20px" width="50%"><a href="https://artistsunlimited.com"><img src="' + 'https://artistsunlimited.com' + '/assets/images/logo-white.png" height="45" style="height:45px" alt="AU"/></a></td><td align="right" style="font-size:22px;color:white;font-weight:bold;padding:20px" width="50%">Artists <br/>Unlimited</td></tr><tr><td colspan="2" align="center" style="padding:40px 0 30px 0;font-size:28px;font-weight:bold;font-family:Arial,sans-serif;color:white"><h2>'+acceptEmail.subject+'</h2></td></tr></table></td></tr><tr><td bgcolor="#ffffff" style="padding:40px 30px 40px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="color:#153643;font-family:Arial,sans-serif;">'+body+'</td></tr></table></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/pay/' + sub._id + '" style="background-color:#f5bbbc;border:transparent;border-radius:0;padding:14px 50px;color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:3px;text-decoration:none;margin:30px 0;" class="btn btn-enter">Get promoted</a></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/login" style="color:#f5d3b5">Artist Tools</a></td></tr><tr><td style="padding:30px 30px 30px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center" width="33%"><a href="https://twitter.com/latropicalmusic" style="color:#fff"><img src="' + 'https://artistsunlimited.com' + '/assets/images/email-twitter.png" alt="Twitter" width="38" height="38" style="display:block" border="0"/></a></td><td align="center" width="33%"><a href="https://www.facebook.com/latropicalofficial" style="color:#fff"><img src="' + 'https://artistsunlimited.com' + '/assets/images/email-facebook.png" alt="Facebook" width="38" height="38" style="display:block" border="0"/></a></td><td align="center" width="33%"><a href="https://soundcloud.com/latropical" style="color:#fff"><img src="' + 'https://artistsunlimited.com' + '/assets/images/email-soundcloud.png" alt="SoundColud" width="38" height="38" style="display:block" border="0"/></a></td></tr></table></td></tr></table></td></tr></table>';
               var emailBody = '<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:0"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse"><tr><td><table border="0" cellpadding="0" cellspacing="0" width="100%" style="background:url(' + 'https://artistsunlimited.com' + '/assets/images/fade-background.png) no-repeat;color:white;background-size:cover;background-position:center;"><tr><td align="left" style="padding:20px" width="50%"><a href="https://artistsunlimited.com"><img src="' + 'https://artistsunlimited.com' + '/assets/images/logo-white.png" height="45" style="height:45px" alt="AU"/></a></td><td align="right" style="font-size:22px;color:white;font-weight:bold;padding:20px" width="50%">Artists <br/>Unlimited</td></tr><tr><td colspan="2" align="center" style="padding:40px 0 30px 0;font-size:28px;font-weight:bold;font-family:Arial,sans-serif;color:white"><h2>' + acceptEmail.subject + '</h2></td></tr></table></td></tr><tr><td bgcolor="#ffffff" style="padding:40px 30px 40px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="color:#153643;font-family:Arial,sans-serif;">' + body + '</td></tr></table></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/pay/' + sub._id + '" style="background-color:#f5bbbc;border:transparent;border-radius:0;padding:14px 50px;color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:3px;text-decoration:none;margin:30px 0;" class="btn btn-enter">Get promoted</a></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/login" style="color:#f5d3b5">Artist Tools</a></td></tr></table></td></tr></table></td></tr></table>';
-              sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", acceptEmail.subject, emailBody);
+              sendEmail(sub.name, sub.email, "Artists Unlimited", "coayscue@artistsunlimited.com", acceptEmail.subject, emailBody);
               res.send(sub);
             }).then(null, next);
         })
@@ -362,7 +362,7 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
             body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);
             body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
             body = body.replace(/\n/g, "<br />");
-            sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", declineEmail.subject, body);
+            sendEmail(sub.name, sub.email, "Artists Unlimited", "coayscue@artistsunlimited.com", declineEmail.subject, body);
             res.send(sub);
           });
       })
@@ -466,17 +466,18 @@ router.post('/getPayment', function(req, res, next) {
       var submission = req.body.submission;
       if (submission.status == 'pooled') {
         submission.paidChannels = req.body.channels;
+        submission.payment = payment;
       } else {
-        submission.pooledChannels = req.body.channels;
+        submission.paidPooledChannels = req.body.channels;
+        submission.pooledPayment = payment;
       }
-      submission.paid = false;
-      submission.payment = payment;
       submission.discounted = req.body.discounted;
       return Submission.findByIdAndUpdate(req.body.submission._id, submission, {
         new: true
       }).exec()
     }).then(function(submission) {
-      var redirectLink = submission.payment.links.find(function(link) {
+      var payment = submission.status == 'pooled' ? submission.payment : submission.pooledPayment;
+      var redirectLink = payment.links.find(function(link) {
         return link.rel == "approval_url";
       })
       res.send(redirectLink.href);
@@ -491,24 +492,30 @@ router.put('/completedPayment', function(req, res, next) {
   };
   var sub;
   Submission.findOne({
-      'payment.id': req.body.paymentId
+      $or: [{
+        'payment.id': req.body.paymentId
+      }, {
+        'pooledPayment.id': req.body.paymentId
+      }]
     })
     .then(function(submission) {
       sub = responseObj.submission = submission;
-      return paypalCalls.executePayment(submission.payment.id, {
+      var payment = sub.status == 'pooled' ? sub.payment : sub.pooledPayment;
+      return paypalCalls.executePayment(payment.id, {
         payer_id: req.body.PayerID,
-        transactions: submission.payment.transactions
+        transactions: payment.transactions
       });
     })
     .then(function(payment) {
-      sub.payment = payment;
       var promiseArray = [];
       if (sub.trackID) {
         if (sub.status == 'pooled') {
+          sub.payment = payment;
           sub.paidChannels.forEach(function(channel) {
             promiseArray.push(schedulePaidRepost(channel, sub));
           });
         } else {
+          sub.pooledPayment = payment;
           sub.paidPooledChannels.forEach(function(channel) {
             promiseArray.push(schedulePaidRepost(channel, sub));
           });
@@ -520,7 +527,6 @@ router.put('/completedPayment', function(req, res, next) {
     })
     .then(function(events) {
       responseObj.events = events;
-      sub.paid = true;
       sub.save();
       if (!sub.trackID) {
         responseObj.status = 'notify';
@@ -566,7 +572,7 @@ function schedulePaidRepost(channel, submission) {
               var day = daysOfWeek[((new Date()).getDay() + ind) % 7];
               chan.availableSlots[day].forEach(function(hour) {
                 var desiredDay = new Date();
-                desiredDay.setDate(((new Date()).getDay() + ind));
+                desiredDay.setTime(desiredDay.getTime() + ind * 24 * 60 * 60 * 1000);
                 desiredDay.setHours(hour);
                 if (continueSearch) {
                   var event = allEvents.find(function(eve) {
@@ -574,6 +580,7 @@ function schedulePaidRepost(channel, submission) {
                   });
                   if (!event) {
                     continueSearch = false;
+                    var payment = submission.status == 'pooled' ? submission.payment : submission.pooledPayment;
                     var newEve = new RepostEvent({
                       type: 'paid',
                       day: desiredDay,
@@ -584,7 +591,7 @@ function schedulePaidRepost(channel, submission) {
                       email: submission.email,
                       name: submission.name,
                       price: channel.price,
-                      saleID: submission.payment.transactions[0].related_resources[0].sale.id
+                      saleID: payment.transactions[0].related_resources[0].sale.id
                     });
                     newEve.save()
                       .then(function(eve) {

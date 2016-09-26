@@ -152,7 +152,7 @@ var schema = new mongoose.Schema({
     admin: Boolean,
     cut: {
         type: Number,
-        default: 0.3
+        default: 0.7
     }
 });
 

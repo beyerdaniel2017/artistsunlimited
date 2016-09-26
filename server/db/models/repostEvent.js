@@ -48,6 +48,7 @@ var schema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  saleID: String,
   price: Number,
   payout: {},
   otherChannels: [],

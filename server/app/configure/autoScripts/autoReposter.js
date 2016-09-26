@@ -7,6 +7,7 @@ var scConfig = require('./../../../env').SOUNDCLOUD;
 var sendEmail = require('../../mandrill/sendEmail.js');
 var request = require('request');
 var notificationCenter = require('../../notificationCenter/notificationCenter.js');
+var paypalCalls = require('../../payPal/paypalCalls.js');
 
 module.exports = doRepost;
 //executes every 5 min
@@ -68,13 +69,14 @@ function repostAndRemove(event, user, repCount) {
       scWrapper.request(reqObj, function(err, data) {
         if (!err) {
           event.completed = true;
-          event.save();
-          if (event.name && event.email) {
-            performStatBoosts(user, event.trackID);
-            distributeEarnings(user, event);
-            sendMessage(err, event, user);
-          }
-          notificationCenter.sendNotifications(user._id, 'trackRepost', 'Track repost', 'A track was reposted on ' + user.soundcloud.username, 'artistsunlimited.com/login');
+          event.save().then(function(event) {
+            if (event.name && event.email) {
+              // performStatBoosts(user, event.trackID);
+              distributeEarnings(user, event);
+              sendMessage(err, event, user);
+            }
+            notificationCenter.sendNotifications(user._id, 'trackRepost', 'Track repost', 'A track was reposted on ' + user.soundcloud.username, 'artistsunlimited.com/login');
+          }).then(null, console.log);
         } else {
           console.log('error ------------------');
           console.log(err);
@@ -86,7 +88,7 @@ function repostAndRemove(event, user, repCount) {
               user.blockRelease = new Date(err.release_at);
               user.save();
             }
-            partialRefund(event);
+            // partialRefund(event);
             sendMessage(err, event, user);
             notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', 'A repost on ' + user.soundcloud.username + ' did not complete.', 'artistsunlimited.com/login');
           }
@@ -290,18 +292,27 @@ function performStatBoosts(user, trackID) {
 
 function distributeEarnings(user, event) {
   if (event.price) {
-    sendPayout(user.paypal_email, (event.price * 0.7).toFixed(2), "Repost on " + user.soundcloud.username + ".")
-      .then(function(payout) {
-        event.payout = payout;
-      }).then(null, console.log)
+    User.findOne({
+      "paidRepost.userID": user._id
+    }).then(function(adminUser) {
+      return paypalCalls.sendPayout(adminUser.paypal_email, (event.price * adminUser.cut).toFixed(2), "Repost on " + user.soundcloud.username + ".", event._id)
+    }).then(function(payout) {
+      event.payout = payout;
+      event.save();
+    }).then(null, function(err) {
+      sendEmail('Christian Ayscue', 'coayscue@gmail.com', "Artists Unlimited", "coayscue@gmail.com", "Error distributing funds", "Error: " + JSON.stringify(err) + "\nATUser: " + JSON.stringify(user) + "\nEvent: " + JSON.stringify(event));
+      console.log(err);
+    })
   }
 }
 
 function partialRefund(event) {
   if (event.price) {
-    sendRefund(event.price, event.saleID)
+    paypalCalls.sendRefund(event.price, event.saleID)
       .then(function(refund) {
+        console.log(refund);
         event.payout = refund;
+        event.save();
       }).then(null, console.log)
   }
 }

@@ -38,6 +38,9 @@ var schema = new mongoose.Schema({
   payment: {
     type: Object
   },
+  pooledPayment: {
+    type: Object
+  },
   paidChannels: {
     type: []
   },

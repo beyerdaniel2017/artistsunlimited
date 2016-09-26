@@ -19,6 +19,7 @@ scWrapper.init({
 });
 
 module.exports = getPaidRepostAccounts;
+
 function getPaidRepostAccounts() {
   PaidRepostAccount
     .find({}, function(err, paidReposters) {
@@ -63,8 +64,12 @@ function scanCollection(collection) {
 
 function getUser(activity) {
   var userId = activity.track.user_id;
-  var reqObj = {method: 'GET', path:'/users/' + userId, qs: {}};
-  scWrapper.request(reqObj, function(err, res){
+  var reqObj = {
+    method: 'GET',
+    path: '/users/' + userId,
+    qs: {}
+  };
+  scWrapper.request(reqObj, function(err, res) {
     if (!err) {
       var userData = {};
       try {
@@ -84,7 +89,11 @@ function addFollower(user) {
   }
   if (emailArray) {
     var email = myArray[0];
-    var reqfollow = {method: 'GET', path:'/users/' + user.id + '/web-profiles', qs: {}};
+    var reqfollow = {
+      method: 'GET',
+      path: '/users/' + user.id + '/web-profiles',
+      qs: {}
+    };
     scWrapper.request(reqfollow, function(err, webProfiles) {
       user.websites = '';
       if (!err) {
@@ -112,8 +121,8 @@ function addFollower(user) {
       }
       Follower.findOne({
           "scID": user.id
-      })
-      .exec()
+        })
+        .exec()
         .then(function(follower) {
           if (!follower) {
             var newFollower = new Follower({
