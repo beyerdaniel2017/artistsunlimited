@@ -486,7 +486,6 @@ router.post('/getPayment', function(req, res, next) {
 })
 
 router.put('/completedPayment', function(req, res, next) {
-  console.log(req.body);
   var responseObj = {
     events: []
   };
@@ -526,13 +525,13 @@ router.put('/completedPayment', function(req, res, next) {
       }
     })
     .then(function(events) {
+      sub.refundDate = new Date((new Date(sub.pooledSendDate)).getTime() + 48 * 60 * 60 * 1000);
+      events.forEach(function(event) {
+        var wouldBeRefundDate = new Date(new Date(event.event.day).getTime() + 4 * 60 * 60 * 1000)
+        if (wouldBeRefundDate > sub.refundDate) sub.refundDate = wouldBeRefundDate;
+      })
       responseObj.events = events;
       sub.save();
-      if (!sub.trackID) {
-        responseObj.status = 'notify';
-        var email_body = JSON.stringify(responseObj);
-        sendEmail('Edward', 'edward@peninsulamgmt.com', 'Artists Unlimited', 'coayscue@artistsunlimited.com', 'Needs Repost', email_body);
-      }
       res.send(responseObj);
     })
     .then(null, next);
@@ -561,9 +560,9 @@ function schedulePaidRepost(channel, submission) {
         allEvents.forEach(function(event1) {
           event1.day = new Date(event1.day);
         });
+        if (channel.blockRelease) channel.blockRelease = new Date(channel.blockRelease);
+        else channel.blockRelease = new Date(0);
         var continueSearch = true;
-        var day = new Date();
-        day.getDay
         var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
         var ind = 1;
         User.findById(channel.userID).exec()
@@ -571,7 +570,7 @@ function schedulePaidRepost(channel, submission) {
             while (continueSearch) {
               var day = daysOfWeek[((new Date()).getDay() + ind) % 7];
               chan.availableSlots[day].forEach(function(hour) {
-                var desiredDay = new Date();
+                var desiredDay = channel.blockRelease > new Date() ? channel.blockRelease : new Date();
                 desiredDay.setTime(desiredDay.getTime() + ind * 24 * 60 * 60 * 1000);
                 desiredDay.setHours(hour);
                 if (continueSearch) {
@@ -598,7 +597,8 @@ function schedulePaidRepost(channel, submission) {
                         eve.day = new Date(eve.day);
                         fulfill({
                           channelName: channel.user.username,
-                          date: eve.day
+                          date: eve.day,
+                          event: eve
                         });
                       })
                       .then(null, reject);

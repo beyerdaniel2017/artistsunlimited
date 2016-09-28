@@ -53,6 +53,9 @@ var schema = new mongoose.Schema({
   discounted: {
     type: Boolean
   },
+  refundDate: {
+    type: Date
+  },
   genre: {
     type: String
   },

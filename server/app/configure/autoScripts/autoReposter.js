@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Trade = mongoose.model('Trade');
 var RepostEvent = mongoose.model('RepostEvent');
+var Submission = mongoose.model('Submission');
 var scWrapper = require("../../SCWrapper/SCWrapper.js");
 var scConfig = require('./../../../env').SOUNDCLOUD;
 var sendEmail = require('../../mandrill/sendEmail.js');
@@ -71,7 +72,7 @@ function repostAndRemove(event, user, repCount) {
           event.completed = true;
           event.save().then(function(event) {
             if (event.name && event.email) {
-              // performStatBoosts(user, event.trackID);
+              performStatBoosts(user, event.trackID);
               distributeEarnings(user, event);
               sendMessage(err, event, user);
             }
@@ -88,7 +89,6 @@ function repostAndRemove(event, user, repCount) {
               user.blockRelease = new Date(err.release_at);
               user.save();
             }
-            // partialRefund(event);
             sendMessage(err, event, user);
             notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', 'A repost on ' + user.soundcloud.username + ' did not complete.', 'artistsunlimited.com/login');
           }
@@ -249,7 +249,7 @@ function postLike(event, user) {
     method: 'PUT',
     path: '/me/favorites/' + event.trackID,
     qs: {
-      oauth_token: user.souncloud.token
+      oauth_token: user.soundcloud.token
     }
   };
   scWrapper.request(reqObj, function(err, response) {
@@ -291,11 +291,24 @@ function performStatBoosts(user, trackID) {
 }
 
 function distributeEarnings(user, event) {
+  console.log('distributing---------')
   if (event.price) {
     User.findOne({
       "paidRepost.userID": user._id
     }).then(function(adminUser) {
-      return paypalCalls.sendPayout(adminUser.paypal_email, (event.price * adminUser.cut).toFixed(2), "Repost on " + user.soundcloud.username + ".", event._id)
+      return Submission.findOne({
+        'pooledPayment.transactions.related_resources.sale.id': event.saleID
+      }).then(function(submission) {
+        if (submission) {
+          User.findOne({
+            "paidRepost.userID": submission.userID
+          }).then(function(originalAdminUser) {
+            return paypalCalls.sendPayout(originalAdminUser.paypal_email, (event.price * 0.2).toFixed(2), "Repost on " + user.soundcloud.username + ".", event._id)
+          }).then(console.log, console.log);
+          adminUser.cut -= 0.1;
+        }
+        return paypalCalls.sendPayout(adminUser.paypal_email, (event.price * adminUser.cut).toFixed(2), "Repost on " + user.soundcloud.username + ".", event._id)
+      })
     }).then(function(payout) {
       event.payout = payout;
       event.save();
