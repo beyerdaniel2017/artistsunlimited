@@ -9,7 +9,7 @@ var User = mongoose.model('User');
 
 //----------Public Repost Events----------
 router.get('/forUser/:id', function(req, res, next) {
-  var date = moment().month(new Date().getMonth()).date(new Date().getDate()-7).hours(0).minutes(0).seconds(0).milliseconds(0).format();
+  var date = moment().month(new Date().getMonth()).date(new Date().getDate() - 7).hours(0).minutes(0).seconds(0).milliseconds(0).format();
   RepostEvent.find({
       userID: req.params.id,
       day: {
@@ -82,22 +82,42 @@ router.get('/listEvents/:id', function(req, res, next) {
 })
 
 router.put('/repostEvents', function(req, res, next) {
-  RepostEvent.findByIdAndUpdate(req.body._id, req.body, {
-      new: true,
-      upsert: true
-    }).exec()
-    .then(function(event) {
-      event.trackID = req.body.trackID;
-      event.title = req.body.title;
-      event.trackURL = req.body.trackURL;
-      return event.save()
-    })
-    .then(function(ev) {
-      ev.day = new Date(ev.day);
-      res.send(ev);
-    })
-    .then(null, next);
+  denyTradeOverlap(req.body)
+    .then(function(ok) {
+      RepostEvent.findByIdAndUpdate(req.body._id, req.body, {
+          new: true,
+          upsert: true
+        }).exec()
+        .then(function(event) {
+          event.trackID = req.body.trackID;
+          event.title = req.body.title;
+          event.trackURL = req.body.trackURL;
+          return event.save()
+        })
+        .then(function(ev) {
+          ev.day = new Date(ev.day);
+          res.send(ev);
+        })
+        .then(null, next);
+    }).then(null, next)
 });
+
+function denyTradeOverlap(repostEvent) {
+  repostEvent.day = new Date(repostEvent.day);
+  repostEvent.unrepostDate = new Date(repostEvent.unrepostDate);
+  return RepostEvent.find({
+    userID: repostEvent.userID,
+    trackID: repostEvent.trackID
+  }).then(function(events) {
+    var blockEvents = events.filter(function(event) {
+      event.day = new Date(event.day);
+      event.unrepostDate = new Date(event.unrepostDate);
+      return (repostEvent.trackID == event.trackID && (Math.abs(event.unrepostDate.getTime() - repostEvent.day.getTime()) < 24 * 3600000 || Math.abs(event.day.getTime() - repostEvent.unrepostDate.getTime()) < 24 * 3600000));
+    })
+    if (blockEvents.length > 0) throw new Error('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.')
+    else return 'ok';
+  })
+}
 
 router.post('/repostEvents', function(req, res, next) {
   var event = new RepostEvent(req.body);
@@ -189,36 +209,39 @@ router.post('/saveAvailableSlots', function(req, res, next) {
 })
 
 router.get('/getRepostEvents/:id', function(req, res, next) {
-  var data =[];
-   RepostEvent.find({ 
-    owner: req.params.id,
-    type: 'traded'
-  })
-  .sort({day: 1})
-  .exec()
-  .then(function(tracks) {      
-    var i= -1;
-    function next() {
-      i++;
-        if(i<tracks.length){
+  var data = [];
+  RepostEvent.find({
+      owner: req.params.id,
+      type: 'traded'
+    })
+    .sort({
+      day: 1
+    })
+    .exec()
+    .then(function(tracks) {
+      var i = -1;
+
+      function next() {
+        i++;
+        if (i < tracks.length) {
           var userid = parseInt(tracks[i].userID);
-            User.findOne({
-              'soundcloud.id': userid
-            }, function(err, user) {
+          User.findOne({
+            'soundcloud.id': userid
+          }, function(err, user) {
             var result = {
-              trackInfo : tracks[i],
-              userInfo : user.soundcloud
+              trackInfo: tracks[i],
+              userInfo: user.soundcloud
             }
             data.push(result);
             next();
           });
-          } else {
-          res.send(data);   
-        }      
+        } else {
+          res.send(data);
+        }
       }
       next();
-  })
-  .then(null, next);
+    })
+    .then(null, next);
 });
 
 // router.put('/', function(req, res, next) {
