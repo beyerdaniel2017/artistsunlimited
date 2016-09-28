@@ -65,10 +65,10 @@
                     </div>
                   </div>
                   <ul class="admin-ui-tabs" role="tablist">
-                     <li class="active">
+                     <li>
                       <a href="javascript:void(0)"><span style="color:red;font-size:14px;">1</span>&nbsp;&nbsp;Set Submission URL</a>
                       </li>
-                      <li class="active">
+                      <li>
                       <a href="javascript:void(0)"><span style="color:red;font-size:14px;">2</span>&nbsp;&nbsp;Set Price</a>
                       </li>
                       <li class="active">
@@ -80,6 +80,9 @@
                       <li>
                       <a href="javascript:void(0)"><span style="color:red;font-size:14px;">5</span>&nbsp;&nbsp;Repost Preferences</a>
                       </li>
+                      <li>
+                      <a href="javascript:void(0)"><span style="color:red;font-size:14px;">6</span>&nbsp;&nbsp;Manage Reposts</a>
+                    </li>
                   </ul>
                   <div class="tab-content">
                   <!-- MY SCHEDULE : Start-->
@@ -88,233 +91,233 @@
                         <div class=""> 
                           <div class="col-md-12">
                             <br />            
-                                  <div class="col-md-4">                                    
-                                      <br />
-                                      <div class="row">
-                      <div class="col-sm-12 custom-submission-accordion">
-                                          <div class="panel-group" id="accordion">
-                                            <div class="panel panel-default">
-                                              <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                  <a data-toggle="collapse" data-parent="#accordion" href="#pnlHeading" onclick="return false;">HEADING </span></a>                            
-                                                </h4>
-                                              </div>
-                                              <div id="pnlHeading" class="panel-collapse collapse in">
-                                                <div class="panel-body">
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Heading Text</label> 
-                                                      <input type="text" ng-model="AccountsStepData.postData.heading.text" class="form-control" placeholder="Heading Text">
-                                                    </div>
-                                                  </div>
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                     <label>Font Size</label><input type="number" ng-model="AccountsStepData.postData.heading.style.fontSize" class="form-control" placeholder="Font Size">
-                                                    </div>
-                                                  </div>
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Font Weight</label> 
-                                                      <select class="form-control" ng-model="AccountsStepData.postData.heading.style.fontWeight" placeholder="Font Weight" ng-init="AccountsStepData.postData.heading.style.fontWeight = 'normal'">
-                                                        <option ng-selected="true" value="normal">Normal</option>
-                                                        <option value="bold">Bold</option>
-                                                        <option value="italic">Italic</option>
-                                                      </select>
-                                                    </div>
-                                                  </div>
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                     <label>Font color</label> 
-                                                      <input colorpicker type="text" placeholder="Font color" ng-model="AccountsStepData.postData.heading.style.fontColor" class="form-control"/>
-                                                    </div>
-                                                  </div>
-                                                </div>
+                            <div class="col-md-4">                                    
+                              <br />
+                              <div class="row">
+                                <div class="col-sm-12 custom-submission-accordion">
+                                  <div class="panel-group" id="accordion">
+                                    <div class="panel panel-default">
+                                      <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                          <a data-toggle="collapse" data-parent="#accordion" href="#pnlHeading" onclick="return false;">HEADING </span></a>                            
+                                        </h4>
+                                      </div>
+                                      <div id="pnlHeading" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                          <div class="row margin-bottom-10">
+                                            <div class="col-md-12">
+                                            <label>Heading Text</label> 
+                                              <input type="text" ng-model="AccountsStepData.postData.heading.text" class="form-control" placeholder="Heading Text">
+                                            </div>
+                                          </div>
+                                          <div class="row margin-bottom-10">
+                                            <div class="col-md-12">
+                                             <label>Font Size</label><input type="number" ng-model="AccountsStepData.postData.heading.style.fontSize" class="form-control" placeholder="Font Size">
+                                            </div>
+                                          </div>
+                                          <div class="row margin-bottom-10">
+                                            <div class="col-md-12">
+                                            <label>Font Weight</label> 
+                                              <select class="form-control" ng-model="AccountsStepData.postData.heading.style.fontWeight" placeholder="Font Weight" ng-init="AccountsStepData.postData.heading.style.fontWeight = 'normal'">
+                                                <option ng-selected="true" value="normal">Normal</option>
+                                                <option value="bold">Bold</option>
+                                                <option value="italic">Italic</option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <div class="row margin-bottom-10">
+                                            <div class="col-md-12">
+                                             <label>Font color</label> 
+                                              <input colorpicker type="text" placeholder="Font color" ng-model="AccountsStepData.postData.heading.style.fontColor" class="form-control"/>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        </div>
+                                      </div>
+                                      <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                          <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlSubheading">SUB HEADING </a>
+                                          </h4>
+                                        </div>
+                                        <div id="pnlSubheading" class="panel-collapse collapse">
+                                          <div class="panel-body">
+                                            <div class="row margin-bottom-10">
+                                              <div class="col-md-12">
+                                              <label>Subheading</label>
+                                                <textarea ng-model="AccountsStepData.postData.subHeading.text" class="form-control" name="Subheading Text" placeholder="Subheading"></textarea required>
                                               </div>
                                             </div>
-                                            <div class="panel panel-default">
-                                              <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                  <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlSubheading">SUB HEADING </a>
-                                                </h4>
-                                              </div>
-                                              <div id="pnlSubheading" class="panel-collapse collapse">
-                                                <div class="panel-body">
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Subheading</label>
-                                                      <textarea ng-model="AccountsStepData.postData.subHeading.text" class="form-control" name="Subheading Text" placeholder="Subheading"></textarea required>
-                                                    </div>
-                                                  </div>
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                     <label>Font Weight</label>
-                                                      <select class="form-control" ng-model="AccountsStepData.postData.subHeading.style.fontWeight" placeholder="Font Weight" ng-init="AccountsStepData.postData.subHeading.style.fontWeight='normal'">
-                                                        <option ng-selected="true" value="normal">Normal</option>
-                                                        <option value="bold">Bold</option>
-                                                        <option value="italic">Italic</option>
-                                                      </select>
-                                                    </div>
-                                                  </div>
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Font Size</label>
-                                                      <input type="number" ng-model="AccountsStepData.postData.subHeading.style.fontSize" 
-                                                      class="form-control" placeholder="Font Size">
-                                                    </div>
-                                                   </div>
-                                                   <div class="row margin-bottom-10">
-                                                     <div class="col-md-12">
-                                                     <label>Font color</label>
-                                                      <input colorpicker type="text" placeholder="Font color" ng-model="AccountsStepData.postData.subHeading.style.fontColor" class="form-control"/>
-                                                     </div>
-                                                    </br>
-                                                  </div>
-                                                </div>
+                                            <div class="row margin-bottom-10">
+                                              <div class="col-md-12">
+                                               <label>Font Weight</label>
+                                                <select class="form-control" ng-model="AccountsStepData.postData.subHeading.style.fontWeight" placeholder="Font Weight" ng-init="AccountsStepData.postData.subHeading.style.fontWeight='normal'">
+                                                  <option ng-selected="true" value="normal">Normal</option>
+                                                  <option value="bold">Bold</option>
+                                                  <option value="italic">Italic</option>
+                                                </select>
                                               </div>
                                             </div>
-                                            <div class="panel panel-default">
-                                              <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                  <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlLogo">LOGO </a>
-                                                </h4>
-                                              </div>
-                                              <div id="pnlLogo" class="panel-collapse collapse">
-                                                <div class="panel-body">
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Image</label>
-                                                      <input type="file" name="uploadLogo" file-input="AccountsStepData.postData.logo.images" id="uploadLogo" class="pull-right" style="width:200px">                                
-                                                    </div>
-                                                  </div>
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                     <label>Logo Position</label>
-                                                      <select class="form-control" ng-model="AccountsStepData.postData.logo.align" placeholder="Logo Position" ng-init="AccountsStepData.postData.logo.align='center'">
-                                                        <option ng-selected="true" value="center">Center</option>
-                                                        <option value="left">Left</option>
-                                                        <option value="right">Right</option>
-                                                      </select>
-                                                    </div>
-                                                  </div>                                                 
-                                                </div>
+                                            <div class="row margin-bottom-10">
+                                              <div class="col-md-12">
+                                              <label>Font Size</label>
+                                                <input type="number" ng-model="AccountsStepData.postData.subHeading.style.fontSize" 
+                                                class="form-control" placeholder="Font Size">
                                               </div>
                                             </div>
-                                            <div class="panel panel-default">
-                                              <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                  <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlBackground">BACKGROUND </a>
-                                                </h4>
+                                            <div class="row margin-bottom-10">
+                                              <div class="col-md-12">
+                                                <label>Font color</label>
+                                                <input colorpicker type="text" placeholder="Font color" ng-model="AccountsStepData.postData.subHeading.style.fontColor" class="form-control"/>
                                               </div>
-                                              <div id="pnlBackground" class="panel-collapse collapse">
-                                                <div class="panel-body">
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Image</label>
-                                                      <input type="file" name="uploadBackground" file-input="AccountsStepData.postData.background.images" id="uploadBackground"  class="pull-right" style="width:200px">
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div class="panel-body">
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Blur Amount</label>
-                                                    <input type="number" ng-model="AccountsStepData.postData.background.blur" 
-                                                      placeholder="Blur Amount" >
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
+                                              </br>
                                             </div>
-                                            <div class="panel panel-default">
-                                              <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                  <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlButton">BUTTON </a>
-                                                </h4>
-                                              </div>
-                                              <div id="pnlButton" class="panel-collapse collapse">
-                                                <div class="panel-body">
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Button text</label>
-                                                    <input class="form-control" type="text" ng-model="AccountsStepData.postData.button.text" placeholder="Button text"/>
-                                                    </div>
-                                                    </br>
-                                                  </div>                           
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Font size</label>
-                                                    <input type="number" ng-model="AccountsStepData.postData.button.style.fontSize" class="form-control" placeholder="Font size">
-                                                    </div>
-                                                    </br>
-                                                  </div>
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Font color</label>
-                                                      <input colorpicker type="text" placeholder="Font color" ng-model="AccountsStepData.postData.button.style.fontColor" class="form-control"/>
-                                                    </div>
-                                                    </br>
-                                                  </div>
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Border</label>
-                                                      <input type="number" ng-model="AccountsStepData.postData.button.style.border" class="form-control" placeholder="Border">
-                                                    </div>
-                                                    </br>
-                                                  </div>
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Border Radius</label>
-                                                       <input type="number" ng-model="AccountsStepData.postData.button.style.borderRadius" class="form-control" placeholder="Border Radius">
-                                                    </div>
-                                                    </br>
-                                                  </div>
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>BG color</label>
-                                                      <input colorpicker type="text" placeholder="BG color" ng-model="AccountsStepData.postData.button.style.bgColor" class="form-control"/>
-                                                    </div>
-                                                    </br>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div> 
-                                            <div class="panel panel-default">
-                                              <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                  <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlInput">INPUT FIELDS </a>
-                                                </h4>
-                                              </div>
-                                              <div id="pnlInput" class="panel-collapse collapse">
-                                                <div class="panel-body">
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Border</label>
-                                                      <input type="number" ng-model="AccountsStepData.postData.inputFields.style.border" class="form-control" placeholder="Border">
-                                                    </div>
-                                                    </br>
-                                                  </div>
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Border Radius</label>
-                                                       <input type="number" ng-model="AccountsStepData.postData.inputFields.style.borderRadius" class="form-control" placeholder="Border Radius">
-                                                    </div>
-                                                    </br>
-                                                  </div>
-                                                  <div class="row margin-bottom-10">
-                                                    <div class="col-md-12">
-                                                    <label>Border color</label>
-                                                      <input colorpicker type="text" placeholder="Border color" ng-model="AccountsStepData.postData.inputFields.style.borderColor" class="form-control"/>
-                                                    </div>
-                                                    </br>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>                    
                                           </div>
                                         </div>
                                       </div>
-                                      </br>
-                                      </br>
+                                      <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                          <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlLogo">LOGO </a>
+                                          </h4>
+                                        </div>
+                                        <div id="pnlLogo" class="panel-collapse collapse">
+                                          <div class="panel-body">
+                                            <div class="row margin-bottom-10">
+                                              <div class="col-md-12">
+                                              <label>Image</label>
+                                                <input type="file" name="uploadLogo" file-input="AccountsStepData.postData.logo.images" id="uploadLogo" class="pull-right" style="width:200px">
+                                              </div>
+                                            </div>
+                                            <div class="row margin-bottom-10">
+                                              <div class="col-md-12">
+                                               <label>Logo Position</label>
+                                                <select class="form-control" ng-model="AccountsStepData.postData.logo.align" placeholder="Logo Position" ng-init="AccountsStepData.postData.logo.align='center'">
+                                                  <option ng-selected="true" value="center">Center</option>
+                                                  <option value="left">Left</option>
+                                                  <option value="right">Right</option>
+                                                </select>
+                                              </div>
+                                            </div>                                                 
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                          <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlBackground">BACKGROUND </a>
+                                          </h4>
+                                        </div>
+                                        <div id="pnlBackground" class="panel-collapse collapse">
+                                          <div class="panel-body">
+                                            <div class="row margin-bottom-10">
+                                              <div class="col-md-12">
+                                              <label>Image</label>
+                                                <input type="file" name="uploadBackground" file-input="AccountsStepData.postData.background.images" id="uploadBackground"  class="pull-right" style="width:200px">
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div class="panel-body">
+                                            <div class="row margin-bottom-10">
+                                              <div class="col-md-12">
+                                              <label>Blur Amount</label>
+                                              <input type="number" ng-model="AccountsStepData.postData.background.blur" 
+                                                placeholder="Blur Amount" >
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                          <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlButton">BUTTON </a>
+                                          </h4>
+                                        </div>
+                                        <div id="pnlButton" class="panel-collapse collapse">
+                                          <div class="panel-body">
+                                            <div class="row margin-bottom-10">
+                                              <div class="col-md-12">
+                                              <label>Button text</label>
+                                              <input class="form-control" type="text" ng-model="AccountsStepData.postData.button.text" placeholder="Button text"/>
+                                              </div>
+                                              </br>
+                                            </div>                           
+                                            <div class="row margin-bottom-10">
+                                              <div class="col-md-12">
+                                              <label>Font size</label>
+                                              <input type="number" ng-model="AccountsStepData.postData.button.style.fontSize" class="form-control" placeholder="Font size">
+                                              </div>
+                                              </br>
+                                            </div>
+                                            <div class="row margin-bottom-10">
+                                              <div class="col-md-12">
+                                              <label>Font color</label>
+                                                <input colorpicker type="text" placeholder="Font color" ng-model="AccountsStepData.postData.button.style.fontColor" class="form-control"/>
+                                              </div>
+                                              </br>
+                                            </div>
+                                            <div class="row margin-bottom-10">
+                                              <div class="col-md-12">
+                                              <label>Border</label>
+                                                <input type="number" ng-model="AccountsStepData.postData.button.style.border" class="form-control" placeholder="Border">
+                                              </div>
+                                              </br>
+                                            </div>
+                                            <div class="row margin-bottom-10">
+                                              <div class="col-md-12">
+                                                <label>Border Radius</label>
+                                                   <input type="number" ng-model="AccountsStepData.postData.button.style.borderRadius" class="form-control" placeholder="Border Radius">
+                                                </div>
+                                                </br>
+                                              </div>
+                                              <div class="row margin-bottom-10">
+                                                <div class="col-md-12">
+                                                <label>BG color</label>
+                                                  <input colorpicker type="text" placeholder="BG color" ng-model="AccountsStepData.postData.button.style.bgColor" class="form-control"/>
+                                                </div>
+                                                </br>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div> 
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                              <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlInput">INPUT FIELDS </a>
+                                            </h4>
+                                          </div>
+                                          <div id="pnlInput" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                              <div class="row margin-bottom-10">
+                                                <div class="col-md-12">
+                                                <label>Border</label>
+                                                  <input type="number" ng-model="AccountsStepData.postData.inputFields.style.border" class="form-control" placeholder="Border">
+                                                </div>
+                                                </br>
+                                              </div>
+                                              <div class="row margin-bottom-10">
+                                                <div class="col-md-12">
+                                                <label>Border Radius</label>
+                                                   <input type="number" ng-model="AccountsStepData.postData.inputFields.style.borderRadius" class="form-control" placeholder="Border Radius">
+                                                </div>
+                                                </br>
+                                              </div>
+                                              <div class="row margin-bottom-10">
+                                                <div class="col-md-12">
+                                                <label>Border color</label>
+                                                  <input colorpicker type="text" placeholder="Border color" ng-model="AccountsStepData.postData.inputFields.style.borderColor" class="form-control"/>
+                                                </div>
+                                                </br>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>                    
+                                      </div>
+                                    </div>
+                                  </div>
+                                  </br>
+                                  </br>
                                   </div>
                                   <div class="col-md-8" >
                                     <div id="backgroundImage" style="background-size:cover;background-image:url({{AccountsStepData.postData.background.images}}); filter: blur({{AccountsStepData.postData.background.blur}}px);-webkit-filter: blur({{AccountsStepData.postData.background.blur}}px);">
@@ -375,9 +378,9 @@
                 </div>
                 <!-- MY SCHEDULE : End-->
                 <div class="clearfix"></div>     
-  </div>
+              </div>
               <!-- Tab panes :: End-->
-</div>
+            </div>
             <!-- overlay -->
              <div class="clearfix"></div>
               <div class="row">
@@ -387,9 +390,9 @@
               <input type="button" name="back" value="Next"  ng-click="nextStep(4,AccountsStepData,'channel')" class="btn btn-pink b-radius-10 border-orange-btn">                                                    
               </div>
               </div>
-              </div>           
-</div>
-    </div>
+            </div>           
+          </div>
+        </div>
         <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
   </div>
 </div>

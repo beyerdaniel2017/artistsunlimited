@@ -18,7 +18,7 @@ app.directive('reforrelists', function($http) {
       }
       $scope.itemview = "calendar";
       $scope.manageView = "calendar";
-      if ($scope.activeTab == "3") {
+      if($scope.activeTab == "3"){
         $window.localStorage.setItem('activetab', '1');
       }
       
@@ -278,15 +278,15 @@ app.directive('reforrelists', function($http) {
           .then(function(res) {
             $scope.processing = false;
             if ($scope.isAdminRoute) {
-              $state.go('adminreForReInteraction', {
-                tradeID: res.data._id
-              })
+               $state.go('adminreForReInteraction', {
+                 tradeID: res.data._id
+               })
             } else {
-              $state.go('reForReInteraction', {
-                tradeID: res.data._id
-              })
+            $state.go('reForReInteraction', {
+              tradeID: res.data._id
+            })
             }
-
+           
           })
           .then(null, function(err) {
             $scope.processing = false;
@@ -452,6 +452,7 @@ app.directive('reforrelists', function($http) {
 
       $scope.clickedSlot = function(day, hour, data) {
         if (data.trackInfo) {
+            $scope.deleteEventData = data;
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
           document.getElementById('scPopupPlayer').innerHTML = "";
           $scope.makeEvent = {};
@@ -491,6 +492,21 @@ app.directive('reforrelists', function($http) {
 
       $scope.closeModal = function() {
         $scope.showOverlay = false;
+      }
+
+      $scope.deleteEvent = function()
+      {
+         var eventId = $scope.deleteEventData.trackInfo._id;
+          $http.delete('/api/events/repostEvents/' + eventId)
+            .then(function(res) {
+              $.Zebra_Dialog("Deleted successfully !!!")
+              $scope.showOverlay = false;
+              $state.reload();
+            })
+            .then(null, function(err) {
+              $scope.processing = false;
+              $.Zebra_Dialog("ERROR: Did not delete.")
+            });
       }
 
       $scope.saveEvent = function() {
@@ -557,6 +573,7 @@ app.directive('reforrelists', function($http) {
 
       $scope.scheduleRepostEvent = function(data) {
         if (data.trackInfo) {
+          $scope.deleteEventData = data;
           $scope.manageView = "newsong";
           document.getElementById('scPlayer').style.visibility = "hidden";
           document.getElementById('scPlayer').innerHTML = "";

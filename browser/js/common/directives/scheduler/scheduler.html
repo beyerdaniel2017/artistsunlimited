@@ -11,7 +11,7 @@
     </ul>
     <!-- Nav tabs :End-->
     <!-- Tab panes :: Start-->
-    <div class="tab-content" ng-show="tabSelected">
+    <div class="tab-content" ng-show="tabSelected" ng-init="getListEvents()">
       <!-- MY SCHEDULE : Start-->
       <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
         <div class="container-90">
@@ -275,7 +275,6 @@
                         </li>
                       </ul> 
                       <br/>
-                      <div class="form-group" ng-show="linkedAccounts.length > 0"  ng-if="!isEdit && !isSchedule">
                         <div class="form-group" ng-show="linkedAccounts.length > 0"  ng-if="isEdit || isSchedule">
                           <div class="col-xs-12">
                             <label>Time between reposts:</label>
@@ -284,7 +283,6 @@
                             </select> hours
                           </div>
                         </div>
-                      </div>
                       </div>
                       <div class="col-md-6 col-xs-12">              
                         <div class="btn-group channel-group" ng-if="user.role == 'admin'" role="group" aria-label="...">
@@ -387,6 +385,7 @@
                             <div class="col-md-12">
                               <div class="next-previous text-center">
                                <!--  <button class="btn active">SKIP TO NEXT AUTOFILL</button> -->
+                               <button class="btn btn-border b-radius-10 save-share" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
                                <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
                                <button class="btn btn-pink b-radius-10 save-share" ng-click="saveEvent();">SAVE & SHARE</button>
                              </div>
@@ -518,11 +517,14 @@
                   </div>
                   <div class="row">
                     <br />
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                      <button class="btn btn-border b-radius-10 btn-block" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
+                    </div>
+                    <div class="col-md-4">
                       <button class="btn btn-border b-radius-10  btn-block" ng-click="backEvent();">CANCEL</button>
                     </div>
-                    <div class="col-md-6">
-                      <button class="btn btn-pink b-radius-10 btn-block" ng-click="saveEvent();">SAVE &amp; SHARE</button>
+                    <div class="col-md-4">
+                      <button class="btn btn-pink b-radius-10 btn-block" ng-click="saveEvent();">SAVE</button>
                     </div>
                   </div><!--row end-->                  
                 </div>

@@ -64,6 +64,11 @@ app.config(function($stateProvider) {
         templateUrl: 'js/accountsStep/views/channelstep6.html',
         controller: 'accountSettingController'
     });
+    $stateProvider.state('channelstep7', {
+        url: '/admin/channel/step7',
+        templateUrl: 'js/accountsStep/views/channelstep7.html',
+        controller: 'accountSettingController'
+    });
 
 });
 
@@ -79,7 +84,6 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     $scope.waitoneminute = false;
     var formActions = SessionService.getActionsfoAccount() ? SessionService.getActionsfoAccount() : 0;
     if (!formActions && formActions != "Add" && formActions != "Edit") {
-
         $scope.user = SessionService.getUser();
         if ($state.current.url == "/admin/basic/step1") {
             if ($scope.AccountsStepData == undefined) {
@@ -111,29 +115,31 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     } else if (formActions == "Add") {
         $scope.AccountsStepData = SessionService.getAdminUser() ? SessionService.getAdminUser() : {};
             $scope.AccountsStepData.postData = {
-                heading : 
-                { text : "",
-                 style : 
-                      {fontSize: 18}
+        heading : { 
+          text : "",
+          style : {
+            fontSize: 18
+          }
                 },
                 subHeading :{text : ""}
             }
             $scope.AccountsStepData.premier = {
-                  heading : 
-                { text : "",
-                 style : 
-                      {fontSize: 18}
+        heading : { 
+          text : "",
+          style : {
+            fontSize: 18
+          }
                 },
-                subHeading :{text : ""}
+        subHeading :{
+          text : ""
+        }
             }
-          
              $scope.AccountsStepData.postData.heading.text = "Submission for Promotion";
              $scope.AccountsStepData.postData.subHeading.text = "Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.";
              $scope.AccountsStepData.premier.heading.text = "Premier Submission for Promotion";
              $scope.AccountsStepData.premier.subHeading.text = "Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.";
         $scope.AccountsStepData.formActions = formActions;
     } else if (formActions == "Edit") {
-
         if ($scope.AccountsStepData == undefined)
             $scope.AccountsStepData = {};
 
@@ -168,6 +174,8 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                     $http.get('/api/users/byId/' + userId)
                         .then(function(response) {
                             if (response.data) {
+              $scope.AccountsStepData.repostSettings = response.data.repostSettings;
+              $scope.AccountsStepData.queue = response.data.queue;
                                 if (response.data.availableSlots) {
                                     $scope.AccountsStepData.availableSlots = response.data.availableSlots;
                                 } else {
@@ -182,6 +190,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                                     }
                                 }
                             }
+
                             $http.get('/api/customsubmissions/getCustomSubmissionAll/' + userId)
                                 .then(function(response) {
                                     var i = -1;
@@ -207,7 +216,153 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
             $scope.AccountsStepData = SessionService.getAdminUser();
         }
     }
+  /*repost settings start*/
+   var commentIndex = 0;
+   $scope.saveRepostSettings = function(type) {
+    if(type == 'paid'){
+      AccountSettingServices.updateAdminProfile({
+        repostSettings: $scope.user.repostSettings
+      })
+      .then(function(res) {
+        $scope.processing = false;
+      })
+      .catch(function() {});
+    }
+    else
+    {
+      $http.put('/api/database/updateRepostSettings', {
+        repostSettings: $scope.AccountsStepData.repostSettings,
+        id: $scope.AccountsStepData.submissionData.userID
+      }).then(function(res) {
+        SessionService.createAdminUser($scope.AccountsStepData);
+      });
+    }
+  }
+  $scope.saveComments = function(value, type, index) {
+    var comments = [];
+    if (type == 'paid' && value) {
+      comments = ($scope.user.repostSettings.paid.comments ? $scope.user.repostSettings.paid.comments : []);
+      if (index == undefined)
+        comments.push(value);
+      else
+        comments[index] = value;
 
+      $scope.user.repostSettings.paid.comments = comments;
+      $scope.saveRepostSettings('paid');
+      $scope.paidComment = "";
+    } 
+    else if (type == 'schedule' && value) {
+      comments = ($scope.AccountsStepData.repostSettings.schedule.comments ? $scope.AccountsStepData.repostSettings.schedule.comments : []);
+      if (index == undefined)
+        comments.push(value);
+      else
+        comments[index] = value;
+
+      $scope.AccountsStepData.repostSettings.schedule.comments = comments;
+      $scope.saveRepostSettings('schedule');
+      $scope.scheduleComment = "";
+    } else if (type == 'trade' && value) {
+      comments = ($scope.AccountsStepData.repostSettings.trade.comments ? $scope.AccountsStepData.repostSettings.trade.comments : []);
+      if (index == undefined)
+        comments.push(value);
+      else
+        comments[index] = value;
+      $scope.AccountsStepData.repostSettings.trade.comments = comments;
+      $scope.saveRepostSettings('trade');
+      $scope.tradeComment = "";
+    } else {
+      $.Zebra_Dialog("Please enter comment");
+      return;
+    }
+  }
+  $scope.editComments = function(comment, type, index) {
+    $scope.scheduleCommentIndex = index;
+    if (type == 'paid') {
+      $('#paidCommentModal').modal('show');
+      $scope.paidComment = comment;
+    } 
+    if (type == 'schedule') {
+      $('#scheduleCommentModal').modal('show');
+      $scope.scheduleComment = comment;
+    } else if (type == 'trade') {
+      $('#tradeCommentModal').modal('show');
+      $scope.tradeComment = comment;
+    }
+  }
+    
+  $scope.choseTrack = function(track) {
+    $scope.newQueue = track;
+    $scope.newQueueID = track.id;
+  }
+  $scope.trackListChange = function(item) {
+    $scope.newQueueSong = $scope.trackListObj.permalink_url;
+    $scope.choseTrack(item)
+  };
+  $scope.getTrackListFromSoundcloud = function() {
+    if ($scope.AccountsStepData.submissionData) {
+      var id = $scope.AccountsStepData.submissionData.id ? $scope.AccountsStepData.submissionData.id : $scope.AccountsStepData.submissionData.user.id;
+      $scope.processing = true;
+      SC.get('/users/' + id + '/tracks', {
+        filter: 'public'
+      })
+      .then(function(tracks) {
+        $scope.trackList = tracks;
+        $scope.processing = false;
+        $scope.$apply();
+      })
+      .catch(function(response) {
+        $scope.processing = false;
+        $scope.$apply();
+      });
+    }
+  }
+  $scope.removeQueueSong = function(index) {
+    $scope.AccountsStepData.queue.splice(index, 1);
+    $http.put('/api/database/updateRepostSettings', {
+      queue: $scope.AccountsStepData.queue,
+      id: $scope.AccountsStepData.submissionData.userID
+    }).then(function(res) {
+      SessionService.createAdminUser($scope.AccountsStepData);
+    });
+    $scope.loadQueueSongs();
+  }
+
+  $scope.addSong = function() {
+    if($scope.AccountsStepData.queue == undefined)
+    {
+      $scope.AccountsStepData.queue=[]   
+    }
+                     
+    if ($scope.AccountsStepData.queue.indexOf($scope.newQueueID) != -1) return;
+      $scope.AccountsStepData.queue.push($scope.newQueueID);
+      $http.put('/api/database/profile', {
+        queue: $scope.AccountsStepData.queue,
+        _id: $scope.AccountsStepData.submissionData.userID
+      }).then(function(res) {
+        SessionService.createAdminUser($scope.AccountsStepData);
+      });
+      $scope.newQueueSong = undefined;
+      $scope.trackListObj = "";
+      $scope.newQueue = undefined;
+      $scope.loadQueueSongs();
+    }
+
+    $scope.loadQueueSongs = function(queue) {      
+      if($scope.AccountsStepData.queue == undefined)
+      {
+        $scope.AccountsStepData.queue=[]   
+      }
+      $scope.autoFillTracks = [];
+      $scope.AccountsStepData.queue.forEach(function(songID) {
+        SC.get('/tracks/' + songID)
+        .then(function(track) {
+          $scope.autoFillTracks.push(track);
+          $scope.$digest();
+        }, console.log);
+      })
+    }
+     
+    /*Repost settings end*/
     $scope.finishAdmin = function() {
         $state.go("accounts");
     }
@@ -439,7 +594,6 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                     $state.go("basicstep4");
                     break;
                 case 5:
-
                     AccountSettingServices.updateAdminProfile({
                             notificationSettings: $scope.AccountsStepData.notificationSettings,
                             email: $scope.AccountsStepData.email
@@ -462,7 +616,6 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                     break;
             }
         }
-
 
         if (type == "channel") {
             switch (step) {
@@ -529,7 +682,6 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                         })
                         .then(function(res) {
                             if ($scope.AccountsStepData.availableSlots == undefined) $scope.AccountsStepData.availableSlots = defaultAvailableSlots;
-
                             SessionService.createAdminUser($scope.AccountsStepData);
                             $state.go("channelstep5");
                         })
@@ -544,6 +696,9 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                             $scope.processing = false;
                         })
                         .catch(function() {});
+              $state.go("channelstep6");
+              break;
+            case 7:
                     SessionService.removeAccountusers($scope.AccountsStepData);
                     $state.go("accounts");
                     break;

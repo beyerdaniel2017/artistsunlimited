@@ -299,6 +299,7 @@ app.directive('scheduler', function($http) {
 
       $scope.isSchedule = false;
       $scope.scheduleSong = function(date) {
+        $scope.isEdit = false;
         $scope.isSchedule = true;
         $scope.tabSelected = false;
         $scope.newEvent = true;
@@ -325,6 +326,7 @@ app.directive('scheduler', function($http) {
         /*if (!editable) {*/
         $scope.isEdit = true;
         //}
+        $scope.deleteEventData = item;
         var newObj = angular.copy(item);
         $scope.makeEventURL = newObj.event.trackURL;
         $scope.selectedSlot = newObj.event.day;
@@ -652,6 +654,7 @@ app.directive('scheduler', function($http) {
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
         } else {
           $scope.editChannelArr = [];
+          $scope.isEdit = true;
           var channels = data.otherChannels;
           if (channels.length > 0) {
             for (var i = 0; i < channels.length; i++) {
@@ -761,6 +764,7 @@ app.directive('scheduler', function($http) {
             .then(function(res) {
               $scope.showOverlay = false;
               $scope.processing = false;
+              $state.reload();
             })
             .then(null, function(err) {
               $scope.processing = false;
@@ -1208,7 +1212,7 @@ app.directive('scheduler', function($http) {
       $scope.followersCount();
       $scope.checkCommentEnable();
       $scope.checkLikeEnable();
-      $scope.updateReach();
+      $scope.updateReach();      
       $scope.verifyBrowser();
       $scope.getLinkedAccounts();
     }

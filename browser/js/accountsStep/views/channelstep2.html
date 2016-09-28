@@ -45,7 +45,7 @@
                 </div>
               </div>
               <ul class="admin-ui-tabs" role="tablist">
-                <li class="active">
+                <li>
                   <a href="javascript:void(0)"><span style="color:red;font-size:14px;">1</span>&nbsp;&nbsp;Set Submission URL</a>
                 </li>
                 <li class="active">
@@ -60,6 +60,9 @@
                 <li>
                   <a href="javascript:void(0)"><span style="color:red;font-size:14px;">5</span>&nbsp;&nbsp;Repost Preferences</a>
                 </li>
+                <li>
+                      <a href="javascript:void(0)"><span style="color:red;font-size:14px;">6</span>&nbsp;&nbsp;Manage Reposts</a>
+                    </li>
               </ul>
               <div class="tab-content margin-40">
                 <!-- MY SCHEDULE : Start-->
@@ -86,7 +89,7 @@
                           </div>
                           <div class="container-60">
                             <div class="margin-20">                                     
-                              <textarea ng-model="AccountsStepData.description" class="form-control" name="Description" placeholder="Channel description"></textarea>                        
+                              <textarea ng-model="AccountsStepData.description" class="form-control" name="Description" placeholder="Channel description"></textarea>
                             </div>
                             <div ng-if="AccountsStepData.formActions=='Add' || AccountsStepData.formActions=='Edit'">
                               <p>Add this channel to one of your existing groups or creating a group to better organize your network!</p>
