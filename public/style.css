@@ -1860,7 +1860,7 @@ h3 {
   background-color: #F8F8F8; }
 
 .logout {
-  color: #686868;
+  color: #fff;
   letter-spacing: 2px;
   font-weight: normal;
   font-size: 11px;
@@ -3583,7 +3583,7 @@ label:hover:before {
 
 .organize-btn {
   background-color: #FF7676;
-  padding: 8px 28px;
+  padding: 8px 13px;
   color: #FFF;
   z-index: 999;
   left: 0;
@@ -4000,7 +4000,7 @@ td {
 .admin-ui-tabs > li {
   float: left;
   text-align: center;
-  width: 20%; }
+  width: 16%; }
 
 .admin-ui-tabs > li > a {
   color: #cccccc; }

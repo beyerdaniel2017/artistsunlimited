@@ -45,7 +45,7 @@
                         <img class="avtar-200 img-responsive" src="{{otherUser.soundcloud.avatarURL ? otherUser.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}"> 
                         <div class="img-btn-box">
                           <button class="btn btn-pink btn-sm btn-block" ng-click="openTrade(otherUser)">OPEN TRADE</button>
-                                      <button class="btn btn-border btn-sm btn-block" ng-click="viewSoundcloud(otherUser)">SOUNDCLOUD</button></a>
+                          <button class="btn btn-border btn-sm btn-block" ng-click="viewSoundcloud(otherUser)">SOUNDCLOUD</button></a>
                         </div>
                       </div>
                       <p class="ng-binding new-trade-ingtexst"><a href="{{otherUser.soundcloud.permalinkURL}}" target="_blank">{{otherUser.soundcloud.username}}</a></p>
@@ -234,9 +234,9 @@
               <div class="col-md-12">
                 <div class="next-previous text-center">
                   <!--  <button class="btn active">SKIP TO NEXT AUTOFILL</button> -->
-                                    <button class="btn btn-border b-radius-10" ng-click="deleteEvent()">DELETE</button>
-                                    <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
-                                    <button class="btn btn-pink b-radius-10 save-share" data-toggle="modal" data-target="#saveAndShareModal" ng-click="saveEvent();">SAVE & SHARE</button>
+                  <button class="btn btn-border b-radius-10" ng-click="deleteEvent()">DELETE</button>
+                  <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
+                  <button class="btn btn-pink b-radius-10 save-share" data-toggle="modal" data-target="#saveAndShareModal" ng-click="saveEvent();">SAVE & SHARE</button>
                 </div>
               </div>
             </div><!--row end-->                    
@@ -323,17 +323,17 @@
           </div> -->
           <div class="row">
             <div class="col-md-12">
-              <div class="col-md-4">
-              <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-click="deleteEvent();">DELETE</button>
+<!--               <div class="col-md-4">
+                <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-click="deleteEvent();">DELETE</button>
+              </div> -->
+              <div class="col-md-6">
+                <button class="btn btn-border b-radius-10 organize-btn" style="width:100%;" ng-click="closeModal();">CANCEL</button>
               </div>
-              <div class="col-md-4">
-              <button class="btn btn-border b-radius-10 organize-btn" style="width:100%;" ng-click="closeModal();">CANCEL</button>
-              </div>
-              <div class="col-md-4">
-              <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE</button>
+              <div class="col-md-6">
+                <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE</button>
               </div>
             </div>
-          </div><!--row end-->                  
+          </div><!--row end-->             
         </div>
       </div>
     </div>
@@ -363,24 +363,24 @@
 </div>
 
 <script>
-setTimeout(function(){
-  $(document).ready(function(){
-    FB.init({
-      appId: '1771378846475599',
-      xfbml: true,
-      version: 'v2.7'
-    });
+  setTimeout(function(){
+    $(document).ready(function(){
+      FB.init({
+        appId: '1771378846475599',
+        xfbml: true,
+        version: 'v2.7'
+      });
 
-    (function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {
-        return;
-      }
-      js = d.createElement(s);
-      js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-  })
-},200);
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+          return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    })
+  },200);
 </script>
