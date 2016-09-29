@@ -101,14 +101,13 @@ app.directive('scheduler', function($http) {
       $scope.linkedAccounts = [];
       /*Get Linked Accounts*/
       $scope.getLinkedAccounts = function() {
-        setTimeout(function() {
-          var linked = $rootScope.userlinkedAccounts;
-          for (var i = 0; i < linked.length; i++) {
-            if (linked[i]._id != $scope.user._id) {
-              $scope.linkedAccounts.push(linked[i]);
-            }
+        var linked = $rootScope.userlinkedAccounts;
+        for (var i = 0; i < linked.length; i++) {
+          if (linked[i]._id != $scope.user._id) {
+            $scope.linkedAccounts.push(linked[i]);
           }
-        }, 2000);
+        }
+        console.log($scope.linkedAccounts);
       }
 
       $scope.checkCommentEnable = function() {
@@ -641,6 +640,8 @@ app.directive('scheduler', function($http) {
         $scope.unrepostHours = "";
         $scope.updateReach();
         if ($scope.makeEvent.type == "empty") {
+          $scope.channelArr = []
+          $scope.isEdit = false;
           makeDay = new Date(day);
           makeDay.setHours(hour);
           $scope.makeEvent = {
@@ -655,17 +656,18 @@ app.directive('scheduler', function($http) {
         } else {
           $scope.editChannelArr = [];
           $scope.isEdit = true;
-          var channels = data.otherChannels;
-          if (channels.length > 0) {
-            for (var i = 0; i < channels.length; i++) {
-              for (var j = 0; j < $scope.linkedAccounts.length; j++) {
-                if (channels[i] == $scope.linkedAccounts[j].soundcloud.id) {
-                  $scope.editChannelArr.push($scope.linkedAccounts[j].name);
-                }
-              }
-            }
-            $scope.channelArr = $scope.editChannelArr;
-          }
+          console.log('here');
+          // var channels = data.otherChannels;
+          // if (channels.length > 0) {
+          //   for (var i = 0; i < channels.length; i++) {
+          //     for (var j = 0; j < $scope.linkedAccounts.length; j++) {
+          //       if (channels[i] == $scope.linkedAccounts[j].soundcloud.id) {
+          //         $scope.editChannelArr.push($scope.linkedAccounts[j].name);
+          //       }
+          //     }
+          //   }
+          //   $scope.channelArr = $scope.editChannelArr;
+          // }
           $scope.timeGap = data.timeGap;
           $scope.followersCount();
           var repostDate = new Date($scope.makeEvent.day);
@@ -805,6 +807,7 @@ app.directive('scheduler', function($http) {
           event.unrepostDate = new Date(event.unrepostDate);
           return ($scope.makeEvent.trackID == event.trackID && (Math.abs(event.unrepostDate.getTime() - $scope.makeEvent.day.getTime()) < 24 * 3600000 || Math.abs(event.day.getTime() - $scope.makeEvent.unrepostDate.getTime()) < 24 * 3600000));
         })
+        console.log(blockEvents);
         return blockEvents.length > 0;
       }
 
@@ -1040,7 +1043,7 @@ app.directive('scheduler', function($http) {
         } else if (event.type == 'track' || event.type == 'queue') {
           return {
             'background-color': '#FF7676',
-            'margin' : '2px',
+            'margin': '2px',
             'height': '18px'
           }
         } else if (event.type == 'traded') {
@@ -1208,13 +1211,15 @@ app.directive('scheduler', function($http) {
         $scope.fbMessageLink = "https://localhost:1443/repostevents?id=" + id;
         $window.open("mailto:example@demo.com?body=" + $scope.fbMessageLink, "_self");
       };
-      $scope.getUserNetwork();
+      $scope.getUserNetwork()
+        .then(function() {
+          $scope.getLinkedAccounts();
+        });
       $scope.followersCount();
       $scope.checkCommentEnable();
       $scope.checkLikeEnable();
-      $scope.updateReach();      
+      $scope.updateReach();
       $scope.verifyBrowser();
-      $scope.getLinkedAccounts();
     }
   }
 })

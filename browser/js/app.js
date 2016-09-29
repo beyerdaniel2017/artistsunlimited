@@ -91,20 +91,20 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
             $rootScope.state = true;
         }
 
-        if($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin') != -1){
+        if ($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin') != -1) {
             var user = SessionService.getUser();
-            if(user){
+            if (user) {
                 var isAdminAuthenticate = ($window.localStorage.getItem('isAdminAuthenticate') ? $window.localStorage.getItem('isAdminAuthenticate') : false);
-                var redirectPath = (isAdminAuthenticate ?  "/admin" : "/login");
-                if($window.location.pathname.indexOf('admin') != -1 && !isAdminAuthenticate){
+                var redirectPath = (isAdminAuthenticate ? "/admin" : "/login");
+                if ($window.location.pathname.indexOf('admin') != -1 && !isAdminAuthenticate) {
                     $http.post('/api/logout').then(function() {
                         SessionService.deleteUser();
                         $state.go('admin');
                         //window.location.href = '/admin';
                     });
-                } else if($window.location.pathname.indexOf('artistTools') != -1 && isAdminAuthenticate){
+                } else if ($window.location.pathname.indexOf('artistTools') != -1 && isAdminAuthenticate) {
                     $http.get('/api/users/isUserAuthenticate').then(function(res) {
-                        if(!res.data){
+                        if (!res.data) {
                             SessionService.deleteUser();
                             $window.location.href = redirectPath;
                         }
@@ -359,12 +359,12 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
     $scope.getUserNetwork = function() {
         if ($window.location.pathname.includes('admin/')) {
             var adminUser = JSON.parse($window.localStorage.getItem('adminUser'));
-            $http.get("/api/database/adminUserNetwork/" + adminUser._id)
+            return $http.get("/api/database/adminUserNetwork/" + adminUser._id)
                 .then(function(res) {
                     $rootScope.userlinkedAccounts = res.data;
                 })
         } else {
-            $http.get("/api/database/userNetworks")
+            return $http.get("/api/database/userNetworks")
                 .then(function(networks) {
                     $rootScope.userlinkedAccounts = networks.data;
                 })

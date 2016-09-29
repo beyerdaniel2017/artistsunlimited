@@ -133,54 +133,71 @@ router.post('/repostEventsScheduler', function(req, res, next) {
   var event = new RepostEvent(req.body);
   event.save()
     .then(function(ev) {
-      var nextRepTime = new Date(ev.day);
+      var scheduleDate = new Date(ev.day);
       req.body.otherChannels.forEach(function(channelID) {
-        req.body.unrepostDate = new Date(req.body.unrepostDate);
-        nextRepTime = new Date(nextRepTime.getTime() + req.body.timeGap * 60 * 60 * 1000);
-        var scheduleEvent = function(chanID, repostDate) {
-          if (req.body.unrepostDate.getTime() > 100000000) var unrepostDate = new Date(repostDate.getTime() + 24 * 60 * 60 * 1000);
-          else var unrepostDate = new Date(0);
-          RepostEvent.findOne({
-              $or: [{
-                userID: chanID,
-                trackID: req.body.trackID,
-                day: {
-                  $lt: unrepostDate.getTime() + 24 * 3600 * 1000
-                },
-                unrepostDate: {
-                  $gt: repostDate.getTime() - 24 * 3600 * 1000
-                }
-              }, {
-                userID: chanID,
-                day: {
-                  $lt: repostDate.getTime() - repostDate.getMinutes() * 60 * 1000 + 24 * 3600 * 1000,
-                  $gt: repostDate.getTime() - repostDate.getMinutes() * 60 * 1000
-                }
-              }]
-            }).exec()
-            .then(function(ev) {
-              console.log(ev);
-              if (!ev) {
-                var ev = new RepostEvent(req.body);
-                ev.day = repostDate;
-                ev.unrepostDate = unrepostDate;
-                ev.userID = chanID;
-                ev.save()
-                  .then(function(eve) {
-                    console.log(eve)
-                  }, console.log);
-              } else {
-                scheduleEvent(chanID, new Date(repostDate.getTime() + 60 * 60 * 1000));
-              }
-            })
-            .then(null, console.log);
-        }
-        scheduleEvent(channelID, nextRepTime)
+        scheduleDate = new Date(scheduleDate.getTime() + 3 * 3600000);
+        User.findOne({
+            'soundcloud.id': channelID
+          })
+          .then(function(channel) {
+            if (channel.blockRelease) channel.blockRelease = new Date(channel.blockRelease);
+            else channel.blockRelease = new Date(0);
+            var desiredDay = channel.blockRelease > scheduleDate ? new Date(channel.blockRelease.getTime() + 24 * 3600000) : scheduleDate;
+            return scheduleEvent(channel, desiredDay, JSON.parse(JSON.stringify(req.body)));
+          }).then(null, next)
       })
       res.send(ev)
-    })
-    .then(null, next);
+    }).then(null, next);
 });
+
+function scheduleEvent(channel, scheduledDate, eventDetails) {
+  return new Promise(function(fulfill, reject) {
+    RepostEvent.find({
+        userID: channel.soundcloud.id,
+        day: {
+          $gt: new Date()
+        }
+      })
+      .exec()
+      .then(function(allEvents) {
+        allEvents.forEach(function(event) {
+          event.day = new Date(event.day);
+        });
+        var continueSearch = true;
+        var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+        var ind = 1;
+        while (continueSearch) {
+          var day = daysOfWeek[(scheduledDate.getDay() + ind) % 7];
+          channel.availableSlots[day].forEach(function(hour) {
+            var desiredDay = new Date(scheduledDate);
+            desiredDay.setTime(desiredDay.getTime() + ind * 24 * 60 * 60 * 1000);
+            desiredDay.setHours(hour);
+            if (continueSearch) {
+              var event = allEvents.find(function(eve) {
+                return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
+              });
+              if (!event) {
+                continueSearch = false;
+                eventDetails.day = desiredDay;
+                eventDetails.comment = undefined;
+                eventDetails.userID = channel.soundcloud.id
+                if ((new Date(eventDetails.unrepostDate)).getTime() > 1000000000) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + 24 * 3600000)
+                else eventDetails.unrepostDate = new Date(0);
+                var newEve = new RepostEvent(eventDetails);
+                newEve.save()
+                  .then(function(eve) {
+                    eve.day = new Date(eve.day);
+                    fulfill('done');
+                  })
+                  .then(null, reject);
+              }
+            }
+          });
+          ind++;
+        }
+      }).then(null, reject);
+  })
+}
 
 router.delete('/repostEvents/:id', function(req, res, next) {
   RepostEvent.findByIdAndRemove(req.params.id).exec()
