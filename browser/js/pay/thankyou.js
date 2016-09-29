@@ -11,8 +11,7 @@ app.controller('ThankyouController', function($http, $scope, $location) {
   $scope.notified = false;
   $http.put('/api/submissions/completedPayment', $location.search())
     .then(function(res) {
-      console.log(res.data);
-      $scope.processing = false;
+      var trackId = res.data.events[0].event._id; 
       $scope.submission = res.data.submission;
       if (res.data.status == 'notify') {
         $scope.notified = true;
@@ -23,6 +22,8 @@ app.controller('ThankyouController', function($http, $scope, $location) {
           ev.date = new Date(ev.date);
         })
       }
+      $scope.processing = false;
+     window.location.href =location.origin + "/repostevents?id="+trackId;
     })
     .then(null, function(err) {
       $.Zebra_Dialog('There was an error processing your request');

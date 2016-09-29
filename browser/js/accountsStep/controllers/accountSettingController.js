@@ -75,7 +75,7 @@ app.config(function($stateProvider) {
 app.controller('accountSettingController', function($rootScope, $state, $scope, $http, $window, AccountSettingServices, SessionService) {
     $scope.isLoggedIn = SessionService.getUser() ? true : false;
     if (!$scope.isLoggedIn) {
-        $state.go('admin');
+      $state.go('admin');
     }
     $scope.user = SessionService.getUser();
     $scope.showTestEmailModal = false;
@@ -84,137 +84,137 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     $scope.waitoneminute = false;
     var formActions = SessionService.getActionsfoAccount() ? SessionService.getActionsfoAccount() : 0;
     if (!formActions && formActions != "Add" && formActions != "Edit") {
-        $scope.user = SessionService.getUser();
-        if ($state.current.url == "/admin/basic/step1") {
-            if ($scope.AccountsStepData == undefined) {
-                $scope.AccountsStepData = SessionService.getUser();
-                $scope.AccountsStepData.formActions = formActions;
-            } else {
-                $scope.AccountsStepData = SessionService.getAdminUser();
-                $scope.AccountsStepData.formActions = formActions;
-            }
-            $scope.AccountsStepData.newpassword = "";
-            if (SessionService.getAdminUser() == undefined && $scope.AccountsStepData.submissionData == undefined) {
-                SessionService.createAdminUser($scope.AccountsStepData);
-            }
-            if ($scope.AccountsStepData.profilePicture == undefined || $scope.AccountsStepData.profilePicture == "") {
-                $scope.AccountsStepData.profilePicture = "https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg";
-            }
+      $scope.user = SessionService.getUser();
+      if ($state.current.url == "/admin/basic/step1") {
+        if ($scope.AccountsStepData == undefined) {
+          $scope.AccountsStepData = SessionService.getUser();
+          $scope.AccountsStepData.formActions = formActions;
         } else {
-            $scope.AccountsStepData = SessionService.getAdminUser();
-            $scope.AccountsStepData.formActions = '';
-            $scope.AccountsStepData.newpassword = "";
+          $scope.AccountsStepData = SessionService.getAdminUser();
+          $scope.AccountsStepData.formActions = formActions;
         }
+        $scope.AccountsStepData.newpassword = "";
+        if (SessionService.getAdminUser() == undefined && $scope.AccountsStepData.submissionData == undefined) {
+          SessionService.createAdminUser($scope.AccountsStepData);
+        }
+        if ($scope.AccountsStepData.profilePicture == undefined || $scope.AccountsStepData.profilePicture == "") {
+          $scope.AccountsStepData.profilePicture = "https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg";
+        }
+      } else {
+        $scope.AccountsStepData = SessionService.getAdminUser();
+        $scope.AccountsStepData.formActions = '';
+        $scope.AccountsStepData.newpassword = "";
+      }
     } else if (formActions == "Admin") {
-        $scope.AccountsStepData = {};
-        if ($state.current.url == "/admin/basic/step1") {
-            $scope.AccountsStepData = SessionService.getUser();
-            $scope.AccountsStepData.formActions = formActions;
-        } else
-            $scope.AccountsStepData = SessionService.getAdminUser();
+      $scope.AccountsStepData = {};
+      if ($state.current.url == "/admin/basic/step1") {
+        $scope.AccountsStepData = SessionService.getUser();
+        $scope.AccountsStepData.formActions = formActions;
+      } else
+        $scope.AccountsStepData = SessionService.getAdminUser();
     } else if (formActions == "Add") {
-        $scope.AccountsStepData = SessionService.getAdminUser() ? SessionService.getAdminUser() : {};
-            $scope.AccountsStepData.postData = {
+      $scope.AccountsStepData = SessionService.getAdminUser() ? SessionService.getAdminUser() : {};
+      $scope.AccountsStepData.postData = {
         heading : { 
           text : "",
           style : {
             fontSize: 18
           }
-                },
-                subHeading :{text : ""}
-            }
-            $scope.AccountsStepData.premier = {
+        },
+        subHeading :{text : ""}
+      }
+      $scope.AccountsStepData.premier = {
         heading : { 
           text : "",
           style : {
             fontSize: 18
           }
-                },
+        },
         subHeading :{
           text : ""
         }
-            }
-             $scope.AccountsStepData.postData.heading.text = "Submission for Promotion";
-             $scope.AccountsStepData.postData.subHeading.text = "Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.";
-             $scope.AccountsStepData.premier.heading.text = "Premier Submission for Promotion";
-             $scope.AccountsStepData.premier.subHeading.text = "Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.";
-        $scope.AccountsStepData.formActions = formActions;
+      }          
+      $scope.AccountsStepData.postData.heading.text = "Submission for Promotion";
+      $scope.AccountsStepData.postData.subHeading.text = "Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.";
+      $scope.AccountsStepData.premier.heading.text = "Premier Submission for Promotion";
+      $scope.AccountsStepData.premier.subHeading.text = "Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.";
+      $scope.AccountsStepData.formActions = formActions;
     } else if (formActions == "Edit") {
-        if ($scope.AccountsStepData == undefined)
-            $scope.AccountsStepData = {};
+      if ($scope.AccountsStepData == undefined)
+        $scope.AccountsStepData = {};
 
-        $scope.AccountsStepData.formActions = formActions;
-        var user_id = SessionService.getActionsfoAccountIndex();
-        if (user_id != undefined && $scope.AccountsStepData.submissionData == undefined && $state.current.url == "/admin/channel/step1") {
-            var userId = "";
-            $http.get('/api/submissions/getAccountsByIndex/' + user_id)
-                .then(function(res) {
-                    $scope.AccountsStepData.submissionData = res.data;
-                    $scope.AccountsStepData.submissionData.submissionUrl = res.data.submissionUrl.replace(/ /g, '');
-                    $scope.AccountsStepData.submissionData.username = res.data.user.username;
-                    $scope.AccountsStepData.submissionData.avatarURL = res.data.user.avatarURL;
-                    $scope.AccountsStepData.submissionData.followers = res.data.user.followers;
-                    $scope.AccountsStepData.submissionData.userID = res.data.userID;
-                    userId = res.data.userID;
-                    $scope.AccountsStepData.price = res.data.price;
-                    $scope.AccountsStepData.description = res.data.description;
-                    if (res.data.availableSlots) {
-                        $scope.AccountsStepData.availableSlots = res.data.availableSlots;
-                    } else {
-                        $scope.AccountsStepData.availableSlots = {
-                            'sunday': [1, 4, 8, 11, 14, 17, 20],
-                            'monday': [1, 4, 8, 11, 14, 17, 20],
-                            'tuesday': [1, 4, 8, 11, 14, 17, 20],
-                            'wednesday': [1, 4, 8, 11, 14, 17, 20],
-                            'thursday': [1, 4, 8, 11, 14, 17, 20],
-                            'friday': [1, 4, 8, 11, 14, 17, 20],
-                            'saturday': [1, 4, 8, 11, 14, 17, 20]
-                        }
-                    }
-                    $http.get('/api/users/byId/' + userId)
-                        .then(function(response) {
-                            if (response.data) {
+      $scope.AccountsStepData.formActions = formActions;
+      var user_id = SessionService.getActionsfoAccountIndex();
+      if (user_id != undefined && $scope.AccountsStepData.submissionData == undefined && $state.current.url == "/admin/channel/step1") {
+        var userId = "";
+        $http.get('/api/submissions/getAccountsByIndex/' + user_id)
+        .then(function(res) {
+          $scope.AccountsStepData.submissionData = res.data;
+          $scope.AccountsStepData.submissionData.submissionUrl = res.data.submissionUrl.replace(/ /g, '');
+          $scope.AccountsStepData.submissionData.username = res.data.user.username;
+          $scope.AccountsStepData.submissionData.avatarURL = res.data.user.avatarURL;
+          $scope.AccountsStepData.submissionData.followers = res.data.user.followers;
+          $scope.AccountsStepData.submissionData.userID = res.data.userID;
+          userId = res.data.userID;
+          $scope.AccountsStepData.price = res.data.price;
+          $scope.AccountsStepData.description = res.data.description;
+          if (res.data.availableSlots) {
+            $scope.AccountsStepData.availableSlots = res.data.availableSlots;
+          } else {
+            $scope.AccountsStepData.availableSlots = {
+              'sunday': [1, 4, 8, 11, 14, 17, 20],
+              'monday': [1, 4, 8, 11, 14, 17, 20],
+              'tuesday': [1, 4, 8, 11, 14, 17, 20],
+              'wednesday': [1, 4, 8, 11, 14, 17, 20],
+              'thursday': [1, 4, 8, 11, 14, 17, 20],
+              'friday': [1, 4, 8, 11, 14, 17, 20],
+              'saturday': [1, 4, 8, 11, 14, 17, 20]
+            }
+          }
+          $http.get('/api/users/byId/' + userId)
+          .then(function(response) {
+            if (response.data) {
               $scope.AccountsStepData.repostSettings = response.data.repostSettings;
               $scope.AccountsStepData.queue = response.data.queue;
-                                if (response.data.availableSlots) {
-                                    $scope.AccountsStepData.availableSlots = response.data.availableSlots;
-                                } else {
-                                    $scope.AccountsStepData.availableSlots = {
-                                        'sunday': [1, 4, 8, 11, 14, 17, 20],
-                                        'monday': [1, 4, 8, 11, 14, 17, 20],
-                                        'tuesday': [1, 4, 8, 11, 14, 17, 20],
-                                        'wednesday': [1, 4, 8, 11, 14, 17, 20],
-                                        'thursday': [1, 4, 8, 11, 14, 17, 20],
-                                        'friday': [1, 4, 8, 11, 14, 17, 20],
-                                        'saturday': [1, 4, 8, 11, 14, 17, 20]
-                                    }
-                                }
-                            }
+              if (response.data.availableSlots) {                                    
+                $scope.AccountsStepData.availableSlots = response.data.availableSlots;
+              } else {
+                $scope.AccountsStepData.availableSlots = {
+                  'sunday': [1, 4, 8, 11, 14, 17, 20],
+                  'monday': [1, 4, 8, 11, 14, 17, 20],
+                  'tuesday': [1, 4, 8, 11, 14, 17, 20],
+                  'wednesday': [1, 4, 8, 11, 14, 17, 20],
+                  'thursday': [1, 4, 8, 11, 14, 17, 20],
+                  'friday': [1, 4, 8, 11, 14, 17, 20],
+                  'saturday': [1, 4, 8, 11, 14, 17, 20]
+                }
+              }
+            }
 
-                            $http.get('/api/customsubmissions/getCustomSubmissionAll/' + userId)
-                                .then(function(response) {
-                                    var i = -1;
-                                    var nextFun = function() {
-                                        i++;
-                                        if (i < response.data.length) {
-                                            var loopdata = response.data[i];
-                                            if (loopdata.type == "submit") {
-                                                $scope.AccountsStepData.postData = loopdata;
-                                            } else if (loopdata.type == "premiere") {
-                                                $scope.AccountsStepData.premier = loopdata;
-                                            }
-                                            nextFun();
-                                        } else {
-                                            SessionService.createAdminUser($scope.AccountsStepData);
-                                        }
-                                    }
-                                    nextFun();
-                                });
-                        })
-                });
-        } else {
-            $scope.AccountsStepData = SessionService.getAdminUser();
-        }
+            $http.get('/api/customsubmissions/getCustomSubmissionAll/' + userId)
+            .then(function(response) {
+              var i = -1;
+              var nextFun = function() {
+                i++;
+                if (i < response.data.length) {
+                  var loopdata = response.data[i];
+                  if (loopdata.type == "submit") {
+                    $scope.AccountsStepData.postData = loopdata;
+                  } else if (loopdata.type == "premiere") {
+                    $scope.AccountsStepData.premier = loopdata;
+                  }
+                  nextFun();
+                } else {
+                  SessionService.createAdminUser($scope.AccountsStepData);
+                }
+              }
+              nextFun();
+            });
+          })
+        });
+      } else {
+        $scope.AccountsStepData = SessionService.getAdminUser();
+      }
     }
   /*repost settings start*/
    var commentIndex = 0;
@@ -364,344 +364,356 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
      
     /*Repost settings end*/
     $scope.finishAdmin = function() {
-        $state.go("accounts");
+      $state.go("accounts");
     }
 
     $scope.generateRandomNumber = function() {
-        var min = 0.01,
-            max = 0.09,
-            numbers = (Math.random() * (max - min) + min).toFixed(2);
-        return numbers
+      var min = 0.01,
+      max = 0.09,
+      numbers = (Math.random() * (max - min) + min).toFixed(2);
+      return numbers
     }
     var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
     var defaultAvailableSlots = {
-        'sunday': [1, 4, 8, 11, 14, 17, 20],
-        'monday': [1, 4, 8, 11, 14, 17, 20],
-        'tuesday': [1, 4, 8, 11, 14, 17, 20],
-        'wednesday': [1, 4, 8, 11, 14, 17, 20],
-        'thursday': [1, 4, 8, 11, 14, 17, 20],
-        'friday': [1, 4, 8, 11, 14, 17, 20],
-        'saturday': [1, 4, 8, 11, 14, 17, 20]
+      'sunday': [1, 4, 8, 11, 14, 17, 20],
+      'monday': [1, 4, 8, 11, 14, 17, 20],
+      'tuesday': [1, 4, 8, 11, 14, 17, 20],
+      'wednesday': [1, 4, 8, 11, 14, 17, 20],
+      'thursday': [1, 4, 8, 11, 14, 17, 20],
+      'friday': [1, 4, 8, 11, 14, 17, 20],
+      'saturday': [1, 4, 8, 11, 14, 17, 20]
     };
 
     $scope.stepButton = [{
-        "name": "SONG URL",
-        "appendText": " {SONGURL} "
-    }, {
-        "name": "EMAIL",
-        "appendText": " {EMAIL} "
-    }, {
-        "name": "SONG NAME",
-        "appendText": " {SONGNAME} "
-    }, {
-        "name": "ARTIST",
-        "appendText": " {ARTIST} "
-    }, {
-        "name": "NAME",
-        "appendText": " {NAME} "
-    }, {
-        "name": "NAME OF TRACK",
-        "appendText": " {NAMEOFTRACK} "
-    }, {
-        "name": "TRACK COVER ART",
-        "appendText": " {TRACKCOVERART} "
-    }, {
-        "name": "SUBMITTED CHANNEL",
-        "appendText": " {SUBMITTEDCHANNEL} "
-    }, {
-        "name": "ACCEPTED CHANNEL LIST",
-        "appendText": " {ACCEPTEDCHANNELLIST} "
-    }, {
-        "name": "TODAYS DATE",
-        "appendText": " {TODAYSDATE} "
+     "name": "TRACK TITLE WITH LINK", 
+     "appendText": " {TRACK_TITLE_WITH_LINK} " 
+    },
+    { 
+      "name": "SUBMITTERS EMAIL", 
+      "appendText": " {SUBMITTERS_EMAIL} " 
+    },
+    { 
+      "name": "TRACK TITLE", 
+      "appendText": " {TRACK_TITLE} " 
+    },
+    { 
+      "name": "TRACK ARTIST WITH LINK", 
+      "appendText": " {TRACK_ARTIST_WITH_LINK} " 
+    },
+    { 
+      "name": "TRACK ARTIST", 
+      "appendText": " {TRACK_ARTIST} " 
+    },
+    { 
+      "name": "TRACK ARTWORK", 
+      "appendText": " {TRACK_ARTWORK} " 
+    },
+    { 
+      "name": "SUBMITTED TO ACCOUNT NAME", 
+      "appendText": " {SUBMITTED_TO_ACCOUNT_NAME} " 
+    },
+    { 
+      "name": "SUBMITTED ACCOUNT NAME WITH LINK", 
+      "appendText": " {SUBMITTED_ACCOUNT_NAME_WITH_LINK} " 
+    },
+    { 
+      "name": "ACCEPTED CHANNEL LIST", 
+      "appendText": " {ACCEPTED_CHANNEL_LIST} " 
+    },
+    { 
+      "name": "ACCEPTED CHANNEL LIST WITH LINK", 
+      "appendText": " {ACCEPTED_CHANNEL_LIST_WITH_LINK} " },
+    { 
+      "name": "TODAYS DATE", 
+      "appendText": " {TODAYSDATE} " 
     }];
 
     $scope.customBox = {
-        "acceptance": {
-            "title": "",
-            "subject": "",
-            "body": ""
-        },
-        "decline": {
-            "title": "",
-            "subject": "",
-            "body": ""
-        }
+      "acceptance": {
+        "title": "",
+        "subject": "",
+        "body": ""
+      },
+      "decline": {
+        "title": "",
+        "subject": "",
+        "body": ""
+      }
     };
 
     $scope.addEventClass = function(index, type) {
-        $('textarea').removeClass("selectedBox");
-        $("." + type).addClass("selectedBox");
+      $('textarea').removeClass("selectedBox");
+      $("." + type).addClass("selectedBox");
     }
 
     $scope.addCustomEmails = function() {
-        if ($scope.AccountsStepData.customizeemails.length > 0)
-            $scope.AccountsStepData.customizeemails.push($scope.customBox);
+      if ($scope.AccountsStepData.customizeemails.length > 0)
+        $scope.AccountsStepData.customizeemails.push($scope.customBox);
     }
 
     $scope.sendTestMail = function(type) {
-        $scope.testEmailType = type;
-        $scope.showTestEmailModal = true;
-        $('#emailModal').modal('show');
+      $scope.testEmailType = type;
+      $scope.showTestEmailModal = true;
+      $('#emailModal').modal('show');
     }
 
     $scope.sendMail = function(email) {
-        if (email != "") {
-            var emailObj = "";
-            if ($scope.testEmailType == "repostaccept") {
-                emailObj = $scope.AccountsStepData.repostCustomizeEmails[0].acceptance;
-            }
-            if ($scope.testEmailType == "repostdecline") {
-                emailObj = $scope.AccountsStepData.repostCustomizeEmails[0].decline;
-            }
-            if ($scope.testEmailType == "premieraccept") {
-                emailObj = $scope.AccountsStepData.premierCustomizeEmails[0].acceptance;
-            }
-            if ($scope.testEmailType == "premierdecline") {
-                emailObj = $scope.AccountsStepData.premierCustomizeEmails[0].decline;
-            }
-            var mailObj = {};
-            mailObj.email = email;
-            mailObj.emailObj = emailObj;
-            $http.post('/api/accountsteps/sendTestEmail', mailObj)
-                .then(function(res) {
-                    if (res.data.success) {
-                        $scope.showTestEmailModal = false;
-                        $('#emailModal').modal('hide');
-                        $.Zebra_Dialog('Mail sent successfully.');
-                    }
-                })
-                .catch(function() {
-                    if (res.data.success) {
-                        $scope.showTestEmailModal = false;
-                        $('#emailModal').modal('hide');
-                        $.Zebra_Dialog('Error in sending mail.');
-                    }
-                })
+      if (email != "") {
+        var emailObj = "";
+        if ($scope.testEmailType == "repostaccept") {
+          emailObj = $scope.AccountsStepData.repostCustomizeEmails[0].acceptance;
         }
+        if ($scope.testEmailType == "repostdecline") {
+          emailObj = $scope.AccountsStepData.repostCustomizeEmails[0].decline;
+        }
+        if ($scope.testEmailType == "premieraccept") {
+          emailObj = $scope.AccountsStepData.premierCustomizeEmails[0].acceptance;
+        }
+        if ($scope.testEmailType == "premierdecline") {
+          emailObj = $scope.AccountsStepData.premierCustomizeEmails[0].decline;
+        }
+        var mailObj = {};
+        mailObj.email = email;
+        mailObj.emailObj = emailObj;
+        $http.post('/api/accountsteps/sendTestEmail', mailObj)
+        .then(function(res) {
+          if (res.data.success) {
+            $scope.showTestEmailModal = false;
+            $('#emailModal').modal('hide');
+            $.Zebra_Dialog('Mail sent successfully.');
+          }
+        })
+        .catch(function() {
+          if (res.data.success) {
+            $scope.showTestEmailModal = false;
+            $('#emailModal').modal('hide');
+            $.Zebra_Dialog('Error in sending mail.');
+          }
+        })
+      }
     }
 
     $scope.closeModal = function() {
-        $scope.showTestEmailModal = false;
-        $('#emailModal').modal('hide');
+      $scope.showTestEmailModal = false;
+      $('#emailModal').modal('hide');
     }
 
     $scope.nextStep = function(step, currentData, type) {
-        if (type == "basic") {
-            switch (step) {
-                case 1:
-                    $state.go("basicstep1");
-                    break;
-                case 2:
-                    var next = true;
-                    var body = {};
-                    if ($scope.AccountsStepData.email == "") {
-                        next = false;
-                        $.Zebra_Dialog('Error: Enter email address');
-                    } else if ($scope.AccountsStepData.email != "") {
-                        body.email = $scope.AccountsStepData.email;
-                    }
-                    if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword != $scope.AccountsStepData.newpassword) {
-                        next = false;
-                        $.Zebra_Dialog('Error: Password doesn’t match');
-                    } else if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword == $scope.AccountsStepData.newpassword) {
-                        body.password = $scope.AccountsStepData.newpassword;
-                    }
-                    if ($scope.AccountsStepData.profilePicture == "https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg") {
-                        next = false;
-                        $.Zebra_Dialog('Error: Please upload your profile image');
-                    }
-                    if ($scope.AccountsStepData.profilePicture != "") {
-                        body.pictureUrl = $scope.AccountsStepData.profilePicture;
-                    }
-
-                    if (next) {
-                        AccountSettingServices.updateAdminProfile(body)
-                            .then(function(res) {
-                                if (res.data.message) {
-                                    $.Zebra_Dialog('Error: Email already register.');
-                                } else {
-                                    $scope.AccountsStepData.newpassword = "";
-                                    $scope.AccountsStepData.newconfirmpassword = "";
-                                    $scope.processing = false;
-                                    $scope.AccountsStepData.repostCustomizeEmails = (($scope.AccountsStepData.repostCustomizeEmails.length > 0) ? $scope.AccountsStepData.repostCustomizeEmails : [{
-                                        "acceptance": {
-                                            "title": "ACCEPTANCE  EMAIL",
-                                            "subject": "Congratulations on your Submission -",
-                                            "body": "Hey {NAME}!\n\nFirst of all thank you so much for submitting your track The Story of Future R&B to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.\nTo maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.\nAll the best,\n\nEdward Sanchez\nPeninsula MGMT Team\nwww.facebook.com/edwardlatropical\n",
-                                            "buttonText": "Accept",
-                                            "buttonBgColor": "#592e2e"
-                                        },
-                                        "decline": {
-                                            "title": "DECLINE  EMAIL",
-                                            "subject": "Music Submission",
-                                            "body": "Hey {NAME},\n\nFirst of all thank you so much for submitting your track <a href='{SONGURL}'>{SONGNAME}</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.\n\n We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.\n\nGoodluck and stay true to the art,\n\nEdward Sanchez\n Peninsula MGMT Team \nwww.facebook.com/edwardlatropical",
-                                            "buttonText": "Decline",
-                                            "buttonBgColor": "#592e2e"
-                                        }
-                                    }]);
-                                    setTimeout(function() {
-                                        SessionService.createAdminUser($scope.AccountsStepData);
-                                        $state.go("basicstep2");
-                                    }, 500);
-                                }
-                            })
-                            .catch(function() {
-                                $.Zebra_Dialog('Error: Error inprocessing the request.');
-                            });
-                    } else {
-                        return;
-                    }
-                    break;
-                case 3:
-                    AccountSettingServices.updateAdminProfile({
-                            repostCustomizeEmails: $scope.AccountsStepData.repostCustomizeEmails
-                        })
-                        .then(function(res) {
-                            $scope.processing = false;
-                        })
-                        .catch(function() {});
-                    $scope.AccountsStepData.premierCustomizeEmails = (($scope.AccountsStepData.premierCustomizeEmails.length > 0) ? $scope.AccountsStepData.premierCustomizeEmails : [{
-                        "acceptance": {
-                            "title": "ACCEPTANCE  EMAIL",
-                            "subject": "Congratulations on your Submission -",
-                            "body": "Hey {NAME}!\n\nFirst of all thank you so much for submitting your track The Story of Future R&B to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.\nTo maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.\nAll the best,\n\nEdward Sanchez\nPeninsula MGMT Team\nwww.facebook.com/edwardlatropical\n",
-                            "buttonText": "Accept",
-                            "buttonBgColor": "#592e2e"
-                        },
-                        "decline": {
-                            "title": "DECLINE  EMAIL",
-                            "subject": "Music Submission",
-                            "body": "Hey {NAME},\n\nFirst of all thank you so much for submitting your track <a href='{SONGURL}'>{SONGNAME}</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.\n\n We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.\n\nGoodluck and stay true to the art,\n\nEdward Sanchez\n Peninsula MGMT Team \nwww.facebook.com/edwardlatropical",
-                            "buttonText": "Decline",
-                            "buttonBgColor": "#592e2e"
-                        }
-                    }]);
-                    SessionService.createAdminUser($scope.AccountsStepData);
-                    $state.go("basicstep3");
-                    break;
-                case 4:
-                    AccountSettingServices.updateAdminProfile({
-                            premierCustomizeEmails: $scope.AccountsStepData.premierCustomizeEmails
-                        })
-                        .then(function(res) {
-                            $scope.processing = false;
-                        })
-                        .catch(function() {});
-
-                    SessionService.createAdminUser($scope.AccountsStepData);
-                    $state.go("basicstep4");
-                    break;
-                case 5:
-                    AccountSettingServices.updateAdminProfile({
-                            notificationSettings: $scope.AccountsStepData.notificationSettings,
-                            email: $scope.AccountsStepData.email
-                        })
-                        .then(function(res) {
-                            $scope.processing = false;
-                        })
-                        .catch(function() {});
-                    $scope.errorverification = false;
-                    $scope.verified = false;
-                    $scope.waitoneminute = false;
-                    SessionService.createAdminUser($scope.AccountsStepData);
-                    if ($scope.AccountsStepData.paypal == undefined) {
-                        $scope.AccountsStepData.paypal = {};
-                        $scope.AccountsStepData.paypal.varify = false;
-                        $scope.AccountsStepData.paypal.processchannel = false;
-                    }
-                    SessionService.createAdminUser($scope.AccountsStepData);
-                    $state.go("basicstep5");
-                    break;
+      if (type == "basic") {
+        switch (step) {
+          case 1:
+            $state.go("basicstep1");
+            break;
+          case 2:
+            var next = true;
+            var body = {};
+            if ($scope.AccountsStepData.email == "") {
+              next = false;
+              $.Zebra_Dialog('Error: Enter email address');
+            } else if ($scope.AccountsStepData.email != "") {
+              body.email = $scope.AccountsStepData.email;
             }
-        }
+            if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword != $scope.AccountsStepData.newpassword) {
+              next = false;
+              $.Zebra_Dialog('Error: Password doesn’t match');
+            } else if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword == $scope.AccountsStepData.newpassword) {
+              body.password = $scope.AccountsStepData.newpassword;
+            }
+            if ($scope.AccountsStepData.profilePicture == "https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg") {
+              next = false;
+              $.Zebra_Dialog('Error: Please upload your profile image');
+            }
+            if ($scope.AccountsStepData.profilePicture != "") {
+              body.pictureUrl = $scope.AccountsStepData.profilePicture;
+            }
 
-        if (type == "channel") {
-            switch (step) {
-                case 1:
-                    $http.get("/connect/logout?return_to=https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https://" + window.location.host + "/callback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_5fead");
-                    $state.go("channelstep1");
-                    break;
-                case 2:
+            if (next) {
+              AccountSettingServices.updateAdminProfile(body)
+              .then(function(res) {
+                if (res.data.message) {
+                  $.Zebra_Dialog('Error: Email already register.');
+                } else {
+                  $scope.AccountsStepData.newpassword = "";
+                  $scope.AccountsStepData.newconfirmpassword = "";
+                  $scope.processing = false;
+                  $scope.AccountsStepData.repostCustomizeEmails = (($scope.AccountsStepData.repostCustomizeEmails.length > 0) ? $scope.AccountsStepData.repostCustomizeEmails : [{
+                    "acceptance": {
+                      "title": "ACCEPTANCE  EMAIL",
+                      "subject": "Congratulations on your Submission -",
+                      "body": "Hey {NAME}!\n\nFirst of all thank you so much for submitting your track The Story of Future R&B to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.\nTo maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.\nAll the best,\n\nEdward Sanchez\nPeninsula MGMT Team\nwww.facebook.com/edwardlatropical\n",
+                      "buttonText": "Accept",
+                      "buttonBgColor": "#592e2e"
+                    },
+                    "decline": {
+                      "title": "DECLINE  EMAIL",
+                      "subject": "Music Submission",
+                      "body": "Hey {NAME},\n\nFirst of all thank you so much for submitting your track <a href='{SONGURL}'>{SONGNAME}</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.\n\n We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.\n\nGoodluck and stay true to the art,\n\nEdward Sanchez\n Peninsula MGMT Team \nwww.facebook.com/edwardlatropical",
+                      "buttonText": "Decline",
+                      "buttonBgColor": "#592e2e"
+                    }
+                  }]);
+                  setTimeout(function() {
                     SessionService.createAdminUser($scope.AccountsStepData);
-                    $state.go("channelstep2");
-                    break;
-                case 3:
-                    var next = true;
-                    if ($scope.AccountsStepData.price == "" || $scope.AccountsStepData.price == undefined) {
-                        next = false;
-                        $.Zebra_Dialog('Error: Enter Price');
-                    }
+                    $state.go("basicstep2");
+                  }, 500);
+                }
+              })
+              .catch(function() {
+                $.Zebra_Dialog('Error: Error inprocessing the request.');
+              });
+            } else {
+              return;
+            }
+            break;
+          case 3:
+            AccountSettingServices.updateAdminProfile({
+              repostCustomizeEmails: $scope.AccountsStepData.repostCustomizeEmails
+            })
+            .then(function(res) {
+              $scope.processing = false;
+            })
+            .catch(function() {});
+            $scope.AccountsStepData.premierCustomizeEmails = (($scope.AccountsStepData.premierCustomizeEmails.length > 0) ? $scope.AccountsStepData.premierCustomizeEmails : [{
+              "acceptance": {
+                "title": "ACCEPTANCE  EMAIL",
+                "subject": "Congratulations on your Submission -",
+                "body": "Hey {NAME}!\n\nFirst of all thank you so much for submitting your track The Story of Future R&B to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.\nTo maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.\nAll the best,\n\nEdward Sanchez\nPeninsula MGMT Team\nwww.facebook.com/edwardlatropical\n",
+                "buttonText": "Accept",
+                "buttonBgColor": "#592e2e"
+              },
+              "decline": {
+                "title": "DECLINE  EMAIL",
+                "subject": "Music Submission",
+                "body": "Hey {NAME},\n\nFirst of all thank you so much for submitting your track <a href='{SONGURL}'>{SONGNAME}</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.\n\n We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.\n\nGoodluck and stay true to the art,\n\nEdward Sanchez\n Peninsula MGMT Team \nwww.facebook.com/edwardlatropical",
+                "buttonText": "Decline",
+                "buttonBgColor": "#592e2e"
+              }
+            }]);
+            SessionService.createAdminUser($scope.AccountsStepData);
+            $state.go("basicstep3");
+            break;
+        case 4:
+          AccountSettingServices.updateAdminProfile({
+            premierCustomizeEmails: $scope.AccountsStepData.premierCustomizeEmails
+          })
+          .then(function(res) {
+            $scope.processing = false;
+          })
+          .catch(function() {});
 
-                    if (next) {
-                        AccountSettingServices.updatePaidRepost({
-                                userID: $scope.AccountsStepData.submissionData.userID,
-                                price: $scope.AccountsStepData.price,
-                                description: $scope.AccountsStepData.description,
-                                groups: $scope.AccountsStepData.submissionData.groups ? $scope.AccountsStepData.submissionData.groups : [],
-                                submissionUrl: $scope.AccountsStepData.submissionData.submissionUrl,
-                                premierUrl: $scope.AccountsStepData.submissionData.premierUrl
-                            })
-                            .then(function(res) {
-                                SessionService.createAdminUser($scope.AccountsStepData);
-                                $state.go("channelstep3");
-                            })
-                            .catch(function() {});
-                    } else {
-                        return;
-                    }
-                    break;
-                case 4:
-                    AccountSettingServices.addCustomize({
-                            userID: $scope.AccountsStepData.submissionData.userID,
-                            type: $scope.AccountsStepData.postData.type,
-                            background: $scope.AccountsStepData.postData.background,
-                            logo: $scope.AccountsStepData.postData.logo,
-                            heading: $scope.AccountsStepData.postData.heading,
-                            subHeading: $scope.AccountsStepData.postData.subHeading,
-                            inputFields: $scope.AccountsStepData.postData.inputFields,
-                            button: $scope.AccountsStepData.postData.button
-                        })
-                        .then(function(res) {
-                            SessionService.createAdminUser($scope.AccountsStepData);
-                            $state.go("channelstep4");
-                        })
-                        .catch(function() {});
-                    break;
-                case 5:
-                    AccountSettingServices.addCustomize({
-                            userID: $scope.AccountsStepData.submissionData.userID,
-                            type: $scope.AccountsStepData.premier.type,
-                            background: $scope.AccountsStepData.premier.background,
-                            logo: $scope.AccountsStepData.premier.logo,
-                            heading: $scope.AccountsStepData.premier.heading,
-                            subHeading: $scope.AccountsStepData.premier.subHeading,
-                            inputFields: $scope.AccountsStepData.premier.inputFields,
-                            button: $scope.AccountsStepData.premier.button
-                        })
-                        .then(function(res) {
-                            if ($scope.AccountsStepData.availableSlots == undefined) $scope.AccountsStepData.availableSlots = defaultAvailableSlots;
-                            SessionService.createAdminUser($scope.AccountsStepData);
-                            $state.go("channelstep5");
-                        })
-                        .catch(function() {});
-                    break;
-                case 6:
-                    AccountSettingServices.updateUserAvailableSlot({
-                            _id: $scope.AccountsStepData.submissionData.userID,
-                            availableSlots: $scope.AccountsStepData.availableSlots
-                        })
-                        .then(function(res) {
-                            $scope.processing = false;
-                        })
-                        .catch(function() {});
+          SessionService.createAdminUser($scope.AccountsStepData);
+          $state.go("basicstep4");
+          break;
+        case 5:
+          AccountSettingServices.updateAdminProfile({
+            notificationSettings: $scope.AccountsStepData.notificationSettings,
+            email: $scope.AccountsStepData.email
+          })
+          .then(function(res) {
+            $scope.processing = false;
+          })
+          .catch(function() {});
+            $scope.errorverification = false;
+            $scope.verified = false;
+            $scope.waitoneminute = false;
+            SessionService.createAdminUser($scope.AccountsStepData);
+            if ($scope.AccountsStepData.paypal == undefined) {
+              $scope.AccountsStepData.paypal = {};
+              $scope.AccountsStepData.paypal.varify = false;
+              $scope.AccountsStepData.paypal.processchannel = false;
+            }
+            SessionService.createAdminUser($scope.AccountsStepData);
+            $state.go("basicstep5");
+            break;
+          }
+        }
+        
+        if (type == "channel") {
+          switch (step) {
+            case 1:
+              $http.get("/connect/logout?return_to=https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https://" + window.location.host + "/callback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_5fead");
+              $state.go("channelstep1");
+              break;
+            case 2:
+              SessionService.createAdminUser($scope.AccountsStepData);
+              $state.go("channelstep2");
+              break;
+            case 3:
+              var next = true;
+              if ($scope.AccountsStepData.price == "" || $scope.AccountsStepData.price == undefined) {
+                next = false;
+                $.Zebra_Dialog('Error: Enter Price');
+              }
+
+              if (next) {
+                AccountSettingServices.updatePaidRepost({
+                  userID: $scope.AccountsStepData.submissionData.userID,
+                  price: $scope.AccountsStepData.price,
+                  description: $scope.AccountsStepData.description,
+                  groups: $scope.AccountsStepData.submissionData.groups ? $scope.AccountsStepData.submissionData.groups : [],
+                  submissionUrl: $scope.AccountsStepData.submissionData.submissionUrl,
+                  premierUrl: $scope.AccountsStepData.submissionData.premierUrl
+                })
+                .then(function(res) {
+                    SessionService.createAdminUser($scope.AccountsStepData);
+                    $state.go("channelstep3");
+                })
+                .catch(function() {});
+              } else {
+                return;
+              }
+              break;
+            case 4:
+              AccountSettingServices.addCustomize({
+                userID: $scope.AccountsStepData.submissionData.userID,
+                type: $scope.AccountsStepData.postData.type,
+                background: $scope.AccountsStepData.postData.background,
+                logo: $scope.AccountsStepData.postData.logo,
+                heading: $scope.AccountsStepData.postData.heading,
+                subHeading: $scope.AccountsStepData.postData.subHeading,
+                inputFields: $scope.AccountsStepData.postData.inputFields,
+                button: $scope.AccountsStepData.postData.button
+              })
+              .then(function(res) {
+                SessionService.createAdminUser($scope.AccountsStepData);
+                $state.go("channelstep4");
+              })
+              .catch(function() {});
+              break;
+            case 5:
+              AccountSettingServices.addCustomize({
+                userID: $scope.AccountsStepData.submissionData.userID,
+                type: $scope.AccountsStepData.premier.type,
+                background: $scope.AccountsStepData.premier.background,
+                logo: $scope.AccountsStepData.premier.logo,
+                heading: $scope.AccountsStepData.premier.heading,
+                subHeading: $scope.AccountsStepData.premier.subHeading,
+                inputFields: $scope.AccountsStepData.premier.inputFields,
+                button: $scope.AccountsStepData.premier.button
+              })
+              .then(function(res) {
+                if ($scope.AccountsStepData.availableSlots == undefined) $scope.AccountsStepData.availableSlots = defaultAvailableSlots;
+                  SessionService.createAdminUser($scope.AccountsStepData);
+                  $state.go("channelstep5");
+              })
+              .catch(function() {});
+              break;
+            case 6:
+               AccountSettingServices.updateUserAvailableSlot({
+                _id: $scope.AccountsStepData.submissionData.userID,
+                availableSlots: $scope.AccountsStepData.availableSlots
+              })
+              .then(function(res) {
+                $scope.processing = false;
+              })
+              .catch(function() {});
               $state.go("channelstep6");
               break;
             case 7:
-                    SessionService.removeAccountusers($scope.AccountsStepData);
-                    $state.go("accounts");
-                    break;
+              SessionService.removeAccountusers($scope.AccountsStepData);
+              $state.go("accounts");
+              break; 
             }
         }
     }

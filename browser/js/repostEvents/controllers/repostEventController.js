@@ -65,6 +65,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
   repostEvent.forEach(function(ev) {
     ev.day = new Date(ev.day);
   });
+
   $scope.events = repostEvent;
   $scope.fillDateArrays = function(repostEvent) {
     var calendar = [];
@@ -93,46 +94,48 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
     return calendar;
   };
 
-  $scope.calendar = $scope.fillDateArrays(repostEvent);
- 
-  $scope.clickedSlot = function(day, hour ,data) {
-   
+  $scope.backEvent = function() {
+    $scope.makeEvent = null;
+    $scope.trackType = "";
+    $scope.trackArtistID = 0;
+    $scope.showOverlay = false;
+  }
+
+  $scope.calendar = $scope.fillDateArrays(repostEvent); 
+  $scope.clickedSlot = function(day, hour ,data) { 
     if(data.trackInfo)
     {
-       $scope.makeEvent={};
-     $scope.popup = true;
-     var makeDay = new Date(day);
-     makeDay.setHours(hour);
-     $scope.makeEvent.day = new Date(makeDay);
-     $scope.makeEvent.url = data.trackInfo.trackURL;
-     $scope.makeEvent.comment = data.trackInfo.comment;
-     $scope.makeEvent.unrepostHours =data.trackInfo.unrepostHours; 
-     $scope.makeEvent.timeGap =data.trackInfo.timeGap;
-     var d = new Date(day).getDay();
-     var channels = data.trackInfo.otherChannels;
-     $scope.displayChannels=[];
-     for(var i=0; i< repostEvent.length; i++)
-     {
-           if(channels.indexOf(repostEvent[i].userInfo.id) > -1){
-              $scope.displayChannels.push(repostEvent[i].userInfo.username);
-           }
-     }
+      $scope.makeEvent={};
+      $scope.popup = true;
+      var makeDay = new Date(day);
+      makeDay.setHours(hour);
+      $scope.makeEvent.day = new Date(makeDay);
+      $scope.makeEvent.url = data.trackInfo.trackURL;
+      $scope.makeEvent.comment = data.trackInfo.comment;
+      $scope.makeEvent.unrepostHours =data.trackInfo.unrepostHours; 
+      $scope.makeEvent.timeGap =data.trackInfo.timeGap;
+      var d = new Date(day).getDay();
+      var channels = data.trackInfo.otherChannels;
+      $scope.displayChannels=[];
+      for(var i=0; i< repostEvent.length; i++)
+      {
+        if(channels.indexOf(repostEvent[i].userInfo.id) > -1){
+          $scope.displayChannels.push(repostEvent[i].userInfo.username);
+        }
+      }
 
-    $scope.showOverlay = true;
-    var calDay = {};
-    var calendarDay = $scope.calendar.find(function(calD) {
-      return calD.day.toLocaleDateString() == day.toLocaleDateString();
-    });
-    SC.oEmbed($scope.makeEvent.url, {
+      $scope.showOverlay = true;
+      var calDay = {};
+      var calendarDay = $scope.calendar.find(function(calD) {
+        return calD.day.toLocaleDateString() == day.toLocaleDateString();
+      });
+      SC.oEmbed($scope.makeEvent.url, {
         element: document.getElementById('scPopupPlayer'),
-         auto_play: false,
-         maxheight: 120
+        auto_play: false,
+        maxheight: 120
       })
       document.getElementById('scPopupPlayer').style.visibility = "visible";
-    }
-   
-  }
- 
+    }   
+  } 
   $scope.fillDateArrays(repostEvent);
-
 });

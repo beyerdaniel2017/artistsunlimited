@@ -30,6 +30,18 @@ router.post('/sendVarificationAccount', function(req, res, next) {
 router.post('/sendTestEmail', function(req, res, next) {
 	var emailObj = req.body.emailObj;
 	var toEmail = req.body.email;
-  	sendEmail(toEmail, toEmail, "Edward Sanchez", "feedback@peninsulamgmt.com", emailObj.subject, emailObj.body);
-  	res.send({success: true});
+  var body = emailObj.body;
+  body = body.replace('{TRACK_TITLE_WITH_LINK}', "<a href='https://soundcloud.com/olivernelson/oliver-nelson-ft-kaleem-taylor-aint-a-thing-3'>Oliver Nelson ft. Kaleem Taylor - Ain't A Thing</a>");
+  body = body.replace('{TRACK_TITLE}', "");
+  body = body.replace('{TRACK_ARTIST_WITH_LINK}', "<a href='https://soundcloud.com/olivernelson'>Oliver Nelson</a>");
+  body = body.replace('{TRACK_ARTIST}', "Oliver Nelson");
+  body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', "La Tropical");
+  body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', "<a href='https://soundcloud.com/latropical'>La Tropical</a>");
+  body = body.replace('{TRACK_ARTWORK}', "<img style='width:200px; height: 200px' src='https://i1.sndcdn.com/artworks-000182530607-7nuozs-t300x300.jpg'></img>");
+  body = body.replace('{ACCEPTEDCHANNELLIST}', "La Tropical, Etiquette Noir and Le Sol");      
+  body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', "<a href='https://soundcloud.com/latropical'>La Tropical</a>, <a href='https://soundcloud.com/etiquettenoir'>Etiquette Noir</a> and <a href='https://soundcloud.com/lesolmusique'>Le Sol</a>");
+  body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
+  body = body.replace(/\n/g, "<br />");
+  sendEmail(toEmail, toEmail, "Edward Sanchez", "feedback@peninsulamgmt.com", emailObj.subject, emailObj.body);
+  res.send({success: true});
 });

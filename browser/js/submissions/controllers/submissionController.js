@@ -28,18 +28,50 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.user.isAdmin = $scope.user.role=='admin' ? true : false;
   $scope.uniqueGroup = [];
   $scope.paidRepostAccounts = [];
-  $scope.dynamicButton = [
-    { "name": "SONG URL", "appendText": " {SONGURL} " },
-    { "name": "EMAIL", "appendText": " {EMAIL} " },
-    { "name": "SONG NAME", "appendText": " {SONGNAME} " },
-    { "name": "ARTIST", "appendText": " {ARTIST} " },
-    { "name": "NAME", "appendText": " {NAME} " },
-    { "name": "NAME OF TRACK", "appendText": " {NAMEOFTRACK} " },
-    { "name": "TRACK COVER ART", "appendText": " {TRACKCOVERART} " },
-    { "name": "SUBMITTED CHANNEL", "appendText": " {SUBMITTEDCHANNEL} " },
-    { "name": "ACCEPTED CHANNEL LIST", "appendText": " {ACCEPTEDCHANNELLIST} " },
-    { "name": "TODAYS DATE", "appendText": " {TODAYSDATE} " }
-  ];
+  $scope.dynamicButton = [{
+   "name": "TRACK TITLE WITH LINK", 
+   "appendText": " {TRACK_TITLE_WITH_LINK} " 
+  },
+  { 
+    "name": "SUBMITTERS EMAIL", 
+    "appendText": " {SUBMITTERS_EMAIL} " 
+  },
+  { 
+    "name": "TRACK TITLE", 
+    "appendText": " {TRACK_TITLE} " 
+  },
+  { 
+    "name": "TRACK ARTIST WITH LINK", 
+    "appendText": " {TRACK_ARTIST_WITH_LINK} " 
+  },
+  { 
+    "name": "TRACK ARTIST", 
+    "appendText": " {TRACK_ARTIST} " 
+  },
+  { 
+    "name": "TRACK ARTWORK", 
+    "appendText": " {TRACK_ARTWORK} " 
+  },
+  { 
+    "name": "SUBMITTED TO ACCOUNT NAME", 
+    "appendText": " {SUBMITTED_TO_ACCOUNT_NAME} " 
+  },
+  { 
+    "name": "SUBMITTED ACCOUNT NAME WITH LINK", 
+    "appendText": " {SUBMITTED_ACCOUNT_NAME_WITH_LINK} " 
+  },
+  { 
+    "name": "ACCEPTED CHANNEL LIST", 
+    "appendText": " {ACCEPTED_CHANNEL_LIST} " 
+  },
+  { 
+    "name": "ACCEPTED CHANNEL LIST WITH LINK", 
+    "appendText": " {ACCEPTED_CHANNEL_LIST_WITH_LINK} " },
+  { 
+    "name": "TODAYS DATE", 
+    "appendText": " {TODAYSDATE} " 
+  }];
+  
   $scope.genreArray = [
     'Alternative Rock',
     'Ambient',
@@ -317,15 +349,14 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     }    
     var body = (item.emailBody != undefined ? item.emailBody : "");
     if(body != ""){
-      body = body.replace('{NAME}', sub.name);
-      body = body.replace('{SONGURL}', sub.trackURL);
-      body = body.replace('{EMAIL}', sub.email);
-      body = body.replace('{SONGNAME}', sub.title);
-      body = body.replace('{ARTIST}', sub.name);
-      body = body.replace('{NAMEOFTRACK}', sub.title);
-      body = body.replace('{TRACKCOVERART}', '<img src="'+sub.track_art_url+'"/>');
-      //body = body.replace('{SUBMITTEDCHANNEL}', sub.userID.name);
-      //body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);
+      body = body.replace('{TRACK_TITLE_WITH_LINK}', sub.title + '('+ sub.trackURL+')');
+      body = body.replace('{TRACK_TITLE}', sub.title);
+      body = body.replace('{TRACK_ARTIST_WITH_LINK}', sub.name + '('+ sub.trackURL+')');
+      body = body.replace('{TRACK_ARTIST}', sub.name);
+      body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
+      body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', sub.userID.soundcloud.username + '('+ sub.userID.soundcloud.permalinkURL+')');
+      //body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);      
+      //body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', sub.userID.name);      
       body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
     }
     var link = "mailto:"+ toEmail
