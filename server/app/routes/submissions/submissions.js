@@ -298,6 +298,7 @@ router.put('/save', function(req, res, next) {
               }
               var body = "";
               var body = acceptEmail.body;
+              body = body.replace('{NAME}',sub.name);
               body = body.replace('{TRACK_TITLE_WITH_LINK}', '<a href="'+sub.trackURL+'">'+sub.title+'</a>');
               body = body.replace('{TRACK_TITLE}', sub.title);
               body = body.replace('{TRACK_ARTIST_WITH_LINK}', '<a href="'+sub.trackURL+'">'+sub.name+'</a>');
@@ -359,6 +360,7 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
               declineEmail = req.user.repostCustomizeEmails[0].decline;
             }
             var body = declineEmail.body;
+            body = body.replace('{NAME}',sub.name);
             body = body.replace('{TRACK_TITLE_WITH_LINK}', '<a href="'+sub.trackURL+'">'+sub.title+'</a>');
             body = body.replace('{TRACK_TITLE}', sub.title);
             body = body.replace('{TRACK_ARTIST_WITH_LINK}', '<a href="'+sub.trackURL+'">'+sub.name+'</a>');
