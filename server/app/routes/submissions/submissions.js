@@ -567,20 +567,22 @@ function schedulePaidRepost(channel, submission) {
           })
           .exec()
           .then(function(allEvents) {
-            allEvents.forEach(function(event1) {
-              event1.day = new Date(event1.day);
+        allEvents.forEach(function(event) {
+          event.day = new Date(event.day);
             });
-        if (channel.blockRelease) channel.blockRelease = new Date(channel.blockRelease);
-        else channel.blockRelease = new Date(0);
+        User.findById(channel.userID).exec()
+          .then(function(chan) {
+            if (chan.blockRelease) chan.blockRelease = new Date(chan.blockRelease);
+            else chan.blockRelease = new Date(0);
             var continueSearch = true;
             var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
             var ind = 1;
-        User.findById(channel.userID).exec()
-          .then(function(chan) {
             while (continueSearch) {
               var day = daysOfWeek[((new Date()).getDay() + ind) % 7];
               chan.availableSlots[day].forEach(function(hour) {
-                var desiredDay = channel.blockRelease > new Date() ? channel.blockRelease : new Date();
+                var scheduleDate = new Date();
+                scheduleDate.setHours(hour);
+                var desiredDay = chan.blockRelease > scheduleDate ? chan.blockRelease : scheduleDate;
                 desiredDay.setTime(desiredDay.getTime() + ind * 24 * 60 * 60 * 1000);
                 desiredDay.setHours(hour);
                 if (continueSearch) {
