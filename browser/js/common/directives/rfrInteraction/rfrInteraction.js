@@ -861,7 +861,9 @@ app.directive('rfrinteraction', function($http) {
       $scope.getEventStyle = function(event) {
         if (event && event.type == 'trade') {
           return {
-            'background-color': '#ADD8E6'
+            'background-color': '#ADD8E6',
+            'height': '19px',
+            'margin':'2px'
           }
           // } else if (event.type == 'track' || event.type == 'queue' || event.type == 'paid') {
           //   return {
