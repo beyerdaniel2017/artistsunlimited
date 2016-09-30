@@ -38,6 +38,7 @@ app.directive('scheduler', function($http) {
       $scope.selectedSlot = {};
       $scope.unrepostHours = 24;
       var commentIndex = 0;
+      $scope.isView = false;
       $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
       var defaultAvailableSlots = {
         sunday: [],
@@ -311,7 +312,10 @@ app.directive('scheduler', function($http) {
         $scope.isEdit = false;
         $scope.isSchedule = true;
         $scope.tabSelected = false;
+        $scope.unrepostEnable = false;
+        $scope.unrepostHours = "";
         $scope.newEvent = true;
+        document.getElementById('scPlayer').style.visibility = "hidden";
         $scope.makeEvent = {
           userID: $scope.user.soundcloud.id,
           type: "track"
@@ -327,10 +331,13 @@ app.directive('scheduler', function($http) {
 
       }
 
-
       $scope.isEdit = false;
       $scope.EditNewSong = function(item, editable) {
         $scope.editChannelArr = [];
+        if(item.event.type == 'traded')
+        {
+          $scope.isView = true;
+        }
         $scope.tabSelected = false;
         /*if (!editable) {*/
         $scope.isEdit = true;
@@ -625,6 +632,7 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.clickedSlot = function(day, hour, data) {
+        $scope.isView = false;
         $scope.popup = true;
         var d = new Date(day).getDay();
         if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1) return;
@@ -662,8 +670,14 @@ app.directive('scheduler', function($http) {
           $scope.newEvent = true;
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
         } else {
-          $scope.editChannelArr = [];
           $scope.isEdit = true;
+          if(data.type == 'traded' && data.trackURL)
+          {
+            $scope.isView = true;
+          }
+         
+          $scope.editChannelArr = [];
+          
           var channels = data.otherChannels;
           if (channels.length > 0) {
             for (var i = 0; i < channels.length; i++) {
@@ -681,6 +695,7 @@ app.directive('scheduler', function($http) {
           var unrepostDate = new Date($scope.makeEvent.unrepostDate);
           var diff = Math.abs(new Date(unrepostDate).getTime() - new Date(repostDate).getTime()) / 3600000;
           $scope.makeEvent.unrepostHours = diff;
+          $scope.unrepostEnable = data.unrepostHours ? true : false;
           $scope.makeEvent.day = new Date($scope.makeEvent.day);
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
           $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
@@ -948,6 +963,8 @@ app.directive('scheduler', function($http) {
         $scope.trackType = "";
         $scope.trackArtistID = 0;
         $scope.showOverlay = false;
+        $scope.unrepostEnable = false;
+        $scope.unrepostHours = "";
       }
 
       $scope.removeQueueSong = function(song) {
@@ -1054,7 +1071,7 @@ app.directive('scheduler', function($http) {
 
         }
         else{
-             $.Zebra_Dialog('No tracks available !!! click ok to add new tracks', {
+             $.Zebra_Dialog('You do not have any tracks from other artists in your auto fill slots', {
             'type':     'question',
             'buttons':  [
                           {caption: 'Ok', callback: function() { 

@@ -2139,9 +2139,10 @@ input:checked + .slider:before {
     color: rgb(138, 138, 138);
 }
 .check-list {
-    /*    max-height: 140px;
-    overflow-y: auto;
-    min-height: 140px;*/
+    /* max-height: 140px; */
+    /* overflow-y: auto; */
+    /* min-height: 140px; */
+    padding: 5px 0;
 }
 .songScheduler .title {
     font-size: 18px;
@@ -3163,6 +3164,7 @@ td {
     overflow: hidden;
     /*height: 20.7px;*/
     padding: 3px;
+    font-size: 12px;
 }
 
 .calendar-grid{

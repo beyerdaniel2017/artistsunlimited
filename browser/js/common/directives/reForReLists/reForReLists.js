@@ -413,14 +413,14 @@ app.directive('reforrelists', function($http) {
         } else if (repostEvent.trackInfo.type == 'traded' && repostEvent.trackInfo.trackID) {
           return {
             'background-color': '#B22222',
+            'height': '19px',
             'margin' : '2px',
-            'height': '18px'
           }
         } else if (repostEvent.trackInfo.type == 'traded' && !repostEvent.trackInfo.trackID) {
           return {
             'background-color': '#2b9fda',
+            'height': '19px',
             'margin' : '2px',
-            'height': '18px'
           }
         }
       }

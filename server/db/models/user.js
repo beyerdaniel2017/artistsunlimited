@@ -72,7 +72,10 @@ var schema = new mongoose.Schema({
         groups: [],
         submissionUrl: String,
         premierUrl: String,
-        createdOn: Date
+        createdOn: Date,
+        repostSettings: { type: Object,
+                          default: {}
+                        }
     }],
     submissionsCustomEmailButtons: [],
     premierCustomEmailButtons: [],

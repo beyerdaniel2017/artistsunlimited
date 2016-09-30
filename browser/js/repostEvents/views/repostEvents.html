@@ -22,17 +22,18 @@
           <!--page-contant Start-->
           <div class="scheduler-tabs">
             <div class="container-90 col-md-12" style="margin-bottom:20px;">
-              <div class="col-md-5 pull-left text-left" style="margin-left:40px;">
+              <div class="col-md-4 pull-left text-left" style="margin-left:40px;">
                 <div class="btn-group" role="group" aria-label="...">
                   <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.png" /></a>
                   <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
                 </div>
               </div>
-              <div class="col-md-5 text-left">
+              <div class="col-md-6 text-left">
                 <div>
-                  <img src="{{trackImage}}" class="img-responsive" style="display: inline;">
+                  <img src="{{trackImage}}" class="img-responsive" style="float: left;margin-right: 10px;">
                   <br>
-                  <h6><b>Track : {{listevents[0].trackInfo.title}}</b></h6> <br> <h6><b>Artist : {{listevents[0].trackInfo.artistName}}</b></h6>
+                  <h6>{{listevents[0].trackInfo.artistName}}</h6>
+                  <h6>{{listevents[0].trackInfo.title}}</h6>                  
                 </div>
               </div>
             </div>
@@ -61,10 +62,10 @@
                   <thead>
                     <tr>
                       <th width="10%" class="text-center">Status</th>
-                      <th width="35%" class="text-center" class="text-center" >Track Name</th>
+                      <th width="45%" class="text-center" class="text-center" >Track Name</th>
                       <th width="20%" class="text-center" >Account</th>
                       <th width="20%" class="text-center">Date</th>
-                      <th width="15%" class="text-center">&nbsp;</th>
+                      <th width="10%" class="text-center">&nbsp;</th>
                     </tr>
                   </thead>
                   <tbody>
