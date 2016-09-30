@@ -349,15 +349,17 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     }    
     var body = (item.emailBody != undefined ? item.emailBody : "");
     if(body != ""){
+      body = body.replace('{SUBMITTERS_EMAIL}', toEmail);
       body = body.replace('{TRACK_TITLE_WITH_LINK}', sub.title + '('+ sub.trackURL+')');
       body = body.replace('{TRACK_TITLE}', sub.title);
       body = body.replace('{TRACK_ARTIST_WITH_LINK}', sub.name + '('+ sub.trackURL+')');
       body = body.replace('{TRACK_ARTIST}', sub.name);
       body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
       body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', sub.userID.soundcloud.username + '('+ sub.userID.soundcloud.permalinkURL+')');
-      //body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);      
-      //body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', sub.userID.name);      
+      body = body.replace('{ACCEPTED_CHANNEL_LIST}', "");      
+      body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', "");      
       body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
+      //body = body.replace(/\n/g, "<br />");
     }
     var link = "mailto:"+ toEmail
       + "?subject=" + escape(subject)

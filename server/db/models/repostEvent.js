@@ -51,6 +51,7 @@ var schema = new mongoose.Schema({
   saleID: String,
   price: Number,
   payout: {},
+  artistName: String,
   otherChannels: [],
   timeGap: {},
   unrepostHours: {}

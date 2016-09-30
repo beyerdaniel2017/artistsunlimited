@@ -38,6 +38,7 @@ app.directive('scheduler', function($http) {
       $scope.selectedSlot = {};
       $scope.unrepostHours = 24;
       var commentIndex = 0;
+      $scope.isView = false;
       $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
       var defaultAvailableSlots = {
         sunday: [],
@@ -75,6 +76,8 @@ app.directive('scheduler', function($http) {
         $scope.makeEventURL = track.permalink_url;
         $scope.makeEvent.trackID = track.id;
         $scope.makeEvent.title = track.title;
+        $scope.makeEvent.trackArtUrl =track.artwork_url;
+        $scope.makeEvent.artistName =track.user.username;
         $scope.makeEvent.trackURL = track.permalink_url
         SC.oEmbed($scope.makeEvent.trackURL, {
           element: document.getElementById('scPlayer'),
@@ -83,13 +86,20 @@ app.directive('scheduler', function($http) {
         })
         document.getElementById('scPlayer').style.visibility = "visible";
       }
+      $scope.choseAutoFillTrack = function(track) {
+        $scope.searchString = track.title;
+        $scope.newQueueID = track.id;
+        $scope.addSong();
+      }
 
       $scope.choseTrack1 = function(track) {
         $scope.searchString = track.title;
         $scope.makeEventURL = track.permalink_url;
         $scope.makeEvent.trackID = track.id;
         $scope.makeEvent.title = track.title;
-        $scope.makeEvent.trackURL = track.permalink_url
+        $scope.makeEvent.trackArtUrl =track.artwork_url;
+        $scope.makeEvent.artistName =track.user.username;
+        $scope.makeEvent.trackURL = track.permalink_url;
         SC.oEmbed($scope.makeEvent.trackURL, {
           element: document.getElementById('scPopupPlayer'),
           auto_play: false,
@@ -101,13 +111,14 @@ app.directive('scheduler', function($http) {
       $scope.linkedAccounts = [];
       /*Get Linked Accounts*/
       $scope.getLinkedAccounts = function() {
-        var linked = $rootScope.userlinkedAccounts;
-        for (var i = 0; i < linked.length; i++) {
-          if (linked[i]._id != $scope.user._id) {
-            $scope.linkedAccounts.push(linked[i]);
+        setTimeout(function() {
+          var linked = $rootScope.userlinkedAccounts;
+          for (var i = 0; i < linked.length; i++) {
+            if (linked[i]._id != $scope.user._id) {
+              $scope.linkedAccounts.push(linked[i]);
+            }
           }
-        }
-        console.log($scope.linkedAccounts);
+        }, 2000);
       }
 
       $scope.checkCommentEnable = function() {
@@ -301,7 +312,10 @@ app.directive('scheduler', function($http) {
         $scope.isEdit = false;
         $scope.isSchedule = true;
         $scope.tabSelected = false;
+        $scope.unrepostEnable = false;
+        $scope.unrepostHours = "";
         $scope.newEvent = true;
+        document.getElementById('scPlayer').style.visibility = "hidden";
         $scope.makeEvent = {
           userID: $scope.user.soundcloud.id,
           type: "track"
@@ -317,10 +331,13 @@ app.directive('scheduler', function($http) {
 
       }
 
-
       $scope.isEdit = false;
       $scope.EditNewSong = function(item, editable) {
         $scope.editChannelArr = [];
+        if(item.event.type == 'traded')
+        {
+          $scope.isView = true;
+        }
         $scope.tabSelected = false;
         /*if (!editable) {*/
         $scope.isEdit = true;
@@ -615,6 +632,7 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.clickedSlot = function(day, hour, data) {
+        $scope.isView = false;
         $scope.popup = true;
         var d = new Date(day).getDay();
         if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1) return;
@@ -640,8 +658,6 @@ app.directive('scheduler', function($http) {
         $scope.unrepostHours = "";
         $scope.updateReach();
         if ($scope.makeEvent.type == "empty") {
-          $scope.channelArr = []
-          $scope.isEdit = false;
           makeDay = new Date(day);
           makeDay.setHours(hour);
           $scope.makeEvent = {
@@ -654,26 +670,32 @@ app.directive('scheduler', function($http) {
           $scope.newEvent = true;
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
         } else {
-          $scope.editChannelArr = [];
           $scope.isEdit = true;
-          console.log('here');
-          // var channels = data.otherChannels;
-          // if (channels.length > 0) {
-          //   for (var i = 0; i < channels.length; i++) {
-          //     for (var j = 0; j < $scope.linkedAccounts.length; j++) {
-          //       if (channels[i] == $scope.linkedAccounts[j].soundcloud.id) {
-          //         $scope.editChannelArr.push($scope.linkedAccounts[j].name);
-          //       }
-          //     }
-          //   }
-          //   $scope.channelArr = $scope.editChannelArr;
-          // }
+          if(data.type == 'traded' && data.trackURL)
+          {
+            $scope.isView = true;
+          }
+         
+          $scope.editChannelArr = [];
+          
+          var channels = data.otherChannels;
+          if (channels.length > 0) {
+            for (var i = 0; i < channels.length; i++) {
+              for (var j = 0; j < $scope.linkedAccounts.length; j++) {
+                if (channels[i] == $scope.linkedAccounts[j].soundcloud.id) {
+                  $scope.editChannelArr.push($scope.linkedAccounts[j].name);
+                }
+              }
+            }
+            $scope.channelArr = $scope.editChannelArr;
+          }
           $scope.timeGap = data.timeGap;
           $scope.followersCount();
           var repostDate = new Date($scope.makeEvent.day);
           var unrepostDate = new Date($scope.makeEvent.unrepostDate);
           var diff = Math.abs(new Date(unrepostDate).getTime() - new Date(repostDate).getTime()) / 3600000;
           $scope.makeEvent.unrepostHours = diff;
+          $scope.unrepostEnable = data.unrepostHours ? true : false;
           $scope.makeEvent.day = new Date($scope.makeEvent.day);
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
           $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
@@ -807,7 +829,6 @@ app.directive('scheduler', function($http) {
           event.unrepostDate = new Date(event.unrepostDate);
           return ($scope.makeEvent.trackID == event.trackID && (Math.abs(event.unrepostDate.getTime() - $scope.makeEvent.day.getTime()) < 24 * 3600000 || Math.abs(event.day.getTime() - $scope.makeEvent.unrepostDate.getTime()) < 24 * 3600000));
         })
-        console.log(blockEvents);
         return blockEvents.length > 0;
       }
 
@@ -898,6 +919,7 @@ app.directive('scheduler', function($http) {
               $scope.makeEventURL = "";
               $scope.makeEvent = null;
               $scope.eventComment = "";
+              $scope.unrepostEnable = false;
               document.getElementById('scPlayer').style.visibility = "hidden";
               document.getElementById('scPopupPlayer').style.visibility = "hidden";
               $scope.unrepostHours = 1;
@@ -914,6 +936,7 @@ app.directive('scheduler', function($http) {
               $scope.makeEventURL = "";
               $scope.makeEvent = null;
               $scope.eventComment = "";
+              $scope.unrepostEnable = false;
               document.getElementById('scPlayer').style.visibility = "hidden";
               document.getElementById('scPopupPlayer').style.visibility = "hidden";
               $scope.unrepostHours = 1;
@@ -940,9 +963,12 @@ app.directive('scheduler', function($http) {
         $scope.trackType = "";
         $scope.trackArtistID = 0;
         $scope.showOverlay = false;
+        $scope.unrepostEnable = false;
+        $scope.unrepostHours = "";
       }
 
-      $scope.removeQueueSong = function(index) {
+      $scope.removeQueueSong = function(song) {
+        var index = $scope.user.queue.indexOf(song.id);
         $scope.user.queue.splice(index, 1);
         $scope.saveUser()
         $scope.loadQueueSongs();
@@ -1008,7 +1034,54 @@ app.directive('scheduler', function($http) {
       if ($scope.user && $scope.user.queue) {
         $scope.loadQueueSongs();
       }
+       var count = 0;
+      $scope.getAutoFillTracks =function()
+      {
+        if($scope.user.queue.length > 0)
+        {
+            if(count >= $scope.autoFillTracks.length)
+            {
+              count = 0;
+            }
+           else
+           {
+            var track = $scope.autoFillTracks[count];
+            $scope.makeEventURL = track.permalink_url;
+            $scope.makeEvent.trackID = track.id;
+            $scope.makeEvent.title = track.title;
+            $scope.makeEvent.trackArtUrl =track.artwork_url;
+            $scope.makeEvent.trackURL = track.permalink_url;
+            if($scope.showOverlay)
+            {
+              SC.oEmbed($scope.makeEvent.trackURL, {
+              element: document.getElementById('scPopupPlayer'),
+              auto_play: false,
+              maxheight: 150
+            })
+            document.getElementById('scPopupPlayer').style.visibility = "visible";
+            }
+            SC.oEmbed($scope.makeEvent.trackURL, {
+              element: document.getElementById('scPlayer'),
+              auto_play: false,
+              maxheight: 150
+            })
+            document.getElementById('scPlayer').style.visibility = "visible";
+            count = count + 1;
+            }
 
+        }
+        else{
+             $.Zebra_Dialog('You do not have any tracks from other artists in your auto fill slots', {
+            'type':     'question',
+            'buttons':  [
+                          {caption: 'Ok', callback: function() { 
+                          $scope.tabSelected = true;
+                          $('.nav-tabs a[href="#managereposts"]').tab('show');
+                          }}
+                        ]
+            });
+        }
+      }  
       $scope.dayOfWeekAsString = function(date) {
         var dayIndex = date.getDay();
         if (screen.width > '744') {
@@ -1043,7 +1116,7 @@ app.directive('scheduler', function($http) {
         } else if (event.type == 'track' || event.type == 'queue') {
           return {
             'background-color': '#FF7676',
-            'margin': '2px',
+            'margin' : '2px',
             'height': '18px'
           }
         } else if (event.type == 'traded') {
@@ -1211,15 +1284,13 @@ app.directive('scheduler', function($http) {
         $scope.fbMessageLink = "https://localhost:1443/repostevents?id=" + id;
         $window.open("mailto:example@demo.com?body=" + $scope.fbMessageLink, "_self");
       };
-      $scope.getUserNetwork()
-        .then(function() {
-          $scope.getLinkedAccounts();
-        });
+      $scope.getUserNetwork();
       $scope.followersCount();
       $scope.checkCommentEnable();
       $scope.checkLikeEnable();
-      $scope.updateReach();
+      $scope.updateReach();      
       $scope.verifyBrowser();
+      $scope.getLinkedAccounts();
     }
   }
 })

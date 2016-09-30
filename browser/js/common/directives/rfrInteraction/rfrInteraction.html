@@ -143,7 +143,8 @@
               <!-- p2 calendar -->
               <div ng-show="activeUser._id==trade.p2.user._id">
                 <div id="scheduler-container" ng-show="itemview == 'calender'">
-                  <div style="width:100%; height:35px; display:flex; flex-direction:row;margin-bottom: 10px; ">
+<div class="space-10"></div>
+                  <div style="width: 100%;height: 35px;display: flex; flex-direction: row; margin-bottom: 10px; margin-left: 20px;">
                     <button ng-show="!repeatOn" class="btn btn-default btn-scheduler" ng-click="decrp2()"><img src="/assets/images/left-arrow.png"/></button>
                     <div ng-show="!repeatOn" class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendarp2[t+p2dayIncr].day).substring(0,3)}} {{calendarp2[t+p2dayIncr].day.getMonth()+1}}/{{calendarp2[t+p2dayIncr].day.getDate()}}</div>
                     <button  ng-show="!repeatOn" class="btn btn-default btn-scheduler" ng-click="incrp2()" ><img id="scheduler-btn-back" src="/assets/images/right-arrow.png"/></button>

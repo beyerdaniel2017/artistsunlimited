@@ -319,9 +319,10 @@
                       </div>
                       <div class="form-group">
                         <div class="col-xs-12">
-                          <div class="total-reach">
+                          <h5 class="text-pink text-center">Total Reach: {{followCounts}} followers</h5>
+                          <!-- <div class="total-reach">
                             <a href="#">Total Reach: {{followCounts}} followers</a>
-                          </div>
+                          </div> -->
                         </div>
                       </div>
                     </div>
@@ -380,9 +381,7 @@
             <div class="">
               <div class="row">
                 <div class="col-md-12">
-                  <br>
                   <h5 class="text-center">AVAILABLE SLOT</h5>
-                  <br>
                 </div>
               </div>
               <div class="row">
@@ -406,7 +405,7 @@
               <br>
               <div class="row">
                 <div class="col-md-12 col-xs-12">   
-                  <span>{{searchStringVal.day | date:'MMMM dd yyyy h:mma'}}</span>
+                  <h4>{{searchStringVal.day | date:'MMMM dd yyyy h:mma'}}</h4>
                     </div>
                   </div>
                   <div class="row">
@@ -450,8 +449,8 @@
                         </div>
                       </div>
                     </div>
-                    <br>
-                    <span style="font-size:11px;">Total Reach: {{followCounts}} followers</span>
+                    
+                    <h5 class="text-pink">Total Reach: {{followCounts}} followers</h5>
                     <div class="row">
                       <div class="col-md-12 text-left">
                         <li class="switch-btn" style="font-size: 10px;vertical-align: middle;
@@ -592,7 +591,8 @@
       <div class="modal-body">
         https://localhost:1443/repostevents?id={{repostResponse}}
         <br>
-        <button class="btn btn-default btn-block" ng-click="sendMail(repostResponse)">Send Email</button>
+        <button class="btn btn-pink btn-block" ng-click="sendMail(repostResponse)">Send Email</button>
+        <br>
         <div id="fb-root"></div>
         <div class="fb-send" data-href="https://jsfiddle.net/37eL5smy/"></div>
       </div>

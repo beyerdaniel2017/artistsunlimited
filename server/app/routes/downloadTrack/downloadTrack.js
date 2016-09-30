@@ -11,6 +11,7 @@ var router = require('express').Router();
 var Promise = require('bluebird');
 var request = require('request');
 var qs = require('qs');
+var rootURL = require('./../../../env').ROOTURL;
 module.exports = router;
 
 var mongoose = require('mongoose');
@@ -31,7 +32,34 @@ scWrapper.init({
 });
 
 router.get('/track', function(req, res, next) {
-  DownloadTrack.findById(req.query.trackID).exec()
+  DownloadTrack.findById(req.query.trackID)
+  .populate('userid')
+  .exec()
+  .then(function(downloadTrack) {
+    downloadTrack = downloadTrack.toJSON();
+    var username =  downloadTrack.userid.soundcloud.username;
+    var title =  downloadTrack.trackTitle.replace(/ /g, '-');
+    var trackDownloadUrl = rootURL + "/download/" + username + "/" + title;
+    DownloadTrack.update({
+      _id: req.query.trackID
+    }, {
+      $set:{
+        trackDownloadUrl:trackDownloadUrl
+      }
+    },
+    {
+      new: true
+    }, function(track){
+      downloadTrack.trackDownloadUrl = trackDownloadUrl;
+      res.send(downloadTrack);
+    })
+  })
+  .then(null, next);
+});
+
+router.get('/trackByURL/:username/:title', function(req, res, next) {
+  var trackDownloadUrl = rootURL + "/download/" + req.params.username + "/" + req.params.title
+  DownloadTrack.findOne({trackDownloadUrl : trackDownloadUrl}).exec()
     .then(function(downloadTrack) {
       res.send(downloadTrack);
     })

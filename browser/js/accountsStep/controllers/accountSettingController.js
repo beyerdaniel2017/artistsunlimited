@@ -156,6 +156,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
           $scope.AccountsStepData.submissionData.followers = res.data.user.followers;
           $scope.AccountsStepData.submissionData.userID = res.data.userID;
           userId = res.data.userID;
+          $scope.AccountsStepData.repostSettings = res.data.repostSettings;
           $scope.AccountsStepData.price = res.data.price;
           $scope.AccountsStepData.description = res.data.description;
           if (res.data.availableSlots) {
@@ -174,7 +175,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
           $http.get('/api/users/byId/' + userId)
           .then(function(response) {
             if (response.data) {
-              $scope.AccountsStepData.repostSettings = response.data.repostSettings;
+             // $scope.AccountsStepData.repostSettings = response.data.repostSettings;
               $scope.AccountsStepData.queue = response.data.queue;
               if (response.data.availableSlots) {                                    
                 $scope.AccountsStepData.availableSlots = response.data.availableSlots;
@@ -230,12 +231,27 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     }
     else
     {
-      $http.put('/api/database/updateRepostSettings', {
+      /*$http.put('/api/database/updateRepostSettings', {
         repostSettings: $scope.AccountsStepData.repostSettings,
         id: $scope.AccountsStepData.submissionData.userID
       }).then(function(res) {
         SessionService.createAdminUser($scope.AccountsStepData);
       });
+    }*/
+         AccountSettingServices.updatePaidRepost({
+                  userID: $scope.AccountsStepData.submissionData.userID,
+                  price: $scope.AccountsStepData.price,
+                  description: $scope.AccountsStepData.description,
+                  groups: $scope.AccountsStepData.submissionData.groups ? $scope.AccountsStepData.submissionData.groups : [],
+                  submissionUrl: $scope.AccountsStepData.submissionData.submissionUrl,
+                  premierUrl: $scope.AccountsStepData.submissionData.premierUrl,
+                  repostSettings: $scope.AccountsStepData.repostSettings
+                })
+                .then(function(res) {
+                    SessionService.createAdminUser($scope.AccountsStepData);
+                })
+                .catch(function() {});
+              
     }
   }
   $scope.saveComments = function(value, type, index) {
@@ -361,7 +377,12 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
         }, console.log);
       })
     }
-     
+    $scope.loadQueueSongs();
+    $scope.choseAutoFillTrack = function(track) {
+        $scope.searchString = track.title;
+        $scope.newQueueID = track.id;
+        $scope.addSong();
+     }
     /*Repost settings end*/
     $scope.finishAdmin = function() {
       $state.go("accounts");
