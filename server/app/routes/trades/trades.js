@@ -4,35 +4,36 @@ var mongoose = require('mongoose');
 var Trade = mongoose.model('Trade');
 var Users = mongoose.model('User');
 var RepostEvent = mongoose.model('RepostEvent');
+var notificationCenter = require('../../notificationCenter/notificationCenter.js')
 
 router.get('/withUser/:userID', function(req, res, next) {
   Trade.find({
-    $or: [{
-      'p1.user': req.params.userID
-    }, {
-      'p2.user': req.params.userID
-    }]
+      $or: [{
+        'p1.user': req.params.userID
+      }, {
+        'p2.user': req.params.userID
+      }]
     }).populate('p1.user').populate('p2.user').exec()
-      .then(function(trades) {
+    .then(function(trades) {
       trades = trades.filter(function(trade) {
         return !(trade.p1.accepted && trade.p2.accepted)
-                  })
+      })
       res.send(trades)
     }).then(null, next);
 });
 
 router.get('/doneWithUser/:userID', function(req, res, next) {
   Trade.find({
-                      $or: [{
+      $or: [{
         'p1.user': req.params.userID
-                      }, {
+      }, {
         'p2.user': req.params.userID
-                      }]
+      }]
     }).populate('p1.user').populate('p2.user').exec()
     .then(function(trades) {
       trades = trades.filter(function(trade) {
         return (trade.p1.accepted && trade.p2.accepted)
-                    })
+      })
       res.send(trades)
     }).then(null, next);
 });
@@ -48,9 +49,9 @@ router.post('/new', function(req, res, next) {
 
 router.put('/', function(req, res, next) {
   var userid = req.user._id;
-  if(req.body.userid!=undefined)
+  if (req.body.userid != undefined)
     userid = req.body.userid;
-  
+
   if (userid != req.body.p1.user._id && userid != req.body.p2.user._id) {
     next({
       message: 'Forbidden',
@@ -64,11 +65,11 @@ router.put('/', function(req, res, next) {
         if (trade.p1.accepted && trade.p2.accepted) {
           var user = (req.user._id == trade.p1.user._id ? req.user : trade.p2.user);
           var other = (req.user._id == trade.p1.user._id ? trade.p2.user : req.user);
-          //notificationCenter.sendNotifications(other._id, 'tradeRequest', 'Trade request', user.soundcloud.username + " accepted your trade.", "https://artistsunlimited.com/artistTools/reForReInteraction/" + trade._id);
+          notificationCenter.sendNotifications(other._id, 'tradeRequest', 'Trade request', user.soundcloud.username + " accepted your trade.", "https://artistsunlimited.com/artistTools/reForReInteraction/" + trade._id);
         } else if (trade.p1.accepted && !trade.p2.accepted) {
-          //notificationCenter.sendNotifications(trade.p2.user._id, 'tradeRequest', 'Trade request', trade.p1.user.soundcloud.username + " requests a trade.", "https://artistsunlimited.com/artistTools/reForReInteraction/" + trade._id);
+          notificationCenter.sendNotifications(trade.p2.user._id, 'tradeRequest', 'Trade request', trade.p1.user.soundcloud.username + " requests a trade.", "https://artistsunlimited.com/artistTools/reForReInteraction/" + trade._id);
         } else {
-          //notificationCenter.sendNotifications(trade.p1.user._id, 'tradeRequest', 'Trade request', trade.p2.user.soundcloud.username + " requests a trade.", "https://artistsunlimited.com/artistTools/reForReInteraction/" + trade._id);
+          notificationCenter.sendNotifications(trade.p1.user._id, 'tradeRequest', 'Trade request', trade.p2.user.soundcloud.username + " requests a trade.", "https://artistsunlimited.com/artistTools/reForReInteraction/" + trade._id);
         }
         res.send(trade);
       })
@@ -92,11 +93,11 @@ router.get('/byID/:tradeID', function(req, res, next) {
 })
 
 router.get('/byID/:tradeID/:userId', function(req, res, next) {
-  var userid =req.params.userId;
+  var userid = req.params.userId;
 
   Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user').exec()
     .then(function(trade) {
-      if (userid != trade.p1.user._id && userid!= trade.p2.user._id) {
+      if (userid != trade.p1.user._id && userid != trade.p2.user._id) {
         next({
           message: 'Forbidden',
           status: 403
@@ -111,7 +112,7 @@ router.get('/byID/:tradeID/:userId', function(req, res, next) {
 router.post('/delete', function(req, res, next) {
   Trade.findById(req.body.id).exec()
     .then(function(trade) {
-      if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user) && (req.body.action!="admin" || req.body.action==undefined)) {
+      if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user) && (req.body.action != "admin" || req.body.action == undefined)) {
         next({
           message: 'Forbidden',
           status: 403
@@ -214,8 +215,8 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
 });
 
 router.put('/offline', function(req, res, next) {
-  var userid =req.user._id;
-  if(req.body.userid!=undefined)
+  var userid = req.user._id;
+  if (req.body.userid != undefined)
     userid = req.body.userid;
 
   Trade.update({

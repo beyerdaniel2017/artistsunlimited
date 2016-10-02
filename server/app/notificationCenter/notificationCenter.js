@@ -5,6 +5,7 @@ var sendEmail = require('../mandrill/sendEmail.js')
 
 module.exports = {
   sendNotifications: function(userID, type, heading, message, link) {
+    //if user belongs to an admin, use the admins settings
     User.findById(userID).exec()
       .then(function(user) {
         if (user.notificationSettings.facebookMessenger[type]) {

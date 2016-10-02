@@ -76,7 +76,7 @@ function repostAndRemove(event, user, repCount) {
               distributeEarnings(user, event);
               sendMessage(err, event, user);
             }
-            notificationCenter.sendNotifications(user._id, 'trackRepost', 'Track repost', 'A track was reposted on ' + user.soundcloud.username, 'artistsunlimited.com/login');
+            notificationCenter.sendNotifications(user._id, 'trackRepost', 'Track repost', event.title + ' was reposted on ' + user.soundcloud.username, 'artistsunlimited.com/login');
           }).then(null, console.log);
         } else {
           console.log('error ------------------');
@@ -90,7 +90,7 @@ function repostAndRemove(event, user, repCount) {
               user.save();
             }
             sendMessage(err, event, user);
-            notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', 'A repost on ' + user.soundcloud.username + ' did not complete.', 'artistsunlimited.com/login');
+            notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', event.title + ' did not repost on ' + user.soundcloud.username + ' did not complete.', 'artistsunlimited.com/login');
           }
         }
       });

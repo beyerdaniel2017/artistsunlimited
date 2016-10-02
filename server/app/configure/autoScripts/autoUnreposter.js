@@ -7,6 +7,8 @@ var scConfig = require('./../../../env').SOUNDCLOUD;
 var sendEmail = require('../../mandrill/sendEmail.js');
 var request = require('request');
 var Trade = mongoose.model('Trade');
+var notificationCenter = require('../../notificationCenter/notificationCenter.js');
+
 
 scWrapper.init({
   id: scConfig.clientID,
@@ -63,7 +65,7 @@ function unrepostEvent(event, user) {
   scWrapper.request(reqObj, function(err, data) {
     if (!err) {
       // putMessage(event, user);
-      notificationCenter.sendNotification(user._id, 'trackUnrepost', 'Track unrepost', 'A track was unreposted from ' + user.soundcloud.username + '.', 'https://artistsunlimited.co/login');
+      notificationCenter.sendNotification(user._id, 'trackUnrepost', 'Track unrepost', event.title + ' was unreposted from ' + user.soundcloud.username + '.', 'https://artistsunlimited.co/login');
     }
   });
 }
