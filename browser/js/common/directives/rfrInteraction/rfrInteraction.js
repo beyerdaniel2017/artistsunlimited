@@ -13,6 +13,7 @@ app.directive('rfrinteraction', function($http) {
       else{
         $scope.isAdminRoute = false;
       }
+      $scope.type = 'remind';
       $scope.change = false;
       $scope.showUndo = false;
       $scope.showEmailModal = false;
@@ -760,6 +761,7 @@ app.directive('rfrinteraction', function($http) {
             if($scope.isAdminRoute){
               $state.go('adminRepostTraders');
             } else{
+              $rootScope.newManageSlots = true;
               $state.go('reForReLists');
             }            
           })
@@ -972,13 +974,8 @@ app.directive('rfrinteraction', function($http) {
       }
 
       $scope.remindTrade = function() {
-        $scope.sharelink = "https://" + window.location.host + "/artistTools/reForReInteraction/" + $scope.trade._id;
+        $('#pop').modal('show');
       }
-
-      $scope.sendMail = function(sharelink) {
-        $scope.fbMessageLink = sharelink;
-        $window.open("mailto:example@demo.com?body=" + sharelink, "_self");
-      };
 
       $scope.updateAlerts();
       $scope.verifyBrowser();

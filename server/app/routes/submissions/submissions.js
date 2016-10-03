@@ -35,10 +35,7 @@ router.post('/', function(req, res, next) {
 
 router.get('/unaccepted', function(req, res, next) {
   if (!req.user.role == 'admin' || !req.user.role == 'superadmin') {
-    next({
-      message: 'Forbidden',
-      status: 403
-    })
+     next(new Error('Unauthoirized'))
   } else {
     var resultSubs = [];
     var skipcount = req.query.skip;
@@ -98,10 +95,7 @@ router.get('/unaccepted', function(req, res, next) {
 
 router.get('/getMarketPlaceSubmission', function(req, res, next) {
   if (!req.user.role == 'admin' || !req.user.role == 'superadmin') {
-    next({
-      message: 'Forbidden',
-      status: 403
-    })
+      next(new Error('Unauthoirized'))
   } else {
     var resultSubs = [];
     var skipcount = req.query.skip;
@@ -180,6 +174,7 @@ router.get('/getUnacceptedSubmissions', function(req, res, next) {
 
 
 router.get('/getGroupedSubmissions', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   Submission.aggregate({
       $match: {
         channelIDS: [],
@@ -200,6 +195,7 @@ router.get('/getGroupedSubmissions', function(req, res, next) {
 });
 
 router.get('/getPaidRepostAccounts', function(req, res) {
+  if (!req.user) next(new Error('Unauthorized'));
   var accounts = req.user.paidRepost;
   var results = [];
   var i = -1;
@@ -225,6 +221,7 @@ router.get('/getPaidRepostAccounts', function(req, res) {
 
 
 router.get('/getAccountsByIndex/:user_id', function(req, res) {
+  if (!req.user) next(new Error('Unauthorized'));
   var user_id = req.params.user_id;
   var results = [];
   var paidRepost = req.user.paidRepost.find(function(pr) {
@@ -245,10 +242,7 @@ router.get('/getAccountsByIndex/:user_id', function(req, res) {
 
 router.put('/save', function(req, res, next) {
   if (!req.user.role == 'admin') {
-    next({
-      message: 'Forbidden',
-      status: 403
-    })
+    next(new Error('Unauthorized'));
   } else {
     if (req.body.status == "pooled") {
       Submission.findByIdAndUpdate(req.body._id, req.body, {
@@ -323,10 +317,7 @@ router.put('/save', function(req, res, next) {
 
 router.delete('/decline/:subID/:password', function(req, res, next) {
   if (!req.user.role == 'admin') {
-    next({
-      message: 'Forbidden',
-      status: 403
-    })
+    next(new Error('Unauthorized'));
   } else {
     Submission.findByIdAndRemove(req.params.subID)
       .populate("userID")

@@ -6,7 +6,7 @@
       <li role="presentation" ng-class="{active: activeTab == '1'}"><a href="#myschedule" aria-controls="myschedule" role="tab" data-toggle="tab">
         <img src="assets/images/myschedule.png" />NEW TRADE</a>
       </li>
-      <li role="presentation" ng-class="{active: activeTab == '2'}"><a href="#organizeschedule" aria-controls="organizeschedule" role="tab" data-toggle="tab"> <img src="assets/images/organizeschedule.png"/>INCOMPLETE TRADES</a></li>
+      <li role="presentation" ng-class="{active: activeTab == '2'}"><a href="#organizeschedule" aria-controls="organizeschedule" role="tab" data-toggle="tab"> <img src="assets/images/organizeschedule.png"/>INCOMPLETE TRADES<span class="badge notification-bubble-left-menu" ng-show="shownotification">!</span></a></li>
       <li role="presentation" ng-class="{active: activeTab == '3'}"><a href="#managereposts" aria-controls="managereposts" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.png"/>MANAGE TRADED SLOTS</a></li>
     </ul>
     <!-- Nav tabs :End-->
@@ -125,7 +125,7 @@
           <li> <div class="vertical-text">
             <button class="btn btn-pink btn-block" ng-click="manage(trade)">Manage</button>
             <button class="btn btn-pink btn-block" ng-click="deleteTrade(trade._id, $index)">Delete</button>
-            <button class="btn btn-pink btn-block" ng-click="remindTrade(trade._id, $index)" ng-show="!trade.other.accepted" data-toggle="modal" data-target="#remindModal">Remind</button>
+            <button class="btn btn-pink btn-block" ng-click="remindTrade(trade._id, $index)" ng-show="!trade.other.accepted">Remind</button>
           </div>
         </li>
       </ul>
@@ -173,18 +173,20 @@
           </div>
         </div>
       </div>
-           <div class="row" ng-init="loadQueueSongs()">
+            <div class="row">
                   <div class="col-md-8 col-md-offset-2">
                     <div class="permanent-links search" style="text-align: center;">
                       <h4 class="bold">Auto-fill Tracks</h4>
-                     <!--  <input class="form-control" placeholder="Soundcloud Track Url" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()" /> -->
                       <scsearch kind='track' returnitem='choseAutoFillTrack(item)'></scsearch>
-                      <br/>
-                      <br/>
-                      <br/>
-                      <div ng-repeat="song in autoFillTracks" style="padding:10px; color:#000; text-align: center;">
-                        <a href="{{song.permalink_url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{song.artwork_url}}">{{' ' + song.title}}</a>&nbsp;&nbsp;&nbsp;
-                        <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeQueueSong(song)"></a> 
+                       <div class="tracks-box" ng-if="autoFillTracks.length > 0">
+                        <div class="track-item-list" ng-repeat="song in autoFillTracks" >
+                            <img class="avatar-20" ng-src="{{song.artwork_url}}">
+                            <div class="tracks-title">
+                              <a class="tracks-title-name" href="{{song.permalink_url}}" target="_blank">
+                              {{' ' + song.title}}</a> 
+                            <a class="close-tracks pull-right" href="#"><img src="assets/images/close.png" ng-click="removeQueueSong(song)"></a> 
+                            </div>
+                        </div> 
                       </div>                             
                     </div>
                   </div>
@@ -356,9 +358,9 @@
   </div>
   <!-- popup overlay end -->
   <!--overlay-->
-  <div class="modal fade" id="remindModal" role="dialog">
+  <!-- <div class="modal fade" id="remindModal" role="dialog">
     <div class="modal-dialog">    
-      <!-- Modal content-->
+    
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -376,8 +378,8 @@
       </div>
     </div>
   </div>
-</div>
-
+</div> -->
+   <shareLinkModal lolo="modal1" modal-body="body" modal-footer="footer" modal-header="header" event-id="tradeID" event-type="type"></shareLinkModal>
 <script>
 setTimeout(function(){
   $(document).ready(function(){
