@@ -46,7 +46,7 @@ function readMessage(messagingEvent) {
 }
 
 function receivedAuthentication(message) {
-    User.findById(message.optin.ref).exec()
+    User.findById(message.optin.ref)
         .then(function(user) {
             user.notificationSettings.facebookMessenger.messengerID = message.sender.id;
             user.save();

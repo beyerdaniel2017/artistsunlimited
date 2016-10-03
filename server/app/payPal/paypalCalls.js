@@ -111,7 +111,7 @@ module.exports = {
     //   var index = submission.channelIDS.indexOf(channelID);
     //   Channel.findOne({
     //       channelID: channelID
-    //     }).exec()
+    //     })
     //     .then(function(chan) {
     //       var invoice_json = {
     //         "merchant_info": {
@@ -162,7 +162,7 @@ module.exports = {
   //               console.log(error);
   //             } else {
   //               submission.invoiceIDS[index] = invoice.id;
-  //               Submission.findByIdAndUpdate(submission._id, submission).exec()
+  //               Submission.findByIdAndUpdate(submission._id, submission)
   //                 .then(function(sub) {})
   //                 .then(null, console.log);
   //             }

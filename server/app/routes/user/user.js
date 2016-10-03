@@ -19,15 +19,15 @@ scWrapper.init({
 module.exports = router;
 
 router.get('/isUserAuthenticate', function(req, res, next) {
-  if(req.user && req.user._id != undefined){
+  if (req.user && req.user._id != undefined) {
     res.send(req.user);
-  }else{
+  } else {
     res.send(null);
   }
 });
 
 router.get('/byId/:id', function(req, res, next) {
-  User.findById(req.params.id).exec()
+  User.findById(req.params.id)
     .then(function(user) {
       //if (user.soundcloud.token) user.soundcloud.token = undefined;
       res.send(user);
@@ -36,8 +36,8 @@ router.get('/byId/:id', function(req, res, next) {
 
 router.get('/bySoundcloudID/:id', function(req, res, next) {
   User.findOne({
-    'soundcloud.id': parseInt(req.params.id)
-  }).exec()
+      'soundcloud.id': parseInt(req.params.id)
+    })
     .then(function(user) {
       //if (user.soundcloud.token) user.soundcloud.token = undefined;
       res.send(user);
@@ -49,7 +49,7 @@ router.post('/withIDs', function(req, res, next) {
       _id: {
         $in: req.body
       }
-    }).exec()
+    })
     .then(function(users) {
       res.send(users);
     }).then(null, next)
@@ -58,7 +58,7 @@ router.post('/withIDs', function(req, res, next) {
 router.get('/getUserID', function(req, res, next) {
   User.findOne({
       role: 'superadmin'
-    }).limit(1).exec()
+    }).limit(1)
     .then(function(user) {
       res.send(user._id);
     })
@@ -66,45 +66,44 @@ router.get('/getUserID', function(req, res, next) {
 
 router.get('/getUserByURL/:username/:page', function(req, res, next) {
   var query = {};
-  var url = rootURL+"/custom/"+req.params.username+"/"+req.params.page;
-  if(req.params.page.indexOf('submit') != -1){
-    query = {'paidRepost.submissionUrl': url};
+  var url = rootURL + "/custom/" + req.params.username + "/" + req.params.page;
+  if (req.params.page.indexOf('submit') != -1) {
+    query = {
+      'paidRepost.submissionUrl': url
+    };
+  } else {
+    query = {
+      'paidRepost.premierUrl': url
+    };
   }
-  else{
-    query = {'paidRepost.premierUrl': url};
-  } 
   User.findOne(query)
-  .exec()
+
   .then(function(user) {
-    if(user && user.paidRepost.length > 0){
-      if(req.params.page.indexOf('submit') != -1){
-        var u = user.paidRepost.find(function(pr){
-          return pr.submissionUrl == url;
-        })
-        if(u){
-          res.send(u.userID);
+      if (user && user.paidRepost.length > 0) {
+        if (req.params.page.indexOf('submit') != -1) {
+          var u = user.paidRepost.find(function(pr) {
+            return pr.submissionUrl == url;
+          })
+          if (u) {
+            res.send(u.userID);
+          } else {
+            res.send(null);
+          }
+        } else {
+          var u = user.paidRepost.find(function(pr) {
+            return pr.premierUrl == url;
+          })
+          if (u) {
+            res.send(u.userID);
+          } else {
+            res.send(null);
+          }
         }
-        else{
-          res.send(null);
-        }
+      } else {
+        res.send(null);
       }
-      else{
-        var u = user.paidRepost.find(function(pr){
-          return pr.premierUrl == url;
-        })
-        if(u){
-          res.send(u.userID);
-        }
-        else{
-          res.send(null);
-        }
-      }
-    }
-    else{
-      res.send(null);
-    }    
-  })
-  .then(null, next);
+    })
+    .then(null, next);
 });
 
 router.post('/bySCURL', function(req, res, next) {
@@ -134,38 +133,38 @@ router.post('/bySCURL', function(req, res, next) {
   }
   var notInUsers = [];
   Trade.find({
-      $or: [{
-        'p1.user': req.user._id
-      }, {
-        'p2.user': req.user._id
-      }]
-    })
-    .exec()
-    .then(function(trades) {
-      if (trades.length > 0) {
-        trades.forEach(function(trade, index) {
-          var u1 = trade.p1.user.toString();
-          var u2 = trade.p2.user.toString();
-          if (notInUsers.indexOf(u1) == -1) {
-            notInUsers.push(u1);
-          }
-          if (notInUsers.indexOf(u2) == -1) {
-            notInUsers.push(u2);
-          }
-          if (index == (trades.length - 1)) {
-            searchObj['_id'] = {
-              $nin: notInUsers
-            };
-            findUsers(searchObj);
-          }
-        });
-      } else {
-        searchObj['_id'] = {
-          $nin: req.user._id
-        };
-        findUsers(searchObj);
-      }
-    }).then(null, next);
+    $or: [{
+      'p1.user': req.user._id
+    }, {
+      'p2.user': req.user._id
+    }]
+  })
+
+  .then(function(trades) {
+    if (trades.length > 0) {
+      trades.forEach(function(trade, index) {
+        var u1 = trade.p1.user.toString();
+        var u2 = trade.p2.user.toString();
+        if (notInUsers.indexOf(u1) == -1) {
+          notInUsers.push(u1);
+        }
+        if (notInUsers.indexOf(u2) == -1) {
+          notInUsers.push(u2);
+        }
+        if (index == (trades.length - 1)) {
+          searchObj['_id'] = {
+            $nin: notInUsers
+          };
+          findUsers(searchObj);
+        }
+      });
+    } else {
+      searchObj['_id'] = {
+        $nin: req.user._id
+      };
+      findUsers(searchObj);
+    }
+  }).then(null, next);
   var findUsers = function(sObj) {
     User.find(sObj)
       .sort({
@@ -173,69 +172,69 @@ router.post('/bySCURL', function(req, res, next) {
       })
       .skip(recordRange.skip)
       .limit(recordRange.limit)
-      .exec()
-      .then(function(user) {
-        if (user.length > 0) {
-          res.send(user);
-        } else if (originalUrl !== '' && originalUrl !== undefined) {
-          var reqObj = {
-            method: 'GET',
-            path: '/resolve.json',
-            qs: {
-              url: originalUrl
-            }
-          };
-          scWrapper.request(reqObj, function(err, result) {
-            if (err) {
-              return res.json({
-                "success": false,
-                message: "Error in processing your request"
-              });
-            };
-            https.get(result.location, function(httpRes2) {
-              var userBody = '';
-              httpRes2.on("data", function(songChunk) {
-                  userBody += songChunk;
-                })
-                .on("end", function() {
-                  var user = JSON.parse(userBody);
-                  User.findOne({
-                      'soundcloud.id': user.id
-                    })
-                    .exec()
-                    .then(function(data) {
-                      if (!data) {
-                        var newUser = new User({
-                          'name': user.username,
-                          'soundcloud': {
-                            'id': user.id,
-                            'username': user.username,
-                            'permalinkURL': user.permalink_url,
-                            'avatarURL': user.avatar_url.replace('large', 't500x500'),
-                            'followers': user.followers_count
-                          }
-                        });
-                        newUser.save();
-                        res.send([newUser]);
-                      } else {
-                        res.send([]);
-                      }
-                    }).then(null, next);
-                });
+
+    .then(function(user) {
+      if (user.length > 0) {
+        res.send(user);
+      } else if (originalUrl !== '' && originalUrl !== undefined) {
+        var reqObj = {
+          method: 'GET',
+          path: '/resolve.json',
+          qs: {
+            url: originalUrl
+          }
+        };
+        scWrapper.request(reqObj, function(err, result) {
+          if (err) {
+            return res.json({
+              "success": false,
+              message: "Error in processing your request"
             });
+          };
+          https.get(result.location, function(httpRes2) {
+            var userBody = '';
+            httpRes2.on("data", function(songChunk) {
+                userBody += songChunk;
+              })
+              .on("end", function() {
+                var user = JSON.parse(userBody);
+                User.findOne({
+                  'soundcloud.id': user.id
+                })
+
+                .then(function(data) {
+                  if (!data) {
+                    var newUser = new User({
+                      'name': user.username,
+                      'soundcloud': {
+                        'id': user.id,
+                        'username': user.username,
+                        'permalinkURL': user.permalink_url,
+                        'avatarURL': user.avatar_url.replace('large', 't500x500'),
+                        'followers': user.followers_count
+                      }
+                    });
+                    newUser.save();
+                    res.send([newUser]);
+                  } else {
+                    res.send([]);
+                  }
+                }).then(null, next);
+              });
           });
-        } else {
-          res.send([]);
-        }
-      }).then(null, next);
+        });
+      } else {
+        res.send([]);
+      }
+    }).then(null, next);
   }
 });
 
 /*profile updateion*/
 router.post('/profilePicUpdate', function(req, res, next) {
   parseMultiPart()
-  .then(uploadToBucket)
-  .catch(errorHandler);
+    .then(uploadToBucket)
+    .catch(errorHandler);
   var body = {
     fields: {},
     file: {}
@@ -285,7 +284,7 @@ router.post('/profilePicUpdate', function(req, res, next) {
     });
   }
 
-  function uploadToBucket() {  
+  function uploadToBucket() {
     return new Promise(function(resolve, reject) {
       AWS.config.update({
         accessKeyId: awsConfig.accessKeyId,
@@ -305,15 +304,15 @@ router.post('/profilePicUpdate', function(req, res, next) {
         if (err) {
           reject(err);
           res.send({
-            success:false,
-            data:data
+            success: false,
+            data: data
           });
-        } else {  
-               
+        } else {
+
           resolve(data);
           res.send({
-           success:true,
-           data:data
+            success: true,
+            data: data
           });
         }
       });
@@ -327,7 +326,7 @@ router.post('/profilePicUpdate', function(req, res, next) {
 });
 
 router.put('/updateAdmin', function(req, res, next) {
-  User.findByIdAndUpdate(req.user._id, req.body).exec()
+  User.findByIdAndUpdate(req.user._id, req.body)
     .then(function(user) {
       res.send(user);
     }).then(null, next);
@@ -335,78 +334,88 @@ router.put('/updateAdmin', function(req, res, next) {
 
 
 router.put('/updateuserRecord', function(req, res, next) {
-  var id= req.body._id;
-  delete req.body._id;
-  User.findByIdAndUpdate(id, req.body).exec()
-    .then(function(user) {
-      res.send(user);
-    }).then(null, next);
-})
-/*Admin profile update start*/
+    var id = req.body._id;
+    delete req.body._id;
+    User.findByIdAndUpdate(id, req.body)
+      .then(function(user) {
+        res.send(user);
+      }).then(null, next);
+  })
+  /*Admin profile update start*/
 router.post('/updateAdminProfile', function(req, res, next) {
   var body = req.body;
-  var updateObj=body;
+  var updateObj = body;
   if (updateObj.pictureUrl) {
     updateObj.profilePicture = body.pictureUrl
   }
-  if(updateObj.email){
+  if (updateObj.email) {
     updateObj.email = body.email;
   }
-  if(updateObj.password) {
+  if (updateObj.password) {
     updateObj.salt = User.generateSalt();
     updateObj.password = User.encryptPassword(body.password, updateObj.salt);
-  } 
-  if(updateObj.email != "" && updateObj.email != undefined){
-  User.findOne({'_id': {$ne : req.user._id}, email: body.email}, function(err,u){
-    if(u){
-      res.send({message: "Email already register."});
-    }
-    else{
-      User.findOneAndUpdate({
+  }
+  if (updateObj.email != "" && updateObj.email != undefined) {
+    User.findOne({
+      '_id': {
+        $ne: req.user._id
+      },
+      email: body.email
+    }, function(err, u) {
+      if (u) {
+        res.send({
+          message: "Email already register."
+        });
+      } else {
+        User.findOneAndUpdate({
+            '_id': req.user._id
+          }, {
+            $set: updateObj
+          }, {
+            new: true
+          })
+          .then(function(result) {
+            res.send(result);
+          })
+          .then(null, function(err) {
+            next(err);
+          });
+      }
+    })
+  } else {
+    User.findOneAndUpdate({
         '_id': req.user._id
       }, {
         $set: updateObj
       }, {
         new: true
-      }).exec()
+      })
       .then(function(result) {
         res.send(result);
       })
       .then(null, function(err) {
         next(err);
       });
-    }
-  })
-}
-else{
-User.findOneAndUpdate({
-        '_id': req.user._id
-      }, {
-        $set: updateObj
-      }, {
-        new: true
-      }).exec()
-      .then(function(result) {
-        res.send(result);
-      })
-      .then(null, function(err) {
-        next(err);
-      });
-}
+  }
 });
 
 router.post('/checkUsercount', function(req, res, next) {
-  var query = {"paidRepost.submissionUrl":req.body.url};
-  if(req.body.action=="id")
-    query = {"paidRepost.userID":req.body.userID,"_id":req.user._id};
-      
-  User.find(query).exec()
-  .then(function(user) {
-    if(user)
-      return res.json(user.length);
-    else
-      return res.json(0);
-  })
+  var query = {
+    "paidRepost.submissionUrl": req.body.url
+  };
+  if (req.body.action == "id")
+    query = {
+      "paidRepost.userID": req.body.userID,
+      "_id": req.user._id
+    };
+
+  User.find(query)
+    .then(function(user) {
+      if (user)
+        return res.json(user.length);
+      else
+        return res.json(0);
+    })
 })
 
 /*Admin profile update start*/
@@ -414,19 +423,21 @@ router.post('/updatePaidRepost', function(req, res, next) {
   var body = req.body;
   body.createdOn = new Date();
   User.findOneAndUpdate({
-    '_id': req.user._id,
-    'paidRepost.userID': body.userID
-  }, {
-    $set: {'paidRepost.$': body}
-  }, {
-    new: true
-  }).exec()
-  .then(function(result) {
-    res.send(result);
-  })
-  .then(null, function(err) {
-    next(err);
-  });
+      '_id': req.user._id,
+      'paidRepost.userID': body.userID
+    }, {
+      $set: {
+        'paidRepost.$': body
+      }
+    }, {
+      new: true
+    })
+    .then(function(result) {
+      res.send(result);
+    })
+    .then(null, function(err) {
+      next(err);
+    });
 });
 
 router.get('/getUserPaidRepostAccounts', function(req, res) {
@@ -437,15 +448,16 @@ router.get('/getUserPaidRepostAccounts', function(req, res) {
     i++;
     if (i < accounts.length) {
       var acc = accounts[i];
-      User.findOne({_id: acc.userID}, function(e,u){        
-        if(u){
+      User.findOne({
+        _id: acc.userID
+      }, function(e, u) {
+        if (u) {
           results.push(u);
         }
         next();
       });
-    }
-    else {
-      console.log('results',results);
+    } else {
+      console.log('results', results);
       res.send(results);
     }
   }
@@ -461,7 +473,7 @@ router.get('/getUserPaidRepostAccounts', function(req, res) {
 //     SCEmails.find({})
 //       .skip(skipCount)
 //       .limit(limitCount)
-//       .exec()
+//       
 //       .then(function(scemails) {
 //         if (scemails.length > 0) {
 //           scemails.forEach(function(sce, index) {

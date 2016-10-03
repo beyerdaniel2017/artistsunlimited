@@ -33,33 +33,34 @@ scWrapper.init({
 
 router.get('/track', function(req, res, next) {
   DownloadTrack.findById(req.query.trackID)
-  .populate('userid')
-  .exec()
+    .populate('userid')
+
   .then(function(downloadTrack) {
-    downloadTrack = downloadTrack.toJSON();
-    var username =  downloadTrack.userid.soundcloud.username;
-    var title =  downloadTrack.trackTitle.replace(/ /g, '-');
-    var trackDownloadUrl = rootURL + "/download/" + username + "/" + title;
-    DownloadTrack.update({
-      _id: req.query.trackID
-    }, {
-      $set:{
-        trackDownloadUrl:trackDownloadUrl
-      }
-    },
-    {
-      new: true
-    }, function(track){
-      downloadTrack.trackDownloadUrl = trackDownloadUrl;
-      res.send(downloadTrack);
+      downloadTrack = downloadTrack.toJSON();
+      var username = downloadTrack.userid.soundcloud.username;
+      var title = downloadTrack.trackTitle.replace(/ /g, '-');
+      var trackDownloadUrl = rootURL + "/download/" + username + "/" + title;
+      DownloadTrack.update({
+        _id: req.query.trackID
+      }, {
+        $set: {
+          trackDownloadUrl: trackDownloadUrl
+        }
+      }, {
+        new: true
+      }, function(track) {
+        downloadTrack.trackDownloadUrl = trackDownloadUrl;
+        res.send(downloadTrack);
+      })
     })
-  })
-  .then(null, next);
+    .then(null, next);
 });
 
 router.get('/trackByURL/:username/:title', function(req, res, next) {
   var trackDownloadUrl = rootURL + "/download/" + req.params.username + "/" + req.params.title
-  DownloadTrack.findOne({trackDownloadUrl : trackDownloadUrl}).exec()
+  DownloadTrack.findOne({
+      trackDownloadUrl: trackDownloadUrl
+    })
     .then(function(downloadTrack) {
       res.send(downloadTrack);
     })
@@ -133,7 +134,7 @@ router.post('/tasks', function(req, res, next) {
   if (body.userid) {
     User.findOne({
       _id: body.userid
-    }).exec().then(function(user) {
+    }).then(function(user) {
       if (user.admin) {
         request.get('http://52.26.54.198:1030/api/bots/randomBot', function(err, res, body) {
           if (!err) {
@@ -216,7 +217,7 @@ router.post('/tasks', function(req, res, next) {
       });
     });
   }
-  DownloadTrack.findById(body._id).exec()
+  DownloadTrack.findById(body._id)
     .then(function(t) {
       if (t.downloadCount) t.downloadCount++;
       else t.downloadCount = 1;
@@ -232,7 +233,7 @@ router.get('/track/recent', function(req, res, next) {
       userid: userID
     }).sort({
       createdOn: -1
-    }).limit(10).exec()
+    }).limit(10)
     .then(function(downloadTracks) {
       var tracks = downloadTracks.filter(function(item) {
         return item._id.toString() !== trackID;
@@ -244,7 +245,7 @@ router.get('/track/recent', function(req, res, next) {
 });
 
 router.post('/linkDLTracks', function(req, res, next) {
-  DownloadTrack.find({}).exec()
+  DownloadTrack.find({})
     .then(function(tracks) {
       tracks.forEach(function(track) {
         User.findOneAndUpdate({
@@ -401,7 +402,7 @@ router.post("/twitter/follow", function(req, res, done) {
     oauth: profileOauthData
   }, function(err, response, follow) {
     if (!err) {
-      DownloadTrack.findById(req.query.trackID).exec()
+      DownloadTrack.findById(req.query.trackID)
         .then(function(t) {
           if (t.downloadCount) t.downloadCount++;
           else t.downloadCount = 1;
@@ -428,7 +429,7 @@ router.post("/twitter/post", function(req, res, done) {
     oauth: profileOauthData
   }, function(err, response, tweet) {
     if (!err) {
-      DownloadTrack.findById(req.query.trackID).exec()
+      DownloadTrack.findById(req.query.trackID)
         .then(function(t) {
           if (t.downloadCount) t.downloadCount++;
           else t.downloadCount = 1;
@@ -450,8 +451,7 @@ router.get("/callbacksubscribe", function(req, res, next) {
     }
     YoutubeOauth.setCredentials(tokens);
     // Youtube subscribed to channel
-    if(typeof req.session.channelIDS == "string")
-    {
+    if (typeof req.session.channelIDS == "string") {
       var channel = req.session.channelIDS;
       req.session.channelIDS = [];
       req.session.channelIDS.push(channel);
@@ -490,7 +490,7 @@ router.get("/subscribe", function(req, res, next) {
     redirect_url: env.YOUTUBE.REDIRECT_URL_SUBSCRIBE
   });
 
-  DownloadTrack.findById(req.query.trackID).exec()
+  DownloadTrack.findById(req.query.trackID)
     .then(function(t) {
       if (t.downloadCount) t.downloadCount++;
       else t.downloadCount = 1;

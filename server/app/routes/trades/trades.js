@@ -13,7 +13,7 @@ router.get('/withUser/:userID', function(req, res, next) {
       }, {
         'p2.user': req.params.userID
       }]
-    }).populate('p1.user').populate('p2.user').exec()
+    }).populate('p1.user').populate('p2.user')
     .then(function(trades) {
       trades = trades.filter(function(trade) {
         return !(trade.p1.accepted && trade.p2.accepted)
@@ -29,7 +29,7 @@ router.get('/doneWithUser/:userID', function(req, res, next) {
       }, {
         'p2.user': req.params.userID
       }]
-    }).populate('p1.user').populate('p2.user').exec()
+    }).populate('p1.user').populate('p2.user')
     .then(function(trades) {
       trades = trades.filter(function(trade) {
         return (trade.p1.accepted && trade.p2.accepted)
@@ -60,7 +60,7 @@ router.put('/', function(req, res, next) {
   } else {
     Trade.findByIdAndUpdate(req.body._id, req.body, {
         new: true
-      }).populate('p1.user').populate('p2.user').exec()
+      }).populate('p1.user').populate('p2.user')
       .then(function(trade) {
         if (trade.p1.accepted && trade.p2.accepted) {
           var user = (req.user._id == trade.p1.user._id ? req.user : trade.p2.user);
@@ -78,7 +78,7 @@ router.put('/', function(req, res, next) {
 })
 
 router.get('/byID/:tradeID', function(req, res, next) {
-  Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user').exec()
+  Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user')
     .then(function(trade) {
       if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user._id) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user._id)) {
         next({
@@ -95,7 +95,7 @@ router.get('/byID/:tradeID', function(req, res, next) {
 router.get('/byID/:tradeID/:userId', function(req, res, next) {
   var userid = req.params.userId;
 
-  Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user').exec()
+  Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user')
     .then(function(trade) {
       if (userid != trade.p1.user._id && userid != trade.p2.user._id) {
         next({
@@ -110,7 +110,7 @@ router.get('/byID/:tradeID/:userId', function(req, res, next) {
 })
 
 router.post('/delete', function(req, res, next) {
-  Trade.findById(req.body.id).exec()
+  Trade.findById(req.body.id)
     .then(function(trade) {
       if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user) && (req.body.action != "admin" || req.body.action == undefined)) {
         next({
@@ -129,7 +129,7 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
   var arrP1Events = [];
   var arrP2Events = [];
   var arrUserTrades = [];
-  Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user').exec()
+  Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user')
     .then(function(trd) {
       var trade = trd.toJSON();
       if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user._id) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user._id)) {
@@ -140,12 +140,12 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
       } else {
         RepostEvent.find({
             userID: trade.p1.user.soundcloud.id
-          }).exec()
+          })
           .then(function(p1Events) {
             arrP1Events = p1Events;
             RepostEvent.find({
                 userID: trade.p2.user.soundcloud.id
-              }).exec()
+              })
               .then(function(p2Events) {
                 arrP2Events = p2Events;
                 Trade.find({
@@ -154,7 +154,7 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
                     }, {
                       'p2.user': req.user._id
                     }]
-                  }).populate('p1.user').populate('p2.user').exec()
+                  }).populate('p1.user').populate('p2.user')
                   .then(function(trades) {
                     var tradesResult = [];
                     var i = -1;
@@ -168,22 +168,22 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
                             var ownerid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p1.user._id : t.p2.user._id);
                             var userid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p2.user.soundcloud.id : t.p1.user.soundcloud.id);
                             RepostEvent.count({
-                                day: {
-                                  $gt: new Date()
-                                },
-                                owner: ownerid,
-                                userID: userid,
-                                trackID: {
-                                  $exists: false
-                                },
-                                type: 'traded'
-                              })
-                              .exec()
-                              .then(function(events) {
-                                t.unfilledTrackCount = events;
-                                tradesResult.push(t);
-                                next();
-                              });
+                              day: {
+                                $gt: new Date()
+                              },
+                              owner: ownerid,
+                              userID: userid,
+                              trackID: {
+                                $exists: false
+                              },
+                              type: 'traded'
+                            })
+
+                            .then(function(events) {
+                              t.unfilledTrackCount = events;
+                              tradesResult.push(t);
+                              next();
+                            });
                           } else {
                             next();
                           }

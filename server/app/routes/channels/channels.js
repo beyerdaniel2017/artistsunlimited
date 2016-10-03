@@ -8,7 +8,7 @@ var User = mongoose.model('User');
 router.get('/', function(req, res, next) {
   User.find({
       role: 'paid repost'
-    }).exec()
+    })
     .then(function(users) {
       users.forEach(function(u) {
         if (u.soundcloud.token) u.soundcloud.token = undefined;
@@ -21,7 +21,7 @@ router.get('/', function(req, res, next) {
 router.put('/', function(req, res, next) {
   Channel.findByIdAndUpdate(req.body._id, req.body, {
       new: true
-    }).exec()
+    })
     .then(function(channel) {
       res.send(channel);
     })

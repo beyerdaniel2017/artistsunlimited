@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 var UserModel = mongoose.model('User');
 mongoose.set('debug', true);
 var loggedInUser = null;
-module.exports = function (app) {
+module.exports = function(app) {
   var twitterConfig = app.getValue('env').TWITTER;
   var twitterCredentials = {
     consumerKey: twitterConfig.consumerKey,
@@ -14,7 +14,7 @@ module.exports = function (app) {
     callbackURL: twitterConfig.callbackUrlAuth
   };
 
-  var createNewUser = function (token, tokenSecret, profile) {
+  var createNewUser = function(token, tokenSecret, profile) {
     return UserModel.create({
       twitter: {
         id: profile.id,
@@ -25,7 +25,7 @@ module.exports = function (app) {
     });
   };
 
-  var updateUserCredentials = function (user, token, tokenSecret, profile) {
+  var updateUserCredentials = function(user, token, tokenSecret, profile) {
     user.twitter.id = profile.id;
     user.twitter.username = profile.username;
     user.twitter.token = token;
@@ -33,34 +33,38 @@ module.exports = function (app) {
     return user.save();
   };
 
-  var verifyCallback = function (token, tokenSecret, profile, done) {
+  var verifyCallback = function(token, tokenSecret, profile, done) {
     // I'm passing no search criteria because there will only be one user AND because Twitter doesn't provide a usedr email address by which to search for a user
-    UserModel.findOne({_id: loggedInUser._id}).exec()
-    .then(function (user) {
-      if (user) { 
-        return updateUserCredentials(user, token, tokenSecret, profile);
-      }
-    }).then(function (user) {
-      done(null, user);
-    }, function (err) {
-      console.error('Error creating user from Twitter authentication', err);
-      done(err);
-    });
+    UserModel.findOne({
+        _id: loggedInUser._id
+      })
+      .then(function(user) {
+        if (user) {
+          return updateUserCredentials(user, token, tokenSecret, profile);
+        }
+      }).then(function(user) {
+        done(null, user);
+      }, function(err) {
+        console.error('Error creating user from Twitter authentication', err);
+        done(err);
+      });
   };
 
   /*
-  * Get information of Logged In user
-  */
-  app.use(function(req,res,next){
+   * Get information of Logged In user
+   */
+  app.use(function(req, res, next) {
     loggedInUser = req.user;
     next();
   });
-  
+
   passport.use(new TwitterStrategy(twitterCredentials, verifyCallback));
-  app.get('/auth/twitter', passport.authenticate('twitter' /*, {scope:[]}*/));
+  app.get('/auth/twitter', passport.authenticate('twitter' /*, {scope:[]}*/ ));
   app.get('/auth/twitter/callback',
-    passport.authenticate('twitter', {failureRedirect: '/login'}),
-    function (req, res) {
+    passport.authenticate('twitter', {
+      failureRedirect: '/login'
+    }),
+    function(req, res) {
       res.redirect('/artistTools/releaser');
-  });
+    });
 };

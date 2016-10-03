@@ -27,12 +27,12 @@ function doRepost() {
         $gt: lowerDate,
         $lt: upperDate
       }
-    }).exec()
+    })
     .then(function(events) {
       events.forEach(function(event) {
         User.findOne({
             'soundcloud.id': event.userID
-          }).exec()
+          })
           .then(function(user) {
             event.day = new Date(event.day);
             event.unrepostDate = new Date(event.unrepostDate);
@@ -76,7 +76,7 @@ function repostAndRemove(event, user, repCount) {
               distributeEarnings(user, event);
               sendMessage(err, event, user);
             }
-            notificationCenter.sendNotifications(user._id, 'trackRepost', 'Track repost', event.title + ' was reposted on ' + user.soundcloud.username, 'artistsunlimited.com/login');
+            notificationCenter.sendNotifications(user._id, 'trackRepost', 'Track repost', event.title + ' was reposted on ' + user.soundcloud.username, 'https://artistsunlimited.com/login');
           }).then(null, console.log);
         } else {
           console.log('error ------------------');
@@ -114,7 +114,7 @@ function repostAndRemove(event, user, repCount) {
 //         messages: message
 //       }
 //     })
-//     .exec()
+//     
 //     .then(function(data) {
 //       //Success
 //     })
@@ -181,7 +181,7 @@ function getID(event, user) {
       if (event.type == 'queue') {
         findAgain(user);
       } else if (event.type == 'traded') {
-        User.findById(event.owner).exec()
+        User.findById(event.owner)
           .then(function(owner) {
             if (owner) {
               findAgain(owner);
@@ -201,7 +201,7 @@ function sendMessage(err, event, user) {
       sendEmail("EDWARD", "edward@peninsulamgmt.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
       sendEmail("PENINSULA", "latropicalofficial@gmail.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
     } else {
-      User.findById(event.owner).exec()
+      User.findById(event.owner)
         .then(function(owner) {
           sendEmail(user.soundcloud.username, user.email, "Artists Unlimited", "coayscue@artistsunlimited.com", "ERROR REPOSTING TRACK!", "Hey " + user.soundcloud.username + ",<br><br>There was an error reposting a track!<br><br>Type: " + event.type + (!event.trackID ? " - autofill" : "") + (!!owner ? "<br>Owner: <a href=" + owner.soundcloud.permalinkURL + ">" + owner.soundcloud.username + "</a>" : "") + (!!event.title ? "<br>Title: " + event.title : "") + (!!event.trackURL ? "<br>URL: " + event.trackURL : "") + "<br><br>The issue is likely that your access token has expired. Simply log back into <a href='https://artistsunlimited.com/login'>Artist Tools</a> to fix this.<br><br><br><br>Error: " + ((typeof err) == 'object' ? JSON.stringify(err) : err));
           sendEmail("Peninsula", "latropicalofficial@gmail.com", "Artists Unlimited", "coayscue@artistsunlimited.com", "ERROR REPOSTING TRACK!", "Hey " + user.soundcloud.username + ",<br><br>There was an error reposting a track!<br><br>Type: " + event.type + (!event.trackID ? " - autofill" : "") + (!!owner ? "<br>Owner: <a href=" + owner.soundcloud.permalinkURL + ">" + owner.soundcloud.username + "</a>" : "") + (!!event.title ? "<br>Title: " + event.title : "") + (!!event.trackURL ? "<br>URL: " + event.trackURL : "") + "<br><br>The issue is likely that your access token has expired. Simply log back into <a href='https://artistsunlimited.com/login'>Artist Tools</a> to fix this.<br><br><br><br>Error: " + ((typeof err) == 'object' ? JSON.stringify(err) : err));

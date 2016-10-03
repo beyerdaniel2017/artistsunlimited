@@ -33,7 +33,7 @@ function sendAutoEmails() {
         emailDayNum: dayNum,
         artist: isArtist
       };
-      Follower.find(filter).exec()
+      Follower.find(filter)
         .then(function(followers) {
           followers.forEach(function(follower) {
             var templateObj = objectAssign({}, template.toObject());

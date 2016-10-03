@@ -45,7 +45,7 @@ function scheduleLikes() {
 
 function performLike() {
   if (totalLikes >= process.env.NUMBER_LIKES) return;
-  Bot.find({}).exec()
+  Bot.find({})
     .then(function(bots) {
       var bot = bots[Math.floor(Math.random() * bots.length)];
       console.log(bot);
