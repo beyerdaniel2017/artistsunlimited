@@ -18,10 +18,10 @@ app.directive('reforrelists', function($http) {
       }
       $scope.itemview = "calendar";
       $scope.manageView = "calendar";
-      if($scope.activeTab == "3"){
+      if ($scope.activeTab == "3") {
         $window.localStorage.setItem('activetab', '1');
       }
-      
+
       $scope.currentTab = "SearchTrade";
       $scope.searchURL = "";
       $scope.sliderSearchMin = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers / 2) : 0)) / Math.log(1.1);
@@ -278,15 +278,15 @@ app.directive('reforrelists', function($http) {
           .then(function(res) {
             $scope.processing = false;
             if ($scope.isAdminRoute) {
-               $state.go('adminreForReInteraction', {
-                 tradeID: res.data._id
-               })
+              $state.go('adminreForReInteraction', {
+                tradeID: res.data._id
+              })
             } else {
-            $state.go('reForReInteraction', {
-              tradeID: res.data._id
-            })
+              $state.go('reForReInteraction', {
+                tradeID: res.data._id
+              })
             }
-           
+
           })
           .then(null, function(err) {
             $scope.processing = false;
@@ -366,29 +366,29 @@ app.directive('reforrelists', function($http) {
         });
       }
       $scope.verifyBrowser = function() {
-        if (navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1) {
-          var position = navigator.userAgent.search("Version") + 8;
-          var end = navigator.userAgent.search(" Safari");
-          var version = navigator.userAgent.substring(position, end);
-          if (parseInt(version) < 9) {
-            $.Zebra_Dialog('You have old version of safari. Click <a href="https://support.apple.com/downloads/safari">here</a> to download the latest version of safari for better site experience.', {
-              'type': 'confirmation',
-              'buttons': [{
-                caption: 'OK'
-              }],
-              'onClose': function() {
-                $window.location.href = "https://support.apple.com/downloads/safari";
-              }
-            });
+          if (navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1) {
+            var position = navigator.userAgent.search("Version") + 8;
+            var end = navigator.userAgent.search(" Safari");
+            var version = navigator.userAgent.substring(position, end);
+            if (parseInt(version) < 9) {
+              $.Zebra_Dialog('You have old version of safari. Click <a href="https://support.apple.com/downloads/safari">here</a> to download the latest version of safari for better site experience.', {
+                'type': 'confirmation',
+                'buttons': [{
+                  caption: 'OK'
+                }],
+                'onClose': function() {
+                  $window.location.href = "https://support.apple.com/downloads/safari";
+                }
+              });
+            }
           }
         }
-      }
-      // $scope.getUserNetwork = function() {
-      //   $http.get("/api/database/userNetworks")
-      //     .then(function(networks) {
-      //       $rootScope.userlinkedAccounts = networks.data;
-      //     })
-      // }
+        // $scope.getUserNetwork = function() {
+        //   $http.get("/api/database/userNetworks")
+        //     .then(function(networks) {
+        //       $rootScope.userlinkedAccounts = networks.data;
+        //     })
+        // }
 
       $scope.dayIncr = 0;
       $scope.incrDay = function() {
@@ -414,13 +414,13 @@ app.directive('reforrelists', function($http) {
           return {
             'background-color': '#B22222',
             'height': '19px',
-            'margin' : '2px',
+            'margin': '2px',
           }
         } else if (repostEvent.trackInfo.type == 'traded' && !repostEvent.trackInfo.trackID) {
           return {
             'background-color': '#2b9fda',
             'height': '19px',
-            'margin' : '2px',
+            'margin': '2px',
           }
         }
       }
@@ -456,7 +456,7 @@ app.directive('reforrelists', function($http) {
 
       $scope.clickedSlot = function(day, hour, data) {
         if (data.trackInfo) {
-            $scope.deleteEventData = data;
+          $scope.deleteEventData = data;
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
           document.getElementById('scPopupPlayer').innerHTML = "";
           $scope.makeEvent = {};
@@ -498,19 +498,18 @@ app.directive('reforrelists', function($http) {
         $scope.showOverlay = false;
       }
 
-      $scope.deleteEvent = function()
-      {
-         var eventId = $scope.deleteEventData.trackInfo._id;
-          $http.delete('/api/events/repostEvents/' + eventId)
-            .then(function(res) {
-              $.Zebra_Dialog("Deleted successfully !!!")
-              $scope.showOverlay = false;
-              $state.reload();
-            })
-            .then(null, function(err) {
-              $scope.processing = false;
-              $.Zebra_Dialog("ERROR: Did not delete.")
-            });
+      $scope.deleteEvent = function() {
+        var eventId = $scope.deleteEventData.trackInfo._id;
+        $http.delete('/api/events/repostEvents/' + eventId)
+          .then(function(res) {
+            $.Zebra_Dialog("Deleted successfully !!!")
+            $scope.showOverlay = false;
+            $state.reload();
+          })
+          .then(null, function(err) {
+            $scope.processing = false;
+            $.Zebra_Dialog("ERROR: Did not delete.")
+          });
       }
 
       $scope.saveEvent = function() {
@@ -552,8 +551,8 @@ app.directive('reforrelists', function($http) {
         $scope.makeEvent.title = track.title;
         $scope.makeEvent.trackURL = track.permalink_url;
         $scope.makeEvent.trackArtUrl = track.artwork_url;
-        $scope.makeEvent.trackArtUrl =track.artwork_url;
-        $scope.makeEvent.artistName =track.user.username;
+        $scope.makeEvent.trackArtUrl = track.artwork_url;
+        $scope.makeEvent.artistName = track.user.username;
         SC.oEmbed($scope.makeEvent.trackURL, {
           element: document.getElementById('scPopupPlayer'),
           auto_play: false,
@@ -568,8 +567,8 @@ app.directive('reforrelists', function($http) {
         $scope.makeEvent.title = track.title;
         $scope.makeEvent.trackURL = track.permalink_url;
         $scope.makeEvent.trackArtUrl = track.artwork_url;
-        $scope.makeEvent.trackArtUrl =track.artwork_url;
-        $scope.makeEvent.artistName =track.user.username;
+        $scope.makeEvent.trackArtUrl = track.artwork_url;
+        $scope.makeEvent.artistName = track.user.username;
         SC.oEmbed($scope.makeEvent.trackURL, {
           element: document.getElementById('scPlayer'),
           auto_play: false,
@@ -583,7 +582,7 @@ app.directive('reforrelists', function($http) {
         $scope.newQueueID = track.id;
         $scope.addSong();
       }
-        $scope.removeQueueSong = function(song) {
+      $scope.removeQueueSong = function(song) {
         var index = $scope.user.queue.indexOf(song.id);
         $scope.user.queue.splice(index, 1);
         $scope.saveUser();
@@ -602,15 +601,14 @@ app.directive('reforrelists', function($http) {
         $scope.user.queue.forEach(function(songID) {
           SC.get('/tracks/' + songID)
             .then(function(track) {
-              if($scope.autoFillTracks.indexOf(track) == -1)
-              {
-                 $scope.autoFillTracks.push(track);
+              if ($scope.autoFillTracks.indexOf(track) == -1) {
+                $scope.autoFillTracks.push(track);
               }
               $scope.$digest();
             }, console.log);
         })
       }
-       $scope.saveUser = function() {
+      $scope.saveUser = function() {
         $scope.processing = true;
         $http.put("/api/database/profile", $scope.user)
           .then(function(res) {

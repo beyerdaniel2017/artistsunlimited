@@ -446,11 +446,11 @@ router.post('/downloadurl', function(req, res, next) {
       body.fields.admin = false;
     }
     body.fields.userid = req.user._id;
-    body.fields.trackDownloadUrl = rootURL + "/download/" + req.user.soundcloud.username + "/" + body.fields.trackTitle.replace(/ /g,'-').replace(/./g,'-');
+    body.fields.trackDownloadUrl = rootURL + "/download/" + req.user.soundcloud.username + "/" + body.fields.trackTitle.replace(/ /g, '-').replace(/./g, '-');
     if (body.fields.adminaction == "admin") {
       var users = JSON.parse(body.fields.user);
       body.fields.userid = users._id;
-      body.fields.trackDownloadUrl = rootURL + "/download/" + users.soundcloud.username + "/" + body.fields.trackTitle.replace(/ /g,'-').replace(/./g,'-');
+      body.fields.trackDownloadUrl = rootURL + "/download/" + users.soundcloud.username + "/" + body.fields.trackTitle.replace(/ /g, '-').replace(/./g, '-');
     }
     body.fields.downloadURL = (body.location !== '') ? body.location : body.fields.downloadURL;
     if (body.fields._id) {
@@ -468,7 +468,7 @@ router.post('/downloadurl', function(req, res, next) {
     return new Promise(function(resolve, reject) {
       if (req.user && req.user.soundcloud && (body.fields.artistID == req.user.soundcloud.id) && !body.fields._id) {
         var token = req.user.soundcloud.token;
-        var purchase_url = downloadTrack.trackDownloadUrl;  //rootURL + '/download?trackid=' + downloadTrack._id;
+        var purchase_url = downloadTrack.trackDownloadUrl; //rootURL + '/download?trackid=' + downloadTrack._id;
         var trackObj = {
           purchase_url: purchase_url, //this doesnt work on localhost, but does on live
           purchase_title: '|| D O W N L O A D',
@@ -1213,6 +1213,7 @@ router.post('/networkaccount', function(req, res, next) {
 });
 
 router.get('/userNetworks', function(req, res, next) {
+  console.log(req);
   var userID = req.user._id;
   NetworkAccounts.findOne({
       channels: userID

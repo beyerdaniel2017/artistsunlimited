@@ -1106,17 +1106,17 @@ label {
 
 .overlay {
   position: absolute;
-  top: -100px;
-  left: -100px;
-  right: -100px;
-  height: 3000px;
+  top: -40px;
+  left: -10px;
+  right: -17px;
+  height: 110%;
   background-color: rgba(0, 0, 0, 0.5);
   text-align: center; }
 
 .slot-box {
   width: 500px;
   background-color: white;
-  margin: 200px auto;
+  margin: 40px auto;
   padding: 50px 0;
   border-radius: 12px; }
 
@@ -1937,16 +1937,16 @@ h3 {
   /* width: 50%;*/ }
 
 .page-content li img {
-  display: inline-table;
-  padding: 11px 0px;
-  margin: 0 10px; }
+  /* display: inline-table;
+    padding: 11px 0px;
+    margin: 0 10px;*/ }
 
 .tab-content {
-  margin: 0 0 0px 0;
-  padding: 0 0px;
-  color: #828282;
-  font-size: 12px;
-  letter-spacing: 1px; }
+  /* margin: 0 0 0px 0;
+    padding: 0 0px;
+    color: #828282;
+    font-size: 12px;
+    letter-spacing: 1px;*/ }
 
 .nav-tabs {
   padding: 0px 0;
@@ -2886,7 +2886,10 @@ input:checked + .slider:before {
   border: 1px solid #c2c2c2;
   box-shadow: 0px 0px 3px #c8c8c8;
   border-radius: 10px;
-  overflow: hidden; }
+  overflow: hidden;
+  overflow: auto;
+  max-height: 250px;
+  overflow-x: hidden; }
 
 .payed-reposts li {
   list-style: none;
@@ -2918,9 +2921,10 @@ input:checked + .slider:before {
   color: #8a8a8a; }
 
 .check-list {
-  /*    max-height: 140px;
-    overflow-y: auto;
-    min-height: 140px;*/ }
+  /* max-height: 140px; */
+  /* overflow-y: auto; */
+  /* min-height: 140px; */
+  padding: 5px 0; }
 
 .songScheduler .title {
   font-size: 18px;
@@ -2950,11 +2954,10 @@ input:checked + .slider:before {
 
 .channel-check {
   border: 1px solid #727272;
-  box-shadow: 0 0px 1px #AEAEAE;
   border-radius: 10px;
   display: inline-block;
   width: 100%;
-  margin: 15px 0 5px 0; }
+  margin: 5px 0 5px 0; }
 
 .channel-masege {
   border-bottom: 1px solid #d8d8d8;
@@ -3061,7 +3064,8 @@ input:checked + .slider:before {
   list-style: none; }
 
 .like-comment li {
-  list-style: none; }
+  list-style: none;
+  margin: 0 5px; }
 
 .input-hour {
   width: 65px;
@@ -3286,7 +3290,7 @@ input:checked + .slider:before {
   min-width: 320px; }
 
 .available-popup-box .like-comment li {
-  margin: 0 10px; }
+  margin: 0 5px; }
 
 /*Combain page css ::start*/
 .margin-top-4 {
@@ -3913,7 +3917,8 @@ td {
   white-space: nowrap;
   overflow: hidden;
   /*height: 20.7px;*/
-  padding: 3px; }
+  padding: 3px;
+  font-size: 12px; }
 
 .calendar-grid {
   width: 98%;
@@ -3953,15 +3958,14 @@ td {
 /*** 14-9-2016 ***/
 .url-search-btn-small {
   position: absolute;
-  right: 12px;
+  right: 5px;
   cursor: pointer;
   font-size: 16px;
   height: 20px;
-  width: 20px;
-  margin-left: -2.5px;
+  width: 25px;
   text-align: center;
-  top: 6px;
-  background: transparent;
+  top: 7px;
+  background: #FFFFFF;
   color: #888; }
 
 .url-search-btn-big {
@@ -3974,8 +3978,11 @@ td {
   margin-left: -2.5px;
   text-align: center;
   top: 13px;
-  background: transparent;
+  background: #FFFFFF;
   color: #888; }
+
+.search-big .url-search-btn-small {
+  top: 12px; }
 
 /*** 14-9-2016 ***/
 /*** 15-9-2016 ***/
@@ -4099,7 +4106,8 @@ td {
   vertical-align: middle; }
 
 .vertical-container li > .list-img-container img {
-  height: 115px; }
+  height: 115px;
+  border-radius: 10px; }
 
 .vertical-text {
   margin: 10px 0; }
@@ -4133,7 +4141,9 @@ td {
   width: 38%; }
 
 .account-vertical-container li > .list-img-container img {
-  height: 115px; }
+  height: 100px;
+  border-radius: 10px;
+  margin: 0 auto; }
 
 .space-10 {
   height: 10px;
@@ -4164,6 +4174,11 @@ td {
   margin-bottom: 40px; }
 
 /*** 22-9-2016 ***/
+.comment-view {
+  display: inline-block;
+  width: 190px;
+  color: #686868 !important; }
+
 /******************************** Media CSS :: START ************************************/
 @media screen and (max-width: 1280px) {
   .min-ht {

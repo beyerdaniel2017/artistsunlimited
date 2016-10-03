@@ -87,8 +87,7 @@
                 <h5 class="bold">Facebook Messenger Notifications</h5>
                 <div class="fb-send-to-messenger" messenger_app_id="1771378846475599" page_id="499383536933941" color="blue" size="large" data-ref="{{profile.data._id}}">
                 </div>
-                <div ng-if="profile.data.notificationSettings.facebookMessenger.messengerID">Linked</div>                       
-                <br />
+                <span ng-if="!!profile.data.notificationSettings.facebookMessenger.messengerID">Linked &#10004</span>                 <br />
                 <br />
                 <label class="with-square-checkbox">
                   <input type="checkbox" ng-model="profile.data.notificationSettings.facebookMessenger.tradeRequest" ng-change="saveNotifications()">
@@ -110,11 +109,11 @@
                   <span>Track Unrepost</span>
                 </label>
                 <br>
-                <label class="with-square-checkbox">
+<!--                 <label class="with-square-checkbox">
                   <input type="checkbox" ng-model="profile.data.notificationSettings.facebookMessenger.dailyUnfilledTrade" ng-change="saveNotifications()">
                   <span>Unfilled Traded Slots Tomorrow</span>
                 </label>
-                <br>
+                <br> -->
                 <h5 class="bold">Email Notifications</h5>
                 <h4>{{profile.data.email}}</h4>
                 <label class="with-square-checkbox">
@@ -137,10 +136,10 @@
                   <span>Track Unrepost</span>
                 </label>
                 <br>
-                <label class="with-square-checkbox">
+<!--                 <label class="with-square-checkbox">
                   <input type="checkbox" ng-model="profile.data.notificationSettings.email.dailyUnfilledTrade" ng-change="saveNotifications()">
                   <span>Unfilled Traded Slots Tomorrow</span>
-                </label>
+                </label> -->
               </div>
             </div>
           </div>
