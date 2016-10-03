@@ -27,6 +27,7 @@ router.get('/isUserAuthenticate', function(req, res, next) {
 });
 
 router.get('/byId/:id', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   User.findById(req.params.id)
     .then(function(user) {
       //if (user.soundcloud.token) user.soundcloud.token = undefined;
@@ -107,6 +108,7 @@ router.get('/getUserByURL/:username/:page', function(req, res, next) {
 });
 
 router.post('/bySCURL', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   var minFollowers = (req.body.minFollower ? parseInt(req.body.minFollower) : 0);
   var maxFollowers = (req.body.maxFollower ? parseInt(req.body.maxFollower) : 100000000);
   var originalUrl = (req.body.url != "") ? req.body.url : undefined;
@@ -232,6 +234,7 @@ router.post('/bySCURL', function(req, res, next) {
 
 /*profile updateion*/
 router.post('/profilePicUpdate', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   parseMultiPart()
     .then(uploadToBucket)
     .catch(errorHandler);
@@ -326,6 +329,7 @@ router.post('/profilePicUpdate', function(req, res, next) {
 });
 
 router.put('/updateAdmin', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   User.findByIdAndUpdate(req.user._id, req.body)
     .then(function(user) {
       res.send(user);
@@ -343,6 +347,7 @@ router.put('/updateuserRecord', function(req, res, next) {
   })
   /*Admin profile update start*/
 router.post('/updateAdminProfile', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   var body = req.body;
   var updateObj = body;
   if (updateObj.pictureUrl) {
@@ -441,6 +446,7 @@ router.post('/updatePaidRepost', function(req, res, next) {
 });
 
 router.get('/getUserPaidRepostAccounts', function(req, res) {
+  if (!req.user) next(new Error('Unauthorized'));
   var accounts = req.user.paidRepost;
   var results = [];
   var i = -1;

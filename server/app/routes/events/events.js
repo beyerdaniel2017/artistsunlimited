@@ -9,6 +9,7 @@ var User = mongoose.model('User');
 
 //----------Public Repost Events----------
 router.get('/forUser/:id', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   var date = moment().month(new Date().getMonth()).date(new Date().getDate() - 7).hours(0).minutes(0).seconds(0).milliseconds(0).format();
   RepostEvent.find({
     userID: req.params.id,
@@ -24,6 +25,7 @@ router.get('/forUser/:id', function(req, res, next) {
 })
 
 router.get('/respostEvent/:id', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   var data = [];
   RepostEvent.findOne({
     _id: req.params.id,
@@ -64,6 +66,7 @@ router.get('/respostEvent/:id', function(req, res, next) {
 
 /*Get Repost events for List*/
 router.get('/listEvents/:id', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   var query;
   var fromDate = req.query.date ? moment().month(new Date(req.query.date).getMonth()).date(new Date(req.query.date).getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format() : moment().month(new Date().getMonth()).date(new Date().getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format();
   var toDate = req.query.date ? moment().month(new Date(req.query.date).getMonth()).date(new Date(req.query.date).getDate() + 6).hours(23).minutes(59).seconds(59).milliseconds(999).format() : moment().month(new Date().getMonth()).date(new Date().getDate()).hours(23).minutes(59).seconds(59).milliseconds(999).format();
@@ -84,21 +87,19 @@ router.get('/listEvents/:id', function(req, res, next) {
 router.put('/repostEvents', function(req, res, next) {
   denyTradeOverlap(req.body)
     .then(function(ok) {
-      RepostEvent.findByIdAndUpdate(req.body._id, req.body, {
-          new: true,
-          upsert: true
-        })
-        .then(function(event) {
-          event.trackID = req.body.trackID;
-          event.title = req.body.title;
-          event.trackURL = req.body.trackURL;
-          return event.save()
-        })
-        .then(function(ev) {
-          ev.day = new Date(ev.day);
-          res.send(ev);
-        })
-        .then(null, next);
+      return RepostEvent.findByIdAndUpdate(req.body._id, req.body, {
+        new: true,
+        upsert: true
+      })
+    }).then(function(event) {
+      event.trackID = req.body.trackID;
+      event.title = req.body.title;
+      event.trackURL = req.body.trackURL;
+      return event.save()
+    })
+    .then(function(ev) {
+      ev.day = new Date(ev.day);
+      res.send(ev);
     }).then(null, next)
 });
 
@@ -153,49 +154,48 @@ router.post('/repostEventsScheduler', function(req, res, next) {
 function scheduleEvent(channel, scheduledDate, eventDetails) {
   return new Promise(function(fulfill, reject) {
     RepostEvent.find({
-      userID: channel.soundcloud.id,
-      day: {
-        $gt: new Date()
-      }
-    })
-
-    .then(function(allEvents) {
-      allEvents.forEach(function(event) {
-        event.day = new Date(event.day);
-      });
-      var continueSearch = true;
-      var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-      var ind = 1;
-      while (continueSearch) {
-        var day = daysOfWeek[(scheduledDate.getDay() + ind) % 7];
-        channel.availableSlots[day].forEach(function(hour) {
-          var desiredDay = new Date(scheduledDate);
-          desiredDay.setTime(desiredDay.getTime() + ind * 24 * 60 * 60 * 1000);
-          desiredDay.setHours(hour);
-          if (continueSearch) {
-            var event = allEvents.find(function(eve) {
-              return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
-            });
-            if (!event) {
-              continueSearch = false;
-              eventDetails.day = desiredDay;
-              eventDetails.comment = undefined;
-              eventDetails.userID = channel.soundcloud.id
-              if ((new Date(eventDetails.unrepostDate)).getTime() > 1000000000) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + 24 * 3600000)
-              else eventDetails.unrepostDate = new Date(0);
-              var newEve = new RepostEvent(eventDetails);
-              newEve.save()
-                .then(function(eve) {
-                  eve.day = new Date(eve.day);
-                  fulfill('done');
-                })
-                .then(null, reject);
-            }
-          }
+        userID: channel.soundcloud.id,
+        day: {
+          $gt: new Date()
+        }
+      })
+      .then(function(allEvents) {
+        allEvents.forEach(function(event) {
+          event.day = new Date(event.day);
         });
-        ind++;
-      }
-    }).then(null, reject);
+        var continueSearch = true;
+        var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+        var ind = 1;
+        while (continueSearch) {
+          var day = daysOfWeek[(scheduledDate.getDay() + ind) % 7];
+          channel.availableSlots[day].forEach(function(hour) {
+            var desiredDay = new Date(scheduledDate);
+            desiredDay.setTime(desiredDay.getTime() + ind * 24 * 60 * 60 * 1000);
+            desiredDay.setHours(hour);
+            if (continueSearch) {
+              var event = allEvents.find(function(eve) {
+                return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
+              });
+              if (!event) {
+                continueSearch = false;
+                eventDetails.day = desiredDay;
+                eventDetails.comment = undefined;
+                eventDetails.userID = channel.soundcloud.id
+                if ((new Date(eventDetails.unrepostDate)).getTime() > 1000000000) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + 24 * 3600000)
+                else eventDetails.unrepostDate = new Date(0);
+                var newEve = new RepostEvent(eventDetails);
+                newEve.save()
+                  .then(function(eve) {
+                    eve.day = new Date(eve.day);
+                    fulfill('done');
+                  })
+                  .then(null, reject);
+              }
+            }
+          });
+          ind++;
+        }
+      }).then(null, reject);
   })
 }
 

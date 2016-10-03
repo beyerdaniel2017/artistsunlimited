@@ -9,6 +9,7 @@ app.directive('reforrelists', function($http) {
       $scope.user = SessionService.getUser();
       $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
       $scope.otherUsers = [];
+       $scope.type = 'remind';
       var path = window.location.pathname;
       $scope.isAdminRoute = false;
       if (path.indexOf("admin/") != -1) {
@@ -301,7 +302,8 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.remindTrade = function(tradeID, index) {
-        $scope.sharelink = "https://localhost:1443/artistTools/reForReInteraction/" + tradeID;
+        $('#pop').modal('show');
+        $scope.tradeID = tradeID;
       }
 
       $scope.sendMail = function(sharelink) {

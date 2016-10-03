@@ -32,6 +32,7 @@ scWrapper.init({
 });
 
 router.get('/track', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   DownloadTrack.findById(req.query.trackID)
     .populate('userid')
 
@@ -227,6 +228,7 @@ router.post('/tasks', function(req, res, next) {
 });
 
 router.get('/track/recent', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   var userID = req.query.userID;
   var trackID = req.query.trackID;
   DownloadTrack.find({
