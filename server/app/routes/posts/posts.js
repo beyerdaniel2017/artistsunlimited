@@ -11,6 +11,7 @@ var HTTPS = require('https');
 
 //============== GET ALL POSTS ==============
 router.get('/', function(req, res, next) {
+        if (!req.user) next(new Error('Unauthorized'));
 	var userid = req.user._id;
 	Post.find({userID: userid}).sort({postDate: 1})
 	.then(function(posts) {
