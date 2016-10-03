@@ -11,13 +11,13 @@ var User = mongoose.model('User');
 router.get('/forUser/:id', function(req, res, next) {
   var date = moment().month(new Date().getMonth()).date(new Date().getDate() - 7).hours(0).minutes(0).seconds(0).milliseconds(0).format();
   RepostEvent.find({
-      userID: req.params.id,
-      day: {
-        $gte: date
-      }
-    })
-    .exec()
-    .then(function(events) {
+    userID: req.params.id,
+    day: {
+      $gte: date
+    }
+  })
+
+  .then(function(events) {
       res.send(events);
     })
     .then(null, next);
@@ -26,15 +26,15 @@ router.get('/forUser/:id', function(req, res, next) {
 router.get('/respostEvent/:id', function(req, res, next) {
   var data = [];
   RepostEvent.findOne({
-      _id: req.params.id,
-    })
-    .exec()
-    .then(function(event) {
+    _id: req.params.id,
+  })
+
+  .then(function(event) {
       RepostEvent.find({
-          trackID: event.trackID
-        })
-        .exec()
-        .then(function(tracks) {
+        trackID: event.trackID
+      })
+
+      .then(function(tracks) {
           var i = -1;
 
           function next() {
@@ -68,14 +68,14 @@ router.get('/listEvents/:id', function(req, res, next) {
   var fromDate = req.query.date ? moment().month(new Date(req.query.date).getMonth()).date(new Date(req.query.date).getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format() : moment().month(new Date().getMonth()).date(new Date().getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format();
   var toDate = req.query.date ? moment().month(new Date(req.query.date).getMonth()).date(new Date(req.query.date).getDate() + 6).hours(23).minutes(59).seconds(59).milliseconds(999).format() : moment().month(new Date().getMonth()).date(new Date().getDate()).hours(23).minutes(59).seconds(59).milliseconds(999).format();
   RepostEvent.find({
-      userID: req.params.id,
-      day: {
-        $gte: fromDate,
-        $lte: toDate
-      }
-    })
-    .exec()
-    .then(function(events) {
+    userID: req.params.id,
+    day: {
+      $gte: fromDate,
+      $lte: toDate
+    }
+  })
+
+  .then(function(events) {
       res.send(events);
     })
     .then(null, next);
@@ -87,7 +87,7 @@ router.put('/repostEvents', function(req, res, next) {
       RepostEvent.findByIdAndUpdate(req.body._id, req.body, {
           new: true,
           upsert: true
-        }).exec()
+        })
         .then(function(event) {
           event.trackID = req.body.trackID;
           event.title = req.body.title;
@@ -153,54 +153,54 @@ router.post('/repostEventsScheduler', function(req, res, next) {
 function scheduleEvent(channel, scheduledDate, eventDetails) {
   return new Promise(function(fulfill, reject) {
     RepostEvent.find({
-        userID: channel.soundcloud.id,
-        day: {
-          $gt: new Date()
-        }
-      })
-      .exec()
-      .then(function(allEvents) {
-        allEvents.forEach(function(event) {
-          event.day = new Date(event.day);
-        });
-        var continueSearch = true;
-        var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-        var ind = 1;
-        while (continueSearch) {
-          var day = daysOfWeek[(scheduledDate.getDay() + ind) % 7];
-          channel.availableSlots[day].forEach(function(hour) {
-            var desiredDay = new Date(scheduledDate);
-            desiredDay.setTime(desiredDay.getTime() + ind * 24 * 60 * 60 * 1000);
-            desiredDay.setHours(hour);
-            if (continueSearch) {
-              var event = allEvents.find(function(eve) {
-                return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
-              });
-              if (!event) {
-                continueSearch = false;
-                eventDetails.day = desiredDay;
-                eventDetails.comment = undefined;
-                eventDetails.userID = channel.soundcloud.id
-                if ((new Date(eventDetails.unrepostDate)).getTime() > 1000000000) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + 24 * 3600000)
-                else eventDetails.unrepostDate = new Date(0);
-                var newEve = new RepostEvent(eventDetails);
-                newEve.save()
-                  .then(function(eve) {
-                    eve.day = new Date(eve.day);
-                    fulfill('done');
-                  })
-                  .then(null, reject);
-              }
+      userID: channel.soundcloud.id,
+      day: {
+        $gt: new Date()
+      }
+    })
+
+    .then(function(allEvents) {
+      allEvents.forEach(function(event) {
+        event.day = new Date(event.day);
+      });
+      var continueSearch = true;
+      var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+      var ind = 1;
+      while (continueSearch) {
+        var day = daysOfWeek[(scheduledDate.getDay() + ind) % 7];
+        channel.availableSlots[day].forEach(function(hour) {
+          var desiredDay = new Date(scheduledDate);
+          desiredDay.setTime(desiredDay.getTime() + ind * 24 * 60 * 60 * 1000);
+          desiredDay.setHours(hour);
+          if (continueSearch) {
+            var event = allEvents.find(function(eve) {
+              return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
+            });
+            if (!event) {
+              continueSearch = false;
+              eventDetails.day = desiredDay;
+              eventDetails.comment = undefined;
+              eventDetails.userID = channel.soundcloud.id
+              if ((new Date(eventDetails.unrepostDate)).getTime() > 1000000000) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + 24 * 3600000)
+              else eventDetails.unrepostDate = new Date(0);
+              var newEve = new RepostEvent(eventDetails);
+              newEve.save()
+                .then(function(eve) {
+                  eve.day = new Date(eve.day);
+                  fulfill('done');
+                })
+                .then(null, reject);
             }
-          });
-          ind++;
-        }
-      }).then(null, reject);
+          }
+        });
+        ind++;
+      }
+    }).then(null, reject);
   })
 }
 
 router.delete('/repostEvents/:id', function(req, res, next) {
-  RepostEvent.findByIdAndRemove(req.params.id).exec()
+  RepostEvent.findByIdAndRemove(req.params.id)
     .then(function(event) {
       event.day = new Date(event.day);
       res.send(event);
@@ -218,7 +218,7 @@ router.post('/saveAvailableSlots', function(req, res, next) {
     }, {
       upsert: true,
       new: true
-    }).exec()
+    })
     .then(function(ev) {
       res.send(ev);
     })
@@ -234,8 +234,8 @@ router.get('/getRepostEvents/:id', function(req, res, next) {
     .sort({
       day: 1
     })
-    .exec()
-    .then(function(tracks) {
+
+  .then(function(tracks) {
       var i = -1;
 
       function next() {
@@ -264,7 +264,7 @@ router.get('/getRepostEvents/:id', function(req, res, next) {
 // router.put('/', function(req, res, next) {
 //   Event.findByIdAndUpdate(req.body._id, req.body, {
 //       new: true
-//     }).exec()
+//     })
 //     .then(function(event) {
 //       event.trackID = req.body.trackID;
 //       return event.save()
@@ -287,7 +287,7 @@ router.get('/getRepostEvents/:id', function(req, res, next) {
 // });
 
 // router.delete('/:id', function(req, res, next) {
-//   Event.findByIdAndRemove(req.params.id).exec()
+//   Event.findByIdAndRemove(req.params.id)
 //     .then(function(event) {
 //       event.day = new Date(event.day);
 //       res.send(event);

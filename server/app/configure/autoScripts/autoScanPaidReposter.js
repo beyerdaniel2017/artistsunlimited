@@ -120,33 +120,33 @@ function addFollower(user) {
         }
       }
       Follower.findOne({
-          "scID": user.id
-        })
-        .exec()
-        .then(function(follower) {
-          if (!follower) {
-            var newFollower = new Follower({
-              artist: user.track_count > 0,
-              scID: user.id,
-              scURL: user.permalink_url,
-              name: user.full_name,
-              username: user.username,
-              followers: user.followers_count,
-              email: email,
-              description: user.description,
-              numTracks: user.track_count,
-              facebookURL: user.facebookURL,
-              instagramURL: user.facebookURL,
-              twitterURL: user.twitterURL,
-              youtubeURL: user.youtubeURL,
-              emailDayNum: Math.floor(Math.random() * 14) + 1,
-              websites: user.websites,
-              genre: user.genre,
-              allEmails: emailArray
-            });
-            newFollower.save();
-          }
-        });
+        "scID": user.id
+      })
+
+      .then(function(follower) {
+        if (!follower) {
+          var newFollower = new Follower({
+            artist: user.track_count > 0,
+            scID: user.id,
+            scURL: user.permalink_url,
+            name: user.full_name,
+            username: user.username,
+            followers: user.followers_count,
+            email: email,
+            description: user.description,
+            numTracks: user.track_count,
+            facebookURL: user.facebookURL,
+            instagramURL: user.facebookURL,
+            twitterURL: user.twitterURL,
+            youtubeURL: user.youtubeURL,
+            emailDayNum: Math.floor(Math.random() * 14) + 1,
+            websites: user.websites,
+            genre: user.genre,
+            allEmails: emailArray
+          });
+          newFollower.save();
+        }
+      });
     });
   }
 }

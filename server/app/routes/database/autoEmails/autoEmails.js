@@ -4,22 +4,24 @@ var mongoose = require('mongoose');
 var EmailTemplate = mongoose.model("EmailTemplate");
 
 router.get('/', function(req, res, next) {
-  if(req.query.templateId) {
+  if (req.query.templateId) {
     EmailTemplate
-      .findOne({ _id: req.query.templateId })
-      .exec()
-      .then(function(template) {
+      .findOne({
+        _id: req.query.templateId
+      })
+
+    .then(function(template) {
         res.send(template);
       })
       .then(null, next);
   } else {
     EmailTemplate
-    .find({})
-    .exec()
+      .find({})
+
     .then(function(templates) {
-      res.send(templates);
-    })
-    .then(null, next);
+        res.send(templates);
+      })
+      .then(null, next);
   }
 });
 
@@ -33,32 +35,34 @@ router.post('/', function(req, res, next) {
   var day = Math.floor(diff / oneDay);
   update.reminderDay = (day % 14) + 1;
 
-  if(update._id) {
+  if (update._id) {
     EmailTemplate
       .findOneAndUpdate({
         _id: update._id
-      }, { $set: update})
-      .exec()
-      .then(function(template) {
+      }, {
+        $set: update
+      })
+
+    .then(function(template) {
         return res.send(template);
       })
-      .then(null, next); 
+      .then(null, next);
   } else {
     var emailTemplate = new EmailTemplate({
-      "reminderDay" : update.reminderDay,
-      "htmlMessage" : update.htmlMessage,
-      "subject" : update.subject,
-      "fromEmail" : update.fromEmail,
-      "fromName" : update.fromName,
-      "purpose" : update.purpose,
-      "isArtist" : update.isArtist,
+      "reminderDay": update.reminderDay,
+      "htmlMessage": update.htmlMessage,
+      "subject": update.subject,
+      "fromEmail": update.fromEmail,
+      "fromName": update.fromName,
+      "purpose": update.purpose,
+      "isArtist": update.isArtist,
     });
     emailTemplate
       .save()
-      .then(function(){
+      .then(function() {
         return res.send();
       })
-      .then(null, next); 
+      .then(null, next);
   }
 });
 
@@ -71,7 +75,7 @@ router.get('/:templateId', function(req, res, next) {
   EmailTemplate
     .findOne({
       _id: templateId
-    }).exec()
+    })
     .then(function(template) {
       res.send(template);
     })

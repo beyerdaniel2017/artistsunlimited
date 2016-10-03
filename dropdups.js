@@ -45,7 +45,7 @@ db.once('open', function() {
 
 function dropDups() {
   var i = 0;
-  SCEmails.find({}).exec()
+  SCEmails.find({})
     .then(function(users) {
       users.forEach(function(user) {
         delete user._id;

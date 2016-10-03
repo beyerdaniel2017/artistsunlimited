@@ -28,19 +28,19 @@ function doUnrepost() {
   var upperDate = new Date();
   upperDate.setTime(upperDate.getTime() + 60 * 60 * 1000 - upperDate.getMinutes(0) * 60 * 1000 - upperDate.getMinutes(0) * 1000);
 
-  User.find({}).exec()
+  User.find({})
     .then(function(users) {
       users.forEach(function(user) {
         RepostEvent.findOne({
-            userID: user.soundcloud.id,
-            completed: true,
-            unrepostDate: {
-              $gt: lowerDate,
-              $lt: upperDate
-            }
-          })
-          .exec()
-          .then(function(event) {
+          userID: user.soundcloud.id,
+          completed: true,
+          unrepostDate: {
+            $gt: lowerDate,
+            $lt: upperDate
+          }
+        })
+
+        .then(function(event) {
             if (event) unrepostEvent(event, user);
           })
           .then(null, function(err) {
@@ -92,7 +92,7 @@ function unrepostEvent(event, user) {
 //         messages: message
 //       }
 //     })
-//     .exec()
+//     
 //     .then(function(data) {
 //       //Success
 //     })

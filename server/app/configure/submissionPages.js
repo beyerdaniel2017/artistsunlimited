@@ -9,7 +9,7 @@ module.exports = function(app) {
       subDomain = subDomain[0];
       SubmissionGroup.find({
           title: subDomain
-        }).exec()
+        })
         .then(function(sub) {
 
         });
