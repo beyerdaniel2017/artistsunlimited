@@ -1,4 +1,4 @@
-app.directive('shareLinkModal', function ($http) {
+app.directive('slmodal', function ($http) {
   return {
     templateUrl: 'js/common/directives/shareLink/shareLink.html',
     restrict: 'EA',
