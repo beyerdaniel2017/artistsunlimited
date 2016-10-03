@@ -26,7 +26,7 @@ module.exports = function(app) {
             }
             User.findOne({
                     'soundcloud.id': data.id
-                }).exec()
+                })
                 .then(function(user) {
                     if (user) {
                         var updateObj = {
@@ -34,20 +34,20 @@ module.exports = function(app) {
                                 'id': data.id,
                                 'username': data.username,
                                 'permalinkURL': data.permalink_url,
-                                'avatarURL': data.avatar_url.replace('large', 't500x500'),
+                                'avatarURL': data.avatar_url.replace('large', 't200x200'),
                                 'token': req.body.token,
                                 'followers': data.followers_count
                             }
                         };
                         User.findOneAndUpdate({
-                                _id: user._id
-                            }, {
-                                $set: updateObj
-                            }, {
-                                new: true
-                            })
-                            .exec()
-                            .then(function(user) {
+                            _id: user._id
+                        }, {
+                            $set: updateObj
+                        }, {
+                            new: true
+                        })
+
+                        .then(function(user) {
                                 done(null, user);
                             })
                             .then(null, function(err) {
@@ -60,9 +60,10 @@ module.exports = function(app) {
                                 'id': data.id,
                                 'username': data.username,
                                 'permalinkURL': data.permalink_url,
-                                'avatarURL': data.avatar_url.replace('large', 't500x500'),
+                                'avatarURL': data.avatar_url.replace('large', 't200x200'),
                                 'token': req.body.token,
-                                'followers': data.followers_count
+                                'followers': data.followers_count,
+                                'role': 'user'
                             }
                         });
                         newUser.save();

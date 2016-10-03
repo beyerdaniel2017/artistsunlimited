@@ -47,6 +47,13 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     } else {
       $window.localStorage.removeItem('returnstate');
     }
+    var path = window.location.pathname;
+    $scope.isAdminRoute = false;
+    if (path.indexOf("admin/") != -1) {
+      $scope.isAdminRoute = true
+    } else {
+      $scope.isAdminRoute = false;
+    }
     $scope.linkedAccountData = {};
     $scope.thirdPartyInfo = ($scope.user.thirdPartyInfo ? $scope.user.thirdPartyInfo : null);
     $scope.hasThirdPartyFields = ($scope.user.thirdPartyInfo ? true : false);
@@ -57,6 +64,12 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       val: '',
       visible: false
     };
+
+    /* Apply page end */
+    $scope.gotoSettings = function() {
+      SessionService.addActionsfoAccount('Admin', $scope.user._id)
+      $state.go("basicstep1");
+    }
 
     /* Init downloadGateway list */
 
@@ -101,6 +114,17 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       $scope.hasThirdPartyFields = true;
     }
 
+    $scope.permanentLinks = [];
+    $scope.choseArtist = function(artist) {
+      var permanentLink = {};
+      $scope.profile.data.permanentLinks.push({
+        url: artist.permalink_url,
+        avatar: artist.avatar_url ? artist.avatar_url : '',
+        username: artist.username,
+        id: artist.id,
+        permanentLink: true
+      });
+    }
     $scope.addSong = function() {
       if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
       if ($scope.tracksQueue.length > 0) {
@@ -218,6 +242,17 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       $.Zebra_Dialog(displayText, {
         width: 600
       });
+    }
+
+    $scope.saveNotifications = function() {
+      $http.put('/api/database/profile/notifications', $scope.profile.data)
+        .then(function(res) {
+          SessionService.create(res.data);
+          $scope.user = SessionService.getUser();
+        })
+        .catch(function(res) {
+          $.Zebra_Dialog('error saving');
+        });
     }
 
     $scope.editProfileModalInstance = {};
@@ -409,12 +444,11 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
 
     // remove linked accounts
     $scope.removeLinkedAccount = function(account) {
-      console.log(account);
-      $scope.userlinkedAccounts.splice($scope.userlinkedAccounts.indexOf(account), 1);
-      $http.put('/api/database/networkaccount', $scope.userlinkedAccounts)
+      $rootScope.userlinkedAccounts.splice($rootScope.userlinkedAccounts.indexOf(account), 1);
+      $http.put('/api/database/networkaccount', $rootScope.userlinkedAccounts)
         .then(function(res) {
-          console.log(res.data);
-          $scope.userlinkedAccounts = res.data.channels;
+          $rootScope.userlinkedAccounts = res.data.channels;
+          $rootScope.userlinkedAccounts = res.data.channels;
         })
     }
 
@@ -538,10 +572,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
     $scope.soundcloudLogin = function() {
       SC.connect()
         .then(function(res) {
-          var find = $scope.userlinkedAccounts.find(function(acct) {
-            return acct.soundcloud.token == res.oauth_token;
-          });
-          if (res.oauth_token == SessionService.getUser().soundcloud.token || !!find) {
+          if (res.oauth_token == SessionService.getUser().soundcloud.token) {
             throw new Error('already added');
           } else {
             $scope.processing = true;
@@ -552,7 +583,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
           }
         })
         .then(function(res) {
-          console.log(res.data);
           var linkedAccountID = res.data.user._id;
           $http.post("/api/database/networkaccount", {
               userID: $scope.user._id,
@@ -560,7 +590,7 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
             })
             .then(function(res) {
               $.Zebra_Dialog(res.data.message);
-              $scope.userlinkedAccounts = res.data.data.channels;
+              $rootScope.userlinkedAccounts = res.data.data.channels;
               setTimeout(function() {
                 window.location.reload();
               }, 1000);
@@ -595,12 +625,6 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
       }
     }
 
-    $scope.getUserNetwork = function() {
-      $http.get("/api/database/userNetworks")
-        .then(function(res) {
-          $rootScope.userlinkedAccounts = res.data;
-        })
-    }
     $scope.getUserNetwork();
     $scope.verifyBrowser();
   })

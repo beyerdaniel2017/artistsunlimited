@@ -1,3 +1,5 @@
 require('./autoAccessTokenChecker.js')();
-require('./autoPublicReposter.js')();
+require('./autoReposter.js')();
 require('./autoUnreposter.js')();
+require('./autoPoolSender.js')();
+require('./refundSender.js')();

@@ -34,6 +34,8 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
       });
     }
   };
+
+
   $scope.login = function() {
     $scope.message = {
       val: '',

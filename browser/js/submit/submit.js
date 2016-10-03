@@ -4,75 +4,67 @@ app.config(function($stateProvider) {
     templateUrl: 'js/submit/submit.view.html',
     controller: 'SubmitSongController'
   });
+  $stateProvider.state('customsubmits', {
+    url: '/custom/:username/:submitpart',
+    templateUrl: 'js/submit/submit.view.html',
+    controller: 'SubmitSongController',
+    resolve: {
+      getUserByURL: function($stateParams, $http, $window) {
+        var username = $stateParams.username;
+        var submitpart = $stateParams.submitpart;
+              if (submitpart.indexOf('submit') != -1) {
+          $window.location.href = '/customsubmit/' + username + '/' + submitpart;
+              } else {
+          $window.location.href = '/custompremiere/' + username + '/' + submitpart;
+              }
+            }
+    }
+  });
 });
 
-app.controller('SubmitSongController', function($rootScope, $state, $scope, $http) {
+app.controller('SubmitSongController', function($rootScope, $state, $scope, $http, $location) {
   $scope.submission = {};
-  $scope.userID = "";
-  $scope.genreArray = [
-    'Alternative Rock',
-    'Ambient',
-    'Creative',
-    'Chill',
-    'Classical',
-    'Country',
-    'Dance & EDM',
-    'Dancehall',
-    'Deep House',
-    'Disco',
-    'Drum & Bass',
-    'Dubstep',
-    'Electronic',
-    'Festival',
-    'Folk',
-    'Hip-Hop/RNB',
-    'House',
-    'Indie/Alternative',
-    'Latin',
-    'Trap',
-    'Vocalists/Singer-Songwriter'
-  ];
-  $scope.urlChange = function() {
-    if ($scope.url != "") {
-      $scope.processing = true;
-      $http.post('/api/soundcloud/resolve', {
-          url: $scope.url
-        })
-        .then(function(res) {
-          if (res.data.kind != "track") throw (new Error(''));
-          $scope.submission.trackID = res.data.id;
-          $scope.submission.title = res.data.title;
-          $scope.submission.trackURL = res.data.trackURL;
-          SC.oEmbed($scope.submission.trackURL, {
-            element: document.getElementById('scPlayer'),
-            auto_play: false,
-            maxheight: 150
-          })
-          document.getElementById('scPlayer').style.visibility = "visible";
-          $scope.processing = false;
-          $scope.notFound = false;
-        }).then(null, function(err) {
-          if (err.status != 403) {
-            $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
-            $scope.notFound = true;
-          } else {
-            $scope.submission.trackURL = $scope.url;
-            SC.oEmbed($scope.submission.trackURL, {
-              element: document.getElementById('scPlayer'),
-              auto_play: false,
-              maxheight: 150
-            })
-          }
-          $scope.submission.trackID = null;
+  $scope.userID = $location.search().id;
+  $scope.searchString = "";
+  // $scope.genreArray = [
+  //   'Alternative Rock',
+  //   'Ambient',
+  //   'Creative',
+  //   'Chill',
+  //   'Classical',
+  //   'Country',
+  //   'Dance & EDM',
+  //   'Dancehall',
+  //   'Deep House',
+  //   'Disco',
+  //   'Drum & Bass',
+  //   'Dubstep',
+  //   'Electronic',
+  //   'Festival',
+  //   'Folk',
+  //   'Hip-Hop/RNB',
+  //   'House',
+  //   'Indie/Alternative',
+  //   'Latin',
+  //   'Trap',
+  //   'Vocalists/Singer-Songwriter'
+  // ];
 
-          $scope.processing = false;
-          document.getElementById('scPlayer').style.visibility = "hidden";
-        });
-    }
+  $scope.choseTrack = function(track) {
+    $scope.searchString = track.title;
+    $scope.submission.trackID = track.id;
+    $scope.submission.title = track.title;
+    $scope.submission.trackURL = track.permalink_url;
+    SC.oEmbed($scope.submission.trackURL, {
+      element: document.getElementById('scPlayer'),
+      auto_play: false,
+      maxheight: 150
+    })
+    document.getElementById('scPlayer').style.visibility = "visible";
   }
 
   $scope.submit = function() {
-    if (!$scope.submission.email || !$scope.submission.name) {
+    if (!$scope.submission.email || !$scope.submission.name || !$scope.submission.trackID) {
       $.Zebra_Dialog("Please fill in all fields")
     } else {
       $scope.processing = true;
@@ -85,14 +77,16 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
           channelIDS: [],
           invoiceIDS: [],
           userID: $scope.userID,
-          genre: $scope.submission.genre
+          genre: ''
         })
         .then(function(res) {
           $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
           $scope.processing = false;
           $scope.notFound = false;
           $scope.submission = {};
+        $scope.searchString = "";
           document.getElementById('scPlayer').style.visibility = "hidden";
+        document.getElementById('scPlayerCustom').style.visibility = "hidden";
           $scope.url = "";
         })
         .then(null, function(err) {
@@ -103,9 +97,13 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.getUserID = function() {
-    $http.get('/api/users/getUserID')
-      .then(function(res) {
-        $scope.userID = res.data;
-      });
+    if ($scope.userID == undefined) {
+      $http.get('/api/users/getUserID')
+        .then(function(res) {
+          $scope.userID = res.data;
+        });
+    }
   }
+
+  $scope.getUserID();
 });

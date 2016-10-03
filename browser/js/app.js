@@ -1,5 +1,5 @@
 'use strict';
-window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'satellizer', 'angularMoment', 'luegg.directives', 'ui-rangeSlider', 'ngSanitize', 'colorpicker.module']);
+window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'yaru22.angular-timeago', 'satellizer', 'angularMoment', 'luegg.directives', 'ui-rangeSlider', 'ngSanitize', 'colorpicker.module', 'ngclipboard']);
 
 app.config(function($urlRouterProvider, $locationProvider, $uiViewScrollProvider, $httpProvider) {
     // This turns off hashbang urls (/#about) and changes it to something normal (/about)
@@ -90,48 +90,19 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
         } else {
             $rootScope.state = true;
         }
-        // if(toState = 'artistTools') {
-        //     var user = SessionService.getUser();
-        //     console.log(user);
-        // }
-        // console.log('reached here');
-        // if (!destinationStateRequiresAuth(toState)) {
-        //     // The destination state does not require authentication
-        //     // Short circuit with return.
-        //     return;
-        // }
-
-        // if (AuthService.isAuthenticated()) {
-        //     // The user is authenticated.
-        //     // Short circuit with return.
-        //     return;
-        // }
-
-        // // Cancel navigating to new state.
-        // event.preventDefault();
-
-        // AuthService.getLoggedInUser().then(function (user) {
-        //     // If a user is retrieved, then renavigate to the destination
-        //     // (the second time, AuthService.isAuthenticated() will work)
-        //     // otherwise, if no user is logged in, go to "login" state.
-        //     if (user) {
-        //         $state.go(toState.name, toParams);
-        //     } else {
-        //         $state.go('login');
-        //     }
-        // });
 
         if ($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin') != -1) {
             var user = SessionService.getUser();
             if (user) {
-                var redirectPath = (user.role != undefined ? "/admin" : "/login");
-                if ($window.location.pathname.indexOf('admin') != -1 && user.role == undefined) {
+                var isAdminAuthenticate = ($window.localStorage.getItem('isAdminAuthenticate') ? $window.localStorage.getItem('isAdminAuthenticate') : false);
+                var redirectPath = (isAdminAuthenticate ? "/admin" : "/login");
+                if ($window.location.pathname.indexOf('admin') != -1 && !isAdminAuthenticate) {
                     $http.post('/api/logout').then(function() {
                         SessionService.deleteUser();
                         $state.go('admin');
                         //window.location.href = '/admin';
                     });
-                } else {
+                } else if ($window.location.pathname.indexOf('artistTools') != -1 && isAdminAuthenticate) {
                     $http.get('/api/users/isUserAuthenticate').then(function(res) {
                         if (!res.data) {
                             SessionService.deleteUser();
@@ -141,6 +112,23 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
                 }
             }
         };
+
+        var user = SessionService.getUser();
+        if (!user) {
+            if ($window.location.pathname.indexOf('admin/') != -1) {
+                $http.post('/api/logout').then(function() {
+                    SessionService.deleteUser();
+                    $window.location.href = '/admin';
+                });
+            } else if ($window.location.pathname.indexOf('artistTools/') != -1) {
+                $http.get('/api/users/isUserAuthenticate').then(function(res) {
+                    if (!res.data) {
+                        SessionService.deleteUser();
+                        $window.location.href = '/login';
+                    }
+                });
+            }
+        }
     });
     SessionService.refreshUser();
 });
@@ -192,8 +180,9 @@ app.directive('fbLike', [
     }
 ])
 
-app.controller('FullstackGeneratedController', function($stateParams, $window, $scope, $state, $http, mainService, SessionService) {
+app.controller('FullstackGeneratedController', function($stateParams, $window, $rootScope, $scope, $state, $http, mainService, SessionService, AuthService) {
     /*Load More*/
+
     $scope.loadList = function() {
         $scope.$broadcast('loadTrades');
     }
@@ -210,6 +199,39 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
             $scope.submissionsCount = res.data;
         });
     }
+
+    $scope.gotoSettings = function() {
+        $scope.user = SessionService.getUser();
+        SessionService.addActionsfoAccount('Admin', $scope.user._id)
+        $state.go("basicstep1");
+    }
+
+    $scope.getBehalfUserRecord = function(paid) {
+        paid = JSON.parse(paid);
+        SessionService.removePaidRepostAccounts();
+        setTimeout(function() {
+            SessionService.addActionsfoAccount('BehalfUser', paid._id, paid.soundcloud.id);
+            SessionService.setUserPaidRepostAccounts(paid);
+            if ($state.current.url.indexOf("admin/reForReInteraction") != -1)
+                window.location.href = '/admin/reposttraders';
+            else
+                window.location.reload($state.current.url);
+        }, 500);
+    }
+
+    $scope.gotoBehalfSetting = function(actions) {
+        if (actions == "SCHEDULER") {
+            window.location.href = '/admin/scheduler';
+        }
+        if (actions == "REPOSTTRADES") {
+            window.location.href = '/admin/reposttraders';
+        }
+        if (actions == "DOWNLOADGATEWAY") {
+            window.location.href = '/admin/downloadGateway';
+        }
+    }
+
+
     $scope.checkNotification = function() {
         var user = SessionService.getUser();
         if (user) {
@@ -232,6 +254,82 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
         }
     }
 
+    $scope.setCurUser = function() {
+        $scope.curATUser = JSON.stringify(SessionService.getUser());
+    }
+
+    $scope.changeUserAdmin = function(param, location) {
+        if (typeof param == 'string' && param.length > 15) param = JSON.parse(param);
+        console.log(param);
+        if (param == 'user') {
+            var prevATUser = JSON.parse($window.localStorage.getItem('prevATUser'));
+            if (SessionService.getUser()._id != prevATUser._id) {
+                $scope.processing = true;
+                $http.post('/api/login/soundCloudLogin', {
+                        token: prevATUser.soundcloud.token,
+                        password: 'test'
+                    })
+                    .then(function(res) {
+                        $scope.processing = false;
+                        SessionService.create(res.data.user);
+                        $scope.curATUser = SessionService.getUser()
+                        if (location) window.location.href = location;
+                        else $state.reload();
+                    })
+                    .then(null, function(err) {
+                        $.Zebra_Dialog('Error: Could not log in');
+                        $scope.processing = false;
+                    });
+            } else {
+                if (location) window.location.href = location;
+                else $state.reload();
+            }
+        } else if (param == 'admin') {
+            var adminUser = JSON.parse($window.localStorage.getItem('adminUser'));
+            console.log(adminUser);
+            if (SessionService.getUser()._id != adminUser._id) {
+                $window.localStorage.setItem('prevATUser', JSON.stringify(SessionService.getUser()))
+                $scope.processing = true;
+                AuthService
+                    .login(adminUser.loginInfo)
+                    .then(handleLoginResponse)
+                    .catch(console.log);
+
+                function handleLoginResponse(res) {
+                    console.log('res.data');
+                    if (res.status === 200 && res.data.success) {
+                        var userData = res.data.user;
+                        userData.isAdmin = true;
+                        SessionService.create(userData);
+                        $scope.processing = false;
+                        $scope.curATUser = SessionService.getUser()
+                        if (location) window.location.href = location;
+                        else $state.reload();
+                    } else console.log("Invalid Email or Password.");
+                }
+            } else {
+                if (location) window.location.href = location;
+                else $state.reload();
+            }
+        } else {
+            $scope.processing = true;
+            $http.post('/api/login/soundCloudLogin', {
+                    token: param.soundcloud.token,
+                    password: 'test'
+                })
+                .then(function(res) {
+                    $scope.processing = false;
+                    SessionService.create(res.data.user);
+                    $window.localStorage.setItem('prevATUser', JSON.stringify(SessionService.getUser()))
+                    $scope.curATUser = SessionService.getUser()
+                    $state.reload();
+                })
+                .then(null, function(err) {
+                    $.Zebra_Dialog('Error: Could not log in');
+                    $scope.processing = false;
+                });
+        }
+    }
 
     $scope.linkedUsersChange = function(authToken) {
         $scope.processing = true;
@@ -242,8 +340,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
             .then(function(res) {
                 $scope.processing = false;
                 SessionService.create(res.data.user);
-                $window.location.reload();
-
+                $state.reload();
             })
             .then(null, function(err) {
                 $.Zebra_Dialog('Error: Could not log in');
@@ -251,12 +348,26 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
             });
     }
 
-    $scope.swithUser = function(isadmin){
-        if(isadmin){
+    $scope.swithUser = function(isadmin) {
+        if (isadmin) {
             mainService.logout();
-        }
-        else{
+        } else {
             mainService.adminlogout();
+        }
+    }
+
+    $scope.getUserNetwork = function() {
+        if ($window.location.pathname.includes('admin/')) {
+            var adminUser = JSON.parse($window.localStorage.getItem('adminUser'));
+            return $http.get("/api/database/adminUserNetwork/" + adminUser._id)
+                .then(function(res) {
+                    $rootScope.userlinkedAccounts = res.data;
+                })
+        } else {
+            return $http.get("/api/database/userNetworks")
+                .then(function(networks) {
+                    $rootScope.userlinkedAccounts = networks.data;
+                })
         }
     }
 
@@ -357,6 +468,7 @@ app.service('mainService', function($http, SessionService) {
     this.adminlogout = function() {
         $http.post('/api/logout').then(function() {
             SessionService.deleteUser();
+            window.localStorage.removeItem('isAdminAuthenticate');
             window.location.href = '/admin';
         });
     }

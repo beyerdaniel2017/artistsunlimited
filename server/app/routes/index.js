@@ -6,6 +6,7 @@ router.use('/login', require('./auth/login.js'));
 router.use('/signup', require('./auth/signup.js'));
 router.use('/channels', require('./channels/channels.js'));
 router.use('/submissions', require('./submissions/submissions.js'));
+router.use('/accountsteps', require('./accountsteps/accountsteps.js'));
 router.use('/events', require('./events/events.js'));
 router.use('/soundcloud', require('./soundC/soundC.js'));
 router.use('/database', require('./database/database.js'));
@@ -22,7 +23,9 @@ router.use('/posts/', require('./posts/posts.js'));
 router.use('/aws/', require('./aws.js'));
 router.use('/broadcast/', require('./broadcast.js'));
 router.use('/customsubmissions/', require('./customSubmissions/customSubmissions.js'));
-router.use('/facebookMessage', require('./facebookMessage/facebookMessage.js'));
+// router.use('/facebookMessage', require('./facebookMessage/facebookMessage.js'));
+router.use('/search/', require('./search/search.js'));
+
 
 router.use('/logout', function(req, res) {
   req.logout();

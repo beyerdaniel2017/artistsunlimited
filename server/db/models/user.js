@@ -4,7 +4,8 @@ var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
     role: {
-        type: String
+        type: String,
+        default: 'user'
     },
     name: {
         type: String
@@ -61,28 +62,101 @@ var schema = new mongoose.Schema({
         salt: String
     },
     linkedAccounts: [],
-    paidRepost: [],
-    customEmailButtons: [],
+    paidRepost: [{
+        userID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        price: String,
+        description: String,
+        groups: [],
+        submissionUrl: String,
+        premierUrl: String,
+        createdOn: Date,
+        repostSettings: {
+            type: Object,
+            default: {}
+        }
+    }],
+    submissionsCustomEmailButtons: [],
+    premierCustomEmailButtons: [],
     profilePicture: {
         type: String
     },
-    availableSlots: {},
-    repostSettings: {},
+    blockRelease: {
+        type: Date,
+        default: new Date(0)
+    },
+    repostCustomizeEmails: [],
+    premierCustomizeEmails: [],
+    paypal_email: String,
+    availableSlots: {
+        type: Object,
+        default: {
+            'sunday': [1, 4, 8, 11, 14, 17, 20],
+            'monday': [1, 4, 8, 11, 14, 17, 20],
+            'tuesday': [1, 4, 8, 11, 14, 17, 20],
+            'wednesday': [1, 4, 8, 11, 14, 17, 20],
+            'thursday': [1, 4, 8, 11, 14, 17, 20],
+            'friday': [1, 4, 8, 11, 14, 17, 20],
+            'saturday': [1, 4, 8, 11, 14, 17, 20]
+        }
+    },
+    repostSettings: {
+        type: Object,
+        default: {}
+    },
     notificationSettings: {
         facebookMessenger: {
-            tradeRequest: Boolean,
-            tradeAcceptance: Boolean,
-            trackRepost: Boolean,
-            trackUnrepost: Boolean,
-            dailyUnfilledTrade: Boolean,
+            messengerID: Number,
+            tradeRequest: {
+                type: Boolean,
+                default: true
+            },
+            tradeAcceptance: {
+                type: Boolean,
+                default: true
+            },
+            trackRepost: {
+                type: Boolean,
+                default: false
+            },
+            trackUnrepost: {
+                type: Boolean,
+                default: false
+            },
+            failedRepost: {
+                type: Boolean,
+                default: true
+            }
         },
         email: {
-            tradeRequest: Boolean,
-            tradeAcceptance: Boolean,
-            trackRepost: Boolean,
-            trackUnrepost: Boolean,
-            dailyUnfilledTrade: Boolean,
+            tradeRequest: {
+                type: Boolean,
+                default: true
+            },
+            tradeAcceptance: {
+                type: Boolean,
+                default: true
+            },
+            trackRepost: {
+                type: Boolean,
+                default: false
+            },
+            trackUnrepost: {
+                type: Boolean,
+                default: false
+            },
+            failedRepost: {
+                type: Boolean,
+                default: true
+            }
         }
+    },
+    admin: Boolean,
+    cut: {
+        type: Number,
+        default: 0.7
     }
 });
 

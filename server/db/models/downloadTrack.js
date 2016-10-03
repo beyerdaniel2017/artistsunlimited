@@ -67,6 +67,9 @@ var schema = new mongoose.Schema({
   },
   socialPlatformValue: {
     type: String
+  },
+  trackDownloadUrl: {
+    type: String
   }
 });
 

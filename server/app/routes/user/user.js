@@ -9,6 +9,7 @@ var scWrapper = require("../../SCWrapper/SCWrapper.js");
 var Busboy = require('busboy');
 var AWS = require('aws-sdk');
 var awsConfig = require('./../../../env').AWS;
+var rootURL = require('./../../../env').ROOTURL;
 
 scWrapper.init({
   id: scConfig.clientID,
@@ -26,23 +27,88 @@ router.get('/isUserAuthenticate', function(req, res, next) {
 });
 
 router.get('/byId/:id', function(req, res, next) {
-  User.findById(req.params.id).exec()
+  if (!req.user) next(new Error('Unauthorized'));
+  User.findById(req.params.id)
     .then(function(user) {
       //if (user.soundcloud.token) user.soundcloud.token = undefined;
       res.send(user);
+    }).then(null, next)
+});
+
+router.get('/bySoundcloudID/:id', function(req, res, next) {
+  User.findOne({
+      'soundcloud.id': parseInt(req.params.id)
     })
+    .then(function(user) {
+      //if (user.soundcloud.token) user.soundcloud.token = undefined;
+      res.send(user);
+    }).then(null, next)
+});
+
+router.post('/withIDs', function(req, res, next) {
+  User.find({
+      _id: {
+        $in: req.body
+      }
+    })
+    .then(function(users) {
+      res.send(users);
+    }).then(null, next)
 });
 
 router.get('/getUserID', function(req, res, next) {
   User.findOne({
       role: 'superadmin'
-    }).limit(1).exec()
+    }).limit(1)
     .then(function(user) {
       res.send(user._id);
     })
 });
 
+router.get('/getUserByURL/:username/:page', function(req, res, next) {
+  var query = {};
+  var url = rootURL + "/custom/" + req.params.username + "/" + req.params.page;
+  if (req.params.page.indexOf('submit') != -1) {
+    query = {
+      'paidRepost.submissionUrl': url
+    };
+  } else {
+    query = {
+      'paidRepost.premierUrl': url
+    };
+  }
+  User.findOne(query)
+
+  .then(function(user) {
+      if (user && user.paidRepost.length > 0) {
+        if (req.params.page.indexOf('submit') != -1) {
+          var u = user.paidRepost.find(function(pr) {
+            return pr.submissionUrl == url;
+          })
+          if (u) {
+            res.send(u.userID);
+          } else {
+            res.send(null);
+          }
+        } else {
+          var u = user.paidRepost.find(function(pr) {
+            return pr.premierUrl == url;
+          })
+          if (u) {
+            res.send(u.userID);
+          } else {
+            res.send(null);
+          }
+        }
+      } else {
+        res.send(null);
+      }
+    })
+    .then(null, next);
+});
+
 router.post('/bySCURL', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   var minFollowers = (req.body.minFollower ? parseInt(req.body.minFollower) : 0);
   var maxFollowers = (req.body.maxFollower ? parseInt(req.body.maxFollower) : 100000000);
   var originalUrl = (req.body.url != "") ? req.body.url : undefined;
@@ -69,38 +135,38 @@ router.post('/bySCURL', function(req, res, next) {
   }
   var notInUsers = [];
   Trade.find({
-      $or: [{
-        'p1.user': req.user._id
-      }, {
-        'p2.user': req.user._id
-      }]
-    })
-    .exec()
-    .then(function(trades) {
-      if (trades.length > 0) {
-        trades.forEach(function(trade, index) {
-          var u1 = trade.p1.user.toString();
-          var u2 = trade.p2.user.toString();
-          if (notInUsers.indexOf(u1) == -1) {
-            notInUsers.push(u1);
-          }
-          if (notInUsers.indexOf(u2) == -1) {
-            notInUsers.push(u2);
-          }
-          if (index == (trades.length - 1)) {
-            searchObj['_id'] = {
-              $nin: notInUsers
-            };
-            findUsers(searchObj);
-          }
-        });
-      } else {
-        searchObj['_id'] = {
-          $nin: req.user._id
-        };
-        findUsers(searchObj);
-      }
-    });
+    $or: [{
+      'p1.user': req.user._id
+    }, {
+      'p2.user': req.user._id
+    }]
+  })
+
+  .then(function(trades) {
+    if (trades.length > 0) {
+      trades.forEach(function(trade, index) {
+        var u1 = trade.p1.user.toString();
+        var u2 = trade.p2.user.toString();
+        if (notInUsers.indexOf(u1) == -1) {
+          notInUsers.push(u1);
+        }
+        if (notInUsers.indexOf(u2) == -1) {
+          notInUsers.push(u2);
+        }
+        if (index == (trades.length - 1)) {
+          searchObj['_id'] = {
+            $nin: notInUsers
+          };
+          findUsers(searchObj);
+        }
+      });
+    } else {
+      searchObj['_id'] = {
+        $nin: req.user._id
+      };
+      findUsers(searchObj);
+    }
+  }).then(null, next);
   var findUsers = function(sObj) {
     User.find(sObj)
       .sort({
@@ -108,66 +174,67 @@ router.post('/bySCURL', function(req, res, next) {
       })
       .skip(recordRange.skip)
       .limit(recordRange.limit)
-      .exec()
-      .then(function(user) {
-        if (user.length > 0) {
-          res.send(user);
-        } else if (originalUrl !== '' && originalUrl !== undefined) {
-          var reqObj = {
-            method: 'GET',
-            path: '/resolve.json',
-            qs: {
-              url: originalUrl
-            }
+
+    .then(function(user) {
+      if (user.length > 0) {
+        res.send(user);
+      } else if (originalUrl !== '' && originalUrl !== undefined) {
+        var reqObj = {
+          method: 'GET',
+          path: '/resolve.json',
+          qs: {
+            url: originalUrl
+          }
+        };
+        scWrapper.request(reqObj, function(err, result) {
+          if (err) {
+            return res.json({
+              "success": false,
+              message: "Error in processing your request"
+            });
           };
-          scWrapper.request(reqObj, function(err, result) {
-            if (err) {
-              return res.json({
-                "success": false,
-                message: "Error in processing your request"
-              });
-            };
-            https.get(result.location, function(httpRes2) {
-              var userBody = '';
-              httpRes2.on("data", function(songChunk) {
-                  userBody += songChunk;
+          https.get(result.location, function(httpRes2) {
+            var userBody = '';
+            httpRes2.on("data", function(songChunk) {
+                userBody += songChunk;
+              })
+              .on("end", function() {
+                var user = JSON.parse(userBody);
+                User.findOne({
+                  'soundcloud.id': user.id
                 })
-                .on("end", function() {
-                  var user = JSON.parse(userBody);
-                  User.findOne({
-                      'soundcloud.id': user.id
-                    })
-                    .exec()
-                    .then(function(data) {
-                      if (!data) {
-                        var newUser = new User({
-                          'name': user.username,
-                          'soundcloud': {
-                            'id': user.id,
-                            'username': user.username,
-                            'permalinkURL': user.permalink_url,
-                            'avatarURL': user.avatar_url.replace('large', 't500x500'),
-                            'followers': user.followers_count
-                          }
-                        });
-                        newUser.save();
-                        res.send([newUser]);
-                      } else {
-                        res.send([]);
+
+                .then(function(data) {
+                  if (!data) {
+                    var newUser = new User({
+                      'name': user.username,
+                      'soundcloud': {
+                        'id': user.id,
+                        'username': user.username,
+                        'permalinkURL': user.permalink_url,
+                        'avatarURL': user.avatar_url.replace('large', 't500x500'),
+                        'followers': user.followers_count
                       }
                     });
-                });
-            });
+                    newUser.save();
+                    res.send([newUser]);
+                  } else {
+                    res.send([]);
+                  }
+                }).then(null, next);
+              });
           });
-        } else {
-          res.send([]);
-        }
-      });
+        });
+      } else {
+        res.send([]);
+      }
+    }).then(null, next);
   }
 });
 
 /*profile updateion*/
 router.post('/profilePicUpdate', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   parseMultiPart()
     .then(uploadToBucket)
     .catch(errorHandler);
@@ -262,37 +329,114 @@ router.post('/profilePicUpdate', function(req, res, next) {
 });
 
 router.put('/updateAdmin', function(req, res, next) {
-  User.findByIdAndUpdate(req.user._id, req.body).exec()
+  if (!req.user) next(new Error('Unauthorized'));
+  User.findByIdAndUpdate(req.user._id, req.body)
     .then(function(user) {
       res.send(user);
     }).then(null, next);
 })
 
-/*Admin profile update start*/
+
+router.put('/updateuserRecord', function(req, res, next) {
+    var id = req.body._id;
+    delete req.body._id;
+    User.findByIdAndUpdate(id, req.body)
+      .then(function(user) {
+        res.send(user);
+      }).then(null, next);
+  })
+  /*Admin profile update start*/
 router.post('/updateAdminProfile', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   var body = req.body;
-  var updateObj = {};
-  if (body.pictureUrl) {
+  var updateObj = body;
+  if (updateObj.pictureUrl) {
     updateObj.profilePicture = body.pictureUrl
   }
-  if (body.username) {
-    updateObj.name = body.username;
-  } else if (body.password) {
+  if (updateObj.email) {
+    updateObj.email = body.email;
+  }
+  if (updateObj.password) {
     updateObj.salt = User.generateSalt();
     updateObj.password = User.encryptPassword(body.password, updateObj.salt);
-  } else {
-    updateObj = body;
   }
+  if (updateObj.email != "" && updateObj.email != undefined) {
+    User.findOne({
+      '_id': {
+        $ne: req.user._id
+      },
+      email: body.email
+    }, function(err, u) {
+      if (u) {
+        res.send({
+          message: "Email already register."
+        });
+      } else {
+        User.findOneAndUpdate({
+            '_id': req.user._id
+          }, {
+            $set: updateObj
+          }, {
+            new: true
+          })
+          .then(function(result) {
+            res.send(result);
+          })
+          .then(null, function(err) {
+            next(err);
+          });
+      }
+    })
+  } else {
+    User.findOneAndUpdate({
+        '_id': req.user._id
+      }, {
+        $set: updateObj
+      }, {
+        new: true
+      })
+      .then(function(result) {
+        res.send(result);
+      })
+      .then(null, function(err) {
+        next(err);
+      });
+  }
+});
 
-  console.log(updateObj);
+router.post('/checkUsercount', function(req, res, next) {
+  var query = {
+    "paidRepost.submissionUrl": req.body.url
+  };
+  if (req.body.action == "id")
+    query = {
+      "paidRepost.userID": req.body.userID,
+      "_id": req.user._id
+    };
 
+  User.find(query)
+    .then(function(user) {
+      if (user)
+        return res.json(user.length);
+      else
+        return res.json(0);
+    })
+})
+
+/*Admin profile update start*/
+router.post('/updatePaidRepost', function(req, res, next) {
+  var body = req.body;
+  body.createdOn = new Date();
   User.findOneAndUpdate({
-      '_id': req.user._id
+      '_id': req.user._id,
+      'paidRepost.userID': body.userID
     }, {
-      $set: updateObj
+      $set: {
+        'paidRepost.$': body
+      }
     }, {
       new: true
-    }).exec()
+    })
     .then(function(result) {
       res.send(result);
     })
@@ -300,6 +444,32 @@ router.post('/updateAdminProfile', function(req, res, next) {
       next(err);
     });
 });
+
+router.get('/getUserPaidRepostAccounts', function(req, res) {
+  if (!req.user) next(new Error('Unauthorized'));
+  var accounts = req.user.paidRepost;
+  var results = [];
+  var i = -1;
+  var next = function() {
+    i++;
+    if (i < accounts.length) {
+      var acc = accounts[i];
+      User.findOne({
+        _id: acc.userID
+      }, function(e, u) {
+        if (u) {
+          results.push(u);
+        }
+        next();
+      });
+    } else {
+      console.log('results', results);
+      res.send(results);
+    }
+  }
+  next();
+});
+
 
 // router.post('/syncSCEmails', function(req, res, next) {
 //   var sCount = 0;
@@ -309,7 +479,7 @@ router.post('/updateAdminProfile', function(req, res, next) {
 //     SCEmails.find({})
 //       .skip(skipCount)
 //       .limit(limitCount)
-//       .exec()
+//       
 //       .then(function(scemails) {
 //         if (scemails.length > 0) {
 //           scemails.forEach(function(sce, index) {

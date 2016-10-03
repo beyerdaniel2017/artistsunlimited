@@ -113,7 +113,7 @@ function getFollowers(nextURL) {
                         scanned: false
                     }, {
                         upsert: true
-                    }).exec().then(function(user) {
+                    }).then(function(user) {
                         totalEmails++;
                     }).then(null, console.log);
                 }
@@ -128,7 +128,7 @@ function getFollowers(nextURL) {
                         followers: follower.followers_count,
                     }, {
                         upsert: true
-                    }).exec().then(null, console.log);
+                    }).then(null, console.log);
                 }
             });
         }
@@ -148,7 +148,7 @@ function scanNextBiggestUser() {
             sort: {
                 followers: -1
             }
-        }).exec()
+        })
         .then(function(emailFlwr) {
             if (!emailFlwr) throw Error('nobody found to scan');
             emailFlwr.scanned = true;

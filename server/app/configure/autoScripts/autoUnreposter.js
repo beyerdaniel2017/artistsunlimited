@@ -7,6 +7,8 @@ var scConfig = require('./../../../env').SOUNDCLOUD;
 var sendEmail = require('../../mandrill/sendEmail.js');
 var request = require('request');
 var Trade = mongoose.model('Trade');
+var notificationCenter = require('../../notificationCenter/notificationCenter.js');
+
 
 scWrapper.init({
   id: scConfig.clientID,
@@ -26,19 +28,19 @@ function doUnrepost() {
   var upperDate = new Date();
   upperDate.setTime(upperDate.getTime() + 60 * 60 * 1000 - upperDate.getMinutes(0) * 60 * 1000 - upperDate.getMinutes(0) * 1000);
 
-  User.find({}).exec()
+  User.find({})
     .then(function(users) {
       users.forEach(function(user) {
         RepostEvent.findOne({
-            userID: user.soundcloud.id,
-            completed: true,
-            unrepostDate: {
-              $gt: lowerDate,
-              $lt: upperDate
-            }
-          })
-          .exec()
-          .then(function(event) {
+          userID: user.soundcloud.id,
+          completed: true,
+          unrepostDate: {
+            $gt: lowerDate,
+            $lt: upperDate
+          }
+        })
+
+        .then(function(event) {
             if (event) unrepostEvent(event, user);
           })
           .then(null, function(err) {
@@ -62,38 +64,39 @@ function unrepostEvent(event, user) {
   };
   scWrapper.request(reqObj, function(err, data) {
     if (!err) {
-      putMessage(event, user);
+      // putMessage(event, user);
+      notificationCenter.sendNotification(user._id, 'trackUnrepost', 'Track unrepost', event.title + ' was unreposted from ' + user.soundcloud.username + '.', 'https://artistsunlimited.co/login');
     }
   });
 }
 
-/*Update Message*/
-function putMessage(event, user) {
-  var query = {
-    $or: [{
-      'p1.user': event.owner,
-      'p2.user': user._id
-    }, {
-      'p2.user': event.owner,
-      'p1.user': user._id
-    }]
-  };
-  var message = {
-    type: 'alert',
-    text: 'A track was unreposted on ' + user.soundcloud.username,
-    senderId: event.owner,
-    date: new Date()
-  };
-  Trade.update(query, {
-      $addToSet: {
-        messages: message
-      }
-    })
-    .exec()
-    .then(function(data) {
-      //Success
-    })
-    .then(null, function(error) {
-      console.log(error);
-    });
-}
+// /*Update Message*/
+// function putMessage(event, user) {
+//   var query = {
+//     $or: [{
+//       'p1.user': event.owner,
+//       'p2.user': user._id
+//     }, {
+//       'p2.user': event.owner,
+//       'p1.user': user._id
+//     }]
+//   };
+//   var message = {
+//     type: 'alert',
+//     text: 'A track was unreposted on ' + user.soundcloud.username,
+//     senderId: event.owner,
+//     date: new Date()
+//   };
+//   Trade.update(query, {
+//       $addToSet: {
+//         messages: message
+//       }
+//     })
+//     
+//     .then(function(data) {
+//       //Success
+//     })
+//     .then(null, function(error) {
+//       console.log(error);
+//     });
+// }

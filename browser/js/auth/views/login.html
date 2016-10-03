@@ -3,6 +3,15 @@
 <div class="container" ng-init="checkIfSubmission()">
   <div class="row">
     <div class="col-sm-12">
+      <div class="pull-right">
+          <div class="switch-btn">
+            <label class="switch">
+              <input type="checkbox" ng-checked="false" ng-click="swithUser(false)">
+              <div class="slider round"></div>
+            </label>
+            <label> Admin</label>
+          </div>
+        </div>
       <div class="content-area bg-white">
         <div class="row">
           <div class="col-sm-12">
@@ -10,7 +19,7 @@
               <br/>
               <div class="col-sm-6 col-sm-offset-3">
                <div class="text-center">
-                  <button class="btn btn-default btn-enter cl-sound-btn" ng-click="soundcloudLogin()">Connect with SoundCloud</button>
+                  <button class="btn btn-pink btn-enter cl-sound-btn" ng-click="soundcloudLogin()">Connect with SoundCloud</button>
                </div>
                 <!--Third party login-->
                 </br>

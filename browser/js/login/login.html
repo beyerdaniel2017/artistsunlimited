@@ -6,7 +6,7 @@
 </style>
   <ng-include src="'js/home/views/_adminHeaderNavigation.html'"></ng-include>
   <!-- Content Start  -->
-  <div id="wrapper">
+  <div id="">
     <div class="container-fluid height-100pr">
       <div class="row">
         <div class="col-md-12 " ng-init="getCurrentDate();getCurrentdateEvents();">
@@ -14,10 +14,10 @@
             <!--page-contant Start--> 
               <div class="login-admin">
                 <div class="row">
-                <div class="col-md-6">
+              <div class="col-md-offset-2 col-md-4 col-sm-6">
                    <div id="loginbox" class="mainbox">                    
                   <div class="panel panel-default" >
-                    <div class="panel-heading" style="background:none;">
+                    <div class="panel-heading">
                       <div class="panel-title text-center">
                         <h5>WELCOME TO ARTISTS UNLIMITED</h5>
                       </div>                       
@@ -45,38 +45,44 @@
                             </div>
                           </div>
                           <div class="col-md-6 text-right">
-                            <p class="">Forgot Password?</p>
-  </div>
+                            <a href="mailto:coayscue@artistsunlimited.com?subject=Artists Unlimited - Forgot Password">Forgot Password?</a>
+                          </div>                        
                         </div>  <!--row ::end-->                            
-    <div class="row">
+                        <div class="row">
                           <div class="col-md-12 col-xs-12">                           
                             <button id="btn-login" href="#" class="btn login-btn" type="submit">LOG IN</button>
                           </div>
                         </div><!--row ::end-->                     
+                        <br />
+                        <div class="row">
+                          <div class="col-md-12 col-xs-12 text-center">                           
+                            <p style="color:red">{{signinError}}</p>
+                          </div>
+                        </div><!--row ::end-->                     
                       </form> 
                     </div>                     
-      </div>
-    </div>
+                  </div>  
+                </div>
                 <!--panel ::end-->
               </div>
-              <div class="col-md-6 pull-right">
+              <div class="col-md-4 col-sm-6">
                 <div class="panel panel-default">                     
                   <div class="panel-body text-center">
                     <div class="become-admin">
                       <h2 >Become an admin</h2>
-  <div class="row">
+                        <div class="row">
                           <div class="col-xs-12 text-center">
                             <p>MONETIZE YOUR ACCOUNT</p>
-    </div>
-  </div>
-<div class="row">
+                          </div>
+                        </div>
+                      <div class="row">
                         <div class="col-xs-12 text-center">
                           <p>SCHEDULE RELEASES WEEKS AHEAD</p>
-    </div>
-  </div>
+                        </div>
+                      </div>                        
                       <div class="col-md-12 col-xs-12"> 
                         <a id="btn-login" href="mailto:coayscue@artistsunlimited.com" class="btn btn-default login-btn">APPLY</a>
-</div>
+                      </div>
                       <div class="row">
                         <div class="col-xs-12 text-center">
                           <p>BECOME THE BEST RECORD LABEL, MUSIC CURATOR, OR DISTRIBUTOR YOU CAN BE!</p>
@@ -87,14 +93,15 @@
                 </div><!--panel ::end-->
               </div><!--Become an admin ::End-->
             </div> <!--row ::end-->
-</div>
+          </div>
             <!--page-contant End-->   
-</div>
-</div>
+          </div>
+        </div>
       <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
-  </div>
-</div>
+      </div>
+    </div>
     <!--overlay-->   
-    <ng-include src="'js/home/views/loader.html'"></ng-include>    </div>
+    <ng-include src="'js/home/views/loader.html'"></ng-include>   
 </div>
+  </div>
 </div>

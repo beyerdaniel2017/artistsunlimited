@@ -21,6 +21,7 @@ module.exports = function(app) {
     app.use(app.getValue('log'));
 
     require('./authentication')(app);
+    app.use('/api/facebookMessage', require('../routes/facebookMessage/facebookMessage.js'));
 
     require('./autoScripts');
     require('./security')(app);

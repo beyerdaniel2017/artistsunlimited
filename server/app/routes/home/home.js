@@ -22,8 +22,8 @@ router.post('/application', function(req, res, next) {
     .find({
       email: applicationObj.email
     })
-    .exec()
-    .then(function(result) {
+
+  .then(function(result) {
       if (result.length > 0) {
         return res.status(400).end();
       }
@@ -66,8 +66,8 @@ router.post('/artistemail', function(req, res, next) {
     .find({
       email: email
     })
-    .exec()
-    .then(function(result) {
+
+  .then(function(result) {
       if (result.length > 0) {
         return res.status(400).end();
       }

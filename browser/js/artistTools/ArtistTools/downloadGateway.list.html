@@ -1,56 +1,7 @@
 <ng-include src="'js/artistTools/ArtistTools/header-navigation.html'"></ng-include>
 <div id="wrapper">
   <ng-include src="'js/artistTools/ArtistTools/navigation.html'"></ng-include>
-<!-- Content Start  -->
-  <div class="container-fluid height-100pr " ng-init="getDownloadList();checkIfSubmission()">
-    <div class="row height-100pr">
-      <div class="col-lg-12">
-        <div class="page-content right-side min-ht padding-10"><!--page-contant Start-->
-            <div class="row extrapadding">
-              <div class="col-md-12 text-center"> <a href="#" class="btn btn-default btn-small" ui-sref="artistToolsDownloadGatewayNew">Add New</a> </div>
-            </div>
-          <div style="padding:0px 20px;">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Track Title</th>
-                   <!--  <th>Artist Username</th> -->
-                    <th>Download Count</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-repeat="item in downloadGatewayList">
-                    <td><a ng-href="/download?trackid={{item._id}}" target="_blank">{{item.trackTitle}}</a></td>
-                  <!--   <td>{{item.artistUsername}}</td> -->
-                    <td>{{item.downloadCount ? item.downloadCount : 0}}</td>
-                    <td><a href="#" ui-sref="artistToolsDownloadGatewayEdit({ gatewayID: item._id})" ui-sref-opts="{reload: true}">Edit</a><span> | </span> <a href="#" ng-click="deleteDownloadGateway($index)">Delete</a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <dllist></dllist>
+  <!-- Content End  -->
+  <ng-include src="'js/home/views/loader.html'"></ng-include>
 </div>
-</div>
-</div>
-</div>
-
-<!-- Content End  -->
-<ng-include src="'js/home/views/loader.html'"></ng-include>
-<script type="text/ng-template" id="thankYou.html">
-  <div class="modal-header">
-  <h3 class="modal-title" style="text-align:center">Thank You</h3>
-  <br>
-  <p style="text-align:center">Thank you for creating a download link! You now have a 10% discount. 
-    <br><br>
-    Click "Continue" to checkout with your 10% discount.</p>
-  </div>
-  <div class="modal-body">
-    <button class="btn btn-danger" type="button" ng-click="$parent.closeModal()">Close</button>
-    <a class="btn btn-success pull-right" ui-sref="pay({ submissionID: $parent.thankYouModal.submissionID })">Continue</a>
-  </div>
-</script>

@@ -5,6 +5,14 @@ var schema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
+  background:{
+    images:String,
+    blur:Number
+  },
+  logo:{
+    images:String,
+      align:String
+  },
   heading: {
     text: String,
     style: {
@@ -41,6 +49,8 @@ var schema = new mongoose.Schema({
   },
   backgroundImage: {
     type: String
-  }
+  },
+  type:String
+
 });
 mongoose.model('CustomSubmission', schema);

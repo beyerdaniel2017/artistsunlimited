@@ -35,18 +35,24 @@ router.post('/', function(req, res, next) {
 
 router.get('/unaccepted', function(req, res, next) {
   if (!req.user.role == 'admin' || !req.user.role == 'superadmin') {
-    next({
-      message: 'Forbidden',
-      status: 403
-    })
+     next(new Error('Unauthoirized'))
   } else {
     var resultSubs = [];
     var skipcount = req.query.skip;
     var limitcount = req.query.limit;
     var genre = req.query.genre ? req.query.genre : undefined;
+    var paidRepostIds = [];
+    if (req.user.paidRepost.length > 0) {
+      req.user.paidRepost.forEach(function(acc) {
+        paidRepostIds.push(acc.userID);
+      })
+    }
     var query = {
       channelIDS: [],
-      userID: req.user._id
+      userID: {
+        $in: paidRepostIds
+      },
+      status: "submitted"
     };
     if (genre != undefined && genre != 'null') {
       query.genre = genre;
@@ -54,10 +60,11 @@ router.get('/unaccepted', function(req, res, next) {
     Submission.find(query).sort({
         submissionDate: 1
       })
+      .populate('userID')
       .skip(skipcount)
       .limit(limitcount)
-      .exec()
-      .then(function(subs) {
+
+    .then(function(subs) {
         var i = -1;
         var next = function() {
           i++;
@@ -65,10 +72,73 @@ router.get('/unaccepted', function(req, res, next) {
             var sub = subs[i].toJSON();
             sub.approvedChannels = [];
             Submission.find({
-                email: sub.email
+              email: sub.email
+            })
+
+            .then(function(oldSubs) {
+                oldSubs.forEach(function(oldSub) {
+                  sub.approvedChannels = sub.approvedChannels.concat(oldSub.paidChannelIDS)
+                });
+                resultSubs.push(sub);
+                next();
               })
-              .exec()
-              .then(function(oldSubs) {
+              .then(null, next);
+          } else {
+            res.send(resultSubs);
+          }
+        }
+        next();
+      })
+      .then(null, next);
+  }
+});
+
+router.get('/getMarketPlaceSubmission', function(req, res, next) {
+  if (!req.user.role == 'admin' || !req.user.role == 'superadmin') {
+      next(new Error('Unauthoirized'))
+  } else {
+    var resultSubs = [];
+    var skipcount = req.query.skip;
+    var limitcount = req.query.limit;
+    var genre = req.query.genre ? req.query.genre : undefined;
+    var paidRepostIds = [];
+    if (req.user.paidRepost.length > 0) {
+      req.user.paidRepost.forEach(function(acc) {
+        paidRepostIds.push(acc.userID);
+      })
+    }
+    var query = {
+      pooledChannelIDS: [],
+      userID: {
+        $nin: paidRepostIds
+      },
+      ignoredBy: {
+        $ne: req.user._id
+      },
+      status: "pooled"
+    };
+    if (genre != undefined && genre != 'null') {
+      query.genre = genre;
+    }
+    Submission.find(query).sort({
+        submissionDate: 1
+      })
+      .populate('userID')
+      .skip(skipcount)
+      .limit(limitcount)
+
+    .then(function(subs) {
+        var i = -1;
+        var next = function() {
+          i++;
+          if (i < subs.length) {
+            var sub = subs[i].toJSON();
+            sub.approvedChannels = [];
+            Submission.find({
+              email: sub.email
+            })
+
+            .then(function(oldSubs) {
                 oldSubs.forEach(function(oldSub) {
                   sub.approvedChannels = sub.approvedChannels.concat(oldSub.paidChannelIDS)
                 });
@@ -87,19 +157,24 @@ router.get('/unaccepted', function(req, res, next) {
 });
 
 router.get('/getUnacceptedSubmissions', function(req, res, next) {
-  var query = {
-    channelIDS: [],
-    userID: req.user._id
-  };
-  Submission.count(query).exec()
-    .then(function(subs) {
-      return res.json(subs)
-    })
-    .then(0, next);
+  if (req.user) {
+    var query = {
+      channelIDS: [],
+      userID: req.user._id
+    };
+    Submission.count(query)
+      .then(function(subs) {
+        return res.json(subs)
+      })
+      .then(0, next);
+  } else {
+    res.json([]);
+  }
 });
 
 
 router.get('/getGroupedSubmissions', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   Submission.aggregate({
       $match: {
         channelIDS: [],
@@ -112,52 +187,126 @@ router.get('/getGroupedSubmissions', function(req, res, next) {
           $sum: 1
         }
       }
-    }).exec()
+    })
     .then(function(subs) {
       return res.json(subs)
     })
     .then(0, next);
 });
 
+router.get('/getPaidRepostAccounts', function(req, res) {
+  if (!req.user) next(new Error('Unauthorized'));
+  var accounts = req.user.paidRepost;
+  var results = [];
+  var i = -1;
+  var next = function() {
+    i++;
+    if (i < accounts.length) {
+      var acc = accounts[i].toJSON();
+      User.findOne({
+        _id: acc.userID
+      }, function(e, u) {
+        if (u) {
+          acc.user = u.soundcloud;
+          results.push(acc);
+        }
+        next();
+      });
+    } else {
+      res.send(results);
+    }
+  }
+  next();
+});
+
+
+router.get('/getAccountsByIndex/:user_id', function(req, res) {
+  if (!req.user) next(new Error('Unauthorized'));
+  var user_id = req.params.user_id;
+  var results = [];
+  var paidRepost = req.user.paidRepost.find(function(pr) {
+    return pr.userID == user_id;
+  });
+  var accounts = paidRepost.toJSON();
+  User.findOne({
+    _id: user_id
+  }, function(e, u) {
+    if (u) {
+      accounts.user = u.soundcloud;
+      res.send(accounts);
+    }
+  });
+});
+
+
+
 router.put('/save', function(req, res, next) {
   if (!req.user.role == 'admin') {
-    next({
-      message: 'Forbidden',
-      status: 403
-    })
+    next(new Error('Unauthorized'));
   } else {
     if (req.body.status == "pooled") {
       Submission.findByIdAndUpdate(req.body._id, req.body, {
           new: true
-        }).exec()
+        })
         .then(function(sub) {
           res.send(sub)
         })
         .then(null, next);
     } else {
+      req.body.status = "pooled";
+      var poolSentDate = new Date();
+      poolSentDate.setHours(poolSentDate.getHours() + 48);
+      req.body.pooledSendDate = poolSentDate;
       Submission.findByIdAndUpdate(req.body._id, req.body, {
           new: true
-        }).exec()
-        .then(function(sub) {
-          Channel.find({
-              channelID: {
+        })
+        .populate("userID")
+
+      .then(function(sub) {
+          User.find({
+              'soundcloud.id': {
                 $in: sub.channelIDS
               }
-            }).exec()
+            })
             .then(function(channels) {
               var nameString = "";
+              var nameStringWithLink = "";
               channels.forEach(function(cha, index) {
-                var addString = "<a href='" + cha.url + "'>" + cha.displayName + "</a>";
+                var addString = cha.soundcloud.username;
+                var addStringWithLink = "<a href='" + cha.soundcloud.permalinkURL + "'>" + cha.soundcloud.username + "</a>";
                 if (index == channels.length - 1) {
                   if (channels.length > 1) {
                     addString = "and " + addString;
+                    addStringWithLink = "and " + addStringWithLink;
                   }
                 } else {
+                  addStringWithLink += ", ";
                   addString += ", ";
                 }
+                nameStringWithLink += addStringWithLink;
                 nameString += addString;
               });
-              sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Congratulations on your Submission - " + (sub.title ? sub.title : ''), '<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:0"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse"><tr><td><table border="0" cellpadding="0" cellspacing="0" width="100%" style="background:url(' + 'https://artistsunlimited.com' + '/assets/images/fade-background.png) no-repeat;color:white;background-size:cover;background-position:center;"><tr><td align="left" style="padding:20px" width="50%"><a href="https://artistsunlimited.com"><img src="' + 'https://artistsunlimited.com' + '/assets/images/logo-white.png" height="45" style="height:45px" alt="AU"/></a></td><td align="right" style="font-size:22px;color:white;font-weight:bold;padding:20px" width="50%">Artists <br/>Unlimited</td></tr><tr><td colspan="2" align="center" style="padding:40px 0 30px 0;font-size:28px;font-weight:bold;font-family:Arial,sans-serif;color:white"><h2>We loved the track!</h2><p>The team listened to your track ' + (sub.title ? sub.title : '') + ' <br/>and it got accepted for promotion.</p></td></tr></table></td></tr><tr><td bgcolor="#ffffff" style="padding:40px 30px 40px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="color:#153643;font-family:Arial,sans-serif;font-size:24px">Hey ' + sub.name + '!</td></tr><tr><td style="padding:20px 0 10px 0;color:#153643;font-family:Arial,sans-serif;font-size:16px;line-height:20px">First of all thank you so much for submitting your track ' + (sub.title ? sub.title : '') + ' to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.</td></tr><tr><td style="padding:20px 0 10px 0;color:#153643;font-family:Arial,sans-serif;font-size:16px;line-height:20px">To maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.</td></tr><tr><td style="padding:20px 0 0 0;color:#153643;font-family:Arial,sans-serif;font-size:16px;line-height:20px">All the best,<br/><br/>Edward Sanchez<br/>Peninsula MGMT Team<br>www.facebook.com/edwardlatropical</td></tr></table></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/pay/' + sub._id + '" style="background-color:#f5bbbc;border:transparent;border-radius:0;padding:14px 50px;color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:3px;text-decoration:none;margin:30px 0;" class="btn btn-enter">Get promoted</a></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/login" style="color:#f5d3b5">Artist Tools</a></td></tr><tr><td style="padding:30px 30px 30px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center" width="33%"><a href="https://twitter.com/latropicalmusic" style="color:#fff"><img src="' + 'https://artistsunlimited.com' + '/assets/images/email-twitter.png" alt="Twitter" width="38" height="38" style="display:block" border="0"/></a></td><td align="center" width="33%"><a href="https://www.facebook.com/latropicalofficial" style="color:#fff"><img src="' + 'https://artistsunlimited.com' + '/assets/images/email-facebook.png" alt="Facebook" width="38" height="38" style="display:block" border="0"/></a></td><td align="center" width="33%"><a href="https://soundcloud.com/latropical" style="color:#fff"><img src="' + 'https://artistsunlimited.com' + '/assets/images/email-soundcloud.png" alt="SoundColud" width="38" height="38" style="display:block" border="0"/></a></td></tr></table></td></tr></table></td></tr></table>');
+              var acceptEmail = {};
+              if (req.user.repostCustomizeEmails && req.user.repostCustomizeEmails.length > 0) {
+                acceptEmail = req.user.repostCustomizeEmails[0].acceptance;
+              }
+              var body = "";
+              var body = acceptEmail.body;
+              body = body.replace('{NAME}', sub.name);
+              body = body.replace('{TRACK_TITLE_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.title + '</a>');
+              body = body.replace('{TRACK_TITLE}', sub.title);
+              body = body.replace('{TRACK_ARTIST_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.name + '</a>');
+              body = body.replace('{TRACK_ARTIST}', sub.name);
+              body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
+              body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', '<a href="' + sub.userID.soundcloud.permalinkURL + '">' + sub.userID.soundcloud.username + '</a>');
+              body = body.replace('{TRACK_ARTWORK}', '<img src="' + sub.track_art_url + '" style="width:200px; height: 200px"/>');
+              body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);
+              body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', nameStringWithLink);
+              body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
+              body = body.replace(/\n/g, "<br />");
+              //var emailBody = '<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:0"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse"><tr><td><table border="0" cellpadding="0" cellspacing="0" width="100%" style="background:url(' + 'https://artistsunlimited.com' + '/assets/images/fade-background.png) no-repeat;color:white;background-size:cover;background-position:center;"><tr><td align="left" style="padding:20px" width="50%"><a href="https://artistsunlimited.com"><img src="' + 'https://artistsunlimited.com' + '/assets/images/logo-white.png" height="45" style="height:45px" alt="AU"/></a></td><td align="right" style="font-size:22px;color:white;font-weight:bold;padding:20px" width="50%">Artists <br/>Unlimited</td></tr><tr><td colspan="2" align="center" style="padding:40px 0 30px 0;font-size:28px;font-weight:bold;font-family:Arial,sans-serif;color:white"><h2>'+acceptEmail.subject+'</h2></td></tr></table></td></tr><tr><td bgcolor="#ffffff" style="padding:40px 30px 40px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="color:#153643;font-family:Arial,sans-serif;">'+body+'</td></tr></table></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/pay/' + sub._id + '" style="background-color:#f5bbbc;border:transparent;border-radius:0;padding:14px 50px;color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:3px;text-decoration:none;margin:30px 0;" class="btn btn-enter">Get promoted</a></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/login" style="color:#f5d3b5">Artist Tools</a></td></tr><tr><td style="padding:30px 30px 30px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center" width="33%"><a href="https://twitter.com/latropicalmusic" style="color:#fff"><img src="' + 'https://artistsunlimited.com' + '/assets/images/email-twitter.png" alt="Twitter" width="38" height="38" style="display:block" border="0"/></a></td><td align="center" width="33%"><a href="https://www.facebook.com/latropicalofficial" style="color:#fff"><img src="' + 'https://artistsunlimited.com' + '/assets/images/email-facebook.png" alt="Facebook" width="38" height="38" style="display:block" border="0"/></a></td><td align="center" width="33%"><a href="https://soundcloud.com/latropical" style="color:#fff"><img src="' + 'https://artistsunlimited.com' + '/assets/images/email-soundcloud.png" alt="SoundColud" width="38" height="38" style="display:block" border="0"/></a></td></tr></table></td></tr></table></td></tr></table>';
+              var emailBody = '<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:0"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse"><tr><td><table border="0" cellpadding="0" cellspacing="0" width="100%" style="background:url(' + 'https://artistsunlimited.com' + '/assets/images/fade-background.png) no-repeat;color:white;background-size:cover;background-position:center;"><tr><td align="left" style="padding:20px" width="50%"><a href="https://artistsunlimited.com"><img src="' + 'https://artistsunlimited.com' + '/assets/images/logo-white.png" height="45" style="height:45px" alt="AU"/></a></td><td align="right" style="font-size:22px;color:white;font-weight:bold;padding:20px" width="50%">Artists <br/>Unlimited</td></tr><tr><td colspan="2" align="center" style="padding:40px 0 30px 0;font-size:28px;font-weight:bold;font-family:Arial,sans-serif;color:white"><h2>' + acceptEmail.subject + '</h2></td></tr></table></td></tr><tr><td bgcolor="#ffffff" style="padding:40px 30px 40px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="color:#153643;font-family:Arial,sans-serif;">' + body + '</td></tr></table></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/pay/' + sub._id + '" style="background-color:#f5bbbc;border:transparent;border-radius:0;padding:14px 50px;color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:3px;text-decoration:none;margin:30px 0;" class="btn btn-enter">Get promoted</a></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/login" style="color:#f5d3b5">Artist Tools</a></td></tr></table></td></tr></table></td></tr></table>';
+              sendEmail(sub.name, sub.email, "Artists Unlimited", "coayscue@artistsunlimited.com", acceptEmail.subject, emailBody);
               res.send(sub);
             }).then(null, next);
         })
@@ -168,15 +317,55 @@ router.put('/save', function(req, res, next) {
 
 router.delete('/decline/:subID/:password', function(req, res, next) {
   if (!req.user.role == 'admin') {
-    next({
-      message: 'Forbidden',
-      status: 403
-    })
+    next(new Error('Unauthorized'));
   } else {
-    Submission.findByIdAndRemove(req.params.subID).exec()
-      .then(function(sub) {
-        sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting your track <a href='" + sub.trackURL + "'>" + sub.title + "</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.<br><br> We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
-        res.send(sub);
+    Submission.findByIdAndRemove(req.params.subID)
+      .populate("userID")
+
+    .then(function(sub) {
+        User.find({
+            'soundcloud.id': {
+              $in: sub.channelIDS
+            }
+          })
+          .then(function(channels) {
+            var nameString = "";
+            var nameStringWithLink = "";
+            channels.forEach(function(cha, index) {
+              var addString = cha.soundcloud.username;
+              var addStringWithLink = "<a href='" + cha.soundcloud.permalinkURL + "'>" + cha.soundcloud.username + "</a>";
+              if (index == channels.length - 1) {
+                if (channels.length > 1) {
+                  addString = "and " + addString;
+                  addStringWithLink = "and " + addStringWithLink;
+                }
+              } else {
+                addString += ", ";
+                addStringWithLink += ", ";
+              }
+              nameString += addString;
+              nameStringWithLink += addStringWithLink;
+            });
+            var declineEmail = {};
+            if (req.user.repostCustomizeEmails && req.user.repostCustomizeEmails.length > 0) {
+              declineEmail = req.user.repostCustomizeEmails[0].decline;
+            }
+            var body = declineEmail.body;
+            body = body.replace('{NAME}', sub.name);
+            body = body.replace('{TRACK_TITLE_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.title + '</a>');
+            body = body.replace('{TRACK_TITLE}', sub.title);
+            body = body.replace('{TRACK_ARTIST_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.name + '</a>');
+            body = body.replace('{TRACK_ARTIST}', sub.name);
+            body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
+            body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', '<a href="' + sub.userID.soundcloud.permalinkURL + '">' + sub.userID.soundcloud.username + '</a>');
+            body = body.replace('{TRACK_ARTWORK}', '<img src="' + sub.track_art_url + '" style="width:200px; height: 200px"/>');
+            body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);
+            body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', nameStringWithLink);
+            body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
+            body = body.replace(/\n/g, "<br />");
+            sendEmail(sub.name, sub.email, "Artists Unlimited", "coayscue@artistsunlimited.com", declineEmail.subject, body);
+            res.send(sub);
+          });
       })
       .then(null, next);
   }
@@ -184,27 +373,55 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
 
 router.get('/withID/:subID', function(req, res, next) {
   Submission.findById(req.params.subID)
-    .populate('userID', 'paidRepost')
-    .exec()
-    .then(function(sub) {
+
+  .then(function(sub) {
       if (!sub) next(new Error('submission not found'))
       sub = sub.toJSON();
       var arrChannels = [];
-      if (sub.channelIDS.length > 0) {
-        sub.channelIDS.forEach(function(ch, index) {
-          if (sub.userID.paidRepost.length > 0) {
-            sub.userID.paidRepost.forEach(function(pr, index1) {
-              if (ch == pr.id) {
-                arrChannels.push(pr);
-              }
-            });
+      var query = {};
+      if (sub.status == "pooled") {
+        query = {
+          'soundcloud.id': {
+            $in: sub.channelIDS
           }
-          sub.channels = arrChannels;
-          if (index == sub.channelIDS.length - 1) {
-            res.send(sub);
+        }
+      } else if (sub.status == "poolSent") {
+        query = {
+          'soundcloud.id': {
+            $in: sub.pooledChannelIDS
           }
-        });
+        }
       }
+      User.find(query, function(e, channels) {
+        if (channels && channels.length > 0) {
+          var i = -1;
+          var next = function() {
+            i++;
+            if (i < channels.length) {
+              var channel = channels[i].toJSON();
+              User.findOne({
+                'paidRepost.userID': channel._id
+              }, function(e, admin) {
+                if (admin) {
+                  var ch = admin.paidRepost.find(function(acc) {
+                    return acc.userID.toString() == channel._id.toString()
+                  });
+                  if (ch) {
+                    ch = ch.toJSON();
+                    ch.user = channel.soundcloud;
+                    arrChannels.push(ch);
+                  }
+                }
+                next();
+              });
+            } else {
+              sub.channels = arrChannels;
+              res.send(sub);
+            }
+          }
+          next();
+        }
+      });
     })
     .then(null, next);
 });
@@ -226,7 +443,13 @@ router.delete('/ignore/:subID/:password', function(req, res, next) {
       status: 403
     })
   } else {
-    Submission.findByIdAndRemove(req.params.subID).exec()
+    Submission.findByIdAndUpdate({
+        _id: req.params.subID
+      }, {
+        $addToSet: {
+          ignoredBy: req.user._id
+        }
+      })
       .then(function(sub) {
         res.send(sub);
       })
@@ -235,20 +458,27 @@ router.delete('/ignore/:subID/:password', function(req, res, next) {
 });
 
 router.post('/getPayment', function(req, res, next) {
-  paypalCalls.makePayment(req.body.total, req.body.submission, req.body.channels)
+  var nameString = "Reposts on: ";
+  req.body.channels.forEach(function(ch) {
+    nameString += ch.user.username + " - ";
+  });
+  paypalCalls.makePayment(req.body.total, nameString, rootURL + "/complete", rootURL + "/pay/" + req.body.submission._id)
     .then(function(payment) {
       var submission = req.body.submission;
-      submission.paidChannelIDS = req.body.channels.map(function(ch) {
-        return ch.id;
-      });
-      submission.paid = false;
-      submission.payment = payment;
+      if (submission.status == 'pooled') {
+        submission.paidChannels = req.body.channels;
+        submission.payment = payment;
+      } else {
+        submission.paidPooledChannels = req.body.channels;
+        submission.pooledPayment = payment;
+      }
       submission.discounted = req.body.discounted;
       return Submission.findByIdAndUpdate(req.body.submission._id, submission, {
         new: true
-      }).exec()
+      })
     }).then(function(submission) {
-      var redirectLink = submission.payment.links.find(function(link) {
+      var payment = submission.status == 'pooled' ? submission.payment : submission.pooledPayment;
+      var redirectLink = payment.links.find(function(link) {
         return link.rel == "approval_url";
       })
       res.send(redirectLink.href);
@@ -262,148 +492,126 @@ router.put('/completedPayment', function(req, res, next) {
   };
   var sub;
   Submission.findOne({
-      'payment.id': req.body.paymentId
+      $or: [{
+        'payment.id': req.body.paymentId
+      }, {
+        'pooledPayment.id': req.body.paymentId
+      }]
     })
     .then(function(submission) {
       sub = responseObj.submission = submission;
-      return paypalCalls.executePayment(submission.payment.id, {
+      var payment = sub.status == 'pooled' ? sub.payment : sub.pooledPayment;
+      return paypalCalls.executePayment(payment.id, {
         payer_id: req.body.PayerID,
-        transactions: submission.payment.transactions
+        transactions: payment.transactions
       });
     })
     .then(function(payment) {
-      sub.payment = payment;
       var promiseArray = [];
       if (sub.trackID) {
-        sub.paidChannelIDS.forEach(function(chanID) {
-          promiseArray.push(schedulePaidRepost(chanID, sub));
-        });
+        if (sub.status == 'pooled') {
+          sub.payment = payment;
+          sub.paidChannels.forEach(function(channel) {
+            promiseArray.push(schedulePaidRepost(channel, sub));
+          });
+        } else {
+          sub.pooledPayment = payment;
+          sub.paidPooledChannels.forEach(function(channel) {
+            promiseArray.push(schedulePaidRepost(channel, sub));
+          });
+        }
         return Promise.all(promiseArray)
       } else {
         return [];
       }
     })
     .then(function(events) {
+      sub.refundDate = new Date((new Date(sub.pooledSendDate)).getTime() + 48 * 60 * 60 * 1000);
+      events.forEach(function(event) {
+        var wouldBeRefundDate = new Date(new Date(event.event.day).getTime() + 4 * 60 * 60 * 1000)
+        if (wouldBeRefundDate > sub.refundDate) sub.refundDate = wouldBeRefundDate;
+      })
       responseObj.events = events;
-      sub.paid = true;
-      // sub.pooled = true;
-      // setPooledSubTimer(sub);
       sub.save();
-      if (!sub.trackID) {
-        responseObj.status = 'notify';
-        var email_body = JSON.stringify(responseObj);
-        sendEmail('Edward', 'edward@peninsulamgmt.com', 'Artists Unlimited', 'coayscue@artistsunlimited.com', 'Needs Repost', email_body);
-      }
       res.send(responseObj);
     })
     .then(null, next);
 })
 
-function setPooledSubTimer(submission) {
-  setTimeout(function() {
-    Submission.findByIdAndUpdate(sub._id, {
-        pooled: "sent pool"
-      }, {}).exec()
-      .then(function(sub) {
-        Channel.find({
-            channelID: {
-              $in: sub.pooledChannelIDS
-            }
-          }).exec()
-          .then(function(channels) {
-            var nameString = "";
-            chans.forEach(function(cha, index) {
-              var addString = "<a href='" + cha.url + "'>" + cha.displayName + "</a>";
-              if (index == chans.length - 1) {
-                if (chans.length > 1) {
-                  addString = "and " + addString;
-                }
-              } else {
-                addString += ", ";
-              }
-              nameString += addString;
-            });
-            sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Congratulations on your Submission - " + (sub.title ? sub.title : ''), '<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:0"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse"><tr><td><table border="0" cellpadding="0" cellspacing="0" width="100%" style="background:url(' + 'https://artistsunlimited.com' + '/assets/images/fade-background.png) no-repeat;color:white;background-size:cover;background-position:center;"><tr><td align="left" style="padding:20px" width="50%"><a href="https://artistsunlimited.com"><img src="' + 'https://artistsunlimited.com' + '/assets/images/logo-white.png" height="45" style="height:45px" alt="AU"/></a></td><td align="right" style="font-size:22px;color:white;font-weight:bold;padding:20px" width="50%">Artists <br/>Unlimited</td></tr><tr><td colspan="2" align="center" style="padding:40px 0 30px 0;font-size:28px;font-weight:bold;font-family:Arial,sans-serif;color:white"><h2>We loved the track!</h2><p>The team listened to your track ' + (sub.title ? sub.title : '') + ' <br/>and it got accepted for promotion.</p></td></tr></table></td></tr><tr><td bgcolor="#ffffff" style="padding:40px 30px 40px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="color:#153643;font-family:Arial,sans-serif;font-size:24px">Hey ' + sub.name + '!</td></tr><tr><td style="padding:20px 0 10px 0;color:#153643;font-family:Arial,sans-serif;font-size:16px;line-height:20px">First of all thank you so much for submitting your track ' + (sub.title ? sub.title : '') + ' to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.</td></tr><tr><td style="padding:20px 0 10px 0;color:#153643;font-family:Arial,sans-serif;font-size:16px;line-height:20px">To maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.</td></tr><tr><td style="padding:20px 0 0 0;color:#153643;font-family:Arial,sans-serif;font-size:16px;line-height:20px">All the best,<br/><br/>Edward Sanchez<br/>Peninsula MGMT Team<br>www.facebook.com/edwardlatropical</td></tr></table></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/pay/' + sub._id + '" style="background-color:#f5bbbc;border:transparent;border-radius:0;padding:14px 50px;color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:3px;text-decoration:none;margin:30px 0;" class="btn btn-enter">Get promoted</a></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/login" style="color:#f5d3b5">Artist Tools</a></td></tr><tr><td style="padding:30px 30px 30px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center" width="33%"><a href="https://twitter.com/latropicalmusic" style="color:#fff"><img src="' + 'https://artistsunlimited.com' + '/assets/images/email-twitter.png" alt="Twitter" width="38" height="38" style="display:block" border="0"/></a></td><td align="center" width="33%"><a href="https://www.facebook.com/latropicalofficial" style="color:#fff"><img src="' + 'https://artistsunlimited.com' + '/assets/images/email-facebook.png" alt="Facebook" width="38" height="38" style="display:block" border="0"/></a></td><td align="center" width="33%"><a href="https://soundcloud.com/latropical" style="color:#fff"><img src="' + 'https://artistsunlimited.com' + '/assets/images/email-soundcloud.png" alt="SoundColud" width="38" height="38" style="display:block" border="0"/></a></td></tr></table></td></tr></table></td></tr></table>');
-            res.send(sub);
-          });
-      })
-      .then(null, next);
-  }, 48 * 60 * 60 * 1000);
-}
-
-function schedulePaidRepost(chanID, submission) {
+function schedulePaidRepost(channel, submission) {
   return new Promise(function(fulfill, reject) {
     var today = new Date();
-    User.findOne({
-        'soundcloud.id': chanID
-      }).exec()
-      .then(function(channel) {
-        scWrapper.setToken(channel.soundcloud.token);
-        var reqObj = {
-          method: 'DELETE',
-          path: '/e1/me/track_reposts/' + submission.trackID,
-          qs: {
-            oauth_token: channel.soundcloud.token
-          }
-        };
-        scWrapper.request(reqObj, function(err, data) {});
-        RepostEvent.find({
-            userID: chanID,
-            day: {
-              $gt: today
-            }
-          })
-          .exec()
-          .then(function(allEvents) {
-            allEvents.forEach(function(event1) {
-              event1.day = new Date(event1.day);
-            });
-            var searchHours = [24, 28, 32, 36, 40, 44];
-            var continueSearch = true;
-            var ind = 1;
-            while (continueSearch) {
-              searchHours.forEach(function(hour) {
-                var actualHour = calcHour(hour, -5);
-                var desiredDay = new Date();
-                desiredDay.setDate(desiredDay.getDate() + ind);
-                desiredDay.setHours(actualHour);
-                if (continueSearch) {
-                  var event = allEvents.find(function(eve) {
-                    return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
+    scWrapper.setToken(channel.user.token);
+    var reqObj = {
+      method: 'DELETE',
+      path: '/e1/me/track_reposts/' + submission.trackID,
+      qs: {
+        oauth_token: channel.user.token
+      }
+    };
+    scWrapper.request(reqObj, function(err, data) {});
+    RepostEvent.find({
+      userID: channel.user.id,
+      day: {
+        $gt: today
+      }
+    })
+
+    .then(function(allEvents) {
+      allEvents.forEach(function(event) {
+        event.day = new Date(event.day);
+      });
+      User.findById(channel.userID)
+        .then(function(chan) {
+          if (chan.blockRelease) chan.blockRelease = new Date(chan.blockRelease);
+          else chan.blockRelease = new Date(0);
+          var continueSearch = true;
+          var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+          var ind = 1;
+          while (continueSearch) {
+            var day = daysOfWeek[((new Date()).getDay() + ind) % 7];
+            chan.availableSlots[day].forEach(function(hour) {
+              var scheduleDate = new Date();
+              scheduleDate.setHours(hour);
+              var desiredDay = chan.blockRelease > scheduleDate ? chan.blockRelease : scheduleDate;
+              desiredDay.setTime(desiredDay.getTime() + ind * 24 * 60 * 60 * 1000);
+              desiredDay.setHours(hour);
+              if (continueSearch) {
+                var event = allEvents.find(function(eve) {
+                  return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
+                });
+                if (!event) {
+                  continueSearch = false;
+                  var payment = submission.status == 'pooled' ? submission.payment : submission.pooledPayment;
+                  var newEve = new RepostEvent({
+                    type: 'paid',
+                    day: desiredDay,
+                    trackID: submission.trackID,
+                    title: submission.title,
+                    trackURL: submission.trackURL,
+                    userID: channel.user.id,
+                    email: submission.email,
+                    name: submission.name,
+                    price: channel.price,
+                    saleID: payment.transactions[0].related_resources[0].sale.id
                   });
-                  if (!event) {
-                    continueSearch = false;
-                    var newEve = new RepostEvent({
-                      type: 'paid',
-                      day: desiredDay,
-                      trackID: submission.trackID,
-                      title: submission.title,
-                      trackURL: submission.trackURL,
-                      userID: chanID,
-                      email: submission.email,
-                      name: submission.name,
-                    });
-                    newEve.save()
-                      .then(function(eve) {
-                        eve.day = new Date(eve.day);
-                        User.findOne({
-                            'soundcloud.id': chanID
-                          }).exec()
-                          .then(function(user) {
-                            fulfill({
-                              channelName: user.soundcloud.username,
-                              date: eve.day
-                            });
-                          }).then(null, reject);
-                      })
-                      .then(null, reject);
-                  }
+                  newEve.save()
+                    .then(function(eve) {
+                      eve.day = new Date(eve.day);
+                      fulfill({
+                        channelName: channel.user.username,
+                        date: eve.day,
+                        event: eve
+                      });
+                    })
+                    .then(null, reject);
                 }
-              });
-              ind++;
-            }
-          });
-      }).then(null, reject);
+              }
+            });
+            ind++;
+          }
+        }).then(null, reject);
+    }).then(null, reject);
   })
 }
 
@@ -419,14 +627,14 @@ function calcHour(hour, destOffset) {
 // router.post('/rescheduleRepost', function(req, res, next) {
 //   var eventHolder;
 //   console.log(req.body);
-//   Event.findByIdAndRemove(req.body.id).exec()
+//   Event.findByIdAndRemove(req.body.id)
 //     .then(function(remEvent) {
 //       eventHolder = remEvent;
 //       return Event.find({
 //         paid: true,
 //         trackID: null,
 //         channelID: eventHolder.channelID
-//       }).exec()
+//       })
 //     })
 //     .then(function(events) {
 //       events.forEach(function(event) {
@@ -444,7 +652,7 @@ function calcHour(hour, destOffset) {
 //       }
 //       Channel.findOne({
 //           channelID: eventHolder.channelID
-//         }).exec()
+//         })
 //         .then(function(channel) {
 //           scWrapper.setToken(channel.accessToken);
 //           var reqObj = {
@@ -459,7 +667,7 @@ function calcHour(hour, destOffset) {
 //               if (!ev) {
 //                 Event.find({
 //                     channelID: eventHolder.channelID
-//                   }).exec()
+//                   })
 //                   .then(function(allEvents) {
 //                     allEvents.forEach(function(event1) {
 //                       event1.day = new Date(event1.day);

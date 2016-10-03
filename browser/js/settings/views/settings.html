@@ -49,6 +49,9 @@
               <br/>
               <div style="text-align: center;">
                 <h4 class="bold">Facebook Messenger Notifications</h4>
+                <div class="fb-send-to-messenger" messenger_app_id="1771378846475599" page_id="499383536933941" data-ref="{{user._id}}" color="blue" size="standard"></div>    
+                <span ng-if="!!user.notificationSettings.facebookMessenger.messengerID">Linked &#10004</span> 
+                <br>
                 <label class="with-square-checkbox">
                   <input type="checkbox" ng-model="user.notificationSettings.facebookMessenger.tradeRequest" ng-change="changeNotificationSettings()">
                   <span>Trade Request</span>
@@ -68,46 +71,46 @@
                   <input type="checkbox" ng-model="user.notificationSettings.facebookMessenger.trackUnrepost" ng-change="changeNotificationSettings()">
                   <span>Track Unrepost</span>
                 </label>
-                <br>
-                <label class="with-square-checkbox">
-                  <input type="checkbox" ng-model="user.notificationSettings.facebookMessenger.dailyUnfilledTrade" ng-change="changeNotificationSettings()">
-                  <span>Unfilled Traded Slots Tomorrow</span>
-                </label>
-                <br>
-                <br/>   
-                <h4 class="bold">Email Notifications</h4>
-                <label class="with-square-checkbox">
-                  <input type="checkbox" ng-model="user.notificationSettings.email.tradeRequest" ng-change="changeNotificationSettings()">
-                  <span>Trade Request</span>
-                </label>
-                <br>
-                <label class="with-square-checkbox">
-                  <input type="checkbox" ng-model="user.notificationSettings.email.tradeAcceptance" ng-change="changeNotificationSettings()">
-                  <span>Trade Acceptance</span>
-                </label>
-                <br>
-                <label class="with-square-checkbox">
-                  <input type="checkbox" ng-model="user.notificationSettings.email.trackRepost" ng-change="changeNotificationSettings()">
-                  <span>Track Repost</span>
-                </label>
-                <br>
-                <label class="with-square-checkbox">
-                  <input type="checkbox" ng-model="user.notificationSettings.email.trackUnrepost" ng-change="changeNotificationSettings()">
-                  <span>Track Unrepost</span>
-                </label>
-                <br>
-                <label class="with-square-checkbox">
-                  <input type="checkbox" ng-model="user.notificationSettings.email.dailyUnfilledTrade" ng-change="changeNotificationSettings()">
-                  <span>Unfilled Traded Slots Tomorrow</span>
-                </label>
-              </div>
+                <!-- <br> -->
+<!--               <label class="with-square-checkbox">
+                <input type="checkbox" ng-model="user.notificationSettings.facebookMessenger.dailyUnfilledTrade" ng-change="changeNotificationSettings()">
+                <span>Unfilled Traded Slots Tomorrow</span>
+              </label> -->
+              <br>
+              <br/>   
+              <h4 class="bold">Email Notifications</h4>
+              <label class="with-square-checkbox">
+                <input type="checkbox" ng-model="user.notificationSettings.email.tradeRequest" ng-change="changeNotificationSettings()">
+                <span>Trade Request</span>
+              </label>
+              <br>
+              <label class="with-square-checkbox">
+                <input type="checkbox" ng-model="user.notificationSettings.email.tradeAcceptance" ng-change="changeNotificationSettings()">
+                <span>Trade Acceptance</span>
+              </label>
+              <br>
+              <label class="with-square-checkbox">
+                <input type="checkbox" ng-model="user.notificationSettings.email.trackRepost" ng-change="changeNotificationSettings()">
+                <span>Track Repost</span>
+              </label>
+              <br>
+              <label class="with-square-checkbox">
+                <input type="checkbox" ng-model="user.notificationSettings.email.trackUnrepost" ng-change="changeNotificationSettings()">
+                <span>Track Unrepost</span>
+              </label>
+<!--               <br>
+              <label class="with-square-checkbox">
+                <input type="checkbox" ng-model="user.notificationSettings.email.dailyUnfilledTrade" ng-change="changeNotificationSettings()">
+                <span>Unfilled Traded Slots Tomorrow</span>
+              </label> -->
             </div>
           </div>
-          <br>                
         </div>
+        <br>                
       </div>
     </div>
   </div>
+</div>
 </div>
 <!-- Content End  -->
 <ng-include src="'js/home/views/loader.html'"></ng-include>

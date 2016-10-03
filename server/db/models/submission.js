@@ -38,14 +38,23 @@ var schema = new mongoose.Schema({
   payment: {
     type: Object
   },
-  paidChannelIDS: {
-    type: [Number]
+  pooledPayment: {
+    type: Object
+  },
+  paidChannels: {
+    type: []
+  },
+  paidPooledChannels: {
+    type: []
   },
   paid: {
     type: Boolean
   },
   discounted: {
     type: Boolean
+  },
+  refundDate: {
+    type: Date
   },
   genre: {
     type: String
@@ -54,10 +63,14 @@ var schema = new mongoose.Schema({
     type: String,
     default: "submitted"
   },
+  pooledSendDate: {
+    type: Date
+  },
   pooledChannelIDS: {
     type: Array,
     default: []
-  }
+  },
+  ignoredBy: []
 });
 
 mongoose.model("Submission", schema);

@@ -13,6 +13,9 @@ var schema = new mongoose.Schema({
   trackURL: {
     type: String
   },
+  trackArtUrl: {
+    type: String
+  },
   day: {
     type: Date
   },
@@ -37,7 +40,21 @@ var schema = new mongoose.Schema({
   },
   name: {
     type: String
-  }
+  },
+  comment: {
+    type: String
+  },
+  like: {
+    type: Boolean,
+    default: false
+  },
+  saleID: String,
+  price: Number,
+  payout: {},
+  artistName: String,
+  otherChannels: [],
+  timeGap: {},
+  unrepostHours: {}
 });
 
 mongoose.model("RepostEvent", schema);

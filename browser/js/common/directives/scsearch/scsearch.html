@@ -1,0 +1,12 @@
+<div class="search-suggetion">
+  <input class="form-control" type="text" placeholder="{{kind | capitalize}}" ng-model="searchString" ng-keypress="keypress($event)" style="{{customstyle}}"/>
+  <ul class="results" ng-show="searching || searchError || searchSelection.length > 0">
+    <li ng-show="searching && !searchError && searchSelection.length==0"><a>One moment...</a></li>
+    <li ng-repeat="item in searchSelection"><a href="javascript:void(0)" ng-click="selectedItem(item)">
+      <div class="pull-left result-seach-img" ><img ng-if="item.artwork_url || item.avatar_url" src="{{item.artwork_url ? item.artwork_url : item.avatar_url}} "/></div> {{item.displayName}}</a>
+    </li>
+    <li ng-show="!!searchError"> {{searchError}}</li>
+    <li ng-show="searchSelection.length > 0 && !searchError"><a> ... or enter a Soundcloud URL</a></li>
+  </ul>
+  <a href="javascript:void(0)" class="url-search-btn-small" ng-click="sendSearch()"><i class="glyphicon glyphicon-search"></i></a>
+</div>

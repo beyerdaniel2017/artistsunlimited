@@ -6,7 +6,7 @@ app.config(function($stateProvider) {
   });
 });
 
-app.controller('PremierSubmissionController', function($rootScope, $state, $scope, $http, AuthService, SessionService, $sce) {
+app.controller('PremierSubmissionController', function($rootScope, $state, $scope, $http, AuthService, SessionService, $sce, $window) {
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
   if (!SessionService.getUser()) {
     $state.go('admin');
@@ -32,6 +32,49 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   $scope.genre = "";
   $scope.skip = 0;
   $scope.limit = 5;
+  $scope.dynamicButton = [{
+   "name": "TRACK TITLE WITH LINK", 
+   "appendText": " {TRACK_TITLE_WITH_LINK} " 
+  },
+  { 
+    "name": "SUBMITTERS EMAIL", 
+    "appendText": " {SUBMITTERS_EMAIL} " 
+  },
+  { 
+    "name": "TRACK TITLE", 
+    "appendText": " {TRACK_TITLE} " 
+  },
+  { 
+    "name": "TRACK ARTIST WITH LINK", 
+    "appendText": " {TRACK_ARTIST_WITH_LINK} " 
+  },
+  { 
+    "name": "TRACK ARTIST", 
+    "appendText": " {TRACK_ARTIST} " 
+  },
+  { 
+    "name": "TRACK ARTWORK", 
+    "appendText": " {TRACK_ARTWORK} " 
+  },
+  { 
+    "name": "SUBMITTED TO ACCOUNT NAME", 
+    "appendText": " {SUBMITTED_TO_ACCOUNT_NAME} " 
+  },
+  { 
+    "name": "SUBMITTED ACCOUNT NAME WITH LINK", 
+    "appendText": " {SUBMITTED_ACCOUNT_NAME_WITH_LINK} " 
+  },
+  { 
+    "name": "ACCEPTED CHANNEL LIST", 
+    "appendText": " {ACCEPTED_CHANNEL_LIST} " 
+  },
+  { 
+    "name": "ACCEPTED CHANNEL LIST WITH LINK", 
+    "appendText": " {ACCEPTED_CHANNEL_LIST_WITH_LINK} " },
+  { 
+    "name": "TODAYS DATE", 
+    "appendText": " {TODAYSDATE} " 
+  }];
   $scope.genreArray = [
     'Alternative Rock',
     'Ambient',
@@ -206,6 +249,34 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     });
   }
 
+  $scope.openEmailClient = function(sub, item){
+    var toEmail = (item.toEmail == '{email}' ? sub.email : item.toEmail);
+    var subject = (item.subject != undefined ? item.subject : "");
+    if(subject != ""){
+      subject = subject.replace('{title}', sub.title);
+      subject = subject.replace('{name}', sub.name);
+      subject = subject.replace('{url}', sub.trackURL);
+    }    
+    var body = (item.emailBody != undefined ? item.emailBody : "");
+    if(body != ""){
+      body = body.replace('{NAME}', sub.name);
+      body = body.replace('{SUBMITTERS_EMAIL}', toEmail);
+      body = body.replace('{TRACK_TITLE_WITH_LINK}', sub.title + '('+ sub.trackURL+')');
+      body = body.replace('{TRACK_TITLE}', sub.title);
+      body = body.replace('{TRACK_ARTIST_WITH_LINK}', sub.name + '('+ sub.trackURL+')');
+      body = body.replace('{TRACK_ARTIST}', sub.name);
+      body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
+      body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', sub.userID.soundcloud.username + '('+ sub.userID.soundcloud.permalinkURL+')');
+      body = body.replace('{ACCEPTED_CHANNEL_LIST}', "");      
+      body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', "");      
+      body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
+    }
+    var link = "mailto:"+ toEmail
+      + "?subject=" + escape(subject)
+      + "&body=" + escape(body); 
+    $window.location.href = link;
+  }
+
   $scope.getChannels = function() {
     $scope.channels = [{
       displayName: 'La Tropical',
@@ -248,6 +319,76 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
       url: 'http://soundcloud.com/luxaudio'
     }]
   }
+
+  $scope.customEmailButtons = $scope.user.premierCustomEmailButtons.length > 0 ? $scope.user.premierCustomEmailButtons : [];
+  if($scope.customEmailButtons.length == 0){
+    $scope.customEmailButtons.push({
+      toEmail: '',
+      subject: '',
+      emailBody: '',
+      buttonText: '',
+      buttonBgColor: ''
+    });
+  }
+  $scope.saveSettings=function(){
+    var valid = true;
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    angular.forEach($scope.customEmailButtons, function(cb) {
+      if(cb.toEmail != "{email}"){
+        var validEmail = re.test(cb.toEmail);
+        if (!validEmail) {
+          valid = false;
+        }
+      }
+    });
+    if(!valid){
+      $.Zebra_Dialog('Please enter {email} or a well formatted email id in To Email field.');
+      return;
+    }
+    $scope.processing = true;
+    $scope.user.premierCustomEmailButtons = $scope.customEmailButtons;
+    $http.post('/api/database/updatePremierCustomEmailButtons', {
+      customEmailButtons: $scope.user.premierCustomEmailButtons,
+    }).then(function(res) {
+      $scope.processing = false;
+      SessionService.create(res.data);
+      $scope.user = SessionService.getUser();
+    });
+  }
+
+  $scope.addItem = function() {
+    $scope.customEmailButtons.push({
+      toEmail: '',
+      subject: '',
+      emailBody: '',
+      buttonText: '',
+      buttonBgColor: ''
+    });
+  }
+
+  $scope.removeItem = function(index) {
+    $scope.customEmailButtons.splice(index, 1);
+  }
+
+  $scope.addEventClass = function(index,type) {
+    $('textarea').removeClass("selectedBox");
+    $("." + type+index).addClass("selectedBox");
+  }
+
+  $scope.appendBody = function(btn) {
+    if ($('.selectedBox').length) {
+      var boxIndex = $('.selectedBox').attr("index");
+      var cursorPos = $('.selectedBox').prop('selectionStart');
+      var v = $('.selectedBox').val();
+      console.log('boxIndex',boxIndex);
+      var textBefore = v.substring(0, cursorPos);
+      var textAfter = v.substring(cursorPos, v.length);
+      var newtext = textBefore + btn.appendText + textAfter;
+      $scope.customEmailButtons[boxIndex].emailBody = newtext;
+      $('textarea').removeClass("selectedBox");
+    }
+  }
+
   $scope.loadSubmissions();
 });
 

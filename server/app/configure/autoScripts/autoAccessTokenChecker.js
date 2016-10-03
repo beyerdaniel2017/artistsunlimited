@@ -17,29 +17,29 @@ function checkTokens() {
     checkTokens()
   }, 3600000);
 
-  User.find({}).exec()
+  User.find({})
     .then(function(users) {
       users.forEach(function(user) {
         RepostEvent.find({
-            userID: user.soundcloud.id,
-            completed: false
-          })
-          .exec()
-          .then(function(events) {
-            if (events && events.length > 0) {
-              scWrapper.setToken(user.soundcloud.token);
-              var reqObj = {
-                method: 'GET',
-                path: '/me',
-                qs: {}
-              };
-              scWrapper.request(reqObj, function(err, data) {
-                if (err) {
-                  sendEmail(user.soundcloud.username, user.email, "Artists Unlimited", "coayscue@artistsunlimited.com", "Invalid Access Token", "Hey " + user.soundcloud.username + ", <br><br>Your soundcloud access token for Artists Unlimited is invalid and you have some scheduled reposts coming up. Please log back in to <a href='https://artistsunlimited.com/login'>Artist Tools</a> to allow us to fulfill your scheduled reposts: <a href='https://artistsunlimited.com/login'>Artist Tools Login</a><br><br>Best,<br>Christian Ayscue<br>Artists Unlimited");
-                }
-              });
-            }
-          })
+          userID: user.soundcloud.id,
+          completed: false
+        })
+
+        .then(function(events) {
+          if (events && events.length > 0) {
+            scWrapper.setToken(user.soundcloud.token);
+            var reqObj = {
+              method: 'GET',
+              path: '/me',
+              qs: {}
+            };
+            scWrapper.request(reqObj, function(err, data) {
+              if (err) {
+                sendEmail(user.soundcloud.username, user.email, "Artists Unlimited", "coayscue@artistsunlimited.com", "Invalid Access Token", "Hey " + user.soundcloud.username + ", <br><br>Your soundcloud access token for Artists Unlimited is invalid and you have some scheduled reposts coming up. Please log back in to <a href='https://artistsunlimited.com/login'>Artist Tools</a> to allow us to fulfill your scheduled reposts: <a href='https://artistsunlimited.com/login'>Artist Tools Login</a><br><br>Best,<br>Christian Ayscue<br>Artists Unlimited");
+              }
+            });
+          }
+        })
       });
     });
 }

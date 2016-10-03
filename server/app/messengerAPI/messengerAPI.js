@@ -1,5 +1,5 @@
 var request = require('request');
-var accessToken = 'EAACF74AST74BAAZCA3IkYFhZA7pJNXekDn8sg35WBqOnMRE22jGkx6rGLFA9XHk1nueISUPb7fnFPaU2Iefi8nv5FrCZAfSCG8wXzTZAua2PFFmlzZCVB2J1LZAHgZAfaWiXUlVgdLhgUBMZB5omx6lPe65rjLmrERnm6uWYncp86QZDZD';
+var accessToken = 'EAAZALD0boJU8BAAAup11zYZBJwYRNJKF9o7rrPL84AwJeBjyKN5qXwieZBuRxrMSBrMVJOI0nzFZBo0Uc3BFvxYBaB9mqyACylGDaVSZCZAuiyXkbDa6mluGV8R2rbHgU3ZChfEah9ZCTJ3OcRhw5sfkcw8RRRMc0wfp6xBw9qNRSQZDZD';
 
 module.exports = {
   typing: function(userID) {

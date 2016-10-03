@@ -15,8 +15,17 @@ router.get('/unaccepted', function(req, res, next) {
   var genre = req.query.genre ? req.query.genre : undefined;
   var skipcount = req.query.skip;
   var limitcount = req.query.limit;
+  var paidRepostIds = [];
+  if (req.user.paidRepost.length > 0) {
+    req.user.paidRepost.forEach(function(acc) {
+      paidRepostIds.push(acc.userID);
+    })
+  }
   var searchObj = {
-    status: 'new'
+    status: 'new',
+    userID: {
+      $in: paidRepostIds
+    }
   };
   if (genre != undefined && genre != 'null') {
     searchObj = {
@@ -26,10 +35,11 @@ router.get('/unaccepted', function(req, res, next) {
   }
   PremierSubmission
     .find(searchObj)
+    .populate('userID')
     .skip(skipcount)
     .limit(limitcount)
-    .exec()
-    .then(function(subs) {
+
+  .then(function(subs) {
       res.send(subs);
     })
     .then(null, next);
@@ -125,6 +135,7 @@ router.post('/', function(req, res, next) {
   function saveToDB(data) {
 
     var newPremierSubmission = new PremierSubmission({
+      userID: body.fields.userID,
       s3URL: data.Location,
       genre: body.fields.genre,
       email: body.fields.email,
@@ -161,10 +172,10 @@ router.post('/', function(req, res, next) {
 
 router.put('/accept', function(req, res, next) {
   PremierSubmission.findByIdAndUpdate(req.body.submi._id, req.body.submi, {
-      new: true
-    })
-    .exec()
-    .then(function(sub) {
+    new: true
+  })
+
+  .then(function(sub) {
       res.send(sub);
     })
     .then(null, next);
@@ -172,10 +183,10 @@ router.put('/accept', function(req, res, next) {
 
 router.put('/decline', function(req, res, next) {
   PremierSubmission.findOneAndRemove({
-      _id: req.body.submission._id
-    })
-    .exec()
-    .then(function(sub) {
+    _id: req.body.submission._id
+  })
+
+  .then(function(sub) {
       sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting <a href='" + sub.s3URL + "'>your track</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.<br><br> We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
       res.send(sub);
     })
@@ -187,8 +198,8 @@ router.post('/delete', function(req, res, next) {
     .remove({
       _id: req.body.id
     })
-    .exec()
-    .then(function() {
+
+  .then(function() {
       return res.end();
     })
     .then(null, function(err) {

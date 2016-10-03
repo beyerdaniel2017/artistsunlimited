@@ -103,18 +103,18 @@ router.post('/authenticated', function(req, res, next) {
           accessToken: req.body.token,
           followerCount: data.followers_count,
           price: parseFloat(data.followers_count / 3000.0).toFixed(2)
-        }).exec()
+        })
         .then(function(channel) {
           sendObj.channel = channel;
           return Event.find({
             channelID: data.id
-          }).exec();
+          });
         })
         .then(function(events) {
           sendObj.events = events;
           return Submission.find({
             channelIDS: data.id
-          }).exec();
+          });
         })
         .then(function(submissions) {
           sendObj.submissions = submissions;
@@ -173,36 +173,46 @@ router.post('/soundCloudAuthentication', function(req, res, next) {
       next(err);
     } else {
       User.findOne({
-          'soundcloud.id': data.id
-        })
-        .exec()
-        .then(function(user) {
-          if (user) {
-            return res.json({
-              'success': true,
-              'message': '',
-              'user': user
-            });
-          } else {
-            var newUser = new User({
-              'name': data.username,
-              'soundcloud': {
-                'id': data.id,
-                'username': data.username,
-                'permalinkURL': data.permalink_url,
-                'avatarURL': data.avatar_url.replace('large', 't500x500'),
-                'token': req.body.token,
-                'followers': data.followers_count
-              }
-            });
-            newUser.save();
-            return res.json({
-              'success': true,
-              'message': '',
-              'user': newUser
-            });
-          }
-        });
+        'soundcloud.id': data.id
+      })
+
+      .then(function(user) {
+        if (user) {
+          return res.json({
+            'success': true,
+            'message': '',
+            'user': user
+          });
+        } else {
+          var newUser = new User({
+            'name': data.username,
+            'soundcloud': {
+              'id': data.id,
+              'username': data.username,
+              'permalinkURL': data.permalink_url,
+              'avatarURL': data.avatar_url.replace('large', 't500x500'),
+              'token': req.body.token,
+              'followers': data.followers_count,
+              'role': 'user'
+            },
+            'availableSlots': {
+              'sunday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
+              'monday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
+              'tuesday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
+              'wednesday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
+              'thursday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
+              'friday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
+              'saturday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22]
+            }
+          });
+          newUser.save();
+          return res.json({
+            'success': true,
+            'message': '',
+            'user': newUser
+          });
+        }
+      });
     }
   });
 });

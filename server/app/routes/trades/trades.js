@@ -2,110 +2,40 @@ var router = require('express').Router();
 module.exports = router;
 var mongoose = require('mongoose');
 var Trade = mongoose.model('Trade');
+var Users = mongoose.model('User');
 var RepostEvent = mongoose.model('RepostEvent');
+var notificationCenter = require('../../notificationCenter/notificationCenter.js')
 
 router.get('/withUser/:userID', function(req, res, next) {
-  var tradeType = req.query.tradeType;
-  var query = {
-    $or: [{
-      'p1.user': req.params.userID
-    }, {
-      'p2.user': req.params.userID
-    }]
-  };  
-  if(tradeType != undefined){
-    tradeType = JSON.parse(tradeType);
-    if(tradeType.Requests == false && tradeType.Requested == false && tradeType.TradePartners == false){
-      query = "";
-    }
-  }
-
-  if (req.user._id != req.params.userID) {
-    next({
-      message: 'Forbidden',
-      status: 403
-    })
-  } else {
-    if(query != ""){
-  Trade.find(query).populate('p1.user').populate('p2.user').exec()
-      .then(function(trades) {
-        var tradesResult = [];
-        var i = -1;
-        if (trades.length > 0) {
-          var next = function() {
-            i++;
-            if (i < trades.length) {
-              var t = trades[i].toJSON();
-              if (t.p1.user && t.p2.user) {
-                t.unfilledTrackCount = 0;
-                var ownerid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p1.user._id : t.p2.user._id);
-                var userid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p2.user.soundcloud.id : t.p1.user.soundcloud.id);
-                RepostEvent.count({
-                    day: {
-                      $gt: new Date()
-                    },
-                    owner: ownerid,
-                    userID: userid,
-                    trackID: {
-                      $exists: false
-                    },
-                    type: 'traded'
-                  })
-                  .exec()
-                  .then(function(events) {
-                    t.unfilledTrackCount = events;
-                  if(tradeType.Requests == true && t.p1.user._id.toString() === req.user._id.toString() && t.p1.accepted == false){
-                    if(tradesResult.indexOf(t) == -1){
-                    tradesResult.push(t);
-                    }                    
-                  }
-                  if(tradeType.Requested == true && t.p2.user._id.toString() === req.user._id.toString() && t.p2.accepted == false){
-                    if(tradesResult.indexOf(t) == -1){
-                      tradesResult.push(t);
-                    }
-                  }
-                  if(tradeType.TradePartners == true){ 
-                    RepostEvent.count({
-                      $or: [{
-                        userID: t.p1.user.soundcloud.id,
-                        owner: t.p2.user._id
-                      }, {
-                        userID: t.p2.user.soundcloud.id,
-                        owner: t.p1.user._id
-                      }]
-                    })
-                    .exec()
-                    .then(function(tp) {
-                      if(tp > 0){
-                        if(tradesResult.indexOf(t) == -1){
-                          tradesResult.push(t);
-                        }
-                      }
-                    next();
-                  });
-                  }
-                  else{                    
-                    next();
-                  }
-                });
-              } else {
-                next();
-              }
-            } else {
-              res.send(tradesResult);
-            }
-          }
-          next();
-        } else {
-          res.send([]);
-        }
+  Trade.find({
+      $or: [{
+        'p1.user': req.params.userID
+      }, {
+        'p2.user': req.params.userID
+      }]
+    }).populate('p1.user').populate('p2.user')
+    .then(function(trades) {
+      trades = trades.filter(function(trade) {
+        return !(trade.p1.accepted && trade.p2.accepted)
       })
-      .then(null, next);
-  }
-    else{
-      res.send([]);
-    }
-  }
+      res.send(trades)
+    }).then(null, next);
+});
+
+router.get('/doneWithUser/:userID', function(req, res, next) {
+  Trade.find({
+      $or: [{
+        'p1.user': req.params.userID
+      }, {
+        'p2.user': req.params.userID
+      }]
+    }).populate('p1.user').populate('p2.user')
+    .then(function(trades) {
+      trades = trades.filter(function(trade) {
+        return (trade.p1.accepted && trade.p2.accepted)
+      })
+      res.send(trades)
+    }).then(null, next);
 });
 
 router.post('/new', function(req, res, next) {
@@ -118,7 +48,11 @@ router.post('/new', function(req, res, next) {
 })
 
 router.put('/', function(req, res, next) {
-  if (req.user._id != req.body.p1.user._id && req.user._id != req.body.p2.user._id) {
+  var userid = req.user._id;
+  if (req.body.userid != undefined)
+    userid = req.body.userid;
+
+  if (userid != req.body.p1.user._id && userid != req.body.p2.user._id) {
     next({
       message: 'Forbidden',
       status: 403
@@ -126,8 +60,17 @@ router.put('/', function(req, res, next) {
   } else {
     Trade.findByIdAndUpdate(req.body._id, req.body, {
         new: true
-      }).populate('p1.user').populate('p2.user').exec()
+      }).populate('p1.user').populate('p2.user')
       .then(function(trade) {
+        if (trade.p1.accepted && trade.p2.accepted) {
+          var user = (req.user._id == trade.p1.user._id ? req.user : trade.p2.user);
+          var other = (req.user._id == trade.p1.user._id ? trade.p2.user : req.user);
+          notificationCenter.sendNotifications(other._id, 'tradeRequest', 'Trade request', user.soundcloud.username + " accepted your trade.", "https://artistsunlimited.com/artistTools/reForReInteraction/" + trade._id);
+        } else if (trade.p1.accepted && !trade.p2.accepted) {
+          notificationCenter.sendNotifications(trade.p2.user._id, 'tradeRequest', 'Trade request', trade.p1.user.soundcloud.username + " requests a trade.", "https://artistsunlimited.com/artistTools/reForReInteraction/" + trade._id);
+        } else {
+          notificationCenter.sendNotifications(trade.p1.user._id, 'tradeRequest', 'Trade request', trade.p2.user.soundcloud.username + " requests a trade.", "https://artistsunlimited.com/artistTools/reForReInteraction/" + trade._id);
+        }
         res.send(trade);
       })
       .then(null, next);
@@ -135,7 +78,7 @@ router.put('/', function(req, res, next) {
 })
 
 router.get('/byID/:tradeID', function(req, res, next) {
-  Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user').exec()
+  Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user')
     .then(function(trade) {
       if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user._id) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user._id)) {
         next({
@@ -149,10 +92,27 @@ router.get('/byID/:tradeID', function(req, res, next) {
     .then(null, next);
 })
 
-router.post('/delete', function(req, res, next) {
-  Trade.findById(req.body.id).exec()
+router.get('/byID/:tradeID/:userId', function(req, res, next) {
+  var userid = req.params.userId;
+
+  Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user')
     .then(function(trade) {
-      if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user)) {
+      if (userid != trade.p1.user._id && userid != trade.p2.user._id) {
+        next({
+          message: 'Forbidden',
+          status: 403
+        })
+      } else {
+        res.send(trade);
+      }
+    })
+    .then(null, next);
+})
+
+router.post('/delete', function(req, res, next) {
+  Trade.findById(req.body.id)
+    .then(function(trade) {
+      if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user) && (req.body.action != "admin" || req.body.action == undefined)) {
         next({
           message: 'Forbidden',
           status: 403
@@ -169,7 +129,7 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
   var arrP1Events = [];
   var arrP2Events = [];
   var arrUserTrades = [];
-  Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user').exec()
+  Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user')
     .then(function(trd) {
       var trade = trd.toJSON();
       if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user._id) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user._id)) {
@@ -180,12 +140,12 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
       } else {
         RepostEvent.find({
             userID: trade.p1.user.soundcloud.id
-          }).exec()
+          })
           .then(function(p1Events) {
             arrP1Events = p1Events;
             RepostEvent.find({
                 userID: trade.p2.user.soundcloud.id
-              }).exec()
+              })
               .then(function(p2Events) {
                 arrP2Events = p2Events;
                 Trade.find({
@@ -194,7 +154,7 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
                     }, {
                       'p2.user': req.user._id
                     }]
-                  }).populate('p1.user').populate('p2.user').exec()
+                  }).populate('p1.user').populate('p2.user')
                   .then(function(trades) {
                     var tradesResult = [];
                     var i = -1;
@@ -208,22 +168,22 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
                             var ownerid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p1.user._id : t.p2.user._id);
                             var userid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p2.user.soundcloud.id : t.p1.user.soundcloud.id);
                             RepostEvent.count({
-                                day: {
-                                  $gt: new Date()
-                                },
-                                owner: ownerid,
-                                userID: userid,
-                                trackID: {
-                                  $exists: false
-                                },
-                                type: 'traded'
-                              })
-                              .exec()
-                              .then(function(events) {
-                                t.unfilledTrackCount = events;
-                                tradesResult.push(t);
-                                next();
-                              });
+                              day: {
+                                $gt: new Date()
+                              },
+                              owner: ownerid,
+                              userID: userid,
+                              trackID: {
+                                $exists: false
+                              },
+                              type: 'traded'
+                            })
+
+                            .then(function(events) {
+                              t.unfilledTrackCount = events;
+                              tradesResult.push(t);
+                              next();
+                            });
                           } else {
                             next();
                           }
@@ -255,16 +215,22 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
 });
 
 router.put('/offline', function(req, res, next) {
+  var userid = req.user._id;
+  if (req.body.userid != undefined)
+    userid = req.body.userid;
+
   Trade.update({
     _id: req.body.tradeID,
-    'p1.user': req.user._id
+    'p1.user': userid
   }, {
     'p1.online': false
   }, function(e, r) {});
   Trade.update({
     _id: req.body.tradeID,
-    'p2.user': req.user._id
+    'p2.user': userid
   }, {
     'p2.online': false
-  }, function(e, r) {});
+  }, function(e, r) {
+    res.send(r);
+  });
 });

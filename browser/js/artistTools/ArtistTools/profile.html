@@ -33,28 +33,6 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-              <hr/>
-              <div class="permanent-links" style="text-align: center;">
-                <h4 class="bold">Permanent Artists:</h4>
-                <small>These artists will be followed on all of your Download Gates</small>
-                <br/>
-                <input class="form-control" placeholder="Artist Soundcloud Url" ng-model="linkUrl" ng-change="permanentLinkURLChange()" />
-                <br/>
-                <br/>
-                <div class="col-md-12 text-center">
-                  <button type="submit" class="btn btn-default btn-small" ng-click="saveProfileInfo()">Add to list</button>
-                </div>
-                <br/>
-                <br/>
-                <div ng-repeat="permanentLink in user.permanentLinks" style="padding:10px; color:#000; text-align: center;">
-                  <a href="{{permanentLink.url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{permanentLink.avatar}}">{{' ' + permanentLink.username}}</a>&nbsp;&nbsp;&nbsp;
-                  <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePermanentLink($index)"></a> 
-                </div>
-              </div>
-            </div>
-          </div>
           <br/>
           <!---Third party access-->
           <!-- <div class="row">
@@ -86,7 +64,7 @@
               <div class="permanent-links" style="text-align: center;">
                 <h4 class="bold">Linked Accounts</h4>
                 <div class="col-md-12 text-center">
-                  <button type="button" class="btn btn-default btn-small" ng-click="soundcloudLogin()">Add to list</button>
+                  <button type="button" class="btn btn-pink b-radius-10" ng-click="soundcloudLogin()">Add to list</button>
                 </div>
                 <br/><br/>
                 <div ng-if="account._id != user._id" ng-repeat="account in userlinkedAccounts" style="padding:10px; color:#000; text-align: center;">
@@ -96,32 +74,76 @@
               </div>
             </div>
           </div>
-          <br>
           <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-8 col-md-offset-2 text-center">
               <hr/>
-              <div class="permanent-links" style="text-align: center;">
-                <h4 class="bold">Auto-fill Tracks</h4>
-                <input class="form-control" placeholder="Soundcloud Track Url" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()" />
-                <br/>
-                <select class="form-control" ng-model="trackListObj" ng-options="item.title for item in trackList" ng-change="trackListChange()">
-                  <option value="" ng-disabled="!!trackListObj" ng-show="trackList.length > 0">-My Songs-</option>
-                </select>
-                <br/>
-                <span>{{newQueue.title}}</span>
-                <br>
-                <div class="col-md-12 text-center">
-                  <button class="btn btn-default btn-small" ng-click="addSong()">Add</button>
+              <h4 class="bold">Notification Settings</h4>
+            </div>
+          </div>
+          <!--row end-->
+          <div class="row margin-40">
+            <div class="col-md-8 col-md-offset-2">
+              <div style="text-align: center;">
+                <h5 class="bold">Facebook Messenger Notifications</h5>
+                <div class="fb-send-to-messenger" messenger_app_id="1771378846475599" page_id="499383536933941" color="blue" size="large" data-ref="{{profile.data._id}}">
                 </div>
-                <br/>
-                <br/>
-                <div ng-repeat="song in autoFillTracks" style="padding:10px; color:#000; text-align: center;">
-                  <a href="{{song.permalink_url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{song.artwork_url}}">{{' ' + song.title}}</a>&nbsp;&nbsp;&nbsp;
-                  <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeQueueSong(user.queue.indexOf(song))"></a> 
-                </div>                             
+                <span ng-if="!!profile.data.notificationSettings.facebookMessenger.messengerID">Linked &#10004</span>                 <br />
+                <br />
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.facebookMessenger.tradeRequest" ng-change="saveNotifications()">
+                  <span>Trade Request</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.facebookMessenger.tradeAcceptance" ng-change="saveNotifications()">
+                  <span>Trade Acceptance</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.facebookMessenger.trackRepost" ng-change="saveNotifications()">
+                  <span>Track Repost</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.facebookMessenger.trackUnrepost" ng-change="saveNotifications()">
+                  <span>Track Unrepost</span>
+                </label>
+                <br>
+<!--                 <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.facebookMessenger.dailyUnfilledTrade" ng-change="saveNotifications()">
+                  <span>Unfilled Traded Slots Tomorrow</span>
+                </label>
+                <br> -->
+                <h5 class="bold">Email Notifications</h5>
+                <h4>{{profile.data.email}}</h4>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.email.tradeRequest" ng-change="saveNotifications()">
+                  <span>Trade Request</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.email.tradeAcceptance" ng-change="saveNotifications()">
+                  <span>Trade Acceptance</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.email.trackRepost" ng-change="saveNotifications()">
+                  <span>Track Repost</span>
+                </label>
+                <br>
+                <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.email.trackUnrepost" ng-change="saveNotifications()">
+                  <span>Track Unrepost</span>
+                </label>
+                <br>
+<!--                 <label class="with-square-checkbox">
+                  <input type="checkbox" ng-model="profile.data.notificationSettings.email.dailyUnfilledTrade" ng-change="saveNotifications()">
+                  <span>Unfilled Traded Slots Tomorrow</span>
+                </label> -->
               </div>
             </div>
           </div>
+          <br>
           <!-- overlay -->
           <div class="overlay" ng-show="showOverlay">
             <div class="label-scheduler label-smaller slot-box">
@@ -181,4 +203,14 @@
       <button class="btn btn-warning" type="button" ng-click="$parent.closeEditProfileModal()">Close</button>
     </div>
   </form>
+</script>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({appId: "1771378846475599", xfbml: true, version: "v2.6" });
+  };
+  (function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) { return; } 
+    js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js"; fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
 </script>
