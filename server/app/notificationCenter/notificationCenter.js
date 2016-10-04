@@ -7,11 +7,6 @@ module.exports = {
   sendNotifications: function(userID, type, heading, message, link) {
     User.findById(userID)
       .then(function(user) {
-        console.log(user)
-        console.log(type)
-        console.log(heading);
-        console.log(message)
-        console.log(link)
         if (user.notificationSettings.facebookMessenger[type]) {
           messengerAPI.buttons(user.notificationSettings.facebookMessenger.messengerID, heading + ':\n' + message, [{
               type: "web_url",

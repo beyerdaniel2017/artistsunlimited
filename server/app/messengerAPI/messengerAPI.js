@@ -1,5 +1,5 @@
 var request = require('request');
-var accessToken = 'EAAZALD0boJU8BAAAup11zYZBJwYRNJKF9o7rrPL84AwJeBjyKN5qXwieZBuRxrMSBrMVJOI0nzFZBo0Uc3BFvxYBaB9mqyACylGDaVSZCZAuiyXkbDa6mluGV8R2rbHgU3ZChfEah9ZCTJ3OcRhw5sfkcw8RRRMc0wfp6xBw9qNRSQZDZD';
+var accessToken = 'EAAZALD0boJU8BAAcZAI5SvVqsa4z0uL5sV3eQRQGAI7h1xfgfIhVAiH2YWGgagJr8hkkhcx8OncZCy52g3AMqlMhrqyTkumWFlyiTj57p1ZBrNPK9yYPwdTSz5uh8ZCITy02pgF84HeVFC3WycOdTDXm0ZBR8eZCjVitVbgpsYBZCAZDZD';
 
 module.exports = {
   typing: function(userID) {
@@ -85,6 +85,9 @@ module.exports = {
     return sendForm(form);
   },
   buttons: function(userID, text, buttons) {
+    console.log(userID)
+    console.log(text);
+    console.log(buttons);
     var form = {
       recipient: {
         id: userID
