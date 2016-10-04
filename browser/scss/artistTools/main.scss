@@ -44,11 +44,30 @@ select {
 label {
     font-weight: normal;
 }
+.form-control {
+    border-radius: 8px;
+    border-color: #686868;
+    outline: none;
+    -webkit-border-radius: 8px;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+}
 .form-control:focus {
     border-color: #FF7676;
     outline: 0;
     -webkit-box-shadow: none;
     box-shadow: none;
+}
+.btn:active, .btn.active {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
+    background-color: #F8F8F8;
+}
+.btn-default:active:hover, .btn-default.active:hover, .open > .dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open > .dropdown-toggle.btn-default:focus, .btn-default.focus:active, .btn-default.active.focus, .open > .dropdown-toggle.btn-default.focus {
+    background-color: #F8F8F8;
 }
 .unrepost-symbol {
     width: 14px;
@@ -125,9 +144,9 @@ label {
 .row-scheduler {
     width: 100%;
     height: 24px;
-    border: solid #d2d2d2;
+    border: solid #ECECEC;
     border-width: 1px 0px 0px 1px;
-    background-color: #F8F8F8;
+    background-color: #F9F9F9;
     border-radius: 0;
     cursor: pointer;
     vertical-align: middle;
@@ -161,10 +180,11 @@ label {
 }*/
 .cell-date {
     width: 100%;
-    color: #b3b3b3;
+    color: #686868;
     font-size: 12px;
     line-height: 35px;
     text-align: center;
+    font-weight: 300;
 }
 .column-day {
     width: 14.2857142857%;
@@ -178,12 +198,12 @@ label {
 .cell-time {
     width: 100%;
     height: 24px;
-    /*border: solid $light-gray;
-  border-width: 0 1px 0 0;*/
-    
+    /* border: solid $light-gray; */
+    /* border-width: 0 1px 0 0; */
     vertical-align: middle;
-    color: $mid-gray;
+    color: #d4d4d4;
     font-size: 1.1em;
+    font-weight: 300;
 }
 .form-scheduler {
     width: 20%;
@@ -206,7 +226,7 @@ label {
     left: -10px;
     right: -17px;
     height: 110%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: #E6E6E699;
     text-align: center;
 }
 .slot-box {
@@ -215,6 +235,7 @@ label {
     margin: 40px auto;
     padding: 50px 0;
     border-radius: 12px;
+    border: 1px solid #C1C1C1;
 }
 @media screen and (max-width: $break-small-landscape) {
     #scheduler-container {
@@ -348,7 +369,7 @@ label {
     vertical-align: middle;
 }
 .msg-from {
-    background: #F5BBBC;
+    background: #FF7676;
     text-align: right;
     float: right;
 }
@@ -970,7 +991,7 @@ h3 {
     padding: 0px 0px;    
 }
 .left-menus ul li a {
-    color: rgb(92, 82, 82);
+    color: #686868;
     font-weight: normal;
     font-size: 10px;
     letter-spacing: 2px;
@@ -1055,12 +1076,12 @@ h3 {
 .page-content {
     background-color: white;
     /*width: 97%;*/
-    
     margin: 0px 20px 0px 10px;
     border-top-left-radius: 12px;
     height: 100%;
     overflow: hidden;
     border-top-right-radius: 12px;
+    min-height: 600px;
 }
 .page-content li {
     margin-bottom: -1px;
@@ -1755,13 +1776,12 @@ input[type=range]:focus::-ms-fill-upper {
     height: 100%;
     margin-left: -230px;
     /*overflow-y: auto;*/
-    
     background: #fff;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
-    z-index: 1043;
+    z-index: 1040;
 }
 #sidebar-wrapper:before {
     position: absolute;
@@ -1914,6 +1934,10 @@ input[type=range]:focus::-ms-fill-upper {
     margin: 0px;
     text-align: center;
     background: #F8F8F8;
+    border-right: 1px solid #ECECEC;
+}
+.scheduler-tabs .nav-tabs li:last-child {
+    border-right: 0px solid transparent;
 }
 .scheduler-tabs .nav-tabs > li > a {
     margin: 0;
@@ -1922,7 +1946,8 @@ input[type=range]:focus::-ms-fill-upper {
     color: #ccc;
     outline: 0;
     height: 68px;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    font-size: 12px;
 }
 .scheduler-tabs .nav > li > a:hover,
 .scheduler-tabs .nav > li > a:focus {
@@ -2083,10 +2108,10 @@ input:checked + .slider:before {
 /*scheduler css ::start*/
 
 .payed-reposts-list li:first-child {
-    background: #F6F6F6;
+    background: #F8F8F8;
 }
 .payed-reposts-list li:nth-child(2n+3) {
-    background: #F6F6F6;
+    background: #F8F8F8;
 }
 .repot-left-list {} .payed-reposts {
     padding: 20px 15px;
@@ -2100,8 +2125,7 @@ input:checked + .slider:before {
     background: none;
 }
 .payed-reposts-list {
-    border: 1px solid #c2c2c2;
-    box-shadow: 0px 0px 3px #c8c8c8;
+    border: 1px solid #8D8D8D;
     border-radius: 10px;
     overflow: hidden;
     overflow: auto;
@@ -2236,7 +2260,6 @@ input:checked + .slider:before {
     margin: 10px 3px;
     border-radius: 10px;
     border: 1px solid #727272;
-    box-shadow: 0 0px 1px #AEAEAE;
     text-align: center;
     color: #8a8a8a;
     font-weight: 600;
@@ -2505,8 +2528,8 @@ input:checked + .slider:before {
 /*submissions css ::end*/
 
 .available-popup-box .slot-box {
-    width: 420px;
-    padding: 10px 40px;
+    width: 360px;
+    padding: 10px 20px;
 }
 .available-popup-box {
     width: 80%;
@@ -2694,7 +2717,7 @@ label:hover:before {
 .left-side .tropical:focus,
 .left-side .tropical:hover,
 .left-side .tropical:visited {
-    background-color: transparent;
+    background-color: #F9F9F9;
 }
 .left-side .tropical.active {
     background: #F8F8F8;
@@ -2772,7 +2795,7 @@ label:hover:before {
     height: 13px;
     position: absolute;
     left: 10px;
-    top: 11px;
+    top: 13px;
 }
 .thumb-img-container:hover .img-btn2 {
     display: block;
@@ -2804,7 +2827,7 @@ label:hover:before {
 .sms-icon,
 .key-icon {
     padding: 0 20px;
-    border-color: #F5D3B5;
+    border-color: #686868;
 }
 .border-btn {
     background: none;
@@ -3034,6 +3057,8 @@ td {
     color: #f9f9f9;
     background-color: #FF7676;
     border-color: #FF7676;
+    letter-spacing: 1px;
+    text-transform:uppercase;
 }
 .btn-pink:hover {
     color: #fff;
@@ -3056,14 +3081,13 @@ td {
 /*Btn Border */
 
 .btn-border {
-    color: #8a8a8a;
-    border: 1px solid #727272;
-    box-shadow: 0 0px 1px #AEAEAE;
+    color: #686868;
+    border: 1px solid #686868;
     background: #FFFFFF;
 }
 .btn-border:hover {
     color: #333;
-    border: 1px solid #333;
+    border: 1px solid #727272;
 }
 .btn-border:active,
 .btn-border.active,
@@ -3075,6 +3099,7 @@ td {
     color: #8a8a8a;
     border: 1px solid #727272;
     box-shadow: 0 0px 1px #AEAEAE;
+    outline: 0;
 }
 /*Btn Border */
 .b-radius-10{
@@ -3182,7 +3207,12 @@ td {
 .scheduler-song-tab tbody{
     border: 1px solid #ddd;
 }
-
+.scheduler-song-tab tr th {
+    font-weight: 300;
+}
+.scheduler-song-tab > thead > tr > th {
+    border-bottom: 1px solid #ddd;
+}
 .scheduler-song-tab tr td {
     vertical-align: middle !important;    
 }
@@ -3429,6 +3459,22 @@ td {
     width: 190px;
     color: #686868 !important;
 }
+.notification-box {
+    background: #FF7676;
+    border-radius: 100px;
+    padding: 5px;
+    font-size: 10px;
+    color: #fff;
+    letter-spacing: normal;
+    font-weight: 700;
+    border: 0;
+    outline: 0;
+}
+.ngrs-range-slider .ngrs-handle {
+    background: #fff;
+    border: 1px solid #FF7676;
+    z-index: 3;
+}
 /******************************** Media CSS :: START ************************************/
 @media screen and (max-width: 1280px) {
     .min-ht {
@@ -3545,9 +3591,6 @@ td {
         left: 279px !important;
         top: 201px !important;
         width: 450px !important;
-    }
-    .left-menus ul li a {
-        padding: 20px 10px;
     }
     .rfr-chat {
         margin-top: 70px;

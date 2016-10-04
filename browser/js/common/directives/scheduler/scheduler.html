@@ -360,8 +360,8 @@
                                 <textarea class="form-control" ng-disabled="disable" ng-model="eventComment">{{comment}}</textarea>
                               </div>
                               <div class="next-previous">
-                                <button class="btn btn-border b-radius-10 pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
-                                <button class="btn btn-border b-radius-10 pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
+                                <button class="btn btn-border b-radius-10 pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">PREVIOUS</button>
+                                <button class="btn btn-border b-radius-10 pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">NEXT</button>
                               </div>
                             </div>
                           </div><!--row end-->
@@ -531,7 +531,7 @@
                 <p>Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.</p>
                 <form ng-submit="updateEmail(modal.email)">
                  <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="modal.email" />
-                 <button class="btn btn-default btn-small" type="submit" id="closeModal">Add</button>
+                 <button class="btn btn-pink btn-small" type="submit" id="closeModal">Add</button>
                </form>
              </div>
            </div>      
