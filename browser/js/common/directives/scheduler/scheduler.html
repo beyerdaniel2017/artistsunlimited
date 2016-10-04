@@ -34,7 +34,7 @@
               </div>
             </form>
           </div>
-          <div class="col-md-4 col-xs-6 pull-right text-right">
+          <div class="col-md-4 col-xs-12 pull-right text-right">
             <div class="btn-group" role="group" aria-label="...">
               <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.png" /></a>
               <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
@@ -128,7 +128,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <br>
-                  <h5 class="text-center">SCHEDULE SETTINGS</h5>
+                  <h1 class="au-title-head text-center">SCHEDULE SETTINGS</h1>
                   <br>
                 </div>
               </div><!--row ::end-->
@@ -214,7 +214,7 @@
                 <div class="row">
                   <div class="col-md-8 col-md-offset-2">
                     <div class="permanent-links search" style="text-align: center;">
-                      <h4 class="bold">Auto-fill Tracks</h4>
+                      <h1 class="au-title-head text-center text-uppercase">Auto-fill Tracks</h1>
                      <!--  <input class="form-control" placeholder="Soundcloud Track Url" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()" /> -->
                       <scsearch kind='track' returnitem='choseAutoFillTrack(item)'></scsearch>
                        <div class="tracks-box" ng-if="autoFillTracks.length > 0">
@@ -239,7 +239,7 @@
               <div class="row extrapadding">
                 <div class="col-md-12" ng-class="{'disabled': isView}">
                   <div class="row">                
-                    <h1 class="title">AVAILABLE SLOT</h1>               
+                    <h1 class="au-title-head text-center">AVAILABLE SLOT</h1>               
                     <div class="col-md-6 col-xs-12 search search-big">
                       <scsearch kind='track' returnitem='choseTrack(item)'></scsearch>
                       <div class="space-10"></div>
@@ -388,7 +388,7 @@
                 <div class="">
                   <div class="row">
                     <div class="col-md-12">
-                      <h5 class="text-center">AVAILABLE SLOT</h5>
+                      <h1 class="text-center au-title-head">AVAILABLE SLOT</h1>
                     </div>
                   </div>
                   <div class="row">
@@ -580,6 +580,7 @@
   </div>
   <!-- test modal -->
    <slmodal lolo="modal1" modal-body="body" modal-footer="footer" modal-header="header" event-id="repostResponse" event-type="type"></slmodal>
+    <youtube-modal you-tube="youtubeModalId" modal-body="body" modal-footer="footer" modal-header="header" event-id="repostResponse" event-type="type"></youtube-modal>
 </div>
 
 <script>

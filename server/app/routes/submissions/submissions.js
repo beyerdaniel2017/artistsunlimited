@@ -64,7 +64,7 @@ router.get('/unaccepted', function(req, res, next) {
       .skip(skipcount)
       .limit(limitcount)
 
-    .then(function(subs) {
+      .then(function(subs) {
         var i = -1;
         var next = function() {
           i++;
@@ -72,10 +72,10 @@ router.get('/unaccepted', function(req, res, next) {
             var sub = subs[i].toJSON();
             sub.approvedChannels = [];
             Submission.find({
-              email: sub.email
-            })
+                email: sub.email
+              })
 
-            .then(function(oldSubs) {
+              .then(function(oldSubs) {
                 oldSubs.forEach(function(oldSub) {
                   sub.approvedChannels = sub.approvedChannels.concat(oldSub.paidChannelIDS)
                 });
@@ -127,7 +127,7 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
       .skip(skipcount)
       .limit(limitcount)
 
-    .then(function(subs) {
+      .then(function(subs) {
         var i = -1;
         var next = function() {
           i++;
@@ -135,10 +135,10 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
             var sub = subs[i].toJSON();
             sub.approvedChannels = [];
             Submission.find({
-              email: sub.email
-            })
+                email: sub.email
+              })
 
-            .then(function(oldSubs) {
+              .then(function(oldSubs) {
                 oldSubs.forEach(function(oldSub) {
                   sub.approvedChannels = sub.approvedChannels.concat(oldSub.paidChannelIDS)
                 });
@@ -262,7 +262,7 @@ router.put('/save', function(req, res, next) {
         })
         .populate("userID")
 
-      .then(function(sub) {
+        .then(function(sub) {
           User.find({
               'soundcloud.id': {
                 $in: sub.channelIDS
@@ -292,15 +292,15 @@ router.put('/save', function(req, res, next) {
               }
               var body = "";
               var body = acceptEmail.body;
-              body = body.replace('{NAME}', sub.name);
-              body = body.replace('{TRACK_TITLE_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.title + '</a>');
+              body = body.replace('{NAME}',sub.name);
+              body = body.replace('{TRACK_TITLE_WITH_LINK}', '<a href="'+sub.trackURL+'">'+sub.title+'</a>');
               body = body.replace('{TRACK_TITLE}', sub.title);
-              body = body.replace('{TRACK_ARTIST_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.name + '</a>');
+              body = body.replace('{TRACK_ARTIST_WITH_LINK}', '<a href="'+sub.trackURL+'">'+sub.name+'</a>');
               body = body.replace('{TRACK_ARTIST}', sub.name);
               body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
-              body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', '<a href="' + sub.userID.soundcloud.permalinkURL + '">' + sub.userID.soundcloud.username + '</a>');
+              body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', '<a href="'+sub.userID.soundcloud.permalinkURL+'">'+sub.userID.soundcloud.username+'</a>');
               body = body.replace('{TRACK_ARTWORK}', '<img src="' + sub.track_art_url + '" style="width:200px; height: 200px"/>');
-              body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);
+              body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);      
               body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', nameStringWithLink);
               body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
               body = body.replace(/\n/g, "<br />");
@@ -322,7 +322,7 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
     Submission.findByIdAndRemove(req.params.subID)
       .populate("userID")
 
-    .then(function(sub) {
+      .then(function(sub) {
         User.find({
             'soundcloud.id': {
               $in: sub.channelIDS
@@ -351,15 +351,15 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
               declineEmail = req.user.repostCustomizeEmails[0].decline;
             }
             var body = declineEmail.body;
-            body = body.replace('{NAME}', sub.name);
-            body = body.replace('{TRACK_TITLE_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.title + '</a>');
+            body = body.replace('{NAME}',sub.name);
+            body = body.replace('{TRACK_TITLE_WITH_LINK}', '<a href="'+sub.trackURL+'">'+sub.title+'</a>');
             body = body.replace('{TRACK_TITLE}', sub.title);
-            body = body.replace('{TRACK_ARTIST_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.name + '</a>');
+            body = body.replace('{TRACK_ARTIST_WITH_LINK}', '<a href="'+sub.trackURL+'">'+sub.name+'</a>');
             body = body.replace('{TRACK_ARTIST}', sub.name);
             body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
-            body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', '<a href="' + sub.userID.soundcloud.permalinkURL + '">' + sub.userID.soundcloud.username + '</a>');
+            body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', '<a href="'+sub.userID.soundcloud.permalinkURL+'">'+sub.userID.soundcloud.username+'</a>');
             body = body.replace('{TRACK_ARTWORK}', '<img src="' + sub.track_art_url + '" style="width:200px; height: 200px"/>');
-            body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);
+            body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);      
             body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', nameStringWithLink);
             body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
             body = body.replace(/\n/g, "<br />");
@@ -372,9 +372,10 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
 });
 
 router.get('/withID/:subID', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   Submission.findById(req.params.subID)
 
-  .then(function(sub) {
+    .then(function(sub) {
       if (!sub) next(new Error('submission not found'))
       sub = sub.toJSON();
       var arrChannels = [];
@@ -466,7 +467,7 @@ router.post('/getPayment', function(req, res, next) {
     .then(function(payment) {
       var submission = req.body.submission;
       if (submission.status == 'pooled') {
-        submission.paidChannels = req.body.channels;
+      submission.paidChannels = req.body.channels;
         submission.payment = payment;
       } else {
         submission.paidPooledChannels = req.body.channels;
@@ -493,7 +494,7 @@ router.put('/completedPayment', function(req, res, next) {
   var sub;
   Submission.findOne({
       $or: [{
-        'payment.id': req.body.paymentId
+      'payment.id': req.body.paymentId
       }, {
         'pooledPayment.id': req.body.paymentId
       }]
@@ -511,9 +512,9 @@ router.put('/completedPayment', function(req, res, next) {
       if (sub.trackID) {
         if (sub.status == 'pooled') {
           sub.payment = payment;
-          sub.paidChannels.forEach(function(channel) {
-            promiseArray.push(schedulePaidRepost(channel, sub));
-          });
+        sub.paidChannels.forEach(function(channel) {
+          promiseArray.push(schedulePaidRepost(channel, sub));
+        });
         } else {
           sub.pooledPayment = payment;
           sub.paidPooledChannels.forEach(function(channel) {
@@ -542,76 +543,76 @@ function schedulePaidRepost(channel, submission) {
   return new Promise(function(fulfill, reject) {
     var today = new Date();
     scWrapper.setToken(channel.user.token);
-    var reqObj = {
-      method: 'DELETE',
-      path: '/e1/me/track_reposts/' + submission.trackID,
-      qs: {
+        var reqObj = {
+          method: 'DELETE',
+          path: '/e1/me/track_reposts/' + submission.trackID,
+          qs: {
         oauth_token: channel.user.token
-      }
-    };
-    scWrapper.request(reqObj, function(err, data) {});
-    RepostEvent.find({
-      userID: channel.user.id,
-      day: {
-        $gt: today
-      }
-    })
-
-    .then(function(allEvents) {
-      allEvents.forEach(function(event) {
-        event.day = new Date(event.day);
-      });
-      User.findById(channel.userID)
-        .then(function(chan) {
-          if (chan.blockRelease) chan.blockRelease = new Date(chan.blockRelease);
-          else chan.blockRelease = new Date(0);
-          var continueSearch = true;
-          var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-          var ind = 1;
-          while (continueSearch) {
-            var day = daysOfWeek[((new Date()).getDay() + ind) % 7];
-            chan.availableSlots[day].forEach(function(hour) {
-              var scheduleDate = new Date();
-              scheduleDate.setHours(hour);
-              var desiredDay = chan.blockRelease > scheduleDate ? chan.blockRelease : scheduleDate;
-              desiredDay.setTime(desiredDay.getTime() + ind * 24 * 60 * 60 * 1000);
-              desiredDay.setHours(hour);
-              if (continueSearch) {
-                var event = allEvents.find(function(eve) {
-                  return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
-                });
-                if (!event) {
-                  continueSearch = false;
-                  var payment = submission.status == 'pooled' ? submission.payment : submission.pooledPayment;
-                  var newEve = new RepostEvent({
-                    type: 'paid',
-                    day: desiredDay,
-                    trackID: submission.trackID,
-                    title: submission.title,
-                    trackURL: submission.trackURL,
-                    userID: channel.user.id,
-                    email: submission.email,
-                    name: submission.name,
-                    price: channel.price,
-                    saleID: payment.transactions[0].related_resources[0].sale.id
-                  });
-                  newEve.save()
-                    .then(function(eve) {
-                      eve.day = new Date(eve.day);
-                      fulfill({
-                        channelName: channel.user.username,
-                        date: eve.day,
-                        event: eve
-                      });
-                    })
-                    .then(null, reject);
-                }
-              }
-            });
-            ind++;
           }
-        }).then(null, reject);
-    }).then(null, reject);
+        };
+        scWrapper.request(reqObj, function(err, data) {});
+        RepostEvent.find({
+        userID: channel.user.id,
+            day: {
+              $gt: today
+            }
+          })
+
+          .then(function(allEvents) {
+        allEvents.forEach(function(event) {
+          event.day = new Date(event.day);
+            });
+      User.findById(channel.userID)
+          .then(function(chan) {
+            if (chan.blockRelease) chan.blockRelease = new Date(chan.blockRelease);
+            else chan.blockRelease = new Date(0);
+            var continueSearch = true;
+            var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+            var ind = 1;
+            while (continueSearch) {
+              var day = daysOfWeek[((new Date()).getDay() + ind) % 7];
+              chan.availableSlots[day].forEach(function(hour) {
+                var scheduleDate = new Date();
+                scheduleDate.setHours(hour);
+                var desiredDay = chan.blockRelease > scheduleDate ? chan.blockRelease : scheduleDate;
+                desiredDay.setTime(desiredDay.getTime() + ind * 24 * 60 * 60 * 1000);
+                desiredDay.setHours(hour);
+                if (continueSearch) {
+                  var event = allEvents.find(function(eve) {
+                    return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
+                  });
+                  if (!event) {
+                    continueSearch = false;
+                    var payment = submission.status == 'pooled' ? submission.payment : submission.pooledPayment;
+                    var newEve = new RepostEvent({
+                      type: 'paid',
+                      day: desiredDay,
+                      trackID: submission.trackID,
+                      title: submission.title,
+                      trackURL: submission.trackURL,
+                      userID: channel.user.id,
+                      email: submission.email,
+                      name: submission.name,
+                      price: channel.price,
+                      saleID: payment.transactions[0].related_resources[0].sale.id
+                    });
+                    newEve.save()
+                      .then(function(eve) {
+                        eve.day = new Date(eve.day);
+                            fulfill({
+                          channelName: channel.user.username,
+                          date: eve.day,
+                          event: eve
+                            });
+                      })
+                      .then(null, reject);
+                  }
+                }
+              });
+              ind++;
+            }
+          }).then(null, reject);
+      }).then(null, reject);
   })
 }
 

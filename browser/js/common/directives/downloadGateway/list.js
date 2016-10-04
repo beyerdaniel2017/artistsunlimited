@@ -83,17 +83,18 @@ app.directive('dllist', function($http) {
         $scope.hasThirdPartyFields = true;
       }
 
-      $scope.permanentLinks = [];
-      $scope.choseArtist = function(artist) {
-        var permanentLink = {};
-        $scope.profile.data.permanentLinks.push({
+    $scope.permanentLinks = [];
+    $scope.choseArtist = function(artist) {
+      var permanentLink = {};
+      $scope.profile.data.permanentLinks.push({
           url: artist.permalink_url,
           avatar: artist.avatar_url ? artist.avatar_url : '',
           username: artist.username,
           id: artist.id,
           permanentLink: true
-        });
-      }
+       });
+      $scope.saveProfileInfo();
+    }
       $scope.addSong = function() {
         if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
         if ($scope.tracksQueue.length > 0) {
@@ -203,14 +204,7 @@ app.directive('dllist', function($http) {
       };
 
       $scope.openHelpModal = function() {
-        if ($state.current.url == '/artistTools/profile') {
-          var displayText = "<h3>Help</h3><span style='font-weight:bold'>Permanent Links:</span> Add artist soundcloud urls here to make the artists followed on every one of your download gates.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
-        } else if ($state.current.url == '/artistTools/downloadGateway') {
-          var displayText = "<h3>Help</h3><span style='font-weight:bold'>List of downloads gateways:</span> This is a list of your download gates. You can create a new one, edit, delete one or view a download gate in the list.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
-        }
-        $.Zebra_Dialog(displayText, {
-          width: 600
-        });
+        $("#ytube").modal('show');
       }
 
       $scope.editProfileModalInstance = {};

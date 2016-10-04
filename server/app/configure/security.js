@@ -16,7 +16,7 @@ module.exports = function(app) {
       'style-src': '* \'unsafe-inline\'',
       'connect-src': '\'self\' https://soundcloud.com https://*.soundcloud.com wss://localhost:1443 wss://artistsunlimited.com https://www.googleapis.com https://accounts.google.com',
       'frame-src': "https://*.soundcloud.com https://*.facebook.com",
-      'media-src': '\'self\' https://*.s3.amazonaws.com'
+      'media-src': '\'self\' https://*.s3.amazonaws.com https://www.youtube.com'
     },
     reportOnly: false,
   }))

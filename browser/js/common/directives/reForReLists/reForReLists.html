@@ -26,14 +26,14 @@
                 </div>                                               
               </div><!--search-trad End-->
               <div class="col-md-1"></div>
-              <div class="col-md-4 col-sm-6 col-xs-12 search">
+              <div class="col-md-5 col-sm-6 col-xs-12 search">
                 <div class="search-suggetion">
                   <scsearch kind='user' returnitem='choseArtist(item)'></scsearch>
                 </div>
               </div>                 
             </div>                 
           </div>
-          <div class="container-90 border-top">
+          <div class="border-top">
             <br>
             <div class="row">
               <div class="col-md-6 border-right">
@@ -176,7 +176,7 @@
             <div class="row">
                   <div class="col-md-8 col-md-offset-2">
                     <div class="permanent-links search" style="text-align: center;">
-                      <h4 class="bold">Auto-fill Tracks</h4>
+                      <h1 class="au-title-head text-center text-uppercase">Auto-fill Tracks</h1>
                       <scsearch kind='track' returnitem='choseAutoFillTrack(item)'></scsearch>
                        <div class="tracks-box" ng-if="autoFillTracks.length > 0">
                         <div class="track-item-list" ng-repeat="song in autoFillTracks" >
@@ -380,6 +380,7 @@
   </div>
 </div> -->
    <slmodal lolo="modal1" modal-body="body" modal-footer="footer" modal-header="header" event-id="tradeID" event-type="type"></slmodal>
+   <youtube-modal you-tube="youtubeModalId" modal-body="body" modal-footer="footer" modal-header="header" event-id="repostResponse" event-type="type"></youtube-modal>
 <script>
 setTimeout(function(){
   $(document).ready(function(){
