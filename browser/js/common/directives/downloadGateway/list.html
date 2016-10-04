@@ -30,23 +30,16 @@
         <br> <br>
         <div class="row">
           <div class="col-md-8 col-md-offset-2">
-            <hr/>
             <div class="permanent-links search" style="text-align: center;">
               <h4 class="bold">Permanent Artists:</h4>
-              <small>These artists will be followed on all of your Download Gates</small>
-              <br/>
                <scsearch kind='user' returnitem='choseArtist(item)'></scsearch>
-              <!-- <input class="form-control" placeholder="Artist Soundcloud Url" ng-model="linkUrl" ng-change="permanentLinkURLChange()" /> -->
-              <br/>
-              <br/>
-              <div class="col-md-12 text-center">
-                <button type="submit" class="btn btn-pink b-radius-10" ng-click="saveProfileInfo()">Add to list</button>
-              </div>
-              <br/>
-              <br/>
-              <div ng-repeat="permanentLink in user.permanentLinks" style="padding:10px; color:#000; text-align: center;">
-                <a href="{{permanentLink.url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{permanentLink.avatar}}">{{' ' + permanentLink.username}}</a>&nbsp;&nbsp;&nbsp;
-                <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePermanentLink($index)"></a> 
+                <div class="tracks-box" ng-if="user.permanentLinks.length > 0">
+                      <div class="track-item-list" ng-repeat="permanentLink in user.permanentLinks" >
+                          <img class="avatar-20" ng-src="{{permanentLink.avatar}}">
+                          <div class="tracks-title">
+                            <a class="tracks-title-name" href="{{permanentLink.url}}" target="_blank">
+                            {{' ' + permanentLink.username}}</a> 
+                          <a class="close-tracks pull-right" href="#"><img src="assets/images/close.png" ng-click="removePermanentLink($index)"></a> 
               </div>
             </div>
           </div>
@@ -54,6 +47,7 @@
       </div>
     </div>
   </div>
+  <youtube-modal you-tube="youtubeModalId" modal-body="body" modal-footer="footer" modal-header="header" event-id="repostResponse" event-type="type"></youtube-modal>
 </div>
 <script type="text/ng-template" id="thankYou.html">
   <div class="modal-header">
