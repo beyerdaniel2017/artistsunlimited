@@ -78,8 +78,8 @@ app.directive('scheduler', function($http) {
         $scope.makeEventURL = track.permalink_url;
         $scope.makeEvent.trackID = track.id;
         $scope.makeEvent.title = track.title;
-        $scope.makeEvent.trackArtUrl = track.artwork_url;
-        $scope.makeEvent.artistName = track.user.username;
+        $scope.makeEvent.trackArtUrl =track.artwork_url;
+        $scope.makeEvent.artistName =track.user.username;
         $scope.makeEvent.trackURL = track.permalink_url
         SC.oEmbed($scope.makeEvent.trackURL, {
           element: document.getElementById('scPlayer'),
@@ -99,8 +99,8 @@ app.directive('scheduler', function($http) {
         $scope.makeEventURL = track.permalink_url;
         $scope.makeEvent.trackID = track.id;
         $scope.makeEvent.title = track.title;
-        $scope.makeEvent.trackArtUrl = track.artwork_url;
-        $scope.makeEvent.artistName = track.user.username;
+        $scope.makeEvent.trackArtUrl =track.artwork_url;
+        $scope.makeEvent.artistName =track.user.username;
         $scope.makeEvent.trackURL = track.permalink_url;
         SC.oEmbed($scope.makeEvent.trackURL, {
           element: document.getElementById('scPopupPlayer'),
@@ -561,10 +561,11 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.openHelpModal = function() {
-        var displayText = "Schedule your reposts using the assigned slots, and indicate your preference for un-reposting after 24 hours. Keep in mind that the scheduler will not allow you to repost and un-repost within a period of 48 hours.Arrow icons pointing downwards indicate that you have marked the track to be un-reposted after 24 hours.Orange-colored slots are reserved for trades initiated using the repost-for-repost platform.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
+       /* var displayText = "Schedule your reposts using the assigned slots, and indicate your preference for un-reposting after 24 hours. Keep in mind that the scheduler will not allow you to repost and un-repost within a period of 48 hours.Arrow icons pointing downwards indicate that you have marked the track to be un-reposted after 24 hours.Orange-colored slots are reserved for trades initiated using the repost-for-repost platform.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
         $.Zebra_Dialog(displayText, {
           width: 600
-        });
+        });*/
+      $("#ytube").modal('show');
       }
 
       $scope.saveUser = function() {
@@ -675,9 +676,9 @@ app.directive('scheduler', function($http) {
           if (data.type == 'traded' && data.trackURL) {
             $scope.isView = true;
           }
-
+         
           $scope.editChannelArr = [];
-
+          
           var channels = data.otherChannels;
           if (channels.length > 0) {
             for (var i = 0; i < channels.length; i++) {
@@ -1035,25 +1036,25 @@ app.directive('scheduler', function($http) {
       if ($scope.user && $scope.user.queue) {
         $scope.loadQueueSongs();
       }
-      var count = 0;
+       var count = 0;
       $scope.getAutoFillTracks = function() {
         if ($scope.user.queue.length > 0) {
           if (count >= $scope.autoFillTracks.length) {
-            count = 0;
+              count = 0;
           } else {
             var track = $scope.autoFillTracks[count];
             $scope.makeEventURL = track.permalink_url;
             $scope.makeEvent.trackID = track.id;
             $scope.makeEvent.title = track.title;
-            $scope.makeEvent.trackArtUrl = track.artwork_url;
+            $scope.makeEvent.trackArtUrl =track.artwork_url;
             $scope.makeEvent.trackURL = track.permalink_url;
             if ($scope.showOverlay) {
               SC.oEmbed($scope.makeEvent.trackURL, {
-                element: document.getElementById('scPopupPlayer'),
-                auto_play: false,
-                maxheight: 150
-              })
-              document.getElementById('scPopupPlayer').style.visibility = "visible";
+              element: document.getElementById('scPopupPlayer'),
+              auto_play: false,
+              maxheight: 150
+            })
+            document.getElementById('scPopupPlayer').style.visibility = "visible";
             }
             SC.oEmbed($scope.makeEvent.trackURL, {
               element: document.getElementById('scPlayer'),
@@ -1062,25 +1063,25 @@ app.directive('scheduler', function($http) {
             })
             document.getElementById('scPlayer').style.visibility = "visible";
             count = count + 1;
-          }
+            }
 
         } else {
-          $scope.showOverlay = false;
-          $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {
-            'type': 'question',
+            $scope.showOverlay = false;
+             $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {
+            'type':     'question',
             'buttons': [{
               caption: 'Cancel',
               callback: function() {}
             }, {
               caption: 'Ok',
               callback: function() {
-                $scope.tabSelected = true;
-                $('.nav-tabs a[href="#managereposts"]').tab('show');
+                          $scope.tabSelected = true;
+                          $('.nav-tabs a[href="#managereposts"]').tab('show');
               }
             }]
-          });
+            });
         }
-      }
+      }  
 
       $scope.dayOfWeekAsString = function(date) {
         var dayIndex = date.getDay();
@@ -1116,7 +1117,7 @@ app.directive('scheduler', function($http) {
         } else if (event.type == 'track' || event.type == 'queue') {
           return {
             'background-color': '#FF7676',
-            'margin': '2px',
+            'margin' : '2px',
             'height': '18px'
           }
         } else if (event.type == 'traded') {
@@ -1284,7 +1285,7 @@ app.directive('scheduler', function($http) {
       $scope.followersCount();
       $scope.checkCommentEnable();
       $scope.checkLikeEnable();
-      $scope.updateReach();
+      $scope.updateReach();      
       $scope.verifyBrowser();
       $scope.getLinkedAccounts();
     }

@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var CustomSubmission = mongoose.model('CustomSubmission');
 
 router.post('/addCustomSubmission', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   CustomSubmission.findByIdAndUpdate(req.body.userID, req.body, {
     new: true,
     upsert: true
@@ -16,6 +17,7 @@ router.post('/addCustomSubmission', function(req, res, next) {
 });
 
 router.post('/addCustomSubmissions', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   CustomSubmission.update({
     userID: req.body.userID,
     type: req.body.type

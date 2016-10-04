@@ -86,10 +86,12 @@ app.directive('dlgate', function($http) {
       };
 
       $scope.openHelpModal = function() {
-        var displayText = "<span style='font-weight:bold'>Song: </span>Choose or enter the url for the song you want to make the download gate for. If you make it for one of your tracks, the download link will be automatically added to your track on soundcloud.<br><br><span style='font-weight:bold'>Social Media Links: </span>The links that you add here will appear on the download gateway page.<br><br><span style='font-weight:bold'>Download File: </span>Either provide a link to a downloadable file or upload an mp3 file. If you upload an mp3, we format the file with the album artwork, title, and artist of your soundcloud track so that it will look good on a music player.<br><br><span style='font-weight:bold'>Artists to Follow and Actions: </span>The artists you add will be followed on this download gate. Under actions, you can make 'Liking', 'Reposting' and 'Commenting' mandatory on the download.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
-        $.Zebra_Dialog(displayText, {
-          width: 600
-        });
+         $("#ytube").modal('show');
+      }
+      
+      $scope.openYoutubeModal = function()
+      {
+          $('#youtube').modal('show');
       }
 
       $scope.removeSMLink = function(index) {

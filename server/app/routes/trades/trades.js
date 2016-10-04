@@ -7,38 +7,41 @@ var RepostEvent = mongoose.model('RepostEvent');
 var notificationCenter = require('../../notificationCenter/notificationCenter.js')
 
 router.get('/withUser/:userID', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   Trade.find({
-      $or: [{
-        'p1.user': req.params.userID
-      }, {
-        'p2.user': req.params.userID
-      }]
+    $or: [{
+      'p1.user': req.params.userID
+    }, {
+      'p2.user': req.params.userID
+    }]
     }).populate('p1.user').populate('p2.user')
-    .then(function(trades) {
+      .then(function(trades) {
       trades = trades.filter(function(trade) {
         return !(trade.p1.accepted && trade.p2.accepted)
-      })
+                  })
       res.send(trades)
     }).then(null, next);
 });
 
 router.get('/doneWithUser/:userID', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   Trade.find({
-      $or: [{
+                      $or: [{
         'p1.user': req.params.userID
-      }, {
+                      }, {
         'p2.user': req.params.userID
-      }]
+                      }]
     }).populate('p1.user').populate('p2.user')
     .then(function(trades) {
       trades = trades.filter(function(trade) {
         return (trade.p1.accepted && trade.p2.accepted)
-      })
+                    })
       res.send(trades)
     }).then(null, next);
 });
 
 router.post('/new', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   var trade = new Trade(req.body);
   trade.save()
     .then(function(trade) {
@@ -48,10 +51,11 @@ router.post('/new', function(req, res, next) {
 })
 
 router.put('/', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   var userid = req.user._id;
-  if (req.body.userid != undefined)
+  if(req.body.userid!=undefined)
     userid = req.body.userid;
-
+  
   if (userid != req.body.p1.user._id && userid != req.body.p2.user._id) {
     next({
       message: 'Forbidden',
@@ -78,6 +82,7 @@ router.put('/', function(req, res, next) {
 })
 
 router.get('/byID/:tradeID', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user')
     .then(function(trade) {
       if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user._id) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user._id)) {
@@ -93,11 +98,11 @@ router.get('/byID/:tradeID', function(req, res, next) {
 })
 
 router.get('/byID/:tradeID/:userId', function(req, res, next) {
-  var userid = req.params.userId;
-
+  if (!req.user) next(new Error('Unauthorized'));
+  var userid =req.params.userId;
   Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user')
     .then(function(trade) {
-      if (userid != trade.p1.user._id && userid != trade.p2.user._id) {
+      if (userid != trade.p1.user._id && userid!= trade.p2.user._id) {
         next({
           message: 'Forbidden',
           status: 403
@@ -110,9 +115,10 @@ router.get('/byID/:tradeID/:userId', function(req, res, next) {
 })
 
 router.post('/delete', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   Trade.findById(req.body.id)
     .then(function(trade) {
-      if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user) && (req.body.action != "admin" || req.body.action == undefined)) {
+      if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user) && (req.body.action!="admin" || req.body.action==undefined)) {
         next({
           message: 'Forbidden',
           status: 403
@@ -125,6 +131,7 @@ router.post('/delete', function(req, res, next) {
 });
 
 router.get('/getTradeData/:tradeID', function(req, res, next) {
+  if (!req.user) next(new Error('Unauthorized'));
   var trade = {};
   var arrP1Events = [];
   var arrP2Events = [];
@@ -168,22 +175,22 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
                             var ownerid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p1.user._id : t.p2.user._id);
                             var userid = (t.p1.user._id.toString() === req.user._id.toString() ? t.p2.user.soundcloud.id : t.p1.user.soundcloud.id);
                             RepostEvent.count({
-                              day: {
-                                $gt: new Date()
-                              },
-                              owner: ownerid,
-                              userID: userid,
-                              trackID: {
-                                $exists: false
-                              },
-                              type: 'traded'
-                            })
+                                day: {
+                                  $gt: new Date()
+                                },
+                                owner: ownerid,
+                                userID: userid,
+                                trackID: {
+                                  $exists: false
+                                },
+                                type: 'traded'
+                              })
 
-                            .then(function(events) {
-                              t.unfilledTrackCount = events;
-                              tradesResult.push(t);
-                              next();
-                            });
+                              .then(function(events) {
+                                t.unfilledTrackCount = events;
+                                tradesResult.push(t);
+                                next();
+                              });
                           } else {
                             next();
                           }
@@ -215,8 +222,9 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
 });
 
 router.put('/offline', function(req, res, next) {
-  var userid = req.user._id;
-  if (req.body.userid != undefined)
+  if (!req.user) next(new Error('Unauthorized'));
+  var userid =req.user._id;
+  if(req.body.userid!=undefined)
     userid = req.body.userid;
 
   Trade.update({
