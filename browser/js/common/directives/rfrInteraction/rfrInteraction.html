@@ -5,7 +5,7 @@
       <div class="left-side-profile">
         <div class="left-profile active"  >
           <div ng-click="changeActiveUser(user)">
-            <div class="tropical-2" ng-style="(activeUser._id == user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.user.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.user.user.soundcloud.username}}</span></a><img class="img-responsive img-circle" ng-src="{{trade.user.user.soundcloud.avatarURL}}" style="height:100px;">
+            <div class="tropical-2" ng-style="(activeUser._id == user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.user.user.soundcloud.permalinkURL}}" style="color:#686868"><span class="ng-binding">{{trade.user.user.soundcloud.username}}</span></a><img class="img-responsive img-circle" ng-src="{{trade.user.user.soundcloud.avatarURL}}" style="height:100px;">
               <p class="ng-binding">
                 <small>Total Reach:</small><br/>
                 {{trade.user.user.soundcloud.followers}} Followers</p>
@@ -14,7 +14,7 @@
           </div><!--left-side-manu ::end-->
           <div class="left-profile">
             <div ng-click="changeActiveUser(trade.other.user)">
-              <div class="tropical"  ng-style="(activeUser._id == trade.other.user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.other.user.soundcloud.permalinkURL}}" style="color:#8a8a8a"><span class="ng-binding">{{trade.other.user.soundcloud.username}}</span></a><img class="img-responsive img-circle" src="{{trade.other.user.soundcloud.avatarURL}}" style="height:100px;">
+              <div class="tropical"  ng-style="(activeUser._id == trade.other.user._id) ? {'background-color':'white'} : {'background-color':'#EEE'}"><a href="{{trade.other.user.soundcloud.permalinkURL}}" style="color:#686868"><span class="ng-binding">{{trade.other.user.soundcloud.username}}</span></a><img class="img-responsive img-circle" src="{{trade.other.user.soundcloud.avatarURL}}" style="height:100px;">
                 <p class="ng-binding">
                   <small>Total Reach:</small><br/>
                   {{trade.other.user.soundcloud.followers}} Followers</p>
@@ -248,7 +248,7 @@
         </div>
       </div>
       <!--CHAT-->
-      <div ng-show="chatOpen" style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center; z-index: 100; padding: 10% 20%;" ng-click="chatOpen=false">
+      <div ng-show="chatOpen" style="position:fixed; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center; z-index: 100; padding: 10% 20%;" ng-click="chatOpen=false">
         <div class="rfr-chat" ng-click="$event.stopPropagation()">
           <div class="rfr-chatbox" style="height:390px;">
             <div class="convo-display" scroll-glue style="height:350px">
