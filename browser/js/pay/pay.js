@@ -32,7 +32,11 @@ app.filter('calculateDiscount', function() {
 app.controller('PayController', function($scope, $rootScope, $http, channels, submission, $state, $uibModal,AppConfig) {
   $rootScope.submission = submission;
   $scope.auDLLink = false;
- 
+  $scope.showSignUp = false;
+  if($state.$current.name == "pay")
+  {
+    $scope.showSignUp = true;
+  }
   //$scope.track = track;
   /*AppConfig.fetchConfig().then(function(res) {
     AppConfig.setConfig(res.data)

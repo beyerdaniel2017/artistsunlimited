@@ -66,14 +66,26 @@
                 <div class="col-md-12 text-center">
                   <button type="button" class="btn btn-pink b-radius-10" ng-click="soundcloudLogin()">Add to list</button>
                 </div>
-                <br/><br/>
-                <div ng-if="account._id != user._id" ng-repeat="account in userlinkedAccounts" style="padding:10px; color:#000; text-align: center;">
-                  <a href="{{account.soundcloud.permalinkURL}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{account.soundcloud.avatarURL}}">{{' ' + account.soundcloud.username}}</a>&nbsp;&nbsp;&nbsp;
+                <div class="space-10"></div>
+                <div class="tracks-box" ng-if="user.permanentLinks.length > 0">
+                  <div class="track-item-list" ng-if="account._id != user._id" ng-repeat="account in userlinkedAccounts">
+                          <img class="avatar-20"  ng-src="{{account.soundcloud.avatarURL}}">
+                      <div class="tracks-title">
+                          <a class="tracks-title-name" href="{{permanentLink.url}}" target="_blank">
+                           {{' ' + account.soundcloud.username}}</a> 
+                          <a class="close-tracks pull-right" href="#"><img src="assets/images/close.png" ng-click="removeLinkedAccount(account)"></a> 
+                    </div>
+                  </div>
+                </div>  
+              <!--   <div ng-if="account._id != user._id" ng-repeat="account in userlinkedAccounts" style="padding:10px; color:#000; text-align: center;">
+                  <a href="{{account.soundcloud.permalinkURL}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{account.soundcloud.avatarURL}}">
+                  {{' ' + account.soundcloud.username}}</a>&nbsp;&nbsp;&nbsp;
                   <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeLinkedAccount(account)"></a> 
+                </div> -->                             
                 </div>                             
               </div>
             </div>
-          </div>
+          <div class="space-10"></div>
           <div class="row">
             <div class="col-md-8 col-md-offset-2 text-center">
               <hr/>
@@ -84,8 +96,8 @@
           <div class="row margin-20">
             <div class="col-md-8 col-md-offset-2">
               <div style="text-align: left;">
-               
-                <div class="fb-notifications-check-list">
+               <div class="row">
+                  <div class="row fb-notifications-check-list">
                  <div class="col-md-6">
                 <h5 class="bold">Facebook Messenger Notifications</h5>
                 <div class="fb-send-to-messenger" messenger_app_id="1771378846475599" page_id="499383536933941" color="blue" size="large" data-ref="{{profile.data._id}}">
@@ -148,6 +160,8 @@
                 </label> -->
               </div>
             </div>
+               </div>
+               
                
               </div>
             </div>

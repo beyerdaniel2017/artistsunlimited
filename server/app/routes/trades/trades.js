@@ -7,7 +7,11 @@ var RepostEvent = mongoose.model('RepostEvent');
 var notificationCenter = require('../../notificationCenter/notificationCenter.js')
 
 router.get('/withUser/:userID', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   Trade.find({
     $or: [{
       'p1.user': req.params.userID
@@ -24,7 +28,11 @@ router.get('/withUser/:userID', function(req, res, next) {
 });
 
 router.get('/doneWithUser/:userID', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   Trade.find({
                       $or: [{
         'p1.user': req.params.userID
@@ -41,7 +49,11 @@ router.get('/doneWithUser/:userID', function(req, res, next) {
 });
 
 router.post('/new', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var trade = new Trade(req.body);
   trade.save()
     .then(function(trade) {
@@ -51,7 +63,11 @@ router.post('/new', function(req, res, next) {
 })
 
 router.put('/', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var userid = req.user._id;
   if(req.body.userid!=undefined)
     userid = req.body.userid;
@@ -82,7 +98,11 @@ router.put('/', function(req, res, next) {
 })
 
 router.get('/byID/:tradeID', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user')
     .then(function(trade) {
       if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user._id) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user._id)) {
@@ -98,7 +118,11 @@ router.get('/byID/:tradeID', function(req, res, next) {
 })
 
 router.get('/byID/:tradeID/:userId', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var userid =req.params.userId;
   Trade.findById(req.params.tradeID).populate('p1.user').populate('p2.user')
     .then(function(trade) {
@@ -115,7 +139,11 @@ router.get('/byID/:tradeID/:userId', function(req, res, next) {
 })
 
 router.post('/delete', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   Trade.findById(req.body.id)
     .then(function(trade) {
       if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user) && (req.body.action!="admin" || req.body.action==undefined)) {
@@ -131,7 +159,11 @@ router.post('/delete', function(req, res, next) {
 });
 
 router.get('/getTradeData/:tradeID', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var trade = {};
   var arrP1Events = [];
   var arrP2Events = [];
@@ -222,7 +254,11 @@ router.get('/getTradeData/:tradeID', function(req, res, next) {
 });
 
 router.put('/offline', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var userid =req.user._id;
   if(req.body.userid!=undefined)
     userid = req.body.userid;
@@ -241,4 +277,44 @@ router.put('/offline', function(req, res, next) {
   }, function(e, r) {
     res.send(r);
   });
+});
+router.put('/hideNotification', function(req, res, next) {
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
+  var trades = req.body;
+   var i = -1;
+     if (trades.length > 0) {
+    var next = function() {
+      i++;
+      if (i < trades.length) {
+         var tradeId = trades[i]._id;
+          if(trades[i].p1.user == req.user._id)
+          {
+              Trade.findOneAndUpdate({
+             '_id': trades[i]._id,
+             $set: {'p1.alert' :'none'}
+             }).then(function(r) {
+              next();
+             });  
+          }
+          else
+          {
+            Trade.findOneAndUpdate({
+            '_id': trades[i]._id,
+            $set: {'p2.alert' :'none'}
+            }).then(function(r) {
+              next();
+      });  
+          }
+      } 
+      else
+      {
+        res.send();
+      }
+    }
+      next();
+  }
 });

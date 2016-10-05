@@ -9,7 +9,10 @@ var User = mongoose.model('User');
 
 //----------Public Repost Events----------
 router.get('/forUser/:id', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user){
+      next(new Error('Unauthorized'));
+      return;
+    }
   var date = moment().month(new Date().getMonth()).date(new Date().getDate()-7).hours(0).minutes(0).seconds(0).milliseconds(0).format();
   RepostEvent.find({
       userID: req.params.id,
@@ -25,7 +28,11 @@ router.get('/forUser/:id', function(req, res, next) {
 })
 
 router.get('/respostEvent/:id', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var data = [];
   RepostEvent.findOne({
       _id: req.params.id,
@@ -66,7 +73,11 @@ router.get('/respostEvent/:id', function(req, res, next) {
 
 /*Get Repost events for List*/
 router.get('/listEvents/:id', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var query;
   var fromDate = req.query.date ? moment().month(new Date(req.query.date).getMonth()).date(new Date(req.query.date).getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format() : moment().month(new Date().getMonth()).date(new Date().getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format();
   var toDate = req.query.date ? moment().month(new Date(req.query.date).getMonth()).date(new Date(req.query.date).getDate() + 6).hours(23).minutes(59).seconds(59).milliseconds(999).format() : moment().month(new Date().getMonth()).date(new Date().getDate()).hours(23).minutes(59).seconds(59).milliseconds(999).format();
@@ -85,7 +96,11 @@ router.get('/listEvents/:id', function(req, res, next) {
 })
 
 router.put('/repostEvents', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   denyTradeOverlap(req.body)
     .then(function(ok) {
       return RepostEvent.findByIdAndUpdate(req.body._id, req.body, {
@@ -106,7 +121,8 @@ router.put('/repostEvents', function(req, res, next) {
 
 function denyTradeOverlap(repostEvent) {
   repostEvent.day = new Date(repostEvent.day);
-  repostEvent.unrepostDate = new Date(repostEvent.unrepostDate);
+  var unrepostDate = new Date(repostEvent.day.getTime() + (parseInt(repostEvent.unrepostHours) * 60 * 60 * 1000));
+  repostEvent.unrepostDate = new Date(unrepostDate);
   return RepostEvent.find({
     userID: repostEvent.userID,
     trackID: repostEvent.trackID
@@ -122,7 +138,11 @@ function denyTradeOverlap(repostEvent) {
 }
 
 router.post('/repostEvents', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var event = new RepostEvent(req.body);
   event.save()
     .then(function(ev) {
@@ -133,7 +153,11 @@ router.post('/repostEvents', function(req, res, next) {
 });
 
 router.post('/repostEventsScheduler', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+  {
+    next(new Error('Unauthorized'));
+    return;
+  }
   var event = new RepostEvent(req.body);
   event.save()
     .then(function(ev) {
@@ -203,7 +227,11 @@ function scheduleEvent(channel, scheduledDate, eventDetails) {
         }
 
 router.delete('/repostEvents/:id', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   RepostEvent.findByIdAndRemove(req.params.id)
     .then(function(event) {
       event.day = new Date(event.day);
@@ -213,7 +241,11 @@ router.delete('/repostEvents/:id', function(req, res, next) {
 });
 
 router.post('/saveAvailableSlots', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   User.findOneAndUpdate({
       _id: req.body.id
     }, {
@@ -231,7 +263,6 @@ router.post('/saveAvailableSlots', function(req, res, next) {
 })
 
 router.get('/getRepostEvents/:id', function(req, res, next) {
-  //if (!req.user) next(new Error('Unauthorized'));
   var data =[];
    RepostEvent.find({ 
     owner: req.params.id,
@@ -251,11 +282,14 @@ router.get('/getRepostEvents/:id', function(req, res, next) {
             User.findOne({
               'soundcloud.id': userid
             }, function(err, user) {
+              if(user)
+              {
             var result = {
               trackInfo : tracks[i],
               userInfo : user.soundcloud
             }
             data.push(result);
+             }
             next();
           });
           } else {

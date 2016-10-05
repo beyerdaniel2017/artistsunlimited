@@ -27,7 +27,11 @@ router.get('/isUserAuthenticate', function(req, res, next) {
 });
 
 router.get('/byId/:id', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   User.findById(req.params.id)
     .then(function(user) {
       //if (user.soundcloud.token) user.soundcloud.token = undefined;
@@ -36,7 +40,11 @@ router.get('/byId/:id', function(req, res, next) {
 });
 
 router.get('/bySoundcloudID/:id', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   User.findOne({
     'soundcloud.id': parseInt(req.params.id)
     })
@@ -47,7 +55,11 @@ router.get('/bySoundcloudID/:id', function(req, res, next) {
 });
 
 router.post('/withIDs', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   User.find({
       _id: {
         $in: req.body
@@ -59,7 +71,11 @@ router.post('/withIDs', function(req, res, next) {
 });
 
 router.get('/getUserID', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   User.findOne({
       role: 'superadmin'
     }).limit(1)
@@ -69,8 +85,11 @@ router.get('/getUserID', function(req, res, next) {
 });
 
 router.get('/getUserByURL/:username/:page', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
-  var query = {};
+if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }  var query = {};
   var url = rootURL+"/custom/"+req.params.username+"/"+req.params.page;
   if(req.params.page.indexOf('submit') != -1){
     query = {
@@ -112,7 +131,11 @@ router.get('/getUserByURL/:username/:page', function(req, res, next) {
 });
 
 router.post('/bySCURL', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var minFollowers = (req.body.minFollower ? parseInt(req.body.minFollower) : 0);
   var maxFollowers = (req.body.maxFollower ? parseInt(req.body.maxFollower) : 100000000);
   var originalUrl = (req.body.url != "") ? req.body.url : undefined;
@@ -238,7 +261,11 @@ router.post('/bySCURL', function(req, res, next) {
 
 /*profile updateion*/
 router.post('/profilePicUpdate', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   parseMultiPart()
   .then(uploadToBucket)
   .catch(errorHandler);
@@ -333,7 +360,11 @@ router.post('/profilePicUpdate', function(req, res, next) {
 });
 
 router.put('/updateAdmin', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   User.findByIdAndUpdate(req.user._id, req.body)
     .then(function(user) {
       res.send(user);
@@ -351,7 +382,11 @@ router.put('/updateuserRecord', function(req, res, next) {
 })
 /*Admin profile update start*/
 router.post('/updateAdminProfile', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var body = req.body;
   var updateObj=body;
   if (updateObj.pictureUrl) {
@@ -409,7 +444,11 @@ User.findOneAndUpdate({
 });
 
 router.post('/checkUsercount', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var query = {
     "paidRepost.submissionUrl": req.body.url
   };
@@ -451,7 +490,11 @@ router.post('/updatePaidRepost', function(req, res, next) {
 });
 
 router.get('/getUserPaidRepostAccounts', function(req, res) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var accounts = req.user.paidRepost;
   var results = [];
   var i = -1;
