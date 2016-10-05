@@ -11,7 +11,11 @@ var HTTPS = require('https');
 
 //============== GET ALL POSTS ==============
 router.get('/', function(req, res, next) {
-        if (!req.user) next(new Error('Unauthorized'));
+     if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
 	var userid = req.user._id;
 	Post.find({
 			userID: userid
@@ -26,7 +30,11 @@ router.get('/', function(req, res, next) {
 
 //============== CREATE A POST ==============
 router.post('/', function(req, res, next) {
-	    if (!req.user) next(new Error('Unauthorized'));
+	 if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
 		Post.create(req.body)
 		.then(function(post) {
 			res.status(201).json(post);
@@ -36,7 +44,11 @@ router.post('/', function(req, res, next) {
 
 //============ FIND A SINGLE POST ===========
 router.param('postId', function(req, res, next, postId) {
-	if (!req.user) next(new Error('Unauthorized'));
+	if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
 	Post.findById(postId)
 	.then(function(post) {
 		if(!post) throw new Error('not found!');
@@ -48,7 +60,11 @@ router.param('postId', function(req, res, next, postId) {
 
 //============== UPDATE A POST ==============
 router.put('/:postId', function(req, res, next) {
-	if (!req.user) next(new Error('Unauthorized'));
+	if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
 	req.post.set(req.body.editedPost);
 	req.post.save()
 	.then(function(post){
@@ -59,7 +75,11 @@ router.put('/:postId', function(req, res, next) {
 
 //============== UPDATE RELEASE STATUS ==============
 router.put('/:postId/status', function(req, res, next) {
-	if (!req.user) next(new Error('Unauthorized'));
+if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
 	Post.update({
 			_id: req.params.postId
 		}, {
@@ -73,7 +93,11 @@ router.put('/:postId/status', function(req, res, next) {
 
 //============== GET POSTS TO DISPLAY AT EDIT==============
 router.get('/:postId', function(req, res, next) {
-   if (!req.user) next(new Error('Unauthorized'));	
+   if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
 	Post.findOne({
 			_id: req.params.postId
 		})
@@ -85,7 +109,11 @@ router.get('/:postId', function(req, res, next) {
 
 //============== DELETE A POST ==============
 router.delete('/:postId', function(req, res, next) {		
-    if (!req.user) next(new Error('Unauthorized'));	
+   if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
 	req.post.remove()
 	.then(function() {
 		res.status(204).end();
@@ -94,7 +122,11 @@ router.delete('/:postId', function(req, res, next) {
 });
 
 router.get('/checkTokenValidity/:userID/:platform', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   if(req.params.platform == 'facebook'){
 		User.findOne({
 				_id: req.params.userID

@@ -32,29 +32,33 @@ scWrapper.init({
 });
 
 router.get('/track', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+    next(new Error('Unauthorized'));
+    return;
+  }
   DownloadTrack.findById(req.query.trackID)
-    .populate('userid')
+  .populate('userid')
 
   .then(function(downloadTrack) {
-      downloadTrack = downloadTrack.toJSON();
-      var username = downloadTrack.userid.soundcloud.username;
-      var title = downloadTrack.trackTitle.replace(/ /g, '-');
-      var trackDownloadUrl = rootURL + "/download/" + username + "/" + title;
-      DownloadTrack.update({
-        _id: req.query.trackID
+    downloadTrack = downloadTrack.toJSON();
+    var username =  downloadTrack.userid.soundcloud.username;
+    var title =  downloadTrack.trackTitle.replace(/ /g, '-');
+    var trackDownloadUrl = rootURL + "/download/" + username + "/" + title;
+    DownloadTrack.update({
+      _id: req.query.trackID
+    }, {
+      $set:{
+        trackDownloadUrl:trackDownloadUrl
+      }
       }, {
-        $set: {
-          trackDownloadUrl: trackDownloadUrl
-        }
-      }, {
-        new: true
-      }, function(track) {
-        downloadTrack.trackDownloadUrl = trackDownloadUrl;
-        res.send(downloadTrack);
-      })
+      new: true
+    }, function(track){
+      downloadTrack.trackDownloadUrl = trackDownloadUrl;
+      res.send(downloadTrack);
     })
-    .then(null, next);
+  })
+  .then(null, next);
 });
 
 router.get('/trackByURL/:username/:title', function(req, res, next) {
@@ -62,10 +66,10 @@ router.get('/trackByURL/:username/:title', function(req, res, next) {
   DownloadTrack.findOne({
       trackDownloadUrl: trackDownloadUrl
     })
-    .then(function(downloadTrack) {
-      res.send(downloadTrack);
-    })
-    .then(null, next);
+  .then(function(downloadTrack) {
+    res.send(downloadTrack);
+  })
+  .then(null, next);
 });
 
 router.post('/tasks', function(req, res, next) {
@@ -228,7 +232,11 @@ router.post('/tasks', function(req, res, next) {
 });
 
 router.get('/track/recent', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var userID = req.query.userID;
   var trackID = req.query.trackID;
   DownloadTrack.find({

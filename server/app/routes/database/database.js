@@ -36,7 +36,11 @@ scWrapper.init({
 });
 
 router.get('/getuserinfo', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var reqObj = {
     method: 'GET',
     path: '/resolve.json',
@@ -59,7 +63,11 @@ router.get('/getuserinfo', function(req, res, next) {
 });
 
 router.post('/adduser', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var reqObj = {
     method: 'GET',
     path: '/resolve.json',
@@ -528,7 +536,11 @@ router.post('/downloadurl/delete', function(req, res, next) {
 });
 
 router.get('/adminUserNetwork/:id', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   User.findById(req.params.id).populate('paidRepost.userID')
     .then(function(user) {
       var network = [];
@@ -552,7 +564,11 @@ router.get('/downloadurl/:id', function(req, res, next) {
 });
 
 router.get('/downloadurl', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   DownloadTrack
     .find({
       userid: req.user._id
@@ -585,7 +601,11 @@ router.get('/downloadurladmin/:userid', function(req, res, next) {
 });
 
 router.post('/paidrepost', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var body = req.body;
   var getPath = '/resolve.json?url=' + body.soundCloudUrl + '&client_id=' + scConfig.clientID;
   var userObj = {};
@@ -676,7 +696,11 @@ router.post('/paidrepost', function(req, res, next) {
 });
 
 router.put('/profile', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var id = req.body._id;
   delete req.body._id;
   User.findByIdAndUpdate(id, req.body, {
@@ -700,7 +724,11 @@ var encryptPassword = function(plainText, salt) {
 };
 
 router.put('/thirdPartyDetails', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var salt = generateSalt();
   var username = req.body.data.username;
   var password = encryptPassword(req.body.data.passwordPlain, salt);
@@ -726,7 +754,11 @@ router.put('/thirdPartyDetails', function(req, res, next) {
 });
 
 router.put('/deleteThirdPartyAccess', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   User.findOneAndUpdate({
       '_id': req.body.userid
     }, {
@@ -745,7 +777,11 @@ router.put('/deleteThirdPartyAccess', function(req, res, next) {
 });
 
 router.put('/saveLinkedAccount', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var username = req.body.data.username;
   var password = req.body.data.password;
   User.findOne({
@@ -800,7 +836,11 @@ router.put('/saveLinkedAccount', function(req, res, next) {
 });
 
 router.put('/deleteLinkedAccount', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var username = req.body.data.username;
   var password = req.body.data.password;
   User.findOneAndUpdate({
@@ -839,7 +879,11 @@ router.put('/deleteLinkedAccount', function(req, res, next) {
 
 
 router.post('/updateUserAccount', function(req, res, next) {
-   if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   User.findOneAndUpdate({
       _id: req.user._id
     }, {
@@ -859,7 +903,11 @@ router.post('/updateUserAccount', function(req, res, next) {
 });
 
 router.post('/updateGroup', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   User.findOneAndUpdate({
       _id: req.user._id
     }, {
@@ -879,7 +927,11 @@ router.post('/updateGroup', function(req, res, next) {
 });
 
 router.post('/updateSubmissionsCustomEmailButtons', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   User.findOneAndUpdate({
       _id: req.user._id
     }, {
@@ -899,7 +951,11 @@ router.post('/updateSubmissionsCustomEmailButtons', function(req, res, next) {
 });
 
 router.post('/updatePremierCustomEmailButtons', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   User.findOneAndUpdate({
       _id: req.user._id
     }, {
@@ -919,7 +975,11 @@ router.post('/updatePremierCustomEmailButtons', function(req, res, next) {
 });
 
 router.put('/deleteUserAccount/:id', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var userID = req.params.id;
   User.update({
       _id: req.user._id
@@ -941,7 +1001,11 @@ router.put('/deleteUserAccount/:id', function(req, res, next) {
     });
 });
 router.post('/profile/edit', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var body = req.body;
   var uid = req.user._id;
   var updateObj = {};
@@ -982,7 +1046,11 @@ router.post('/profile/edit', function(req, res, next) {
 });
 
 router.put('/profile/notifications', function(req, res, next) {
-     if (!req.user) next(new Error('Unauthorized'));
+     if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   User.findOneAndUpdate({
       '_id': req.body._id
     }, {
@@ -1086,7 +1154,11 @@ router.post('/profile/soundcloud', function(req, res, next) {
 });
 
 router.put('/networkaccount', function(req, res, next) {
-   if (!req.user) next(new Error('Unauthorized'));
+   if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   NetworkAccounts.findOneAndUpdate({
       channels: req.body[0]._id
     }, {
@@ -1101,7 +1173,11 @@ router.put('/networkaccount', function(req, res, next) {
 })
 
 router.post('/networkaccount', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var userID = req.body.userID;
   var linkedAccountID = req.body.linkedAccountID;
   NetworkAccounts.findOne({
@@ -1231,7 +1307,11 @@ router.post('/networkaccount', function(req, res, next) {
 });
 
 router.get('/userNetworks', function(req, res, next) {
-if (!req.user) next(new Error('Unauthorized'));
+if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var userID = req.user._id;
   NetworkAccounts.findOne({
       channels: userID
@@ -1248,7 +1328,11 @@ if (!req.user) next(new Error('Unauthorized'));
 });
 
 router.put('/updateRepostSettings', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var repostSettings = req.body.repostSettings;
   User.findOneAndUpdate({
       '_id': req.body.id

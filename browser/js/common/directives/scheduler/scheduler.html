@@ -216,7 +216,10 @@
                     <div class="permanent-links search" style="text-align: center;">
                       <h1 class="au-title-head text-center text-uppercase">Auto-fill Tracks</h1>
                      <!--  <input class="form-control" placeholder="Soundcloud Track Url" type="text" ng-model="newQueueSong" ng-change="changeQueueSong()" /> -->
+                     <div class="col-md-6">
                       <scsearch kind='track' returnitem='choseAutoFillTrack(item)'></scsearch>
+                     </div>
+                     <div class="col-md-6"> 
                        <div class="tracks-box" ng-if="autoFillTracks.length > 0">
                         <div class="track-item-list" ng-repeat="song in autoFillTracks" >
                             <img class="avatar-20" ng-src="{{song.artwork_url}}">
@@ -230,6 +233,7 @@
                   </div>
                 </div>
               </div>
+            </div>
             </div>
             <!-- MANAGE REPOSTS : End -->                
           </div>
@@ -386,11 +390,11 @@
             <div class="available-popup-box">
               <div class="label-scheduler label-smaller slot-box" ng-click="$event.stopPropagation();">
                 <div class="">
-                  <div class="row">
+                  <!-- <div class="row">
                     <div class="col-md-12">
                       <h1 class="text-center au-title-head">AVAILABLE SLOT</h1>
                     </div>
-                  </div>
+                  </div> -->
                   <div class="row">
                     <div class="col-md-12 search">
                       <scsearch kind='track' returnitem='choseTrack1(item)'></scsearch>
@@ -411,6 +415,7 @@
                     </select>
                     </div>
                   </div>
+                   <div class="space-10"></div>
                   <div class="row">
                     <div class="col-md-12">
                       <div class="btn-group channel-group" ng-if="user.role == 'admin'" role="group" aria-label="...">
@@ -503,8 +508,8 @@
                       </div>                         
                     </div>
                   </div>
+                  <div class="space-10"></div>
                   <div class="row">
-                    <br />
                     <div class="col-md-12 text-center">
                       <button class="btn btn-border b-radius-10" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
                       <button class="btn btn-border b-radius-10 " ng-click="backEvent();">CANCEL</button>

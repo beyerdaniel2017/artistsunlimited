@@ -252,6 +252,53 @@ app.directive('reforrelists', function($http) {
           });
       };
 
+      var count = 0;
+      $scope.getAutoFillTracks = function() {
+        if ($scope.user.queue.length > 0) {
+          if (count >= $scope.autoFillTracks.length) {
+              count = 0;
+          } else {
+            var track = $scope.autoFillTracks[count];
+            $scope.makeEventURL = track.permalink_url;
+            $scope.makeEvent.trackID = track.id;
+            $scope.makeEvent.title = track.title;
+            $scope.makeEvent.trackArtUrl =track.artwork_url;
+            $scope.makeEvent.trackURL = track.permalink_url;
+            if ($scope.showOverlay) {
+              SC.oEmbed($scope.makeEvent.trackURL, {
+              element: document.getElementById('scPopupPlayer'),
+              auto_play: false,
+              maxheight: 150
+            })
+            document.getElementById('scPopupPlayer').style.visibility = "visible";
+            }
+            SC.oEmbed($scope.makeEvent.trackURL, {
+              element: document.getElementById('scPlayer'),
+              auto_play: false,
+              maxheight: 150
+            })
+            document.getElementById('scPlayer').style.visibility = "visible";
+            count = count + 1;
+            }
+
+        } else {
+            $scope.showOverlay = false;
+             $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {
+            'type':     'question',
+            'buttons': [{
+              caption: 'Cancel',
+              callback: function() {}
+            }, {
+              caption: 'Ok',
+              callback: function() {
+                          $scope.tabSelected = true;
+                          $('.nav-tabs a[href="#managereposts"]').tab('show');
+              }
+            }]
+            });
+        }
+      }  
+
       $scope.openTrade = function(user) {
         var trade = {
           messages: [{
@@ -353,6 +400,17 @@ app.directive('reforrelists', function($http) {
           }
         });
       }
+
+      $scope.hideNotification = function() {
+           $http.put('/api/trades/hideNotification', $scope.shownTrades)
+                .then(function(res) {
+                })
+                .then(null, function(err) {
+                  $scope.checkNotification();
+                })
+            }
+          
+      
       $scope.setCurrentTab = function(currentTab) {
         $scope.currentTab = currentTab;
       }
@@ -668,6 +726,7 @@ app.directive('reforrelists', function($http) {
       $scope.sortResult($scope.sortby);
       $scope.loadMore();
       $scope.setView("inbox");
+      $scope.loadQueueSongs();
     }
   }
 })

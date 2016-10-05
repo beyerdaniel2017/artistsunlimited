@@ -35,7 +35,8 @@ router.post('/', function(req, res, next) {
 
 router.get('/unaccepted', function(req, res, next) {
   if (!req.user.role == 'admin' || !req.user.role == 'superadmin') {
-     next(new Error('Unauthoirized'))
+     next(new Error('Unauthoirized'));
+     return;
   } else {
     var resultSubs = [];
     var skipcount = req.query.skip;
@@ -95,7 +96,8 @@ router.get('/unaccepted', function(req, res, next) {
 
 router.get('/getMarketPlaceSubmission', function(req, res, next) {
   if (!req.user.role == 'admin' || !req.user.role == 'superadmin') {
-      next(new Error('Unauthoirized'))
+      next(new Error('Unauthoirized'));
+      return;
   } else {
     var resultSubs = [];
     var skipcount = req.query.skip;
@@ -174,7 +176,11 @@ router.get('/getUnacceptedSubmissions', function(req, res, next) {
 
 
 router.get('/getGroupedSubmissions', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   Submission.aggregate({
       $match: {
         channelIDS: [],
@@ -195,7 +201,11 @@ router.get('/getGroupedSubmissions', function(req, res, next) {
 });
 
 router.get('/getPaidRepostAccounts', function(req, res) {
-  if (!req.user) next(new Error('Unauthorized'));
+ if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var accounts = req.user.paidRepost;
   var results = [];
   var i = -1;
@@ -221,7 +231,11 @@ router.get('/getPaidRepostAccounts', function(req, res) {
 
 
 router.get('/getAccountsByIndex/:user_id', function(req, res) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   var user_id = req.params.user_id;
   var results = [];
   var paidRepost = req.user.paidRepost.find(function(pr) {
@@ -243,6 +257,7 @@ router.get('/getAccountsByIndex/:user_id', function(req, res) {
 router.put('/save', function(req, res, next) {
   if (!req.user.role == 'admin') {
     next(new Error('Unauthorized'));
+    return;
   } else {
     if (req.body.status == "pooled") {
       Submission.findByIdAndUpdate(req.body._id, req.body, {
@@ -318,6 +333,7 @@ router.put('/save', function(req, res, next) {
 router.delete('/decline/:subID/:password', function(req, res, next) {
   if (!req.user.role == 'admin') {
     next(new Error('Unauthorized'));
+    return;
   } else {
     Submission.findByIdAndRemove(req.params.subID)
       .populate("userID")
@@ -372,7 +388,11 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
 });
 
 router.get('/withID/:subID', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) 
+    {
+      next(new Error('Unauthorized'));
+      return;
+    }
   Submission.findById(req.params.subID)
 
     .then(function(sub) {

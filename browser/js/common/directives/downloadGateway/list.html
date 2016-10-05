@@ -32,7 +32,11 @@
           <div class="col-md-8 col-md-offset-2">
             <div class="permanent-links search" style="text-align: center;">
               <h4 class="bold">Permanent Artists:</h4>
+          <div class="row">
+                  <div class="col-md-6">
                <scsearch kind='user' returnitem='choseArtist(item)'></scsearch>
+              </div>
+            <div class="col-md-6">
                 <div class="tracks-box" ng-if="user.permanentLinks.length > 0">
                       <div class="track-item-list" ng-repeat="permanentLink in user.permanentLinks" >
                           <img class="avatar-20" ng-src="{{permanentLink.avatar}}">
@@ -45,6 +49,8 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
     </div>
   </div>
   <youtube-modal you-tube="youtubeModalId" modal-body="body" modal-footer="footer" modal-header="header" event-id="repostResponse" event-type="type"></youtube-modal>
