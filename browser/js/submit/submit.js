@@ -12,12 +12,12 @@ app.config(function($stateProvider) {
       getUserByURL: function($stateParams, $http, $window) {
         var username = $stateParams.username;
         var submitpart = $stateParams.submitpart;
-              if (submitpart.indexOf('submit') != -1) {
+        if (submitpart.indexOf('submit') != -1) {
           $window.location.href = '/customsubmit/' + username + '/' + submitpart;
-              } else {
+        } else {
           $window.location.href = '/custompremiere/' + username + '/' + submitpart;
-              }
-            }
+        }
+      }
     }
   });
 });
@@ -50,16 +50,18 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   //   'Vocalists/Singer-Songwriter'
   // ];
 
+
+
   $scope.choseTrack = function(track) {
     $scope.searchString = track.title;
     $scope.submission.trackID = track.id;
     $scope.submission.title = track.title;
     $scope.submission.trackURL = track.permalink_url;
-    SC.oEmbed($scope.submission.trackURL, {
-      element: document.getElementById('scPlayer'),
+    console.log(track);
+    SC.Widget('scPlayer').load(track.permalink_url, {
       auto_play: false,
-      maxheight: 150
-    })
+      show_artwork: true
+    });
     document.getElementById('scPlayer').style.visibility = "visible";
   }
 
@@ -84,9 +86,9 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
           $scope.processing = false;
           $scope.notFound = false;
           $scope.submission = {};
-        $scope.searchString = "";
+          $scope.searchString = "";
           document.getElementById('scPlayer').style.visibility = "hidden";
-        document.getElementById('scPlayerCustom').style.visibility = "hidden";
+          document.getElementById('scPlayerCustom').style.visibility = "hidden";
           $scope.url = "";
         })
         .then(null, function(err) {

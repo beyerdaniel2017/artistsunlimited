@@ -32,7 +32,10 @@ scWrapper.init({
 });
 
 router.get('/track', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
   DownloadTrack.findById(req.query.trackID)
     .populate('userid')
 
