@@ -112,12 +112,17 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
         .then(function(track) {
           $scope.track = track;
   });
-  setTimeout(function(){ $scope.auDLLink = $scope.track.purchase_url ? true: false;
-    SC.oEmbed(submission.trackURL, {
-        element: document.getElementById('scPlayer'),
-        auto_play: false,
-        maxheight: 150
-      });
+  setTimeout(function(){ 
+    $scope.auDLLink = $scope.track.purchase_url ? true: false;
+    SC.Widget('scPlayer').load(submission.trackURL, {
+      auto_play: false,
+      show_artwork: true
+    });
+    // SC.oEmbed(submission.trackURL, {
+    //     element: document.getElementById('scPlayer'),
+    //     auto_play: false,
+    //     maxheight: 150
+    //   });
  }, 3000);
 }
 $scope.getTrack();

@@ -232,11 +232,6 @@ router.post('/tasks', function(req, res, next) {
 });
 
 router.get('/track/recent', function(req, res, next) {
-  if (!req.user) 
-    {
-      next(new Error('Unauthorized'));
-      return;
-    }
   var userID = req.query.userID;
   var trackID = req.query.trackID;
   DownloadTrack.find({

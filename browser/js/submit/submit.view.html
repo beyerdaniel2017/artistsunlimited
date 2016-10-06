@@ -83,13 +83,14 @@
           </form>
         </div>
       </div>
-<div class="row">
-  <div class="col-md-12 text-center">
-    <span ng-if="notFound">Track not found.<br>If a private track, please email it to: edward@peninsulamgmt.com</span>
-    <div id="scPlayer" style="margin:10px 0; position:relative; z-index:1;"></div>
-  </div>
-</div>
-</div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <span ng-if="notFound">Track not found.<br>If a private track, please email it to: edward@peninsulamgmt.com</span>
+          <!-- <div id="scPlayer" style="margin:10px 0; position:relative; z-index:1;"></div> -->
+          <iframe id="scPlayer" width="500" height="160" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
+        </div>
+      </div>
+      </div>
           </div>
         </div>    
       </div>

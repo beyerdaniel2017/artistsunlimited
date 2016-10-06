@@ -388,13 +388,7 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
 });
 
 router.get('/withID/:subID', function(req, res, next) {
-  if (!req.user) 
-    {
-      next(new Error('Unauthorized'));
-      return;
-    }
   Submission.findById(req.params.subID)
-
     .then(function(sub) {
       if (!sub) next(new Error('submission not found'))
       sub = sub.toJSON();

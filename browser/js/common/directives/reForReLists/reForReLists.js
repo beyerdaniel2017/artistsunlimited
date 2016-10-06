@@ -265,18 +265,17 @@ app.directive('reforrelists', function($http) {
             $scope.makeEvent.trackArtUrl =track.artwork_url;
             $scope.makeEvent.trackURL = track.permalink_url;
             if ($scope.showOverlay) {
-              SC.oEmbed($scope.makeEvent.trackURL, {
-              element: document.getElementById('scPopupPlayer'),
+            SC.Widget('scPopupPlayer').load($scope.makeEvent.trackURL, {
               auto_play: false,
-              maxheight: 150
-            })
+            show_artwork: false
+             });
+            
             document.getElementById('scPopupPlayer').style.visibility = "visible";
             }
-            SC.oEmbed($scope.makeEvent.trackURL, {
-              element: document.getElementById('scPlayer'),
+            SC.Widget('scPlayer').load($scope.makeEvent.trackURL, {
               auto_play: false,
-              maxheight: 150
-            })
+            show_artwork: true
+             });
             document.getElementById('scPlayer').style.visibility = "visible";
             count = count + 1;
             }
@@ -539,11 +538,10 @@ app.directive('reforrelists', function($http) {
           var calendarDay = $scope.calendar.find(function(calD) {
             return calD.day.toLocaleDateString() == day.toLocaleDateString();
           });
-          SC.oEmbed($scope.makeEvent.url, {
-            element: document.getElementById('scPopupPlayer'),
+          SC.Widget('scPopupPlayer').load($scope.makeEvent.url, {
             auto_play: false,
-            maxheight: 120
-          })
+            show_artwork: false
+             });
           document.getElementById('scPopupPlayer').style.visibility = "visible";
         }
       }
@@ -607,11 +605,10 @@ app.directive('reforrelists', function($http) {
         $scope.makeEvent.trackArtUrl = track.artwork_url;
         $scope.makeEvent.trackArtUrl =track.artwork_url;
         $scope.makeEvent.artistName =track.user.username;
-        SC.oEmbed($scope.makeEvent.trackURL, {
-          element: document.getElementById('scPopupPlayer'),
+         SC.Widget('scPopupPlayer').load($scope.makeEvent.trackURL, {
           auto_play: false,
-          maxheight: 150
-        })
+            show_artwork: false
+             });
         document.getElementById('scPopupPlayer').style.visibility = "visible";
       }
 
@@ -623,11 +620,10 @@ app.directive('reforrelists', function($http) {
         $scope.makeEvent.trackArtUrl = track.artwork_url;
         $scope.makeEvent.trackArtUrl =track.artwork_url;
         $scope.makeEvent.artistName =track.user.username;
-        SC.oEmbed($scope.makeEvent.trackURL, {
-          element: document.getElementById('scPlayer'),
+        SC.Widget('scPlayer').load($scope.makeEvent.trackURL, {
           auto_play: false,
-          maxheight: 150
-        })
+            show_artwork: true
+             });
         document.getElementById('scPlayer').style.visibility = "visible";
       }
 
@@ -705,11 +701,10 @@ app.directive('reforrelists', function($http) {
           var calendarDay = $scope.calendar.find(function(calD) {
             return calD.day.toLocaleDateString() == day.toLocaleDateString();
           });
-          SC.oEmbed($scope.makeEvent.url, {
-            element: document.getElementById('scPlayer'),
+           SC.Widget('scPlayer').load($scope.makeEvent.url, {
             auto_play: false,
-            maxheight: 120
-          })
+            show_artwork: true
+             });
           document.getElementById('scPlayer').style.visibility = "visible";
         }
       }

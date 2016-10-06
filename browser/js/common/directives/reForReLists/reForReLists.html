@@ -90,16 +90,13 @@
             <div class="col-md-4 col-sm-6 col-xs-12">
               <div class="">
                 <div class="icon-addon addon-md">
-                  <input placeholder="Search by URL" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="txtSearchByArtistURL" ng-model="searchURL" style="" type="text">
-                  <a for="txtSearchByArtistURL" class="url-search-btn-small" rel="tooltip" title="Search by URL" ng-click="searchCurrentTrade()">
-                    <i class="glyphicon glyphicon-search"></i>
-                  </a>
+                  <input placeholder="Search by Name" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="txtSearchByArtistURL" ng-model="searchURL" style="" type="text">
                 </div>
               </div>
             </div>
           </div> 
           <br>
-          <div class="row" ng-repeat="trade in shownTrades track by $index">
+          <div class="row" ng-repeat="trade in shownTrades | filter : searchURL track by $index">
             <div class="col-md-12">
               <div class="vertical-container">
                 <ul>
@@ -227,9 +224,17 @@
                   <scsearch kind='track' returnitem='choseTrack1(item)'></scsearch>
                 </div>
                 <div class="row">
+                 <div class="col-md-12">
+                  <br>   
+                <button class="form-control" ng-click="getAutoFillTracks()">AUTOFILL</button>
+                </div>
+               </div>
+                <div class="row">
                   <div class="col-md-12 col-xs-12">
                     <br>   
-                    <p class="text-center" style="font-size: 1.5em;">{{makeEvent.day | date:'EEE MM/dd h:mma'}}</p>
+                    <select class="form-control" ng-disabled="true">
+                       <option>{{makeEvent.day | date:'EEE MM/dd h:mma'}}</option>
+                    </select>
                   </div>
                 </div>
                 <ul>
@@ -245,7 +250,7 @@
             </div><!--row end-->
             <div class="row">
               <div class="col-xs-12">
-                <div id="scPlayer" style="margin:10px 0"></div>            
+                 <iframe id="scPlayer" width="650" height="160" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>             
               </div>
             </div>
             <div class="row">
@@ -297,7 +302,9 @@
         <br>
         <div class="row">
           <div class="col-md-12 col-xs-12">   
-            <span>{{makeEvent.day | date:'EEE MM/dd h:mma'}}</span>
+           <select class="form-control" ng-disabled="true">
+               <option>{{makeEvent.day | date:'EEE MM/dd h:mma'}}</option>
+           </select>
           </div>
         </div>
         <!-- <span style="font-size:11px;">Total Reach: {{followCounts}} followers</span> -->
@@ -315,7 +322,7 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div id="scPopupPlayer" style="margin:10px 0; width:100%;"></div>      
+          <iframe id="scPopupPlayer" width="300" height="120" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>          
         </div>
       </div><!--row end-->
 <!--         <div class="row">

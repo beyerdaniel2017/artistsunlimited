@@ -105,7 +105,9 @@
           <br>
           <div class="row">
             <div class="col-md-12 col-xs-12">   
-              <span>{{makeEvent.day | date:'MMMM dd yyyy h:mma'}}</span>
+             <select class="form-control" ng-disabled="true">
+               <option>{{makeEvent.day | date:'MMMM dd yyyy h:mma'}}</option>
+           </select>
             </div>
           </div>
           <br>
@@ -120,16 +122,10 @@
                 <span>Unrepost after<input  class="form-control input-hour" placeholder="1" ng-model="makeEvent.unrepostHours">hours</span>
               </li>
             </div>
-            <div class="col-xs-12" style="font-size:12px;">
-              <label>Time between reposts:</label>
-              <select class="form-control input-hour">
-                <option>{{makeEvent.timeGap}}</option>
-              </select> hours
-            </div>
           </div>
           <div class="row">
             <div class="col-md-12">
-               <div id="scPopupPlayer" style="margin:10px 0; width:100%;"></div>      
+              <iframe id="scPopupPlayer" width="300" height="120" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>         
             </div>
           </div><!--row end-->
           <br> 
