@@ -13,6 +13,7 @@ app.directive('scheduler', function($http) {
       $scope.user = SessionService.getUser();
       $scope.showEmailModal = false;
       $scope.makeEventURL = "";
+      $scope.showPlayer = false;
       $scope.showOverlay = false;
       $scope.processiong = false;
       $scope.hideall = false;
@@ -81,17 +82,18 @@ app.directive('scheduler', function($http) {
         $scope.makeEvent.trackArtUrl =track.artwork_url;
         $scope.makeEvent.artistName =track.user.username;
         $scope.makeEvent.trackURL = track.permalink_url
-        SC.oEmbed($scope.makeEvent.trackURL, {
-          element: document.getElementById('scPlayer'),
+         SC.Widget('scPlayer').load($scope.makeEventURL, {
           auto_play: false,
-          maxheight: 150
-        })
+          show_artwork: true
+        });
+        $scope.showPlayer = true;
         document.getElementById('scPlayer').style.visibility = "visible";
       }
       $scope.choseAutoFillTrack = function(track) {
         $scope.searchString = track.title;
         $scope.newQueueID = track.id;
         $scope.addSong();
+        $scope.showPlayer = true;
       }
 
       $scope.choseTrack1 = function(track) {
@@ -102,11 +104,12 @@ app.directive('scheduler', function($http) {
         $scope.makeEvent.trackArtUrl =track.artwork_url;
         $scope.makeEvent.artistName =track.user.username;
         $scope.makeEvent.trackURL = track.permalink_url;
-        SC.oEmbed($scope.makeEvent.trackURL, {
-          element: document.getElementById('scPopupPlayer'),
+        document.getElementById('scPopupPlayer').innerHTML = "";
+        SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
           auto_play: false,
-          maxheight: 150
-        })
+          show_artwork: false
+        });
+        $scope.showPlayer = true;
         document.getElementById('scPopupPlayer').style.visibility = "visible";
       }
 
@@ -306,7 +309,8 @@ app.directive('scheduler', function($http) {
         $scope.followersCount();
         $scope.checkCommentEnable();
         $scope.checkLikeEnable();
-        document.getElementById('scPlayer').style.visibility = "hidden";
+        $scope.showPlayer = false;
+        //document.getElementById('scPlayer').style.visibility = "hidden";
       }
 
       $scope.isSchedule = false;
@@ -318,7 +322,7 @@ app.directive('scheduler', function($http) {
         $scope.unrepostEnable = false;
         $scope.unrepostHours = "";
         $scope.newEvent = true;
-        document.getElementById('scPlayer').style.visibility = "hidden";
+        /*document.getElementById('scPlayer').style.visibility = "hidden";*/
         $scope.makeEvent = {
           userID: $scope.user.soundcloud.id,
           type: "track"
@@ -363,11 +367,10 @@ app.directive('scheduler', function($http) {
           }
           $scope.channelArr = $scope.editChannelArr;
         }
-        SC.oEmbed($scope.makeEventURL, {
-          element: document.getElementById('scPlayer'),
+        SC.Widget('scPlayer').load($scope.makeEventURL, {
           auto_play: false,
-          maxheight: 120
-        })
+         show_artwork: false
+         });
         document.getElementById('scPlayer').style.visibility = "visible";
         $scope.followersCount();
         $scope.makeEvent = {};
@@ -387,6 +390,7 @@ app.directive('scheduler', function($http) {
         $scope.tabSelected = true;
         $scope.makeEventURL = "";
         $scope.makeEvent = null;
+        $scope.showPlayer = false;
       }
 
       function getshortdate(d) {
@@ -622,8 +626,8 @@ app.directive('scheduler', function($http) {
             type: "track"
           };
         }
-        document.getElementById('scPlayer').style.visibility = "hidden";
-        document.getElementById('scPlayer').innerHTML = "";
+        /*document.getElementById('scPlayer').style.visibility = "hidden";
+        document.getElementById('scPlayer').innerHTML = "";*/
 
         $scope.newEvent = true;
         var makeDay = new Date(selectedSlot.slotdate);
@@ -651,8 +655,8 @@ app.directive('scheduler', function($http) {
           return calD.day.toLocaleDateString() == day.toLocaleDateString();
         });
 
-        document.getElementById('scPopupPlayer').style.visibility = "hidden";
-        document.getElementById('scPopupPlayer').innerHTML = "";
+        /*document.getElementById('scPopupPlayer').style.visibility = "hidden";
+        document.getElementById('scPopupPlayer').innerHTML = "";*/
         $scope.makeEventURL = "";
         $scope.trackListSlotObj = undefined;
         $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
@@ -669,7 +673,7 @@ app.directive('scheduler', function($http) {
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
           $scope.makeEvent.unrepost = true;
           $scope.newEvent = true;
-          document.getElementById('scPopupPlayer').style.visibility = "hidden";
+         /* document.getElementById('scPopupPlayer').style.visibility = "hidden";*/
         } else {
           $scope.isEdit = true;
           if (data.type == 'traded' && data.trackURL) {
@@ -702,11 +706,11 @@ app.directive('scheduler', function($http) {
           $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
           $scope.makeEventURL = $scope.makeEvent.trackURL;
           $scope.eventComment = $scope.makeEvent.comment;
-          SC.oEmbed($scope.makeEvent.trackURL, {
-            element: document.getElementById('scPopupPlayer'),
+          SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
             auto_play: false,
-            maxheight: 150
+            show_artwork: false
           });
+          $scope.showPlayer = true;
           $scope.newEvent = false;
           document.getElementById('scPopupPlayer').style.visibility = "visible";
         }
@@ -789,6 +793,7 @@ app.directive('scheduler', function($http) {
             .then(function(res) {
               $scope.showOverlay = false;
               $scope.processing = false;
+              $scope.showPlayer = false;
               $state.reload();
             })
             .then(null, function(err) {
@@ -966,6 +971,7 @@ app.directive('scheduler', function($http) {
         $scope.showOverlay = false;
         $scope.unrepostEnable = false;
         $scope.unrepostHours = "";
+        $scope.showPlayer = false;
       }
 
       $scope.removeQueueSong = function(song) {
@@ -1040,7 +1046,7 @@ app.directive('scheduler', function($http) {
         if ($scope.user.queue.length > 0) {
           if (count >= $scope.autoFillTracks.length) {
               count = 0;
-          } else {
+          }
             var track = $scope.autoFillTracks[count];
             $scope.makeEventURL = track.permalink_url;
             $scope.makeEvent.trackID = track.id;
@@ -1048,21 +1054,19 @@ app.directive('scheduler', function($http) {
             $scope.makeEvent.trackArtUrl =track.artwork_url;
             $scope.makeEvent.trackURL = track.permalink_url;
             if ($scope.showOverlay) {
-              SC.oEmbed($scope.makeEvent.trackURL, {
-              element: document.getElementById('scPopupPlayer'),
-              auto_play: false,
-              maxheight: 150
-            })
-            document.getElementById('scPopupPlayer').style.visibility = "visible";
+              SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
+                auto_play: false,
+                show_artwork: false
+              });
+              //document.getElementById('scPopupPlayer').style.visibility = "visible";
             }
-            SC.oEmbed($scope.makeEvent.trackURL, {
-              element: document.getElementById('scPlayer'),
+            SC.Widget('scPlayer').load($scope.makeEventURL, {
               auto_play: false,
-              maxheight: 150
-            })
+              show_artwork: true
+            });
+            $scope.showPlayer = true;
             document.getElementById('scPlayer').style.visibility = "visible";
             count = count + 1;
-            }
 
         } else {
             $scope.showOverlay = false;
@@ -1074,11 +1078,11 @@ app.directive('scheduler', function($http) {
             }, {
               caption: 'Ok',
               callback: function() {
-                          $scope.tabSelected = true;
-                          $('.nav-tabs a[href="#managereposts"]').tab('show');
+                $scope.tabSelected = true;
+                $('.nav-tabs a[href="#managereposts"]').tab('show');
               }
             }]
-            });
+          });
         }
       }  
 

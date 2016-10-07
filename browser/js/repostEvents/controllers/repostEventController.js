@@ -128,12 +128,12 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
       var calDay = {};
       var calendarDay = $scope.calendar.find(function(calD) {
         return calD.day.toLocaleDateString() == day.toLocaleDateString();
-      });
-      SC.oEmbed($scope.makeEvent.url, {
-        element: document.getElementById('scPopupPlayer'),
-        auto_play: false,
-        maxheight: 120
       })
+      
+       SC.Widget('scPopupPlayer').load($scope.makeEvent.url, {
+          auto_play: false,
+          show_artwork: false
+      });
       document.getElementById('scPopupPlayer').style.visibility = "visible";
     }   
   } 

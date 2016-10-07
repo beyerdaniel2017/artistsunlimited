@@ -86,16 +86,12 @@
       <div class="row">
         <div class="col-md-12 text-center">
           <span ng-if="notFound">Track not found.<br>If a private track, please email it to: edward@peninsulamgmt.com</span>
-          <div id="scPlayer" style="margin:10px 0; position:relative; z-index:1;"></div>
+          <!-- <div id="scPlayer" style="margin:10px 0; position:relative; z-index:1;"></div> -->
+          <iframe id="scPlayer" width="500" height="160" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
         </div>
       </div>
     </div>
   </div>
-</div>    
-</div>
-</div>
-</div>
-</div>
 </div>
 <div class="custom-settings" style="background-color:transparent !important;"  ng-show="customizeSettings">
   <div id="backgroundImage1" style="background-size:cover;background-image:url( {{customizeSettings.background.images}}); filter: blur({{customizeSettings.background.blur}}px);-webkit-filter: blur({{customizeSettings.background.blur}}px);">
@@ -164,9 +160,5 @@
       <iframe id="sc-widget" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/users/1539950/favorites" width="100%" height="465" scrolling="no" frameborder="no"></iframe>
     </div>
   </form>
-</div>
-</div>
-</div>
-</div>
 </div>
 <ng-include src="'js/home/views/loader.html'"></ng-include>
