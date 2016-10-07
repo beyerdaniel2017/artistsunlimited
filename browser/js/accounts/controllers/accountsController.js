@@ -7,17 +7,15 @@ app.config(function($stateProvider) {
 });
 
 app.controller('accountsController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$sce,accountService) {
-     $scope.isLoggedIn = SessionService.getUser() ? true : false;
-    if (!SessionService.getUser()) {
-  	  $state.go('admin');
-    }
-    SessionService.removeAccountusers();
-
-
-    $scope.paidRepostAccounts = [];
-    $scope.user = SessionService.getUser();
-    $scope.user.paidRepost.groups = $scope.user.paidRepost.groups ? $scope.user.paidRepost.groups : [];
-    $scope.soundcloudLogin = function() {
+  $scope.isLoggedIn = SessionService.getUser() ? true : false;
+  if (!SessionService.getUser()) {
+	  $state.go('admin');
+  }
+  SessionService.removeAccountusers();
+  $scope.paidRepostAccounts = [];
+  $scope.user = SessionService.getUser();
+  $scope.user.paidRepost.groups = $scope.user.paidRepost.groups ? $scope.user.paidRepost.groups : [];
+  $scope.soundcloudLogin = function() {
     $scope.processing = true;
     SC.connect()
     .then(function(res) {
@@ -42,7 +40,7 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
       $.Zebra_Dialog('Error: Could not log in');
       $scope.processing = false;
     });
-	};
+  };
 
   $scope.addAccounts = function(actions,index){
     SessionService.addActionsfoAccount(actions,index);
@@ -126,15 +124,15 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
   }
 
   $scope.editprice = function(index, userdata) {
-      $scope.processing = true;
-      $scope.user.paidRepost[index].price = userdata.price;
-      $http.post('/api/database/updateGroup', {
-        paidRepost: $scope.user.paidRepost,
-      }).then(function(res) {
-        $scope.processing = false;
-        SessionService.create(res.data);
-        $scope.user = SessionService.getUser();
-      });
+    $scope.processing = true;
+    $scope.user.paidRepost[index].price = userdata.price;
+    $http.post('/api/database/updateGroup', {
+      paidRepost: $scope.user.paidRepost,
+    }).then(function(res) {
+      $scope.processing = false;
+      SessionService.create(res.data);
+      $scope.user = SessionService.getUser();
+    });
   }
 
   $scope.getPaidRepostAccounts();

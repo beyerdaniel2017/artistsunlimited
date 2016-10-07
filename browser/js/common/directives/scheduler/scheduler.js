@@ -17,7 +17,7 @@ app.directive('scheduler', function($http) {
       $scope.processiong = false;
       $scope.hideall = false;
       $scope.itemview = "calender";
-      $scope.dayIncr = 0;
+      $scope.dayIncr = 7;
       $scope.listDayIncr = 0;
       $scope.eventDate = new Date();
       $scope.autoFillTracks = [];
@@ -581,10 +581,9 @@ app.directive('scheduler', function($http) {
             $scope.processing = false;
           });
       }
-
-      $scope.dayIncr = 7;
+      
       $scope.incrDay = function() {
-        if ($scope.dayIncr < 49) $scope.dayIncr++;
+        if ($scope.dayIncr < 42) $scope.dayIncr++;
       }
 
       $scope.decrDay = function() {
@@ -1148,11 +1147,11 @@ app.directive('scheduler', function($http) {
 
       $scope.fillDateArrays = function(events) {
         var calendar = [];
-        var todayDate = new Date();
-        var today = new Date(todayDate.setDate(todayDate.getDate() - 7));
+        var today = new Date();
+        today.setDate(today.getDate() - 7);
         for (var i = 0; i < 49; i++) {
           var calDay = {};
-          calDay.day = new Date()
+          calDay.day = new Date(today);
           calDay.day.setDate(today.getDate() + i);
           var dayEvents = $scope.events.filter(function(ev) {
             return (ev.day.toLocaleDateString() == calDay.day.toLocaleDateString());

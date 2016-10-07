@@ -372,7 +372,7 @@ app.directive('dlgate', function($http) {
         $scope.searchSelection = [];
         $scope.searchError = undefined;
         $scope.searchString = item.displayName;
-        $scope.track.trackTitle = item.displayName;
+        $scope.track.trackTitle = item.title;
         $scope.track.trackID = item.id;
         $scope.track.artistID = item.user.id;
         $scope.track.description = item.description;

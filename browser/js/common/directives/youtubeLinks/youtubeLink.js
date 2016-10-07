@@ -13,29 +13,29 @@ app.directive('youtubeModal', function ($http) {
     controller: function ($scope) {
       $scope.handler = 'ytube';
       $scope.origin = window.location.origin;
-      if(window.location.pathname.indexOf('admin/scheduler') >-1)
+      if(window.location.pathname.indexOf('scheduler') >-1)
       { 
-        $scope.youtubeUrl = "https://www.youtube.com/watch?v=vUCM_0evdQY";
+        $scope.youtubeUrl = "https://www.youtube.com/embed/vUCM_0evdQY";
       }
-      else if(window.location.pathname.indexOf('admin/reposttraders') >-1)
+      else if(window.location.pathname.indexOf('reposttraders') >-1 || window.location.pathname.indexOf('reForReLists') >-1)
       {
-        $scope.youtubeUrl = "https://www.youtube.com/embed/XGSy3_Czz8k";
+        $scope.youtubeUrl = "https://www.youtube.com/embed/LA_HEUM_xqc";
       }
       else if(window.location.pathname.indexOf('admin/submission') >-1)
       {
-        $scope.youtubeUrl = "https://www.youtube.com/embed/XGSy3_Czz8k";
+        $scope.youtubeUrl = "https://www.youtube.com/embed/vUCM_0evdQY";
       }
-      else if(window.location.pathname.indexOf('admin/downloadGateway') >-1)
+      else if(window.location.pathname.indexOf('downloadGateway') >-1)
       {
-        $scope.youtubeUrl = "https://www.youtube.com/embed/XGSy3_Czz8k";
+        $scope.youtubeUrl = "https://www.youtube.com/embed/vUCM_0evdQY";
       }
-      else if(window.location.pathname.indexOf('admin/reForReInteraction') >-1)
+      else if(window.location.pathname.indexOf('reForReInteraction') >-1)
       {
-        $scope.youtubeUrl = "https://www.youtube.com/embed/XGSy3_Czz8k";
+        $scope.youtubeUrl = "https://www.youtube.com/embed/vUCM_0evdQY";
       }
       else if(window.location.pathname.indexOf('admin/premiersubmissions') >-1)
       {
-        $scope.youtubeUrl = "https://www.youtube.com/embed/XGSy3_Czz8k";
+        $scope.youtubeUrl = "https://www.youtube.com/embed/vUCM_0evdQY";
       }       
     },
   };

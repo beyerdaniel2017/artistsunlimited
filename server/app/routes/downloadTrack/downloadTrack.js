@@ -37,7 +37,7 @@ router.get('/track', function(req, res, next) {
     return;
   }
   DownloadTrack.findById(req.query.trackID)
-    .populate('userid')
+  .populate('userid')
 
   .then(function(downloadTrack) {
       downloadTrack = downloadTrack.toJSON();
@@ -231,7 +231,10 @@ router.post('/tasks', function(req, res, next) {
 });
 
 router.get('/track/recent', function(req, res, next) {
-  if (!req.user) next(new Error('Unauthorized'));
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
   var userID = req.query.userID;
   var trackID = req.query.trackID;
   DownloadTrack.find({
