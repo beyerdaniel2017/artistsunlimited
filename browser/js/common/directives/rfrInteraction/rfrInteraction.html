@@ -113,10 +113,11 @@
                   </div>
                   <div id="scheduler-container" ng-show="itemview == 'list'">
                     <div class="space-10"></div>
+                    <div class="m-table-responsive">
                     <table class="table scheduler-song-tab">
                       <thead>
                         <tr>
-                          <th width="30%" class="text-center">Track</th>
+                          <th width="30%" class="text-center">Traded</th>
                           <th width="20%" class="text-center">Account</th>
                           <th width="20%" class="text-center">Date</th>
                           <th width="20%" class="text-center">Unrepost Date</th>
@@ -125,7 +126,9 @@
                       </thead>
                       <tbody>
                         <tr ng-repeat="item in listEvents" ng-hide="!(item.event.type=='trade' || item.event.type=='empty') || (item.event.type=='empty' && item.date < currentDate)" ng-class='{grey : item.date < currentDate}' ng-style="getEventStyle(item.event)">
-                          <td class="text-center">{{item.event.title}}</td>
+                          <td class="text-center">
+                          <div class="check-list"><div class="checkbox demo-radio-btn"> <label class="with-square-checkbox"><input type="checkbox" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" style="display:block;left:170px;" ng-checked="item.event.type == 'traded'"></label></div></div>             
+                        </td>
                           <td class="text-center">{{trade.p1.user.soundcloud.username}}</td>
                           <td class="text-center">{{item.date | date: 'EEE MM/dd h:mma'}}</td>
                           <td class="text-center">{{getUnrepostDate(item) | date: 'EEE MM/dd h:mma'}}</td>
@@ -139,6 +142,7 @@
                     </table>
                   </div>
                 </div>
+              </div>
               </div>
               <!-- p2 calendar -->
               <div ng-show="activeUser._id==trade.p2.user._id">
@@ -164,6 +168,7 @@
                 </div>
                 <div id="scheduler-container" ng-show="itemview == 'list'">
                   <div class="space-10"></div>
+                  <div class="m-table-responsive">
                   <table class="table scheduler-song-tab">
                     <thead>
                       <tr>
@@ -192,6 +197,7 @@
                   </table>
                 </div>
               </div>
+            </div>
             </div>
             <div class="space-20"></div>
           </div>

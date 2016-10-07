@@ -1,7 +1,7 @@
 app.config(function($stateProvider) {
   $stateProvider.state('customsubmit', {
     url: '/customsubmit/:username/:submitpart',
-    templateUrl: 'js/accountSubmit/accountSubmit.view.html',
+    templateUrl: 'js/accountSubmit/accountsubmit.view.html',
     controller: 'AccountSubmitSongController',
     resolve: {
       userID : function($stateParams, $http, $window) {
@@ -34,17 +34,17 @@ app.controller('AccountSubmitSongController', function($rootScope, $state, $scop
   $scope.submission = {};
   $scope.customizeSettings = customizeSettings;
   $scope.searchString = "";
-
+  $scope.showPlayer = false;
   $scope.choseTrack = function(track) {
     $scope.searchString = track.title;
     $scope.submission.trackID = track.id;
     $scope.submission.title = track.title;
     $scope.submission.trackURL = track.permalink_url;
-    SC.oEmbed($scope.submission.trackURL, {
-      element: document.getElementById('scPlayerCustom'),
+    SC.Widget('scPlayerCustom').load($scope.submission.trackURL, {
       auto_play: false,
-      maxheight: 150
-    })
+          show_artwork: true
+        });
+    $scope.showPlayer = true;
     document.getElementById('scPlayerCustom').style.visibility = "visible";
   }
 

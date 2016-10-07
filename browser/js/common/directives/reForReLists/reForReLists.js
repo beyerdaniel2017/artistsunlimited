@@ -257,7 +257,7 @@ app.directive('reforrelists', function($http) {
         if ($scope.user.queue.length > 0) {
           if (count >= $scope.autoFillTracks.length) {
               count = 0;
-          } else {
+          }
             var track = $scope.autoFillTracks[count];
             $scope.makeEventURL = track.permalink_url;
             $scope.makeEvent.trackID = track.id;
@@ -278,8 +278,6 @@ app.directive('reforrelists', function($http) {
              });
             document.getElementById('scPlayer').style.visibility = "visible";
             count = count + 1;
-            }
-
         } else {
             $scope.showOverlay = false;
              $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {

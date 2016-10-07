@@ -1098,12 +1098,11 @@ h3 {
     background-color: white;
     /*width: 97%;*/
     /*margin: 0px 20px 0px 10px;*/
-    margin: 0px 41px 0px 0;
-    border-top-left-radius: 12px;
+    margin: 0px 41px 40px 0;
+    border-radius: 12px;
     height: 100%;
     overflow: hidden;
-    border-top-right-radius: 12px;
-    min-height: 600px;
+    min-height: 650px;
 }
 .page-content li {
     margin-bottom: -1px;
@@ -2386,7 +2385,7 @@ input:checked + .slider:before {
     color: rgb(138, 138, 138);
     letter-spacing: 1px;
     background-color: #F9F9F9;
-    padding: 44px 0;
+    padding: 0 0 44px;
     font-weight: normal;
 }
 .from-background {
@@ -2423,7 +2422,7 @@ input:checked + .slider:before {
     background-color: rgba(245, 245, 245, 0);
 }
 .tropical img {
-    width: 45%;
+    width: 50%;
     text-align: center;
     margin: 15px auto;
 }
@@ -3482,13 +3481,13 @@ td {
 /*** 17-9-2016 ***/
 /*** 22-9-2016 ***/
 
-.left-profile-content {
+/*.left-profile-content {
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
     margin-bottom: 40px;
-}
+}*/
 /*** 22-9-2016 ***/
 
 .comment-view{
@@ -3764,6 +3763,26 @@ td {
     .img-btn {
         margin-left: 264px;
     }
+    .m-table-responsive{
+        min-height: .01%;
+        overflow-x: auto;
+    }
+      .cell-date {
+        line-height: 20px;
+     }
+     .left-side-profile{
+        top: 0;
+        border-radius: 10px;
+     }
+     .vertical-container li > .list-img-container img {
+        margin: 0 auto;
+    }
+    .tracks-box {
+        margin: 10px auto;
+    }
+    .page-header ul li.switch-btn{
+        padding-top: 10px;
+    }
 }
 @media screen and (max-width: 640px) {
     .organize-text {
@@ -3858,7 +3877,6 @@ td {
     padding-right: 38px;
     padding-left: 40px;
   }*/
-    
     .img-btn {
         margin-left: 121px;
     }
@@ -3938,6 +3956,7 @@ td {
     .vertical-container li{
         width: 100%;
     }
+  
 }
 @media screen and (max-width: 360px) {
     .accpect,
