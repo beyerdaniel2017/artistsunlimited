@@ -271,7 +271,7 @@ border-color: #F7F7F7;
   background: #F5BBBC;
   border: transparent;
   border-radius: 8px;
-  padding: 14px 50px;
+  padding: 14px 50px !important;
   color: #fff;
   font-size: 12px;
   text-transform: uppercase;
@@ -282,7 +282,7 @@ border-color: #F7F7F7;
   background: #fff;
   border: transparent;
   border-radius: 8px;
-  padding: 14px 50px;
+  padding: 14px 50px !important;
   color: #686868;
   font-size: 12px;
   text-transform: uppercase;
@@ -389,50 +389,62 @@ border-color: #F7F7F7;
 .facebook {
   background: #F5D3B5 url("assets/images/facebook_icon.png") no-repeat scroll center center/30px auto;
   width: 40px;
-  height: 34px;
+  height: 40px;
   position: absolute;
   top: 0;
-  right: 0; }
+  right: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px; }
 
 .twitter {
   background: #F5D3B5 url("assets/images/twitter_icon.png") no-repeat scroll center center/30px auto;
   width: 40px;
-  height: 34px;
+  height: 40px;
   position: absolute;
   top: 0;
-  right: 0; }
+  right: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px; }
 
 .instagram {
   background: #F5D3B5 url("assets/images/instagram_icon.png") no-repeat scroll center center/30px auto;
   width: 40px;
-  height: 34px;
+  height: 40px;
   position: absolute;
   top: 0;
-  right: 0; }
+  right: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px; }
 
 .youtube {
   background: #F5D3B5 url("assets/images/youtube_icon.png") no-repeat scroll center center/30px auto;
   width: 40px;
-  height: 34px;
+  height: 40px;
   position: absolute;
   top: 0;
-  right: 0; }
+  right: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px; }
 
 .spotify {
   background: #F5D3B5 url("assets/images/spotify_icon.png") no-repeat scroll center center/30px auto;
   width: 40px;
-  height: 34px;
+  height: 40px;
   position: absolute;
   top: 0;
-  right: 0; }
+  right: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px; }
 
 .soundcloud {
   background: #F5D3B5 url("assets/images/soundcloud_icon.png") no-repeat scroll center center/30px auto;
   width: 40px;
-  height: 34px;
+  height: 40px;
   position: absolute;
   top: 0;
-  right: 0; }
+  right: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px; }
 
 .soundcloud-img img {
   position: absolute;
@@ -495,14 +507,14 @@ label.with-square-checkbox {
   font-weight: 400; }
 
 label.with-square-checkbox span {
-  line-height: 24px; }
+  line-height: 21px; }
 
 .check-bx label.with-square-checkbox span::before {
   margin-right: 4px;
   padding-left: 2px;
   width: 21px;
   height: 21px;
-  border: 1px solid #F5D3B5;
+  border: 1px solid #8D8D8D;
   display: inline-block;
   line-height: 20px;
   content: '';
@@ -513,7 +525,7 @@ label.with-square-checkbox span::before {
   padding-left: 2px;
   width: 21px;
   height: 21px;
-  border: 1px solid #F5D3B5;
+  border: 1px solid #8D8D8D;
   display: inline-block;
   line-height: 18px;
   content: '';
@@ -525,7 +537,7 @@ label.with-square-checkbox input[type="checkbox"] {
 label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   font-family: 'Glyphicons Halflings';
   content: '\e013';
-  color: #F5D3B5; }
+  color: #8D8D8D; }
 
 .player {
   border-radius: 8px;
@@ -745,7 +757,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 
 .search .results {
   position: absolute;
-  top: 35px;
+  top: 41px;
   left: 0;
   right: 0;
   z-index: 10;
@@ -753,7 +765,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   margin: 0;
   border-width: 1px;
   border-style: solid;
-  border-color: #F5D3B5;
+  border-color: #686868;
   border-radius: 8px;
   background-color: #fff;
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -956,7 +968,8 @@ label {
   -webkit-border-radius: 8px;
   -webkit-box-shadow: none !important;
   -moz-box-shadow: none !important;
-  box-shadow: none !important; }
+  box-shadow: none !important;
+  height: 40px; }
 
 .form-control:focus {
   border-color: #FF7676;
@@ -964,14 +977,29 @@ label {
   -webkit-box-shadow: none;
   box-shadow: none; }
 
-.btn:active, .btn.active {
+.btn {
+  padding: 8px 12px;
+  font-size: 12px; }
+
+.btn:active,
+.btn.active {
   -webkit-box-shadow: none;
   box-shadow: none; }
 
-.btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
+.btn-default:active,
+.btn-default.active,
+.open > .dropdown-toggle.btn-default {
   background-color: #F8F8F8; }
 
-.btn-default:active:hover, .btn-default.active:hover, .open > .dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open > .dropdown-toggle.btn-default:focus, .btn-default.focus:active, .btn-default.active.focus, .open > .dropdown-toggle.btn-default.focus {
+.btn-default:active:hover,
+.btn-default.active:hover,
+.open > .dropdown-toggle.btn-default:hover,
+.btn-default:active:focus,
+.btn-default.active:focus,
+.open > .dropdown-toggle.btn-default:focus,
+.btn-default.focus:active,
+.btn-default.active.focus,
+.open > .dropdown-toggle.btn-default.focus {
   background-color: #F8F8F8; }
 
 .unrepost-symbol {
@@ -1086,7 +1114,7 @@ label {
 .cell-date {
   width: 100%;
   color: #686868;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 35px;
   text-align: center;
   font-weight: 300; }
@@ -1127,8 +1155,8 @@ label {
 
 .overlay {
   position: absolute;
-  top: -40px;
-  left: -10px;
+  top: -70px;
+  left: -40px;
   right: -17px;
   height: 110%;
   background-color: #E6E6E699;
@@ -1946,7 +1974,8 @@ h3 {
 .page-content {
   background-color: white;
   /*width: 97%;*/
-  margin: 0px 20px 0px 10px;
+  /*margin: 0px 20px 0px 10px;*/
+  margin: 0px 41px 0px 0;
   border-top-left-radius: 12px;
   height: 100%;
   overflow: hidden;
@@ -2652,7 +2681,7 @@ input[type=range]:focus::-ms-fill-upper {
   #wrapper.toggled {
     padding-left: 0; }
   #sidebar-wrapper {
-    width: 240px; }
+    width: 210px; }
   #wrapper.toggled #sidebar-wrapper {
     width: 0; }
   #page-content-wrapper {
@@ -2860,7 +2889,9 @@ input:checked + .slider:before {
   border-color: #686868;
   outline: none;
   background: url("../assets/images/music-icon.png") no-repeat 93% 50%;
-  text-align: center; }
+  text-align: center;
+  letter-spacing: 2px;
+  font-size: 12px; }
 
 .schedule-date-change {
   max-width: 200px;
@@ -2984,7 +3015,7 @@ input:checked + .slider:before {
   border-radius: 10px;
   display: inline-block;
   width: 100%;
-  margin: 5px 0 5px 0; }
+  /*margin:5px 0 5px 0;*/ }
 
 .channel-masege {
   border-bottom: 1px solid #d8d8d8;
@@ -3041,14 +3072,7 @@ input:checked + .slider:before {
 
 .songScheduler .next-previous button {
   padding: 10px 30px;
-  background: transparent none repeat scroll 0% 0%;
-  margin: 10px 3px;
-  border-radius: 10px;
-  border: 1px solid #727272;
-  text-align: center;
-  color: #8a8a8a;
-  font-weight: 600;
-  font-size: 13px; }
+  margin: 10px 3px; }
 
 .songScheduler .next-previous button:active {
   backgrpound-color: #FF7676;
@@ -3067,12 +3091,12 @@ input:checked + .slider:before {
   box-shadow: 0 0px 1px #AEAEAE; }
 
 .songScheduler select {
-  border: 1px solid #BDBDBD;
-  box-shadow: 0 0px 1px #AEAEAE; }
+  /* border: 1px solid #BDBDBD;
+    box-shadow: 0 0px 1px #AEAEAE;*/ }
 
 .songScheduler textarea {
-  border: 1px solid #727272;
-  box-shadow: 0 0px 1px #AEAEAE; }
+  /* border: 1px solid #727272;
+    box-shadow: 0 0px 1px #AEAEAE;*/ }
 
 .songScheduler .save-share {
   background-color: #FF7676 !important;
@@ -3081,8 +3105,8 @@ input:checked + .slider:before {
 
 .songScheduler input,
 .songScheduler select {
-  height: 45px;
-  color: #868686; }
+  /*height: 45px;*/
+  color: #686868; }
 
 /*songScheduler css ::end*/
 .like-comment {
@@ -3650,6 +3674,13 @@ label:hover:before {
 .calendar-trade li {
   list-style: none; }
 
+.au-title-head {
+  font-size: 15px;
+  color: #686868;
+  font-weight: 400;
+  margin: 10px 0 20px 0;
+  letter-spacing: 2px; }
+
 .margin-20 {
   margin: 20px 0px; }
 
@@ -3786,7 +3817,11 @@ td {
   display: inline-table;
   margin: 0px;
   text-align: center;
-  background: #F8F8F8; }
+  background: #F8F8F8;
+  border-right: 1px solid #ECECEC; }
+
+.two-tabs .nav-tabs li:last-child {
+  border-right: 0px solid transparent; }
 
 .two-tabs .nav-tabs > li > a {
   margin: 0;
@@ -3861,7 +3896,7 @@ td {
 
 /*Btn Border */
 .b-radius-10 {
-  border-radius: 10px; }
+  border-radius: 8px; }
 
 .text-pink {
   color: #FF7676 !important; }
@@ -3998,9 +4033,9 @@ td {
   height: 20px;
   width: 25px;
   text-align: center;
-  top: 7px;
+  top: 9px;
   background: #FFFFFF;
-  color: #888; }
+  color: #686868 !important; }
 
 .url-search-btn-big {
   position: absolute;
@@ -4013,11 +4048,11 @@ td {
   text-align: center;
   top: 13px;
   background: #FFFFFF;
-  color: #888; }
+  color: #686868; }
 
-.search-big .url-search-btn-small {
-  top: 12px; }
-
+/*.search-big .url-search-btn-small {
+    top: 12px;
+}*/
 /*** 14-9-2016 ***/
 /*** 15-9-2016 ***/
 .padding-10 {
@@ -4036,15 +4071,19 @@ td {
   margin-bottom: 20px; }
 
 .admin-ui-tabs {
-  list-style: none; }
+  list-style: none;
+  text-align: center; }
 
 .admin-ui-tabs > li {
-  float: left;
-  text-align: center;
-  width: 16%; }
+  /* float: left; */
+  /* text-align: center; */
+  /* width: 16%; */
+  margin: 0 1.7% 10px;
+  display: inline-block; }
 
 .admin-ui-tabs > li > a {
-  color: #cccccc; }
+  color: #cccccc;
+  font-size: 13px; }
 
 .admin-ui-tabs > li.active > a,
 .admin-ui-tabs > li.active > a:hover,
@@ -4090,7 +4129,7 @@ td {
   width: 200px;
   height: 200px;
   margin: 0px auto;
-  border-radius: 10px; }
+  border-radius: 8px; }
 
 .thumb-img-container {
   width: 200px;
@@ -4141,7 +4180,7 @@ td {
 
 .vertical-container li > .list-img-container img {
   height: 115px;
-  border-radius: 10px; }
+  border-radius: 8px; }
 
 .vertical-text {
   margin: 10px 0; }
@@ -4176,7 +4215,7 @@ td {
 
 .account-vertical-container li > .list-img-container img {
   height: 100px;
-  border-radius: 10px;
+  border-radius: 8px;
   margin: 0 auto; }
 
 .space-10 {
@@ -4213,6 +4252,54 @@ td {
   width: 190px;
   color: #686868 !important; }
 
+.tracks-box {
+  border: 1px solid #8E8E8E;
+  border-radius: 10px;
+  overflow: auto;
+  max-height: 250px;
+  overflow-x: hidden;
+  max-width: 320px;
+  margin: 0px auto;
+  padding: 10px; }
+
+.tracks-title {
+  background: #FFD5D5;
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 3px;
+  width: 250px;
+  text-align: left; }
+
+.tracks-title-name {
+  color: #000 !important;
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  width: 210px;
+  overflow: hidden;
+  position: relative;
+  top: 3px; }
+
+.avatar-20 {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  float: left;
+  margin-right: 5px;
+  /* margin-top: 3px;*/ }
+
+.close-tracks {
+  margin-left: 5px;
+  position: relative; }
+
+.track-item-list {
+  display: block;
+  margin-bottom: 5px; }
+
+.track-item-list:last-child {
+  margin-bottom: 0px; }
+
 .notification-box {
   background: #FF7676;
   border-radius: 100px;
@@ -4228,6 +4315,52 @@ td {
   background: #fff;
   border: 1px solid #FF7676;
   z-index: 3; }
+
+.fb-notifications-check-list {
+  /*margin: 10px 0;*/ }
+
+.fb-notifications-check-list label.with-square-checkbox {
+  margin-right: 10px;
+  margin-bottom: 10px; }
+
+.fb-notifications-check-list label.with-square-checkbox {
+  cursor: pointer;
+  font-weight: 400;
+  display: block;
+  text-align: left; }
+
+.fb-notifications-check-list label.with-square-checkbox span {
+  line-height: 21px; }
+
+.fb-notifications-check-list label.with-square-checkbox span::before {
+  margin-right: 4px;
+  padding-left: 2px;
+  width: 21px;
+  height: 21px;
+  border: 1px solid #8D8D8D;
+  display: inline-block;
+  line-height: 20px;
+  content: '';
+  float: left; }
+
+.fb-notifications-check-list label.with-square-checkbox span::before {
+  margin-right: 4px;
+  padding-left: 2px;
+  width: 21px;
+  height: 21px;
+  border: 1px solid #8D8D8D;
+  display: inline-block;
+  line-height: 18px;
+  content: '';
+  float: left; }
+
+.fb-notifications-check-list label.with-square-checkbox input[type="checkbox"] {
+  display: none; }
+
+.fb-notifications-check-list label.with-square-checkbox input[type="checkbox"]:checked + span::before {
+  font-family: 'Glyphicons Halflings';
+  content: '\e013';
+  color: #8D8D8D; }
 
 /******************************** Media CSS :: START ************************************/
 @media screen and (max-width: 1280px) {
@@ -4332,8 +4465,7 @@ td {
   .download-group-btn button {
     padding: 10px 23px; }
   .admin-ui-tabs > li {
-    width: 100%;
-    padding: 10px 0; }
+    width: 100%; }
   .account-vertical-container li {
     width: 100%;
     text-align: center; }

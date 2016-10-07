@@ -81,41 +81,41 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
     } else {
       $scope.processing = true;
       $http.post('/api/submissions', {
-        email: $scope.submission.email,
-        trackID: $scope.submission.trackID,
-        name: $scope.submission.name,
-        title: $scope.submission.title,
-        trackURL: $scope.submission.trackURL,
-        channelIDS: [],
-        invoiceIDS: [],
-        userID: $scope.userID,
-        genre: ''
-      })
-      .then(function(res) {
-        $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
-        $scope.processing = false;
-        $scope.notFound = false;
-        $scope.submission = {};
-      $scope.searchString = "";
-        document.getElementById('scPlayer').style.visibility = "hidden";
-      document.getElementById('scPlayerCustom').style.visibility = "hidden";
-        $scope.url = "";
-      })
-      .then(null, function(err) {
-        $scope.processing = false;
-        $.Zebra_Dialog("Error: Could not submit song.");
-      });
+          email: $scope.submission.email,
+          trackID: $scope.submission.trackID,
+          name: $scope.submission.name,
+          title: $scope.submission.title,
+          trackURL: $scope.submission.trackURL,
+          channelIDS: [],
+          invoiceIDS: [],
+          userID: $scope.userID,
+          genre: ''
+        })
+        .then(function(res) {
+          $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
+          $scope.processing = false;
+          $scope.notFound = false;
+          $scope.submission = {};
+          $scope.searchString = "";
+          document.getElementById('scPlayer').style.visibility = "hidden";
+          document.getElementById('scPlayerCustom').style.visibility = "hidden";
+          $scope.url = "";
+        })
+        .then(null, function(err) {
+          $scope.processing = false;
+          $.Zebra_Dialog("Error: Could not submit song.");
+        });
     }
   }
 
   $scope.getUserID = function() {
     if ($scope.userID == undefined) {
       $http.get('/api/users/getUserID')
-      .then(function(res) {
-        $scope.userID = res.data;
-      });
+        .then(function(res) {
+          $scope.userID = res.data;
+        });
     }
   }
 
-  $scope.getUserID();  
+  $scope.getUserID();
 });
