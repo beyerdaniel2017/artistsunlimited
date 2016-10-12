@@ -322,7 +322,7 @@ app.directive('scheduler', function($http) {
         $scope.unrepostEnable = false;
         $scope.unrepostHours = "";
         $scope.newEvent = true;
-        /*document.getElementById('scPlayer').style.visibility = "hidden";*/
+        //document.getElementById('scPlayer').style.visibility = "hidden";
         $scope.makeEvent = {
           userID: $scope.user.soundcloud.id,
           type: "track"
@@ -341,13 +341,9 @@ app.directive('scheduler', function($http) {
       $scope.isEdit = false;
       $scope.EditNewSong = function(item, editable) {
         $scope.editChannelArr = [];
-        if (item.event.type == 'traded') {
-          $scope.isView = true;
-        }
         $scope.tabSelected = false;
-        /*if (!editable) {*/
         $scope.isEdit = true;
-        //}
+        $scope.isSchedule = false;
         $scope.deleteEventData = item;
         var newObj = angular.copy(item);
         $scope.makeEventURL = newObj.event.trackURL;
@@ -371,7 +367,13 @@ app.directive('scheduler', function($http) {
           auto_play: false,
          show_artwork: false
          });
+        $scope.showPlayer = true;
+        document.getElementById('scPlayer').style.visibility = "hidden";
+         if (item.event.type == 'traded' && item.event.trackURL) {
+          $scope.isView = true;
         document.getElementById('scPlayer').style.visibility = "visible";
+        }
+        
         $scope.followersCount();
         $scope.makeEvent = {};
         $scope.newEvent = false;
@@ -654,9 +656,6 @@ app.directive('scheduler', function($http) {
         var calendarDay = $scope.calendar.find(function(calD) {
           return calD.day.toLocaleDateString() == day.toLocaleDateString();
         });
-
-        /*document.getElementById('scPopupPlayer').style.visibility = "hidden";
-        document.getElementById('scPopupPlayer').innerHTML = "";*/
         $scope.makeEventURL = "";
         $scope.trackListSlotObj = undefined;
         $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
@@ -670,16 +669,12 @@ app.directive('scheduler', function($http) {
             day: makeDay,
             type: "track"
           };
+           document.getElementById('scPopupPlayer').style.visibility = "hidden";
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
           $scope.makeEvent.unrepost = true;
           $scope.newEvent = true;
-         /* document.getElementById('scPopupPlayer').style.visibility = "hidden";*/
         } else {
           $scope.isEdit = true;
-          if (data.type == 'traded' && data.trackURL) {
-            $scope.isView = true;
-          }
-         
           $scope.editChannelArr = [];
           
           var channels = data.otherChannels;
@@ -706,13 +701,22 @@ app.directive('scheduler', function($http) {
           $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
           $scope.makeEventURL = $scope.makeEvent.trackURL;
           $scope.eventComment = $scope.makeEvent.comment;
+          $scope.newEvent = false;
+          if (data.type == 'traded' && data.trackURL) {
+             $scope.isView = true;
           SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
             auto_play: false,
             show_artwork: false
           });
           $scope.showPlayer = true;
-          $scope.newEvent = false;
           document.getElementById('scPopupPlayer').style.visibility = "visible";
+        }
+          else
+          {
+             document.getElementById('scPopupPlayer').style.visibility = "hidden";
+          }
+         
+          
         }
       }
 
@@ -1076,7 +1080,7 @@ app.directive('scheduler', function($http) {
               caption: 'Cancel',
               callback: function() {}
             }, {
-              caption: 'Ok',
+              caption: 'Autofill',
               callback: function() {
                 $scope.tabSelected = true;
                 $('.nav-tabs a[href="#managereposts"]').tab('show');

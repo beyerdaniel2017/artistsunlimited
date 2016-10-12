@@ -504,9 +504,8 @@ app.directive('reforrelists', function($http) {
       };
 
       $scope.calendar = $scope.fillDateArrays($scope.events);
-
+      $scope.isView = false;
       $scope.clickedSlot = function(day, hour, data) {
-        if (data.trackInfo) {
             $scope.deleteEventData = data;
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
           document.getElementById('scPopupPlayer').innerHTML = "";
@@ -536,12 +535,19 @@ app.directive('reforrelists', function($http) {
           var calendarDay = $scope.calendar.find(function(calD) {
             return calD.day.toLocaleDateString() == day.toLocaleDateString();
           });
+          if (data.trackInfo.trackURL) 
+          {
+            $scope.isView = true; 
           SC.Widget('scPopupPlayer').load($scope.makeEvent.url, {
             auto_play: false,
             show_artwork: false
              });
           document.getElementById('scPopupPlayer').style.visibility = "visible";
         }
+        else{
+          $scope.isView = false;  
+           document.getElementById('scPopupPlayer').style.visibility = "hidden";
+            }
       }
 
       $scope.closeModal = function() {

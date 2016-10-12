@@ -285,8 +285,8 @@ app.directive('rfrinteraction', function($http) {
           .then(function(res) {
             $scope.processing = false;
             $scope.trade = res.data;
-            $scope.trade.other = (trade.p1.user._id == $scope.user._id) ? $scope.trade.p2 : $scope.trade.p1;
-            $scope.trade.user = (trade.p1.user._id == $scope.user._id) ? $scope.trade.p1 : $scope.trade.p2;
+            $scope.trade.other = ($scope.trade.p1.user._id == $scope.user._id) ? $scope.trade.p2 : $scope.trade.p1;
+            $scope.trade.user = ($scope.trade.p1.user._id == $scope.user._id) ? $scope.trade.p1 : $scope.trade.p2;
             $scope.fillCalendar();
             $scope.showUndo = false;
           }).then(null, console.log)

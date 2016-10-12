@@ -10,10 +10,10 @@
     <!-- Nav tabs :Start-->
     <ul class="nav nav-tabs" role="tablist">
       <li role="presentation" class="active"><a href="#myschedule" aria-controls="myschedule" role="tab" data-toggle="tab" ng-click="showTab();">
-        <img src="assets/images/myschedule.png" />MY SCHEDULE</a>
+        <img src="assets/images/myschedule.svg" />MY SCHEDULE</a>
       </li>
-      <li role="presentation"><a href="#organizeschedule" aria-controls="organizeschedule" role="tab" data-toggle="tab" ng-click="showTab();"> <img src="assets/images/organizeschedule.png"/> ORGANIZE SCHEDULE</a></li>
-      <li role="presentation"><a href="#managereposts" aria-controls="managereposts" role="tab" data-toggle="tab" ng-click="showTab();"> <img src="assets/images/managereposts.png"/> MANAGE REPOSTS</a></li>
+      <li role="presentation"><a href="#organizeschedule" aria-controls="organizeschedule" role="tab" data-toggle="tab" ng-click="showTab();"> <img src="assets/images/organizeschedule.svg"/> ORGANIZE SCHEDULE</a></li>
+      <li role="presentation"><a href="#managereposts" aria-controls="managereposts" role="tab" data-toggle="tab" ng-click="showTab();"> <img src="assets/images/managereposts.svg"/> MANAGE REPOSTS</a></li>
     </ul>
     <!-- Nav tabs :End-->
     <!-- Tab panes :: Start-->
@@ -21,25 +21,26 @@
       <!-- MY SCHEDULE : Start-->
       <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
         <div class="container-90">
-          <div class="col-md-3 col-xs-6">
+          <div class="col-md-4 col-xs-12">
+            <div class="btn-group" role="group" aria-label="...">
+              <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.svg" /></a>
+              <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.svg" /></a>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12 text-center">
             <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
               <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
               <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
             </div>
           </div>
-          <div class="col-md-4 col-xs-12 pull-right">
+          <div class="col-md-4 col-xs-12  pull-right padding-right-0">
             <form >
               <div class="schedule-newsong">
                 <button type="button" class="form-control" ng-click="addNewSong();">SCHEDULE NEW SONG</button>  
               </div>
             </form>
           </div>
-          <div class="col-md-4 col-xs-12 pull-right text-right">
-            <div class="btn-group" role="group" aria-label="...">
-              <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.png" /></a>
-              <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
-            </div>
-          </div>
+        
         </div>
         <div class="">
           <h3 style="text-align:center;">{{user.displayName}}</h3>
@@ -229,6 +230,7 @@
                             </div>
                       </div>                             
                     </div>
+                    <div class="space-20"></div>
                   </div>
                 </div>
               </div>
@@ -240,7 +242,8 @@
           <div class="col-md-12" ng-show="!tabSelected">
             <div class="songScheduler">
               <div class="row extrapadding">
-                <div class="col-md-12" ng-class="{'disabled': isView}">
+                <div class="col-md-12">
+                <div ng-class="{'disabled': isView}">
                   <div class="row">                
                     <h1 class="au-title-head text-center">AVAILABLE SLOT</h1>               
                     <div class="col-md-6 col-xs-12 search search-big">
@@ -254,10 +257,10 @@
                           <option style="color:black;text:center;" ng-repeat="slot in listAvailableSlots"
                           value="{{slot}}">{{slot.slotdate.toString().split(' ')[1] + ' ' +slot.slotdate.toString().split(' ')[2] + ' ' + slot.slotdate.toString().split(' ')[3]}} {{slot.slottime}}</option>
                         </select>
-                        <select ng-if="isEdit" ng-disabled="true" class="form-control">
+                        <select ng-if="isEdit  && !isSchedule" ng-disabled="true" class="form-control">
                           <option>{{selectedSlot | date:'EEE MM/dd h:mma'}}</option>
                         </select>
-                        <select ng-if="isSchedule" class="form-control">
+                        <select ng-if="!isEdit && isSchedule" class="form-control">
                           <option>{{selectedSlot | date:'EEE MM/dd h:mma'}}</option>
                         </select>
                       </div>
@@ -271,14 +274,6 @@
                         </li>
                       </ul> 
                       <br/>
-                       <!--  <div class="form-group" ng-show="linkedAccounts.length > 0"  ng-if="isEdit || isSchedule">
-                          <div class="col-xs-12">
-                            <label>Time between reposts:</label>
-                            <select class="form-control input-hour">
-                              <option>{{timeGap}}</option>
-                            </select> hours
-                          </div>
-                        </div> -->
                       </div>
                       <div class="col-md-6 col-xs-12">              
                         <div class="btn-group channel-group" ng-if="user.role == 'admin'" role="group" aria-label="...">
@@ -327,7 +322,7 @@
                       </div>
                       <div class="row">
                         <div class="col-xs-12">
-                           <iframe id="scPlayer" ng-show="showPlayer" width="760" height="160" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>   
+                           <iframe id="scPlayer" ng-show="showPlayer" width="100%" height="160" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>   
                         </div>
                       </div><!--row end-->
                       <div class="row">
@@ -347,17 +342,6 @@
                       <div class="row">
                         <div class="col-md-12">                     
                           <div class="row">
-    <!--                    <div class="col-md-6">
-                              <div class="form-group">
-                                <div class="left-textarea">
-                                  <textarea class="form-control" placeholder="To" style="border:none;"></textarea>
-                                  <div class="creat-link">
-                                    <div class="pull-left"><img src="assets/images/link.png"></div>
-                                    <div class="pull-right"><a href="#">Create Link</a></div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div> -->
                             <div class="col-md-12">
                               <div class="form-group">
                                 <textarea class="form-control" ng-disabled="disable" ng-model="eventComment">{{comment}}</textarea>
@@ -367,17 +351,18 @@
                                 <button class="btn btn-border b-radius-10 pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">NEXT</button>
                               </div>
                             </div>
+                              </div>
+                          </div>
                           </div><!--row end-->
                           <div class="row">
                             <div class="col-md-12">
                               <div class="next-previous text-center">
-                               <button class="btn btn-border b-radius-10 save-share" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
+                               <button class="btn btn-border b-radius-10 save-share" ng-class="{'disabled': isView}" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
                                <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
-                               <button class="btn btn-pink b-radius-10 save-share" ng-click="saveEvent();">SAVE & SHARE</button>
+                               <button class="btn btn-pink b-radius-10 save-share" ng-class="{'disabled': isView}" ng-click="saveEvent();">SAVE & SHARE</button>
                              </div>
                            </div>
                          </div><!--row end-->                    
-                       </div>
                      </div><!--row end-->
                    </div>
                  </div><!--row end-->
@@ -385,15 +370,11 @@
              </div>
            </div>
            <!-- overlay -->
-           <div class="overlay" ng-show="showOverlay" ng-click="backEvent()" ng-class="{'disabled': isView}" style="z-index: 999;">
+           <div class="overlay" ng-show="showOverlay" ng-click="backEvent()" style="z-index: 999;">
             <div class="available-popup-box">
               <div class="label-scheduler label-smaller slot-box" ng-click="$event.stopPropagation();">
                 <div class="">
-                  <!-- <div class="row">
-                    <div class="col-md-12">
-                      <h1 class="text-center au-title-head">AVAILABLE SLOT</h1>
-                    </div>
-                  </div> -->
+                  <div ng-class="{'disabled': isView}">
                   <div class="row">
                     <div class="col-md-12 search">
                       <scsearch kind='track' returnitem='choseTrack1(item)'></scsearch>
@@ -468,12 +449,6 @@
                         <label>Unrepost after<input  class="form-control input-hour" style="color: #868686;" placeholder="24" ng-model="unrepostHours">hours</label>
                       </li>
                     </div>
-                   <!--  <div class="col-xs-12" style="font-size:12px;" ng-show="linkedAccounts.length > 0">
-                      <label>Time between reposts:
-                        <select class="form-control input-hour" ng-model="timeGap">
-                          <option ng-repeat="n in [0,1,2,3,4,5,6,7,8,9,10,11,12]" value="{{n}}">{{n}}</option>
-                        </select> hours</label>
-                      </div> -->
                     </div>
                     <div class="row">
                       <div class="col-md-12">
@@ -507,12 +482,13 @@
                       </div>                         
                     </div>
                   </div>
+                  </div>
                   <div class="space-10"></div>
                   <div class="row">
                     <div class="col-md-12 text-center">
-                      <button class="btn btn-border b-radius-10" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
+                      <button class="btn btn-border b-radius-10" ng-class="{'disabled': isView}" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
                       <button class="btn btn-border b-radius-10 " ng-click="backEvent();">CANCEL</button>
-                      <button class="btn btn-pink b-radius-10" ng-click="saveEvent();">SAVE</button>
+                      <button class="btn btn-pink b-radius-10" ng-class="{'disabled': isView}" ng-click="saveEvent();">SAVE</button>
                     </div>
                   </div><!--row end-->                  
                 </div>
@@ -525,7 +501,7 @@
       </div>
     </div>
     <!--overlay-->
-    <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showEmailModal">
+    <div ng-show="showEmailModal">
       <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
         <div class="modal-dialog modal-vertical-centered">    
           <!-- Modal content-->

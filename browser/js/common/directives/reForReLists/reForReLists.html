@@ -1,3 +1,9 @@
+<style type="text/css">
+  .disabled{
+  opacity: 1.5;
+  pointer-events: none;
+}
+</style>
 <div class="page-content right-side">
   <!--page-contant Start-->
   <div class="scheduler-tabs">
@@ -80,7 +86,7 @@
         <div class="organize-list">
           <br>                           
           <div class="row">
-            <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="col-md-4 col-sm-6 col-xs-12 text-left">
               <div class="btn-group channel-group" role="group" aria-label="...">
                 <a class="btn btn-default b-radius-10 active" ng-class="{active : itemView == 'inbox'}" href="javascript:void(0)" ng-click="setView('inbox')">Inbox</a>
                 <a class="btn btn-default b-radius-10" ng-class="{active : itemView == 'sent'}" href="javascript:void(0)" ng-click="setView('sent')">Sent</a>
@@ -135,18 +141,19 @@
 <!-- MANAGE REPOSTS : Start -->
 <div role="tabpanel" class="tab-pane fade" ng-class="{in: activeTab == '3', active: activeTab == '3'}" id="managereposts"> 
   <div class="container-90">            
-    <div class="col-md-3 col-xs-6">
+    <div class="col-md-2 col-xs-6">
+      <div class="btn-group" role="group" aria-label="..." ng-show="manageView != 'newsong'">
+        <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'calendar'}" href="javascript:void(0)" ng-click="setManageView('calendar')"><img src="assets/images/box-view.svg" /></a>
+        <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'list'}" href="javascript:void(0)" ng-click="setManageView('list')"><img src="assets/images/list-view.svg" /></a>
+      </div>
+    </div>             
+    <div class="col-md-10 col-xs-6 text-center">
       <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
         <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
         <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
       </div>
     </div>                  
-    <div class="col-md-9 col-xs-6 text-right">
-      <div class="btn-group" role="group" aria-label="..." ng-show="manageView != 'newsong'">
-        <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'calendar'}" href="javascript:void(0)" ng-click="setManageView('calendar')"><img src="assets/images/box-view.png" /></a>
-        <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'list'}" href="javascript:void(0)" ng-click="setManageView('list')"><img src="assets/images/list-view.png" /></a>
-      </div>
-    </div>          
+           
     <div class="">                
       <div id="scheduler-container" ng-show="manageView == 'calendar'" style="width:100%;">
        <div class="calendar-day-date">
@@ -171,10 +178,13 @@
         </div>
       </div>
             <div class="row">
-                  <div class="col-md-8 col-md-offset-2">
+                  <div class="col-md-12">
                     <div class="permanent-links search" style="text-align: center;">
                       <h1 class="au-title-head text-center text-uppercase">Auto-fill Tracks</h1>
+                      <div class="col-md-6 ">
                       <scsearch kind='track' returnitem='choseAutoFillTrack(item)'></scsearch>
+                      </div>
+                      <div class="col-md-6">
                        <div class="tracks-box" ng-if="autoFillTracks.length > 0">
                         <div class="track-item-list" ng-repeat="song in autoFillTracks" >
                             <img class="avatar-20" ng-src="{{song.artwork_url}}">
@@ -188,6 +198,7 @@
                     </div>
                   </div>
                 </div>
+    </div>
     </div>
     <div id="scheduler-container" ng-show="manageView == 'list'" style="width:100%;">
       <table class="table  scheduler-song-tab">
@@ -280,6 +291,7 @@
 </div>
 <!-- popup overlay start-->
 <div class="overlay" ng-show="showOverlay" ng-click="closeModal()" style="z-index: 999;">
+<div ng-class="{'disabled': isView}">
   <div class="available-popup-box">
     <div class="label-scheduler label-smaller slot-box" ng-click="$event.stopPropagation();">
       <div class="">
@@ -324,6 +336,7 @@
         <div class="col-md-12">
           <iframe id="scPopupPlayer" width="300" height="120" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>          
         </div>
+      </div>
       </div><!--row end-->
 <!--         <div class="row">
             <div class="col-xs-12">
@@ -355,13 +368,13 @@
           <div class="row">
             <div class="col-md-12">
               <div class="col-md-4">
-              <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-click="deleteEvent();">DELETE</button>
+              <button class="btn btn-pink b-radius-10 organize-btn" ng-class="{'disabled': isView}" style="width:100%;" ng-click="deleteEvent();">DELETE</button>
               </div>
               <div class="col-md-4">
               <button class="btn btn-border b-radius-10 organize-btn" style="width:100%;" ng-click="closeModal();">CANCEL</button>
               </div>
               <div class="col-md-4">
-              <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE</button>
+              <button class="btn btn-pink b-radius-10 organize-btn" ng-class="{'disabled': isView}" style="width:100%;" ng-click="saveEvent();">SAVE</button>
               </div>
             </div>
           </div><!--row end-->                  

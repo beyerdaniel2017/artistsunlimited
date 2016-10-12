@@ -1,4 +1,4 @@
-<div class="container-fluid height-100pr">
+<div class="container-fluid height-100pr margin-refor-re">
   <div class="row">
     <div class="col-md-2 col-sm-12 col-xs-12 pr-paddin-right-0 pr-margin-right-0">
       <!--left-side-manu ::start-->
@@ -30,29 +30,20 @@
         </div>
         <!-- calendar side -->
         <div class="col-md-10 col-sm-12 col-xs-12 pr-margin-left-0 pr-padding-left-0 pr-paddin-right-0" ng-init="getCurrentDate();getCurrentdateEvents();">
-          <div class="page-content right-side left-profile-content">
+          <div class="page-content right-side left-profile-content margin-0"> 
             <!--page-contant Start-->
             <div class="scheduler-tabs">
               <!-- Nav tabs :Start-->
-              <a ui-sref="{{isAdminRoute ? 'adminRepostTraders' : 'reForReLists'}}" href="javascript:void(0)" class="pull-right" style="margin-right:20px; margin-top:10px">X</a>
+              <a class="btn btn-pink b-radius-10 pull-right" ui-sref="{{isAdminRoute ? 'adminRepostTraders' : 'reForReLists'}}" href="javascript:void(0)" style="margin-right:20px; margin-top:10px">X</a>
               <!-- Nav tabs :End-->
               <!-- Tab panes :: Start-->
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
                   <div class="container-90">
-                    <div class="col-md-5 col-xs-6 pull-left">
-                      <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
-                        <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
-                        <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
-                      </div>
-                      <button class="btn btn-pink" ng-click="saveTrade()" ng-if="(trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && showUndo" style="margin-right:5px;">Request</button>
-                      <button class="btn btn-pink" ng-click="acceptTrade()" ng-if="!showUndo && (trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && !trade.user.accepted">Accept</button>
-                      <button class="btn btn-pink" ng-click="undo()" ng-if="showUndo">Undo</button>
-                    </div>
-                    <div class="col-md-6 col-xs-12 pull-right text-right">
+                   <div class="col-md-6 col-xs-12">
                       <div class="btn-group" role="group" aria-label="..." style="margin-right:10px;">
-                        <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.png" /></a>
-                        <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.png" /></a>
+                        <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.svg" /></a>
+                        <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.svg" /></a>
                       </div>
                       <label class="switch" style="vertical-align: middle;">
                         <input type="checkbox" ng-checked="repeatOn" ng-click="changeRepeatOn()">
@@ -60,6 +51,16 @@
                       </label>
                       <span>Repeat trade for<input class="form-control input-hour" type="tel" ng-model="trade.repeatFor" ng-change="changeRepeatFor()">weeks</span>
                     </div>
+                    <div class="col-md-5 col-xs-12">
+                      <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
+                        <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
+                        <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
+                      </div>
+                      <button class="btn btn-pink" ng-click="saveTrade()" ng-if="(trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && showUndo" style="margin-right:5px;">Request</button>
+                      <button class="btn btn-pink" ng-click="acceptTrade()" ng-if="!showUndo && (trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && !trade.user.accepted">Accept</button>
+                      <button class="btn btn-border" ng-click="undo()" ng-if="showUndo">Undo</button>
+                    </div>
+                   
                     <!-- <div class="col-md-2 col-xs-6 pull-right text-right">
                       
                   </div>   -->                  
