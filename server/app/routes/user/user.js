@@ -518,6 +518,31 @@ router.get('/getUserPaidRepostAccounts', function(req, res) {
   next();
 });
 
+router.get('/syncUsers', function(req, res, next) {
+  var finalResult = [];
+  User.find({availableSlots: {$exists: false}})
+  .then(function(result){
+    var count = 0;
+    result.forEach(function(user) {
+      updateUser(user);
+    });    
+    //res.send(finalResult);
+    function updateUser(user){      
+      var objUser = user.toJSON();
+      User.update({
+        '_id': objUser._id
+      }, {
+        $set: objUser
+      },{
+        new: true
+      })  
+      .then(function(u) {
+        finalResult.push(u);
+      })    
+    }    
+  });
+});
+
 
 // router.post('/syncSCEmails', function(req, res, next) {
 //   var sCount = 0;

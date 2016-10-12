@@ -104,7 +104,18 @@ var schema = new mongoose.Schema({
     },
     repostSettings: {
         type: Object,
-        default: {}
+        default: {
+            trade : {
+                comments : [],
+                comment : false,
+                like : false
+            },
+            schedule : {
+                comments : [],
+                comment : false,
+                like : false
+            }
+        }
     },
     notificationSettings: {
         facebookMessenger: {

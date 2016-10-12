@@ -24,45 +24,45 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
-  $scope.user = SessionService.getUser();
-  $scope.user.isAdmin = $scope.user.role == 'admin' ? true : false;
+  $scope.user=SessionService.getUser();
+  $scope.user.isAdmin = $scope.user.role=='admin' ? true : false;
   $scope.uniqueGroup = [];
   $scope.paidRepostAccounts = [];
   $scope.dynamicButton = [{
-    "name": "TRACK TITLE WITH LINK",
-    "appendText": " {TRACK_TITLE_WITH_LINK} "
+   "name": "TRACK TITLE WITH LINK", 
+   "appendText": " {TRACK_TITLE_WITH_LINK} " 
   }, {
-    "name": "SUBMITTERS EMAIL",
-    "appendText": " {SUBMITTERS_EMAIL} "
+    "name": "SUBMITTERS EMAIL", 
+    "appendText": " {SUBMITTERS_EMAIL} " 
   }, {
-    "name": "TRACK TITLE",
-    "appendText": " {TRACK_TITLE} "
+    "name": "TRACK TITLE", 
+    "appendText": " {TRACK_TITLE} " 
   }, {
-    "name": "TRACK ARTIST WITH LINK",
-    "appendText": " {TRACK_ARTIST_WITH_LINK} "
+    "name": "TRACK ARTIST WITH LINK", 
+    "appendText": " {TRACK_ARTIST_WITH_LINK} " 
   }, {
-    "name": "TRACK ARTIST",
-    "appendText": " {TRACK_ARTIST} "
+    "name": "TRACK ARTIST", 
+    "appendText": " {TRACK_ARTIST} " 
   }, {
-    "name": "TRACK ARTWORK",
-    "appendText": " {TRACK_ARTWORK} "
+    "name": "TRACK ARTWORK", 
+    "appendText": " {TRACK_ARTWORK} " 
   }, {
-    "name": "SUBMITTED TO ACCOUNT NAME",
-    "appendText": " {SUBMITTED_TO_ACCOUNT_NAME} "
+    "name": "SUBMITTED TO ACCOUNT NAME", 
+    "appendText": " {SUBMITTED_TO_ACCOUNT_NAME} " 
   }, {
-    "name": "SUBMITTED ACCOUNT NAME WITH LINK",
-    "appendText": " {SUBMITTED_ACCOUNT_NAME_WITH_LINK} "
+    "name": "SUBMITTED ACCOUNT NAME WITH LINK", 
+    "appendText": " {SUBMITTED_ACCOUNT_NAME_WITH_LINK} " 
   }, {
-    "name": "ACCEPTED CHANNEL LIST",
-    "appendText": " {ACCEPTED_CHANNEL_LIST} "
+    "name": "ACCEPTED CHANNEL LIST", 
+    "appendText": " {ACCEPTED_CHANNEL_LIST} " 
   }, {
-    "name": "ACCEPTED CHANNEL LIST WITH LINK",
+    "name": "ACCEPTED CHANNEL LIST WITH LINK", 
     "appendText": " {ACCEPTED_CHANNEL_LIST_WITH_LINK} "
   }, {
-    "name": "TODAYS DATE",
-    "appendText": " {TODAYSDATE} "
+    "name": "TODAYS DATE", 
+    "appendText": " {TODAYSDATE} " 
   }];
-
+  
   $scope.genreArray = [
     'Alternative Rock',
     'Ambient',
@@ -87,41 +87,41 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     'Vocalists/Singer-Songwriter'
   ];
 
-  $scope.getSubmissionsByGenre = function() {
+  $scope.getSubmissionsByGenre = function(){
     $scope.showingElements = [];
     $scope.skip = 0;
     $scope.loadSubmissions();
   }
 
   $scope.loadSubmissions = function() {
-    var genre = $scope.genre.replace(/[0-9]/g, '');
-    var selectedGenre = genre.replace('(', '').replace(')', '').trim();
+    var genre=$scope.genre.replace(/[0-9]/g, '');
+    var selectedGenre= genre.replace('(','').replace(')','').trim();
     $scope.processing = true;
-    $http.get('/api/submissions/unaccepted?genre=' + encodeURIComponent(selectedGenre) + "&skip=" + $scope.skip + "&limit=" + $scope.limit)
+    $http.get('/api/submissions/unaccepted?genre='+encodeURIComponent(selectedGenre)+"&skip="+$scope.skip+"&limit="+$scope.limit)
       .then(function(res) {
-        $scope.processing = false;
-        if (res.data.length > 0) {
-          angular.forEach(res.data, function(d) {
-            d.selectedChannelName = [];
-            d.selectedChannelIDS = [];
-            d.selectedGroups = [];
-            $scope.showingElements.push(d)
-          });
-        }
-        setTimeout(function() {
-          $scope.showingElements.forEach(function(sub) {
-            SC.Widget(sub.trackID + "player").load(sub.trackURL, {
-              auto_play: false,
-              show_artwork: true
-            });
-          }, 50)
+      $scope.processing = false;
+      if (res.data.length > 0) {
+        angular.forEach(res.data, function(d) {
+          d.selectedChannelName = [];
+          d.selectedChannelIDS = [];
+          d.selectedGroups = [];
+          $scope.showingElements.push(d)
         });
-      })
-      .then(null, function(err) {
-        $scope.processing = false;
-        $.Zebra_Dialog('Error: Could not get channels.')
-        console.log(err);
+      }
+      setTimeout(function() {
+        $scope.showingElements.forEach(function(sub) {
+          SC.Widget(sub.trackID + "player").load(sub.trackURL, {
+            auto_play: false,
+          show_artwork: true
+          });
+        }, 50)
       });
+    })
+    .then(null, function(err) {
+      $scope.processing = false;
+      $.Zebra_Dialog('Error: Could not get channels.')
+      console.log(err);
+    });
   }
 
   $scope.loadMore = function() {
@@ -130,36 +130,36 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.loadMarketSubmissions = function() {
-    var genre = $scope.genre.replace(/[0-9]/g, '');
-    var selectedGenre = genre.replace('(', '').replace(')', '').trim();
+    var genre=$scope.genre.replace(/[0-9]/g, '');
+    var selectedGenre= genre.replace('(','').replace(')','').trim();
     $scope.processing = true;
-    $http.get('/api/submissions/getMarketPlaceSubmission?genre=' + encodeURIComponent(selectedGenre) + "&skip=" + $scope.marketSkip + "&limit=" + $scope.marketLimit)
+    $http.get('/api/submissions/getMarketPlaceSubmission?genre='+encodeURIComponent(selectedGenre)+"&skip="+$scope.marketSkip+"&limit="+$scope.marketLimit)
       .then(function(res) {
-        $scope.processing = false;
-        if (res.data.length > 0) {
-          angular.forEach(res.data, function(d) {
-            d.selectedChannelName = [];
-            d.selectedChannelIDS = [];
-            d.selectedGroups = [];
-            d.pooledSendDate = new Date(d.pooledSendDate);
-            $scope.marketSubmissions.push(d)
-          });
-        }
-        setTimeout(function() {
-          $scope.marketSubmissions.forEach(function(sub) {
-            SC.oEmbed(sub.trackURL, {
-              element: document.getElementById(sub.trackID + "_player"),
-              auto_play: false,
-              maxheight: 150
-            });
-          }, 50)
+      $scope.processing = false;
+      if (res.data.length > 0) {
+        angular.forEach(res.data, function(d) {
+          d.selectedChannelName = [];
+          d.selectedChannelIDS = [];
+          d.selectedGroups = [];
+          d.pooledSendDate = new Date(d.pooledSendDate);
+          $scope.marketSubmissions.push(d)
         });
-      })
-      .then(null, function(err) {
-        $scope.processing = false;
-        $.Zebra_Dialog('Error: Could not get channels.')
-        console.log(err);
+      }
+      setTimeout(function() {
+        $scope.marketSubmissions.forEach(function(sub) {
+          SC.oEmbed(sub.trackURL, {
+            element: document.getElementById(sub.trackID + "_player"),
+            auto_play: false,
+            maxheight: 150
+          });
+        }, 50)
       });
+    })
+    .then(null, function(err) {
+      $scope.processing = false;
+      $.Zebra_Dialog('Error: Could not get channels.')
+      console.log(err);
+    });
   }
 
   $scope.changeBox = function(sub, chan) {
@@ -175,7 +175,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
 
   $scope.changeBoxGroup = function(sub, group) {
     var ind = sub.selectedGroups.indexOf(group);
-    if (sub[group]) {
+    if(sub[group]){
       if (ind == -1) {
         sub.selectedGroups.push(group);
       }
@@ -183,20 +183,20 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       sub.selectedGroups.splice(ind, 1);
     }
     $scope.selectedGroupChannelIDS = [];
-    sub.selectedGroups.forEach(function(g) {
-      $scope.user.paidRepost.forEach(function(acc) {
-        if (acc.groups.indexOf(g) != -1) {
-          if ($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1) {
+    sub.selectedGroups.forEach(function(g){
+      $scope.user.paidRepost.forEach(function(acc){
+        if(acc.groups.indexOf(g) != -1){
+          if($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1){
             $scope.selectedGroupChannelIDS.push(acc.id);
-          }
+          }      
         }
-      });
+      });    
     });
   }
 
   $scope.save = function(submi) {
-    submi.selectedChannelIDS.forEach(function(cid) {
-      if ($scope.selectedGroupChannelIDS.indexOf(cid) == -1) {
+    submi.selectedChannelIDS.forEach(function(cid){
+      if($scope.selectedGroupChannelIDS.indexOf(cid) == -1){
         $scope.selectedGroupChannelIDS.push(cid);
       }
     });
@@ -253,8 +253,8 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.marketSave = function(submi) {
-    submi.selectedChannelIDS.forEach(function(cid) {
-      if ($scope.selectedGroupChannelIDS.indexOf(cid) == -1) {
+    submi.selectedChannelIDS.forEach(function(cid){
+      if($scope.selectedGroupChannelIDS.indexOf(cid) == -1){
         $scope.selectedGroupChannelIDS.push(cid);
       }
     });
@@ -328,25 +328,25 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       })
   }
 
-  $scope.openEmailClient = function(sub, item) {
+  $scope.openEmailClient = function(sub, item){
     var toEmail = (item.toEmail == '{email}' ? sub.email : item.toEmail);
     var subject = (item.subject != undefined ? item.subject : "");
-    if (subject != "") {
+    if(subject != ""){
       subject = subject.replace('{title}', sub.title);
       subject = subject.replace('{name}', sub.name);
       subject = subject.replace('{url}', sub.trackURL);
-    }
+    }    
     var body = (item.emailBody != undefined ? item.emailBody : "");
-    if (body != "") {
+    if(body != ""){
       body = body.replace('{SUBMITTERS_EMAIL}', toEmail);
-      body = body.replace('{TRACK_TITLE_WITH_LINK}', sub.title + ' (' + sub.trackURL + ')');
+      body = body.replace('{TRACK_TITLE_WITH_LINK}', sub.title + ' ('+ sub.trackURL+')');
       body = body.replace('{TRACK_TITLE}', sub.title);
-      body = body.replace('{TRACK_ARTIST_WITH_LINK}', sub.name + ' (' + sub.trackURL + ')');
+      body = body.replace('{TRACK_ARTIST_WITH_LINK}', sub.name + ' ('+ sub.trackURL+')');
       body = body.replace('{TRACK_ARTIST}', sub.name);
       body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
-      body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', sub.userID.soundcloud.username + ' (' + sub.userID.soundcloud.permalinkURL + ')');
-      body = body.replace('{ACCEPTED_CHANNEL_LIST}', "");
-      body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', "");
+      body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', sub.userID.soundcloud.username + ' ('+ sub.userID.soundcloud.permalinkURL+')');
+      body = body.replace('{ACCEPTED_CHANNEL_LIST}', "");      
+      body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', "");      
       body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
       //body = body.replace(/\n/g, "<br />");
     }
@@ -357,10 +357,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.getSubmissionByGenre = function() {
     $http.get('/api/submissions/getGroupedSubmissions').then(function(res) {
       var unacceptedSubmission = res.data;
-      for (var i = 0; i < $scope.genreArray.length; i++) {
-        for (var j = 0; j < unacceptedSubmission.length; j++) {
-          if ($scope.genreArray[i] == unacceptedSubmission[j]._id) {
-            $scope.genreArray[i] = $scope.genreArray[i] + ' (' + unacceptedSubmission[j].total_count + ')';
+      for(var i=0; i< $scope.genreArray.length; i++){
+        for(var j=0; j<unacceptedSubmission.length; j++){
+          if($scope.genreArray[i] == unacceptedSubmission[j]._id){
+            $scope.genreArray[i] = $scope.genreArray[i] +' ('+ unacceptedSubmission[j].total_count + ')';
           }
         }
       }
@@ -368,7 +368,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.customEmailButtons = $scope.user.submissionsCustomEmailButtons.length > 0 ? $scope.user.submissionsCustomEmailButtons : [];
-  if ($scope.customEmailButtons.length == 0) {
+  if($scope.customEmailButtons.length == 0){
     $scope.customEmailButtons.push({
       toEmail: '',
       subject: '',
@@ -377,18 +377,18 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       buttonBgColor: ''
     });
   }
-  $scope.saveSettings = function() {
+  $scope.saveSettings=function(){
     var valid = true;
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     angular.forEach($scope.customEmailButtons, function(cb) {
-      if (cb.toEmail != "{email}") {
+      if(cb.toEmail != "{email}"){
         var validEmail = re.test(cb.toEmail);
         if (!validEmail) {
           valid = false;
         }
       }
     });
-    if (!valid) {
+    if(!valid){
       $.Zebra_Dialog('Please enter {email} or a well formatted email id in To Email field.');
       return;
     }
@@ -417,9 +417,9 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $scope.customEmailButtons.splice(index, 1);
   }
 
-  $scope.addEventClass = function(index, type) {
+  $scope.addEventClass = function(index,type) {
     $('textarea').removeClass("selectedBox");
-    $("." + type + index).addClass("selectedBox");
+    $("." + type+index).addClass("selectedBox");
   }
 
   $scope.appendBody = function(btn) {
@@ -427,7 +427,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       var boxIndex = $('.selectedBox').attr("index");
       var cursorPos = $('.selectedBox').prop('selectionStart');
       var v = $('.selectedBox').val();
-      console.log('boxIndex', boxIndex);
+      console.log('boxIndex',boxIndex);
       var textBefore = v.substring(0, cursorPos);
       var textAfter = v.substring(cursorPos, v.length);
       var newtext = textBefore + btn.appendText + textAfter;
@@ -443,11 +443,15 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
         $scope.paidRepostAccounts[i].groups.forEach(function(acc) {
           if (acc != "" && $scope.uniqueGroup.indexOf(acc) === -1) {
             $scope.uniqueGroup.push(acc);
-          }
+          } 
         });
       }
     });
   }
+
+  $scope.openHelpModal = function() {
+         $("#ytube").modal('show');
+        }
 
   //$scope.getSubmissionByGenre();
   $scope.getPaidRepostAccounts();
@@ -458,16 +462,16 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
 app.directive('countdown', [
   'Util',
   '$interval',
-  function(Util, $interval) {
+  function (Util, $interval) {
     return {
       restrict: 'A',
       scope: {
         date: '@'
       },
-      link: function(scope, element) {
+      link: function (scope, element) {
         var future;
-        future = new Date(scope.date);
-        $interval(function() {
+        future = new Date(scope.date);                
+        $interval(function () {
           var diff;
           diff = Math.floor((future.getTime() - new Date().getTime()) / 1000);
           return element.text(Util.dhms(diff));
@@ -475,9 +479,9 @@ app.directive('countdown', [
       }
     };
   }
-]).factory('Util', [function() {
+]).factory('Util', [function () {
   return {
-    dhms: function(t) {
+    dhms: function (t) {
       var days, hours, minutes, seconds;
       //days = Math.floor(t / 86400);
       //t = days * 86400;

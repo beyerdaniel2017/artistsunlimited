@@ -261,12 +261,12 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     if(body != ""){
       body = body.replace('{NAME}', sub.name);
       body = body.replace('{SUBMITTERS_EMAIL}', toEmail);
-      body = body.replace('{TRACK_TITLE_WITH_LINK}', sub.title + '('+ sub.trackURL+')');
+      body = body.replace('{TRACK_TITLE_WITH_LINK}', sub.title + ' ('+ sub.trackURL+')');
       body = body.replace('{TRACK_TITLE}', sub.title);
-      body = body.replace('{TRACK_ARTIST_WITH_LINK}', sub.name + '('+ sub.trackURL+')');
+      body = body.replace('{TRACK_ARTIST_WITH_LINK}', sub.name + ' ('+ sub.trackURL+')');
       body = body.replace('{TRACK_ARTIST}', sub.name);
       body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
-      body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', sub.userID.soundcloud.username + '('+ sub.userID.soundcloud.permalinkURL+')');
+      body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', sub.userID.soundcloud.username + ' ('+ sub.userID.soundcloud.permalinkURL+')');
       body = body.replace('{ACCEPTED_CHANNEL_LIST}', "");      
       body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', "");      
       body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
@@ -389,6 +389,9 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     }
   }
 
+  $scope.openHelpModal = function() {
+         $("#ytube").modal('show');
+        }
   $scope.loadSubmissions();
 });
 
