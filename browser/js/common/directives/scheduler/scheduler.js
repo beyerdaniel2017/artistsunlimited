@@ -144,31 +144,31 @@ app.directive('scheduler', function($http) {
       $scope.checkLikeEnable = function() {
         if ($scope.user.repostSettings && $scope.user.repostSettings.schedule) {
           if ($scope.user.repostSettings.schedule.like == false) {
-            $scope.likeSrc = 'assets/images/like.png';
+            $scope.likeSrc = 'assets/images/like.svg';
             $scope.likeEvent = false;
           } else {
-            $scope.likeSrc = 'assets/images/likeTrue.png';
+            $scope.likeSrc = 'assets/images/likeTrue.svg';
             $scope.likeEvent = true;
           }
         }
       }
       $scope.changeLikeCommentIcons = function(type) {
         if (type == 'like') {
-          if ($scope.likeSrc == 'assets/images/like.png') {
-            $scope.likeSrc = 'assets/images/likeTrue.png';
+          if ($scope.likeSrc == 'assets/images/like.svg') {
+            $scope.likeSrc = 'assets/images/likeTrue.svg';
             $scope.likeEvent = true;
           } else {
-            $scope.likeSrc = 'assets/images/like.png';
+            $scope.likeSrc = 'assets/images/like.svg';
             $scope.likeEvent = false
           }
         } else {
-          if ($scope.commentSrc == 'assets/images/comment.png') {
-            $scope.commentSrc = 'assets/images/noComment.png';
+          if ($scope.commentSrc == 'assets/images/comment.svg') {
+            $scope.commentSrc = 'assets/images/noComment.svg';
             $scope.commentEvent = false;
             $scope.disable = true;
             $scope.eventComment = "";
           } else {
-            $scope.commentSrc = 'assets/images/comment.png';
+            $scope.commentSrc = 'assets/images/comment.svg';
             $scope.commentEvent = true;
             $scope.disable = false;
             commentIndex = 0;
@@ -302,7 +302,6 @@ app.directive('scheduler', function($http) {
         $scope.makeEventURL = "";
         $scope.makeEvent = {};
         $scope.unrepostHours = "";
-        $scope.timeGap = "";
         $scope.eventComment = "";
         $scope.channelArr = [];
         $scope.selectedSlot = "";
@@ -310,7 +309,7 @@ app.directive('scheduler', function($http) {
         $scope.checkCommentEnable();
         $scope.checkLikeEnable();
         $scope.showPlayer = false;
-        //document.getElementById('scPlayer').style.visibility = "hidden";
+        $scope.getListEvents();
       }
 
       $scope.isSchedule = false;
@@ -322,7 +321,8 @@ app.directive('scheduler', function($http) {
         $scope.unrepostEnable = false;
         $scope.unrepostHours = "";
         $scope.newEvent = true;
-        //document.getElementById('scPlayer').style.visibility = "hidden";
+        $scope.showPlayer = false;
+        document.getElementById('scPlayer').style.visibility = "hidden";
         $scope.makeEvent = {
           userID: $scope.user.soundcloud.id,
           type: "track"
@@ -365,15 +365,13 @@ app.directive('scheduler', function($http) {
         }
         SC.Widget('scPlayer').load($scope.makeEventURL, {
           auto_play: false,
-         show_artwork: false
+         show_artwork: true
          });
         $scope.showPlayer = true;
-        document.getElementById('scPlayer').style.visibility = "hidden";
+         document.getElementById('scPlayer').style.visibility = "visible";
          if (item.event.type == 'traded' && item.event.trackURL) {
           $scope.isView = true;
-        document.getElementById('scPlayer').style.visibility = "visible";
         }
-        
         $scope.followersCount();
         $scope.makeEvent = {};
         $scope.newEvent = false;
@@ -702,21 +700,25 @@ app.directive('scheduler', function($http) {
           $scope.makeEventURL = $scope.makeEvent.trackURL;
           $scope.eventComment = $scope.makeEvent.comment;
           $scope.newEvent = false;
-          if (data.type == 'traded' && data.trackURL) {
-             $scope.isView = true;
           SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
             auto_play: false,
             show_artwork: false
           });
           $scope.showPlayer = true;
           document.getElementById('scPopupPlayer').style.visibility = "visible";
+          if (data.type == 'traded' && data.trackURL) {
+             $scope.isView = true;
+          }
+          else  
+          if (data.type != 'traded' && data.trackURL) 
+          {
+            $scope.showPlayer = true; 
         }
           else
+          if (data.type == 'traded' && !data.trackURL) 
           {
-             document.getElementById('scPopupPlayer').style.visibility = "hidden";
+            $scope.showPlayer = false; 
           }
-         
-          
         }
       }
 
@@ -955,6 +957,7 @@ app.directive('scheduler', function($http) {
               $scope.processing = false;
               $scope.trackType = "";
               $scope.trackArtistID = 0;
+              $scope.refreshEvents();
             })
             .then(null, function(err) {
               $scope.processing = false;

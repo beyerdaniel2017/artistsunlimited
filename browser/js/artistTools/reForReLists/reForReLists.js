@@ -110,14 +110,37 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
     $state.go('login');
     return;
   }
+  $scope.listevents = [];
   $scope.user = SessionService.getUser();
   $scope.currentTrades = currentTrades;
   $scope.currentTradesCopy = currentTrades;
   $scope.favorites = favorites;
   $scope.searchUser = openTrades;
   repostEvents.forEach(function(ev) {
-    ev.day = new Date(ev.day);
+    ev.day = new Date(ev.trackInfo.day);
   });
   $scope.events = repostEvents;
-  $scope.listevents = repostEvents;
+  angular.forEach(repostEvents, function(e) {
+    if(getshortdate(new Date(e.trackInfo.day)) >= getshortdate(new Date())){
+      $scope.listevents.push(e);
+    }
+  });
+  $scope.manageSlots = false;
+  for(var i=0; i<$scope.listevents.length; i++)
+  {
+    if($scope.listevents[i].trackInfo.trackURL == undefined)
+    {
+      $scope.manageSlots = true;
+      return;
+    }
+  }
+  function getshortdate(d) {
+    var YYYY = d.getFullYear();
+    var M = d.getMonth() + 1;
+    var D = d.getDate();
+    var MM = (M < 10) ? ('0' + M) : M;
+    var DD = (D < 10) ? ('0' + D) : D;
+    var result = MM + "/" + DD + "/" + YYYY;
+    return result;
+  }
 });

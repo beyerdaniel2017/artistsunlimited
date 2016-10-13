@@ -22,15 +22,15 @@
       <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
         <div class="container-90">
           <div class="col-md-4 col-xs-12">
-            <div class="btn-group" role="group" aria-label="...">
+            <div class="btn-group view-padding-left" role="group" aria-label="...">
               <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.svg" /></a>
               <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.svg" /></a>
             </div>
           </div>
           <div class="col-md-3 col-xs-12 text-center">
             <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
-              <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
-              <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
+              <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.svg" /></a>
+              <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.svg" /></a>
             </div>
           </div>
           <div class="col-md-4 col-xs-12  pull-right padding-right-0">
@@ -98,6 +98,7 @@
             </table>
           </div>
         </div>
+        <div class="space-20"></div>
       </div>
       </div>
       <!-- MY SCHEDULE : End-->
@@ -120,6 +121,7 @@
               </div>
             </div>
           </div>
+          <div class="space-20"></div>
         </div>
       </div>
       <!-- ORGANIZE SCHEDULE :End -->
@@ -362,6 +364,7 @@
                                <button class="btn btn-pink b-radius-10 save-share" ng-class="{'disabled': isView}" ng-click="saveEvent();">SAVE & SHARE</button>
                              </div>
                            </div>
+                           <div class="space-10"></div>
                          </div><!--row end-->                    
                      </div><!--row end-->
                    </div>

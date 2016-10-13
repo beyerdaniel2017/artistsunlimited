@@ -33,25 +33,22 @@
           <div class="page-content right-side left-profile-content margin-0"> 
             <!--page-contant Start-->
             <div class="scheduler-tabs">
+            <div class="space-10"></div>
               <!-- Nav tabs :Start-->
-              <a class="btn btn-pink b-radius-10 pull-right" ui-sref="{{isAdminRoute ? 'adminRepostTraders' : 'reForReLists'}}" href="javascript:void(0)" style="margin-right:20px; margin-top:10px">X</a>
+              <a class="btn btn-pink b-radius-10 pull-right" ui-sref="{{isAdminRoute ? 'adminRepostTraders' : 'reForReLists'}}" href="javascript:void(0)" style="margin-right:15px; margin-top:0px;"><strong>X</strong></a>
               <!-- Nav tabs :End-->
               <!-- Tab panes :: Start-->
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
                   <div class="container-90">
-                   <div class="col-md-6 col-xs-12">
-                      <div class="btn-group" role="group" aria-label="..." style="margin-right:10px;">
+                   <div class="col-md-2 col-xs-12">
+                      <div class="btn-group" role="group" aria-label="..." style="margin-left:25px;">
                         <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.svg" /></a>
                         <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.svg" /></a>
                       </div>
-                      <label class="switch" style="vertical-align: middle;">
-                        <input type="checkbox" ng-checked="repeatOn" ng-click="changeRepeatOn()">
-                        <div class="slider round"></div>
-                      </label>
-                      <span>Repeat trade for<input class="form-control input-hour" type="tel" ng-model="trade.repeatFor" ng-change="changeRepeatFor()">weeks</span>
+                      
                     </div>
-                    <div class="col-md-5 col-xs-12">
+                    <div class="col-md-6 col-xs-12 text-center">
                       <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
                         <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
                         <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
@@ -59,6 +56,13 @@
                       <button class="btn btn-pink" ng-click="saveTrade()" ng-if="(trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && showUndo" style="margin-right:5px;">Request</button>
                       <button class="btn btn-pink" ng-click="acceptTrade()" ng-if="!showUndo && (trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && !trade.user.accepted">Accept</button>
                       <button class="btn btn-border" ng-click="undo()" ng-if="showUndo">Undo</button>
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                      <label class="switch" style="vertical-align: middle;">
+                        <input type="checkbox" ng-checked="repeatOn" ng-click="changeRepeatOn()">
+                        <div class="slider round"></div>
+                      </label>
+                      <span>Repeat trade for<input class="form-control input-hour" type="tel" ng-model="trade.repeatFor" ng-change="changeRepeatFor()">weeks</span>
                     </div>
                    
                     <!-- <div class="col-md-2 col-xs-6 pull-right text-right">

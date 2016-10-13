@@ -1,9 +1,3 @@
-<style type="text/css">
-  .disabled{
-  opacity: 1.5;
-  pointer-events: none;
-}
-</style>
 <div class="page-content right-side">
   <!--page-contant Start-->
   <div class="scheduler-tabs">
@@ -13,7 +7,7 @@
         <img src="assets/images/myschedule.png" />NEW TRADE</a>
       </li>
       <li role="presentation" ng-class="{active: activeTab == '2'}"><a href="#organizeschedule" aria-controls="organizeschedule" role="tab" data-toggle="tab"> <img src="assets/images/organizeschedule.png"/>INCOMPLETE TRADES<span class="badge notification-bubble-left-menu" ng-show="shownotification">!</span></a></li>
-      <li role="presentation" ng-class="{active: activeTab == '3'}"><a href="#managereposts" aria-controls="managereposts" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.png"/>MANAGE TRADED SLOTS</a></li>
+      <li role="presentation" ng-class="{active: activeTab == '3'}"><a href="#managetrades" aria-controls="" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.png"/>MANAGE TRADED SLOTS<span class="badge notification-bubble-left-menu" ng-show="manageSlots">!</span></a></li>
     </ul>
     <!-- Nav tabs :End-->
     <!-- Tab panes :: Start-->
@@ -33,7 +27,7 @@
               </div><!--search-trad End-->
               <div class="col-md-1"></div>
               <div class="col-md-5 col-sm-6 col-xs-12 search">
-                <div class="search-suggetion">
+                <div class="search-suggetion" style="margin-top: 20px;">
                   <scsearch kind='user' returnitem='choseArtist(item)'></scsearch>
                 </div>
               </div>                 
@@ -51,7 +45,7 @@
                         <img class="avtar-200 img-responsive" src="{{otherUser.soundcloud.avatarURL ? otherUser.soundcloud.avatarURL.replace('large', 't500x500') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}"> 
                         <div class="img-btn-box">
                           <button class="btn btn-pink btn-sm btn-block" ng-click="openTrade(otherUser)">OPEN TRADE</button>
-                                      <button class="btn btn-border btn-sm btn-block" ng-click="viewSoundcloud(otherUser)">SOUNDCLOUD</button></a>
+                          <button class="btn btn-border btn-sm btn-block" ng-click="viewSoundcloud(otherUser)">SOUNDCLOUD</button></a>
                         </div>
                       </div>
                       <p class="ng-binding new-trade-ingtexst"><a href="{{otherUser.soundcloud.permalinkURL}}" target="_blank">{{otherUser.soundcloud.username}}</a></p>
@@ -60,9 +54,9 @@
                   </div>
                 </div><!--row ::end-->
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 border-left">
                 <div class="row">
-                  <p class="text-center"><strong>Others</strong></p>
+                  <p class="text-center"><strong>Users</strong></p>
                   <div ng-repeat="otherUser in searchUser" class="col-md-6 col-sm-6 col-xs-12 text-center margin-20">
                     <div class="slidethamb-box">                             
                       <div class="thumb-img-container">
@@ -79,6 +73,7 @@
                 </div><!--row ::end-->
               </div>
             </div><!--row ::end-->
+            <div class="space-10"></div>
           </div><!--container-90 ::end-->
         </div>
       </div>
@@ -94,29 +89,29 @@
             </div>
             <div class="col-md-4 col-sm-6 col-xs-12"></div>                            
             <div class="col-md-4 col-sm-6 col-xs-12">
-              <div class="">
+              <!-- <div class="">
                 <div class="icon-addon addon-md">
                   <input placeholder="Search by Name" class="form-control ng-pristine ng-valid ng-empty ng-touched" id="txtSearchByArtistURL" ng-model="searchURL" style="" type="text">
                 </div>
-              </div>
+              </div> -->
             </div>
           </div> 
           <br>
           <div class="row" ng-repeat="trade in shownTrades | filter : searchURL track by $index">
             <div class="col-md-12">
-              <div class="vertical-container">
+              <div ng-class="{'vertical-container-last': $last, 'vertical-container': !$last}">
                 <ul>
                   <li> <div class="list-img-container">
                     <img class="img-responsive" src="{{trade.other.user.soundcloud.avatarURL}}">
                   </div>
                 </li>
                 <li> <div class="vertical-text">
-                  <p>{{trade.other.user.soundcloud.username}}</p>
+                  <span><strong>{{trade.other.user.soundcloud.username}}</strong></span>
                   <p>{{trade.other.user.soundcloud.followers | number:0}} Followers</p>
                 </div>
               </li>
               <li> <div class="vertical-text">
-                <p ng-show="itemView=='sent'">You are offering {{trade.user.slots.length}} slots<br>and asking for {{trade.other.slots.length}} slots</p>
+                <p ng-show="itemView=='sent'">You are offering {{trade.user.slots.length}} slots and asking for {{trade.other.slots.length}} slots</p>
                 <p ng-show="itemView=='inbox'">{{trade.other.user.soundcloud.username}} is offering {{trade.other.slots.length}} slots<br>and asking for {{trade.user.slots.length}} slots</p>
               </div>
             </li>
@@ -127,8 +122,14 @@
           </li>
           <li> <div class="vertical-text">
             <button class="btn btn-pink btn-block" ng-click="manage(trade)">Manage</button>
-            <button class="btn btn-pink btn-block" ng-click="deleteTrade(trade._id, $index)">Delete</button>
-            <button class="btn btn-pink btn-block" ng-click="remindTrade(trade._id, $index)" ng-show="!trade.other.accepted">Remind</button>
+            <div class="row">
+               <div class="col-md-6">
+                <button class="btn btn-border btn-block" ng-click="deleteTrade(trade._id, $index)">Delete</button>
+             </div>
+              <div class="col-md-6">
+                <button class="btn btn-border btn-block" ng-click="remindTrade(trade._id, $index)" ng-show="!trade.other.accepted">Remind</button>
+             </div>
+            </div>
           </div>
         </li>
       </ul>
@@ -139,10 +140,10 @@
 <br>                                                     
 </div><!-- ORGANIZE SCHEDULE :End -->        
 <!-- MANAGE REPOSTS : Start -->
-<div role="tabpanel" class="tab-pane fade" ng-class="{in: activeTab == '3', active: activeTab == '3'}" id="managereposts"> 
+<div role="tabpanel" class="tab-pane fade" ng-class="{in: activeTab == '3', active: activeTab == '3'}" id="managetrades"> 
   <div class="container-90">            
     <div class="col-md-2 col-xs-6">
-      <div class="btn-group" role="group" aria-label="..." ng-show="manageView != 'newsong'">
+      <div class="btn-group view-padding-left" role="group" aria-label="..." ng-show="manageView != 'newsong'">
         <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'calendar'}" href="javascript:void(0)" ng-click="setManageView('calendar')"><img src="assets/images/box-view.svg" /></a>
         <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'list'}" href="javascript:void(0)" ng-click="setManageView('list')"><img src="assets/images/list-view.svg" /></a>
       </div>
@@ -153,7 +154,6 @@
         <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
       </div>
     </div>                  
-           
     <div class="">                
       <div id="scheduler-container" ng-show="manageView == 'calendar'" style="width:100%;">
        <div class="calendar-day-date">
@@ -177,28 +177,6 @@
           </div>
         </div>
       </div>
-            <div class="row">
-                  <div class="col-md-12">
-                    <div class="permanent-links search" style="text-align: center;">
-                      <h1 class="au-title-head text-center text-uppercase">Auto-fill Tracks</h1>
-                      <div class="col-md-6 ">
-                      <scsearch kind='track' returnitem='choseAutoFillTrack(item)'></scsearch>
-                      </div>
-                      <div class="col-md-6">
-                       <div class="tracks-box" ng-if="autoFillTracks.length > 0">
-                        <div class="track-item-list" ng-repeat="song in autoFillTracks" >
-                            <img class="avatar-20" ng-src="{{song.artwork_url}}">
-                            <div class="tracks-title">
-                              <a class="tracks-title-name" href="{{song.permalink_url}}" target="_blank">
-                              {{' ' + song.title}}</a> 
-                            <a class="close-tracks pull-right" href="#"><img src="assets/images/close.png" ng-click="removeQueueSong(song)"></a> 
-                            </div>
-                        </div> 
-                      </div>                             
-                    </div>
-                  </div>
-                </div>
-    </div>
     </div>
     <div id="scheduler-container" ng-show="manageView == 'list'" style="width:100%;">
       <table class="table  scheduler-song-tab">
@@ -219,7 +197,10 @@
             <td class="text-center">{{item.userInfo.username}}</td>
             <td class="text-center">{{item.trackInfo.day | date: 'MMM dd yyyy hh:mm a'}}</td>
             <td class="text-center"><span ng-if="item.trackInfo" style="color:{{item.trackInfo.type == 'traded' && item.trackInfo.trackID ? '#B22222' : '#2b9fda'}}">{{item.trackInfo.type}}</span></td>
-            <td class="text-center"><a class="btn btn-pink btn-block btn-sm margin-0" href="javascript:void(0)" ng-if="item.trackInfo.type == 'traded' && !item.trackInfo.trackID" ng-click="scheduleRepostEvent(item)">Schedule</a></td>
+            <td class="text-center">
+           <a class="btn btn-pink btn-block btn-sm margin-0" href="javascript:void(0)" ng-if="item.trackInfo.type == 'traded' && item.trackInfo.trackID" ng-click="editRepostEvent(item)">Edit</a>
+            <a class="btn btn-pink btn-block btn-sm margin-0" href="javascript:void(0)" ng-if="item.trackInfo.type == 'traded' && !item.trackInfo.trackID" ng-click="scheduleRepostEvent(item)">Schedule</a>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -227,7 +208,7 @@
     <div class="col-md-12" ng-show="manageView == 'newsong'">
       <div class="songScheduler">
         <div class="row extrapadding">
-          <div class="col-md-12" ng-disabled="isEdit" ng-class="{'disabled': isEdit}">
+          <div class="col-md-12">
             <div class="row">              
               <h1 class="title">{{makeEvent.artist.username}}</h1>               
               <div class="col-md-12 col-xs-12">              
@@ -254,7 +235,7 @@
                       <input checked="" type="checkbox" ng-model="unrepostEnable">
                       <div class="slider round"></div>
                     </label> 
-                    <label>Unrepost after<input  class="form-control input-hour" placeholder="1" ng-model="makeEvent.unrepostHours">hours</label>
+                    <label>Unrepost after<input ng-disabled="true" class="form-control input-hour" placeholder="1" ng-model="makeEvent.unrepostHours">hours</label>
                   </li>
                 </ul><br/>
               </div>                              
@@ -268,9 +249,9 @@
               <div class="col-md-12">
                 <div class="next-previous text-center">
                   <!--  <button class="btn active">SKIP TO NEXT AUTOFILL</button> -->
-                                    <button class="btn btn-border b-radius-10" ng-click="deleteEvent()">DELETE</button>
-                                    <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
-                                    <button class="btn btn-pink b-radius-10 save-share" data-toggle="modal" data-target="#saveAndShareModal" ng-click="saveEvent();">SAVE & SHARE</button>
+                  <button class="btn btn-border b-radius-10" ng-click="deleteEvent()">DELETE</button>
+                  <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
+                  <button class="btn btn-pink b-radius-10 save-share" data-toggle="modal" data-target="#saveAndShareModal" ng-click="saveEvent();">SAVE & SHARE</button>
                 </div>
               </div>
             </div><!--row end-->                    
@@ -278,6 +259,29 @@
         </div><!--row end-->
       </div>
     </div><!--row end-->
+     <div class="row" ng-show="manageView != 'newsong'">
+        <div class="col-md-12">
+          <div class="permanent-links search" style="text-align: center;">
+            <h1 class="au-title-head text-center text-uppercase">Auto-fill Tracks</h1>
+            <div class="col-md-6 ">
+            <scsearch kind='track' returnitem='choseAutoFillTrack(item)'></scsearch>
+            </div>
+            <div class="col-md-6">
+             <div class="tracks-box" ng-if="autoFillTracks.length > 0">
+              <div class="track-item-list" ng-repeat="song in autoFillTracks" >
+                  <img class="avatar-20" ng-src="{{song.artwork_url}}">
+                  <div class="tracks-title">
+                    <a class="tracks-title-name" href="{{song.permalink_url}}" target="_blank">
+                    {{' ' + song.title}}</a> 
+                    <a class="close-tracks pull-right" href="#"><img src="assets/images/close.png" ng-click="removeQueueSong(song)"></a> 
+                  </div>
+                </div> 
+              </div>                             
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 </div>           
@@ -290,8 +294,7 @@
 </div>
 </div>
 <!-- popup overlay start-->
-<div class="overlay" ng-show="showOverlay" ng-click="closeModal()" style="z-index: 999;">
-<div ng-class="{'disabled': isView}">
+<div class="overlay" ng-show="showOverlay" style="z-index: 999;">
   <div class="available-popup-box">
     <div class="label-scheduler label-smaller slot-box" ng-click="$event.stopPropagation();">
       <div class="">
@@ -337,7 +340,7 @@
           <iframe id="scPopupPlayer" width="300" height="120" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>          
         </div>
       </div>
-      </div><!--row end-->
+      <!--row end-->
 <!--         <div class="row">
             <div class="col-xs-12">
               <div class="pull-right">
@@ -368,13 +371,13 @@
           <div class="row">
             <div class="col-md-12">
               <div class="col-md-4">
-              <button class="btn btn-pink b-radius-10 organize-btn" ng-class="{'disabled': isView}" style="width:100%;" ng-click="deleteEvent();">DELETE</button>
+              <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-click="deleteEvent();">DELETE</button>
               </div>
               <div class="col-md-4">
               <button class="btn btn-border b-radius-10 organize-btn" style="width:100%;" ng-click="closeModal();">CANCEL</button>
               </div>
               <div class="col-md-4">
-              <button class="btn btn-pink b-radius-10 organize-btn" ng-class="{'disabled': isView}" style="width:100%;" ng-click="saveEvent();">SAVE</button>
+              <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE</button>
               </div>
             </div>
           </div><!--row end-->                  

@@ -10,6 +10,7 @@ app.directive('reforrelists', function($http) {
       $rootScope.userlinkedAccounts = ($scope.user.linkedAccounts ? $scope.user.linkedAccounts : []);
       $scope.otherUsers = [];
        $scope.type = 'remind';
+      $scope.listDayIncr = 0;
       var path = window.location.pathname;
       $scope.isAdminRoute = false;
       if (path.indexOf("admin/") != -1) {
@@ -23,6 +24,15 @@ app.directive('reforrelists', function($http) {
         $window.localStorage.setItem('activetab', '1');
       }
       
+      if(window.location.href.indexOf('artistTools/reForReLists#organizeschedule') != -1)
+      {
+            $scope.activeTab = "2";
+      }
+      else
+      if(window.location.href.indexOf('artistTools/reForReLists#managetrades') != -1)
+      {
+           $scope.activeTab = "3";
+      }
       $scope.currentTab = "SearchTrade";
       $scope.searchURL = "";
       $scope.sliderSearchMin = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers / 2) : 0)) / Math.log(1.1);
@@ -116,6 +126,46 @@ app.directive('reforrelists', function($http) {
 
       $scope.hello = function(obj) {
         $state.go('reForReInteraction', obj);
+      }
+
+      $scope.editRepostEvent = function(item) {
+        console.log('item',item);
+        $scope.makeEvent = {};
+        $scope.deleteEventData = item;
+        $scope.manageView = "newsong";
+        $scope.editChannelArr = [];
+        var newObj = angular.copy(item);
+        $scope.makeEventURL = newObj.trackInfo.trackURL;
+        $scope.selectedSlot = newObj.trackInfo.day;
+        $scope.makeEvent.unrepostHours = newObj.trackInfo.unrepostHours;
+        $scope.unrepostEnable = newObj.trackInfo.unrepostHours ? true : false;
+        var channels = newObj.trackInfo.otherChannels;
+        if (channels.length > 0) {
+          for (var i = 0; i < channels.length; i++) {
+            for (var j = 0; j < $scope.linkedAccounts.length; j++) {
+              if (channels[i] == $scope.linkedAccounts[j].soundcloud.id) {
+                $scope.editChannelArr.push($scope.linkedAccounts[j].name);
+              }
+            }
+          }
+          $scope.channelArr = $scope.editChannelArr;
+        }
+        SC.Widget('scPlayer').load($scope.makeEventURL, {
+          auto_play: false,
+         show_artwork: true
+         });
+         if (item.trackInfo.type == 'traded' && item.trackInfo.trackURL) {
+         document.getElementById('scPlayer').style.visibility = "visible";
+        }
+        $scope.newEvent = false;
+        $scope.makeEvent.day = $scope.selectedSlot;
+        $scope.makeEvent.userID = newObj.trackInfo.userID;
+        $scope.makeEvent.owner = newObj.trackInfo.owner;
+        $scope.makeEvent._id = newObj.trackInfo._id;
+        $scope.makeEvent.trackURL = $scope.makeEventURL;
+        $scope.makeEvent.title = newObj.trackInfo.title;
+        $scope.makeEvent.trackID = newObj.trackInfo.trackID;
+        $scope.makeEvent.artistName = newObj.trackInfo.artistName;
       }
 
       $scope.searchCurrentTrade = function() {
@@ -556,16 +606,28 @@ app.directive('reforrelists', function($http) {
 
       $scope.deleteEvent = function() {
          var eventId = $scope.deleteEventData.trackInfo._id;
+            $.Zebra_Dialog('Are you sure you want to delete this trade?', {
+            'type':     'question',
+            'buttons': [{
+              caption: 'Cancel',
+              callback: function() {}
+            }, {
+              caption: 'Yes',
+              callback: function() {
           $http.delete('/api/events/repostEvents/' + eventId)
             .then(function(res) {
-              $.Zebra_Dialog("Deleted successfully !!!")
               $scope.showOverlay = false;
               $state.reload();
+               $scope.activeTab = "3";
             })
             .then(null, function(err) {
               $scope.processing = false;
               $.Zebra_Dialog("ERROR: Did not delete.")
             });
+                
+              }
+            }]
+          });
       }
 
       $scope.saveEvent = function() {
@@ -580,7 +642,6 @@ app.directive('reforrelists', function($http) {
             $scope.tabSelected = true;
             $scope.trackType = "";
             $scope.trackArtistID = 0;
-            $.Zebra_Dialog("Event created successfully.");
             if ($scope.manageView == "newsong") {
               $scope.manageView = "list";
             }

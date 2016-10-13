@@ -19,7 +19,7 @@
                         <select class="form-control" ng-model="trackListObj" ng-options="item.title for item in trackList" ng-change="trackListChange()" ng-show="trackList.length > 0">
                             <option value="" ng-disabled="!!trackListObj">-My Songs-</option>
                         </select>
-                        <!-- <a class="close-ic" href="#"><img src="assets/images/close.png"></a> -->
+                        <!-- <a class="close-ic" href="#"><img src="assets/images/close.svg"></a> -->
                     </div>
                     <div class="col-md-4" ng-if="!isTrackAvailable"></div>
                     <div class="track-section text-center" ng-if="isTrackAvailable" style="border:1px solid #D3D3D3;"><img class="img-responsive" ng-src="{{track.trackArtworkURL}}" />
@@ -42,7 +42,7 @@
                             <h4>Social Media Links</h4>
                             <div class="social-media-links" ng-repeat="item in track.SMLinks">
                                 <input class="form-control" type="text" placeholder="Link" ng-model="item.value" ng-change="SMLinkChange($index)"/>
-                                <span class="{{item.key}}"></span> <a class="close-ic-rel" href="#" ng-click="removeSMLink($index)"><img src="assets/images/close.png"></a> 
+                                <span class="{{item.key}}"></span> <a class="close-ic-rel" href="#" ng-click="removeSMLink($index)"><img src="assets/images/close.svg"></a> 
                             </div>
                             <a href="#" ng-click="addSMLink()">+ Social Media</a> </div>
                             <div class="artist-follow search" ng-if="user.admin">
@@ -50,7 +50,7 @@
                                 <scsearch kind='playlist' returnitem='chosePlaylist(item)'></scsearch>
                                 <div ng-repeat="playlist in track.playlists" style="padding:10px; color:#000; text-align: center;">
                                     <a href="{{playlist.url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{playlist.avatar}}">{{' ' + playlist.title}}</a>&nbsp;&nbsp;&nbsp;
-                                    <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removePlaylist($index)"></a> 
+                                    <a class="close-ic" href="#"><img src="assets/images/close.svg" ng-click="removePlaylist($index)"></a> 
                                 </div>
                             </div>
                             <div class="social-container">
@@ -125,7 +125,7 @@
                                                 <label>Youtube Channel Url:</label>
                                                 <div class="col-sm-19" ng-repeat="youtube in track.youtube" ng-show="!artist.permanentLink">
                                                     <input class="form-control" placeholder="URL" ng-model="youtube" ng-change="resolveYoutube(youtube)"/>
-                                                    <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeYouTubes($index)"></a>
+                                                    <a class="close-ic" href="#"><img src="assets/images/close.svg" ng-click="removeYouTubes($index)"></a>
                                                 </div>
                                                 <a href="#" ng-click="addYouTubeUrl()">+ Add</a>
                                             </div>
@@ -137,7 +137,7 @@
                                                 <scsearch kind='user' returnitem='choseArtist(item)'></scsearch>
                                                 <div ng-repeat="artist in track.artists" style="padding:10px; color:#000; text-align: center;">
                                                     <a href="{{artist.url}}" target="_blank" style="color:#000;"><img class="avatar" ng-src="{{artist.avatar}}">{{' ' + artist.username}}</a>&nbsp;&nbsp;&nbsp;
-                                                    <a class="close-ic" href="#"><img src="assets/images/close.png" ng-click="removeArtist($index)"></a>
+                                                    <a class="close-ic" href="#"><img src="assets/images/close.svg" ng-click="removeArtist($index)"></a>
                                                 </div>
                                             </div>
                                             <div class="social-container">

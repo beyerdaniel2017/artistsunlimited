@@ -41,9 +41,9 @@ select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-image: url(../assets/images/select-dropdown.png) !important;
+    background-image: url(../assets/images/select-dropdown.svg) !important;
     background-repeat: no-repeat;
-    background-position: right;
+    background-position: 96% 52%;
 }
 label {
     font-weight: normal;
@@ -1124,7 +1124,7 @@ h3 {
     margin: 0px 41px 40px 0;
     border-radius: 12px;
     height: 100%;
-    overflow: hidden;
+    /*overflow: hidden;*/
     min-height: 650px;
 }
 .page-content li {
@@ -1474,7 +1474,10 @@ input[type=range]:focus::-ms-fill-upper {
     border-top: 1px solid #EDEDED;
 }
 .border-right {
-    border-right: 1px solid #EDEDED;
+    border-right: 0px solid #EDEDED;
+}
+.border-left {
+    border-left: 1px solid #EDEDED;
 }
 .border-right-black {
     border-right: 1px solid #c5c5c5;
@@ -1973,6 +1976,11 @@ input[type=range]:focus::-ms-fill-upper {
 .scheduler-tabs #myschedule {
    /* padding: 30px 0px;*/
 }
+.scheduler-tabs .nav-tabs {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+}
 .scheduler-tabs .nav-tabs li {
     width: 33.3333333333%;
     display: inline-table;
@@ -1980,6 +1988,7 @@ input[type=range]:focus::-ms-fill-upper {
     text-align: center;
     background: #F8F8F8;
     border-right: 1px solid #ECECEC;
+
 }
 .scheduler-tabs .nav-tabs li:last-child {
     border-right: 0px solid transparent;
@@ -2238,7 +2247,7 @@ input:checked + .slider:before {
 }
 .songScheduler label {
     font-size: 15px;
-    color: rgb(138, 138, 138);
+    color: #333;
     font-weight: 300;
     margin: 10px 0;
     vertical-align: middle;
@@ -3068,6 +3077,11 @@ td {
     padding: 0px 0;
     border: 0px solid !important;
 }
+.two-tabs .nav-tabs {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+}
 .two-tabs .nav-tabs li {
     width: 50%;
     display: inline-table;
@@ -3240,7 +3254,6 @@ td {
     white-space: nowrap;
     overflow: hidden;
     /*height: 20.7px;*/
-    
     padding: 3px;
     font-size: 12px;
 }
@@ -3289,13 +3302,13 @@ td {
 
 .url-search-btn-small {
     position: absolute;
-    right: 5px;
+    right: 7px;
     cursor: pointer;
     font-size: 16px;
     height: 20px;
     width: 25px;
     text-align: center;
-    top: 8px;
+    top: 7px;
     background: #FFFFFF;
     color: #686868 !important;
 }
@@ -3434,6 +3447,27 @@ td {
     margin-right: 8px;
     padding: 0;
 }
+.vertical-container-last{
+    padding: 10px 0;
+}
+
+.vertical-container-last ul{
+    list-style: outside none none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.vertical-container-last li {
+    width: 19%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.vertical-container-last li > .list-img-container img{
+    height: 115px;
+    border-radius: 8px;
+}
+
 .vertical-container{
     border-bottom: 1px solid #cccccc;
     padding: 10px 0;
@@ -3444,9 +3478,21 @@ td {
     margin: 0px;
 }
 .vertical-container li {
-    width: 19%;
+    width:16%;
     display: inline-block;
     vertical-align: middle;
+}
+.vertical-container li:first-child {
+    width: 14%;
+}
+.vertical-container li:last-child {
+    width: 19%;
+}
+.vertical-container li:nth-child(2) {
+    text-align: left;
+}
+.vertical-container li:nth-child(3) {
+    width:33%;
 }
 .vertical-container li > .list-img-container img{
     height: 115px;
@@ -3635,7 +3681,7 @@ td {
     color: #8D8D8D;
 }
 .margin-refor-re{
-    margin: 0 50px;
+    margin: 0 50px 40px 50px;
 }
 .question-btn:hover ,.question-btn:active, .question-btn:focus{
     color: #fff !important;
@@ -3651,6 +3697,9 @@ td {
     border: 1px solid #333;
     color: #333 !important;
     text-shadow: none !important;
+}
+.view-padding-left{
+    padding-left: 24px;
 }
 /******************************** Media CSS :: START ************************************/
 
@@ -3808,6 +3857,25 @@ td {
         top:0px;
         border-radius: 10px;
     }
+    .vertical-container li > .list-img-container img {
+        margin: 0 auto;
+    }
+    .vertical-container li {
+        width: 100%;
+    }
+    .vertical-container li:first-child {
+        width: 100%;
+    }
+    .vertical-container li:last-child {
+        width: 100%;
+    }
+    .vertical-container li:nth-child(2) {
+        text-align: center;
+    }
+    .vertical-container li:nth-child(3) {
+        width:100%;
+    }
+     
 }
 @media screen and (max-width: 667px) {
     .img-btn {
@@ -3836,6 +3904,19 @@ td {
     .margin-refor-re {
         margin: 0;
     }
+    .vertical-container li:first-child {
+        width: 100%;
+    }
+    .vertical-container li:last-child {
+        width: 100%;
+    }
+    .vertical-container li:nth-child(2) {
+        text-align: center;
+    }
+    .vertical-container li:nth-child(3) {
+        width:100%;
+    }
+ 
 }
 @media screen and (max-width: 640px) {
     .organize-text {
