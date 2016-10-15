@@ -1,6 +1,6 @@
 <div id="sidebar-wrapper">
   <div class="left-side">
-    <div class="tropical"><span>{{user.email}}</span><img class="img-responsive img-circle" src="{{user.profilePicture ? user.profilePicture : (user.soundcloud.avatarURL ? user.soundcloud.avatarURL :'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg')}}" style="width: 100px;height: 100px;">
+    <div class="tropical" style="word-break: break-all;padding: 10px;display:inherit;"><span>{{user.email}}</span><img class="img-responsive img-circle" src="{{user.profilePicture ? user.profilePicture : (user.soundcloud.avatarURL ? user.soundcloud.avatarURL :'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg')}}" style="width: 100px;height: 100px;">
       <div class="clearfix"></div>
       <div ng-if="user.role!='admin'">
         <div style="width:80%;margin:0 auto;" class="text-center">

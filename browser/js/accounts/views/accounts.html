@@ -30,8 +30,8 @@
                 <div class="">
                   <br>                           
                   <div class="row">
-                    <div class="col-md-3 col-md-offset-4 col-sm-6 col-xs-12">
-                      <button class="btn decline" ng-click="addAccounts('Add');">+&nbsp;ACCOUNT</button>
+                    <div class="col-md-12 col-xs-12 text-center">
+                      <button class="btn btn-pink" ng-click="addAccounts('Add');">ADD ACCOUNT</button>
                     </div>
                     <div class="col-md-4 col-sm-6 col-xs-12">
                       <div class="">
@@ -43,9 +43,9 @@
                     </div>
                   </div>
                   <br><br>
-                  <div class="row" ng-repeat="userdata in paidRepostAccounts">
+                  <div class="row" >
                     <div class="col-md-12">
-                        <div class="account-vertical-container">
+                        <div class="account-vertical-container" ng-repeat="userdata in paidRepostAccounts">
                           <ul>
                             <li>
                               <div class="list-img-container">
@@ -73,7 +73,7 @@
                               <li> 
                                <div  class="text-center vertical-text">
                                  <a class="btn btn-pink" href="javascript:void(0)" ng-click="addAccounts('Edit',userdata.userID);">Edit</a> 
-                                 <a class="btn btn-pink" href="javascript:void(0)" ng-click="deletePaidRepost($index)">Delete</a>
+                                 <a class="btn btn-border" href="javascript:void(0)" ng-click="deletePaidRepost($index)">Delete</a>
                                </div>
                               </li> 
                           </ul>

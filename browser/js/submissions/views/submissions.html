@@ -3,6 +3,9 @@
    background-color:#EEEEEE;
    color:#000000 !important;
 }
+.border-bottom{
+  border-bottom: 1px solid #dcdcdc;
+}
 </style>
 <ng-include src="'js/home/views/_adminHeaderNavigation.html'"></ng-include>
   <!-- Content Start  -->
@@ -16,59 +19,51 @@
             <div class="scheduler-tabs">
               <!-- Nav tabs :Start-->
               <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#mysubmissions" aria-controls="mysubmissions" role="tab" data-toggle="tab"><img src="assets/images/music-icon-big.png"/>MY SUBMISSIONS</a>
+                <li role="presentation" class="active"><a href="#mysubmissions" aria-controls="mysubmissions" role="tab" data-toggle="tab"><img src="assets/images/music-icon-big.svg"/>MY SUBMISSIONS</a>
                 </li>
-                <li role="presentation"><a href="#marketplace" aria-controls="marketplace" role="tab" data-toggle="tab"><img src="assets/images/mysubmissions-cart.png"/> AU MARKETPLACE</a></li>
-                <li role="presentation"><a href="#managesubmissions" aria-controls="managesubmissions" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.png"/>CUSTOM BUTTONS</a></li>
+                <li role="presentation"><a href="#marketplace" aria-controls="marketplace" role="tab" data-toggle="tab"><img src="assets/images/mysubmissions-cart.svg"/> AU MARKETPLACE</a></li>
+                <li role="presentation"><a href="#managesubmissions" aria-controls="managesubmissions" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.svg"/>CUSTOM BUTTONS</a></li>
               </ul>
               <!-- Nav tabs :End-->
               <!-- Tab panes :: Start-->
               <div class="tab-content">
                 <!-- MY SCHEDULE : Start-->
                 <div role="tabpanel" class="tab-pane fade in active" id="mysubmissions">
-                  <div ng-repeat="sub in showingElements"  ng-if="sub.invoiceIDS.length == 0" class="submi-section">
-                  <div class="tab-content-main"> 
+                <div class="container-90">
+                  <div class="submi-section" ng-repeat="sub in showingElements"  ng-if="sub.invoiceIDS.length == 0" ng-class="{'border-bottom':!$last}" >
+                  <div class="">
                     <div class="row">
-                      <div class="col-md-10"> 
-                        <div class="row"> 
-                          <div class="col-sm-10">
+                      <div class="col-md-12">
                             <ul class="submissions-tab-list">
                               <li><strong>{{sub.name}} </strong>submitted a track <strong>{{sub.datedata}}</strong> to <strong>{{sub.userID.name}}</strong></li>
                             </ul>   
                           </div>
-                          <div class="col-sm-2">
-                            
-                          </div>
-                        </div>
                       </div>
-                    </div><!--row ::end-->               
+                    <!--row ::end-->               
                     <div class="row">
                       <div class="col-md-10">                         
-                         <div class="row">
-                           <div class="col-md-12" >
-                            <div style="height: 160px; width: 100%;">
+                            <div>
                              <!--  <div id="{{sub.trackID}}player" class="video-main"></div> -->
-                              <iframe id="{{sub.trackID}}player" width="800" height="140" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
+                              <iframe id="{{sub.trackID}}player" width="100%" height="150" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
                             </div>
                            </div>
-                         </div><!--row ::end-->
-                      </div>
                       <div class="col-md-2">
-                        <div style="padding-top: 30px;">
-                          <ul class="submissions-tab-list decline-accpect-btn">
+                        <div style="padding-top: 20px;">
+                          <ul class="submissions-tab-list">
                             <div class="dropdown sort-btn">
-                              <button class="btn dropdown-toggle sort-select descending" type="button" data-toggle="dropdown">CUSTOM EMAIL</button>
+                              <button class="btn btn-sm dropdown-toggle sort-select descending" type="button" data-toggle="dropdown">CUSTOM EMAIL</button>
                               <ul class="dropdown-menu">
                                 <li><a href="#" ng-click="openEmailClient(sub, button)" ng-repeat="button in user.submissionsCustomEmailButtons">{{button.buttonText}}</a></li>
                               </ul>
                             </div>
-                            <button class="btn decline" ng-click="ignore(sub)">IGNORE</button>
-                            <button class="btn decline" ng-click="decline(sub)">DECLINE</button>   
-                            <button class="btn accpect" ng-click="save(sub)">ACCEPT</button>
+                            <button class="btn btn-border b-radius-10 btn-sm btn-block " ng-click="ignore(sub)">IGNORE</button>
+                            <button class="btn btn-border b-radius-10 btn-sm btn-block" ng-click="decline(sub)">DECLINE</button>  
+                            <button class="btn btn-pink btn-sm  b-radius-10 btn-block" ng-click="save(sub)">ACCEPT</button>
                           </ul> 
                         </div>
                       </div>
-                    </div><!--row ::end-->
+                    </div>
+                    <!--row ::end-->
                     <div class="row">
                       <div class="col-md-6">
                         <div class="channel-check">
@@ -110,55 +105,51 @@
                           </div>
                         </div>
                       </div>
-                    </div><!--row ::end-->
+                    </div>
+                    <!--row ::end-->
                   </div>
                   </div>            
                 <br/>
                 <div class="col-md-12 text-center margin-20" >
-                  <button class="btn decline" style="background-color:#ffeb99" ng-click="loadMore()">LOAD MORE</button>           
-                </div><br/><br/>          
+                  <button class="btn btn-pink" ng-click="loadMore()">LOAD MORE</button>           
+                </div>
+                <div class="space-10"></div>
+                </div>
                 </div>
                 <!-- MY SCHEDULE : End-->
                 <!-- ORGANIZE SCHEDULE :Start -->
                 <div role="tabpanel" class="tab-pane fade" id="marketplace">
-                <div ng-repeat="sub in marketSubmissions"  ng-if="sub.invoiceIDS.length == 0" class="submi-section">
-                  <div class="tab-content-main">
+                <div class="container-90">
+                    <div class="submi-section" ng-repeat="sub in marketSubmissions"  ng-if="sub.invoiceIDS.length == 0">
+                  <div class="">
                     <div class="row">
-                      <div class="col-md-10">
-                        <div class="row">
-                          <div class="col-sm-10">
+                      <div class="col-md-12">
                             <ul class="submissions-tab-list">
                               <li>Submitted by <strong>{{sub.name}} </strong></li>
                             </ul>   
                           </div>
-                          <div class="col-sm-2">
                           </div>
-                        </div>
-                      </div>
-                    </div><!--row ::end-->                
+                    <!--row ::end-->                
                     <div class="row">
                       <div class="col-md-10">                         
-                         <div class="row">
-                           <div class="col-md-12" >
                             <div style="height: 160px; width: 100%;">
-                              <div id="{{sub.trackID}}_player" class="video-main"></div>
+                              <iframe id="{{sub.trackID}}player" width="100%" height="140" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
                             </div>
                            </div>
-                         </div><!--row ::end-->
-                      </div>
                        <div class="col-md-2">
                         <div class="">
                           <div class="submitted-time">
                             <span countdown='' date='{{sub.pooledSendDate | date:"yyyy-MM-dd HH:mm:ss" }}'>&nbsp;</span>
                           </div>
-                          <ul class="submissions-tab-list decline-accpect-btn">
-                            <button class="btn decline" style="width: 90%; !important" ng-click="marketIgnore(sub)">IGNORE</button>
+                          <ul class="submissions-tab-list ">
+                            <button class="btn btn-border btn-sm b-radius-10 btn-block" ng-click="marketIgnore(sub)">IGNORE</button>
                             <!-- <button class="btn decline" ng-click="marketDecline(sub)">DECLINE</button> -->   
-                            <button class="btn accpect" ng-click="marketSave(sub)">ACCEPT</button>
+                            <button class="btn btn-pink btn-sm b-radius-10 btn-block" ng-click="marketSave(sub)">ACCEPT</button>
                           </ul> 
                         </div>
                       </div>
-                    </div><!--row ::end-->
+                    </div>
+                    <!--row ::end-->
                     <div class="row">
                       <div class="col-md-6">
                         <div class="channel-check" ng-if="paidRepostAccounts.length > 0">
@@ -200,13 +191,17 @@
                           </div>
                         </div>
                       </div>
-                    </div><!--row ::end-->
+                    </div>
+                    <!--row ::end-->
                   </div> 
                   </div>
                 <br/>
                 <div class="col-md-12 text-center margin-20" >
-                  <button class="btn decline" style="background-color:#ffeb99" ng-click="loadMore()">LOAD MORE</button>           
-                </div><br/><br/>
+                  <button class="btn btn-pink" ng-click="loadMore()">LOAD MORE</button>           
+                </div>
+                 
+                </div>
+                <div class="space-10"></div>
                 </div>
                 <!-- ORGANIZE SCHEDULE :End -->
                 <!-- MANAGE REPOSTS : Start -->
@@ -222,31 +217,27 @@
                             <div class="row margin-bottom-10" ng-repeat="item in customEmailButtons track by $index" style="border-bottom: solid 1px #dcdcdc;">
                               <div class="col-md-12">
                                 <div class="col-md-1 margin-bottom-10">&nbsp;</div>
-                                <div class="col-md-5 margin-bottom-10">
-                                  <label>To Email</label>
+                                <div class="col-md-10 margin-bottom-10">
+                                  <input type="text" ng-model="item.buttonText" class="form-control" placeholder="Button Title">
+                                  <br/>
                                   <input type="text" ng-model="item.toEmail" class="form-control" placeholder="To Email">
                                   <br/>
-                                  <label>Subject</label>
                                   <input type="text" ng-model="item.subject" class="form-control" placeholder="Subject">
                                 </div>
-                                <div class="col-md-5 margin-bottom-10">
-                                  <label>Title</label>
-                                  <input type="text" ng-model="item.buttonText" class="form-control" placeholder="Title">
-                                </div>
                                 <div class="col-md-1 margin-bottom-10">
-                                  <span ng-click="removeItem($index)">X</span>
+                                  <span class="btn btn-border" ng-click="removeItem($index)">X</span>
                                 </div>
                               </div>
                               <div class="col-md-12 margin-bottom-10">
                                 <div class="col-md-1">&nbsp;</div>
                                 <div class="col-md-10">
-                                  <label>Email Body</label>
                                   <textarea ng-model="item.emailBody" class="form-control emailBodyArea{{$index}}" rows="10" placeholder="Email body" index="{{$index}}" ng-click="addEventClass($index,'emailBodyArea');"></textarea>
                                 </div>
                                 <div class="col-md-1">&nbsp;</div>
                               </div>
                               <br/>
                               <div class="col-md-12">
+                              <button class="btn btn-default" ng-click="sendTestMail($index)">Send test mail</button>
                                 <div class="button-list text-center">
                                   <input ng-repeat="btn in dynamicButton " type="button" name="{{btn.name}}" class="btn btn-border organize-btn" style="margin-left:20px;" value="{{btn.name}}" ng-click="appendBody(btn)">
                                 </div>
@@ -270,6 +261,7 @@
                       </div>
                     </div>  
                   </div>
+                <div class="space-20"></div>
                 </div>
                 <!-- MANAGE REPOSTS : End -->                
               </div>
@@ -282,7 +274,46 @@
         <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
         </div>
       </div>
-      <!--overlay-->   
+      <!--overlay-->  
+      <!--overlay-->
+            <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showTestEmailModal">
+            <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
+              <div class="modal-dialog modal-vertical-centered">    
+               
+                <div class="modal-content">
+                  <div style="text-align:center; padding:10px;">        
+                    <div style="text-align:center;padding-bottom:10px;">
+                       <div class="modal-body">
+       <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="email" required/>
+      </div>
+        <button type="button" class="btn btn-pink" data-dismiss="modal" ng-click="testEmail(email)">Send</button>
+        
+   
+                   </div>
+                 </div>      
+               </div>
+             </div>
+           </div>
+         </div> 
+         <!--  <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showTestEmailModal">
+   <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
+  <div class="modal-dialog modal-vertical-centered">    
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Paid Comment Box</h4>
+      </div>
+      <div class="modal-body">
+        <input class="form-control" type="text" ng-model="paidComment" placeholder="Enter new comment"></input>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="saveComments(paidComment,'paid',scheduleCommentIndex)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div> -->
 <ng-include src="'js/home/views/loader.html'"></ng-include>    
 </div>
   </div>
