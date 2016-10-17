@@ -571,10 +571,11 @@ function schedulePaidRepost(channel, submission) {
       userID: channel.user.id,
       email: submission.email,
       name: submission.name,
-      price: channel.price,
-      // comment: channel.repostSettings.
-      saleID: payment.transactions[0].related_resources[0].sale.id
+      price: channel.user.price,
+      saleID: payment.transactions[0].related_resources[0].sale.id,
+      like: channel.user.repostSettings.paid.like
     }
+    if (channel.user.repostSettings.paid && channel.user.repostSettings.paid.comment) eventDetails.comment = channel.user.repostSettings.paid.comments[Math.floor(Math.random() * channel.user.repostSettings.paid.comments.length)];
     scheduleRepost(eventDetails, new Date())
       .then(function(event) {
         fulfill({

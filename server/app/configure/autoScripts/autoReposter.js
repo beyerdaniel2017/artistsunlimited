@@ -89,18 +89,18 @@ function repostAndRemove(event, user, repCount) {
             user.save();
           }
           if (event.email && event.name) {
-            scheduleRepost(event, new Date());
-            .then(function(ev) {
-              Submission.findOne({
-                $or: [{
-                  'pooledPayment.transactions.related_resources.sale.id': ev.saleID
-                }, {
-                  'payment.transactions.related_resources.sale.id': ev.saleID
-                }]
-              }).then(function(submission) {
-                sendEmail(ev.name, ev.email, "AU Server", "coayscue@artistsunlimited.com", "Failed Repost reschedule and refund", "Hi " + ev.name ",<br><br>There was an error with a repost of " + ev.title + " on " + user.soundcloud.username + ". We will refund you the price of the repost ($" + ev.price + ") on " + (new Date(submission.refundDate)).toLocaleDateString() + ". Your track will still be reposted on " + user.soundcloud.username " on " + ev.day.toLocaleDateString());
+            scheduleRepost(event, new Date())
+              .then(function(ev) {
+                Submission.findOne({
+                  $or: [{
+                    'pooledPayment.transactions.related_resources.sale.id': ev.saleID
+                  }, {
+                    'payment.transactions.related_resources.sale.id': ev.saleID
+                  }]
+                }).then(function(submission) {
+                  sendEmail(ev.name, ev.email, "AU Server", "coayscue@artistsunlimited.com", "Failed Repost reschedule and refund", "Hi " + ev.name + ",<br><br>There was an error with a repost of " + ev.title + " on " + user.soundcloud.username + ". We will refund you the price of the repost ($" + ev.price + ") on " + (new Date(submission.refundDate)).toLocaleDateString() + ". Your track will still be reposted on " + user.soundcloud.username + " on " + ev.day.toLocaleDateString());
+                })
               })
-            })
           } else if (event.owner) {
             scheduleRepost(event, new Date());
           }

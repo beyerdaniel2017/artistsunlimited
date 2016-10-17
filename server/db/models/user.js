@@ -133,7 +133,7 @@ var schema = new mongoose.Schema({
                 like: false
             },
             paid: {
-                comments: []
+                comments: [],
                 comment: false,
                 like: false
             }
