@@ -6,8 +6,8 @@ var HTTPS = require('https');
 var scWrapper = require('./server/app/SCWrapper/SCWrapper.js');
 var request = require('request');
 
-var client_id = "8002f0f8326d869668523d8e45a53b90";
-var client_secret = "7c896a35685064e133b6a01998f62714";
+var client_id = "e72f5b4e3b48dc9015fe168cc6d66fa8";
+var client_secret = "ee5f5be9ff2d8ec040098ade0b42e1f2";
 var redirect_uri = "https://artistsunlimited.co/callback.html";
 var fs = require('fs');
 
@@ -35,8 +35,8 @@ var fs = require('fs');
 //   })
 //   .end();
 
-var aT = "1-231090-86560544-02506b330d4aa4";
-var id = 86560544;
+var aT = "1-231090-148393-11845152e60d2d6d";
+var id = 286840750;
 // SCR.init(client_id, client_secret, redirect_uri);
 // SC.init(client_id, client_id, redirect_uri);
 // SCR.get('/users/' + id, function(err, data) {
@@ -51,32 +51,37 @@ scWrapper.init({
   secret: client_secret,
   uri: redirect_uri
 });
+scWrapper.setToken(aT);
 var reqObj = {
-  method: 'GET',
-  path: '/users/' + id,
+  method: 'PUT',
+  path: '/e1/me/track_reposts/' + id,
   qs: {
     oauth_token: aT
   }
 };
+scWrapper.request(reqObj, function(err, data) {
+  console.log('err -------' + JSON.stringify(err));
+  console.log('data ------' + JSON.stringify(data));
+});
 
-var total = ""
+// var total = ""
 
-function get(url) {
-  request.get(url, function(err, res, body) {
-    if (err) {
-      console.log(err);
-    } else {
-      var body = JSON.parse(body);
-      if (body.next_href) {
-        body.collection.forEach(function(follower) {
-          total += follower.id + ","
-        })
-        get(body.next_href);
-      } else {
-        console.log(total);
-      }
-    }
-  })
-}
+// function get(url) {
+//   request.get(url, function(err, res, body) {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       var body = JSON.parse(body);
+//       if (body.next_href) {
+//         body.collection.forEach(function(follower) {
+//           total += follower.id + ","
+//         })
+//         get(body.next_href);
+//       } else {
+//         console.log(total);
+//       }
+//     }
+//   })
+// }
 
-get("http://api.soundcloud.com/users/86560544/followings?client_id=8002f0f8326d869668523d8e45a53b90&page_size=200")
+// get("http://api.soundcloud.com/users/86560544/followings?client_id=8002f0f8326d869668523d8e45a53b90&page_size=200")

@@ -24,7 +24,7 @@ function sendRefunds() {
       if (submission.pooledPayment) refundArray.push(refund(submission.pooledPayment.transactions[0].related_resources[0].sale.id));
       Promise.all(refundArray)
         .then(null, function(err) {
-          sendEmail('Christian Ayscue', 'coayscue@gmail.com', "Artists Unlimited", "coayscue@gmail.com", "Error refunding", "Error: " + JSON.stringify(err) + "\n Submission: " + JSON.stringify(submisison));
+          sendEmail('Christian Ayscue', 'coayscue@gmail.com', "Artists Unlimited", "coayscue@artistsunlimited.com", "Error refunding", "Error: " + JSON.stringify(err) + "\n Submission: " + JSON.stringify(submisison));
         })
       submission.refundDate = new Date(0);
       submission.save();
@@ -42,17 +42,25 @@ function refund(saleID) {
       payout: null
     })
     .then(function(repostEvents) {
-      var paymentRefundTotal = 0;
-      repostEvents.forEach(function(event) {
-        paymentRefundTotal += event.price;
-      })
-      return paypalCalls.sendRefund(paymentRefundTotal, saleID)
-        .then(function(refund) {
-          console.log(refund);
-          repostEvents.forEach(function(event) {
-            event.payout = refund;
-            event.save();
+      if (repostEvents.length > 0) {
+        var paymentRefundTotal = 0;
+        var channelList = "<br>";
+        repostEvents.forEach(function(event) {
+          paymentRefundTotal += event.price;
+          User.findOne({
+            'soundcloud.id': event.userID
+          }).then(function(user) {
+            channelList += user.soundcloud.username + "<br>"
           })
         })
+        return paypalCalls.sendRefund(paymentRefundTotal, saleID)
+          .then(function(refund) {
+            repostEvents.forEach(function(event) {
+              event.payout = refund;
+              event.save();
+            })
+            sendEmail(repostEvents[0].name, repostEvents[0].email, "Artists Unlimited", "coayscue@artistsunlimited.com", "Refund", "Hello " + repostEvents.name + ",<br><br>Due to an issue with repostinge have refunded your PayPal account the amount of $" + paymentRefundTotal + " for the reposts of " + repostEvents[0].title + " on:" + cannelList + "<br> These reposts have also been rescheduled.<br><br><a href='https://artistsunlimited.com'>Artists Unlimited</a>")
+          })
+      }
     })
 }

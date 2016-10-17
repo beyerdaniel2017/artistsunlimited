@@ -923,6 +923,9 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 html {
   height: 100%; }
 
+html, * {
+  outline: none; }
+
 a:focus,
 a:after,
 a:active:after {
@@ -969,7 +972,7 @@ label {
   -webkit-box-shadow: none !important;
   -moz-box-shadow: none !important;
   box-shadow: none !important;
-  height: 40px; }
+  height: 37px; }
 
 .form-control:focus {
   border-color: #FF7676;
@@ -977,14 +980,25 @@ label {
   -webkit-box-shadow: none;
   box-shadow: none; }
 
-.btn {
-  padding: 8px 12px;
-  font-size: 12px; }
+/*.btn {
+    padding: 8px 12px;
+    font-size: 12px;
+}*/
+button,
+button:active,
+button:focus,
+button:hover,
+.btn,
+.btn:active,
+.btn:focus,
+.btn:hover {
+  outline: none !important; }
 
 .btn:active,
 .btn.active {
   -webkit-box-shadow: none;
-  box-shadow: none; }
+  box-shadow: none;
+  outline: 0; }
 
 .btn-default:active,
 .btn-default.active,
@@ -1000,7 +1014,8 @@ label {
 .btn-default.focus:active,
 .btn-default.active.focus,
 .open > .dropdown-toggle.btn-default.focus {
-  background-color: #F8F8F8; }
+  background-color: #F8F8F8;
+  outline: 0; }
 
 .unrepost-symbol {
   width: 14px;
@@ -1042,6 +1057,15 @@ label {
   border-radius: 0px;
   padding: 3px;
   height: 100%; }
+
+.btn-scheduler:hover, .btn-scheduler:active, .btn-scheduler:focus {
+  background: transparent;
+  border-color: transparent;
+  outline: 0; }
+
+.btn-scheduler:active:hover, .btn-scheduler.active:hover, .open > .dropdown-toggle.btn-scheduler:hover, .btn-scheduler:active:focus, .btn-scheduler.active:focus, .open > .dropdown-toggle.btn-scheduler:focus, .btn-scheduler.focus:active, .btn-scheduler.active.focus, .open > .dropdown-toggle.btn-scheduler.focus {
+  background-color: transparent;
+  border-color: transparent; }
 
 .btn-small {
   background: #F5BBBC;
@@ -1097,7 +1121,7 @@ label {
   border-bottom: 1px solid #d2d2d2; }
 
 .row-scheduler:hover {
-  background-color: #f2f2f2; }
+  /* background-color: #f2f2f2;*/ }
 
 .row-dark {
   background-color: #cccccc; }
@@ -1974,13 +1998,11 @@ h3 {
 .page-content {
   background-color: white;
   /*width: 97%;*/
-  /*margin: 0px 20px 0px 10px;*/
-  margin: 0px 41px 0px 0;
-  border-top-left-radius: 12px;
+  margin: 0px 41px 40px 0;
+  border-radius: 12px;
   height: 100%;
   overflow: hidden;
-  border-top-right-radius: 12px;
-  min-height: 600px; }
+  min-height: 650px; }
 
 .page-content li {
   margin-bottom: -1px;
@@ -2888,10 +2910,11 @@ input:checked + .slider:before {
   -webkit-border-radius: 8px;
   border-color: #686868;
   outline: none;
-  background: url("../assets/images/music-icon.png") no-repeat 93% 50%;
+  background: url("../assets/images/music-icon.svg") no-repeat 93% 50%;
   text-align: center;
   letter-spacing: 2px;
-  font-size: 12px; }
+  font-size: 12px;
+  background-size: 16px; }
 
 .schedule-date-change {
   max-width: 200px;
@@ -3174,7 +3197,7 @@ input:checked + .slider:before {
   color: #8a8a8a;
   letter-spacing: 1px;
   background-color: #F9F9F9;
-  padding: 44px 0;
+  padding: 0 0 44px;
   font-weight: normal; }
 
 .from-background {
@@ -3211,7 +3234,7 @@ input:checked + .slider:before {
   background-color: rgba(245, 245, 245, 0); }
 
 .tropical img {
-  width: 45%;
+  width: 50%;
   text-align: center;
   margin: 15px auto; }
 
@@ -3661,8 +3684,8 @@ label:hover:before {
 .left-side-profile {
   position: absolute;
   width: 100%;
-  /*z-index: 1;*/
   top: 40px;
+  left: 0;
   background-color: white;
   border-top-left-radius: 10px;
   overflow: hidden;
@@ -3987,7 +4010,7 @@ td {
   width: 98%;
   margin: 1px auto;
   height: 20px;
-  padding: 1px 5px;
+  padding: 1px 2px;
   line-height: 14px; }
 
 .calendar-day-date {
@@ -4033,7 +4056,7 @@ td {
   height: 20px;
   width: 25px;
   text-align: center;
-  top: 9px;
+  top: 8px;
   background: #FFFFFF;
   color: #686868 !important; }
 
@@ -4057,6 +4080,12 @@ td {
 /*** 15-9-2016 ***/
 .padding-10 {
   padding: 10px; }
+
+.padding-right-0 {
+  padding-right: 0px; }
+
+.padding-left-0 {
+  padding-left: 0px; }
 
 .btn {
   margin-bottom: 5px; }
@@ -4239,13 +4268,13 @@ td {
 
 /*** 17-9-2016 ***/
 /*** 22-9-2016 ***/
-.left-profile-content {
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-  margin-bottom: 40px; }
-
+/*.left-profile-content {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin-bottom: 40px;
+}*/
 /*** 22-9-2016 ***/
 .comment-view {
   display: inline-block;
@@ -4362,6 +4391,24 @@ td {
   content: '\e013';
   color: #8D8D8D; }
 
+.margin-refor-re {
+  margin: 0 50px; }
+
+.question-btn:hover, .question-btn:active, .question-btn:focus {
+  color: #fff !important;
+  background-color: RGBA(255, 118, 118, 0.92) !important;
+  border-color: RGBA(255, 118, 118, 0.92) !important; }
+
+.question-btn {
+  padding: 5px 0 !important;
+  margin-top: 4px !important; }
+
+.ZebraDialog_Button_1 {
+  background: transparent !important;
+  border: 1px solid #333;
+  color: #333 !important;
+  text-shadow: none !important; }
+
 /******************************** Media CSS :: START ************************************/
 @media screen and (max-width: 1280px) {
   .min-ht {
@@ -4472,11 +4519,30 @@ td {
   .account-vertical-container li:first-child {
     width: 100%; }
   .account-vertical-container li:nth-child(2) {
-    width: 100%; } }
+    width: 100%; }
+  .left-side-profile {
+    top: 0px;
+    border-radius: 10px; } }
 
 @media screen and (max-width: 667px) {
   .img-btn {
-    margin-left: 264px; } }
+    margin-left: 264px; }
+  .m-table-responsive {
+    min-height: .01%;
+    overflow-x: auto; }
+  .cell-date {
+    line-height: 20px; }
+  .left-side-profile {
+    top: 0;
+    border-radius: 10px; }
+  .vertical-container li > .list-img-container img {
+    margin: 0 auto; }
+  .tracks-box {
+    margin: 10px auto; }
+  .page-header ul li.switch-btn {
+    padding-top: 10px; }
+  .margin-refor-re {
+    margin: 0; } }
 
 @media screen and (max-width: 640px) {
   .organize-text {

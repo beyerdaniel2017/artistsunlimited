@@ -58,11 +58,24 @@ function sendSignup(user) {
 }
 
 function receivedMessage(message) {
-    messengerAPI.buttons(message.sender.id, 'Hey, please go here:', [{
-        type: "web_url",
-        url: "https://artistsunlimited.com",
-        title: "Artists Unlimited"
-    }]).then(null, null);
+    User.findOne({
+        'notificationSettings.facebookMessenger.messengerID': message.sender.id
+    }).then(function(user) {
+        if (!user) {
+            messengerAPI.buttons(message.sender.id, 'Hey, please go here:', [{
+                type: "web_url",
+                url: "https://artistsunlimited.com",
+                title: "Artists Unlimited"
+            }]).then(null, null);
+        } else {
+            user.lastMessageDate = new Date();
+            user.save();
+            if (message.message.quick_reply && message.message.quick_reply.payload.includes('OPTIN YES')) {
+                messengerAPI.typing(message.sender.id);
+                messengerAPI.text(message.sender.id, "Ok.")
+            }
+        }
+    })
 }
 
 function signupUser(messengerID) {

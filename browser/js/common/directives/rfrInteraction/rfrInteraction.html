@@ -41,26 +41,26 @@
                 <div role="tabpanel" class="tab-pane fade in active" id="myschedule">
                   <div class="container-90">
                    <div class="col-md-6 col-xs-12">
-                      <div class="btn-group" role="group" aria-label="..." style="margin-right:10px;">
-                        <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.svg" /></a>
-                        <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.svg" /></a>
-                      </div>
-                      <label class="switch" style="vertical-align: middle;">
-                        <input type="checkbox" ng-checked="repeatOn" ng-click="changeRepeatOn()">
-                        <div class="slider round"></div>
-                      </label>
-                      <span>Repeat trade for<input class="form-control input-hour" type="tel" ng-model="trade.repeatFor" ng-change="changeRepeatFor()">weeks</span>
+                    <div class="btn-group" role="group" aria-label="..." style="margin-right:10px;">
+                      <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender')"><img src="assets/images/box-view.svg" /></a>
+                      <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list')"><img src="assets/images/list-view.svg"/></a>
                     </div>
-                    <div class="col-md-5 col-xs-12">
-                      <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
-                        <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
-                        <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
-                      </div>
-                      <button class="btn btn-pink" ng-click="saveTrade()" ng-if="(trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && showUndo" style="margin-right:5px;">Request</button>
-                      <button class="btn btn-pink" ng-click="acceptTrade()" ng-if="!showUndo && (trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && !trade.user.accepted">Accept</button>
-                      <button class="btn btn-border" ng-click="undo()" ng-if="showUndo">Undo</button>
+                    <label class="switch" style="vertical-align: middle;">
+                      <input type="checkbox" ng-checked="repeatOn" ng-click="changeRepeatOn()">
+                      <div class="slider round"></div>
+                    </label>
+                    <span>Repeat trade for<input class="form-control input-hour" type="tel" ng-model="trade.repeatFor" ng-change="changeRepeatFor()">weeks</span>
+                  </div>
+                  <div class="col-md-5 col-xs-12">
+                    <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
+                      <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
+                      <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
                     </div>
-                   
+                    <button class="btn btn-pink" ng-click="saveTrade()" ng-if="(trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && showUndo" style="margin-right:5px;">Request</button>
+                    <button class="btn btn-pink" ng-click="acceptTrade()" ng-if="!showUndo && (trade.p1.slots.length > 0 || trade.p2.slots.length > 0) && !trade.user.accepted">Accept</button>
+                    <button class="btn btn-border" ng-click="undo()" ng-if="showUndo">Undo</button>
+                  </div>
+                  
                     <!-- <div class="col-md-2 col-xs-6 pull-right text-right">
                       
                   </div>   -->                  
@@ -115,40 +115,40 @@
                   <div id="scheduler-container" ng-show="itemview == 'list'">
                     <div class="space-10"></div>
                     <div class="m-table-responsive">
-                    <table class="table scheduler-song-tab">
-                      <thead>
-                        <tr>
-                          <th width="30%" class="text-center">Traded</th>
-                          <th width="20%" class="text-center">Account</th>
-                          <th width="20%" class="text-center">Date</th>
-                          <th width="20%" class="text-center">Unrepost Date</th>
-                          <th width="10%" class="text-center">&nbsp;</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr ng-repeat="item in listEvents" ng-hide="!(item.event.type=='trade' || item.event.type=='empty') || (item.event.type=='empty' && item.date < currentDate)" ng-class='{grey : item.date < currentDate}' ng-style="getEventStyle(item.event)">
-                          <td class="text-center">
-                          <div class="check-list"><div class="checkbox demo-radio-btn"> <label class="with-square-checkbox"><input type="checkbox" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" style="display:block;left:170px;" ng-checked="item.event.type == 'traded'"></label></div></div>             
-                        </td>
-                          <td class="text-center">{{trade.p1.user.soundcloud.username}}</td>
-                          <td class="text-center">{{item.date | date: 'EEE MM/dd h:mma'}}</td>
-                          <td class="text-center">{{getUnrepostDate(item) | date: 'EEE MM/dd h:mma'}}</td>
-                          <!-- <td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">Toggle</button></td> -->
-                          <td class="text-center">
-                            <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>&nbsp;&nbsp;<a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item, 'editable');">Edit</a> -->
-                            <a href="javascript:void(0)" class="btn btn-pink btn-block btn-sm margin-0" ng-click="toggleSlot(item)" ng-hide="item.date < currentDate">Toggle</a>
-                          </td>                   
-                        </tr>
-                      </tbody>
-                    </table>
+                      <table class="table scheduler-song-tab">
+                        <thead>
+                          <tr>
+                            <th width="30%" class="text-center">Traded</th>
+                            <th width="20%" class="text-center">Account</th>
+                            <th width="20%" class="text-center">Date</th>
+                            <th width="20%" class="text-center">Unrepost Date</th>
+                            <th width="10%" class="text-center">&nbsp;</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr ng-repeat="item in listEvents" ng-hide="!(item.event.type=='trade' || item.event.type=='empty') || (item.event.type=='empty' && item.date < currentDate)" ng-class='{grey : item.date < currentDate}' ng-style="getEventStyle(item.event)">
+                            <td class="text-center">
+                              <div class="check-list"><div class="checkbox demo-radio-btn"> <label class="with-square-checkbox"><input type="checkbox" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" style="display:block;left:170px;" ng-checked="item.event.type == 'traded'"></label></div></div>             
+                            </td>
+                            <td class="text-center">{{trade.p1.user.soundcloud.username}}</td>
+                            <td class="text-center">{{item.date | date: 'EEE MM/dd h:mma'}}</td>
+                            <td class="text-center">{{getUnrepostDate(item) | date: 'EEE MM/dd h:mma'}}</td>
+                            <!-- <td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">Toggle</button></td> -->
+                            <td class="text-center">
+                              <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>&nbsp;&nbsp;<a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item, 'editable');">Edit</a> -->
+                              <a href="javascript:void(0)" class="btn btn-pink btn-block btn-sm margin-0" ng-click="toggleSlot(item)" ng-hide="item.date < currentDate">Toggle</a>
+                            </td>                   
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
-              </div>
               </div>
               <!-- p2 calendar -->
               <div ng-show="activeUser._id==trade.p2.user._id">
                 <div id="scheduler-container" ng-show="itemview == 'calender'">
-<div class="space-10"></div>
+                  <div class="space-10"></div>
                   <div style="width: 100%;height: 35px;display: flex; flex-direction: row; margin-bottom: 10px; margin-left: 20px;">
                     <button ng-show="!repeatOn" class="btn btn-default btn-scheduler" ng-click="decrp2()"><img src="/assets/images/left-arrow.png"/></button>
                     <div ng-show="!repeatOn" class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendarp2[t+p2dayIncr].day).substring(0,3)}} {{calendarp2[t+p2dayIncr].day.getMonth()+1}}/{{calendarp2[t+p2dayIncr].day.getDate()}}</div>
@@ -170,35 +170,35 @@
                 <div id="scheduler-container" ng-show="itemview == 'list'">
                   <div class="space-10"></div>
                   <div class="m-table-responsive">
-                  <table class="table scheduler-song-tab">
-                    <thead>
-                      <tr>
-                        <th width="30%" class="text-center">Traded</th>
-                        <th width="20%" class="text-center">Account</th>
-                        <th width="20%" class="text-center">Date</th>
-                        <th width="20%" class="text-center">Unrepost Date</th>
-                        <th width="10%" class="text-center">&nbsp;</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr ng-repeat="item in listEvents" ng-hide="!(item.event.type=='trade' || item.event.type=='empty') || (item.event.type=='empty' && item.date < currentDate)" ng-class='{grey : item.date < currentDate}' ng-style="getEventStyle(item.event)">
-                        <td class="text-center">
-                          <div class="check-list"><div class="checkbox demo-radio-btn"> <label class="with-square-checkbox"><input type="checkbox" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" style="display:block;left:170px;" ng-checked="item.event.type == 'traded'"></label></div></div>             
-                        </td>
-                        <td class="text-center">{{trade.p2.user.soundcloud.username}}</td>
-                        <td class="text-center">{{item.date | date: 'EEE MM/dd h:mma'}}</td>
-                        <td class="text-center">{{getUnrepostDate(item) | date: 'EEE MM/dd h:mma'}}</td>
-                        <!-- <td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">Toggle</button></td> -->
-                        <td class="text-center">
-                          <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>&nbsp;&nbsp;<a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item, 'editable');">Edit</a> -->
-                          <a href="javascript:void(0)" class="btn btn-pink btn-block btn-sm margin-0" ng-click="toggleSlot(item)" ng-hide="item.date < currentDate">Toggle</a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                    <table class="table scheduler-song-tab">
+                      <thead>
+                        <tr>
+                          <th width="30%" class="text-center">Traded</th>
+                          <th width="20%" class="text-center">Account</th>
+                          <th width="20%" class="text-center">Date</th>
+                          <th width="20%" class="text-center">Unrepost Date</th>
+                          <th width="10%" class="text-center">&nbsp;</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="item in listEvents" ng-hide="!(item.event.type=='trade' || item.event.type=='empty') || (item.event.type=='empty' && item.date < currentDate)" ng-class='{grey : item.date < currentDate}' ng-style="getEventStyle(item.event)">
+                          <td class="text-center">
+                            <div class="check-list"><div class="checkbox demo-radio-btn"> <label class="with-square-checkbox"><input type="checkbox" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" style="display:block;left:170px;" ng-checked="item.event.type == 'traded'"></label></div></div>             
+                          </td>
+                          <td class="text-center">{{trade.p2.user.soundcloud.username}}</td>
+                          <td class="text-center">{{item.date | date: 'EEE MM/dd h:mma'}}</td>
+                          <td class="text-center">{{getUnrepostDate(item) | date: 'EEE MM/dd h:mma'}}</td>
+                          <!-- <td><button class="btn btn-default" ng-if="item.event" ng-style="getEventStyle(item.event)">Toggle</button></td> -->
+                          <td class="text-center">
+                            <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>&nbsp;&nbsp;<a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item, 'editable');">Edit</a> -->
+                            <a href="javascript:void(0)" class="btn btn-pink btn-block btn-sm margin-0" ng-click="toggleSlot(item)" ng-hide="item.date < currentDate">Toggle</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-            </div>
             </div>
             <div class="space-20"></div>
           </div>
@@ -307,24 +307,24 @@
 </div>
 
 <script>
-setTimeout(function(){
-  $(document).ready(function(){
-    FB.init({
-      appId: '1771378846475599',
-      xfbml: true,
-      version: 'v2.7'
-    });
+  setTimeout(function(){
+    $(document).ready(function(){
+      FB.init({
+        appId: '1771378846475599',
+        xfbml: true,
+        version: 'v2.7'
+      });
 
-    (function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {
-        return;
-      }
-      js = d.createElement(s);
-      js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-  })
-},200);
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+          return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    })
+  },200);
 </script>

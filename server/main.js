@@ -25,7 +25,6 @@ var createApplication = function() {
 };
 
 var startServer = function() {
-
   var HTTPS_PORT = process.env.HTTPS_PORT || 1443;
 
   secureServer.listen(HTTPS_PORT, function() {
