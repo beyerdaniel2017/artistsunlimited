@@ -87,6 +87,21 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     'Vocalists/Singer-Songwriter'
   ];
 
+   $scope.sendTestMail = function(index) {
+      $scope.showTestEmailModal = true;
+      $scope.emailIndex = index;
+      $('#emailModal').modal('show');
+    }
+   
+    $scope.testEmail = function(email)
+    {
+      $scope.showTestEmailModal = false;
+      $('#emailModal').modal('hide');
+      var subject = $scope.customEmailButtons[$scope.emailIndex].subject;
+      var body = $scope.customEmailButtons[$scope.emailIndex].emailBody;
+      $window.open("mailto:"+email +"?body=" + body+"&subject="+subject, "_self");
+
+    }
   $scope.getSubmissionsByGenre = function(){
     $scope.showingElements = [];
     $scope.skip = 0;

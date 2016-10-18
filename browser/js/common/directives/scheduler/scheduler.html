@@ -87,7 +87,7 @@
                   <td class="text-center">{{item.event.title}}</td>
                   <td class="text-center">{{user.soundcloud.username}}</td>
                   <td class="text-center">{{item.date | date:'EEE MM/dd h:mma'}}</td>
-                  <td><span ng-if="item.event" style="color:{{item.event.type == 'track'? '#FF0000' : '#FF6347'}}">{{item.event.type}}</span></td>
+                  <td><span ng-if="item.event" style="color:{{item.event.type == 'track'? '#FF0000' : '#FFD450'}}">{{item.event.type}}</span></td>
                   <td class="text-center">
                     <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>&nbsp;&nbsp; -->
                     <a class="btn btn-pink btn-block btn-sm margin-0" href="javascript:void(0)" ng-if="item.event" ng-click="EditNewSong(item, 'editable');">Edit</a>
@@ -322,6 +322,7 @@
                           </div>
                         </div>
                       </div>
+                      </div>
                       <div class="row">
                         <div class="col-xs-12">
                            <iframe id="scPlayer" ng-show="showPlayer" width="100%" height="160" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>   
@@ -361,7 +362,7 @@
                               <div class="next-previous text-center">
                                <button class="btn btn-border b-radius-10 save-share" ng-class="{'disabled': isView}" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
                                <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
-                               <button class="btn btn-pink b-radius-10 save-share" ng-class="{'disabled': isView}" ng-click="saveEvent();">SAVE & SHARE</button>
+                               <button class="btn btn-pink b-radius-10 save-share" ng-click="saveEvent();">SAVE & SHARE</button>
                              </div>
                            </div>
                     
@@ -378,7 +379,7 @@
             <div class="available-popup-box">
               <div class="label-scheduler label-smaller slot-box" ng-click="$event.stopPropagation();">
                 <div class="">
-                  <div ng-class="{'disabled': isView}">
+                  <div ng-class="{'disabled': isView}" >
                   <div class="row">
                     <div class="col-md-12 search">
                       <scsearch kind='track' returnitem='choseTrack1(item)'></scsearch>
@@ -454,6 +455,7 @@
                       </li>
                     </div>
                     </div>
+                    </div>
                     <div class="row">
                       <div class="col-md-12">
                        <iframe id="scPopupPlayer" ng-show="showPlayer" width="300" height="120" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe> 
@@ -473,6 +475,7 @@
                       </div>
                     </div>
                   </div>
+                  
                   <div class="row">
                     <div class="col-md-12">                        
                       <div class="acceptance">
@@ -486,13 +489,12 @@
                       </div>                         
                     </div>
                   </div>
-                  </div>
                   <div class="space-10"></div>
                   <div class="row">
                     <div class="col-md-12 text-center">
                       <button class="btn btn-border b-radius-10" ng-class="{'disabled': isView}" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
                       <button class="btn btn-border b-radius-10 " ng-click="backEvent();">CANCEL</button>
-                      <button class="btn btn-pink b-radius-10" ng-class="{'disabled': isView}" ng-click="saveEvent();">SAVE</button>
+                      <button class="btn btn-pink b-radius-10" ng-click="saveEvent();">SAVE</button>
                     </div>
                   </div><!--row end-->                  
                 </div>

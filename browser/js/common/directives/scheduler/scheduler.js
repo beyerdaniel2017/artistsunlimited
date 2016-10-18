@@ -42,7 +42,7 @@ app.directive('scheduler', function($http) {
       var commentIndex = 0;
       $scope.isView = false;
       $scope.origin = window.location.origin;
-      $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
+      $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length>>0] : '';
       var defaultAvailableSlots = {
         sunday: [],
         monday: [],
@@ -136,7 +136,7 @@ app.directive('scheduler', function($http) {
           } else {
             $scope.disable = false;
             $scope.commentEvent = true;
-            $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
+            $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length>>0] : '';
             $scope.commentSrc = 'assets/images/comment.png';
           }
         }
@@ -172,7 +172,7 @@ app.directive('scheduler', function($http) {
             $scope.commentEvent = true;
             $scope.disable = false;
             commentIndex = 0;
-            $scope.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
+            $scope.eventComment = $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length>>0];
           }
         }
         //$scope.saveRepostSettings();
@@ -698,6 +698,7 @@ app.directive('scheduler', function($http) {
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
           $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
           $scope.makeEventURL = $scope.makeEvent.trackURL;
+          $scope.makeEvent.trackID = data.trackID;
           $scope.eventComment = $scope.makeEvent.comment;
           $scope.newEvent = false;
           SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
