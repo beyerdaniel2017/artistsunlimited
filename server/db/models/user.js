@@ -20,7 +20,8 @@ var schema = new mongoose.Schema({
         type: String
     },
     permanentLinks: {
-        type: [mongoose.Schema.Types.Mixed]
+        type: [mongoose.Schema.Types.Mixed],
+        default: []
     },
     twitter: {
         id: String,
@@ -53,7 +54,8 @@ var schema = new mongoose.Schema({
         default: []
     },
     description: {
-        type: String
+        type: String,
+        default: ""
     },
     thirdPartyInfo: {
         username: String,
@@ -61,25 +63,50 @@ var schema = new mongoose.Schema({
         passwordPlain: String,
         salt: String
     },
-    linkedAccounts: [],
+    linkedAccounts: {
+        type: Array,
+        default: []
+    },
     paidRepost: [{
         userID: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         },
-        price: String,
-        description: String,
-        groups: [],
+        price: {
+            type: String,
+            default: 10
+        },
+        description: {
+            type: String,
+            default: ''
+        },
+        groups: {
+            type: Array,
+            default: []
+        },
         submissionUrl: String,
         premierUrl: String,
-        createdOn: Date,
-        repostSettings: {
-            type: Object,
-            default: {}
+        createdOn: {
+            type: Date,
+            default: new Date()
         }
     }],
-    submissionsCustomEmailButtons: [],
-    premierCustomEmailButtons: [],
+    submissionsCustomEmailButtons: {
+        type: Array,
+        default: []
+    },
+    premierCustomEmailButtons: {
+        type: Array,
+        default: []
+    },
+    repostCustomizeEmails: {
+        type: Array,
+        default: []
+    },
+    premierCustomizeEmails: {
+        type: Array,
+        default: []
+    },
     profilePicture: {
         type: String
     },
@@ -87,8 +114,6 @@ var schema = new mongoose.Schema({
         type: Date,
         default: new Date(0)
     },
-    repostCustomizeEmails: [],
-    premierCustomizeEmails: [],
     paypal_email: String,
     availableSlots: {
         type: Object,
@@ -105,21 +130,30 @@ var schema = new mongoose.Schema({
     repostSettings: {
         type: Object,
         default: {
-            trade : {
-                comments : [],
-                comment : false,
-                like : false
+            trade: {
+                comments: [],
+                comment: false,
+                like: false
             },
-            schedule : {
-                comments : [],
-                comment : false,
-                like : false
+            schedule: {
+                comments: [],
+                comment: false,
+                like: false
+            },
+            paid: {
+                comments: [],
+                comment: false,
+                like: false
             }
         }
     },
     notificationSettings: {
         facebookMessenger: {
             messengerID: Number,
+            lastMessageDate: {
+                type: Date,
+                default: new Date(0)
+            },
             tradeRequest: {
                 type: Boolean,
                 default: true
@@ -164,7 +198,10 @@ var schema = new mongoose.Schema({
             }
         }
     },
-    admin: Boolean,
+    admin: {
+        type: Boolean,
+        default: false
+    },
     cut: {
         type: Number,
         default: 0.7

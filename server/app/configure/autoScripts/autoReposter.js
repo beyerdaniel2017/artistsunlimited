@@ -9,13 +9,14 @@ var sendEmail = require('../../mandrill/sendEmail.js');
 var request = require('request');
 var notificationCenter = require('../../notificationCenter/notificationCenter.js');
 var paypalCalls = require('../../payPal/paypalCalls.js');
+var scheduleRepost = require('../../scheduleRepost/scheduleRepost.js');
 
 module.exports = doRepost;
-//executes every 5 min
+//executes every min
 function doRepost() {
   setTimeout(function() {
     doRepost();
-  }, 300000);
+  }, 60000);
   var lowerDate = new Date();
   lowerDate.setTime(lowerDate.getTime() - lowerDate.getMinutes() * 60 * 1000 - lowerDate.getSeconds() * 1000);
   var upperDate = new Date();
@@ -58,44 +59,63 @@ function repostAndRemove(event, user, repCount) {
   };
   var idPromise = getID(event, user);
   idPromise.then(function(id) {
-      event.trackID = id;
-      scWrapper.setToken(user.soundcloud.token);
-      var reqObj = {
-        method: 'PUT',
-        path: '/e1/me/track_reposts/' + id,
-        qs: {
-          oauth_token: user.soundcloud.token
-        }
-      };
-      scWrapper.request(reqObj, function(err, data) {
-        if (!err) {
-          event.completed = true;
-          event.save().then(function(event) {
-            if (event.name && event.email) {
-              // performStatBoosts(user, event.trackID);
-              distributeEarnings(user, event);
-              sendMessage(err, event, user);
-            }
-            notificationCenter.sendNotifications(user._id, 'trackRepost', 'Track repost', (!!event.title) ? event.title : 'A track' + ' was reposted on ' + user.soundcloud.username, 'https://artistsunlimited.com/artistTools/scheduler');
-          }).then(null, console.log);
-        } else {
-          console.log('error ------------------');
-          console.log(err);
-          console.log(data);
-          var now = new Date();
-          if (now.getMinutes() >= 55) {
-            if (JSON.stringify(err).includes('too many reposts')) {
-              err = ((typeof err) == 'string' ? JSON.parse(err) : err)[0];
-              user.blockRelease = new Date(err.release_at);
-              user.save();
-            }
-            sendMessage(err, event, user);
-            notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', event.title + ' did not repost on ' + user.soundcloud.username + ' did not complete.', 'artistsunlimited.com/artistTools/scheduler');
+    event.trackID = id;
+    scWrapper.setToken(user.soundcloud.token);
+    var reqObj = {
+      method: 'PUT',
+      path: '/e1/me/track_reposts/' + id,
+      qs: {
+        oauth_token: user.soundcloud.token
+      }
+    };
+    scWrapper.request(reqObj, function(err, data) {
+      if (!err) {
+        event.completed = true;
+        event.save().then(function(event) {
+          if (event.name && event.email) {
+            // performStatBoosts(user, event.trackID);
+            distributeEarnings(user, event);
           }
+          notificationCenter.sendNotifications(user._id, 'trackRepost', 'Track repost', (!!event.title) ? event.title : 'A track' + ' was reposted on ' + user.soundcloud.username, 'https://artistsunlimited.com/artistTools/scheduler');
+        }).then(null, console.log);
+      } else {
+        console.log('error ------------------');
+        console.log(err);
+        console.log(data);
+        var now = new Date();
+        if (now.getMinutes() >= 55) {
+          if (JSON.stringify(err).includes('too many reposts')) {
+            err = ((typeof err) == 'string' ? JSON.parse(err) : err)[0];
+            user.blockRelease = new Date(err.release_at);
+            user.save();
+          }
+          if (event.email && event.name) {
+            var newEvent = JSON.parse(JSON.stringify(event));
+            delete newEvent._id;
+            scheduleRepost(newEvent, new Date())
+              .then(function(ev) {
+                Submission.findOne({
+                  $or: [{
+                    'pooledPayment.transactions.related_resources.sale.id': ev.saleID
+                  }, {
+                    'payment.transactions.related_resources.sale.id': ev.saleID
+                  }]
+                }).then(function(submission) {
+                  sendEmail(ev.name, ev.email, "AU Server", "coayscue@artistsunlimited.com", "Failed Repost reschedule and refund", "Hi " + ev.name + ",<br><br>There was an error reposting " + ev.title + " on " + user.soundcloud.username + ". <br><br>We will refund you the price of the repost, $" + ev.price + ", on " + (new Date(submission.refundDate)).toLocaleDateString() + " and we have rescheduled the track to be reposted on " + user.soundcloud.username + " on " + ev.day.toLocaleDateString() + ".<br><br>Sorry for the inconvenience and thank you for your patience.<br><br>-<a href='https://artistsunlimited.com'>Artists Unlimited</a>");
+                }).then(null, console.log)
+              }).then(null, console.log);
+            event.remove();
+          } else if (event.owner) {
+            var newEvent = JSON.parse(JSON.stringify(event));
+            delete newEvent._id;
+            scheduleRepost(newEvent, new Date()).then(null, console.log);
+            event.remove();
+          }
+          notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', event.title + ' did not repost on ' + user.soundcloud.username + ' did not complete.', 'https://artistsunlimited.com/artistTools/scheduler');
         }
-      });
-    })
-    .then(null, function() {})
+      }
+    });
+  }).then(null, console.log)
 }
 
 // /*Update Message*/
@@ -194,26 +214,27 @@ function getID(event, user) {
   })
 }
 
-function sendMessage(err, event, user) {
-  if (err) {
-    if (event.email && event.name) {
-      sendEmail("CHRISTIAN", "coayscue@artistsunlimited.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
-      sendEmail("EDWARD", "edward@peninsulamgmt.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
-      sendEmail("PENINSULA", "latropicalofficial@gmail.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
-    } else {
-      User.findById(event.owner)
-        .then(function(owner) {
-          // sendEmail(user.soundcloud.username, user.email, "Artists Unlimited", "coayscue@artistsunlimited.com", "ERROR REPOSTING TRACK!", "Hey " + user.soundcloud.username + ",<br><br>There was an error reposting a track!<br><br>Type: " + event.type + (!event.trackID ? " - autofill" : "") + (!!owner ? "<br>Owner: <a href=" + owner.soundcloud.permalinkURL + ">" + owner.soundcloud.username + "</a>" : "") + (!!event.title ? "<br>Title: " + event.title : "") + (!!event.trackURL ? "<br>URL: " + event.trackURL : "") + "<br><br>The issue is likely that your access token has expired. Simply log back into <a href='https://artistsunlimited.com/login'>Artist Tools</a> to fix this.<br><br><br><br>Error: " + ((typeof err) == 'object' ? JSON.stringify(err) : err));
-          // sendEmail("Peninsula", "latropicalofficial@gmail.com", "Artists Unlimited", "coayscue@artistsunlimited.com", "ERROR REPOSTING TRACK!", "Hey " + user.soundcloud.username + ",<br><br>There was an error reposting a track!<br><br>Type: " + event.type + (!event.trackID ? " - autofill" : "") + (!!owner ? "<br>Owner: <a href=" + owner.soundcloud.permalinkURL + ">" + owner.soundcloud.username + "</a>" : "") + (!!event.title ? "<br>Title: " + event.title : "") + (!!event.trackURL ? "<br>URL: " + event.trackURL : "") + "<br><br>The issue is likely that your access token has expired. Simply log back into <a href='https://artistsunlimited.com/login'>Artist Tools</a> to fix this.<br><br><br><br>Error: " + ((typeof err) == 'object' ? JSON.stringify(err) : err));
-          // sendEmail("Christian", "coayscue@gmail.com", "Artists Unlimited", "coayscue@artistsunlimited.com", "ERROR REPOSTING TRACK!", "Hey " + user.soundcloud.username + ",<br><br>There was an error reposting a track!<br><br>Type: " + event.type + (!event.trackID ? " - autofill" : "") + (!!owner ? "<br>Owner: <a href=" + owner.soundcloud.permalinkURL + ">" + owner.soundcloud.username + "</a>" : "") + (!!event.title ? "<br>Title: " + event.title : "") + (!!event.trackURL ? "<br>URL: " + event.trackURL : "") + "<br><br>The issue is likely that your access token has expired. Simply log back into <a href='https://artistsunlimited.com/login'>Artist Tools</a> to fix this.<br><br><br><br>Error: " + ((typeof err) == 'object' ? JSON.stringify(err) : err));
-        });
-    }
-  } else {
-    if (event.email && event.name) {
-      sendEmail(event.name, event.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + event.name + ",<br><br>We would just like to let you know the track <a href='" + event.trackURL + "'>" + event.title + "</a> has been reposted on <a href='" + user.soundcloud.permalinkURL + "'>" + user.soundcloud.username + "</a>! If you would like to do another round of reposts please resubmit your track to artistsunlimited.com/submit. We will get back to you ASAP and continue to do our best in making our submission process as quick and easy as possible.<br><br>How was this experience by the way? Feel free to email some feedback, suggestions or just positive reviews to feedback@peninsulamgmt.com.<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
-    }
-  }
-}
+// function sendMessage(err, event, user) {
+//   if (err) {
+//     if (event.email && event.name) {
+
+//       // sendEmail("CHRISTIAN", "coayscue@artistsunlimited.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
+//       // sendEmail("EDWARD", "edward@peninsulamgmt.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
+//       // sendEmail("PENINSULA", "latropicalofficial@gmail.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
+//     } else {
+//       User.findById(event.owner)
+//         .then(function(owner) {
+//           // sendEmail(user.soundcloud.username, user.email, "Artists Unlimited", "coayscue@artistsunlimited.com", "ERROR REPOSTING TRACK!", "Hey " + user.soundcloud.username + ",<br><br>There was an error reposting a track!<br><br>Type: " + event.type + (!event.trackID ? " - autofill" : "") + (!!owner ? "<br>Owner: <a href=" + owner.soundcloud.permalinkURL + ">" + owner.soundcloud.username + "</a>" : "") + (!!event.title ? "<br>Title: " + event.title : "") + (!!event.trackURL ? "<br>URL: " + event.trackURL : "") + "<br><br>The issue is likely that your access token has expired. Simply log back into <a href='https://artistsunlimited.com/login'>Artist Tools</a> to fix this.<br><br><br><br>Error: " + ((typeof err) == 'object' ? JSON.stringify(err) : err));
+//           // sendEmail("Peninsula", "latropicalofficial@gmail.com", "Artists Unlimited", "coayscue@artistsunlimited.com", "ERROR REPOSTING TRACK!", "Hey " + user.soundcloud.username + ",<br><br>There was an error reposting a track!<br><br>Type: " + event.type + (!event.trackID ? " - autofill" : "") + (!!owner ? "<br>Owner: <a href=" + owner.soundcloud.permalinkURL + ">" + owner.soundcloud.username + "</a>" : "") + (!!event.title ? "<br>Title: " + event.title : "") + (!!event.trackURL ? "<br>URL: " + event.trackURL : "") + "<br><br>The issue is likely that your access token has expired. Simply log back into <a href='https://artistsunlimited.com/login'>Artist Tools</a> to fix this.<br><br><br><br>Error: " + ((typeof err) == 'object' ? JSON.stringify(err) : err));
+//           // sendEmail("Christian", "coayscue@gmail.com", "Artists Unlimited", "coayscue@artistsunlimited.com", "ERROR REPOSTING TRACK!", "Hey " + user.soundcloud.username + ",<br><br>There was an error reposting a track!<br><br>Type: " + event.type + (!event.trackID ? " - autofill" : "") + (!!owner ? "<br>Owner: <a href=" + owner.soundcloud.permalinkURL + ">" + owner.soundcloud.username + "</a>" : "") + (!!event.title ? "<br>Title: " + event.title : "") + (!!event.trackURL ? "<br>URL: " + event.trackURL : "") + "<br><br>The issue is likely that your access token has expired. Simply log back into <a href='https://artistsunlimited.com/login'>Artist Tools</a> to fix this.<br><br><br><br>Error: " + ((typeof err) == 'object' ? JSON.stringify(err) : err));
+//         });
+//     }
+//   } else {
+//     // if (event.email && event.name) {
+//     //   sendEmail(event.name, event.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + event.name + ",<br><br>We would just like to let you know the track <a href='" + event.trackURL + "'>" + event.title + "</a> has been reposted on <a href='" + user.soundcloud.permalinkURL + "'>" + user.soundcloud.username + "</a>! If you would like to do another round of reposts please resubmit your track to artistsunlimited.com/submit. We will get back to you ASAP and continue to do our best in making our submission process as quick and easy as possible.<br><br>How was this experience by the way? Feel free to email some feedback, suggestions or just positive reviews to feedback@peninsulamgmt.com.<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
+//     // }
+//   }
+// }
 
 function postComment(event, user) {
   scWrapper.request({

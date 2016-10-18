@@ -269,6 +269,7 @@ router.put('/offline', function(req, res, next) {
     res.send(r);
   });
 });
+
 router.put('/hideNotification', function(req, res, next) {
   if (!req.user) {
     next(new Error('Unauthorized'));

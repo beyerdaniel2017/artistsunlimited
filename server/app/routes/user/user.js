@@ -19,19 +19,18 @@ scWrapper.init({
 module.exports = router;
 
 router.get('/isUserAuthenticate', function(req, res, next) {
-  if(req.user && req.user._id != undefined){
+  if (req.user && req.user._id != undefined) {
     res.send(req.user);
-  }else{
+  } else {
     res.send(null);
   }
 });
 
 router.get('/byId/:id', function(req, res, next) {
- if (!req.user) 
-    {
-      next(new Error('Unauthorized'));
-      return;
-    }
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
   User.findById(req.params.id)
     .then(function(user) {
       //if (user.soundcloud.token) user.soundcloud.token = undefined;
@@ -40,13 +39,12 @@ router.get('/byId/:id', function(req, res, next) {
 });
 
 router.get('/bySoundcloudID/:id', function(req, res, next) {
-  if (!req.user) 
-    {
-      next(new Error('Unauthorized'));
-      return;
-    }
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
   User.findOne({
-    'soundcloud.id': parseInt(req.params.id)
+      'soundcloud.id': parseInt(req.params.id)
     })
     .then(function(user) {
       //if (user.soundcloud.token) user.soundcloud.token = undefined;
@@ -55,11 +53,10 @@ router.get('/bySoundcloudID/:id', function(req, res, next) {
 });
 
 router.post('/withIDs', function(req, res, next) {
- if (!req.user) 
-    {
-      next(new Error('Unauthorized'));
-      return;
-    }
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
   User.find({
       _id: {
         $in: req.body
@@ -71,11 +68,10 @@ router.post('/withIDs', function(req, res, next) {
 });
 
 router.get('/getUserID', function(req, res, next) {
-  if (!req.user) 
-    {
-      next(new Error('Unauthorized'));
-      return;
-    }
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
   User.findOne({
       role: 'superadmin'
     }).limit(1)
@@ -85,13 +81,13 @@ router.get('/getUserID', function(req, res, next) {
 });
 
 router.get('/getUserByURL/:username/:page', function(req, res, next) {
-if (!req.user) 
-    {
-      next(new Error('Unauthorized'));
-      return;
-    }  var query = {};
-  var url = rootURL+"/custom/"+req.params.username+"/"+req.params.page;
-  if(req.params.page.indexOf('submit') != -1){
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
+  var query = {};
+  var url = rootURL + "/custom/" + req.params.username + "/" + req.params.page;
+  if (req.params.page.indexOf('submit') != -1) {
     query = {
       'paidRepost.submissionUrl': url
     };
@@ -99,43 +95,42 @@ if (!req.user)
     query = {
       'paidRepost.premierUrl': url
     };
-  } 
+  }
   User.findOne(query)
 
   .then(function(user) {
-    if(user && user.paidRepost.length > 0){
-      if(req.params.page.indexOf('submit') != -1){
-        var u = user.paidRepost.find(function(pr){
-          return pr.submissionUrl == url;
-        })
-        if(u){
-          res.send(u.userID);
+      if (user && user.paidRepost.length > 0) {
+        if (req.params.page.indexOf('submit') != -1) {
+          var u = user.paidRepost.find(function(pr) {
+            return pr.submissionUrl == url;
+          })
+          if (u) {
+            res.send(u.userID);
           } else {
-          res.send(null);
-        }
+            res.send(null);
+          }
         } else {
-        var u = user.paidRepost.find(function(pr){
-          return pr.premierUrl == url;
-        })
-        if(u){
-          res.send(u.userID);
+          var u = user.paidRepost.find(function(pr) {
+            return pr.premierUrl == url;
+          })
+          if (u) {
+            res.send(u.userID);
           } else {
-          res.send(null);
+            res.send(null);
+          }
         }
-      }
       } else {
-      res.send(null);
-    }    
-  })
-  .then(null, next);
+        res.send(null);
+      }
+    })
+    .then(null, next);
 });
 
 router.post('/bySCURL', function(req, res, next) {
-if (!req.user) 
-    {
-      next(new Error('Unauthorized'));
-      return;
-    }
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
   var minFollowers = (req.body.minFollower ? parseInt(req.body.minFollower) : 0);
   var maxFollowers = (req.body.maxFollower ? parseInt(req.body.maxFollower) : 100000000);
   var originalUrl = (req.body.url != "") ? req.body.url : undefined;
@@ -162,38 +157,38 @@ if (!req.user)
   }
   var notInUsers = [];
   Trade.find({
-      $or: [{
-        'p1.user': req.user._id
-      }, {
-        'p2.user': req.user._id
-      }]
-    })
+    $or: [{
+      'p1.user': req.user._id
+    }, {
+      'p2.user': req.user._id
+    }]
+  })
 
-    .then(function(trades) {
-      if (trades.length > 0) {
-        trades.forEach(function(trade, index) {
-          var u1 = trade.p1.user.toString();
-          var u2 = trade.p2.user.toString();
-          if (notInUsers.indexOf(u1) == -1) {
-            notInUsers.push(u1);
-          }
-          if (notInUsers.indexOf(u2) == -1) {
-            notInUsers.push(u2);
-          }
-          if (index == (trades.length - 1)) {
-            searchObj['_id'] = {
-              $nin: notInUsers
-            };
-            findUsers(searchObj);
-          }
-        });
-      } else {
-        searchObj['_id'] = {
-          $nin: req.user._id
-        };
-        findUsers(searchObj);
-      }
-    }).then(null, next);
+  .then(function(trades) {
+    if (trades.length > 0) {
+      trades.forEach(function(trade, index) {
+        var u1 = trade.p1.user.toString();
+        var u2 = trade.p2.user.toString();
+        if (notInUsers.indexOf(u1) == -1) {
+          notInUsers.push(u1);
+        }
+        if (notInUsers.indexOf(u2) == -1) {
+          notInUsers.push(u2);
+        }
+        if (index == (trades.length - 1)) {
+          searchObj['_id'] = {
+            $nin: notInUsers
+          };
+          findUsers(searchObj);
+        }
+      });
+    } else {
+      searchObj['_id'] = {
+        $nin: req.user._id
+      };
+      findUsers(searchObj);
+    }
+  }).then(null, next);
   var findUsers = function(sObj) {
     User.find(sObj)
       .sort({
@@ -202,73 +197,72 @@ if (!req.user)
       .skip(recordRange.skip)
       .limit(recordRange.limit)
 
-      .then(function(user) {
-        if (user.length > 0) {
-          res.send(user);
-        } else if (originalUrl !== '' && originalUrl !== undefined) {
-          var reqObj = {
-            method: 'GET',
-            path: '/resolve.json',
-            qs: {
-              url: originalUrl
-            }
-          };
-          scWrapper.request(reqObj, function(err, result) {
-            if (err) {
-              return res.json({
-                "success": false,
-                message: "Error in processing your request"
-              });
-            };
-            https.get(result.location, function(httpRes2) {
-              var userBody = '';
-              httpRes2.on("data", function(songChunk) {
-                  userBody += songChunk;
-                })
-                .on("end", function() {
-                  var user = JSON.parse(userBody);
-                  User.findOne({
-                      'soundcloud.id': user.id
-                    })
-
-                    .then(function(data) {
-                      if (!data) {
-                        var newUser = new User({
-                          'name': user.username,
-                          'soundcloud': {
-                            'id': user.id,
-                            'username': user.username,
-                            'permalinkURL': user.permalink_url,
-                            'avatarURL': user.avatar_url.replace('large', 't500x500'),
-                            'followers': user.followers_count
-                          }
-                        });
-                        newUser.save();
-                        res.send([newUser]);
-                      } else {
-                        res.send([]);
-                      }
-                    }).then(null, next);
-                });
+    .then(function(user) {
+      if (user.length > 0) {
+        res.send(user);
+      } else if (originalUrl !== '' && originalUrl !== undefined) {
+        var reqObj = {
+          method: 'GET',
+          path: '/resolve.json',
+          qs: {
+            url: originalUrl
+          }
+        };
+        scWrapper.request(reqObj, function(err, result) {
+          if (err) {
+            return res.json({
+              "success": false,
+              message: "Error in processing your request"
             });
+          };
+          https.get(result.location, function(httpRes2) {
+            var userBody = '';
+            httpRes2.on("data", function(songChunk) {
+                userBody += songChunk;
+              })
+              .on("end", function() {
+                var user = JSON.parse(userBody);
+                User.findOne({
+                  'soundcloud.id': user.id
+                })
+
+                .then(function(data) {
+                  if (!data) {
+                    var newUser = new User({
+                      'name': user.username,
+                      'soundcloud': {
+                        'id': user.id,
+                        'username': user.username,
+                        'permalinkURL': user.permalink_url,
+                        'avatarURL': user.avatar_url.replace('large', 't500x500'),
+                        'followers': user.followers_count
+                      }
+                    });
+                    newUser.save();
+                    res.send([newUser]);
+                  } else {
+                    res.send([]);
+                  }
+                }).then(null, next);
+              });
           });
-        } else {
-          res.send([]);
-        }
-      }).then(null, next);
+        });
+      } else {
+        res.send([]);
+      }
+    }).then(null, next);
   }
 });
 
 /*profile updateion*/
 router.post('/profilePicUpdate', function(req, res, next) {
- if (!req.user) 
-    {
-      next(new Error('Unauthorized'));
-      return;
-    }
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
   parseMultiPart()
-  .then(uploadToBucket)
-  .catch(errorHandler);
+    .then(uploadToBucket)
+    .catch(errorHandler);
   var body = {
     fields: {},
     file: {}
@@ -318,7 +312,7 @@ router.post('/profilePicUpdate', function(req, res, next) {
     });
   }
 
-  function uploadToBucket() {  
+  function uploadToBucket() {
     return new Promise(function(resolve, reject) {
       AWS.config.update({
         accessKeyId: awsConfig.accessKeyId,
@@ -338,15 +332,15 @@ router.post('/profilePicUpdate', function(req, res, next) {
         if (err) {
           reject(err);
           res.send({
-            success:false,
-            data:data
+            success: false,
+            data: data
           });
-        } else {  
-               
+        } else {
+
           resolve(data);
           res.send({
-           success:true,
-           data:data
+            success: true,
+            data: data
           });
         }
       });
@@ -360,11 +354,10 @@ router.post('/profilePicUpdate', function(req, res, next) {
 });
 
 router.put('/updateAdmin', function(req, res, next) {
-if (!req.user) 
-    {
-      next(new Error('Unauthorized'));
-      return;
-    }
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
   User.findByIdAndUpdate(req.user._id, req.body)
     .then(function(user) {
       res.send(user);
@@ -373,61 +366,60 @@ if (!req.user)
 
 
 router.put('/updateuserRecord', function(req, res, next) {
-  var id= req.body._id;
-  delete req.body._id;
+    var id = req.body._id;
+    delete req.body._id;
     User.findByIdAndUpdate(id, req.body)
-    .then(function(user) {
-      res.send(user);
-    }).then(null, next);
-})
-/*Admin profile update start*/
+      .then(function(user) {
+        res.send(user);
+      }).then(null, next);
+  })
+  /*Admin profile update start*/
 router.post('/updateAdminProfile', function(req, res, next) {
-  if (!req.user) 
-    {
-      next(new Error('Unauthorized'));
-      return;
-    }
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
   var body = req.body;
-  var updateObj=body;
+  var updateObj = body;
   if (updateObj.pictureUrl) {
     updateObj.profilePicture = body.pictureUrl
   }
-  if(updateObj.email){
+  if (updateObj.email) {
     updateObj.email = body.email;
   }
-  if(updateObj.password) {
+  if (updateObj.password) {
     updateObj.salt = User.generateSalt();
     updateObj.password = User.encryptPassword(body.password, updateObj.salt);
-  } 
-  if(updateObj.email != "" && updateObj.email != undefined){
+  }
+  if (updateObj.email != "" && updateObj.email != undefined) {
     User.findOne({
       '_id': {
         $ne: req.user._id
       },
       email: body.email
     }, function(err, u) {
-    if(u){
+      if (u) {
         res.send({
           message: "Email already register."
         });
       } else {
-      User.findOneAndUpdate({
-        '_id': req.user._id
-      }, {
-        $set: updateObj
-      }, {
-        new: true
+        User.findOneAndUpdate({
+            '_id': req.user._id
+          }, {
+            $set: updateObj
+          }, {
+            new: true
           })
-      .then(function(result) {
-        res.send(result);
-      })
-      .then(null, function(err) {
-        next(err);
-      });
-    }
-  })
+          .then(function(result) {
+            res.send(result);
+          })
+          .then(null, function(err) {
+            next(err);
+          });
+      }
+    })
   } else {
-User.findOneAndUpdate({
+    User.findOneAndUpdate({
         '_id': req.user._id
       }, {
         $set: updateObj
@@ -440,31 +432,30 @@ User.findOneAndUpdate({
       .then(null, function(err) {
         next(err);
       });
-}
+  }
 });
 
 router.post('/checkUsercount', function(req, res, next) {
-  if (!req.user) 
-    {
-      next(new Error('Unauthorized'));
-      return;
-    }
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
   var query = {
     "paidRepost.submissionUrl": req.body.url
   };
-  if(req.body.action=="id")
+  if (req.body.action == "id")
     query = {
       "paidRepost.userID": req.body.userID,
       "_id": req.user._id
     };
-      
+
   User.find(query)
-  .then(function(user) {
-    if(user)
-      return res.json(user.length);
-    else
-      return res.json(0);
-  })
+    .then(function(user) {
+      if (user)
+        return res.json(user.length);
+      else
+        return res.json(0);
+    })
 })
 
 /*Admin profile update start*/
@@ -472,29 +463,28 @@ router.post('/updatePaidRepost', function(req, res, next) {
   var body = req.body;
   body.createdOn = new Date();
   User.findOneAndUpdate({
-    '_id': req.user._id,
-    'paidRepost.userID': body.userID
-  }, {
+      '_id': req.user._id,
+      'paidRepost.userID': body.userID
+    }, {
       $set: {
         'paidRepost.$': body
       }
-  }, {
-    new: true
+    }, {
+      new: true
     })
-  .then(function(result) {
-    res.send(result);
-  })
-  .then(null, function(err) {
-    next(err);
-  });
+    .then(function(result) {
+      res.send(result);
+    })
+    .then(null, function(err) {
+      next(err);
+    });
 });
 
 router.get('/getUserPaidRepostAccounts', function(req, res) {
-  if (!req.user) 
-    {
-      next(new Error('Unauthorized'));
-      return;
-    }
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
   var accounts = req.user.paidRepost;
   var results = [];
   var i = -1;
@@ -505,13 +495,13 @@ router.get('/getUserPaidRepostAccounts', function(req, res) {
       User.findOne({
         _id: acc.userID
       }, function(e, u) {
-        if(u){
+        if (u) {
           results.push(u);
         }
         next();
       });
     } else {
-      console.log('results',results);
+      console.log('results', results);
       res.send(results);
     }
   }
@@ -520,29 +510,32 @@ router.get('/getUserPaidRepostAccounts', function(req, res) {
 
 router.get('/syncUsers', function(req, res, next) {
   var finalResult = [];
-  User.find({availableSlots: {$exists: false}})
-  .then(function(result){
-    var count = 0;
-    result.forEach(function(user) {
-      updateUser(user);
-    });    
-    //res.send(finalResult);
-    function updateUser(user){      
-      var objUser = user.toJSON();
-      User.update({
-        '_id': objUser._id
-      }, {
-        $set: objUser
-      },{
-        new: true
-      })  
-      .then(function(u) {
-        finalResult.push(u);
-      })    
-    }    
-  });
+  User.find({
+      availableSlots: {
+        $exists: false
+      }
+    })
+    .then(function(result) {
+      var count = 0;
+      result.forEach(function(user) {
+        updateUser(user);
+      });
+      //res.send(finalResult);
+      function updateUser(user) {
+        var objUser = user.toJSON();
+        User.update({
+            '_id': objUser._id
+          }, {
+            $set: objUser
+          }, {
+            new: true
+          })
+          .then(function(u) {
+            finalResult.push(u);
+          })
+      }
+    });
 });
-
 
 // router.post('/syncSCEmails', function(req, res, next) {
 //   var sCount = 0;
