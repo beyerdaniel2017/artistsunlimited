@@ -14,6 +14,7 @@ var Promise = require('promise');
 var scConfig = global.env.SOUNDCLOUD;
 var sendEmail = require("../../mandrill/sendEmail.js"); //takes: to_name, to_email, from_name, from_email, subject, message_html
 var paypalCalls = require("../../payPal/paypalCalls.js");
+var scheduleRepost = require("../../scheduleRepost/scheduleRepost.js");
 var scWrapper = require("../../SCWrapper/SCWrapper.js");
 scWrapper.init({
   id: scConfig.clientID,
@@ -176,8 +177,7 @@ router.get('/getUnacceptedSubmissions', function(req, res, next) {
 
 
 router.get('/getGroupedSubmissions', function(req, res, next) {
-if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -201,8 +201,7 @@ if (!req.user)
 });
 
 router.get('/getPaidRepostAccounts', function(req, res) {
- if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -231,8 +230,7 @@ router.get('/getPaidRepostAccounts', function(req, res) {
 
 
 router.get('/getAccountsByIndex/:user_id', function(req, res) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -514,12 +512,14 @@ router.put('/completedPayment', function(req, res, next) {
       }]
     })
     .then(function(submission) {
+      if (submission) {
       sub = responseObj.submission = submission;
       var payment = sub.status == 'pooled' ? sub.payment : sub.pooledPayment;
       return paypalCalls.executePayment(payment.id, {
         payer_id: req.body.PayerID,
         transactions: payment.transactions
       });
+      } else next('submission not found');
     })
     .then(function(payment) {
       var promiseArray = [];
@@ -555,7 +555,6 @@ router.put('/completedPayment', function(req, res, next) {
 
 function schedulePaidRepost(channel, submission) {
   return new Promise(function(fulfill, reject) {
-    var today = new Date();
     scWrapper.setToken(channel.user.token);
         var reqObj = {
           method: 'DELETE',
@@ -565,42 +564,11 @@ function schedulePaidRepost(channel, submission) {
           }
         };
         scWrapper.request(reqObj, function(err, data) {});
-        RepostEvent.find({
-        userID: channel.user.id,
-            day: {
-              $gt: today
-            }
-          })
-
-          .then(function(allEvents) {
-        allEvents.forEach(function(event) {
-          event.day = new Date(event.day);
-            });
+    var payment = submission.status == 'pooled' ? submission.payment : submission.pooledPayment;
       User.findById(channel.userID)
-          .then(function(chan) {
-            if (chan.blockRelease) chan.blockRelease = new Date(chan.blockRelease);
-            else chan.blockRelease = new Date(0);
-            var continueSearch = true;
-            var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-            var ind = 1;
-            while (continueSearch) {
-              var day = daysOfWeek[((new Date()).getDay() + ind) % 7];
-              chan.availableSlots[day].forEach(function(hour) {
-                var scheduleDate = new Date();
-                scheduleDate.setHours(hour);
-                var desiredDay = chan.blockRelease > scheduleDate ? chan.blockRelease : scheduleDate;
-                desiredDay.setTime(desiredDay.getTime() + ind * 24 * 60 * 60 * 1000);
-                desiredDay.setHours(hour);
-                if (continueSearch) {
-                  var event = allEvents.find(function(eve) {
-                    return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
-                  });
-                  if (!event) {
-                    continueSearch = false;
-                    var payment = submission.status == 'pooled' ? submission.payment : submission.pooledPayment;
-                    var newEve = new RepostEvent({
+      .then(function(user) {
+        var eventDetails = {
                       type: 'paid',
-                      day: desiredDay,
                       trackID: submission.trackID,
                       title: submission.title,
                       trackURL: submission.trackURL,
@@ -608,23 +576,18 @@ function schedulePaidRepost(channel, submission) {
                       email: submission.email,
                       name: submission.name,
                       price: channel.price,
-                      saleID: payment.transactions[0].related_resources[0].sale.id
-                    });
-                    newEve.save()
-                      .then(function(eve) {
-                        eve.day = new Date(eve.day);
+          saleID: payment.transactions[0].related_resources[0].sale.id,
+        }
+        if (user.repostSettings && user.repostSettings.paid && user.repostSettings.paid.like) eventDetails.like = true;
+        if (user.repostSettings && user.repostSettings.paid && user.repostSettings.paid.comment) eventDetails.comment = user.repostSettings.paid.comments[Math.floor(Math.random() * user.repostSettings.paid.comments.length)];
+        console.log(eventDetails);
+        scheduleRepost(eventDetails, new Date())
+          .then(function(event) {
                             fulfill({
                           channelName: channel.user.username,
-                          date: eve.day,
-                          event: eve
+              date: event.day,
+              event: event
                             });
-                      })
-                      .then(null, reject);
-                  }
-                }
-              });
-              ind++;
-            }
           }).then(null, reject);
       }).then(null, reject);
   })

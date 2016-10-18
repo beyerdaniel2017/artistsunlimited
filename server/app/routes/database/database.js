@@ -10,6 +10,7 @@ var TrackedUser = mongoose.model('TrackedUser');
 var DownloadTrack = mongoose.model('DownloadTrack');
 var User = mongoose.model('User');
 var PaidRepostAccount = mongoose.model('PaidRepostAccount');
+var RepostEvent = mongoose.model('RepostEvent');
 var csv = require('csv-write-stream');
 var fs = require('fs');
 var scConfig = global.env.SOUNDCLOUD;
@@ -36,8 +37,7 @@ scWrapper.init({
 });
 
 router.get('/getuserinfo', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -63,8 +63,7 @@ router.get('/getuserinfo', function(req, res, next) {
 });
 
 router.post('/adduser', function(req, res, next) {
- if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -536,8 +535,7 @@ router.post('/downloadurl/delete', function(req, res, next) {
 });
 
 router.get('/adminUserNetwork/:id', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -564,8 +562,7 @@ router.get('/downloadurl/:id', function(req, res, next) {
 });
 
 router.get('/downloadurl', function(req, res, next) {
-if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -601,8 +598,7 @@ router.get('/downloadurladmin/:userid', function(req, res, next) {
 });
 
 router.post('/paidrepost', function(req, res, next) {
- if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -696,8 +692,7 @@ router.post('/paidrepost', function(req, res, next) {
 });
 
 router.put('/profile', function(req, res, next) {
- if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -724,8 +719,7 @@ var encryptPassword = function(plainText, salt) {
 };
 
 router.put('/thirdPartyDetails', function(req, res, next) {
-if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -754,8 +748,7 @@ if (!req.user)
 });
 
 router.put('/deleteThirdPartyAccess', function(req, res, next) {
- if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -777,8 +770,7 @@ router.put('/deleteThirdPartyAccess', function(req, res, next) {
 });
 
 router.put('/saveLinkedAccount', function(req, res, next) {
- if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -836,8 +828,7 @@ router.put('/saveLinkedAccount', function(req, res, next) {
 });
 
 router.put('/deleteLinkedAccount', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -879,8 +870,7 @@ router.put('/deleteLinkedAccount', function(req, res, next) {
 
 
 router.post('/updateUserAccount', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -903,8 +893,7 @@ router.post('/updateUserAccount', function(req, res, next) {
 });
 
 router.post('/updateGroup', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -927,8 +916,7 @@ router.post('/updateGroup', function(req, res, next) {
 });
 
 router.post('/updateSubmissionsCustomEmailButtons', function(req, res, next) {
- if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -951,8 +939,7 @@ router.post('/updateSubmissionsCustomEmailButtons', function(req, res, next) {
 });
 
 router.post('/updatePremierCustomEmailButtons', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -975,8 +962,7 @@ router.post('/updatePremierCustomEmailButtons', function(req, res, next) {
 });
 
 router.put('/deleteUserAccount/:id', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -1001,8 +987,7 @@ router.put('/deleteUserAccount/:id', function(req, res, next) {
     });
 });
 router.post('/profile/edit', function(req, res, next) {
- if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -1046,8 +1031,7 @@ router.post('/profile/edit', function(req, res, next) {
 });
 
 router.put('/profile/notifications', function(req, res, next) {
-     if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -1154,8 +1138,7 @@ router.post('/profile/soundcloud', function(req, res, next) {
 });
 
 router.put('/networkaccount', function(req, res, next) {
-   if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -1173,8 +1156,7 @@ router.put('/networkaccount', function(req, res, next) {
 })
 
 router.post('/networkaccount', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -1307,8 +1289,7 @@ router.post('/networkaccount', function(req, res, next) {
 });
 
 router.get('/userNetworks', function(req, res, next) {
-if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -1328,8 +1309,7 @@ if (!req.user)
 });
 
 router.put('/updateRepostSettings', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -1350,3 +1330,25 @@ router.put('/updateRepostSettings', function(req, res, next) {
       next(err);
     });
 });
+
+router.get('/updateAllDefaults', function(req, res, next) {
+  User.find({})
+    .then(function(users) {
+      users.forEach(function(user) {
+        user.repostSettings.paid = {
+          like: false,
+          comment: false,
+          comments: []
+        }
+        user.save();
+      })
+      return RepostEvent.find({})
+    })
+    .then(function(repEvents) {
+      repEvents.forEach(function(repEvent) {
+        repEvent.save();
+      })
+      res.send('ok')
+    })
+    .then(null, next);
+})

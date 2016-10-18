@@ -27,8 +27,7 @@ router.get('/isUserAuthenticate', function(req, res, next) {
 });
 
 router.get('/byId/:id', function(req, res, next) {
- if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -40,8 +39,7 @@ router.get('/byId/:id', function(req, res, next) {
 });
 
 router.get('/bySoundcloudID/:id', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -55,8 +53,7 @@ router.get('/bySoundcloudID/:id', function(req, res, next) {
 });
 
 router.post('/withIDs', function(req, res, next) {
- if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -71,8 +68,7 @@ router.post('/withIDs', function(req, res, next) {
 });
 
 router.get('/getUserID', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -85,11 +81,11 @@ router.get('/getUserID', function(req, res, next) {
 });
 
 router.get('/getUserByURL/:username/:page', function(req, res, next) {
-if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
-    }  var query = {};
+  }
+  var query = {};
   var url = rootURL+"/custom/"+req.params.username+"/"+req.params.page;
   if(req.params.page.indexOf('submit') != -1){
     query = {
@@ -131,8 +127,7 @@ if (!req.user)
 });
 
 router.post('/bySCURL', function(req, res, next) {
-if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -261,8 +256,7 @@ if (!req.user)
 
 /*profile updateion*/
 router.post('/profilePicUpdate', function(req, res, next) {
- if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -360,8 +354,7 @@ router.post('/profilePicUpdate', function(req, res, next) {
 });
 
 router.put('/updateAdmin', function(req, res, next) {
-if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -382,8 +375,7 @@ router.put('/updateuserRecord', function(req, res, next) {
 })
 /*Admin profile update start*/
 router.post('/updateAdminProfile', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -444,8 +436,7 @@ User.findOneAndUpdate({
 });
 
 router.post('/checkUsercount', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -490,8 +481,7 @@ router.post('/updatePaidRepost', function(req, res, next) {
 });
 
 router.get('/getUserPaidRepostAccounts', function(req, res) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -520,7 +510,11 @@ router.get('/getUserPaidRepostAccounts', function(req, res) {
 
 router.get('/syncUsers', function(req, res, next) {
   var finalResult = [];
-  User.find({availableSlots: {$exists: false}})
+  User.find({
+      availableSlots: {
+        $exists: false
+      }
+    })
   .then(function(result){
     var count = 0;
     result.forEach(function(user) {
@@ -542,7 +536,6 @@ router.get('/syncUsers', function(req, res, next) {
     }    
   });
 });
-
 
 // router.post('/syncSCEmails', function(req, res, next) {
 //   var sCount = 0;

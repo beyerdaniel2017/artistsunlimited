@@ -6,6 +6,8 @@ var Event = mongoose.model('Event');
 var RepostEvent = mongoose.model('RepostEvent');
 var moment = require('moment');
 var User = mongoose.model('User');
+var scheduleRepost = require("../../scheduleRepost/scheduleRepost.js");
+
 
 //----------Public Repost Events----------
 router.get('/forUser/:id', function(req, res, next) {
@@ -28,8 +30,7 @@ router.get('/forUser/:id', function(req, res, next) {
 })
 
 router.get('/respostEvent/:id', function(req, res, next) {
- if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -73,8 +74,7 @@ router.get('/respostEvent/:id', function(req, res, next) {
 
 /*Get Repost events for List*/
 router.get('/listEvents/:id', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -96,8 +96,7 @@ router.get('/listEvents/:id', function(req, res, next) {
 })
 
 router.put('/repostEvents', function(req, res, next) {
- if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -138,8 +137,7 @@ function denyTradeOverlap(repostEvent) {
 }
 
 router.post('/repostEvents', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -153,8 +151,7 @@ router.post('/repostEvents', function(req, res, next) {
 });
 
 router.post('/repostEventsScheduler', function(req, res, next) {
-  if (!req.user) 
-  {
+  if (!req.user) {
     next(new Error('Unauthorized'));
     return;
   }
@@ -163,72 +160,19 @@ router.post('/repostEventsScheduler', function(req, res, next) {
     .then(function(ev) {
       var scheduleDate = new Date(ev.day);
       req.body.otherChannels.forEach(function(channelID) {
-        scheduleDate = new Date(scheduleDate.getTime() + 3 * 3600000);
-        User.findOne({
-            'soundcloud.id': channelID
-          })
-          .then(function(channel) {
-            if (channel.blockRelease) channel.blockRelease = new Date(channel.blockRelease);
-            else channel.blockRelease = new Date(0);
-            var desiredDay = channel.blockRelease > scheduleDate ? new Date(channel.blockRelease.getTime() + 24 * 3600000) : scheduleDate;
-            return scheduleEvent(channel, desiredDay, JSON.parse(JSON.stringify(req.body)));
-          }).then(null, next)
+        scheduleDate = new Date(scheduleDate.getTime() + 5 * 3600000);
+        var eventDetails = JSON.parse(JSON.stringify(ev));
+        delete eventDetails._id;
+        eventDetails.comment = undefined;
+        eventDetails.userID = channelID;
+        scheduleRepost(eventDetails, scheduleDate);
       })
       res.send(ev)
     }).then(null, next);
 });
 
-function scheduleEvent(channel, scheduledDate, eventDetails) {
-  return new Promise(function(fulfill, reject) {
-    RepostEvent.find({
-        userID: channel.soundcloud.id,
-                day: {
-          $gt: new Date()
-        }
-      })
-      .then(function(allEvents) {
-        allEvents.forEach(function(event) {
-          event.day = new Date(event.day);
-        });
-        var continueSearch = true;
-        var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-        var ind = 1;
-        while (continueSearch) {
-          var day = daysOfWeek[(scheduledDate.getDay() + ind) % 7];
-          channel.availableSlots[day].forEach(function(hour) {
-            var desiredDay = new Date(scheduledDate);
-            desiredDay.setTime(desiredDay.getTime() + ind * 24 * 60 * 60 * 1000);
-            desiredDay.setHours(hour);
-            if (continueSearch) {
-              var event = allEvents.find(function(eve) {
-                return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
-              });
-              if (!event) {
-                continueSearch = false;
-                eventDetails.day = desiredDay;
-                eventDetails.comment = undefined;
-                eventDetails.userID = channel.soundcloud.id
-                if ((new Date(eventDetails.unrepostDate)).getTime() > 1000000000) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + 24 * 3600000)
-                else eventDetails.unrepostDate = new Date(0);
-                var newEve = new RepostEvent(eventDetails);
-                newEve.save()
-                  .then(function(eve) {
-                    eve.day = new Date(eve.day);
-                    fulfill('done');
-                  })
-                  .then(null, reject);
-                }
-                }
-          });
-          ind++;
-              }
-      }).then(null, reject);
-            })
-        }
-
 router.delete('/repostEvents/:id', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -241,8 +185,7 @@ router.delete('/repostEvents/:id', function(req, res, next) {
 });
 
 router.post('/saveAvailableSlots', function(req, res, next) {
-  if (!req.user) 
-    {
+  if (!req.user) {
       next(new Error('Unauthorized'));
       return;
     }
@@ -282,8 +225,7 @@ router.get('/getRepostEvents/:id', function(req, res, next) {
             User.findOne({
               'soundcloud.id': userid
             }, function(err, user) {
-              if(user)
-              {
+            if (user) {
             var result = {
               trackInfo : tracks[i],
               userInfo : user.soundcloud
