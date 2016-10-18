@@ -99,6 +99,14 @@ var schema = new mongoose.Schema({
         type: Array,
         default: []
     },
+    repostCustomizeEmails: {
+        type: Array,
+        default: []
+    },
+    premierCustomizeEmails: {
+        type: Array,
+        default: []
+    },
     profilePicture: {
         type: String
     },

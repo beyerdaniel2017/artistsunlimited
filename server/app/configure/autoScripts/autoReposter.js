@@ -9,6 +9,7 @@ var sendEmail = require('../../mandrill/sendEmail.js');
 var request = require('request');
 var notificationCenter = require('../../notificationCenter/notificationCenter.js');
 var paypalCalls = require('../../payPal/paypalCalls.js');
+var scheduleRepost = require('../../scheduleRepost/scheduleRepost.js');
 
 module.exports = doRepost;
 //executes every min
@@ -89,7 +90,9 @@ function repostAndRemove(event, user, repCount) {
             user.save();
           }
           if (event.email && event.name) {
-            scheduleRepost(event, new Date())
+            var newEvent = JSON.parse(JSON.stringify(event));
+            delete newEvent._id;
+            scheduleRepost(newEvent, new Date())
               .then(function(ev) {
                 Submission.findOne({
                   $or: [{
@@ -98,17 +101,21 @@ function repostAndRemove(event, user, repCount) {
                     'payment.transactions.related_resources.sale.id': ev.saleID
                   }]
                 }).then(function(submission) {
-                  sendEmail(ev.name, ev.email, "AU Server", "coayscue@artistsunlimited.com", "Failed Repost reschedule and refund", "Hi " + ev.name + ",<br><br>There was an error with a repost of " + ev.title + " on " + user.soundcloud.username + ". We will refund you the price of the repost ($" + ev.price + ") on " + (new Date(submission.refundDate)).toLocaleDateString() + ". Your track will still be reposted on " + user.soundcloud.username + " on " + ev.day.toLocaleDateString());
-                })
-              })
+                  sendEmail(ev.name, ev.email, "AU Server", "coayscue@artistsunlimited.com", "Failed Repost reschedule and refund", "Hi " + ev.name + ",<br><br>There was an error reposting " + ev.title + " on " + user.soundcloud.username + ". <br><br>We will refund you the price of the repost, $" + ev.price + ", on " + (new Date(submission.refundDate)).toLocaleDateString() + " and we have rescheduled the track to be reposted on " + user.soundcloud.username + " on " + ev.day.toLocaleDateString() + ".<br><br>Sorry for the inconvenience and thank you for your patience.<br><br>-<a href='https://artistsunlimited.com'>Artists Unlimited</a>");
+                }).then(null, console.log)
+              }).then(null, console.log);
+            event.remove();
           } else if (event.owner) {
-            scheduleRepost(event, new Date());
+            var newEvent = JSON.parse(JSON.stringify(event));
+            delete newEvent._id;
+            scheduleRepost(newEvent, new Date()).then(null, console.log);
+            event.remove();
           }
           notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', event.title + ' did not repost on ' + user.soundcloud.username + ' did not complete.', 'https://artistsunlimited.com/artistTools/scheduler');
         }
       }
     });
-  }).then(null, function() {})
+  }).then(null, console.log)
 }
 
 // /*Update Message*/

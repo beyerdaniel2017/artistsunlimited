@@ -17,7 +17,6 @@ function sendRefunds() {
       $gt: (new Date()).getTime() - 2 * 60 * 60 * 1000
     }
   }).then(function(submissions) {
-    console.log(JSON.stringify(submissions));
     return submissions.forEach(function(submission) {
       var refundArray = []
       if (submission.payment) refundArray.push(refund(submission.payment.transactions[0].related_resources[0].sale.id));
@@ -37,30 +36,35 @@ function refund(saleID) {
       saleID: saleID,
       completed: false,
       day: {
-        $lt: new Date()
+        $lt: (new Date()).getTime() - 3600000
       },
       payout: null
     })
     .then(function(repostEvents) {
       if (repostEvents.length > 0) {
+        var promiseArray = [];
         var paymentRefundTotal = 0;
-        var channelList = "<br>";
         repostEvents.forEach(function(event) {
           paymentRefundTotal += event.price;
-          User.findOne({
+          promiseArray.push(User.findOne({
             'soundcloud.id': event.userID
-          }).then(function(user) {
-            channelList += user.soundcloud.username + "<br>"
+          }))
+        });
+        return Promise.all(promiseArray).then(function(users) {
+          console.log(users);
+          var channelList = "<br>";
+          users.forEach(function(user) {
+            channelList += (user.soundcloud.username + "<br>")
           })
-        })
-        return paypalCalls.sendRefund(paymentRefundTotal, saleID)
-          .then(function(refund) {
-            repostEvents.forEach(function(event) {
-              event.payout = refund;
-              event.save();
-            })
-            sendEmail(repostEvents[0].name, repostEvents[0].email, "Artists Unlimited", "coayscue@artistsunlimited.com", "Refund", "Hello " + repostEvents.name + ",<br><br>Due to an issue with repostinge have refunded your PayPal account the amount of $" + paymentRefundTotal + " for the reposts of " + repostEvents[0].title + " on:" + cannelList + "<br> These reposts have also been rescheduled.<br><br><a href='https://artistsunlimited.com'>Artists Unlimited</a>")
-          })
+          return paypalCalls.sendRefund(paymentRefundTotal, saleID)
+            .then(function(refund) {
+              repostEvents.forEach(function(event) {
+                event.payout = refund;
+                event.save();
+              })
+              sendEmail(repostEvents[0].name, repostEvents[0].email, "Artists Unlimited", "coayscue@artistsunlimited.com", "Refund", "Hello " + repostEvents[0].name + ",<br><br>We refunded your PayPal account the amount of $" + paymentRefundTotal + " for the reposts of " + repostEvents[0].title + " on:<br>" + channelList + "<br> The reposts have also been rescheduled on the respective channels, and you should have previously received an email detailing the repost dates. We appologize for the inconvenience and thank you for your patience.<br><br>-<a href='https://artistsunlimited.com'>Artists Unlimited</a>");
+            }).then(null, console.log);
+        }).then(null, console.log)
       }
-    })
+    }).then(null, console.log);
 }

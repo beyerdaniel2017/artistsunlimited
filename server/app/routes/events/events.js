@@ -161,7 +161,8 @@ router.post('/repostEventsScheduler', function(req, res, next) {
       var scheduleDate = new Date(ev.day);
       req.body.otherChannels.forEach(function(channelID) {
         scheduleDate = new Date(scheduleDate.getTime() + 5 * 3600000);
-        eventDetails = ev;
+        var eventDetails = JSON.parse(JSON.stringify(ev));
+        delete eventDetails._id;
         eventDetails.comment = undefined;
         eventDetails.userID = channelID;
         scheduleRepost(eventDetails, scheduleDate);

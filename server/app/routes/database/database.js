@@ -10,6 +10,7 @@ var TrackedUser = mongoose.model('TrackedUser');
 var DownloadTrack = mongoose.model('DownloadTrack');
 var User = mongoose.model('User');
 var PaidRepostAccount = mongoose.model('PaidRepostAccount');
+var RepostEvent = mongoose.model('RepostEvent');
 var csv = require('csv-write-stream');
 var fs = require('fs');
 var scConfig = global.env.SOUNDCLOUD;
@@ -1334,6 +1335,11 @@ router.get('/updateAllDefaults', function(req, res, next) {
   User.find({})
     .then(function(users) {
       users.forEach(function(user) {
+        user.repostSettings.paid = {
+          like: false,
+          comment: false,
+          comments: []
+        }
         user.save();
       })
       return RepostEvent.find({})

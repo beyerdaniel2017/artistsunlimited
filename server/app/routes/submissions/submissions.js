@@ -512,12 +512,14 @@ router.put('/completedPayment', function(req, res, next) {
       }]
     })
     .then(function(submission) {
-      sub = responseObj.submission = submission;
-      var payment = sub.status == 'pooled' ? sub.payment : sub.pooledPayment;
-      return paypalCalls.executePayment(payment.id, {
-        payer_id: req.body.PayerID,
-        transactions: payment.transactions
-      });
+      if (submission) {
+        sub = responseObj.submission = submission;
+        var payment = sub.status == 'pooled' ? sub.payment : sub.pooledPayment;
+        return paypalCalls.executePayment(payment.id, {
+          payer_id: req.body.PayerID,
+          transactions: payment.transactions
+        });
+      } else next('submission not found');
     })
     .then(function(payment) {
       var promiseArray = [];
@@ -563,27 +565,31 @@ function schedulePaidRepost(channel, submission) {
     };
     scWrapper.request(reqObj, function(err, data) {});
     var payment = submission.status == 'pooled' ? submission.payment : submission.pooledPayment;
-    var eventDetails = {
-      type: 'paid',
-      trackID: submission.trackID,
-      title: submission.title,
-      trackURL: submission.trackURL,
-      userID: channel.user.id,
-      email: submission.email,
-      name: submission.name,
-      price: channel.user.price,
-      saleID: payment.transactions[0].related_resources[0].sale.id,
-      like: channel.user.repostSettings.paid.like
-    }
-    if (channel.user.repostSettings.paid && channel.user.repostSettings.paid.comment) eventDetails.comment = channel.user.repostSettings.paid.comments[Math.floor(Math.random() * channel.user.repostSettings.paid.comments.length)];
-    scheduleRepost(eventDetails, new Date())
-      .then(function(event) {
-        fulfill({
-          channelName: channel.user.username,
-          date: event.day,
-          event: event
-        });
-      }).then(null, next);
+    User.findById(channel.userID)
+      .then(function(user) {
+        var eventDetails = {
+          type: 'paid',
+          trackID: submission.trackID,
+          title: submission.title,
+          trackURL: submission.trackURL,
+          userID: channel.user.id,
+          email: submission.email,
+          name: submission.name,
+          price: channel.price,
+          saleID: payment.transactions[0].related_resources[0].sale.id,
+        }
+        if (user.repostSettings && user.repostSettings.paid && user.repostSettings.paid.like) eventDetails.like = true;
+        if (user.repostSettings && user.repostSettings.paid && user.repostSettings.paid.comment) eventDetails.comment = user.repostSettings.paid.comments[Math.floor(Math.random() * user.repostSettings.paid.comments.length)];
+        console.log(eventDetails);
+        scheduleRepost(eventDetails, new Date())
+          .then(function(event) {
+            fulfill({
+              channelName: channel.user.username,
+              date: event.day,
+              event: event
+            });
+          }).then(null, reject);
+      }).then(null, reject);
   })
 }
 
