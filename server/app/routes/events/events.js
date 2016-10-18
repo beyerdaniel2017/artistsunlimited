@@ -30,54 +30,104 @@ router.get('/forUser/:id', function(req, res, next) {
 })
 
 router.get('/respostEvent/:id', function(req, res, next) {
-  if (!req.user) {
-      next(new Error('Unauthorized'));
-      return;
-    }
+  if (!req.user){
+    next(new Error('Unauthorized'));
+    return;
+  }
   var data = [];
   RepostEvent.findOne({
-      _id: req.params.id,
+    _id: req.params.id,
+  })
+
+  .then(function(event) {
+    RepostEvent.find({
+      trackID: event.trackID
     })
 
-    .then(function(event) {
-      RepostEvent.find({
-          trackID: event.trackID
-        })
+    .then(function(tracks) {
+      var i = -1;
 
-        .then(function(tracks) {
-          var i = -1;
-
-          function next() {
-            i++;
-            if (i < tracks.length) {
-              var userid = parseInt(tracks[i].userID);
-              User.findOne({
-                'soundcloud.id': userid
-              }, function(err, user) {
-                var result = {
-                  trackInfo: tracks[i],
-                  userInfo: user.soundcloud
-                }
-                data.push(result);
-                next();
-              });
-            } else {
-              res.send(data);
+      function next() {
+        i++;
+        if (i < tracks.length) {
+          var userid = parseInt(tracks[i].userID);
+          User.findOne({
+            'soundcloud.id': userid
+          }, function(err, user) {
+            var result = {
+              trackInfo: tracks[i],
+              userInfo: user.soundcloud
             }
-          }
-          next();
-        })
-        .then(null, next);
+            data.push(result);
+            next();
+          }); 
+        } else {
+          res.send(data);
+        }
+      }
+      next();
     })
     .then(null, next);
+  })
+  .then(null, next);
+})
+
+router.get('/respostEvent/getPaidReposts/:id', function(req, res, next) {
+  if (!req.user){
+    next(new Error('Unauthorized'));
+    return;
+  }
+  var data = [];
+  RepostEvent.findOne({
+    _id: req.params.id,
+  })
+  .then(function(event) {
+    RepostEvent.find({
+      trackID: event.trackID
+    })
+    .then(function(tracks) {
+      var users = [];
+      for(var x = 0; x < tracks.length; x++){
+        users.push(parseInt(tracks[x].userID));
+      }
+      RepostEvent.find({
+        userID: {$in: users},
+        type: 'paid'
+      })
+      .then(function(events) {
+        var i = -1;
+        function next() {
+          i++;
+          if (i < events.length) {
+            var userid = parseInt(events[i].userID);
+            User.findOne({
+              'soundcloud.id': userid
+            }, function(err, user) {
+              var result = {
+                trackInfo: events[i],
+                userInfo: user.soundcloud
+              }
+              data.push(result);
+              next();
+            }); 
+          } else {
+            res.send(data);
+          }
+        }
+        next();
+      });
+    })
+    .then(null, next);
+  })
+  .then(null, next);
 })
 
 /*Get Repost events for List*/
 router.get('/listEvents/:id', function(req, res, next) {
-  if (!req.user) {
-      next(new Error('Unauthorized'));
-      return;
-    }
+  if (!req.user){
+    next(new Error('Unauthorized'));
+    return;
+  }
   var query;
   var fromDate = req.query.date ? moment().month(new Date(req.query.date).getMonth()).date(new Date(req.query.date).getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format() : moment().month(new Date().getMonth()).date(new Date().getDate()).hours(0).minutes(0).seconds(0).milliseconds(0).format();
   var toDate = req.query.date ? moment().month(new Date(req.query.date).getMonth()).date(new Date(req.query.date).getDate() + 6).hours(23).minutes(59).seconds(59).milliseconds(999).format() : moment().month(new Date().getMonth()).date(new Date().getDate()).hours(23).minutes(59).seconds(59).milliseconds(999).format();

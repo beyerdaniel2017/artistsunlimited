@@ -47,10 +47,10 @@
           <div id="scheduler-container" ng-show="itemview == 'calender'">
             <div class="calendar-day-date">
               <div class="date-top-strip">
-                <button class="btn btn-default btn-scheduler" ng-click="decrDay()"><img src="/assets/images/left-arrow.png"/></button>
+                <button class="btn btn-default btn-scheduler" ng-click="decrDay()"><img src="/assets/images/left-arrow.svg"/></button>
                 <div class="bold cell-date" ng-repeat="t in [0,1,2,3,4,5,6]">{{dayOfWeekAsString(calendar[t+dayIncr].day).substring(0,3)}} {{calendar[t+dayIncr].day.getMonth()+1}}/{{calendar[t+dayIncr].day.getDate()}}
                 </div>
-                <button class="btn btn-default btn-scheduler" ng-click="incrDay()" ><img id="scheduler-btn-back" src="/assets/images/right-arrow.png"/></button>
+                <button class="btn btn-default btn-scheduler" ng-click="incrDay()" ><img id="scheduler-btn-back" src="/assets/images/right-arrow.svg"/></button>
               </div>
             </div>
             <div style="width:100%; display:flex; flex-direction:row;">

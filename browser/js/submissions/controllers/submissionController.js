@@ -86,6 +86,16 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     'Trap',
     'Vocalists/Singer-Songwriter'
   ];
+   if(window.location.href.indexOf('admin/submissions#mysubmissions') != -1)
+      {
+        $('.nav-tabs a[href="#mysubmissions"]').tab('show');
+      }else if(window.location.href.indexOf('admin/submissions#marketplace') != -1)
+      {
+        $('.nav-tabs a[href="#marketplace"]').tab('show');
+      }else if(window.location.href.indexOf('admin/submissions#managesubmissions') != -1)
+      {
+         $('.nav-tabs a[href="#managesubmissions"]').tab('show');
+      }
 
    $scope.sendTestMail = function(index) {
       $scope.showTestEmailModal = true;

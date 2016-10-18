@@ -66,6 +66,17 @@ app.directive('scheduler', function($http) {
         });
       }
 
+      if(window.location.href.indexOf('scheduler#myschedule') != -1)
+      {
+        $('.nav-tabs a[href="#myschedule"]').tab('show');
+      }else if(window.location.href.indexOf('scheduler#organizeschedule') != -1)
+      {
+        $('.nav-tabs a[href="#organizeschedule"]').tab('show');
+      }else if(window.location.href.indexOf('scheduler#managereposts') != -1)
+      {
+         $('.nav-tabs a[href="#managereposts"]').tab('show');
+      }
+
       $scope.setRepostHours = function() {
         if ($scope.unrepostEnable) {
           $scope.unrepostHours = "24";
@@ -517,8 +528,6 @@ app.directive('scheduler', function($http) {
           }
           checkingSlots.push(slot);
           if (checkingSlots.length > 8) {
-            console.log('errorSlots');
-            console.log(checkingSlots);
             status = true;
           }
         })
@@ -565,10 +574,6 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.openHelpModal = function() {
-       /* var displayText = "Schedule your reposts using the assigned slots, and indicate your preference for un-reposting after 24 hours. Keep in mind that the scheduler will not allow you to repost and un-repost within a period of 48 hours.Arrow icons pointing downwards indicate that you have marked the track to be un-reposted after 24 hours.Orange-colored slots are reserved for trades initiated using the repost-for-repost platform.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
-        $.Zebra_Dialog(displayText, {
-          width: 600
-        });*/
       $("#ytube").modal('show');
       }
 
@@ -626,8 +631,6 @@ app.directive('scheduler', function($http) {
             type: "track"
           };
         }
-        /*document.getElementById('scPlayer').style.visibility = "hidden";
-        document.getElementById('scPlayer').innerHTML = "";*/
 
         $scope.newEvent = true;
         var makeDay = new Date(selectedSlot.slotdate);

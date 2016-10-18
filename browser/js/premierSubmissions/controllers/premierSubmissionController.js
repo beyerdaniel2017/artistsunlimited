@@ -99,6 +99,14 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     'Vocalists/Singer-Songwriter'
   ];
 
+  if(window.location.href.indexOf('admin/premiersubmissions#mysubmissions') != -1)
+      {
+        $('.nav-tabs a[href="#mysubmissions"]').tab('show');
+      }else if(window.location.href.indexOf('admin/premiersubmissions#managesubmissions') != -1)
+      {
+        $('.nav-tabs a[href="#managesubmissions"]').tab('show');
+      }
+
   $scope.getSubmissionsByGenre = function() {
     $scope.showingElements = [];
     $scope.skip = 0;

@@ -21,10 +21,12 @@
                         </p>
                         <p><img ng-src="{{channel.user.avatarURL}}" class="img-responsive" alt="" style="border: 1px solid orange;" / height="200px;" width="300px"></p>
                         <p style="height:70px;">{{channel.description}} Has {{channel.user.followers.toLocaleString()}} followers.</p>
-                        <button ng-show="channel.addtocart" class="btn btn-enter" style="background-color: #F5BBBC; margin-right: auto;margin-left: auto;width: 100%;" ng-click="addToCart(channel)">
-                            Remove cart
+                        <button ng-show="channel.addtocart" class="btn btn-default btn-block" 
+                        ng-click="addToCart(channel)">
+                            REMOVE FROM CART
                         </button>                        
-                        <button ng-show="!channel.addtocart" class="btn btn-enter" style="background-color: #F6D6A5; margin-right: auto;margin-left: auto;width: 100%;" ng-click="addToCart(channel)">
+                        <button ng-show="!channel.addtocart" class="btn btn-pink btn-block" 
+                        ng-click="addToCart(channel)">
                             Add to cart
                         </button>
                     </div>  

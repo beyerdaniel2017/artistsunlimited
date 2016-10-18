@@ -91,9 +91,11 @@
                                         <div class="auSocialPlatform">
                                             <div ng-if="track.socialPlatform == 'facebookLike'">
                                                 <label>Like Facebook Page:</label>
-                                                <div class="col-sm-19">
-                                                    <input placeholder='Url' type="text" class="form-control" ng-model="track.socialPlatformValue" value="" />
+                                                <div class="col-sm-9 social-media-links" ng-repeat="facebook in track.fbLike track by $index">
+                                                    <input placeholder='Url' type="text" class="form-control" ng-model="facebook" ng-change="resolveFacebook(facebook)" value="" />
+                                                    <a class="close-ic-rel" href="#"><img src="assets/images/close.svg" ng-click="removefbLike($index)"></a>
                                                 </div>
+                                                 <a href="#" ng-click="addFbUrl()">+ Add</a>
                                             </div>
                                             <div ng-if="track.socialPlatform == 'facebookShare'">
                                                 <label>Share link on Facebook:</label>
@@ -109,10 +111,12 @@
                                             </div>
                                             <div ng-if="track.socialPlatform == 'twitterFollow'">
                                                 <label>User to Follow:</label>
-                                                <div class="input-group">
+                                                <div class="input-group col-sm-9 social-media-links" ng-repeat="twitter in track.twitter track by $index">
                                                     <span class="input-group-addon">@</span>
-                                                    <input type="text" class="form-control" input-prepend="@" ng-model="track.socialPlatformValue" placeholder="diplo" value="" />
+                                                    <input type="text" class="form-control" input-prepend="@" ng-model="twitter" ng-change="resolveTwitter(twitter)" placeholder="diplo"/>
+                                                    <a class="close-ic-rel" href="#"><img src="assets/images/close.svg" ng-click="removeTwitter($index)"></a>
                                                 </div>
+                                                  <a href="#" ng-click="addTwitterUrl()">+ Add</a>
                                             </div>
                                             <div ng-if="track.socialPlatform == 'instagramFollow'">
                                                 <label>User to Follow:</label>
@@ -123,9 +127,9 @@
                                             </div>
                                             <div ng-if="track.socialPlatform == 'youtubeSubscribe'">
                                                 <label>Youtube Channel Url:</label>
-                                                <div class="col-sm-19" ng-repeat="youtube in track.youtube" ng-show="!artist.permanentLink">
+                                                <div class="col-sm-9 social-media-links" ng-repeat="youtube in track.youtube track by $index" ng-show="!artist.permanentLink">
                                                     <input class="form-control" placeholder="URL" ng-model="youtube" ng-change="resolveYoutube(youtube)"/>
-                                                    <a class="close-ic" href="#"><img src="assets/images/close.svg" ng-click="removeYouTubes($index)"></a>
+                                                    <a class="close-ic-rel" href="#"><img src="assets/images/close.svg" ng-click="removeYouTubes($index)"></a>
                                                 </div>
                                                 <a href="#" ng-click="addYouTubeUrl()">+ Add</a>
                                             </div>
@@ -174,8 +178,10 @@
                                         </form>
                                     </div>
                                 </div>
+                                 <div class="space-10"></div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

@@ -53,11 +53,16 @@
                                </div>
                             </li>
                               <li>
-                                <div class="text-center">
+                                <div>
                                   <p><strong>{{userdata.user.username}}</strong></p>
                                   <p>{{userdata.user.followers}} Followers</p>
-                                  <p><a href="{{userdata.submissionUrl}}" target="_blank">{{userdata.submissionUrl}}</a></p>
-                                  <p><a href="{{userdata.premierUrl}}" target="_blank">{{userdata.premierUrl}}</a></p>
+                                  <span class="ac-link-trunk">
+                                    <a href="{{userdata.submissionUrl}}" target="_blank">{{userdata.submissionUrl}}</a>
+                                    <br/>
+                                    <a href="{{userdata.premierUrl}}" target="_blank">{{userdata.premierUrl}}</a>
+                                  </span>
+                                  <!-- <p><a href="{{userdata.submissionUrl}}" target="_blank">{{userdata.submissionUrl}}</a></p>
+                                  <p><a href="{{userdata.premierUrl}}" target="_blank">{{userdata.premierUrl}}</a></p> -->
                                 </div>
                               </li>
                                <li>
@@ -66,7 +71,7 @@
                                       <span class="pull-left" style="margin-right: 10px; padding-top: 7px; font-size: 13px;">Price for each repost: $</span>
                                         <span class="pull-right" style="position: relative;"> <input type="" name="" placeholder="price" class="price-input-box price-input" ng-model="userdata.price" ng-blur="editprice($index, userdata)"></span>
                                     </div>
-                                    <p class="small-text" style="font-size:11px; color:#c2c2c2;">Recommended: 1$ for every 3,000 followers
+                                    <p class="small-text" style="font-size:12px; color:#c2c2c2;">Recommended: 1$ for every 3,000 followers
                                     60,000 followers  =  $20</p>       
                                 </div>
                               </li>

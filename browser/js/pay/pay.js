@@ -113,7 +113,7 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
           $scope.track = track;
   });
   setTimeout(function(){ 
-    $scope.auDLLink = $scope.track.purchase_url ? true: false;
+    //$scope.auDLLink = $scope.track.purchase_url ? true: false;
     SC.Widget('scPlayer').load(submission.trackURL, {
       auto_play: false,
       show_artwork: true

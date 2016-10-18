@@ -25,6 +25,27 @@ app.directive('channelsettings', function($http) {
           });        
 	    }
 	  }
+
+      if(window.location.href.indexOf('admin/channel/step1#submissionUrl') != -1)
+      {
+        $('.nav-tabs a[href="#submissionUrl"]').tab('show');
+      }else if(window.location.href.indexOf('admin/channel/step1#setPrice') != -1)
+      {
+      	$('.nav-tabs a[href="#setPrice"]').tab('show');
+      }else if(window.location.href.indexOf('admin/channel/step1#customSubmission') != -1)
+      {
+      	 $('.nav-tabs a[href="#customSubmission"]').tab('show');
+      }else if(window.location.href.indexOf('admin/channel/step1#customPremiereSubmission') != -1)
+      {
+      	 $('.nav-tabs a[href="#customPremiereSubmission"]').tab('show');
+      }else if(window.location.href.indexOf('admin/channel/step1#repostPreferences') != -1)
+      {
+      	 $('.nav-tabs a[href="#repostPreferences"]').tab('show');
+      }else if(window.location.href.indexOf('admin/channel/step1#manageReposts') != -1)
+      {
+      	 $('.nav-tabs a[href="#manageReposts"]').tab('show');
+      }
+
 	  $scope.saveComments = function(value, type, index) {
 	    var comments = [];
 	    if (type == 'paid' && value) {

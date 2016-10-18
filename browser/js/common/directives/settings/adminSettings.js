@@ -61,6 +61,26 @@ app.directive('adminsettings', function($http) {
 	      }
 	    };
 
+	      if(window.location.href.indexOf('admin/basic/step1#generalInfo') != -1)
+	      {
+	        $('.nav-tabs a[href="#generalInfo"]').tab('show');
+	      }else if(window.location.href.indexOf('admin/basic/step1#sce') != -1)
+	      {
+	      	$('.nav-tabs a[href="#sce"]').tab('show');
+	      }else if(window.location.href.indexOf('admin/basic/step1#sce') != -1)
+	      {
+	      	 $('.nav-tabs a[href="#sce"]').tab('show');
+	      }else if(window.location.href.indexOf('admin/basic/step1#psce') != -1)
+	      {
+	      	 $('.nav-tabs a[href="#psce"]').tab('show');
+	      }else if(window.location.href.indexOf('admin/basic/step1#notifications') != -1)
+	      {
+	      	 $('.nav-tabs a[href="#notifications"]').tab('show');
+	      }else if(window.location.href.indexOf('admin/basic/step1#paypalInfo') != -1)
+	      {
+	      	 $('.nav-tabs a[href="#paypalInfo"]').tab('show');
+	      }
+
 	    $scope.addEventClass = function(index, type) {
 	      $('textarea').removeClass("selectedBox");
 	      $("." + type).addClass("selectedBox");
