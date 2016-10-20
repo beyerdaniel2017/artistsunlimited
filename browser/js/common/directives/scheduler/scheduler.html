@@ -164,8 +164,8 @@
                       <div class="slider round"></div>
                     </label>                               
                   </li>
-                  <div class="payed-reposts-list">
-                    <ul ng-if="user.repostSettings.schedule.comments.length">
+                  <div class="payed-reposts-list" ng-if="user.repostSettings.schedule.comments.length">
+                    <ul>
                       <li class="text-left"  ng-repeat="comment in user.repostSettings.schedule.comments track by $index">
                         <span class="comment-view">{{comment}}</span>
                         <span class="pull-right" ng-click="editComments(comment,'schedule',$index)">Edit</span></li>
@@ -190,8 +190,8 @@
                                 <div class="slider round"></div>
                               </label>                               
                             </li>                           
-                            <div class="payed-reposts-list">
-                              <ul  ng-if="user.repostSettings.trade.comments.length">
+                            <div class="payed-reposts-list" ng-if="user.repostSettings.trade.comments.length">
+                              <ul>
                                 <li class="text-left" ng-repeat="comment in user.repostSettings.trade.comments track by $index"><span class="comment-view">{{comment}}</span><span class="pull-right" ng-click="editComments(comment, 'trade',$index)">Edit</span></li>
                               </ul>
                             </div>

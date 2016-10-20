@@ -247,6 +247,11 @@ app.directive('rfrinteraction', function($http) {
         $.Zebra_Dialog("Request trade? Giving " + $scope.trade.user.slots.length + " for " + $scope.trade.other.slots.length + ".", {
           'type': 'confirmation',
           'buttons': [{
+            caption: 'Cancel',
+            callback: function() {
+            console.log('No was clicked');
+            }
+          }, {
             caption: 'Request',
             callback: function() {
               $scope.processing = true;
@@ -264,11 +269,6 @@ app.directive('rfrinteraction', function($http) {
                   $scope.processing = false;
                   $.Zebra_Dialog('Error requesting');
                 })
-            }
-          }, {
-            caption: 'Cancel',
-            callback: function() {
-              console.log('No was clicked');
             }
           }]
         });
@@ -393,7 +393,10 @@ app.directive('rfrinteraction', function($http) {
 
         var makeDay = new Date(day);
         makeDay.setHours(hour, 30, 0, 0);
-
+        if ($scope.user.blockRelease && new Date($scope.user.blockRelease).getTime() > new Date(makeDay).getTime()) {
+          $.Zebra_Dialog("Sorry! You are blocked till date " + moment($scope.user.blockRelease).format('LLL'));
+          return;
+        }
         switch (event.type) {
           case 'queue':
           case 'track':
@@ -434,35 +437,14 @@ app.directive('rfrinteraction', function($http) {
           $.Zebra_Dialog("Accept trade? Giving " + $scope.trade.user.slots.length + " for " + $scope.trade.other.slots.length + ".", {
             'type': 'confirmation',
             'buttons': [{
-              caption: 'Accept',
-              callback: function() {
-                $scope.completeTrade();
-                // if ($scope.user.queue && $scope.user.queue.length == 0) {
-                //   $('#autoFillTrack').modal('show');
-                // } else {
-                //   $scope.user.accepted = true;
-                //   if ($scope.trade.p1.user._id == $scope.user._id) {
-                //     $scope.trade.p1.accepted = true;
-                //   } else {
-                //     $scope.trade.p2.accepted = true;
-                //   }
-                //   $scope.processing = true;
-                //   $http.put('/api/trades', $scope.trade)
-                //     .then(function(res) {
-                //       $scope.processing = false;
-                //       $scope.trade = res.data;
-                //       if ($scope.trade.p1.accepted && $scope.trade.p2.accepted) $scope.completeTrade();
-                //       else $scope.emitMessage('---- ' + $scope.user.soundcloud.username + " accepted the trade ----", 'alert');
-                //     })
-                //     .then(null, function(err) {
-                //       $scope.processing = false;
-                //       $.Zebra_Dialog('Error accepting');
-                //     })
-              }
-            }, {
               caption: 'Cancel',
               callback: function() {
-                console.log('No was clicked');
+               console.log('No was clicked');
+              }
+            }, {
+              caption: 'Accept',
+              callback: function() {
+                 $scope.completeTrade();
               }
             }]
           });

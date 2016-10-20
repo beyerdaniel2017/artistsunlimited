@@ -147,7 +147,27 @@ app.directive('scheduler', function($http) {
           } else {
             $scope.disable = false;
             $scope.commentEvent = true;
+            if($scope.slotType == 'track')
+            {
             $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length>>0] : '';
+            }
+            $scope.commentSrc = 'assets/images/comment.png';
+          }
+        }
+       if ($scope.user.repostSettings && $scope.user.repostSettings.trade) {
+          if ($scope.user.repostSettings.trade.comment == false) {
+         
+            $scope.disable = true;
+            $scope.commentEvent = false;
+            $scope.eventComment = "";
+            $scope.commentSrc = 'assets/images/noComment.png';
+          } else {
+            $scope.disable = false;
+            $scope.commentEvent = true;
+            if($scope.slotType == 'traded')
+            {
+             $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length>>0] : '';
+            }
             $scope.commentSrc = 'assets/images/comment.png';
           }
         }
@@ -183,7 +203,14 @@ app.directive('scheduler', function($http) {
             $scope.commentEvent = true;
             $scope.disable = false;
             commentIndex = 0;
+            if($scope.slotType == 'track')
+            {
             $scope.eventComment = $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length>>0];
+          }
+            else
+            {
+            $scope.eventComment = $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length>>0];
+            }
           }
         }
         //$scope.saveRepostSettings();
@@ -191,15 +218,23 @@ app.directive('scheduler', function($http) {
 
       $scope.getPrevNextComment = function(type) {
         if (type == 'next') {
-          if (commentIndex < $scope.user.repostSettings.schedule.comments.length - 1) {
+            if($scope.slotType == 'track' && commentIndex < $scope.user.repostSettings.schedule.comments.length - 1) {
             commentIndex = commentIndex + 1;
             $scope.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
           }
+            else if($scope.slotType == 'traded' && commentIndex < $scope.user.repostSettings.trade.comments.length - 1) {
+              commentIndex = commentIndex + 1;
+              $scope.eventComment = $scope.user.repostSettings.trade.comments[commentIndex];
+            }
         } else {
-          if (commentIndex >= 1) {
+            if ($scope.slotType == 'track' && commentIndex >= 1) {
             commentIndex = commentIndex - 1;
             $scope.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
           }
+            else if ($scope.slotType == 'traded' && commentIndex >= 1) {
+              commentIndex = commentIndex - 1;
+              $scope.eventComment = $scope.user.repostSettings.trade.comments[commentIndex];
+            }
         }
       }
 
@@ -641,6 +676,7 @@ app.directive('scheduler', function($http) {
       $scope.clickedSlot = function(day, hour, data) {
         $scope.isView = false;
         $scope.popup = true;
+        $scope.slotType = 'track';
         var d = new Date(day).getDay();
         if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1) return;
         var today = new Date();
@@ -669,6 +705,9 @@ app.directive('scheduler', function($http) {
             day: makeDay,
             type: "track"
           };
+          if($scope.commentEvent == true)
+          $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length>>0] : '';
+
            document.getElementById('scPopupPlayer').style.visibility = "hidden";
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
           $scope.makeEvent.unrepost = true;
@@ -701,7 +740,6 @@ app.directive('scheduler', function($http) {
           $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
           $scope.makeEventURL = $scope.makeEvent.trackURL;
           $scope.makeEvent.trackID = data.trackID;
-          $scope.eventComment = $scope.makeEvent.comment;
           $scope.newEvent = false;
           SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
             auto_play: false,
@@ -710,17 +748,26 @@ app.directive('scheduler', function($http) {
           $scope.showPlayer = true;
           document.getElementById('scPopupPlayer').style.visibility = "visible";
           if (data.type == 'traded' && data.trackURL) {
+             $scope.slotType = 'traded';
              $scope.isView = true;
+             if($scope.commentEvent)
+             $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length>>0] : '';
           }
           else  
           if (data.type != 'traded' && data.trackURL) 
           {
+            $scope.slotType = 'track';
             $scope.showPlayer = true; 
+            if($scope.commentEvent)
+            $scope.eventComment = $scope.makeEvent.comment;
         }
           else
           if (data.type == 'traded' && !data.trackURL) 
           {
+            $scope.slotType = 'traded';
             $scope.showPlayer = false; 
+            if($scope.commentEvent)
+            $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length>>0] : '';
           }
         }
       }
