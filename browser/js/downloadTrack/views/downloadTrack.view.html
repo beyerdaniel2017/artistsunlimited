@@ -31,13 +31,13 @@
                <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'actionsOnSoundcloud'">
                   By downloading this song you agree to: <img src="assets/images/favorite_icon.png" style="width:14px; height:12px;"> the track, <img src="assets/images/repost_icon.png" style="width:16px; height:12px;"> the track, and follow {{track.artistUsername}}<span ng-repeat="artist in track.artists" ng-if="user.admin == true">, {{artist.username}}</span><span> and our network</span>.
               </p>
-              <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'youtubeSubscribe'">For downloading this song you need to subscribe to {{ track.socialPlatformValue }} on youtube.
+              <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'youtubeSubscribe'" style="word-break: break-all;">For downloading this song you need to subscribe to {{ track.socialPlatformValue }} on youtube.
               </p>
-              <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'twitterFollow'">For downloading this song you need to follow {{ track.socialPlatformValue }} on twitter.
+              <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'twitterFollow'" style="word-break: break-all;">For downloading this song you need to follow {{ track.socialPlatformValue }} on twitter.
               </p>
               <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'twitterPost'">For downloading this song you need to tweet &quot{{ track.socialPlatformValue }}&quot on twitter.
               </p>
-              <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'facebookLike'">For downloading this song you need to like {{ track.socialPlatformValue }} Facebook page/link.
+              <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'facebookLike'" style="word-break: break-all;">For downloading this song you need to like {{ track.socialPlatformValue }} Facebook page/link.
               </p>
               <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'facebookShare'">For downloading this song you need to share {{ track.socialPlatformValue }} on Facebook.
               </p>

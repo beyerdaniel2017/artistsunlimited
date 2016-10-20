@@ -11,15 +11,15 @@
                     <h4>Song</h4>
                     <div class="search-suggetion">
                       <scsearch kind='track' returnitem='choseTrack(item)'></scsearch>
-                  </div>
-                  <br />
-                        <!-- <div class="song-url">
-                            <input class="form-control" placeholder="Enter Song URL" ng-model="track.trackURL" ng-change="trackURLChange()" required/>
-                        </div> -->
+                    </div>
+                    <br />
+                    <!-- <div class="song-url">
+                        <input class="form-control" placeholder="Enter Song URL" ng-model="track.trackURL" ng-change="trackURLChange()" required/>
+                    </div> -->
                         <select class="form-control" ng-model="trackListObj" ng-options="item.title for item in trackList" ng-change="trackListChange()" ng-show="trackList.length > 0">
                             <option value="" ng-disabled="!!trackListObj">-My Songs-</option>
                         </select>
-                        <!-- <a class="close-ic" href="#"><img src="assets/images/close.svg"></a> -->
+                    <!-- <a class="close-ic" href="#"><img src="assets/images/close.svg"></a> -->
                     </div>
                     <div class="col-md-4" ng-if="!isTrackAvailable"></div>
                     <div class="track-section text-center" ng-if="isTrackAvailable" style="border:1px solid #D3D3D3;"><img class="img-responsive" ng-src="{{track.trackArtworkURL}}" />
@@ -27,10 +27,10 @@
                             <h4>{{track.trackTitle}}</h4>
                             <a href="#"><img class="avatar" ng-src="{{track.artistArtworkURL}}">{{' ' + track.artistUsername}}</a>
                             <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'actionsOnSoundcloud'"> By downloading this song you agree to: <img src="assets/images/favorite_icon.png" style="width:14px; height:12px;"> the track, <img src="assets/images/repost_icon.png" style="width:16px; height:12px;"> the track, and follow {{track.artistUsername}}<span ng-repeat="artist in track.artists" ng-show="user.admin">, {{artist.username}}</span><span> and our network</span>.</p>
-                            <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'youtubeSubscribe'">For downloading this song you need to subscribe to {{ track.socialPlatformValue }} on youtube.</p>
-                            <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'twitterFollow'">For downloading this song you need to follow {{ track.socialPlatformValue }} on twitter.</p>
+                            <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'youtubeSubscribe'" style="word-break: break-all;">For downloading this song you need to subscribe to {{ track.socialPlatformValue }} on youtube.</p>
+                            <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'twitterFollow'" style="word-break: break-all;">For downloading this song you need to follow {{ track.socialPlatformValue }} on twitter.</p>
                             <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'twitterPost'">For downloading this song you need to tweet &quot{{ track.socialPlatformValue }}&quot on twitter.</p>
-                            <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'facebookLike'">For downloading this song you need to like {{ track.socialPlatformValue }} Facebook page/link.</p>
+                            <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'facebookLike'" style="word-break: break-all;">For downloading this song you need to like {{ track.socialPlatformValue }} Facebook page/link.</p>
                             <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'facebookShare'">For downloading this song you need to share {{ track.socialPlatformValue }} on Facebook.</p>
                             <p class="text-justify pad-download-agreement" ng-if="track.socialPlatform == 'instagramFollow'">For downloading this song you need to follow {{ track.socialPlatformValue }} on instagram.</p>
                         </div>
@@ -91,11 +91,9 @@
                                         <div class="auSocialPlatform">
                                             <div ng-if="track.socialPlatform == 'facebookLike'">
                                                 <label>Like Facebook Page:</label>
-                                                <div class="col-sm-9 social-media-links" ng-repeat="facebook in track.fbLike track by $index">
-                                                    <input placeholder='Url' type="text" class="form-control" ng-model="facebook" ng-change="resolveFacebook(facebook)" value="" />
-                                                    <a class="close-ic-rel" href="#"><img src="assets/images/close.svg" ng-click="removefbLike($index)"></a>
+                                                <div class="col-sm-19">
+                                                    <input placeholder='Url' type="text" class="form-control" ng-model="track.socialPlatformValue" value="" />
                                                 </div>
-                                                 <a href="#" ng-click="addFbUrl()">+ Add</a>
                                             </div>
                                             <div ng-if="track.socialPlatform == 'facebookShare'">
                                                 <label>Share link on Facebook:</label>

@@ -5,7 +5,7 @@
     <a href="{{user.soundcloud.permalinkURL}}" target="_blank" style="color:#8a8a8a">
       <span>{{user.soundcloud.username}}</span><img class="img-responsive img-circle" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't200x200') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="height:100px;">
       <p>{{user.soundcloud.followers | number:0}} Followers</p></a>
-      <!-- <p style="color:red" ng-show="user.blockRelease != undefined && new Date().getTime() < new Date(user.blockRelease).getTime()">Your profile is blocked till {{ user.blockRelease | date:'MMMM dd yyyy h:mma' }}</p> -->
+      <p style="color:red" ng-show="user.blockRelease != undefined && blockUser">Your profile is blocked till {{ user.blockRelease | date:'MMMM dd yyyy h:mma' }}</p>
       <select class="form-control" style="width:180px; margin:0 auto;" ng-model="linkedUsers"
       ng-show="userlinkedAccounts.length > 0" ng-change="linkedUsersChange(linkedUsers)">
       <option value="">{{user.soundcloud.username}}</option>

@@ -232,7 +232,7 @@
                 <ul>
                   <li class="switch-btn">
                     <label class="switch">
-                      <input checked="" type="checkbox" ng-model="unrepostEnable">
+                      <input ng-disabled="true" checked="makeEvent.day < makeEvent.unrepostDate" type="checkbox">>
                       <div class="slider round"></div>
                     </label> 
                     <label>Unrepost after<input ng-disabled="true" class="form-control input-hour" placeholder="1" ng-model="makeEvent.unrepostHours">hours</label>

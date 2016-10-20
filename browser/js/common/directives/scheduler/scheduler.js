@@ -463,7 +463,6 @@ app.directive('scheduler', function($http) {
             } else if (item.event) {
               $scope.listevents.push(item);
             }
-
             if (event == undefined && new Date(item.date) > new Date()) {
               item.slotdate = d;
               item.slottime = time;
@@ -1156,6 +1155,7 @@ app.directive('scheduler', function($http) {
             });
             $scope.events = events;
             $scope.calendar = $scope.fillDateArrays(events);
+            $scope.getListEvents();
 
           })
       }

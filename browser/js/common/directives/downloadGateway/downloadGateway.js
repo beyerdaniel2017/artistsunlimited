@@ -17,7 +17,6 @@ app.directive('dlgate', function($http) {
         artists: [],
         playlists: [],
         youtube: [],
-        fbLike:[],
         twitter:[],
         showDownloadTracks: 'user',
         admin: $scope.user.admin,
@@ -101,14 +100,12 @@ app.directive('dlgate', function($http) {
       };
 
       $scope.saveDownloadGate = function() {
-        if ($scope.track.youtube && $scope.track.youtube.length > 0) 
+        if ($scope.track.youtube && $scope.track.youtube.length > 0){
           $scope.track.socialPlatformValue = $scope.track.youtube.toString();
-
-        else if ($scope.track.fbLike && $scope.track.fbLike.length > 0) 
-          $scope.track.socialPlatformValue = $scope.track.fbLike.toString();
-        
-        else if ($scope.track.twitter && $scope.track.twitter.length > 0) 
+        }        
+        else if ($scope.track.twitter && $scope.track.twitter.length > 0){ 
           $scope.track.socialPlatformValue = $scope.track.twitter.toString();
+        }
 
         if (!($scope.track.downloadURL || ($scope.track.file && $scope.track.file.name))) {
           $.Zebra_Dialog('Enter a download file');
@@ -253,14 +250,6 @@ app.directive('dlgate', function($http) {
             $scope.track.twitter[length - 1] = twitter;
           }
       }
-
-      $scope.resolveFacebook = function(facebook)
-      {
-          var length = $scope.track.fbLike.length;
-          if ($scope.track.fbLike.indexOf(facebook) == -1) {
-            $scope.track.fbLike[length - 1] = facebook;
-          }
-        }
 
       $scope.trackURLChange = function() {
         if ($scope.track.trackURL !== '') {
@@ -507,43 +496,32 @@ app.directive('dlgate', function($http) {
 
           $scope.isTrackAvailable = true;
           $scope.track = res.data;
+          $scope.track.youtube = [];
+          $scope.track.twitter = [];
           if ($scope.track.socialPlatformValue) {
-            if($scope.track.socialPlatform == 'youtube')
+            if($scope.track.socialPlatform == 'youtubeSubscribe')
+            {              
+              if ($scope.track.socialPlatformValue.indexOf(',') > -1) {
+                var urls = $scope.track.socialPlatformValue.split(',');
+                for (var i = 0; i < urls.length; i++) {
+                  $scope.track.youtube.push(urls[i]);
+                }
+              } else {
+                $scope.track.youtube.push($scope.track.socialPlatformValue);
+              }
+            }
+            else if($scope.track.socialPlatform == 'twitterFollow')
             {
-            $scope.track.youtube = [];
-            if ($scope.track.socialPlatformValue.indexOf(',') > -1) {
-              var urls = $scope.track.socialPlatformValue.split(',');
-              for (var i = 0; i < urls.length; i++) {
-                $scope.track.youtube.push(urls[i]);
+              $scope.track.twitter = [];
+              if ($scope.track.socialPlatformValue.indexOf(',') > -1) {
+                var urls = $scope.track.socialPlatformValue.split(',');
+                for (var i = 0; i < urls.length; i++) {
+                  $scope.track.twitter.push(urls[i]);
+                }
+              } else {
+               $scope.track.twitter.push($scope.track.socialPlatformValue);
               }
-            } else {
-              $scope.track.youtube.push($scope.track.socialPlatformValue);
             }
-          }
-           else if($scope.track.socialPlatform == 'facebookLike')
-           {
-            $scope.track.fbLike = [];
-            if ($scope.track.socialPlatformValue.indexOf(',') > -1) {
-              var urls = $scope.track.socialPlatformValue.split(',');
-              for (var i = 0; i < urls.length; i++) {
-                $scope.track.fbLike.push(urls[i]);
-              }
-            } else {
-              $scope.track.fbLike.push($scope.track.socialPlatformValue);
-            }
-           }
-           else if($scope.track.socialPlatform == 'twitterFollow')
-           {
-            $scope.track.twitter = [];
-            if ($scope.track.socialPlatformValue.indexOf(',') > -1) {
-              var urls = $scope.track.socialPlatformValue.split(',');
-              for (var i = 0; i < urls.length; i++) {
-                $scope.track.twitter.push(urls[i]);
-              }
-            } else {
-              $scope.track.twitter.push($scope.track.socialPlatformValue);
-            }
-           }
           }
 
 
@@ -613,16 +591,8 @@ app.directive('dlgate', function($http) {
       $scope.addYouTubeUrl = function() {
         $scope.track.youtube.push('');
       }
-
       $scope.removeYouTubes = function(index) {
         $scope.track.youtube.splice(index, 1);
-      }
-
-      $scope.addFbUrl = function() {       
-        $scope.track.fbLike.push('');
-      }
-      $scope.removefbLike = function(index) {
-        $scope.track.fbLike.splice(index, 1);
       }
 
       $scope.addTwitterUrl = function() {

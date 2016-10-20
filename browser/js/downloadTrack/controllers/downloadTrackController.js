@@ -28,7 +28,7 @@ app.config(function($stateProvider, $authProvider, $httpProvider) {
   $authProvider.twitter({
     url: '/api/download/twitter/auth',
     authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
-    redirectUri: 'https://artistsunlimited.co/download', //must match website
+    redirectUri: 'https://localhost:1443/download', //must match website
     type: '1.0',
     popupOptions: {
       width: 495,
@@ -101,26 +101,37 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
   /* Function for Twitter */
   $scope.authenticateTwitter = function() {
     $auth.authenticate('twitter').then(function(response) {
-      var userName = $scope.track.socialPlatformValue;
+      var twitterUsers = [];
       if ($scope.track.socialPlatform == 'twitterFollow') {
-        $http({
-          method: "POST",
-          url: '/api/download/twitter/follow',
-          data: {
-            screen_name: userName,
-            accessToken: response.data,
-            trackID: $scope.track._id
+        if ($scope.track.socialPlatformValue.indexOf(',') > -1) {
+          var userNames = $scope.track.socialPlatformValue.split(',');
+          for (var i = 0; i < userNames.length; i++) {
+            twitterUsers.push(userNames[i]);
           }
-        })
-        .then(function(records) {
-          if (records.data && records.statusText === "OK") {
-            if (records.data.screen_name === $scope.track.socialPlatformValue) {
-              window.location.replace($scope.track.downloadURL);
-            }
-          } else {
-            $.Zebra_Dialog('Error in processing the request. Please try again.');
+        } else {
+          twitterUsers.push($scope.track.socialPlatformValue);
+        }
+        function followTwitterUser(index){
+          if(index < twitterUsers.length){
+            $http({
+              method: "POST",
+              url: '/api/download/twitter/follow',
+              data: {
+                screen_name: twitterUsers[index],
+                accessToken: response.data,
+                trackID: $scope.track._id
+              }
+            })
+            .then(function(records) {
+              index++;
+              followTwitterUser(index)
+            });
           }
-        });
+          else{
+            window.location.replace($scope.track.downloadURL);
+          }
+        }   
+        followTwitterUser(0);     
       } else if ($scope.track.socialPlatform == 'twitterPost') {
         response.data.socialPlatformValue = $scope.track.socialPlatformValue;
         $http({
@@ -238,6 +249,11 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
 
     function receiveDownloadTrack(result) {
       $scope.track = result.data;
+      $scope.trackImage = result.data.trackArtworkURL;
+       SC.Widget('scPlayer').load($scope.track.downloadURL, {
+          auto_play: false,
+          show_artwork: false
+         });
       $scope.embedTrack = true;
       $scope.processing = false;
       if ($scope.track.showDownloadTracks === 'user') {
@@ -360,25 +376,27 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
   }
 
   $scope.downloadTrackFacebookLike = function(fblikeid) {
-    window.fbAsyncInit = function() {
-      FB.init({
-        appId: '1576897469267996',
-        xfbml: true,
-        version: 'v2.6'
-      });
-      FB.Event.subscribe('edge.create', function(href, widget) {
-        window.location = fblikeid.downloadURL;
-      });
-    };
-    (function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {
-        return;
-      }
-      js = d.createElement(s);
-      js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
+    setTimeout(function(){
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId: '1771378846475599',
+          xfbml: true,
+          version: 'v2.6'
+        });
+        FB.Event.subscribe('edge.create', function(href, widget) {
+          window.location = fblikeid.downloadURL;
+        });
+      };
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+          return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    },1000);      
   };
 });

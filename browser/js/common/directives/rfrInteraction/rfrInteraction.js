@@ -3,7 +3,7 @@ app.directive('rfrinteraction', function($http) {
     templateUrl: 'js/common/directives/rfrInteraction/rfrInteraction.html',
     restrict: 'E',
     scope: false,
-    controller: function rfrInteractionController($rootScope, $state, $scope, $http, AuthService, $window, SessionService, socket) {
+    controller: function rfrInteractionController($rootScope, $state, $scope, $http, AuthService, $window, SessionService, socket,moment) {
       var path = window.location.pathname;
       $window.localStorage.setItem('activetab', '1');
       $scope.isAdminRoute = false;
