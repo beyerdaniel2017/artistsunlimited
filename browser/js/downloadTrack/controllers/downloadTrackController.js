@@ -227,7 +227,7 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
     function receiveDownloadTrack(result) {
       if(result.data){
         var username = result.data.userid.soundcloud.username;
-        var title = result.data.trackTitle.replace(/ /g, '-');
+        var title = result.data.title;
         $state.go('downloadnew',{username: username, title: title})
       }      
     }
@@ -249,11 +249,13 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
 
     function receiveDownloadTrack(result) {
       $scope.track = result.data;
-      $scope.trackImage = result.data.trackArtworkURL;
-       SC.Widget('scPlayer').load($scope.track.downloadURL, {
-          auto_play: false,
-          show_artwork: false
-         });
+      $scope.backgroundStyle = function() {
+        return {
+          'background-image': 'url(' + $scope.track.trackArtworkURL + ')',
+          'background-repeat': 'no-repeat',
+          'background-size': 'cover'
+        }
+      }
       $scope.embedTrack = true;
       $scope.processing = false;
       if ($scope.track.showDownloadTracks === 'user') {
@@ -377,16 +379,16 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
 
   $scope.downloadTrackFacebookLike = function(fblikeid) {
     setTimeout(function(){
-      window.fbAsyncInit = function() {
+      //window.fbAsyncInit = function() {
         FB.init({
-          appId: '1771378846475599',
+          appId: '1576897469267996',
           xfbml: true,
           version: 'v2.6'
         });
         FB.Event.subscribe('edge.create', function(href, widget) {
           window.location = fblikeid.downloadURL;
         });
-      };
+      //};
       (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) {
@@ -397,6 +399,6 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
         js.src = "//connect.facebook.net/en_US/sdk.js";
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
-    },1000);      
+    },500);      
   };
 });

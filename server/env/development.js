@@ -28,7 +28,7 @@ module.exports = {
   "TWITTER": {
     "consumerKey": "5zGuJpzTAqoHOuRdziAhf5OtG",
     "consumerSecret": "4edfdG7GZpxPv7nannqnhPEPseVqGLz1RPcCta8lXl4UPSOexG",
-    "callbackUrlDL": "https://localhost:1443/dl",
+    "callbackUrlDL": "https://localhost:1443/download",
     "callbackUrlAuth": "https://localhost:1443/auth/twitter/callback",
   },
   "FACEBOOK": {

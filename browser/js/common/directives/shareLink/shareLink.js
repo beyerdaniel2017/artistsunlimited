@@ -18,12 +18,12 @@ app.directive('slmodal', function ($http) {
       $scope.handler = 'pop'; 
       $scope.origin = window.location.origin;
       $scope.sendMail = function(id) {
-        if(eventType =='share'){
+        if($scope.eventType =='share'){
           $scope.fbMessageLink = $scope.origin + "/repostevents?id=" + id;
         } else {
           $scope.fbMessageLink = $scope.origin + "/artistTools/reForReInteraction/" + id;
         }
-        $window.open("mailto:example@demo.com?body=" + $scope.fbMessageLink, "_self");
+        window.open("mailto:example@demo.com?body=" + $scope.fbMessageLink, "_self");
       };
     },
   };

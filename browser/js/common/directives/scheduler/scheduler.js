@@ -381,7 +381,9 @@ app.directive('scheduler', function($http) {
         makeDay.setHours(hour);
         $scope.makeEvent.day = makeDay;
         $scope.selectedSlot = new Date(date);
-
+        $scope.editChannelArr = [];
+        $scope.channelArr = [];
+        $scope.slotType = 'track';
       }
 
       $scope.isEdit = false;
@@ -426,6 +428,7 @@ app.directive('scheduler', function($http) {
         var hour = ConvertStringTimeToUTC(selectedSlot.getHours());
         var makeDay = new Date(day);
         makeDay.setHours(hour);
+        $scope.makeEvent.trackID = newObj.event.trackID;
         $scope.makeEvent.day = makeDay;
         $scope.makeEvent._id = newObj.event._id;
         $scope.makeEvent.trackURL = $scope.makeEventURL;
@@ -705,17 +708,20 @@ app.directive('scheduler', function($http) {
             day: makeDay,
             type: "track"
           };
+          $scope.channelArr = [];
           if($scope.commentEvent == true)
           $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length>>0] : '';
 
-           document.getElementById('scPopupPlayer').style.visibility = "hidden";
+          document.getElementById('scPopupPlayer').style.visibility = "hidden";
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
           $scope.makeEvent.unrepost = true;
           $scope.newEvent = true;
+          $scope.editChannelArr = [];
+          $scope.channelArr = [];
         } else {
           $scope.isEdit = true;
           $scope.editChannelArr = [];
-          
+          $scope.channelArr = []
           var channels = data.otherChannels;
           if (channels.length > 0) {
             for (var i = 0; i < channels.length; i++) {
@@ -1098,36 +1104,37 @@ app.directive('scheduler', function($http) {
       if ($scope.user && $scope.user.queue) {
         $scope.loadQueueSongs();
       }
-       var count = 0;
+      var count = 0;
       $scope.getAutoFillTracks = function() {
         if ($scope.user.queue.length > 0) {
           if (count >= $scope.autoFillTracks.length) {
-              count = 0;
+            count = 0;
           }
-            var track = $scope.autoFillTracks[count];
-            $scope.makeEventURL = track.permalink_url;
-            $scope.makeEvent.trackID = track.id;
-            $scope.makeEvent.title = track.title;
-            $scope.makeEvent.trackArtUrl =track.artwork_url;
-            $scope.makeEvent.trackURL = track.permalink_url;
-            if ($scope.showOverlay) {
-              SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
-                auto_play: false,
-                show_artwork: false
-              });
-              //document.getElementById('scPopupPlayer').style.visibility = "visible";
-            }
+          var track = $scope.autoFillTracks[count];
+          $scope.makeEventURL = track.permalink_url;
+          $scope.makeEvent.trackID = track.id;
+          $scope.makeEvent.title = track.title;
+          $scope.makeEvent.trackArtUrl =track.artwork_url;
+          $scope.makeEvent.trackURL = track.permalink_url;
+          $scope.showPlayer = true;
+          if ($scope.showOverlay) {
+            SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
+              auto_play: false,
+              show_artwork: false
+            });
+            document.getElementById('scPopupPlayer').style.visibility = "visible";
+          }
+          else{
             SC.Widget('scPlayer').load($scope.makeEventURL, {
               auto_play: false,
               show_artwork: true
-            });
-            $scope.showPlayer = true;
+            });            
             document.getElementById('scPlayer').style.visibility = "visible";
-            count = count + 1;
-
+          }          
+          count = count + 1;
         } else {
-            $scope.showOverlay = false;
-             $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {
+          $scope.showOverlay = false;
+          $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {
             'type':     'question',
             'buttons': [{
               caption: 'Cancel',

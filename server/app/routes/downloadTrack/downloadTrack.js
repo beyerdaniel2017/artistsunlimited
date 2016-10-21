@@ -42,18 +42,19 @@ router.get('/track', function(req, res, next) {
   .then(function(downloadTrack) {
     downloadTrack = downloadTrack.toJSON();
     var username =  downloadTrack.userid.soundcloud.username;
-    var title =  downloadTrack.trackTitle.replace(/ /g, '-');
+    var title =  downloadTrack.trackTitle.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/?])+/g, '').replace(/ /g,'-');
     var trackDownloadUrl = rootURL + "/download/" + username + "/" + title;
     DownloadTrack.update({
       _id: req.query.trackID
     }, {
       $set:{
-        trackDownloadUrl:trackDownloadUrl
+        trackDownloadUrl:trackDownloadUrl.toLowerCase()
       }
       }, {
       new: true
     }, function(track){
-      downloadTrack.trackDownloadUrl = trackDownloadUrl;
+      downloadTrack.trackDownloadUrl = trackDownloadUrl.toLowerCase();
+      downloadTrack.title = title.toLowerCase();
       res.send(downloadTrack);
     })
   })
@@ -62,10 +63,12 @@ router.get('/track', function(req, res, next) {
 
 router.get('/trackByURL/:username/:title', function(req, res, next) {
   var trackDownloadUrl = rootURL + "/download/" + req.params.username + "/" + req.params.title
+  trackDownloadUrl = trackDownloadUrl.toLowerCase();
   DownloadTrack.findOne({
       trackDownloadUrl: trackDownloadUrl
     })
   .then(function(downloadTrack) {
+    console.log('downloadTrack',downloadTrack);
     res.send(downloadTrack);
   })
   .then(null, next);
