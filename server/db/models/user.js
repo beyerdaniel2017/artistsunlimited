@@ -128,22 +128,46 @@ var schema = new mongoose.Schema({
         }
     },
     repostSettings: {
-        type: Object,
-        default: {
-            trade: {
-                comments: [],
-                comment: false,
-                like: false
+        trade: {
+            comments: {
+                type: Array,
+                default: []
             },
-            schedule: {
-                comments: [],
-                comment: false,
-                like: false
+            comment: {
+                type: Boolean,
+                default: false
             },
-            paid: {
-                comments: [],
-                comment: false,
-                like: false
+            like: {
+                type: Boolean,
+                default: false
+            }
+        },
+        schedule: {
+            comments: {
+                type: Array,
+                default: []
+            },
+            comment: {
+                type: Boolean,
+                default: false
+            },
+            like: {
+                type: Boolean,
+                default: false
+            }
+        },
+        paid: {
+            comments: {
+                type: Array,
+                default: []
+            },
+            comment: {
+                type: Boolean,
+                default: false
+            },
+            like: {
+                type: Boolean,
+                default: false
             }
         }
     },
@@ -173,6 +197,10 @@ var schema = new mongoose.Schema({
             failedRepost: {
                 type: Boolean,
                 default: true
+            },
+            accessToken: {
+                type: Boolean,
+                default: true
             }
         },
         email: {
@@ -193,6 +221,10 @@ var schema = new mongoose.Schema({
                 default: false
             },
             failedRepost: {
+                type: Boolean,
+                default: true
+            },
+            accessToken: {
                 type: Boolean,
                 default: true
             }

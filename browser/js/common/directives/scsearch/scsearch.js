@@ -8,12 +8,26 @@ app.directive('scsearch', function($http) {
       customstyle: '@'
     },
     controller: ['$scope', function scSearchController($scope) {
+      SC.Widget('scPlayer').load(track.permalink_url, {
+        auto_play: false,
+        show_artwork: true
+      });
+
       $scope.searchSelection = [];
       $scope.sendSearch = function() {
         $scope.searchSelection = [];
         $scope.searchError = undefined;
         $scope.searching = true;
-        if ($scope.searchString != "") {
+        if ($scope.searchString.includes('soundcloud.com')) {
+          var widget = SC.Widget('searchWidget').load(track.permalink_url, {
+            auto_play: false,
+            show_artwork: true
+          });
+          document.getElementById('searchWidget').style.visibility = "hidden";
+          setTimeout(function() {
+            widget.get()
+          }, 500)
+        } else if ($scope.searchString != "") {
           $http.post('/api/search', {
             q: $scope.searchString,
             kind: $scope.kind

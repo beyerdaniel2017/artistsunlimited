@@ -79,10 +79,10 @@ app.directive('scheduler', function($http) {
         $scope.makeEventURL = track.permalink_url;
         $scope.makeEvent.trackID = track.id;
         $scope.makeEvent.title = track.title;
-        $scope.makeEvent.trackArtUrl =track.artwork_url;
-        $scope.makeEvent.artistName =track.user.username;
+        $scope.makeEvent.trackArtUrl = track.artwork_url;
+        $scope.makeEvent.artistName = track.user.username;
         $scope.makeEvent.trackURL = track.permalink_url
-         SC.Widget('scPlayer').load($scope.makeEventURL, {
+        SC.Widget('scPlayer').load($scope.makeEventURL, {
           auto_play: false,
           show_artwork: true
         });
@@ -101,14 +101,21 @@ app.directive('scheduler', function($http) {
         $scope.makeEventURL = track.permalink_url;
         $scope.makeEvent.trackID = track.id;
         $scope.makeEvent.title = track.title;
-        $scope.makeEvent.trackArtUrl =track.artwork_url;
-        $scope.makeEvent.artistName =track.user.username;
+        $scope.makeEvent.trackArtUrl = track.artwork_url;
+        $scope.makeEvent.artistName = track.user.username;
         $scope.makeEvent.trackURL = track.permalink_url;
         document.getElementById('scPopupPlayer').innerHTML = "";
-        SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
+        var widg = SC.Widget('scPopupPlayer')
+        widg.load($scope.makeEventURL, {
           auto_play: false,
           show_artwork: false
         });
+        setTimeout(function() {
+          widg.getCurrentSound(function(track) {
+            console.log('track');
+            console.log(track);
+          })
+        }, 2000);
         $scope.showPlayer = true;
         document.getElementById('scPopupPlayer').style.visibility = "visible";
       }
@@ -365,11 +372,11 @@ app.directive('scheduler', function($http) {
         }
         SC.Widget('scPlayer').load($scope.makeEventURL, {
           auto_play: false,
-         show_artwork: true
-         });
+          show_artwork: true
+        });
         $scope.showPlayer = true;
-         document.getElementById('scPlayer').style.visibility = "visible";
-         if (item.event.type == 'traded' && item.event.trackURL) {
+        document.getElementById('scPlayer').style.visibility = "visible";
+        if (item.event.type == 'traded' && item.event.trackURL) {
           $scope.isView = true;
         }
         $scope.followersCount();
@@ -565,11 +572,11 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.openHelpModal = function() {
-       /* var displayText = "Schedule your reposts using the assigned slots, and indicate your preference for un-reposting after 24 hours. Keep in mind that the scheduler will not allow you to repost and un-repost within a period of 48 hours.Arrow icons pointing downwards indicate that you have marked the track to be un-reposted after 24 hours.Orange-colored slots are reserved for trades initiated using the repost-for-repost platform.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
-        $.Zebra_Dialog(displayText, {
-          width: 600
-        });*/
-      $("#ytube").modal('show');
+        /* var displayText = "Schedule your reposts using the assigned slots, and indicate your preference for un-reposting after 24 hours. Keep in mind that the scheduler will not allow you to repost and un-repost within a period of 48 hours.Arrow icons pointing downwards indicate that you have marked the track to be un-reposted after 24 hours.Orange-colored slots are reserved for trades initiated using the repost-for-repost platform.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
+         $.Zebra_Dialog(displayText, {
+           width: 600
+         });*/
+        $("#ytube").modal('show');
       }
 
       $scope.saveUser = function() {
@@ -585,7 +592,7 @@ app.directive('scheduler', function($http) {
             $scope.processing = false;
           });
       }
-      
+
       $scope.incrDay = function() {
         if ($scope.dayIncr < 42) $scope.dayIncr++;
       }
@@ -667,14 +674,14 @@ app.directive('scheduler', function($http) {
             day: makeDay,
             type: "track"
           };
-           document.getElementById('scPopupPlayer').style.visibility = "hidden";
+          document.getElementById('scPopupPlayer').style.visibility = "hidden";
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
           $scope.makeEvent.unrepost = true;
           $scope.newEvent = true;
         } else {
           $scope.isEdit = true;
           $scope.editChannelArr = [];
-          
+
           var channels = data.otherChannels;
           if (channels.length > 0) {
             for (var i = 0; i < channels.length; i++) {
@@ -707,17 +714,13 @@ app.directive('scheduler', function($http) {
           $scope.showPlayer = true;
           document.getElementById('scPopupPlayer').style.visibility = "visible";
           if (data.type == 'traded' && data.trackURL) {
-             $scope.isView = true;
-          }
-          else  
-          if (data.type != 'traded' && data.trackURL) 
-          {
-            $scope.showPlayer = true; 
-        }
-          else
-          if (data.type == 'traded' && !data.trackURL) 
-          {
-            $scope.showPlayer = false; 
+            $scope.isView = true;
+          } else
+          if (data.type != 'traded' && data.trackURL) {
+            $scope.showPlayer = true;
+          } else
+          if (data.type == 'traded' && !data.trackURL) {
+            $scope.showPlayer = false;
           }
         }
       }
@@ -1048,37 +1051,37 @@ app.directive('scheduler', function($http) {
       if ($scope.user && $scope.user.queue) {
         $scope.loadQueueSongs();
       }
-       var count = 0;
+      var count = 0;
       $scope.getAutoFillTracks = function() {
         if ($scope.user.queue.length > 0) {
           if (count >= $scope.autoFillTracks.length) {
-              count = 0;
+            count = 0;
           }
-            var track = $scope.autoFillTracks[count];
-            $scope.makeEventURL = track.permalink_url;
-            $scope.makeEvent.trackID = track.id;
-            $scope.makeEvent.title = track.title;
-            $scope.makeEvent.trackArtUrl =track.artwork_url;
-            $scope.makeEvent.trackURL = track.permalink_url;
-            if ($scope.showOverlay) {
-              SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
-                auto_play: false,
-                show_artwork: false
-              });
-              //document.getElementById('scPopupPlayer').style.visibility = "visible";
-            }
-            SC.Widget('scPlayer').load($scope.makeEventURL, {
+          var track = $scope.autoFillTracks[count];
+          $scope.makeEventURL = track.permalink_url;
+          $scope.makeEvent.trackID = track.id;
+          $scope.makeEvent.title = track.title;
+          $scope.makeEvent.trackArtUrl = track.artwork_url;
+          $scope.makeEvent.trackURL = track.permalink_url;
+          if ($scope.showOverlay) {
+            SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
               auto_play: false,
-              show_artwork: true
+              show_artwork: false
             });
-            $scope.showPlayer = true;
-            document.getElementById('scPlayer').style.visibility = "visible";
-            count = count + 1;
+            //document.getElementById('scPopupPlayer').style.visibility = "visible";
+          }
+          SC.Widget('scPlayer').load($scope.makeEventURL, {
+            auto_play: false,
+            show_artwork: true
+          });
+          $scope.showPlayer = true;
+          document.getElementById('scPlayer').style.visibility = "visible";
+          count = count + 1;
 
         } else {
-            $scope.showOverlay = false;
-             $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {
-            'type':     'question',
+          $scope.showOverlay = false;
+          $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {
+            'type': 'question',
             'buttons': [{
               caption: 'Cancel',
               callback: function() {}
@@ -1091,7 +1094,7 @@ app.directive('scheduler', function($http) {
             }]
           });
         }
-      }  
+      }
 
       $scope.dayOfWeekAsString = function(date) {
         var dayIndex = date.getDay();
@@ -1127,7 +1130,7 @@ app.directive('scheduler', function($http) {
         } else if (event.type == 'track' || event.type == 'queue') {
           return {
             'background-color': '#FF7676',
-            'margin' : '2px',
+            'margin': '2px',
             'height': '18px'
           }
         } else if (event.type == 'traded') {
@@ -1295,7 +1298,7 @@ app.directive('scheduler', function($http) {
       $scope.followersCount();
       $scope.checkCommentEnable();
       $scope.checkLikeEnable();
-      $scope.updateReach();      
+      $scope.updateReach();
       $scope.verifyBrowser();
       $scope.getLinkedAccounts();
     }

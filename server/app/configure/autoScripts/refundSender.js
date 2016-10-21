@@ -44,14 +44,20 @@ function refund(saleID) {
       if (repostEvents.length > 0) {
         var promiseArray = [];
         var paymentRefundTotal = 0;
+        var checkedEvents = [];
         repostEvents.forEach(function(event) {
-          paymentRefundTotal += event.price;
-          promiseArray.push(User.findOne({
-            'soundcloud.id': event.userID
-          }))
+          var sameEvent = checkedEvents.find(function(checkedEvent) {
+            return (checkedEvent.userID == event.userID && checkedEvent.trackID == checkedEvent.trackID);
+          })
+          if (!sameEvent) {
+            checkedEvents.push(event)
+            paymentRefundTotal += event.price;
+            promiseArray.push(User.findOne({
+              'soundcloud.id': event.userID
+            }))
+          }
         });
         return Promise.all(promiseArray).then(function(users) {
-          console.log(users);
           var channelList = "<br>";
           users.forEach(function(user) {
             channelList += (user.soundcloud.username + "<br>")
