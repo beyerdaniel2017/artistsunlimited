@@ -48,9 +48,27 @@ function readMessage(messagingEvent) {
 function receivedAuthentication(message) {
     User.findById(message.optin.ref)
         .then(function(user) {
-            user.notificationSettings.facebookMessenger.messengerID = message.sender.id;
-            user.save();
-        }).then(null, console.log);
+            if (!user.notificationSettings.facebookMessenger.messengerID) {
+                messengerAPI.buttons(message.sender.id, "Hey, thanks for opting in! You can always change your notification settings here:", [{
+                    type: 'web_url',
+                    url: 'https://artistsunlimited.com/artistTools/profile',
+                    title: 'Change settings'
+                }])
+                user.notificationSettings.facebookMessenger.messengerID = message.sender.id;
+                user.notificationSettings.facebookMessenger.lastMessageDate = new Date();
+                user.save()
+            } else {
+                User.find({
+                        "notificationSettings.facebookMessenger.messengerID": message.sender.id
+                    })
+                    .then(function(users) {
+                        users.forEach(function() {
+                            user.notificationSettings.facebookMessenger.lastMessageDate = new Date();
+                            user.save()
+                        })
+                    }).then(null, console.log);
+            }
+        })
 }
 
 function sendSignup(user) {
@@ -58,24 +76,31 @@ function sendSignup(user) {
 }
 
 function receivedMessage(message) {
-    User.findOne({
+    User.find({
         'notificationSettings.facebookMessenger.messengerID': message.sender.id
-    }).then(function(user) {
-        if (!user) {
-
+    }).then(function(users) {
+        users.forEach(function(user) {
+            user.notificationSettings.facebookMessenger.lastMessageDate = new Date();
+            user.save();
+        })
+        if (message.message.quick_reply && message.message.quick_reply.payload.includes('OPTIN YES')) {
+            messengerAPI.typing(message.sender.id);
+            messengerAPI.text(message.sender.id, "Ok.")
+        } else if (users.length == 0) {
             messengerAPI.buttons(message.sender.id, 'Hey, please go here:', [{
                 type: "web_url",
                 url: "https://artistsunlimited.com",
                 title: "Artists Unlimited"
-            }]).then(null, null);
+            }]).then(null, console.log);
         } else {
-            user.lastMessageDate = new Date();
-            user.save();
-            if (message.message.quick_reply && message.message.quick_reply.payload.includes('OPTIN YES')) {
-                messengerAPI.typing(message.sender.id);
-                messengerAPI.text(message.sender.id, "Ok.")
-            }
+            messengerAPI.quickReplies(message.sender.id, 'Hey, would you like to receive notifications for the next 24 hours?', [{
+                content_type: "text",
+                title: "Yes",
+                payload: "OPTIN YES"
+            }]);
         }
+
+
     })
 }
 
