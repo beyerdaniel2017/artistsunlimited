@@ -96,20 +96,20 @@ app.directive('scheduler', function($http) {
         document.getElementById('scPlayer').style.visibility = "visible";
         var playerWidget = SC.Widget('scPlayer').load($scope.makeEventURL, {
           auto_play: false,
-          show_artwork: true
+          show_artwork: true,
+          callback: function() {
+            playerWidget.getCurrentSound(function(track) {
+              console.log(track);
+              $scope.searchString = track.title;
+              $scope.makeEventURL = track.permalink_url;
+              $scope.makeEvent.trackID = track.id;
+              $scope.makeEvent.title = track.title;
+              $scope.makeEvent.trackArtUrl = track.artwork_url;
+              $scope.makeEvent.artistName = track.user.username;
+              $scope.makeEvent.trackURL = track.permalink_url
+            })
+          }
         });
-        setTimeout(function() {
-          playerWidget.getCurrentSound(function(track) {
-            console.log(track);
-            $scope.searchString = track.title;
-            $scope.makeEventURL = track.permalink_url;
-            $scope.makeEvent.trackID = track.id;
-            $scope.makeEvent.title = track.title;
-            $scope.makeEvent.trackArtUrl = track.artwork_url;
-            $scope.makeEvent.artistName = track.user.username;
-            $scope.makeEvent.trackURL = track.permalink_url
-          })
-        }, 500)
       }
 
       $scope.choseAutoFillTrack = function(track) {
@@ -135,20 +135,20 @@ app.directive('scheduler', function($http) {
         var popupPlayerWidget = SC.Widget('scPopupPlayer')
         popupPlayerWidget.load($scope.makeEventURL, {
           auto_play: false,
-          show_artwork: false
+          show_artwork: false,
+          callback: function() {
+            popupPlayerWidget.getCurrentSound(function(track) {
+              console.log(track);
+              $scope.searchString = track.title;
+              $scope.makeEventURL = track.permalink_url;
+              $scope.makeEvent.trackID = track.id;
+              $scope.makeEvent.title = track.title;
+              $scope.makeEvent.trackArtUrl = track.artwork_url;
+              $scope.makeEvent.artistName = track.user.username;
+              $scope.makeEvent.trackURL = track.permalink_url;
+            })
+          }
         });
-        setTimeout(function() {
-          popupPlayerWidget.getCurrentSound(function(track) {
-            console.log(track);
-            $scope.searchString = track.title;
-            $scope.makeEventURL = track.permalink_url;
-            $scope.makeEvent.trackID = track.id;
-            $scope.makeEvent.title = track.title;
-            $scope.makeEvent.trackArtUrl = track.artwork_url;
-            $scope.makeEvent.artistName = track.user.username;
-            $scope.makeEvent.trackURL = track.permalink_url;
-          })
-        }, 500)
       }
 
       $scope.linkedAccounts = [];

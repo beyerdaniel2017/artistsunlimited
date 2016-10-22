@@ -649,10 +649,12 @@ app.directive('reforrelists', function($http) {
                 $scope.listevents = res.data;
               });
             $scope.showOverlay = false;
+            console.log('updated')
           })
           .then(null, function(err) {
             $scope.processing = false;
-            $.Zebra_Dialog("ERROR: Did not save.");
+            console.log(err);
+            $.Zebra_Dialog(err);
           });
       }
 
@@ -667,14 +669,14 @@ app.directive('reforrelists', function($http) {
         var popupPlayerWidget = SC.Widget('scPopupPlayer')
         popupPlayerWidget.load($scope.makeEvent.trackURL, {
           auto_play: false,
-          show_artwork: false
+          show_artwork: false,
+          callback: function() {
+            popupPlayerWidget.getCurrentSound(function(track) {
+              console.log(track);
+              $scope.fillMakeEvent(track);
+            })
+          }
         });
-        setTimeout(function() {
-          popupPlayerWidget.getCurrentSound(function(track) {
-            console.log(track);
-            $scope.fillMakeEvent(track);
-          })
-        }, 500);
         document.getElementById('scPopupPlayer').style.visibility = "visible";
       }
 
@@ -693,14 +695,14 @@ app.directive('reforrelists', function($http) {
         var playerWidget = SC.Widget('scPlayer');
         playerWidget.load($scope.makeEvent.trackURL, {
           auto_play: false,
-          show_artwork: true
+          show_artwork: true,
+          callback: function() {
+            playerWidget.getCurrentSound(function(track) {
+              console.log(track);
+              $scope.fillMakeEvent(track);
+            })
+          }
         });
-        setTimeout(function() {
-          playerWidget.getCurrentSound(function(track) {
-            console.log(track);
-            $scope.fillMakeEvent(track);
-          })
-        }, 500);
         document.getElementById('scPlayer').style.visibility = "visible";
       }
 
