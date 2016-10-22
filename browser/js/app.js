@@ -91,20 +91,20 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
             $rootScope.state = true;
         }
 
-        if ($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin') != -1) {
+        if($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin') != -1){
             var user = SessionService.getUser();
-            if (user) {
+            if(user){
                 var isAdminAuthenticate = ($window.localStorage.getItem('isAdminAuthenticate') ? $window.localStorage.getItem('isAdminAuthenticate') : false);
-                var redirectPath = (isAdminAuthenticate ? "/admin" : "/login");
-                if ($window.location.pathname.indexOf('admin') != -1 && !isAdminAuthenticate) {
+                var redirectPath = (isAdminAuthenticate ?  "/admin" : "/login");
+                if($window.location.pathname.indexOf('admin') != -1 && !isAdminAuthenticate){
                     $http.post('/api/logout').then(function() {
                         SessionService.deleteUser();
                         $state.go('admin');
                         //window.location.href = '/admin';
                     });
-                } else if ($window.location.pathname.indexOf('artistTools') != -1 && isAdminAuthenticate) {
+                } else if($window.location.pathname.indexOf('artistTools') != -1 && isAdminAuthenticate){
                     $http.get('/api/users/isUserAuthenticate').then(function(res) {
-                        if (!res.data) {
+                        if(!res.data){
                             SessionService.deleteUser();
                             $window.location.href = redirectPath;
                         }
@@ -182,6 +182,14 @@ app.directive('fbLike', [
 
 app.controller('FullstackGeneratedController', function($stateParams, $window, $rootScope, $scope, $state, $http, mainService, SessionService, AuthService) {
     /*Load More*/
+    $scope.isBlock = function()
+    {
+      $scope.user = SessionService.getUser();
+      $scope.todayDate = new Date();
+      $scope.blockRelease = new Date($scope.user.blockRelease);
+      $scope.isBlock = $scope.todayDate < $scope.blockRelease ? true : false;
+      return $scope.isBlock;
+    }
 
     $scope.loadList = function() {
         $scope.$broadcast('loadTrades');
@@ -260,7 +268,6 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
 
     $scope.changeUserAdmin = function(param, location) {
         if (typeof param == 'string' && param.length > 15) param = JSON.parse(param);
-        console.log(param);
         if (param == 'user') {
             var prevATUser = JSON.parse($window.localStorage.getItem('prevATUser'));
             if (SessionService.getUser()._id != prevATUser._id) {
@@ -370,7 +377,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                 })
         }
     }
-
+    
     $scope.checkNotification();
     $scope.getSubmissionCount();
 });

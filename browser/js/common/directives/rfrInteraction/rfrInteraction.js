@@ -3,14 +3,13 @@ app.directive('rfrinteraction', function($http) {
     templateUrl: 'js/common/directives/rfrInteraction/rfrInteraction.html',
     restrict: 'E',
     scope: false,
-    controller: function rfrInteractionController($rootScope, $state, $scope, $http, AuthService, $window, SessionService, socket) {
+    controller: function rfrInteractionController($rootScope, $state, $scope, $http, AuthService, $window, SessionService, socket, moment) {
       var path = window.location.pathname;
       $window.localStorage.setItem('activetab', '1');
       $scope.isAdminRoute = false;
       if (path.indexOf("admin/") != -1) {
         $scope.isAdminRoute = true
-      }
-      else{
+      } else {
         $scope.isAdminRoute = false;
       }
       $scope.type = 'remind';
@@ -247,6 +246,11 @@ app.directive('rfrinteraction', function($http) {
         $.Zebra_Dialog("Request trade? Giving " + $scope.trade.user.slots.length + " for " + $scope.trade.other.slots.length + ".", {
           'type': 'confirmation',
           'buttons': [{
+            caption: 'Cancel',
+            callback: function() {
+              console.log('No was clicked');
+            }
+          }, {
             caption: 'Request',
             callback: function() {
               $scope.processing = true;
@@ -264,11 +268,6 @@ app.directive('rfrinteraction', function($http) {
                   $scope.processing = false;
                   $.Zebra_Dialog('Error requesting');
                 })
-            }
-          }, {
-            caption: 'Cancel',
-            callback: function() {
-              console.log('No was clicked');
             }
           }]
         });
@@ -386,14 +385,14 @@ app.directive('rfrinteraction', function($http) {
         var style = {};
         var currentDay = new Date(day).getDay();
 
-        var date = (new Date(day)).setHours(hour)
-        if (!($scope.activeUser.availableSlots[daysArray[currentDay]] && $scope.activeUser.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date()))) {
+        var date = (new Date(day)).setHours(hour);
+        if (!($scope.activeUser.availableSlots[daysArray[currentDay]] && $scope.activeUser.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date())) || ($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease) > date)) {
+
           return false;
         }
 
         var makeDay = new Date(day);
         makeDay.setHours(hour, 30, 0, 0);
-
         switch (event.type) {
           case 'queue':
           case 'track':
@@ -425,7 +424,6 @@ app.directive('rfrinteraction', function($http) {
       }
 
       $scope.acceptTrade = function() {
-
           // if ($scope.trade.p1.user._id == $scope.user._id) {
           //   var accString = $scope.trade.p2.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
           // } else {
@@ -434,35 +432,14 @@ app.directive('rfrinteraction', function($http) {
           $.Zebra_Dialog("Accept trade? Giving " + $scope.trade.user.slots.length + " for " + $scope.trade.other.slots.length + ".", {
             'type': 'confirmation',
             'buttons': [{
-              caption: 'Accept',
-              callback: function() {
-                $scope.completeTrade();
-                // if ($scope.user.queue && $scope.user.queue.length == 0) {
-                //   $('#autoFillTrack').modal('show');
-                // } else {
-                //   $scope.user.accepted = true;
-                //   if ($scope.trade.p1.user._id == $scope.user._id) {
-                //     $scope.trade.p1.accepted = true;
-                //   } else {
-                //     $scope.trade.p2.accepted = true;
-                //   }
-                //   $scope.processing = true;
-                //   $http.put('/api/trades', $scope.trade)
-                //     .then(function(res) {
-                //       $scope.processing = false;
-                //       $scope.trade = res.data;
-                //       if ($scope.trade.p1.accepted && $scope.trade.p2.accepted) $scope.completeTrade();
-                //       else $scope.emitMessage('---- ' + $scope.user.soundcloud.username + " accepted the trade ----", 'alert');
-                //     })
-                //     .then(null, function(err) {
-                //       $scope.processing = false;
-                //       $.Zebra_Dialog('Error accepting');
-                //     })
-              }
-            }, {
               caption: 'Cancel',
               callback: function() {
                 console.log('No was clicked');
+              }
+            }, {
+              caption: 'Accept',
+              callback: function() {
+                $scope.completeTrade();
               }
             }]
           });
@@ -758,12 +735,12 @@ app.directive('rfrinteraction', function($http) {
         $http.put('/api/trades', $scope.trade)
           .then(function(res) {
             $window.localStorage.setItem('activetab', '3');
-            if($scope.isAdminRoute){
+            if ($scope.isAdminRoute) {
               $state.go('adminRepostTraders');
-            } else{
+            } else {
               $rootScope.newManageSlots = true;
               $state.go('reForReLists');
-            }            
+            }
           })
           .then(null, console.log);
       }
@@ -850,7 +827,7 @@ app.directive('rfrinteraction', function($http) {
         var style = {};
         var currentDay = new Date(date).getDay();
         var date = (new Date(date)).setHours(hour)
-        if ($scope.activeUser.availableSlots[daysArray[currentDay]] && $scope.activeUser.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date()) && event.type == 'empty') {
+        if ($scope.activeUser.availableSlots[daysArray[currentDay]] && $scope.activeUser.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date()) && event.type == 'empty' && !($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease).getTime() > date)) {
           style = {
             'background-color': '#fff',
             'border-color': "#999",
@@ -865,7 +842,7 @@ app.directive('rfrinteraction', function($http) {
           return {
             'background-color': '#ADD8E6',
             'height': '19px',
-            'margin':'2px'
+            'margin': '2px'
           }
           // } else if (event.type == 'track' || event.type == 'queue' || event.type == 'paid') {
           //   return {

@@ -2,7 +2,7 @@
   <div class="left-side">
     <div class="tropical" style="word-break: break-all;padding: 10px;display:inherit;"><span>{{user.email}}</span><img class="img-responsive img-circle" src="{{user.profilePicture ? user.profilePicture : (user.soundcloud.avatarURL ? user.soundcloud.avatarURL :'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg')}}" style="width: 100px;height: 100px;">
       <div class="clearfix"></div>
-      <div ng-if="user.role!='admin'">
+      <div ng-if="user.role != 'admin'">
         <div style="width:80%;margin:0 auto;" class="text-center">
           <select id="paidusers" class="form-control" ng-model="curATUser" ng-change="changeUserAdmin(curATUser)">
             <option ng-repeat="atUser in userlinkedAccounts" value="{{atUser}}">{{atUser.soundcloud.username}}</option>
@@ -18,7 +18,7 @@
           <li ui-sref-active-eq="left-menu-active" class="border-bottom SETTINGS"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin'); gotoSettings();">SETTINGS</a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom SCHEDULER"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/scheduler');">SCHEDULER</a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom REPOSTTRADES"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/reposttraders');">REPOST TRADER</a></li>
-          <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="submissions" ng-click="changeUserAdmin('admin', '/admin/submissions');">REPOST SUBMISSION <div class="badge notification-bubble-submission-count" ng-show="submissionsCount > 0">{{submissionsCount}}</div></a></li>
+          <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="submissions" ng-click="changeUserAdmin('admin', '/admin/submissions');">REPOST SUBMISSION <!-- <div class="badge notification-bubble-submission-count" ng-show="submissionsCount > 0">{{submissionsCount}}</div> --></a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom PREMIERSUBMISSIONS"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin', '/admin/premiersubmissions');">PREMIER SUBMISSIONS</a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="accounts" ng-click="changeUserAdmin('admin', '/admin/accounts');">ACCOUNTS</a></li>
           <li ui-sref-active-eq="left-menu-active" class="border-bottom DOWNLOADGATEWAY"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/downloadGateway');">DOWNLOAD GATEWAY</a></li>

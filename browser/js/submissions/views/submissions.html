@@ -44,7 +44,7 @@
                       <div class="col-md-10">                         
                             <div>
                              <!--  <div id="{{sub.trackID}}player" class="video-main"></div> -->
-                              <iframe id="{{sub.trackID}}player" width="100%" height="150" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
+                              <iframe id="{{sub.trackID}}player" width="100%" height="115" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
                             </div>
                            </div>
                       <div class="col-md-2">
@@ -120,7 +120,7 @@
                 <!-- ORGANIZE SCHEDULE :Start -->
                 <div role="tabpanel" class="tab-pane fade" id="marketplace">
                 <div class="container-90">
-                    <div class="submi-section" ng-repeat="sub in marketSubmissions"  ng-if="sub.invoiceIDS.length == 0">
+                    <div class="submi-section" ng-repeat="sub in marketSubmissions"  ng-if="sub.invoiceIDS.length == 0" ng-class="{'border-bottom':!$last}" >
                   <div class="">
                     <div class="row">
                       <div class="col-md-12">
@@ -133,7 +133,7 @@
                     <div class="row">
                       <div class="col-md-10">                         
                             <div style="height: 160px; width: 100%;">
-                              <iframe id="{{sub.trackID}}player" width="100%" height="140" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
+                              <iframe id="{{sub.trackID}}player" width="100%" height="115" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
                             </div>
                            </div>
                        <div class="col-md-2">
@@ -236,7 +236,7 @@
                                 <div class="col-md-1">&nbsp;</div>
                               </div>
                               <br/>
-                              <div class="col-md-12">
+                              <div class="col-md-12 text-center">
                               <button class="btn btn-default" ng-click="sendTestMail($index)">Send test mail</button>
                                 <div class="button-list text-center">
                                   <input ng-repeat="btn in dynamicButton " type="button" name="{{btn.name}}" class="btn btn-border organize-btn" style="margin-left:20px;" value="{{btn.name}}" ng-click="appendBody(btn)">

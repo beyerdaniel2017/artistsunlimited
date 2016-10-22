@@ -583,6 +583,7 @@ function schedulePaidRepost(channel, submission) {
         console.log(eventDetails);
         scheduleRepost(eventDetails, new Date())
           .then(function(event) {
+
             fulfill({
               channelName: channel.user.username,
               date: event.day,

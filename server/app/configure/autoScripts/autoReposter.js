@@ -76,13 +76,14 @@ function repostAndRemove(event, user, repCount) {
             // performStatBoosts(user, event.trackID);
             distributeEarnings(user, event);
           }
-          notificationCenter.sendNotifications(user._id, 'trackRepost', 'Track repost', (!!event.title) ? event.title : 'A track' + ' was reposted on ' + user.soundcloud.username, 'https://artistsunlimited.com/artistTools/scheduler');
+          notificationCenter.sendNotifications(user._id, 'trackRepost', 'Track repost', ((!!event.title) ? event.title : 'A track') + ' was reposted on ' + user.soundcloud.username, 'https://artistsunlimited.com/artistTools/scheduler');
         }).then(null, console.log);
       } else {
         console.log('error ------------------');
         console.log(err);
         console.log(data);
         var now = new Date();
+
         if (now.getMinutes() >= 55) {
           if (JSON.stringify(err).includes('too many reposts')) {
             err = ((typeof err) == 'string' ? JSON.parse(err) : err)[0];
@@ -110,9 +111,11 @@ function repostAndRemove(event, user, repCount) {
             delete newEvent._id;
             scheduleRepost(newEvent, new Date()).then(null, console.log);
             event.remove();
+
           }
           notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', event.title + ' did not repost on ' + user.soundcloud.username + ' did not complete.', 'https://artistsunlimited.com/artistTools/scheduler');
         }
+        notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', event.title + ' did not repost on ' + user.soundcloud.username + ' did not complete.', 'https://artistsunlimited.com/artistTools/scheduler');
       }
     });
   }).then(null, console.log)

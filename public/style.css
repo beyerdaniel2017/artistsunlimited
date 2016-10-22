@@ -3064,10 +3064,11 @@ input:checked + .slider:before {
 .channel-masege ul li {
   display: inline-block;
   background-color: #FFD6D6;
-  margin: 2px 5px;
-  padding: 5px 15px;
+  margin: 6px 3px;
+  padding: 5px;
   border-radius: 2px;
-  color: #6F6F6F; }
+  color: #686868;
+  font-size: 12px; }
 
 .songScheduler .channel-group {
   margin: 0 auto;
@@ -3639,7 +3640,7 @@ label:hover:before {
   margin-left: 60px; }
 
 .key-icon i {
-  background-image: url(../assets/images/key.png);
+  background-image: url(../assets/images/key.svg);
   background-repeat: no-repeat;
   background-size: 100%;
   width: 17px;
@@ -4267,7 +4268,7 @@ td {
   border: 1px solid #999999;
   padding: 7px;
   margin-left: 0;
-  width: 70px;
+  width: 100px;
   text-align: center; }
 
 .account-vertical-container {
@@ -4283,15 +4284,19 @@ td {
   margin: 0px; }
 
 .account-vertical-container li {
-  width: 24.33333%;
+  width: 26.333%;
   display: inline-block;
   vertical-align: middle; }
 
 .account-vertical-container li:first-child {
-  width: 11%; }
+  width: 14%; }
 
 .account-vertical-container li:nth-child(2) {
-  width: 38%; }
+  width: 30%;
+  text-align: left; }
+
+.account-vertical-container li:nth-child(3) {
+  width: 28%; }
 
 .account-vertical-container li > .list-img-container img {
   height: 100px;
@@ -4534,6 +4539,13 @@ td {
   border: 0px solid transparent;
   border-bottom-color: transparent; }
 
+.ac-link-trunk > a {
+  display: inline-block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 200px; }
+
 /******************************** Media CSS :: START ************************************/
 @media screen and (max-width: 1280px) {
   .min-ht {
@@ -4644,7 +4656,8 @@ td {
   .account-vertical-container li:first-child {
     width: 100%; }
   .account-vertical-container li:nth-child(2) {
-    width: 100%; }
+    width: 100%;
+    text-align: center; }
   .left-side-profile {
     top: 0px;
     border-radius: 10px; }
@@ -4663,7 +4676,9 @@ td {
   .settings-tabs-5 .nav-tabs li {
     width: 100%; }
   .settings-tabs-6 .nav-tabs li {
-    width: 100%; } }
+    width: 100%; }
+  .view-padding-left {
+    padding-left: 0; } }
 
 @media screen and (max-width: 667px) {
   .img-btn {
@@ -4699,7 +4714,11 @@ td {
   .settings-tabs-6 .nav-tabs li {
     width: 100%; }
   .page-content {
-    margin: 0; } }
+    margin: 0; }
+  .account-vertical-container li:nth-child(3) {
+    width: 100%; }
+  .view-padding-left {
+    padding-left: 0; } }
 
 @media screen and (max-width: 640px) {
   .organize-text {

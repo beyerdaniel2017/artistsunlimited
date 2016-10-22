@@ -10,6 +10,7 @@ app.directive('scsearch', function($http) {
     controller: ['$scope', function scSearchController($scope) {
       $scope.searchSelection = [];
       $scope.sendSearch = function() {
+        console.log('here')
         $scope.searchSelection = [];
         $scope.searchError = undefined;
         $scope.searching = true;
@@ -21,7 +22,7 @@ app.directive('scsearch', function($http) {
             $scope.searching = false;
             if (res.data.item) {
               if (res.data.item.kind != $scope.kind) {
-                $scope.serachError = "Please enter a " + $scope.kind + " URL.";
+                $scope.searchError = "Please enter a " + $scope.kind + " URL.";
               } else {
                 $scope.selectedItem(res.data.item);
               }
@@ -35,10 +36,26 @@ app.directive('scsearch', function($http) {
                 $scope.searchError = "We could not find a " + $scope.kind + "."
               }
             }
+            if ($scope.searching || $scope.searchError !="" || $scope.searchSelection.length > 0) {
+              window.onclick = function (event) {
+                $scope.searching  = false;
+                $scope.searchError = "";
+                $scope.searchSelection = [];
+                $scope.$apply();
+              };
+            }
           }).then(null, function(err) {
             $scope.searching = false;
             console.log('We could not find a ' + $scope.kind);
             $scope.searchError = "We could not find a " + $scope.kind + "."
+            if ($scope.searching || $scope.searchError !="" || $scope.searchSelection.length > 0) {
+              window.onclick = function (event) {
+                $scope.searching  = false;
+                $scope.searchError = "";
+                $scope.searchSelection = [];
+                $scope.$apply();
+              };
+            }
           });
         }
       }
@@ -61,6 +78,7 @@ app.directive('scsearch', function($http) {
         $scope.searchSelection = [];
         $scope.searchError = undefined;
         $scope.searchString = "";
+        $scope.searching = false;
         $scope.returnitem({
           item: item
         });

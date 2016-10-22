@@ -42,7 +42,7 @@ app.directive('scheduler', function($http) {
       var commentIndex = 0;
       $scope.isView = false;
       $scope.origin = window.location.origin;
-      $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
+      $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length >> 0] : '';
       var defaultAvailableSlots = {
         sunday: [],
         monday: [],
@@ -66,6 +66,14 @@ app.directive('scheduler', function($http) {
         });
       }
 
+      if (window.location.href.indexOf('scheduler#myschedule') != -1) {
+        $('.nav-tabs a[href="#myschedule"]').tab('show');
+      } else if (window.location.href.indexOf('scheduler#organizeschedule') != -1) {
+        $('.nav-tabs a[href="#organizeschedule"]').tab('show');
+      } else if (window.location.href.indexOf('scheduler#managereposts') != -1) {
+        $('.nav-tabs a[href="#managereposts"]').tab('show');
+      }
+
       $scope.setRepostHours = function() {
         if ($scope.unrepostEnable) {
           $scope.unrepostHours = "24";
@@ -75,20 +83,35 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.choseTrack = function(track) {
+        console.log('choseTrack');
+        console.log(track)
         $scope.searchString = track.title;
         $scope.makeEventURL = track.permalink_url;
         $scope.makeEvent.trackID = track.id;
         $scope.makeEvent.title = track.title;
-        $scope.makeEvent.trackArtUrl =track.artwork_url;
-        $scope.makeEvent.artistName =track.user.username;
+        $scope.makeEvent.trackArtUrl = track.artwork_url;
+        $scope.makeEvent.artistName = track.user.username;
         $scope.makeEvent.trackURL = track.permalink_url
-         SC.Widget('scPlayer').load($scope.makeEventURL, {
+        $scope.showPlayer = true;
+        document.getElementById('scPlayer').style.visibility = "visible";
+        var playerWidget = SC.Widget('scPlayer').load($scope.makeEventURL, {
           auto_play: false,
           show_artwork: true
         });
-        $scope.showPlayer = true;
-        document.getElementById('scPlayer').style.visibility = "visible";
+        setTimeout(function() {
+          playerWidget.getCurrentSound(function(track) {
+            console.log(track);
+            $scope.searchString = track.title;
+            $scope.makeEventURL = track.permalink_url;
+            $scope.makeEvent.trackID = track.id;
+            $scope.makeEvent.title = track.title;
+            $scope.makeEvent.trackArtUrl = track.artwork_url;
+            $scope.makeEvent.artistName = track.user.username;
+            $scope.makeEvent.trackURL = track.permalink_url
+          })
+        }, 500)
       }
+
       $scope.choseAutoFillTrack = function(track) {
         $scope.searchString = track.title;
         $scope.newQueueID = track.id;
@@ -97,20 +120,35 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.choseTrack1 = function(track) {
+        console.log('choseTrack');
+        console.log(track);
         $scope.searchString = track.title;
         $scope.makeEventURL = track.permalink_url;
         $scope.makeEvent.trackID = track.id;
         $scope.makeEvent.title = track.title;
-        $scope.makeEvent.trackArtUrl =track.artwork_url;
-        $scope.makeEvent.artistName =track.user.username;
+        $scope.makeEvent.trackArtUrl = track.artwork_url;
+        $scope.makeEvent.artistName = track.user.username;
         $scope.makeEvent.trackURL = track.permalink_url;
         document.getElementById('scPopupPlayer').innerHTML = "";
-        SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
+        $scope.showPlayer = true;
+        document.getElementById('scPopupPlayer').style.visibility = "visible";
+        var popupPlayerWidget = SC.Widget('scPopupPlayer')
+        popupPlayerWidget.load($scope.makeEventURL, {
           auto_play: false,
           show_artwork: false
         });
-        $scope.showPlayer = true;
-        document.getElementById('scPopupPlayer').style.visibility = "visible";
+        setTimeout(function() {
+          popupPlayerWidget.getCurrentSound(function(track) {
+            console.log(track);
+            $scope.searchString = track.title;
+            $scope.makeEventURL = track.permalink_url;
+            $scope.makeEvent.trackID = track.id;
+            $scope.makeEvent.title = track.title;
+            $scope.makeEvent.trackArtUrl = track.artwork_url;
+            $scope.makeEvent.artistName = track.user.username;
+            $scope.makeEvent.trackURL = track.permalink_url;
+          })
+        }, 500)
       }
 
       $scope.linkedAccounts = [];
@@ -136,11 +174,30 @@ app.directive('scheduler', function($http) {
           } else {
             $scope.disable = false;
             $scope.commentEvent = true;
-            $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
+            if ($scope.slotType == 'track') {
+              $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length >> 0] : '';
+            }
+            $scope.commentSrc = 'assets/images/comment.png';
+          }
+        }
+        if ($scope.user.repostSettings && $scope.user.repostSettings.trade) {
+          if ($scope.user.repostSettings.trade.comment == false) {
+
+            $scope.disable = true;
+            $scope.commentEvent = false;
+            $scope.eventComment = "";
+            $scope.commentSrc = 'assets/images/noComment.png';
+          } else {
+            $scope.disable = false;
+            $scope.commentEvent = true;
+            if ($scope.slotType == 'traded') {
+              $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length >> 0] : '';
+            }
             $scope.commentSrc = 'assets/images/comment.png';
           }
         }
       }
+
       $scope.checkLikeEnable = function() {
         if ($scope.user.repostSettings && $scope.user.repostSettings.schedule) {
           if ($scope.user.repostSettings.schedule.like == false) {
@@ -172,7 +229,11 @@ app.directive('scheduler', function($http) {
             $scope.commentEvent = true;
             $scope.disable = false;
             commentIndex = 0;
-            $scope.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
+            if ($scope.slotType == 'track') {
+              $scope.eventComment = $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length >> 0];
+            } else {
+              $scope.eventComment = $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length >> 0];
+            }
           }
         }
         //$scope.saveRepostSettings();
@@ -180,14 +241,20 @@ app.directive('scheduler', function($http) {
 
       $scope.getPrevNextComment = function(type) {
         if (type == 'next') {
-          if (commentIndex < $scope.user.repostSettings.schedule.comments.length - 1) {
+          if ($scope.slotType == 'track' && commentIndex < $scope.user.repostSettings.schedule.comments.length - 1) {
             commentIndex = commentIndex + 1;
             $scope.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
+          } else if ($scope.slotType == 'traded' && commentIndex < $scope.user.repostSettings.trade.comments.length - 1) {
+            commentIndex = commentIndex + 1;
+            $scope.eventComment = $scope.user.repostSettings.trade.comments[commentIndex];
           }
         } else {
-          if (commentIndex >= 1) {
+          if ($scope.slotType == 'track' && commentIndex >= 1) {
             commentIndex = commentIndex - 1;
             $scope.eventComment = $scope.user.repostSettings.schedule.comments[commentIndex];
+          } else if ($scope.slotType == 'traded' && commentIndex >= 1) {
+            commentIndex = commentIndex - 1;
+            $scope.eventComment = $scope.user.repostSettings.trade.comments[commentIndex];
           }
         }
       }
@@ -335,7 +402,9 @@ app.directive('scheduler', function($http) {
         makeDay.setHours(hour);
         $scope.makeEvent.day = makeDay;
         $scope.selectedSlot = new Date(date);
-
+        $scope.editChannelArr = [];
+        $scope.channelArr = [];
+        $scope.slotType = 'track';
       }
 
       $scope.isEdit = false;
@@ -365,11 +434,11 @@ app.directive('scheduler', function($http) {
         }
         SC.Widget('scPlayer').load($scope.makeEventURL, {
           auto_play: false,
-         show_artwork: true
-         });
+          show_artwork: true
+        });
         $scope.showPlayer = true;
-         document.getElementById('scPlayer').style.visibility = "visible";
-         if (item.event.type == 'traded' && item.event.trackURL) {
+        document.getElementById('scPlayer').style.visibility = "visible";
+        if (item.event.type == 'traded' && item.event.trackURL) {
           $scope.isView = true;
         }
         $scope.followersCount();
@@ -380,6 +449,7 @@ app.directive('scheduler', function($http) {
         var hour = ConvertStringTimeToUTC(selectedSlot.getHours());
         var makeDay = new Date(day);
         makeDay.setHours(hour);
+        $scope.makeEvent.trackID = newObj.event.trackID;
         $scope.makeEvent.day = makeDay;
         $scope.makeEvent._id = newObj.event._id;
         $scope.makeEvent.trackURL = $scope.makeEventURL;
@@ -452,7 +522,6 @@ app.directive('scheduler', function($http) {
             } else if (item.event) {
               $scope.listevents.push(item);
             }
-
             if (event == undefined && new Date(item.date) > new Date()) {
               item.slotdate = d;
               item.slottime = time;
@@ -517,8 +586,6 @@ app.directive('scheduler', function($http) {
           }
           checkingSlots.push(slot);
           if (checkingSlots.length > 8) {
-            console.log('errorSlots');
-            console.log(checkingSlots);
             status = true;
           }
         })
@@ -565,11 +632,7 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.openHelpModal = function() {
-       /* var displayText = "Schedule your reposts using the assigned slots, and indicate your preference for un-reposting after 24 hours. Keep in mind that the scheduler will not allow you to repost and un-repost within a period of 48 hours.Arrow icons pointing downwards indicate that you have marked the track to be un-reposted after 24 hours.Orange-colored slots are reserved for trades initiated using the repost-for-repost platform.<br><br><a style='text-align:center; margin:0 auto;' href='mailto:coayscue@artistsunlimited.co?subject=Artists Unlimited Help' target='_top'>Email Tech Support</a>";
-        $.Zebra_Dialog(displayText, {
-          width: 600
-        });*/
-      $("#ytube").modal('show');
+        $("#ytube").modal('show');
       }
 
       $scope.saveUser = function() {
@@ -585,7 +648,7 @@ app.directive('scheduler', function($http) {
             $scope.processing = false;
           });
       }
-      
+
       $scope.incrDay = function() {
         if ($scope.dayIncr < 42) $scope.dayIncr++;
       }
@@ -626,8 +689,6 @@ app.directive('scheduler', function($http) {
             type: "track"
           };
         }
-        /*document.getElementById('scPlayer').style.visibility = "hidden";
-        document.getElementById('scPlayer').innerHTML = "";*/
 
         $scope.newEvent = true;
         var makeDay = new Date(selectedSlot.slotdate);
@@ -639,6 +700,7 @@ app.directive('scheduler', function($http) {
       $scope.clickedSlot = function(day, hour, data) {
         $scope.isView = false;
         $scope.popup = true;
+        $scope.slotType = 'track';
         var d = new Date(day).getDay();
         if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1) return;
         var today = new Date();
@@ -667,14 +729,20 @@ app.directive('scheduler', function($http) {
             day: makeDay,
             type: "track"
           };
-           document.getElementById('scPopupPlayer').style.visibility = "hidden";
+          $scope.channelArr = [];
+          if ($scope.commentEvent == true)
+            $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length >> 0] : '';
+
+          document.getElementById('scPopupPlayer').style.visibility = "hidden";
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
           $scope.makeEvent.unrepost = true;
           $scope.newEvent = true;
+          $scope.editChannelArr = [];
+          $scope.channelArr = [];
         } else {
           $scope.isEdit = true;
           $scope.editChannelArr = [];
-          
+          $scope.channelArr = []
           var channels = data.otherChannels;
           if (channels.length > 0) {
             for (var i = 0; i < channels.length; i++) {
@@ -698,7 +766,7 @@ app.directive('scheduler', function($http) {
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
           $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
           $scope.makeEventURL = $scope.makeEvent.trackURL;
-          $scope.eventComment = $scope.makeEvent.comment;
+          $scope.makeEvent.trackID = data.trackID;
           $scope.newEvent = false;
           SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
             auto_play: false,
@@ -707,17 +775,23 @@ app.directive('scheduler', function($http) {
           $scope.showPlayer = true;
           document.getElementById('scPopupPlayer').style.visibility = "visible";
           if (data.type == 'traded' && data.trackURL) {
-             $scope.isView = true;
-          }
-          else  
-          if (data.type != 'traded' && data.trackURL) 
-          {
-            $scope.showPlayer = true; 
-        }
-          else
-          if (data.type == 'traded' && !data.trackURL) 
-          {
-            $scope.showPlayer = false; 
+
+            $scope.slotType = 'traded';
+            $scope.isView = true;
+            if ($scope.commentEvent)
+              $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length >> 0] : '';
+          } else
+          if (data.type != 'traded' && data.trackURL) {
+            $scope.slotType = 'track';
+            $scope.showPlayer = true;
+            if ($scope.commentEvent)
+              $scope.eventComment = $scope.makeEvent.comment;
+          } else
+          if (data.type == 'traded' && !data.trackURL) {
+            $scope.slotType = 'traded';
+            $scope.showPlayer = false;
+            if ($scope.commentEvent)
+              $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length >> 0] : '';
           }
         }
       }
@@ -1048,37 +1122,37 @@ app.directive('scheduler', function($http) {
       if ($scope.user && $scope.user.queue) {
         $scope.loadQueueSongs();
       }
-       var count = 0;
+      var count = 0;
       $scope.getAutoFillTracks = function() {
         if ($scope.user.queue.length > 0) {
           if (count >= $scope.autoFillTracks.length) {
-              count = 0;
+            count = 0;
           }
-            var track = $scope.autoFillTracks[count];
-            $scope.makeEventURL = track.permalink_url;
-            $scope.makeEvent.trackID = track.id;
-            $scope.makeEvent.title = track.title;
-            $scope.makeEvent.trackArtUrl =track.artwork_url;
-            $scope.makeEvent.trackURL = track.permalink_url;
-            if ($scope.showOverlay) {
-              SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
-                auto_play: false,
-                show_artwork: false
-              });
-              //document.getElementById('scPopupPlayer').style.visibility = "visible";
-            }
+          var track = $scope.autoFillTracks[count];
+          $scope.makeEventURL = track.permalink_url;
+          $scope.makeEvent.trackID = track.id;
+          $scope.makeEvent.title = track.title;
+          $scope.makeEvent.trackArtUrl = track.artwork_url;
+          $scope.makeEvent.trackURL = track.permalink_url;
+          $scope.showPlayer = true;
+          if ($scope.showOverlay) {
+            SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
+              auto_play: false,
+              show_artwork: false
+            });
+            document.getElementById('scPopupPlayer').style.visibility = "visible";
+          } else {
             SC.Widget('scPlayer').load($scope.makeEventURL, {
               auto_play: false,
               show_artwork: true
             });
-            $scope.showPlayer = true;
             document.getElementById('scPlayer').style.visibility = "visible";
-            count = count + 1;
-
+          }
+          count = count + 1;
         } else {
-            $scope.showOverlay = false;
-             $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {
-            'type':     'question',
+          $scope.showOverlay = false;
+          $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {
+            'type': 'question',
             'buttons': [{
               caption: 'Cancel',
               callback: function() {}
@@ -1091,7 +1165,7 @@ app.directive('scheduler', function($http) {
             }]
           });
         }
-      }  
+      }
 
       $scope.dayOfWeekAsString = function(date) {
         var dayIndex = date.getDay();
@@ -1127,7 +1201,7 @@ app.directive('scheduler', function($http) {
         } else if (event.type == 'track' || event.type == 'queue') {
           return {
             'background-color': '#FF7676',
-            'margin' : '2px',
+            'margin': '2px',
             'height': '18px'
           }
         } else if (event.type == 'traded') {
@@ -1152,6 +1226,7 @@ app.directive('scheduler', function($http) {
             });
             $scope.events = events;
             $scope.calendar = $scope.fillDateArrays(events);
+            $scope.getListEvents();
 
           })
       }
@@ -1295,7 +1370,7 @@ app.directive('scheduler', function($http) {
       $scope.followersCount();
       $scope.checkCommentEnable();
       $scope.checkLikeEnable();
-      $scope.updateReach();      
+      $scope.updateReach();
       $scope.verifyBrowser();
       $scope.getLinkedAccounts();
     }

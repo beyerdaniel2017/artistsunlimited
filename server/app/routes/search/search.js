@@ -5,6 +5,7 @@ var request = require('request');
 var queryString = require('query-string');
 var scClientID = require('./../../../env').SOUNDCLOUD.clientID;
 var SCResolve = require('soundcloud-resolve-jsonp/node');
+var http = require('http');
 
 router.post('/', function(req, res, next) {
   if (req.body.q.includes("soundcloud.com")) {
@@ -42,37 +43,61 @@ function acSearch(q, kind) {
     var autocompleteSearch = 'https://api-v2.soundcloud.com/search/autocomplete?' + queryString.stringify(acQuery);
     request.get(autocompleteSearch, function(err, response, body) {
       if (err) reject(err);
-      try {
-        var autoResults = JSON.parse(body).results.filter(function(obj) {
-          return obj.kind == kind;
-        })
-        fulfill(Promise.all(autoResults.slice(0, 3).map(function(result) {
-          return resolveURL(result.entity.permalink_url)
-            .then(function(item) {
-              return item;
-            })
-            .then(null, reject);
-        })));
-      } catch (e) {
-        reject(e);
+      else {
+        try {
+          var autoResults = JSON.parse(body).results.filter(function(obj) {
+            return obj.kind == kind;
+          })
+          fulfill(Promise.all(autoResults.slice(0, 3).map(function(result) {
+            return resolveURL(result.entity.permalink_url)
+              .then(function(item) {
+                return item;
+              })
+              .then(null, reject);
+          })));
+        } catch (e) {
+          reject(e);
+        }
       }
-
     });
   }))
 }
 
 function resolveURL(url) {
   return (new Promise(function(fulfill, reject) {
-    SCResolve({
-      url: url,
-      client_id: scClientID
-    }, function(err, item) {
-      if (err) {
-        reject(err);
-      } else {
-        fulfill(item);
-      }
-    });
+    try {
+      http.get('http://api.soundcloud.com/resolve?url=' + url + '&client_id=' + scClientID, function(res) {
+        var body = "";
+        res.on('data', function(chunk) {
+          body += chunk
+        });
+        res.on('end', function() {
+          var location = JSON.parse(body).location;
+          request.get(location, function(err, response, body) {
+            if (err) {
+              reject(err)
+            } else if (response.statusCode == 403) {
+              var endIndex = location.indexOf('?client_id');
+              var startIndex = location.indexOf('/tracks/') + 8;
+              var id = location.slice(startIndex, endIndex);
+              fulfill({
+                title: '--unknown--',
+                user: {
+                  username: "--unknown--"
+                },
+                permalink_url: url,
+                kind: "track",
+                id: id
+              });
+            } else {
+              fulfill(JSON.parse(body));
+            }
+          });
+        })
+      }).on('error', reject);
+    } catch (e) {
+      reject(e)
+    }
   }))
 }
 

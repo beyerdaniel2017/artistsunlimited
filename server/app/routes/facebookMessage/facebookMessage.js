@@ -83,12 +83,10 @@ function receivedMessage(message) {
             user.notificationSettings.facebookMessenger.lastMessageDate = new Date();
             user.save();
         })
-        console.log(users)
         if (message.message.quick_reply && message.message.quick_reply.payload.includes('OPTIN YES')) {
             messengerAPI.typing(message.sender.id);
             messengerAPI.text(message.sender.id, "Ok.")
         } else if (users.length == 0) {
-            console.log('hey there');
             messengerAPI.buttons(message.sender.id, 'Hey, please go here:', [{
                 type: "web_url",
                 url: "https://artistsunlimited.com",
