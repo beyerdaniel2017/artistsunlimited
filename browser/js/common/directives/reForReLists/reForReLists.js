@@ -652,7 +652,8 @@ app.directive('reforrelists', function($http) {
           })
           .then(null, function(err) {
             $scope.processing = false;
-            $.Zebra_Dialog(err.message);
+            console.log(err);
+            $.Zebra_Dialog(err.data);
           });
       }
 
