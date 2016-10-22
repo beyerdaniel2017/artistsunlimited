@@ -100,8 +100,10 @@ router.put('/repostEvents', function(req, res, next) {
     next(new Error('Unauthorized'));
     return;
   }
+  req.body.unrepostDate = new Date(req.body.unrepostDate);
   denyTradeOverlap(req.body)
     .then(function(ok) {
+      console.log('ok');
       return RepostEvent.findByIdAndUpdate(req.body._id, req.body, {
         new: true,
         upsert: true
@@ -121,7 +123,7 @@ router.put('/repostEvents', function(req, res, next) {
 function denyTradeOverlap(repostEvent) {
   repostEvent.day = new Date(repostEvent.day);
   var unrepostDate = new Date(repostEvent.day.getTime() + (parseInt(repostEvent.unrepostHours) * 60 * 60 * 1000));
-  repostEvent.unrepostDate = new Date(unrepostDate);
+  console.log(repostEvent);
   return RepostEvent.find({
     userID: repostEvent.userID,
     trackID: repostEvent.trackID

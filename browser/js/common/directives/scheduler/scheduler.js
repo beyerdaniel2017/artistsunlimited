@@ -42,7 +42,8 @@ app.directive('scheduler', function($http) {
       var commentIndex = 0;
       $scope.isView = false;
       $scope.origin = window.location.origin;
-      $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
+      $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.floor(Math.random() * $scope.user.repostSettings.schedule.comments.length)] : '';
+      console.log($scope.eventComment);
       var defaultAvailableSlots = {
         sunday: [],
         monday: [],
@@ -75,6 +76,8 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.choseTrack = function(track) {
+        console.log('choseTrack');
+        console.log(track)
         $scope.searchString = track.title;
         $scope.makeEventURL = track.permalink_url;
         $scope.makeEvent.trackID = track.id;
@@ -82,13 +85,24 @@ app.directive('scheduler', function($http) {
         $scope.makeEvent.trackArtUrl = track.artwork_url;
         $scope.makeEvent.artistName = track.user.username;
         $scope.makeEvent.trackURL = track.permalink_url
-        SC.Widget('scPlayer').load($scope.makeEventURL, {
+        $scope.showPlayer = true;
+        document.getElementById('scPlayer').style.visibility = "visible";
+        var playerWidget = SC.Widget('scPlayer').load($scope.makeEventURL, {
           auto_play: false,
           show_artwork: true
         });
-        $scope.showPlayer = true;
-        document.getElementById('scPlayer').style.visibility = "visible";
+        playerWidget.getCurrentSound(function(track) {
+          console.log(track);
+          $scope.searchString = track.title;
+          $scope.makeEventURL = track.permalink_url;
+          $scope.makeEvent.trackID = track.id;
+          $scope.makeEvent.title = track.title;
+          $scope.makeEvent.trackArtUrl = track.artwork_url;
+          $scope.makeEvent.artistName = track.user.username;
+          $scope.makeEvent.trackURL = track.permalink_url
+        })
       }
+
       $scope.choseAutoFillTrack = function(track) {
         $scope.searchString = track.title;
         $scope.newQueueID = track.id;
@@ -97,6 +111,8 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.choseTrack1 = function(track) {
+        console.log('choseTrack');
+        console.log(track);
         $scope.searchString = track.title;
         $scope.makeEventURL = track.permalink_url;
         $scope.makeEvent.trackID = track.id;
@@ -105,19 +121,23 @@ app.directive('scheduler', function($http) {
         $scope.makeEvent.artistName = track.user.username;
         $scope.makeEvent.trackURL = track.permalink_url;
         document.getElementById('scPopupPlayer').innerHTML = "";
-        var widg = SC.Widget('scPopupPlayer')
-        widg.load($scope.makeEventURL, {
+        $scope.showPlayer = true;
+        document.getElementById('scPopupPlayer').style.visibility = "visible";
+        var popupPlayerWidget = SC.Widget('scPopupPlayer')
+        popupPlayerWidget.load($scope.makeEventURL, {
           auto_play: false,
           show_artwork: false
         });
-        setTimeout(function() {
-          widg.getCurrentSound(function(track) {
-            console.log('track');
-            console.log(track);
-          })
-        }, 2000);
-        $scope.showPlayer = true;
-        document.getElementById('scPopupPlayer').style.visibility = "visible";
+        popupPlayerWidget.getCurrentSound(function() {
+          console.log(track);
+          $scope.searchString = track.title;
+          $scope.makeEventURL = track.permalink_url;
+          $scope.makeEvent.trackID = track.id;
+          $scope.makeEvent.title = track.title;
+          $scope.makeEvent.trackArtUrl = track.artwork_url;
+          $scope.makeEvent.artistName = track.user.username;
+          $scope.makeEvent.trackURL = track.permalink_url;
+        })
       }
 
       $scope.linkedAccounts = [];
@@ -143,7 +163,7 @@ app.directive('scheduler', function($http) {
           } else {
             $scope.disable = false;
             $scope.commentEvent = true;
-            $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[0] : '';
+            $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.floor(Math.random() * $scope.user.repostSettings.schedule.comments.length)] : '';
             $scope.commentSrc = 'assets/images/comment.png';
           }
         }

@@ -8,26 +8,13 @@ app.directive('scsearch', function($http) {
       customstyle: '@'
     },
     controller: ['$scope', function scSearchController($scope) {
-      SC.Widget('scPlayer').load(track.permalink_url, {
-        auto_play: false,
-        show_artwork: true
-      });
-
       $scope.searchSelection = [];
       $scope.sendSearch = function() {
+        console.log('here')
         $scope.searchSelection = [];
         $scope.searchError = undefined;
         $scope.searching = true;
-        if ($scope.searchString.includes('soundcloud.com')) {
-          var widget = SC.Widget('searchWidget').load(track.permalink_url, {
-            auto_play: false,
-            show_artwork: true
-          });
-          document.getElementById('searchWidget').style.visibility = "hidden";
-          setTimeout(function() {
-            widget.get()
-          }, 500)
-        } else if ($scope.searchString != "") {
+        if ($scope.searchString != "") {
           $http.post('/api/search', {
             q: $scope.searchString,
             kind: $scope.kind
@@ -35,7 +22,7 @@ app.directive('scsearch', function($http) {
             $scope.searching = false;
             if (res.data.item) {
               if (res.data.item.kind != $scope.kind) {
-                $scope.serachError = "Please enter a " + $scope.kind + " URL.";
+                $scope.searchError = "Please enter a " + $scope.kind + " URL.";
               } else {
                 $scope.selectedItem(res.data.item);
               }
@@ -75,6 +62,7 @@ app.directive('scsearch', function($http) {
         $scope.searchSelection = [];
         $scope.searchError = undefined;
         $scope.searchString = "";
+        $scope.searching = false;
         $scope.returnitem({
           item: item
         });

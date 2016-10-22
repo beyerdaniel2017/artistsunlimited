@@ -33,7 +33,7 @@ var schema = new mongoose.Schema({
   },
   unrepostDate: {
     type: Date,
-    default: new Date(0)
+    default: new Date(10)
   },
   email: {
     type: String

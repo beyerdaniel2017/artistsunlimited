@@ -11,7 +11,6 @@ router.post('/', function(req, res, next) {
   if (req.body.q.includes("soundcloud.com")) {
     resolveURL(req.body.q)
       .then(function(item) {
-        console.log(item);
         var sendObj = {
           item: item,
           searchString: req.body.q,
@@ -46,8 +45,6 @@ function acSearch(q, kind) {
       if (err) reject(err);
       else {
         try {
-          console.log('autocomplete');
-          console.log(JSON.parse(body).results);
           var autoResults = JSON.parse(body).results.filter(function(obj) {
             return obj.kind == kind;
           })
@@ -75,8 +72,6 @@ function resolveURL(url) {
           body += chunk
         });
         res.on('end', function() {
-          console.log(body);
-          console.log(JSON.parse(body));
           var location = JSON.parse(body).location;
           request.get(location, function(err, response, body) {
             if (err) {
@@ -85,7 +80,6 @@ function resolveURL(url) {
               var endIndex = location.indexOf('?client_id');
               var startIndex = location.indexOf('/tracks/') + 8;
               var id = location.slice(startIndex, endIndex);
-              console.log(id);
               fulfill({
                 title: '--unknown--',
                 user: {
@@ -96,7 +90,6 @@ function resolveURL(url) {
                 id: id
               });
             } else {
-              console.log('body');
               fulfill(JSON.parse(body));
             }
           });
@@ -119,8 +112,6 @@ function regSearch(q, kind) {
     request.get(regularSearch, function(err, response, regResults) {
       if (err) reject(err);
       try {
-        console.log('regresults');
-        console.log(JSON.parse(regResults).collection);
         var regResults = JSON.parse(regResults).collection.filter(function(obj) {
           return obj.kind == kind;
         })
