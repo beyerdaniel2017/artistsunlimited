@@ -111,9 +111,11 @@ function repostAndRemove(event, user, repCount) {
             delete newEvent._id;
             scheduleRepost(newEvent, new Date()).then(null, console.log);
             event.remove();
+
           }
           notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', event.title + ' did not repost on ' + user.soundcloud.username + ' did not complete.', 'https://artistsunlimited.com/artistTools/scheduler');
         }
+        notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', event.title + ' did not repost on ' + user.soundcloud.username + ' did not complete.', 'https://artistsunlimited.com/artistTools/scheduler');
       }
     });
   }).then(null, console.log)

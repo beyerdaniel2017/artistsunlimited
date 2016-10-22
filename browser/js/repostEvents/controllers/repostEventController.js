@@ -6,7 +6,13 @@ app.config(function($stateProvider) {
     resolve: {
       repostEvent: function($http, $location) {
         var eventid = $location.search().id;
-        return $http.get('/api/events/respostEvent/' + eventid)
+        var paid = $location.search().paid;
+        var url = '/api/events/respostEvent/' + eventid;
+        if(paid != undefined){
+          url = '/api/events/respostEvent/getPaidReposts/' + eventid;
+        }
+        console.log('url',url);
+        return $http.get(url)
         .then(function(res) {
           return res.data;
         })

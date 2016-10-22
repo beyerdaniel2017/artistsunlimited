@@ -23,7 +23,7 @@ app.controller('ThankyouController', function($http, $scope, $location) {
         })
       }
       $scope.processing = false;
-     window.location.href =location.origin + "/repostevents?id="+trackId;
+      window.location.href =location.origin + "/repostevents?id="+trackId+"&paid="+true;
     })
     .then(null, function(err) {
       $.Zebra_Dialog('There was an error processing your request');

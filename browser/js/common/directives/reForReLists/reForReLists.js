@@ -129,7 +129,6 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.editRepostEvent = function(item) {
-        console.log('item',item);
         $scope.makeEvent = {};
         $scope.deleteEventData = item;
         $scope.manageView = "newsong";
@@ -648,6 +647,7 @@ app.directive('reforrelists', function($http) {
             $http.get("/api/events/getRepostEvents/" + $scope.user._id)
               .then(function(res) {
                 $scope.calendar = $scope.fillDateArrays(res.data);
+                $scope.listevents = res.data;
               });
             $scope.showOverlay = false;
           })

@@ -62,6 +62,7 @@ function receivedMessage(message) {
         'notificationSettings.facebookMessenger.messengerID': message.sender.id
     }).then(function(user) {
         if (!user) {
+
             messengerAPI.buttons(message.sender.id, 'Hey, please go here:', [{
                 type: "web_url",
                 url: "https://artistsunlimited.com",

@@ -36,15 +36,13 @@ router.get('/respostEvent/:id', function(req, res, next) {
   }
   var data = [];
   RepostEvent.findOne({
-    _id: req.params.id,
-  })
-
-  .then(function(event) {
+      _id: req.params.id,
+    })
+    .then(function(event) {
       RepostEvent.find({
-        trackID: event.trackID
-      })
-
-      .then(function(tracks) {
+          trackID: event.trackID
+        })
+        .then(function(tracks) {
           var i = -1;
 
           function next() {
@@ -66,6 +64,59 @@ router.get('/respostEvent/:id', function(req, res, next) {
             }
           }
           next();
+        })
+        .then(null, next);
+    })
+    .then(null, next);
+})
+
+router.get('/respostEvent/getPaidReposts/:id', function(req, res, next) {
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
+  var data = [];
+  RepostEvent.findOne({
+      _id: req.params.id,
+    })
+    .then(function(event) {
+      RepostEvent.find({
+          trackID: event.trackID
+        })
+        .then(function(tracks) {
+          var users = [];
+          for (var x = 0; x < tracks.length; x++) {
+            users.push(parseInt(tracks[x].userID));
+          }
+          RepostEvent.find({
+              userID: {
+                $in: users
+              },
+              type: 'paid'
+            })
+            .then(function(events) {
+              var i = -1;
+
+              function next() {
+                i++;
+                if (i < events.length) {
+                  var userid = parseInt(events[i].userID);
+                  User.findOne({
+                    'soundcloud.id': userid
+                  }, function(err, user) {
+                    var result = {
+                      trackInfo: events[i],
+                      userInfo: user.soundcloud
+                    }
+                    data.push(result);
+                    next();
+                  });
+                } else {
+                  res.send(data);
+                }
+              }
+              next();
+            });
         })
         .then(null, next);
     })
@@ -216,8 +267,7 @@ router.get('/getRepostEvents/:id', function(req, res, next) {
     .sort({
       day: 1
     })
-
-  .then(function(tracks) {
+    .then(function(tracks) {
       var i = -1;
 
       function next() {

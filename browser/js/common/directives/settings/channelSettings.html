@@ -840,8 +840,8 @@
                         <div class="slider round"></div>
                       </label>                               
                     </li>
-                    <div class="payed-reposts-list">
-                      <ul ng-if="user.repostSettings.paid.comments.length">
+                    <div class="payed-reposts-list" ng-if="user.repostSettings.paid.comments.length">
+                      <ul>
                         <li class="text-left"  ng-repeat="comment in user.repostSettings.paid.comments track by $index">{{comment}}<span class="pull-right" ng-click="editComments(comment,'paid',$index)">Edit</span></li>
                       </ul>
                     </div>
@@ -864,8 +864,8 @@
                         <div class="slider round"></div>
                       </label>                               
                     </li>
-                    <div class="payed-reposts-list">
-                      <ul ng-if="AccountsStepData.repostSettings.schedule.comments.length">
+                    <div class="payed-reposts-list" ng-if="AccountsStepData.repostSettings.schedule.comments.length">
+                      <ul>
                         <li class="text-left"  ng-repeat="comment in AccountsStepData.repostSettings.schedule.comments track by $index">{{comment}}<span class="pull-right" ng-click="editComments(comment,'schedule',$index)">Edit</span></li>
                       </ul>
                     </div>
@@ -888,8 +888,8 @@
                         <div class="slider round"></div>
                       </label>                               
                     </li>                           
-                    <div class="payed-reposts-list">
-                      <ul  ng-if="AccountsStepData.repostSettings.trade.comments.length">
+                    <div class="payed-reposts-list" ng-if="AccountsStepData.repostSettings.trade.comments.length">
+                      <ul>
                         <li class="text-left" ng-repeat="comment in AccountsStepData.repostSettings.trade.comments track by $index">{{comment}}<span class="pull-right" ng-click="editComments(comment, 'trade',$index)">Edit</span></li>
                       </ul>
                     </div>
@@ -938,7 +938,7 @@
               <button class="btn btn-pink" ui-sref="accounts">FINISH</button>
             </div>
           </div>
-<div class="space-10"></div>
+            <div class="space-10"></div>
         </div>
       </div>
     </div>
