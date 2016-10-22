@@ -98,16 +98,18 @@ app.directive('scheduler', function($http) {
           auto_play: false,
           show_artwork: true
         });
-        playerWidget.getCurrentSound(function(track) {
-          console.log(track);
-          $scope.searchString = track.title;
-          $scope.makeEventURL = track.permalink_url;
-          $scope.makeEvent.trackID = track.id;
-          $scope.makeEvent.title = track.title;
-          $scope.makeEvent.trackArtUrl = track.artwork_url;
-          $scope.makeEvent.artistName = track.user.username;
-          $scope.makeEvent.trackURL = track.permalink_url
-        })
+        setTimeout(function() {
+          playerWidget.getCurrentSound(function(track) {
+            console.log(track);
+            $scope.searchString = track.title;
+            $scope.makeEventURL = track.permalink_url;
+            $scope.makeEvent.trackID = track.id;
+            $scope.makeEvent.title = track.title;
+            $scope.makeEvent.trackArtUrl = track.artwork_url;
+            $scope.makeEvent.artistName = track.user.username;
+            $scope.makeEvent.trackURL = track.permalink_url
+          })
+        }, 500)
       }
 
       $scope.choseAutoFillTrack = function(track) {
@@ -135,16 +137,18 @@ app.directive('scheduler', function($http) {
           auto_play: false,
           show_artwork: false
         });
-        popupPlayerWidget.getCurrentSound(function(track) {
-          console.log(track);
-          $scope.searchString = track.title;
-          $scope.makeEventURL = track.permalink_url;
-          $scope.makeEvent.trackID = track.id;
-          $scope.makeEvent.title = track.title;
-          $scope.makeEvent.trackArtUrl = track.artwork_url;
-          $scope.makeEvent.artistName = track.user.username;
-          $scope.makeEvent.trackURL = track.permalink_url;
-        })
+        setTimeout(function() {
+          popupPlayerWidget.getCurrentSound(function(track) {
+            console.log(track);
+            $scope.searchString = track.title;
+            $scope.makeEventURL = track.permalink_url;
+            $scope.makeEvent.trackID = track.id;
+            $scope.makeEvent.title = track.title;
+            $scope.makeEvent.trackArtUrl = track.artwork_url;
+            $scope.makeEvent.artistName = track.user.username;
+            $scope.makeEvent.trackURL = track.permalink_url;
+          })
+        }, 500)
       }
 
       $scope.linkedAccounts = [];

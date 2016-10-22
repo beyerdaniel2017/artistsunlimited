@@ -386,7 +386,7 @@ app.directive('rfrinteraction', function($http) {
         var currentDay = new Date(day).getDay();
 
         var date = (new Date(day)).setHours(hour);
-        if (!($scope.activeUser.availableSlots[daysArray[currentDay]] && $scope.activeUser.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date())) || ($scope.user.blockRelease && new Date($scope.user.blockRelease) > date)) {
+        if (!($scope.activeUser.availableSlots[daysArray[currentDay]] && $scope.activeUser.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date())) || ($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease) > date)) {
 
           return false;
         }
@@ -827,7 +827,7 @@ app.directive('rfrinteraction', function($http) {
         var style = {};
         var currentDay = new Date(date).getDay();
         var date = (new Date(date)).setHours(hour)
-        if ($scope.activeUser.availableSlots[daysArray[currentDay]] && $scope.activeUser.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date()) && event.type == 'empty' && !($scope.user.blockRelease && new Date($scope.user.blockRelease).getTime() > date)) {
+        if ($scope.activeUser.availableSlots[daysArray[currentDay]] && $scope.activeUser.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date()) && event.type == 'empty' && !($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease).getTime() > date)) {
           style = {
             'background-color': '#fff',
             'border-color': "#999",
