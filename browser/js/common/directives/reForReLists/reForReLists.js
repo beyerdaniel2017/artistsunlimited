@@ -649,12 +649,10 @@ app.directive('reforrelists', function($http) {
                 $scope.listevents = res.data;
               });
             $scope.showOverlay = false;
-            console.log('updated')
           })
           .then(null, function(err) {
             $scope.processing = false;
-            console.log(err);
-            $.Zebra_Dialog(err);
+            $.Zebra_Dialog(err.message);
           });
       }
 
