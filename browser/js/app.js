@@ -190,6 +190,8 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
       $scope.isBlock = $scope.todayDate < $scope.blockRelease ? true : false;
       return $scope.isBlock;
     }
+    var admin = JSON.parse($window.localStorage.getItem('adminUser'));
+    $rootScope.enableNavigation = admin.paidRepost.length > 0 ? false : true;
 
     $scope.loadList = function() {
         $scope.$broadcast('loadTrades');

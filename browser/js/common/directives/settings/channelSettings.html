@@ -1,22 +1,28 @@
+<style type="text/css">
+  .disabled{
+    opacity: 1.5;
+    pointer-events: none;
+  }
+</style>
 <div class=" ">  
   <div class="settings-tabs-6">
     <ul class="nav nav-tabs" role="tablist">
       <li role="presentation" class="active">
         <a href="#submissionUrl" aria-controls="submissionUrl" role="tab" data-toggle="tab" style="padding-top: 18px">Set Submission URL</a>
       </li>
-      <li role="presentation">
+      <li role="presentation" ng-class="{active : activeTab.indexOf('setPrice') > -1 && currentTab == 'setPrice',disabled:activeTab.indexOf('setPrice') == -1}">
         <a href="#setPrice" aria-controls="setPrice" role="tab" data-toggle="tab" style="padding-top: 18px">Set Price</a>
       </li>
-      <li role="presentation">
+      <li role="presentation" ng-class="{active : activeTab.indexOf('customSubmission') > -1 && currentTab == 'customSubmission',disabled:activeTab.indexOf('customSubmission') == -1}">
         <a href="#customSubmission" aria-controls="customSubmission" role="tab" data-toggle="tab">Customize Submission Page</a>
       </li>
-      <li role="presentation">
+      <li role="presentation" ng-class="{active : activeTab.indexOf('customPremiereSubmission') > -1 && currentTab == 'customPremiereSubmission',disabled:activeTab.indexOf('customPremiereSubmission') == -1}">
         <a href="#customPremiereSubmission" aria-controls="customPremiereSubmission" role="tab" data-toggle="tab">Premier Submission Page</a>
       </li>
-      <li role="presentation">
+      <li role="presentation" ng-class="{active : activeTab.indexOf('repostPreferences') > -1 && currentTab == 'repostPreferences',disabled:activeTab.indexOf('repostPreferences') == -1}">
         <a href="#repostPreferences" aria-controls="repostPreferences" role="tab" data-toggle="tab" style="padding-top: 18px">Repost Preferences</a>
       </li>
-      <li role="presentation">
+      <li role="presentation" ng-class="{active : activeTab.indexOf('manageReposts') > -1 && currentTab == 'manageReposts',disabled:activeTab.indexOf('manageReposts') == -1}">
         <a href="#manageReposts" aria-controls="manageReposts" role="tab" data-toggle="tab" style="padding-top: 18px">Manage Reposts</a>
       </li>      
     </ul>

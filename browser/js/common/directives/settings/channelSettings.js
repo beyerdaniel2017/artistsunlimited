@@ -293,6 +293,7 @@ app.directive('channelsettings', function($http) {
 	      .then(function(res) {
 	        var scInfo = {};
 	        scInfo.userID = res.data.user._id;
+	        $scope.paidRepostId = res.data.user._id;
 	        AccountSettingServices.checkUsercount({
 	          "userID": scInfo.userID,
 	          'action': "id"
@@ -352,15 +353,29 @@ app.directive('channelsettings', function($http) {
 	      });
 	    };    
 
+        $scope.isPaidRepost = function()
+	    {
+	        if($scope.AccountsStepData.formActions == 'Edit')
+	        {
+	          $scope.activeTab = ['submissionUrl','setPrice','customSubmission','customPremiereSubmission','repostPreferences','manageReposts'];
+	        }else
+		        {
+		          $scope.activeTab = ['submissionUrl'];
+		        }
+	    }
+        
+        $scope.isPaidRepost();
+
         $scope.nextStep = function(step, currentData, type) {
       	if (type == "channel") {
         	switch (step) {
             case 1:
               $http.get("/connect/logout?return_to=https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https://" + window.location.host + "/callback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_5fead");
-              //$state.go("channelstep1");
               break;
             case 2:
               SessionService.createAdminUser($scope.AccountsStepData);
+                $scope.activeTab.push('setPrice');
+                 $('.nav-tabs a[href="#setPrice"]').tab('show');
               $.Zebra_Dialog('Changes saved successfully.');
               break;
       			case 3:
@@ -380,6 +395,8 @@ app.directive('channelsettings', function($http) {
 	                premierUrl: $scope.AccountsStepData.submissionData.premierUrl
 	              })
 	              .then(function(res) {
+	              	$scope.activeTab.push('customSubmission');
+	              	$('.nav-tabs a[href="#customSubmission"]').tab('show');
 	                  SessionService.createAdminUser($scope.AccountsStepData);
 	                  $.Zebra_Dialog('Changes saved successfully.');
 	              })
@@ -400,6 +417,8 @@ app.directive('channelsettings', function($http) {
 	              button: $scope.AccountsStepData.postData.button
 	            })
 	            .then(function(res) {
+	              $scope.activeTab.push('customPremiereSubmission');
+	              $('.nav-tabs a[href="#customPremiereSubmission"]').tab('show');
 	              SessionService.createAdminUser($scope.AccountsStepData);
 	              $.Zebra_Dialog('Changes saved successfully.');
 	            })
@@ -419,6 +438,8 @@ app.directive('channelsettings', function($http) {
 	            .then(function(res) {
 	              if ($scope.AccountsStepData.availableSlots == undefined) $scope.AccountsStepData.availableSlots = defaultAvailableSlots;
 	                SessionService.createAdminUser($scope.AccountsStepData);
+	                $scope.activeTab.push('repostPreferences');
+	                $('.nav-tabs a[href="#repostPreferences"]').tab('show');
 	                $.Zebra_Dialog('Changes saved successfully.');
 	            })
 	            .catch(function() {});
@@ -430,6 +451,9 @@ app.directive('channelsettings', function($http) {
 	            })
 	            .then(function(res) {
 	              $scope.processing = false;
+	              $scope.activeTab.push('manageReposts');
+	              $('.nav-tabs a[href="#manageReposts"]').tab('show');
+
 	            })
 	            .catch(function() {});
 	            $.Zebra_Dialog('Changes saved successfully.');
