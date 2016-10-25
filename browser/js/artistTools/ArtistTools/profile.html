@@ -67,7 +67,7 @@
                   <button type="button" class="btn btn-pink b-radius-10" ng-click="soundcloudLogin()">Add to list</button>
                 </div>
                 <div class="space-10"></div>
-                <div class="tracks-box" ng-if="userlinkedAccounts.length > 0">
+                <div class="tracks-box" ng-if="userlinkedAccounts.length > 1">
                   <div class="track-item-list" ng-if="account._id != user._id" ng-repeat="account in userlinkedAccounts">
                           <img class="avatar-20"  ng-src="{{account.soundcloud.avatarURL}}">
                       <div class="tracks-title">

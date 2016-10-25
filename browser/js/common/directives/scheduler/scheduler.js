@@ -98,16 +98,16 @@ app.directive('scheduler', function($http) {
           auto_play: false,
           show_artwork: true,
           callback: function() {
-            playerWidget.getCurrentSound(function(track) {
-              console.log(track);
-              $scope.searchString = track.title;
-              $scope.makeEventURL = track.permalink_url;
-              $scope.makeEvent.trackID = track.id;
-              $scope.makeEvent.title = track.title;
-              $scope.makeEvent.trackArtUrl = track.artwork_url;
-              $scope.makeEvent.artistName = track.user.username;
-              $scope.makeEvent.trackURL = track.permalink_url
-            })
+          playerWidget.getCurrentSound(function(track) {
+            console.log(track);
+            $scope.searchString = track.title;
+            $scope.makeEventURL = track.permalink_url;
+            $scope.makeEvent.trackID = track.id;
+            $scope.makeEvent.title = track.title;
+            $scope.makeEvent.trackArtUrl = track.artwork_url;
+            $scope.makeEvent.artistName = track.user.username;
+            $scope.makeEvent.trackURL = track.permalink_url
+          })
           }
         });
       }
@@ -137,16 +137,16 @@ app.directive('scheduler', function($http) {
           auto_play: false,
           show_artwork: false,
           callback: function() {
-            popupPlayerWidget.getCurrentSound(function(track) {
-              console.log(track);
-              $scope.searchString = track.title;
-              $scope.makeEventURL = track.permalink_url;
-              $scope.makeEvent.trackID = track.id;
-              $scope.makeEvent.title = track.title;
-              $scope.makeEvent.trackArtUrl = track.artwork_url;
-              $scope.makeEvent.artistName = track.user.username;
-              $scope.makeEvent.trackURL = track.permalink_url;
-            })
+          popupPlayerWidget.getCurrentSound(function(track) {
+            console.log(track);
+            $scope.searchString = track.title;
+            $scope.makeEventURL = track.permalink_url;
+            $scope.makeEvent.trackID = track.id;
+            $scope.makeEvent.title = track.title;
+            $scope.makeEvent.trackArtUrl = track.artwork_url;
+            $scope.makeEvent.artistName = track.user.username;
+            $scope.makeEvent.trackURL = track.permalink_url;
+          })
           }
         });
       }
@@ -161,7 +161,7 @@ app.directive('scheduler', function($http) {
               $scope.linkedAccounts.push(linked[i]);
             }
           }
-        }, 2000);
+        }, 1000);
       }
 
       $scope.checkCommentEnable = function() {
@@ -779,7 +779,7 @@ app.directive('scheduler', function($http) {
             $scope.slotType = 'traded';
             $scope.isView = true;
             if ($scope.commentEvent)
-              $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length >> 0] : '';
+               $scope.eventComment = $scope.makeEvent.comment;
           } else
           if (data.type != 'traded' && data.trackURL) {
             $scope.slotType = 'track';

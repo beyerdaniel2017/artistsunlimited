@@ -910,14 +910,16 @@
             </div>                    
           </div>
           <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="">
                  <h4 class="bold text-center">Auto-fill Tracks</h4>
              
-               <div class="col-md-6">
+               <div class="col-md-4 col-md-offset-2">
               <div class="permanent-links search">
                  <scsearch kind='track' returnitem='choseAutoFillTrack(item)'></scsearch>
                </div> 
-              <div class="col-md-6">
+            
+              </div>
+                <div class="col-md-5">
                     <div class="tracks-box" ng-if="autoFillTracks.length > 0">
                   <div class="track-item-list" ng-repeat="song in autoFillTracks" >
                     <img class="avatar-20" ng-src="{{song.artwork_url}}">
@@ -931,7 +933,6 @@
               </div>
               </div>
             </div>
-          </div>
 
           <div class="row">
             <div class="col-md-12 text-center">
