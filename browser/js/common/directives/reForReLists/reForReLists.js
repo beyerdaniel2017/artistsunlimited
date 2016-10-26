@@ -621,7 +621,6 @@ app.directive('reforrelists', function($http) {
                   $scope.processing = false;
                   $.Zebra_Dialog("ERROR: Did not delete.")
                 });
-
             }
           }]
         });
