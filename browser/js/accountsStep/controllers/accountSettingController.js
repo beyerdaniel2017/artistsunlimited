@@ -1,75 +1,74 @@
 app.config(function($stateProvider) {
-    $stateProvider.state('basicstep1', {
-        url: '/admin/basic/step1',
-        templateUrl: 'js/accountsStep/views/basicstep1.html',
-        controller: 'accountSettingController'
-    });
+  $stateProvider.state('basicstep1', {
+    url: '/admin/basic/step1',
+    templateUrl: 'js/accountsStep/views/basicstep1.html',
+    controller: 'accountSettingController'
+  });
 
-    $stateProvider.state('basicstep2', {
-        url: '/admin/basic/step2',
-        templateUrl: 'js/accountsStep/views/basicstep2.html',
-        controller: 'accountSettingController'
-    });
+  $stateProvider.state('basicstep2', {
+    url: '/admin/basic/step2',
+    templateUrl: 'js/accountsStep/views/basicstep2.html',
+    controller: 'accountSettingController'
+  });
 
-    $stateProvider.state('basicstep3', {
-        url: '/admin/basic/step3',
-        templateUrl: 'js/accountsStep/views/basicstep3.html',
-        controller: 'accountSettingController'
-    });
+  $stateProvider.state('basicstep3', {
+    url: '/admin/basic/step3',
+    templateUrl: 'js/accountsStep/views/basicstep3.html',
+    controller: 'accountSettingController'
+  });
 
-    $stateProvider.state('basicstep4', {
-        url: '/admin/basic/step4',
-        templateUrl: 'js/accountsStep/views/basicstep4.html',
-        controller: 'accountSettingController'
-    });
+  $stateProvider.state('basicstep4', {
+    url: '/admin/basic/step4',
+    templateUrl: 'js/accountsStep/views/basicstep4.html',
+    controller: 'accountSettingController'
+  });
 
-    $stateProvider.state('basicstep5', {
-        url: '/admin/basic/step5',
-        templateUrl: 'js/accountsStep/views/basicstep5.html',
-        controller: 'accountSettingController'
-    });
+  $stateProvider.state('basicstep5', {
+    url: '/admin/basic/step5',
+    templateUrl: 'js/accountsStep/views/basicstep5.html',
+    controller: 'accountSettingController'
+  });
 
-    $stateProvider.state('channelstep1', {
-        url: '/admin/channel/step1',
-        templateUrl: 'js/accountsStep/views/channelstep1.html',
-        controller: 'accountSettingController'
-    });
+  $stateProvider.state('channelstep1', {
+    url: '/admin/channel/step1',
+    templateUrl: 'js/accountsStep/views/channelstep1.html',
+    controller: 'accountSettingController'
+  });
 
-    $stateProvider.state('channelstep2', {
-        url: '/admin/channel/step2',
-        templateUrl: 'js/accountsStep/views/channelstep2.html',
-        controller: 'accountSettingController'
-    });
+  $stateProvider.state('channelstep2', {
+    url: '/admin/channel/step2',
+    templateUrl: 'js/accountsStep/views/channelstep2.html',
+    controller: 'accountSettingController'
+  });
 
-    $stateProvider.state('channelstep3', {
-        url: '/admin/channel/step3',
-        templateUrl: 'js/accountsStep/views/channelstep3.html',
-        controller: 'accountSettingController'
-    });
+  $stateProvider.state('channelstep3', {
+    url: '/admin/channel/step3',
+    templateUrl: 'js/accountsStep/views/channelstep3.html',
+    controller: 'accountSettingController'
+  });
 
-    $stateProvider.state('channelstep4', {
-        url: '/admin/channel/step4',
-        templateUrl: 'js/accountsStep/views/channelstep4.html',
-        controller: 'accountSettingController'
-    });
+  $stateProvider.state('channelstep4', {
+    url: '/admin/channel/step4',
+    templateUrl: 'js/accountsStep/views/channelstep4.html',
+    controller: 'accountSettingController'
+  });
 
-    $stateProvider.state('channelstep5', {
-        url: '/admin/channel/step5',
-        templateUrl: 'js/accountsStep/views/channelstep5.html',
-        controller: 'accountSettingController'
-    });
+  $stateProvider.state('channelstep5', {
+    url: '/admin/channel/step5',
+    templateUrl: 'js/accountsStep/views/channelstep5.html',
+    controller: 'accountSettingController'
+  });
 
-    $stateProvider.state('channelstep6', {
-        url: '/admin/channel/step6',
-        templateUrl: 'js/accountsStep/views/channelstep6.html',
-        controller: 'accountSettingController'
-    });
-    $stateProvider.state('channelstep7', {
-        url: '/admin/channel/step7',
-        templateUrl: 'js/accountsStep/views/channelstep7.html',
-        controller: 'accountSettingController'
-    });
-
+  $stateProvider.state('channelstep6', {
+    url: '/admin/channel/step6',
+    templateUrl: 'js/accountsStep/views/channelstep6.html',
+    controller: 'accountSettingController'
+  });
+  $stateProvider.state('channelstep7', {
+    url: '/admin/channel/step7',
+    templateUrl: 'js/accountsStep/views/channelstep7.html',
+    controller: 'accountSettingController'
+  });
 });
 
 app.controller('accountSettingController', function($rootScope, $state, $scope, $http, $window, AccountSettingServices, SessionService) {
@@ -78,11 +77,14 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
       $state.go('admin');
     }
     $scope.user = SessionService.getUser();
+    if($scope.user && $scope.user.role == 'admin'){
+      $rootScope.enableNavigation = $scope.user.paidRepost.length > 0 ? false : true;
+    }
     $scope.showTestEmailModal = false;
     $scope.errorverification = false;
     $scope.verified = false;
     $scope.waitoneminute = false;
-    console.log('user',$scope.user);
+    //console.log('user',$scope.user);
     var formActions = SessionService.getActionsfoAccount() ? SessionService.getActionsfoAccount() : 0;
     if (!formActions && formActions != "Add" && formActions != "Edit") {
       $scope.user = SessionService.getUser();

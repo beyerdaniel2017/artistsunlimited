@@ -83,8 +83,6 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.choseTrack = function(track) {
-        console.log('choseTrack');
-        console.log(track)
         $scope.searchString = track.title;
         $scope.makeEventURL = track.permalink_url;
         $scope.makeEvent.trackID = track.id;
@@ -120,8 +118,6 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.choseTrack1 = function(track) {
-        console.log('choseTrack');
-        console.log(track);
         $scope.searchString = track.title;
         $scope.makeEventURL = track.permalink_url;
         $scope.makeEvent.trackID = track.id;
@@ -170,14 +166,14 @@ app.directive('scheduler', function($http) {
             $scope.disable = true;
             $scope.commentEvent = false;
             $scope.eventComment = "";
-            $scope.commentSrc = 'assets/images/noComment.png';
+            $scope.commentSrc = 'assets/images/noComment.svg';
           } else {
             $scope.disable = false;
             $scope.commentEvent = true;
             if ($scope.slotType == 'track') {
               $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length >> 0] : '';
             }
-            $scope.commentSrc = 'assets/images/comment.png';
+            $scope.commentSrc = 'assets/images/comment.svg';
           }
         }
         if ($scope.user.repostSettings && $scope.user.repostSettings.trade) {
@@ -186,14 +182,14 @@ app.directive('scheduler', function($http) {
             $scope.disable = true;
             $scope.commentEvent = false;
             $scope.eventComment = "";
-            $scope.commentSrc = 'assets/images/noComment.png';
+            $scope.commentSrc = 'assets/images/noComment.svg';
           } else {
             $scope.disable = false;
             $scope.commentEvent = true;
             if ($scope.slotType == 'traded') {
               $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length >> 0] : '';
             }
-            $scope.commentSrc = 'assets/images/comment.png';
+            $scope.commentSrc = 'assets/images/comment.svg';
           }
         }
       }
@@ -221,12 +217,14 @@ app.directive('scheduler', function($http) {
         } else {
           if ($scope.commentSrc == 'assets/images/comment.svg') {
             $scope.commentSrc = 'assets/images/noComment.svg';
+            $scope.makeEvent.isComment = false;
             $scope.commentEvent = false;
             $scope.disable = true;
             $scope.eventComment = "";
           } else {
             $scope.commentSrc = 'assets/images/comment.svg';
             $scope.commentEvent = true;
+            $scope.makeEvent.isComment = true;
             $scope.disable = false;
             commentIndex = 0;
             if ($scope.slotType == 'track') {
@@ -373,8 +371,7 @@ app.directive('scheduler', function($http) {
         $scope.channelArr = [];
         $scope.selectedSlot = "";
         $scope.followersCount();
-        $scope.checkCommentEnable();
-        $scope.checkLikeEnable();
+        $scope.setScheduleLikeComment();
         $scope.showPlayer = false;
         $scope.getListEvents();
       }
@@ -389,6 +386,7 @@ app.directive('scheduler', function($http) {
         $scope.unrepostHours = "";
         $scope.newEvent = true;
         $scope.showPlayer = false;
+        $scope.setScheduleLikeComment();
         document.getElementById('scPlayer').style.visibility = "hidden";
         $scope.makeEvent = {
           userID: $scope.user.soundcloud.id,
@@ -417,7 +415,14 @@ app.directive('scheduler', function($http) {
         var newObj = angular.copy(item);
         $scope.makeEventURL = newObj.event.trackURL;
         $scope.selectedSlot = newObj.event.day;
-        $scope.eventComment = newObj.event.comment;
+        $scope.likeSrc = (newObj.event.like == true) ? 'assets/images/likeTrue.svg' : 'assets/images/like.svg';
+        $scope.likeEvent = newObj.event.like;
+        $scope.commentSrc = (newObj.event.comment != "") ? 'assets/images/comment.svg' : 'assets/images/noComment.svg';
+        $scope.commentEvent = (newObj.event.comment != "" ? true : false);
+        $scope.disable = !$scope.commentEvent;
+        if($scope.commentEvent){
+          $scope.eventComment = newObj.event.comment;
+        }        
         $scope.timeGap = newObj.event.timeGap;
         $scope.unrepostHours = newObj.event.unrepostHours;
         $scope.unrepostEnable = newObj.event.unrepostHours ? true : false;
@@ -729,6 +734,8 @@ app.directive('scheduler', function($http) {
             day: makeDay,
             type: "track"
           };
+ 
+          $scope.setScheduleLikeComment();
           $scope.channelArr = [];
           if ($scope.commentEvent == true)
             $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length >> 0] : '';
@@ -741,6 +748,12 @@ app.directive('scheduler', function($http) {
           $scope.channelArr = [];
         } else {
           $scope.isEdit = true;
+          $scope.likeSrc = (data.like == true) ? 'assets/images/likeTrue.svg' : 'assets/images/like.svg';
+          $scope.likeEvent = data.like;
+          $scope.commentSrc = (data.comment != "") ? 'assets/images/comment.svg' : 'assets/images/noComment.svg';
+          $scope.commentEvent = (data.comment != "" ? true : false);
+          $scope.disable = !$scope.commentEvent;
+
           $scope.editChannelArr = [];
           $scope.channelArr = []
           var channels = data.otherChannels;
@@ -775,11 +788,10 @@ app.directive('scheduler', function($http) {
           $scope.showPlayer = true;
           document.getElementById('scPopupPlayer').style.visibility = "visible";
           if (data.type == 'traded' && data.trackURL) {
-
             $scope.slotType = 'traded';
             $scope.isView = true;
             if ($scope.commentEvent)
-               $scope.eventComment = $scope.makeEvent.comment;
+              $scope.eventComment = $scope.makeEvent.comment;
           } else
           if (data.type != 'traded' && data.trackURL) {
             $scope.slotType = 'track';
@@ -788,11 +800,60 @@ app.directive('scheduler', function($http) {
               $scope.eventComment = $scope.makeEvent.comment;
           } else
           if (data.type == 'traded' && !data.trackURL) {
+            $scope.setTradedLikeComment();
             $scope.slotType = 'traded';
             $scope.showPlayer = false;
-            if ($scope.commentEvent)
-              $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length >> 0] : '';
+            // if ($scope.commentEvent)
+            //   $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length >> 0] : '';
           }
+        }
+      }
+
+      $scope.setScheduleLikeComment = function(){        
+        if ($scope.user.repostSettings && $scope.user.repostSettings.schedule) {
+          if ($scope.user.repostSettings.schedule.like == false) {
+            $scope.likeSrc = 'assets/images/like.svg';
+            $scope.likeEvent = false;
+          } else {
+            $scope.likeSrc = 'assets/images/likeTrue.svg';
+            $scope.likeEvent = true;
+          }
+        }
+
+        if ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comment == false) {
+          $scope.disable = true;
+          $scope.commentEvent = false;
+          $scope.eventComment = "";
+          $scope.commentSrc = 'assets/images/noComment.svg';
+        } else {
+          $scope.disable = false;
+          $scope.commentEvent = true;
+          $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length >> 0] : '';
+          $scope.commentSrc = 'assets/images/comment.svg';
+        }
+      }
+
+      $scope.setTradedLikeComment = function(){        
+        if ($scope.user.repostSettings && $scope.user.repostSettings.trade) {
+          if ($scope.user.repostSettings.trade.like == false) {
+            $scope.likeSrc = 'assets/images/like.svg';
+            $scope.likeEvent = false;
+          } else {
+            $scope.likeSrc = 'assets/images/likeTrue.svg';
+            $scope.likeEvent = true;
+          }
+        }
+
+        if ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comment == false) {
+          $scope.disable = true;
+          $scope.commentEvent = false;
+          $scope.eventComment = "";
+          $scope.commentSrc = 'assets/images/noComment.svg';
+        } else {
+          $scope.disable = false;
+          $scope.commentEvent = true;
+          $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length >> 0] : '';
+          $scope.commentSrc = 'assets/images/comment.svg';
         }
       }
 

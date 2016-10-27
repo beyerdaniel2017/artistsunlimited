@@ -43,4 +43,5 @@ app.controller('ArtistToolsDownloadGatewayController', function($rootScope, $sta
     $window.localStorage.removeItem('returnstate');
     $window.localStorage.removeItem('tid');
   }
+  $scope.curATUser = SessionService.getUser();
 });
