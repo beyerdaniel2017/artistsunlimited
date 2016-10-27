@@ -11,6 +11,12 @@ var client_secret = "ee5f5be9ff2d8ec040098ade0b42e1f2";
 var redirect_uri = "https://artistsunlimited.co/callback.html";
 var fs = require('fs');
 
+scWrapper.init({
+  id: client_id,
+  secret: client_secret,
+  uri: redirect_uri
+});
+
 // SC.init({
 //   client_id: client_id,
 //   // secret: client_secret,
@@ -46,23 +52,23 @@ var id = 286840750;
 //   }
 //   console.log(data);
 // });
-scWrapper.init({
-  id: client_id,
-  secret: client_secret,
-  uri: redirect_uri
-});
-scWrapper.setToken(aT);
-var reqObj = {
-  method: 'PUT',
-  path: '/e1/me/track_reposts/' + id,
-  qs: {
-    oauth_token: aT
-  }
-};
-scWrapper.request(reqObj, function(err, data) {
-  console.log('err -------' + JSON.stringify(err));
-  console.log('data ------' + JSON.stringify(data));
-});
+// scWrapper.init({
+//   id: client_id,
+//   secret: client_secret,
+//   uri: redirect_uri
+// });
+// scWrapper.setToken(aT);
+// var reqObj = {
+//   method: 'PUT',
+//   path: '/e1/me/track_reposts/' + id,
+//   qs: {
+//     oauth_token: aT
+//   }
+// };
+// scWrapper.request(reqObj, function(err, data) {
+//   console.log('err -------' + JSON.stringify(err));
+//   console.log('data ------' + JSON.stringify(data));
+// });
 
 // var total = ""
 
@@ -85,3 +91,21 @@ scWrapper.request(reqObj, function(err, data) {
 // }
 
 // get("http://api.soundcloud.com/users/86560544/followings?client_id=8002f0f8326d869668523d8e45a53b90&page_size=200")
+
+
+var at = '1-231090-780957-56de13fffe2f790f';
+
+scWrapper.setToken(at);
+var reqObj = {
+  method: 'GET',
+  path: '/me',
+  qs: {}
+};
+scWrapper.request(reqObj, function(err, data) {
+  if (err) {
+    console.log('err');
+    console.log(err);
+  } else {
+    console.log(data)
+  }
+});

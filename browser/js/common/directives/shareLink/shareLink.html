@@ -1,26 +1,25 @@
 
 <div class="modal fade" id="{{handler}}" role="dialog">
-    <div class="modal-dialog">    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Share Your Link</h4>
+  <div class="modal-dialog">    
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Share Your Link</h4>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <input id="foo" class="form-control" ng-if="eventType == 'share'" value="{{origin}}/repostevents?id={{eventId}}">
+          <input id="foo" class="form-control" ng-if="eventType == 'remind'" value="{{origin}}/artistTools/reForReInteraction/{{eventId}}">
+          <span class="input-group-addon" ngclipboard data-clipboard-target="#foo" id="basic-addon2">Copy</span>
         </div>
-        <div class="modal-body">
-          <div class="input-group">
-            <input id="foo" class="form-control" ng-if="eventType == 'share'" value="{{origin}}/repostevents?id={{eventId}}">
-            <input id="foo" class="form-control" ng-if="eventType == 'remind'" value="{{origin}}/artistTools/reForReInteraction/{{eventId}}">
-            <span class="input-group-addon" ngclipboard data-clipboard-target="#foo" id="basic-addon2">Copy</span>
-          </div>
-          <br>
-          <button class="btn btn-pink btn-block" ng-click="sendMail(eventId)">Send Email</button>
-          <br>
-          <div id="fb-root"></div>
-          <div class="fb-send" data-href="https://jsfiddle.net/37eL5smy/"></div>
+        <br>
+        <button class="btn btn-pink btn-block" ng-click="sendMail(eventId)">Send Email</button>
+        <br>
+        <div id="fb-root" >
         </div>
+        <div class="fb-send" data-href="{{messengerLink}}"></div>
         <div class="modal-footer">
-
         </div>
       </div>
     </div>
