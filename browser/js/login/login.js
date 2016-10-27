@@ -11,7 +11,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
   $scope.showingElements = [];
   $scope.submissions = [];
   $scope.loginObj = {};
-  var userData = SessionService.getUser();
+  var userData = SessionService.getUser();  
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
   if ($scope.isLoggedIn) {
     if (userData.paypal_email == undefined || userData.paypal_email == "") {
@@ -21,7 +21,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
       $state.go('accounts');
     }
   }
-
+  
   $scope.login = function() {
     $scope.signinError = "";
     AuthService
@@ -37,16 +37,22 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         SessionService.create(userData);
         userData.loginInfo = $scope.loginObj;
         $window.localStorage.setItem('adminUser', JSON.stringify(userData));
-        if (userData.paypal_email == undefined || userData.paypal_email == "" || !userData.paidRepost[0])
+        if (userData.paypal_email == undefined || userData.paypal_email == "")
           $state.go('basicstep1');
+        else
+        if(!userData.paidRepost[0])
+        {
+           SessionService.addActionsfoAccount('Add','index');
+           $state.go('channelstep1');
+        }
         else {
-          $http.get('/api/users/byId/' + userData.paidRepost[0].userID)
-            .then(function(res) {
-              $window.localStorage.setItem('prevATUser', JSON.stringify(res.data));
+        $http.get('/api/users/byId/' + userData.paidRepost[0].userID)
+          .then(function(res) {
+            $window.localStorage.setItem('prevATUser', JSON.stringify(res.data));
               SessionService.removeAccountusers();
               $state.go('accounts');
-            })
-            .then(console.debug);
+          })
+          .then(console.debug);
         }
       } else {
         $scope.signinError = "Invalid Email or Password.";

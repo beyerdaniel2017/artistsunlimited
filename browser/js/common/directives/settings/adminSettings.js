@@ -61,25 +61,19 @@ app.directive('adminsettings', function($http) {
 	      }
 	    };
 
-	      if(window.location.href.indexOf('admin/basic/step1#generalInfo') != -1)
-	      {
+	    if(window.location.href.indexOf('admin/basic/step1#generalInfo') != -1) {
 	        $('.nav-tabs a[href="#generalInfo"]').tab('show');
-	      }else if(window.location.href.indexOf('admin/basic/step1#sce') != -1)
-	      {
+      	}else if(window.location.href.indexOf('admin/basic/step1#sce') != -1) {
 	      	$('.nav-tabs a[href="#sce"]').tab('show');
-	      }else if(window.location.href.indexOf('admin/basic/step1#sce') != -1)
-	      {
-	      	 $('.nav-tabs a[href="#sce"]').tab('show');
-	      }else if(window.location.href.indexOf('admin/basic/step1#psce') != -1)
-	      {
-	      	 $('.nav-tabs a[href="#psce"]').tab('show');
-	      }else if(window.location.href.indexOf('admin/basic/step1#notifications') != -1)
-	      {
-	      	 $('.nav-tabs a[href="#notifications"]').tab('show');
-	      }else if(window.location.href.indexOf('admin/basic/step1#paypalInfo') != -1)
-	      {
-	      	 $('.nav-tabs a[href="#paypalInfo"]').tab('show');
-	      }
+      	}else if(window.location.href.indexOf('admin/basic/step1#sce') != -1) {
+      	 	$('.nav-tabs a[href="#sce"]').tab('show');
+      	}else if(window.location.href.indexOf('admin/basic/step1#psce') != -1) {
+      	 	$('.nav-tabs a[href="#psce"]').tab('show');
+      	}else if(window.location.href.indexOf('admin/basic/step1#notifications') != -1) {
+      	 	$('.nav-tabs a[href="#notifications"]').tab('show');
+      	}else if(window.location.href.indexOf('admin/basic/step1#paypalInfo') != -1) {
+      	 	$('.nav-tabs a[href="#paypalInfo"]').tab('show');
+      	}
 
 	    $scope.addEventClass = function(index, type) {
 	      $('textarea').removeClass("selectedBox");
@@ -139,153 +133,149 @@ app.directive('adminsettings', function($http) {
 	    }
 	    $scope.isFirstLogin = function()
 	    {
-	        if($scope.AccountsStepData.repostCustomizeEmails.length > 0 && $scope.AccountsStepData.premierCustomizeEmails.length >0 && $scope.AccountsStepData.notificationSettings !="")
-	        {
+	        if($scope.AccountsStepData.repostCustomizeEmails.length > 0 && $scope.AccountsStepData.premierCustomizeEmails.length >0 && $scope.AccountsStepData.notificationSettings !="") {
 	          $scope.activeTab = ['general','sce','psce','notifications','paypalInfo'];
-	        }else
-		        {
-		          $scope.activeTab = ['general'];
-		        }
+	        } else {
+	          $scope.activeTab = ['general'];
+	        }
 	    }
         $scope.isFirstLogin();
     	$scope.nextStep = function(step, currentData, type) {
-
     		if (type == "basic") {
-      		switch (step) {
-	        case 1:
-	          $state.go("basicstep1");
-	          break;
-	        case 2:	          	
-	          var next = true;
-	          var body = {};
-	          if ($scope.AccountsStepData.email == "") {
-	            next = false;
-	            $.Zebra_Dialog('Error: Enter email address');
-	          } else if ($scope.AccountsStepData.email != "") {
-	            body.email = $scope.AccountsStepData.email;
-	          }
-	          if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword != $scope.AccountsStepData.newpassword) {
-	            next = false;
-	            $.Zebra_Dialog('Error: Password doesn’t match');
-	          } else if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword == $scope.AccountsStepData.newpassword) {
-	            body.password = $scope.AccountsStepData.newpassword;
-	          }
-	          if ($scope.AccountsStepData.profilePicture == "https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg") {
-	            next = false;
-	            $.Zebra_Dialog('Error: Please upload your profile image');
-	          }
-	          if ($scope.AccountsStepData.profilePicture != "") {
-	            body.pictureUrl = $scope.AccountsStepData.profilePicture;
-	          }
+	      		switch (step) {
+		        case 1:
+		          	$state.go("basicstep1");
+		          	break;
+	        	case 2:	          	
+		          	var next = true;
+		          	var body = {};
+		          	if ($scope.AccountsStepData.email == "") {
+		            	next = false;
+		            	$.Zebra_Dialog('Error: Enter email address');
+		          	} else if ($scope.AccountsStepData.email != "") {
+		            	body.email = $scope.AccountsStepData.email;
+		          	}
+		          	if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword != $scope.AccountsStepData.newpassword) {
+			            next = false;
+			            $.Zebra_Dialog('Error: Password doesn’t match');
+		          	} else if ($scope.AccountsStepData.newpassword != "" && $scope.AccountsStepData.newconfirmpassword == $scope.AccountsStepData.newpassword) {
+			            body.password = $scope.AccountsStepData.newpassword;
+		          	}
+		          	if ($scope.AccountsStepData.profilePicture == "https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg") {
+			            next = false;
+			            $.Zebra_Dialog('Error: Please upload your profile image');
+		          	}
+		          	if ($scope.AccountsStepData.profilePicture != "") {
+			            body.pictureUrl = $scope.AccountsStepData.profilePicture;
+		          	}
 
-	          if (next) {
-	            AccountSettingServices.updateAdminProfile(body)
-	            .then(function(res) {
-	              if (res.data.message) {
-	                $.Zebra_Dialog('Error: Email already register.');
-	              } else {
-	                $scope.AccountsStepData.newpassword = "";
-	                $scope.AccountsStepData.newconfirmpassword = "";
-	                $scope.processing = false;
-	                $scope.AccountsStepData.repostCustomizeEmails = (($scope.AccountsStepData.repostCustomizeEmails.length > 0) ? $scope.AccountsStepData.repostCustomizeEmails : [{
-	                  "acceptance": {
-	                    "title": "ACCEPTANCE  EMAIL",
-	                    "subject": "Congratulations on your Submission -",
-	                    "body": "Hey {NAME}!\n\nFirst of all thank you so much for submitting your track The Story of Future R&B to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.\nTo maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.\nAll the best,\n\nEdward Sanchez\nPeninsula MGMT Team\nwww.facebook.com/edwardlatropical\n",
-	                    "buttonText": "Accept",
-	                    "buttonBgColor": "#592e2e"
-	                  },
-	                  "decline": {
-	                    "title": "DECLINE  EMAIL",
-	                    "subject": "Music Submission",
-	                    "body": "Hey {NAME},\n\nFirst of all thank you so much for submitting your track <a href='{SONGURL}'>{SONGNAME}</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.\n\n We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.\n\nGoodluck and stay true to the art,\n\nEdward Sanchez\n Peninsula MGMT Team \nwww.facebook.com/edwardlatropical",
-	                    "buttonText": "Decline",
-	                    "buttonBgColor": "#592e2e"
-	                  }
-	                }]);                  
-	                $scope.activeTab.push('sce');  
-	                $('.nav-tabs a[href="#sce"]').tab('show');          
-	                SessionService.createAdminUser($scope.AccountsStepData);
-	                $.Zebra_Dialog('Changes saved successfully.');
-	              }
-	            })
-	            .catch(function() {
-	              $.Zebra_Dialog('Error: Error inprocessing the request.');
-	            });
-	          } else {
-	            return;
-	          }
-	          break;
-	        case 3:
-	          AccountSettingServices.updateAdminProfile({
-	            repostCustomizeEmails: $scope.AccountsStepData.repostCustomizeEmails
-	          })
-	          .then(function(res) {
-	            $scope.processing = false;
-	          })
-	          .catch(function() {});
-	          $scope.AccountsStepData.premierCustomizeEmails = (($scope.AccountsStepData.premierCustomizeEmails.length > 0) ? $scope.AccountsStepData.premierCustomizeEmails : [{
-	            "acceptance": {
-	              "title": "ACCEPTANCE  EMAIL",
-	              "subject": "Congratulations on your Submission -",
-	              "body": "Hey {NAME}!\n\nFirst of all thank you so much for submitting your track The Story of Future R&B to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.\nTo maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.\nAll the best,\n\nEdward Sanchez\nPeninsula MGMT Team\nwww.facebook.com/edwardlatropical\n",
-	              "buttonText": "Accept",
-	              "buttonBgColor": "#592e2e"
-	            },
-	            "decline": {
-	              "title": "DECLINE  EMAIL",
-	              "subject": "Music Submission",
-	              "body": "Hey {NAME},\n\nFirst of all thank you so much for submitting your track <a href='{SONGURL}'>{SONGNAME}</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.\n\n We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.\n\nGoodluck and stay true to the art,\n\nEdward Sanchez\n Peninsula MGMT Team \nwww.facebook.com/edwardlatropical",
-	              "buttonText": "Decline",
-	              "buttonBgColor": "#592e2e"
-	            }
-	          }]);
-              $scope.activeTab.push('psce');
-              $('.nav-tabs a[href="#psce"]').tab('show');    
-	          SessionService.createAdminUser($scope.AccountsStepData);
-	          $.Zebra_Dialog('Changes saved successfully.');
-	          break;
-      		case 4:
-	          AccountSettingServices.updateAdminProfile({
-	            premierCustomizeEmails: $scope.AccountsStepData.premierCustomizeEmails
-	          })
-	          .then(function(res) {
-	          	$scope.activeTab.push('notifications'); 
-	          	$('.nav-tabs a[href="#notifications"]').tab('show');  
-	            $scope.processing = false;
-	          })
-	          .catch(function() {});
-
-	          SessionService.createAdminUser($scope.AccountsStepData);
-	          $.Zebra_Dialog('Changes saved successfully.');
-	          break;
-      		case 5:
-	          AccountSettingServices.updateAdminProfile({
-	            notificationSettings: $scope.AccountsStepData.notificationSettings,
-	            email: $scope.AccountsStepData.email
-	          })
-	          .then(function(res) {
-	            $scope.processing = false;
-	          })
-	          .catch(function() {});
-	            $scope.errorverification = false;
-	            $scope.verified = false;
-	            $scope.waitoneminute = false;
-	            SessionService.createAdminUser($scope.AccountsStepData);
-	            if ($scope.AccountsStepData.paypal == undefined) {
-	              $scope.AccountsStepData.paypal = {};
-	              $scope.AccountsStepData.paypal.varify = false;
-	              $scope.AccountsStepData.paypal.processchannel = false;
-	            }
-	            $scope.activeTab.push('paypalInfo'); 
-	            $('.nav-tabs a[href="#paypalInfo"]').tab('show');  
-	            SessionService.createAdminUser($scope.AccountsStepData);
-	            $.Zebra_Dialog('Changes saved successfully.');
-	            break;
-        	}
-      	}
+	          		if (next) {
+		            	AccountSettingServices.updateAdminProfile(body)
+		            	.then(function(res) {
+		              		if (res.data.message) {
+		                		$.Zebra_Dialog('Error: Email already register.');
+		              		} else {
+				                $scope.AccountsStepData.newpassword = "";
+				                $scope.AccountsStepData.newconfirmpassword = "";
+				                $scope.processing = false;
+				                $scope.AccountsStepData.repostCustomizeEmails = (($scope.AccountsStepData.repostCustomizeEmails.length > 0) ? $scope.AccountsStepData.repostCustomizeEmails : [{
+				                  "acceptance": {
+				                    "title": "ACCEPTANCE  EMAIL",
+				                    "subject": "Congratulations on your Submission -",
+				                    "body": "Hey {NAME}!\n\nFirst of all thank you so much for submitting your track The Story of Future R&B to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.\nTo maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.\nAll the best,\n\nEdward Sanchez\nPeninsula MGMT Team\nwww.facebook.com/edwardlatropical\n",
+				                    "buttonText": "Accept",
+				                    "buttonBgColor": "#592e2e"
+				                  },
+				                  "decline": {
+				                    "title": "DECLINE  EMAIL",
+				                    "subject": "Music Submission",
+				                    "body": "Hey {NAME},\n\nFirst of all thank you so much for submitting your track <a href='{SONGURL}'>{SONGNAME}</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.\n\n We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.\n\nGoodluck and stay true to the art,\n\nEdward Sanchez\n Peninsula MGMT Team \nwww.facebook.com/edwardlatropical",
+				                    "buttonText": "Decline",
+				                    "buttonBgColor": "#592e2e"
+				                  }
+				                }]);                  
+		                		$scope.activeTab.push('sce');  
+		                		$('.nav-tabs a[href="#sce"]').tab('show');          
+		                		SessionService.createAdminUser($scope.AccountsStepData);
+		                		$.Zebra_Dialog('Changes saved successfully.');
+		              		}
+	            		})
+			            .catch(function() {
+			              $.Zebra_Dialog('Error: Error inprocessing the request.');
+			            });
+	          		} else {
+	            		return;
+	          		}
+	          		break;
+	        	case 3:
+		         	AccountSettingServices.updateAdminProfile({
+			            repostCustomizeEmails: $scope.AccountsStepData.repostCustomizeEmails
+		          	})
+		          	.then(function(res) {
+			            $scope.processing = false;
+		          	})
+	          		.catch(function() {});
+			          	$scope.AccountsStepData.premierCustomizeEmails = (($scope.AccountsStepData.premierCustomizeEmails.length > 0) ? $scope.AccountsStepData.premierCustomizeEmails : [{
+			            "acceptance": {
+			              "title": "ACCEPTANCE  EMAIL",
+			              "subject": "Congratulations on your Submission -",
+			              "body": "Hey {NAME}!\n\nFirst of all thank you so much for submitting your track The Story of Future R&B to us! We checkedout your submission and our team was absolutely grooving with the track and we believe it’s ready to be reposted and shared by channels on our network. All you need to do is click the button below.\nTo maintain our feed’s integrity, we do not offer more than one repost of the approved track per channel. With that said, if you are interested in more extensive PR packages and campaigns that guarante eanywhere from 25,000 to 300,000 plays and corresponding likes/reposts depending on your budget please send us an email @ artistsunlimited.pr@gmail.com. We thoroughly enjoyed listening to your production and we hope that in the future you submit your music to our network. Keep working hard and putting your heart into your art, we will be here to help you with the rest.\nAll the best,\n\nEdward Sanchez\nPeninsula MGMT Team\nwww.facebook.com/edwardlatropical\n",
+			              "buttonText": "Accept",
+			              "buttonBgColor": "#592e2e"
+			            },
+			            "decline": {
+			              "title": "DECLINE  EMAIL",
+			              "subject": "Music Submission",
+			              "body": "Hey {NAME},\n\nFirst of all thank you so much for submitting your track <a href='{SONGURL}'>{SONGNAME}</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.\n\n We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.\n\nGoodluck and stay true to the art,\n\nEdward Sanchez\n Peninsula MGMT Team \nwww.facebook.com/edwardlatropical",
+			              "buttonText": "Decline",
+			              "buttonBgColor": "#592e2e"
+			            }
+	          		}]);
+	              	$scope.activeTab.push('psce');
+	              	$('.nav-tabs a[href="#psce"]').tab('show');    
+		          	SessionService.createAdminUser($scope.AccountsStepData);
+		          	$.Zebra_Dialog('Changes saved successfully.');
+		          	break;
+      			case 4:
+		          	AccountSettingServices.updateAdminProfile({
+			            premierCustomizeEmails: $scope.AccountsStepData.premierCustomizeEmails
+		          	})
+		          	.then(function(res) {
+		          		$scope.activeTab.push('notifications'); 
+		          		$('.nav-tabs a[href="#notifications"]').tab('show');  
+		            	$scope.processing = false;
+         		 	})
+	          		.catch(function() {});
+	          		SessionService.createAdminUser($scope.AccountsStepData);
+	          		$.Zebra_Dialog('Changes saved successfully.');
+	          		break;
+      			case 5:
+	          		AccountSettingServices.updateAdminProfile({
+	            		notificationSettings: $scope.AccountsStepData.notificationSettings,
+	            		email: $scope.AccountsStepData.email
+	          		})
+	          		.then(function(res) {
+	            		$scope.processing = false;
+	          		})
+	          		.catch(function() {});
+	            		$scope.errorverification = false;
+	            		$scope.verified = false;
+	            		$scope.waitoneminute = false;
+	            		SessionService.createAdminUser($scope.AccountsStepData);
+	            		if ($scope.AccountsStepData.paypal == undefined) {
+	             		 	$scope.AccountsStepData.paypal = {};
+	              			$scope.AccountsStepData.paypal.varify = false;
+	              			$scope.AccountsStepData.paypal.processchannel = false;
+	            		}
+			            $scope.activeTab.push('paypalInfo'); 
+			            $('.nav-tabs a[href="#paypalInfo"]').tab('show');  
+			            SessionService.createAdminUser($scope.AccountsStepData);
+			            $.Zebra_Dialog('Changes saved successfully.');
+			            break;
+        			}
+      			}
 	        
-      	if (type == "channel") {
+      		if (type == "channel") {
         	switch (step) {
             case 1:
               $http.get("/connect/logout?return_to=https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https://" + window.location.host + "/callback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_5fead");
@@ -368,6 +358,7 @@ app.directive('adminsettings', function($http) {
 	            break;
       			case 7:
 	            SessionService.removeAccountusers($scope.AccountsStepData);
+	            $rootScope.enableNavigation = false;
 	            $state.go("accounts");
 	            break; 
     			}
@@ -459,7 +450,6 @@ app.directive('adminsettings', function($http) {
         };
 
     	$scope.varifyaccount = function() {
-    		console.log('verify',$scope.AccountsStepData);
 	      $scope.processing = true;
 	      $scope.errorverification = false;
 	      $scope.verified = false;
@@ -475,7 +465,7 @@ app.directive('adminsettings', function($http) {
 	          $scope.verified = true;
 	          $scope.waitoneminute = false;
 	          SessionService.createAdminUser($scope.AccountsStepData);
-	         $state.go('accounts');
+	         $state.go('channelstep1');
 	        })
 	        .catch(function() {});
 	        $scope.processing = false;

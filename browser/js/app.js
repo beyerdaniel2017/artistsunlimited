@@ -202,15 +202,14 @@ app.directive('fbLike', [
 
 app.controller('FullstackGeneratedController', function($stateParams, $window, $rootScope, $scope, $state, $http, mainService, SessionService, AuthService) {
     /*Load More*/
+    $scope.user = SessionService.getUser();
+    $rootScope.enableNavigation = false;
     $scope.isBlock = function() {
-        $scope.user = SessionService.getUser();
         $scope.todayDate = new Date();
         $scope.blockRelease = new Date($scope.user.blockRelease);
         $scope.isBlock = $scope.todayDate < $scope.blockRelease ? true : false;
         return $scope.isBlock;
     }
-    var admin = JSON.parse($window.localStorage.getItem('adminUser'));
-    $rootScope.enableNavigation = admin.paidRepost.length > 0 ? false : true;
 
     $scope.loadList = function() {
         $scope.$broadcast('loadTrades');

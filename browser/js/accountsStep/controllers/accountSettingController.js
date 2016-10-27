@@ -85,8 +85,40 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
   var formActions = SessionService.getActionsfoAccount() ? SessionService.getActionsfoAccount() : 0;
   if (!formActions && formActions != "Add" && formActions != "Edit") {
     $scope.user = SessionService.getUser();
-    if ($state.current.url == "/admin/basic/step1") {
-      if ($scope.AccountsStepData == undefined) {
+    if ($scope.user && $scope.user.role == 'admin') {
+      $rootScope.enableNavigation = $scope.user.paidRepost.length > 0 ? false : true;
+    }
+    $scope.showTestEmailModal = false;
+    $scope.errorverification = false;
+    $scope.verified = false;
+    $scope.waitoneminute = false;
+    //console.log('user',$scope.user);
+    var formActions = SessionService.getActionsfoAccount() ? SessionService.getActionsfoAccount() : 0;
+    if (!formActions && formActions != "Add" && formActions != "Edit") {
+      $scope.user = SessionService.getUser();
+      if ($state.current.url == "/admin/basic/step1") {
+        if ($scope.AccountsStepData == undefined) {
+          $scope.AccountsStepData = SessionService.getUser();
+          $scope.AccountsStepData.formActions = formActions;
+        } else {
+          $scope.AccountsStepData = SessionService.getAdminUser();
+          $scope.AccountsStepData.formActions = formActions;
+        }
+        $scope.AccountsStepData.newpassword = "";
+        if (SessionService.getAdminUser() == undefined && $scope.AccountsStepData.submissionData == undefined) {
+          SessionService.createAdminUser($scope.AccountsStepData);
+        }
+        if ($scope.AccountsStepData.profilePicture == undefined || $scope.AccountsStepData.profilePicture == "") {
+          $scope.AccountsStepData.profilePicture = "https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg";
+        }
+      } else {
+        $scope.AccountsStepData = SessionService.getAdminUser();
+        $scope.AccountsStepData.formActions = '';
+        $scope.AccountsStepData.newpassword = "";
+      }
+    } else if (formActions == "Admin") {
+      $scope.AccountsStepData = {};
+      if ($state.current.url == "/admin/basic/step1") {
         $scope.AccountsStepData = SessionService.getUser();
         $scope.AccountsStepData.formActions = formActions;
       } else {

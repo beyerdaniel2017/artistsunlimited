@@ -10,8 +10,9 @@ app.controller('settingsController', function($rootScope, $state, $scope, $http,
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
+
   $scope.user = SessionService.getUser();
-  $scope.profile = SessionService.getUser();
+  $scope.profile = SessionService.getUser();  
   $scope.updateProfileWithPicture = function(data) {
     $scope.processing = true;
     if(typeof $scope.profilepic === 'undefined')
