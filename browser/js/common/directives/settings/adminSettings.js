@@ -470,7 +470,6 @@ app.directive('adminsettings', function($http) {
 	        .catch(function() {});
 	        $scope.processing = false;
 	      } else {
-	      	  $state.go('channelstep1');
 	        $scope.errorverification = true;
 	        $scope.processing = false;
 	      }

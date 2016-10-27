@@ -97,7 +97,6 @@ app.directive('scheduler', function($http) {
           show_artwork: true,
           callback: function() {
           playerWidget.getCurrentSound(function(track) {
-            console.log(track);
             $scope.searchString = track.title;
             $scope.makeEventURL = track.permalink_url;
             $scope.makeEvent.trackID = track.id;
@@ -134,7 +133,6 @@ app.directive('scheduler', function($http) {
           show_artwork: false,
           callback: function() {
           popupPlayerWidget.getCurrentSound(function(track) {
-            console.log(track);
             $scope.searchString = track.title;
             $scope.makeEventURL = track.permalink_url;
             $scope.makeEvent.trackID = track.id;
@@ -446,6 +444,11 @@ app.directive('scheduler', function($http) {
         if (item.event.type == 'traded' && item.event.trackURL) {
           $scope.isView = true;
         }
+        else
+          if(item.event.type == 'traded' && !item.event.trackURL)
+          {
+            $scope.setTradedLikeComment();
+          }
         $scope.followersCount();
         $scope.makeEvent = {};
         $scope.newEvent = false;
@@ -482,11 +485,19 @@ app.directive('scheduler', function($http) {
         $scope.listDayIncr--;
         $scope.getListEvents();
       }
-
+       $scope.isPrev = false;
       $scope.getListEvents = function() {
         $scope.listevents = [];
         var currentDate = new Date();
+        var date =new Date();
+        var checkWeekDate = new Date(date.setDate(date.getDate() - 7)); 
         currentDate.setDate(currentDate.getDate() + $scope.listDayIncr);
+         if(!(currentDate >= checkWeekDate))
+         {
+          $scope.isPrev = true;
+           return;
+         }
+          
         for (var i = 0; i < 7; i++) {
           var d = new Date(currentDate);
           d.setDate(d.getDate() + i);
@@ -496,7 +507,6 @@ app.directive('scheduler', function($http) {
           slots = slots.sort(function(a, b) {
             return a - b
           });
-
           angular.forEach(slots, function(s) {
             var item = new Object();
             var h = s;
@@ -514,16 +524,15 @@ app.directive('scheduler', function($http) {
             var event = calendarDay.events.find(function(ev) {
               return new Date(ev.day).getHours() == s;
             });
-
             item.event = event;
             var dt = new Date(strDdate);
             dt.setHours(s);
             item.date = new Date(dt);
             //item.date = strDdate + " " + time;
             if (!item.event) {
-              if (new Date(item.date).getTime() > new Date().getTime()) {
+              //if (new Date(item.date).getTime() > new Date().getTime()) {
                 $scope.listevents.push(item);
-              }
+             // }
             } else if (item.event) {
               $scope.listevents.push(item);
             }
@@ -533,9 +542,11 @@ app.directive('scheduler', function($http) {
               $scope.listAvailableSlots.push(item);
             }
           });
+
         }
       }
       $scope.getNextEvents = function() {
+        $scope.isPrev = false;
         $scope.listDayIncr++;
         $scope.getListEvents();
       }
@@ -726,6 +737,7 @@ app.directive('scheduler', function($http) {
         $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
         $scope.unrepostHours = "";
         $scope.updateReach();
+        $scope.setScheduleLikeComment();
         if ($scope.makeEvent.type == "empty") {
           makeDay = new Date(day);
           makeDay.setHours(hour);
@@ -734,8 +746,6 @@ app.directive('scheduler', function($http) {
             day: makeDay,
             type: "track"
           };
- 
-          $scope.setScheduleLikeComment();
           $scope.channelArr = [];
           if ($scope.commentEvent == true)
             $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length >> 0] : '';
@@ -790,8 +800,12 @@ app.directive('scheduler', function($http) {
           if (data.type == 'traded' && data.trackURL) {
             $scope.slotType = 'traded';
             $scope.isView = true;
+            $scope.eventComment = "";
             if ($scope.commentEvent)
+            {
               $scope.eventComment = $scope.makeEvent.comment;
+            }
+            
           } else
           if (data.type != 'traded' && data.trackURL) {
             $scope.slotType = 'track';

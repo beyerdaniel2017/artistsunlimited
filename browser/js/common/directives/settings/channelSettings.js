@@ -46,6 +46,11 @@ app.directive('channelsettings', function($http) {
       	 $('.nav-tabs a[href="#manageReposts"]').tab('show');
       }
 
+      $scope.finish = function()
+      {
+      	window.location.href = window.location.origin + "/admin/accounts";
+      }
+      
 	  $scope.saveComments = function(value, type, index) {
 	    var comments = [];
 	    if (type == 'paid' && value) {
