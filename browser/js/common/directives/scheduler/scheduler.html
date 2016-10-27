@@ -282,7 +282,7 @@
                   <a class="btn btn-default b-radius-10 active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender');setActive('channel')">Channels</a>
                   <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
                 </div>
-                <div class="channel-check" ng-if="uniqueGroup.length > 0 || linkedAccounts.length > 0 && isEdit">
+                <div class="channel-check" ng-if="uniqueGroup.length > 0 || linkedAccounts.length > 0 && !isEdit">
                   <div class="channel-masege">
                     <ul>
                       <li class="" ng-show="channelArr.length > 0" ng-repeat="chan in channelArr">{{chan}}<span></span></li>
@@ -402,7 +402,7 @@
         </div>
         <div class="space-10"></div>
         <div class="row">
-          <div class="col-md-12" ng-if="isEdit">
+          <div class="col-md-12" ng-if="!isEdit">
             <div class="btn-group channel-group" ng-if="user.role == 'admin'" role="group" aria-label="...">
               <a class="btn btn-default b-radius-10 active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender');setActive('channel')">Channels</a>
               <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
