@@ -161,7 +161,7 @@ app.directive('scheduler', function($http) {
               $scope.linkedAccounts.push(linked[i]);
             }
           }
-        }, 2000);
+        }, 1000);
       }
 
       $scope.checkCommentEnable = function() {
@@ -779,7 +779,7 @@ app.directive('scheduler', function($http) {
             $scope.slotType = 'traded';
             $scope.isView = true;
             if ($scope.commentEvent)
-              $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length >> 0] : '';
+              $scope.eventComment = $scope.makeEvent.comment;
           } else
           if (data.type != 'traded' && data.trackURL) {
             $scope.slotType = 'track';
@@ -982,7 +982,7 @@ app.directive('scheduler', function($http) {
           return;
         }
         if (!$scope.makeEvent.trackID && ($scope.makeEvent.type == "track")) {
-          $.Zebra_Dialog("Enter a track URL");
+          $.Zebra_Dialog("Pleae add a track.");
         } else {
           $scope.processing = true;
           if ($scope.newEvent) {
@@ -1018,10 +1018,11 @@ app.directive('scheduler', function($http) {
               if (res) {
                 $scope.repostResponse = res.data._id;
                 $('#pop').modal('show');
+                $scope.e
               }
               $scope.makeEventURL = "";
               $scope.makeEvent = null;
-              $scope.eventComment = "";
+            $scope.eventComment = "";
               $scope.unrepostEnable = false;
               document.getElementById('scPlayer').style.visibility = "hidden";
               document.getElementById('scPopupPlayer').style.visibility = "hidden";

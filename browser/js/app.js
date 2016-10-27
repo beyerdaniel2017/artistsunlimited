@@ -91,20 +91,20 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
             $rootScope.state = true;
         }
 
-        if($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin') != -1){
+        if ($window.location.pathname.indexOf('artistTools') != -1 || $window.location.pathname.indexOf('admin') != -1) {
             var user = SessionService.getUser();
-            if(user){
+            if (user) {
                 var isAdminAuthenticate = ($window.localStorage.getItem('isAdminAuthenticate') ? $window.localStorage.getItem('isAdminAuthenticate') : false);
-                var redirectPath = (isAdminAuthenticate ?  "/admin" : "/login");
-                if($window.location.pathname.indexOf('admin') != -1 && !isAdminAuthenticate){
+                var redirectPath = (isAdminAuthenticate ? "/admin" : "/login");
+                if ($window.location.pathname.indexOf('admin') != -1 && !isAdminAuthenticate) {
                     $http.post('/api/logout').then(function() {
                         SessionService.deleteUser();
                         $state.go('admin');
                         //window.location.href = '/admin';
                     });
-                } else if($window.location.pathname.indexOf('artistTools') != -1 && isAdminAuthenticate){
+                } else if ($window.location.pathname.indexOf('artistTools') != -1 && isAdminAuthenticate) {
                     $http.get('/api/users/isUserAuthenticate').then(function(res) {
-                        if(!res.data){
+                        if (!res.data) {
                             SessionService.deleteUser();
                             $window.location.href = redirectPath;
                         }
@@ -131,6 +131,26 @@ app.run(function($rootScope, $window, $http, AuthService, $state, $uiViewScroll,
         }
     });
     SessionService.refreshUser();
+
+    $rootScope.reloadFB = function() {
+        setTimeout(function() {
+            FB.init({
+                appId: "1771378846475599",
+                xfbml: true,
+                version: "v2.6"
+            });
+            (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {
+                    return;
+                }
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        }, 500);
+    }
 });
 
 app.directive('fbLike', [
@@ -182,14 +202,15 @@ app.directive('fbLike', [
 
 app.controller('FullstackGeneratedController', function($stateParams, $window, $rootScope, $scope, $state, $http, mainService, SessionService, AuthService) {
     /*Load More*/
-    $scope.isBlock = function()
-    {
-      $scope.user = SessionService.getUser();
-      $scope.todayDate = new Date();
-      $scope.blockRelease = new Date($scope.user.blockRelease);
-      $scope.isBlock = $scope.todayDate < $scope.blockRelease ? true : false;
-      return $scope.isBlock;
+    $scope.isBlock = function() {
+        $scope.user = SessionService.getUser();
+        $scope.todayDate = new Date();
+        $scope.blockRelease = new Date($scope.user.blockRelease);
+        $scope.isBlock = $scope.todayDate < $scope.blockRelease ? true : false;
+        return $scope.isBlock;
     }
+    var admin = JSON.parse($window.localStorage.getItem('adminUser'));
+    $rootScope.enableNavigation = admin.paidRepost.length > 0 ? false : true;
 
     $scope.loadList = function() {
         $scope.$broadcast('loadTrades');
@@ -377,7 +398,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                 })
         }
     }
-    
+
     $scope.checkNotification();
     $scope.getSubmissionCount();
 });

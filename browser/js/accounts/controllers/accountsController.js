@@ -6,10 +6,10 @@ app.config(function($stateProvider) {
   })
 });
 
-app.controller('accountsController', function($rootScope, $state, $scope, $http, AuthService, SessionService,$sce,accountService) {
+app.controller('accountsController', function($rootScope, $state, $scope, $http, AuthService, SessionService, $sce, accountService) {
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
   if (!SessionService.getUser()) {
-	  $state.go('admin');
+    $state.go('admin');
   }
   SessionService.removeAccountusers();
   $scope.paidRepostAccounts = [];
@@ -18,32 +18,32 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
   $scope.soundcloudLogin = function() {
     $scope.processing = true;
     SC.connect()
-    .then(function(res) {
-      $rootScope.accessToken = res.oauth_token;
-      return $http.post('/api/login/soundCloudAuthentication', {
-        token: res.oauth_token
-      });
-    })
-    .then(function(res) { 
-      var scInfo = res.data.user.soundcloud;
-      scInfo.groups = [];
-      scInfo.description = "";    
-      scInfo.price = 1;    
-      $http.post('/api/database/updateUserAccount', {
-        soundcloudInfo: scInfo,
-      }).then(function(user) {
+      .then(function(res) {
+        $rootScope.accessToken = res.oauth_token;
+        return $http.post('/api/login/soundCloudAuthentication', {
+          token: res.oauth_token
+        });
+      })
+      .then(function(res) {
+        var scInfo = res.data.user.soundcloud;
+        scInfo.groups = [];
+        scInfo.description = "";
+        scInfo.price = 1;
+        $http.post('/api/database/updateUserAccount', {
+          soundcloudInfo: scInfo,
+        }).then(function(user) {
+          $scope.processing = false;
+          location.reload();
+        });
+      })
+      .then(null, function(err) {
+        $.Zebra_Dialog('Error: Could not log in');
         $scope.processing = false;
-        location.reload();
       });
-    })
-    .then(null, function(err) {
-      $.Zebra_Dialog('Error: Could not log in');
-      $scope.processing = false;
-    });
   };
 
-  $scope.addAccounts = function(actions,index){
-    SessionService.addActionsfoAccount(actions,index);
+  $scope.addAccounts = function(actions, index) {
+    SessionService.addActionsfoAccount(actions, index);
     $state.go("channelstep1");
   }
 
@@ -54,28 +54,28 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
         callback: function() {
           var postRepost = $scope.paidRepostAccounts[index].userID;
           accountService.deleteUserAccount(postRepost)
-          .then(function(res){
-            $scope.paidRepostAccounts.splice(index, 1);
-          })
+            .then(function(res) {
+              $scope.paidRepostAccounts.splice(index, 1);
+            })
         }
-       }, {
-        caption: 'No', 
-        callback: function() {} 
+      }, {
+        caption: 'No',
+        callback: function() {}
       }]
     });
   };
 
-  $scope.updateGroup = function(account){
+  $scope.updateGroup = function(account) {
     var priceFlag = true;
-    for (var i =  $scope.user.paidRepost.length - 1; i >= 0; i--) {
-      if ($scope.user.paidRepost[i].price){
-        priceFlag=true;
-      } else{
-        priceFlag=false;
+    for (var i = $scope.user.paidRepost.length - 1; i >= 0; i--) {
+      if ($scope.user.paidRepost[i].price) {
+        priceFlag = true;
+      } else {
+        priceFlag = false;
         break;
       }
     }
-    if (!priceFlag){
+    if (!priceFlag) {
       return $.Zebra_Dialog('Price can not be empty.');
     }
     $scope.processing = true;
@@ -87,18 +87,18 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
       $scope.user = SessionService.getUser();
     });
   }
-    
-  $scope.addItems=function(rowid,index){
-    $("#"+rowid).toggleClass();
+
+  $scope.addItems = function(rowid, index) {
+    $("#" + rowid).toggleClass();
   }
-  
+
   $scope.addGroup = function(index, item) {
     $scope.user.paidRepost[index].groups.push('');
   }
-  $scope.removeItem = function(parentIndex,index, item) {
+  $scope.removeItem = function(parentIndex, index, item) {
     $scope.user.paidRepost[parentIndex].groups.splice(index, 1)
   }
-  $scope.updatePaidRepostGroup = function(item, group) {           
+  $scope.updatePaidRepostGroup = function(item, group) {
     for (var i = 0; i < $scope.user.paidRepost.length; i++) {
       if ($scope.user.paidRepost[i].id == item.id) {
         $scope.user.paidRepost[i].groups.push(group);
