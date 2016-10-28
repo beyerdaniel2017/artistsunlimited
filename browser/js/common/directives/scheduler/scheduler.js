@@ -485,19 +485,11 @@ app.directive('scheduler', function($http) {
         $scope.listDayIncr--;
         $scope.getListEvents();
       }
-       $scope.isPrev = false;
+
       $scope.getListEvents = function() {
         $scope.listevents = [];
         var currentDate = new Date();
-        var date =new Date();
-        var checkWeekDate = new Date(date.setDate(date.getDate() - 7)); 
         currentDate.setDate(currentDate.getDate() + $scope.listDayIncr);
-         if(!(currentDate >= checkWeekDate))
-         {
-          $scope.isPrev = true;
-           return;
-         }
-          
         for (var i = 0; i < 7; i++) {
           var d = new Date(currentDate);
           d.setDate(d.getDate() + i);
@@ -507,6 +499,7 @@ app.directive('scheduler', function($http) {
           slots = slots.sort(function(a, b) {
             return a - b
           });
+
           angular.forEach(slots, function(s) {
             var item = new Object();
             var h = s;
@@ -524,15 +517,16 @@ app.directive('scheduler', function($http) {
             var event = calendarDay.events.find(function(ev) {
               return new Date(ev.day).getHours() == s;
             });
+
             item.event = event;
             var dt = new Date(strDdate);
             dt.setHours(s);
             item.date = new Date(dt);
             //item.date = strDdate + " " + time;
             if (!item.event) {
-              //if (new Date(item.date).getTime() > new Date().getTime()) {
+              if (new Date(item.date).getTime() > new Date().getTime()) {
                 $scope.listevents.push(item);
-             // }
+              }
             } else if (item.event) {
               $scope.listevents.push(item);
             }
@@ -542,11 +536,9 @@ app.directive('scheduler', function($http) {
               $scope.listAvailableSlots.push(item);
             }
           });
-
         }
       }
       $scope.getNextEvents = function() {
-        $scope.isPrev = false;
         $scope.listDayIncr++;
         $scope.getListEvents();
       }
