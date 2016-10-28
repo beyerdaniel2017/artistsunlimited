@@ -133,7 +133,7 @@ app.directive('adminsettings', function($http) {
 	    }
 	    $scope.isFirstLogin = function()
 	    {
-	        if($scope.AccountsStepData.repostCustomizeEmails.length > 0 && $scope.AccountsStepData.premierCustomizeEmails.length >0 && $scope.AccountsStepData.notificationSettings !="") {
+	        if($scope.AccountsStepData.paypal_email != "") {
 	          $scope.activeTab = ['general','sce','psce','notifications','paypalInfo'];
 	        } else {
 	          $scope.activeTab = ['general'];
