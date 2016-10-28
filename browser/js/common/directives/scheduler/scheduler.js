@@ -169,14 +169,13 @@ app.directive('scheduler', function($http) {
             $scope.disable = false;
             $scope.commentEvent = true;
             if ($scope.slotType == 'track') {
-              $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length >> 0] : '';
+              $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length] : '';
             }
             $scope.commentSrc = 'assets/images/comment.svg';
           }
         }
         if ($scope.user.repostSettings && $scope.user.repostSettings.trade) {
           if ($scope.user.repostSettings.trade.comment == false) {
-
             $scope.disable = true;
             $scope.commentEvent = false;
             $scope.eventComment = "";
@@ -185,7 +184,7 @@ app.directive('scheduler', function($http) {
             $scope.disable = false;
             $scope.commentEvent = true;
             if ($scope.slotType == 'traded') {
-              $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length >> 0] : '';
+              $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length] : '';
             }
             $scope.commentSrc = 'assets/images/comment.svg';
           }
@@ -226,9 +225,9 @@ app.directive('scheduler', function($http) {
             $scope.disable = false;
             commentIndex = 0;
             if ($scope.slotType == 'track') {
-              $scope.eventComment = $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length >> 0];
+              $scope.eventComment = ($scope.user.repostSettings.schedule.comments.length > 1 ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length] : $scope.user.repostSettings.schedule.comments[0]);
             } else {
-              $scope.eventComment = $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length >> 0];
+              $scope.eventComment = ($scope.user.repostSettings.trade.comments.length > 1 ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length] : $scope.user.repostSettings.trade.comments[0]);
             }
           }
         }
@@ -418,6 +417,7 @@ app.directive('scheduler', function($http) {
         $scope.commentSrc = (newObj.event.comment != "") ? 'assets/images/comment.svg' : 'assets/images/noComment.svg';
         $scope.commentEvent = (newObj.event.comment != "" ? true : false);
         $scope.disable = !$scope.commentEvent;
+        $scope.eventComment = "";
         if($scope.commentEvent){
           $scope.eventComment = newObj.event.comment;
         }        
@@ -439,14 +439,14 @@ app.directive('scheduler', function($http) {
           auto_play: false,
           show_artwork: true
         });
+        $scope.slotType = item.event.type;
         $scope.showPlayer = true;
         document.getElementById('scPlayer').style.visibility = "visible";
         if (item.event.type == 'traded' && item.event.trackURL) {
           $scope.isView = true;
         }
         else
-          if(item.event.type == 'traded' && !item.event.trackURL)
-          {
+          if(item.event.type == 'traded' && !item.event.trackURL) {
             $scope.setTradedLikeComment();
           }
         $scope.followersCount();
