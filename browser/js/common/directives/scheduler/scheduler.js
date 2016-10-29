@@ -420,7 +420,7 @@ app.directive('scheduler', function($http) {
         $scope.eventComment = "";
         if($scope.commentEvent){
           $scope.eventComment = newObj.event.comment;
-        }        
+        }  
         $scope.timeGap = newObj.event.timeGap;
         $scope.unrepostHours = newObj.event.unrepostHours;
         $scope.unrepostEnable = newObj.event.unrepostHours ? true : false;
@@ -462,6 +462,7 @@ app.directive('scheduler', function($http) {
         $scope.makeEvent._id = newObj.event._id;
         $scope.makeEvent.trackURL = $scope.makeEventURL;
         $scope.makeEvent.title = newObj.event.title;
+        $scope.makeEvent.type = item.event.type;
       }
 
       $scope.addNewSongCancel = function() {
@@ -754,10 +755,13 @@ app.directive('scheduler', function($http) {
           $scope.likeEvent = data.like;
           $scope.commentSrc = (data.comment != "") ? 'assets/images/comment.svg' : 'assets/images/noComment.svg';
           $scope.commentEvent = (data.comment != "" ? true : false);
-          $scope.disable = !$scope.commentEvent;
+          if($scope.commentEvent == false){
+            $scope.eventComment = "";
+          }
+          $scope.disable = ($scope.commentEvent == true) ? false : true;
 
           $scope.editChannelArr = [];
-          $scope.channelArr = []
+          $scope.channelArr = [];
           var channels = data.otherChannels;
           if (channels.length > 0) {
             for (var i = 0; i < channels.length; i++) {

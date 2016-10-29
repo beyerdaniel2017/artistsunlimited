@@ -474,6 +474,23 @@ app.directive('adminsettings', function($http) {
 	        $scope.processing = false;
 	      }
 	    }
+
+	    $scope.updateLOGOIMAGE = function() {
+        $scope.processing = true;
+        if ($scope.AccountsStepData.profilePicture != "") {
+            if (!(typeof $scope.AccountsStepData.profilePicture === 'undefined')) {
+                AccountSettingServices.uploadFile($scope.AccountsStepData.profilePicture).then(function(res) {
+                    if (res) {
+                        $scope.AccountsStepData.profilePicture = res.data.Location;
+                        $scope.processing = false;
+                    }
+                });
+            }
+        }else {
+            $scope.processing = false;
+        }
+    }
+   
 		}
   }
 })

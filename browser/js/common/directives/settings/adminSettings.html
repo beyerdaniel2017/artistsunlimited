@@ -338,4 +338,10 @@ setTimeout(function(){
     js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js"; fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));  }
 ,500);      
+</script><script type="text/javascript">
+$("#uploadImage").change(function() {
+  setTimeout(function(){
+    angular.element('#uploadImage').scope().updateLOGOIMAGE();  
+  },500);  
+});
 </script>

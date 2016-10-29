@@ -535,6 +535,71 @@ app.directive('channelsettings', function($http) {
 	            $scope.AccountsStepData.availableSlots[daysArray[day]].push(pushhour);
 	        }
 	    }
+
+	    $scope.updateCustomLogoImage = function() {
+        $scope.processing = true;
+        if ($scope.AccountsStepData.postData != undefined && $scope.AccountsStepData.postData.logo.images != "") {
+            if (!(typeof $scope.AccountsStepData.postData.logo.images === 'undefined')) {
+                AccountSettingServices.uploadFile($scope.AccountsStepData.postData.logo.images).then(function(res) {
+                    if (res) {
+                        $scope.AccountsStepData.postData.logo.images = res.data.Location;
+                        $scope.processing = false;
+                    }
+                });
+            }
+        } else {
+            $scope.processing = false;
+        }
+    }	   
+
+     $scope.updatePremierLogoImage = function() {
+        $scope.processing = true;
+        if ($scope.AccountsStepData.premier != undefined && $scope.AccountsStepData.premier.logo.images != "") {
+            if (!(typeof $scope.AccountsStepData.premier.logo.images === 'undefined')) {
+                AccountSettingServices.uploadFile($scope.AccountsStepData.premier.logo.images).then(function(res) {
+                    if (res) {
+                        $scope.AccountsStepData.premier.logo.images = res.data.Location;
+                        $scope.processing = false;
+                    }
+                });
+            }
+        } else {
+            $scope.processing = false;
+        }
+    }
+    $scope.uploadCustomBackground = function()
+    {
+    	 $scope.processing = true;
+        if ($scope.AccountsStepData.postData != undefined && $scope.AccountsStepData.postData.background.images != "") {
+            if (!(typeof $scope.AccountsStepData.postData.background.images === 'undefined')) {
+                AccountSettingServices.uploadFile($scope.AccountsStepData.postData.background.images).then(function(res) {
+                    if (res) {
+                        $scope.AccountsStepData.postData.background.images = res.data.Location;
+                        $scope.processing = false;
+                    }
+                });
+            }
+        } 
+        else {
+            $scope.processing = false;
+        }
+    }
+    $scope.uploadPremierBackground = function()
+    {
+    	 $scope.processing = true;
+    	 if ($scope.AccountsStepData.premier != undefined && $scope.AccountsStepData.premier.background.images != "") {
+            if (!(typeof $scope.AccountsStepData.premier.background.images === 'undefined')) {
+                AccountSettingServices.uploadFile($scope.AccountsStepData.premier.background.images).then(function(res) {
+                    if (res) {
+                        $scope.AccountsStepData.premier.background.images = res.data.Location;
+                        $scope.processing = false;
+                    }
+                });
+            }
+        } else {
+            $scope.processing = false;
+        }
+    }
     }
    }
 })

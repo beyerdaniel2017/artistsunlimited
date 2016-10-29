@@ -275,7 +275,7 @@
                             <div class="row margin-bottom-10">
                               <div class="col-md-12">
                                 <label>Image</label>
-                                <input type="file" name="uploadLogo" file-input="AccountsStepData.postData.logo.images" id="uploadLogo" class="pull-right" style="width:200px">
+                                <input type="file" name="uploadLogo" file-input="AccountsStepData.postData.logo.images" id="uploadCustomLogo" class="pull-right" style="width:200px">
                               </div>
                             </div>
                             <div class="row margin-bottom-10">
@@ -302,7 +302,7 @@
                             <div class="row margin-bottom-10">
                               <div class="col-md-12">
                               <label>Image</label>
-                                <input type="file" name="uploadBackground" file-input="AccountsStepData.postData.background.images" id="uploadBackground"  class="pull-right" style="width:200px">
+                                <input type="file" name="uploadBackground" file-input="AccountsStepData.postData.background.images" id="uploadCustomBackground"  class="pull-right" style="width:200px">
                               </div>
                             </div>
                           </div>
@@ -480,19 +480,17 @@
         <div  class="submi-section">
           <div class=""> 
             <div class="col-md-12">
-                     
               <div class="col-md-4">                                    
-                
                     <div class="row">
                       <div class="col-sm-12 custom-submission-accordion">
                         <div class="panel-group" id="accordion">
                           <div class="panel panel-default">
                             <div class="panel-heading">
                               <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#pnlHeading" onclick="return false;">HEADING </span></a>                            
+                                <a data-toggle="collapse" data-parent="#accordion" href="#pnlPremiereHeading" onclick="return false;">HEADING </span></a>                            
                               </h4>
                             </div>
-                            <div id="pnlHeading" class="panel-collapse collapse in">
+                            <div id="pnlPremiereHeading" class="panel-collapse collapse in">
                               <div class="panel-body">
                                 <div class="row margin-bottom-10">
                                   <div class="col-md-12">
@@ -527,10 +525,10 @@
                           <div class="panel panel-default">
                             <div class="panel-heading">
                               <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlSubheading">SUB HEADING </a>
+                                <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlPremiereSubheading">SUB HEADING </a>
                               </h4>
                             </div>
-                            <div id="pnlSubheading" class="panel-collapse collapse">
+                            <div id="pnlPremiereSubheading" class="panel-collapse collapse">
                               <div class="panel-body">
                                 <div class="row margin-bottom-10">
                                   <div class="col-md-12">
@@ -568,15 +566,15 @@
                             <div class="panel panel-default">
                               <div class="panel-heading">
                                 <h4 class="panel-title">
-                                  <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlLogo">LOGO </a>
+                                  <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlPremiereLogo">LOGO </a>
                                 </h4>
                               </div>
-                    <div id="pnlLogo" class="panel-collapse collapse">
+                    <div id="pnlPremiereLogo" class="panel-collapse collapse">
                       <div class="panel-body">
                         <div class="row margin-bottom-10">
                           <div class="col-md-12">
                           <label>Image</label>
-                            <input type="file" name="uploadpremier"  file-input="AccountsStepData.premier.logo.images" id="uploadpremier" class="pull-right" style="width:200px">
+                            <input type="file" name="uploadpremier"  file-input="AccountsStepData.premier.logo.images" id="uploadPremierLogo" class="pull-right" style="width:200px">
                           </div>
                         </div>
                         <div class="row margin-bottom-10">
@@ -595,15 +593,15 @@
                   <div class="panel panel-default">
                     <div class="panel-heading">
                       <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlBackground">BACKGROUND </a>
+                        <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlPremiereBackground">BACKGROUND </a>
                       </h4>
                     </div>
-                    <div id="pnlBackground" class="panel-collapse collapse">
+                    <div id="pnlPremiereBackground" class="panel-collapse collapse">
                       <div class="panel-body">
                         <div class="row margin-bottom-10">
                           <div class="col-md-12">
                           <label>Image</label>
-                            <input type="file" name="uploadpremierBackground"  file-input="AccountsStepData.premier.background.images" id="uploadpremierBackground"  class="pull-right" style="width:200px">
+                            <input type="file" name="uploadPremierBackground"  file-input="AccountsStepData.premier.background.images" id="uploadPremierBackground"  class="pull-right" style="width:200px">
                           </div>
                         </div>
                       </div>
@@ -621,10 +619,10 @@
                   <div class="panel panel-default">
                     <div class="panel-heading">
                       <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlButton">BUTTON </a>
+                        <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlPremiereButton">BUTTON </a>
                       </h4>
                     </div>
-                    <div id="pnlButton" class="panel-collapse collapse">
+                    <div id="pnlPremiereButton" class="panel-collapse collapse">
                       <div class="panel-body">
                         <div class="row margin-bottom-10">
                           <div class="col-md-12">
@@ -1003,4 +1001,25 @@
       </div>
     </div>
   </div>
-</div>
+</div><script type="text/javascript">
+$("#uploadCustomLogo").change(function() {
+  setTimeout(function(){
+    angular.element('#uploadCustomLogo').scope().updateCustomLogoImage();  
+  },500);  
+});
+$("#uploadPremierLogo").change(function() {
+  setTimeout(function(){
+    angular.element('#uploadPremierLogo').scope().updatePremierLogoImage();  
+  },500);  
+});
+ $("#uploadCustomBackground").change(function(){
+   setTimeout(function(){
+    angular.element('#uploadCustomBackground').scope().uploadCustomBackground();  
+  },500);    
+});
+  $("#uploadPremierBackground").change(function(){
+   setTimeout(function(){
+    angular.element('#uploadPremierBackground').scope().uploadPremierBackground();  
+  },500);    
+});
+</script>
