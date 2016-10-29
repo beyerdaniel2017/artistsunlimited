@@ -311,8 +311,8 @@ app.directive('channelsettings', function($http) {
 	            $scope.AccountsStepData.submissionData = res.data.user.soundcloud;
 	            $scope.AccountsStepData.submissionData.userID = res.data.user._id;
 	            var usernames = res.data.user.soundcloud.username.replace(" ", "");
-	            var url = 'https://artistsunlimited.com/custom/' + usernames + '/submit';
-	            var premierurl = 'https://artistsunlimited.com/custom/' + usernames + '/premiere';
+	            var url = window.location.origin + '/custom/' + usernames + '/submit';
+	            var premierurl = window.location.origin + '/custom/' + usernames + '/premiere';
 	            AccountSettingServices.checkUsercount({
 	              "url": url,
 	              'action': "url"
