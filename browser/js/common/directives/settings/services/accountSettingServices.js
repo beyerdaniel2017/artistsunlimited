@@ -23,9 +23,9 @@ app.factory('AccountSettingServices', ['$http', function($http) {
     function addCustomize(data) {
         return $http.post('/api/customsubmissions/addCustomSubmissions', data);
     }
-    
+
     function checkUsercount(data) {
-        return $http.post('/api/users/checkUsercount',data);
+        return $http.post('/api/users/checkUsercount', data);
     }
 
     function uploadFile(data) {
@@ -34,11 +34,13 @@ app.factory('AccountSettingServices', ['$http', function($http) {
         return $http({
                 method: 'POST',
                 url: '/api/users/profilePicUpdate',
-                headers: { 'Content-Type': undefined },
+                headers: {
+                    'Content-Type': undefined
+                },
                 tranformRequest: angular.identify,
                 data: fd
             })
-            .then(function(response) {           
+            .then(function(response) {
                 return response.data;
             });
     }
@@ -47,10 +49,10 @@ app.factory('AccountSettingServices', ['$http', function($http) {
         getSaltPassword: getSaltPassword,
         updateAdminProfile: updateAdminProfile,
         uploadFile: uploadFile,
-        checkUsercount:checkUsercount,
-        addCustomize:addCustomize,
-        updateUserAvailableSlot:updateUserAvailableSlot,
-        updatePaidRepost:updatePaidRepost
+        checkUsercount: checkUsercount,
+        addCustomize: addCustomize,
+        updateUserAvailableSlot: updateUserAvailableSlot,
+        updatePaidRepost: updatePaidRepost
 
     };
 }]);

@@ -17,6 +17,7 @@ app.config(function($stateProvider) {
         } else {
           $window.location.href = '/custompremiere/' + username + '/' + submitpart;
         }
+        return new Promise(function(fulfill, reject) {});
       }
     }
   });

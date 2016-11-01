@@ -254,47 +254,47 @@
                                 <button type="submit" class="btn btn-pink b-radius-10 btn-enter">Save Settings</button>
                               </div>
                             </div>
-                          </br>
-                        </br>
-                      </form>
-                    </div>
+                            <br>
+                            <br>
+                          </form>
+                        </div>
+                      </div>
+                    </div>  
                   </div>
-                </div>  
+                  <div class="space-20"></div>
+                </div>
+                <!-- MANAGE REPOSTS : End -->                
               </div>
-              <div class="space-20"></div>
+              <!-- Tab panes :: End-->
             </div>
-            <!-- MANAGE REPOSTS : End -->                
+            <!-- overlay -->          
           </div>
-          <!-- Tab panes :: End-->
         </div>
-        <!-- overlay -->          
+        <youtube-modal you-tube="youtubeModalId" modal-body="body" modal-footer="footer" modal-header="header" event-id="repostResponse" event-type="type"></youtube-modal>
+        <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
+        </div>
       </div>
-    </div>
-    <youtube-modal you-tube="youtubeModalId" modal-body="body" modal-footer="footer" modal-header="header" event-id="repostResponse" event-type="type"></youtube-modal>
-    <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
-    </div>
-  </div>
-  <!--overlay-->  
-  <!--overlay-->
-  <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showTestEmailModal">
-    <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
-      <div class="modal-dialog modal-vertical-centered">    
+      <!--overlay-->  
+      <!--overlay-->
+      <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showTestEmailModal">
+        <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
+          <div class="modal-dialog modal-vertical-centered">    
 
-        <div class="modal-content">
-          <div style="text-align:center; padding:10px;">        
-            <div style="text-align:center;padding-bottom:10px;">
-             <div class="modal-body">
-               <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="email" required/>
-             </div>
-             <button type="button" class="btn btn-pink" data-dismiss="modal" ng-click="testEmail(email)">Send</button>
+            <div class="modal-content">
+              <div style="text-align:center; padding:10px;">        
+                <div style="text-align:center;padding-bottom:10px;">
+                 <div class="modal-body">
+                   <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="email" required/>
+                 </div>
+                 <button type="button" class="btn btn-pink" data-dismiss="modal" ng-click="testEmail(email)">Send</button>
 
 
+               </div>
+             </div>      
            </div>
-         </div>      
+         </div>
        </div>
-     </div>
-   </div>
- </div> 
+     </div> 
          <!--  <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showTestEmailModal">
    <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
   <div class="modal-dialog modal-vertical-centered">    

@@ -9,7 +9,7 @@
     <div class="tropical" style="word-break: break-all;padding: 10px;display:inherit;"><span>{{user.email}}</span><img class="img-responsive img-circle" src="{{user.profilePicture ? user.profilePicture : (user.soundcloud.avatarURL ? user.soundcloud.avatarURL :'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg')}}" style="width: 100px;height: 100px;">
       <div class="clearfix"></div>
       <div ng-if="user.role != 'admin'">
-      <p style="color:red" ng-controller="FullstackGeneratedController" ng-init="isBlock()" ng-show="isBlock">Your reposts are blocked untill {{ user.blockRelease | date:'MMMM dd yyyy h:mma' }}</p>
+        <p style="color:red" ng-controller="FullstackGeneratedController" ng-init="isBlock()" ng-show="isBlock">Your reposts are blocked untill {{ user.blockRelease | date:'MMMM dd yyyy h:mma' }}</p>
         <div style="width:80%;margin:0 auto;" class="text-center">
           <select id="paidusers" class="form-control" ng-model="curATUser" ng-change="changeUserAdmin(curATUser)">
             <option ng-repeat="atUser in userlinkedAccounts" value="{{atUser}}">{{atUser.soundcloud.username}}</option>
@@ -21,7 +21,7 @@
     <!--tropical end-->
     <div class="left-menus">
       <nav class="nav">
-        <ul class="nav nav-navabar">{{enableNavigation}}
+        <ul class="nav nav-navabar">
           <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom SETTINGS"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin'); gotoSettings();">SETTINGS</a></li>
           <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom SCHEDULER"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/scheduler')">SCHEDULER</a></li>
           <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom REPOSTTRADES"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/reposttraders');">REPOST TRADER</a></li>
