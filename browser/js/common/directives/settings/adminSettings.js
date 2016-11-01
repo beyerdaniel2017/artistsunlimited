@@ -133,7 +133,7 @@ app.directive('adminsettings', function($http) {
 	    }
 	    $scope.isFirstLogin = function()
 	    {
-	        if($scope.AccountsStepData.repostCustomizeEmails.length > 0 && $scope.AccountsStepData.premierCustomizeEmails.length >0 && $scope.AccountsStepData.notificationSettings !="") {
+	        if($scope.AccountsStepData.paypal_email != "") {
 	          $scope.activeTab = ['general','sce','psce','notifications','paypalInfo'];
 	        } else {
 	          $scope.activeTab = ['general'];
@@ -474,6 +474,23 @@ app.directive('adminsettings', function($http) {
 	        $scope.processing = false;
 	      }
 	    }
+
+	    $scope.updateLOGOIMAGE = function() {
+        $scope.processing = true;
+        if ($scope.AccountsStepData.profilePicture != "") {
+            if (!(typeof $scope.AccountsStepData.profilePicture === 'undefined')) {
+                AccountSettingServices.uploadFile($scope.AccountsStepData.profilePicture).then(function(res) {
+                    if (res) {
+                        $scope.AccountsStepData.profilePicture = res.data.Location;
+                        $scope.processing = false;
+                    }
+                });
+            }
+        }else {
+            $scope.processing = false;
+        }
+    }
+   
 		}
   }
 })

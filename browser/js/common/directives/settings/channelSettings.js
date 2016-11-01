@@ -42,11 +42,6 @@ app.directive('channelsettings', function($http) {
 				window.location.href = window.location.origin + "/admin/accounts";
 			}
 
-			$scope.logStuff = function() {
-				console.log($scope.AccountsStepData.postData);
-				console.log($scope.AccountsStepData.premier);
-			}
-
 			$scope.saveComments = function(value, type, index) {
 				var comments = [];
 				if (type == 'paid' && value) {
@@ -304,8 +299,8 @@ app.directive('channelsettings', function($http) {
 									$scope.AccountsStepData.submissionData = res.data.user.soundcloud;
 									$scope.AccountsStepData.submissionData.userID = res.data.user._id;
 									var usernames = res.data.user.soundcloud.username.replace(" ", "");
-									var url = 'https://artistsunlimited.com/custom/' + usernames + '/submit';
-									var premierurl = 'https://artistsunlimited.com/custom/' + usernames + '/premiere';
+									var url = window.location.origin + '/custom/' + usernames + '/submit';
+									var premierurl = window.location.origin + '/custom/' + usernames + '/premiere';
 									AccountSettingServices.checkUsercount({
 											"url": url,
 											'action': "url"
@@ -524,6 +519,68 @@ app.directive('channelsettings', function($http) {
 					$scope.AccountsStepData.availableSlots[daysArray[day]].push(pushhour);
 				}
 			}
+
+			$scope.updateCustomLogoImage = function() {
+				$scope.processing = true;
+				if ($scope.AccountsStepData.postData != undefined && $scope.AccountsStepData.postData.logo.images != "") {
+					if (!(typeof $scope.AccountsStepData.postData.logo.images === 'undefined')) {
+						AccountSettingServices.uploadFile($scope.AccountsStepData.postData.logo.images).then(function(res) {
+							if (res) {
+								$scope.AccountsStepData.postData.logo.images = res.data.Location;
+								$scope.processing = false;
+							}
+						});
+					}
+				} else {
+					$scope.processing = false;
+				}
+			}
+
+			$scope.updatePremierLogoImage = function() {
+				$scope.processing = true;
+				if ($scope.AccountsStepData.premier != undefined && $scope.AccountsStepData.premier.logo.images != "") {
+					if (!(typeof $scope.AccountsStepData.premier.logo.images === 'undefined')) {
+						AccountSettingServices.uploadFile($scope.AccountsStepData.premier.logo.images).then(function(res) {
+							if (res) {
+								$scope.AccountsStepData.premier.logo.images = res.data.Location;
+								$scope.processing = false;
+							}
+						});
+					}
+				} else {
+					$scope.processing = false;
+				}
+			}
+			$scope.uploadCustomBackground = function() {
+				$scope.processing = true;
+				if ($scope.AccountsStepData.postData != undefined && $scope.AccountsStepData.postData.background.images != "") {
+					if (!(typeof $scope.AccountsStepData.postData.background.images === 'undefined')) {
+						AccountSettingServices.uploadFile($scope.AccountsStepData.postData.background.images).then(function(res) {
+							if (res) {
+								$scope.AccountsStepData.postData.background.images = res.data.Location;
+								$scope.processing = false;
+							}
+						});
+					}
+				} else {
+					$scope.processing = false;
+				}
+			}
+			$scope.uploadPremierBackground = function() {
+				$scope.processing = true;
+				if ($scope.AccountsStepData.premier != undefined && $scope.AccountsStepData.premier.background.images != "") {
+					if (!(typeof $scope.AccountsStepData.premier.background.images === 'undefined')) {
+						AccountSettingServices.uploadFile($scope.AccountsStepData.premier.background.images).then(function(res) {
+							if (res) {
+								$scope.AccountsStepData.premier.background.images = res.data.Location;
+								$scope.processing = false;
+							}
+						});
+					}
+				} else {
+					$scope.processing = false;
+				}
+			}
 		}
 	}
-})
+});
