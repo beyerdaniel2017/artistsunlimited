@@ -92,16 +92,12 @@
                               <div class="row margin-bottom-10" ng-repeat="item in customEmailButtons track by $index" style="border-bottom: solid 1px #dcdcdc;">
                                 <div class="col-md-12">
                                   <div class="col-md-1 margin-bottom-10">&nbsp;</div>
-                                  <div class="col-md-5 margin-bottom-10">
-                                    <label>To Email</label>
+                                  <div class="col-md-10 margin-bottom-10">
+                                    <input type="text" ng-model="item.buttonText" class="form-control" placeholder="Button Title">
+                                    <br/>
                                     <input type="text" ng-model="item.toEmail" class="form-control" placeholder="To Email">
                                     <br/>
-                                    <label>Subject</label>
                                     <input type="text" ng-model="item.subject" class="form-control" placeholder="Subject">
-                                  </div>
-                                  <div class="col-md-5 margin-bottom-10">
-                                    <label>Title</label>
-                                    <input type="text" ng-model="item.buttonText" class="form-control" placeholder="Title">
                                   </div>
                                   <div class="col-md-1 margin-bottom-10">
                                     <span ng-click="removeItem($index)">X</span>
@@ -116,7 +112,8 @@
                                   <div class="col-md-1">&nbsp;</div>
                                 </div>
                                 <br/>
-                                <div class="col-md-12">
+                                <div class="col-md-12 text-center">
+                                  <button class="btn btn-default" ng-click="sendTestMail($index)">Send test mail</button>
                                   <div class="button-list text-center">
                                     <input ng-repeat="btn in dynamicButton " type="button" name="{{btn.name}}" class="btn btn-border organize-btn" style="margin-left:20px;" value="{{btn.name}}" ng-click="appendBody(btn)">
                                   </div>
@@ -153,7 +150,26 @@
           <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
           </div>
         </div>
-        <!--overlay-->   
+        <!--overlay--> 
+        <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showTestEmailModal">
+        <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
+          <div class="modal-dialog modal-vertical-centered">    
+
+            <div class="modal-content">
+              <div style="text-align:center; padding:10px;">        
+                <div style="text-align:center;padding-bottom:10px;">
+                 <div class="modal-body">
+                   <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="email" required/>
+                 </div>
+                 <button type="button" class="btn btn-pink" data-dismiss="modal" ng-click="testEmail(email)">Send</button>
+
+
+               </div>
+             </div>      
+           </div>
+         </div>
+       </div>
+     </div>  
         <ng-include src="'js/home/views/loader.html'"></ng-include>    
       </div>
     </div>
