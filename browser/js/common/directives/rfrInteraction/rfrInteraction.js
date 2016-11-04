@@ -260,16 +260,19 @@ app.directive('rfrinteraction', function($http) {
         }
       }
       $scope.saveTrade = function() {
-        // if ($scope.user.queue && $scope.user.queue.length == 0) {
-        //   $('#autoFillTrack').modal('show');
-        // } else {
-        console.log('trade');
+        var slotCount = 0;
         if ($scope.trade.p1.user._id == $scope.user._id) {
           $scope.trade.p1.accepted = true;
           $scope.trade.p2.accepted = false;
+          slotCount = $scope.trade.p1.slots.length;
         } else {
           $scope.trade.p2.accepted = true;
           $scope.trade.p1.accepted = false;
+          slotCount = $scope.trade.p2.slots.length;
+        }
+        if(slotCount == 0) {
+           $.Zebra_Dialog("You must trade at least one slot on your page.");
+           return;
         }
         $.Zebra_Dialog("Request trade? Giving " + $scope.trade.user.slots.length + " for " + $scope.trade.other.slots.length + ".", {
           'type': 'confirmation',

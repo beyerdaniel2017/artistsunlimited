@@ -86,7 +86,6 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.viewSoundcloud = function(user) {
-        console.log(user);
         window.location.href = user.soundcloud.permalinkURL;
       }
 
@@ -163,8 +162,6 @@ app.directive('reforrelists', function($http) {
         $scope.makeEvent.title = newObj.trackInfo.title;
         $scope.makeEvent.trackID = newObj.trackInfo.trackID;
         $scope.makeEvent.artistName = newObj.trackInfo.artistName;
-        console.log('edit');
-        console.log($scope.makeEvent);
       }
 
       $scope.searchCurrentTrade = function() {
@@ -632,7 +629,6 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.saveEvent = function() {
-        console.log($scope.makeEvent);
         var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
           .then(function(res) {
             $scope.makeEventURL = "";
@@ -656,7 +652,6 @@ app.directive('reforrelists', function($http) {
           })
           .then(null, function(err) {
             $scope.processing = false;
-            console.log(err);
             $.Zebra_Dialog(err.data);
           });
       }
@@ -675,7 +670,6 @@ app.directive('reforrelists', function($http) {
           show_artwork: false,
           callback: function() {
           popupPlayerWidget.getCurrentSound(function(track) {
-            console.log(track);
             $scope.fillMakeEvent(track);
           })
           }
@@ -691,7 +685,6 @@ app.directive('reforrelists', function($http) {
         $scope.makeEvent.trackArtUrl = track.artwork_url;
         $scope.makeEvent.trackArtUrl = track.artwork_url;
         $scope.makeEvent.artistName = track.user.username;
-        console.log($scope.makeEvent);
       }
 
       $scope.choseTrack1 = function(track) {
@@ -702,7 +695,6 @@ app.directive('reforrelists', function($http) {
           show_artwork: true,
           callback: function() {
           playerWidget.getCurrentSound(function(track) {
-            console.log(track);
             $scope.fillMakeEvent(track);
           })
           }

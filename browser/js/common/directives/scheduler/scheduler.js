@@ -41,6 +41,7 @@ app.directive('scheduler', function($http) {
       $scope.unrepostHours = 24;
       var commentIndex = 0;
       $scope.isView = false;
+      $scope.isTraded = false;
       $scope.origin = window.location.origin;
       $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length >> 0] : '';
       var defaultAvailableSlots = {
@@ -408,6 +409,7 @@ app.directive('scheduler', function($http) {
         $scope.editChannelArr = [];
         $scope.tabSelected = false;
         $scope.isEdit = true;
+        $scope.isTraded = false;
         $scope.isSchedule = false;
         $scope.deleteEventData = item;
         var newObj = angular.copy(item);
@@ -442,6 +444,8 @@ app.directive('scheduler', function($http) {
           show_artwork: true
         });
         $scope.slotType = item.event.type;
+        if($scope.slotType == "traded")
+          $scope.isTraded = true;
         $scope.showPlayer = true;
         document.getElementById('scPlayer').style.visibility = "visible";
         if (item.event.type == 'traded' && item.event.trackURL) {
@@ -742,6 +746,8 @@ app.directive('scheduler', function($http) {
             type: "track"
           };
           $scope.channelArr = [];
+          $scope.isEdit = false;
+          $scope.isTraded = false;
           if ($scope.commentEvent == true)
             $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length >> 0] : '';
             $scope.isComment = "";
@@ -752,6 +758,9 @@ app.directive('scheduler', function($http) {
           $scope.editChannelArr = [];
           $scope.channelArr = [];
         } else {
+          if(data.type == 'traded'){
+            $scope.isTraded = true;
+          }          
           $scope.isEdit = true;
           $scope.likeSrc = (data.like == true) ? 'assets/images/likeTrue.svg' : 'assets/images/like.svg';
           $scope.likeEvent = data.like;

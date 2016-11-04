@@ -30,10 +30,6 @@ router.get('/forUser/:id', function(req, res, next) {
 })
 
 router.get('/respostEvent/:id', function(req, res, next) {
-  if (!req.user) {
-    next(new Error('Unauthorized'));
-    return;
-  }
   var data = [];
   RepostEvent.findOne({
       _id: req.params.id,
