@@ -360,7 +360,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="next-previous text-center">
-               <button class="btn btn-border b-radius-10 save-share" ng-class="{'disabled': isView}" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
+               <button class="btn btn-border b-radius-10" ng-class="{'disabled': isView}" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
                <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
                <button class="btn btn-pink b-radius-10 save-share" ng-click="saveEvent();">SAVE</button>
              </div>
@@ -442,7 +442,7 @@
               </div>
             </div>
           </div>
-          <h5 class="text-pink" ng-if="isEdit">Total Reach: {{followCounts}} followers</h5>
+          <h5 class="text-pink">Total Reach: {{followCounts}} followers</h5>
           <div class="row">
             <div class="col-md-12 text-center">
               <li class="switch-btn" style="font-size: 12px;vertical-align: middle;
