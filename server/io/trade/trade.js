@@ -18,8 +18,10 @@ module.exports = function(io) {
 					tradeData.messages.push(message);
 					if (tradeData.p1.user.toString() == msg.id.toString() && tradeData.p2.online == false) {
 						tradeData.p2.alert = 'change';
+	   				        tradeData.p1.alert = 'none';
 					} else if (tradeData.p2.user.toString() == msg.id.toString() && tradeData.p1.online == false) {
 						tradeData.p1.alert = 'change';
+	   				        tradeData.p2.alert = 'none';
 					}
 					tradeData.save(function(result) {
 						io.emit('send:message', {

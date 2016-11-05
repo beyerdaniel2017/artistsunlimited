@@ -12,6 +12,8 @@ app.directive('rfrinteraction', function($http) {
       } else {
         $scope.isAdminRoute = false;
       }
+      $scope.shownotification = false;
+      $scope.chatOpen = false;
       $scope.type = 'remind';
       $scope.change = false;
       $scope.showUndo = false;
@@ -125,6 +127,7 @@ app.directive('rfrinteraction', function($http) {
         // });
         $scope.fillCalendar();
         $scope.updateAlerts();
+        $scope.checkNotification();
         // $scope.processing = false;
         // })
         // .then(null, function(err) {
@@ -231,10 +234,32 @@ app.directive('rfrinteraction', function($http) {
         // $scope.processing = true;
       }
 
+      $scope.checkNotification = function() {
+        var user = SessionService.getUser();
+        if (user) {
+          return $http.get('/api/trades/withUser/' + user._id)
+            .then(function(res) {
+              var trades = res.data;
+              var trade = trades.find(function(t) {
+                return t._id.toString() == $scope.trade._id.toString();
+              });
+              console.log('trade', trade);
+              if (trade) {
+                if (trade.p1.user._id == user._id) {
+                  if (trade.p1.alert == "change" && $scope.chatOpen == false) {
+                    $scope.shownotification = true;
+                  }
+                }
+                if (trade.p2.user._id == user._id) {
+                  if (trade.p2.alert == "change" && $scope.chatOpen == false) {
+                    $scope.shownotification = true;
+                  }
+                }
+              }
+            });
+        }
+      }
       $scope.saveTrade = function() {
-        // if ($scope.user.queue && $scope.user.queue.length == 0) {
-        //   $('#autoFillTrack').modal('show');
-        // } else {
         if ($scope.trade.p1.user._id == $scope.user._id) {
           $scope.trade.p1.accepted = true;
           $scope.trade.p2.accepted = false;
@@ -242,7 +267,7 @@ app.directive('rfrinteraction', function($http) {
           $scope.trade.p2.accepted = true;
           $scope.trade.p1.accepted = false;
         }
-        console.log($scope.trade);
+
         if ($scope.trade.p1.slots.length == 0 || $scope.trade.p2.slots.length == 0) {
           $.Zebra_Dialog("Issue! At least one slot on each account must be selected.");
         } else {
@@ -279,6 +304,9 @@ app.directive('rfrinteraction', function($http) {
 
       $scope.openChat = function() {
         $scope.chatOpen = true;
+        $scope.msgCount = 0;
+        $scope.shownotification = false;
+        $scope.updateAlerts();
       }
 
       $scope.undo = function() {
@@ -522,6 +550,7 @@ app.directive('rfrinteraction', function($http) {
         if (message.tradeID == $scope.stateParams.tradeID) {
           $scope.msgHistory.push(message);
           $scope.message = message.message;
+          $scope.checkNotification();
           // $scope.trade.messages.push(message);
           if (message.type == "alert") {
             $scope.refreshCalendar();
@@ -530,13 +559,15 @@ app.directive('rfrinteraction', function($http) {
       });
 
       socket.on('get:message', function(data) {
+        $scope.msgCount = 0;
         if (data != '') {
           if (data._id == $scope.stateParams.tradeID) {
             $scope.msgHistory = data ? data.messages : [];
+            $scope.msgCount++;
           }
         }
       });
-
+      $scope.msgCount = 0;
       $scope.emitMessage = function(message, type) {
         socket.emit('send:message', {
           message: message,
@@ -681,8 +712,8 @@ app.directive('rfrinteraction', function($http) {
           $scope.trade.p2.alert = "none";
           // $scope.trade.p2.online = true;
         }
-        $scope.$parent.shownotification = false;
-        // $http.put('/api/trades', $scope.trade);
+        $http.put('/api/trades', $scope.trade);
+        $scope.shownotification = false;
       }
 
       $scope.completeTrade = function() {
@@ -953,9 +984,8 @@ app.directive('rfrinteraction', function($http) {
       $scope.remindTrade = function() {
         $('#pop').modal('show');
       }
-
-      $scope.updateAlerts();
       $scope.verifyBrowser();
+      $scope.checkNotification();
     }
   }
 });

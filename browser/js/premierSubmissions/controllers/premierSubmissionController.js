@@ -280,8 +280,8 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
       body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
     }
     var link = "mailto:"+ toEmail
-      + "?subject=" + escape(subject)
-      + "&body=" + escape(body); 
+    + "?subject=" + escape(subject)
+    + "&body=" + escape(body); 
     $window.location.href = link;
   }
 
@@ -397,9 +397,35 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     }
   }
 
+  $scope.sendTestMail = function(index) {
+    $scope.showTestEmailModal = true;
+    $scope.emailIndex = index;
+    $('#emailModal').modal('show');
+  }
+ 
+  $scope.testEmail = function(email)
+  {
+    $scope.showTestEmailModal = false;
+    $('#emailModal').modal('hide');
+    var subject = $scope.customEmailButtons[$scope.emailIndex].subject;
+    var body = $scope.customEmailButtons[$scope.emailIndex].emailBody;
+    body = body.replace('{SUBMITTERS_EMAIL}', email);
+    body = body.replace('{TRACK_TITLE_WITH_LINK}', "Oliver Nelson ft. Kaleem Taylor - Ain't A Thing" + ' (https://soundcloud.com/olivernelson/oliver-nelson-ft-kaleem-taylor-aint-a-thing-3)');
+    body = body.replace('{TRACK_TITLE}', "Oliver Nelson ft. Kaleem Taylor - Ain't A Thing");
+    body = body.replace('{TRACK_ARTIST_WITH_LINK}', "Oliver Nelson" + ' (https://soundcloud.com/olivernelson)');
+    body = body.replace('{TRACK_ARTIST}', "Jhonny Submitter");
+    body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', "La Tropical");
+    body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', "La Tropical" + ' (https://soundcloud.com/latropical)');
+    body = body.replace('{ACCEPTED_CHANNEL_LIST}', "La Tropical, Etiquette Noir and Le Sol");      
+    body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', "La Tropical(https://soundcloud.com/latropical),Etiquette Noir(https://soundcloud.com/etiquettenoir),Le Sol(https://soundcloud.com/lesolmusique)");      
+    body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
+    $window.open("mailto:"+email +"?body=" + body+"&subject="+subject, "_self");
+
+  }
+
   $scope.openHelpModal = function() {
-         $("#ytube").modal('show');
-        }
+   $("#ytube").modal('show');
+  }
   $scope.loadSubmissions();
 });
 

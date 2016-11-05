@@ -334,10 +334,10 @@
             <div class="pull-right">
               <ul class="like-comment">
                 <li>
-                  <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('like');"><img src="{{likeSrc}}" class="img-responsive"></a>
+                  <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('like');">Like: <img src="{{likeSrc}}" class="img-responsive"></a>
                 </li>
                 <li >
-                  <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('comment');"><img src="{{commentSrc}}" class="img-responsive"></a>
+                  <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('comment');">Comment: <img src="{{commentSrc}}" class="img-responsive"></a>
                 </li>
               </ul>                      
             </div>
@@ -356,14 +356,14 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div><!--row end-->
-        <div class="row">
-          <div class="col-md-12">
-            <div class="next-previous text-center">
-             <button class="btn btn-border b-radius-10 save-share" ng-class="{'disabled': isView}" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
-             <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
-             <button class="btn btn-pink b-radius-10 save-share" ng-click="saveEvent();">SAVE</button>
+          </div><!--row end-->
+          <div class="row">
+            <div class="col-md-12">
+              <div class="next-previous text-center">
+               <button class="btn btn-border b-radius-10" ng-class="{'disabled': isView}" ng-if="isEdit && !isTraded" ng-click="deleteEvent();">DELETE</button>
+               <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
+               <button class="btn btn-pink b-radius-10 save-share" ng-click="saveEvent();">SAVE</button>
+             </div>
            </div>
          </div>
 
@@ -443,7 +443,7 @@
               </div>
             </div>
           </div>
-          <h5 class="text-pink" ng-if="!isEdit">Total Reach: {{followCounts}} followers</h5>
+          <h5 class="text-pink">Total Reach: {{followCounts}} followers</h5>
           <div class="row">
             <div class="col-md-12 text-center">
               <li class="switch-btn" style="font-size: 12px;vertical-align: middle;
@@ -467,10 +467,10 @@
         <div class="pull-right">
           <ul class="like-comment">
             <li>
-              <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('like');"><img src="{{likeSrc}}" class="img-responsive"></a>
+              Like: <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('like');"><img src="{{likeSrc}}"></a>
             </li>
             <li>
-              <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('comment');"><img src="{{commentSrc}}" class="img-responsive"></a>
+              Comment: <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('comment');"><img src="{{commentSrc}}"></a>
             </li>
           </ul>                      
         </div>
@@ -493,7 +493,7 @@
     <div class="space-10"></div>
     <div class="row">
       <div class="col-md-12 text-center">
-        <button class="btn btn-border b-radius-10" ng-class="{'disabled': isView}" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
+        <button class="btn btn-border b-radius-10" ng-class="{'disabled': isView}" ng-if="isEdit && !isTraded" ng-click="deleteEvent();">DELETE</button>
         <button class="btn btn-border b-radius-10 " ng-click="backEvent();">CANCEL</button>
         <button class="btn btn-pink b-radius-10" ng-click="saveEvent();">SAVE</button>
       </div>

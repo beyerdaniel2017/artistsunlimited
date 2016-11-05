@@ -260,7 +260,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
     }
 
 
-    $scope.checkNotification = function() {
+    /*$scope.checkNotification = function() {
         var user = SessionService.getUser();
         if (user) {
             return $http.get('/api/trades/withUser/' + user._id)
@@ -280,7 +280,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                     });
                 })
         }
-    }
+    }*/
 
     $scope.setCurUser = function() {
         $scope.curATUser = JSON.stringify(SessionService.getUser());
@@ -398,7 +398,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
         }
     }
 
-    $scope.checkNotification();
+//    $scope.checkNotification();
     $scope.getSubmissionCount();
 });
 

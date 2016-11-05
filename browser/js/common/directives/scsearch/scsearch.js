@@ -60,6 +60,12 @@ app.directive('scsearch', function($http) {
         }
       }
 
+      $scope.directSearch = function() {
+        if ($scope.searchString.indexOf('soundcloud.com') > -1) {
+          $scope.sendSearch();
+        }
+      }
+
       $scope.setItemText = function(item) {
         switch (item.kind) {
           case 'track':
@@ -92,11 +98,6 @@ app.directive('scsearch', function($http) {
         }
       }
 
-      $scope.changedSearch = function() {
-        if ($scope.searchString.includes("soundcloud.com")) {
-          $scope.sendSearch();
-        }
-      }
     }]
   }
 }).filter('capitalize', function() {

@@ -86,7 +86,6 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.viewSoundcloud = function(user) {
-        console.log(user);
         window.location.href = user.soundcloud.permalinkURL;
       }
 
@@ -152,6 +151,7 @@ app.directive('reforrelists', function($http) {
         });
         if (item.trackInfo.type == 'traded' && item.trackInfo.trackURL) {
           document.getElementById('scPlayer').style.visibility = "visible";
+           $scope.showPlayer = true;
         }
         $scope.newEvent = false;
         $scope.makeEvent.day = $scope.selectedSlot;
@@ -162,8 +162,6 @@ app.directive('reforrelists', function($http) {
         $scope.makeEvent.title = newObj.trackInfo.title;
         $scope.makeEvent.trackID = newObj.trackInfo.trackID;
         $scope.makeEvent.artistName = newObj.trackInfo.artistName;
-        console.log('edit');
-        console.log($scope.makeEvent);
       }
 
       $scope.searchCurrentTrade = function() {
@@ -319,6 +317,7 @@ app.directive('reforrelists', function($http) {
               show_artwork: false
             });
             document.getElementById('scPopupPlayer').style.visibility = "visible";
+             $scope.showPlayer = true;
           }
           var playerWidg = SC.Widget('scPlayer')
           playerWidget.load($scope.makeEvent.trackURL, {
@@ -326,6 +325,7 @@ app.directive('reforrelists', function($http) {
             show_artwork: true
           });
           document.getElementById('scPlayer').style.visibility = "visible";
+           $scope.showPlayer = true;
           count = count + 1;
         } else {
           $scope.showOverlay = false;
@@ -591,9 +591,11 @@ app.directive('reforrelists', function($http) {
             show_artwork: false
           });
           document.getElementById('scPopupPlayer').style.visibility = "visible";
+           $scope.showPlayer = true;
         } else {
           $scope.isView = false;
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
+           $scope.showPlayer = false;
         }
       }
 
@@ -627,7 +629,6 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.saveEvent = function() {
-        console.log($scope.makeEvent);
         var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
           .then(function(res) {
             $scope.makeEventURL = "";
@@ -651,7 +652,6 @@ app.directive('reforrelists', function($http) {
           })
           .then(null, function(err) {
             $scope.processing = false;
-            console.log(err);
             $.Zebra_Dialog(err.data);
           });
       }
@@ -669,13 +669,13 @@ app.directive('reforrelists', function($http) {
           auto_play: false,
           show_artwork: false,
           callback: function() {
-            popupPlayerWidget.getCurrentSound(function(track) {
-              console.log(track);
-              $scope.fillMakeEvent(track);
-            })
+          popupPlayerWidget.getCurrentSound(function(track) {
+            $scope.fillMakeEvent(track);
+          })
           }
         });
         document.getElementById('scPopupPlayer').style.visibility = "visible";
+         $scope.showPlayer = true;
       }
 
       $scope.fillMakeEvent = function(track) {
@@ -685,7 +685,6 @@ app.directive('reforrelists', function($http) {
         $scope.makeEvent.trackArtUrl = track.artwork_url;
         $scope.makeEvent.trackArtUrl = track.artwork_url;
         $scope.makeEvent.artistName = track.user.username;
-        console.log($scope.makeEvent);
       }
 
       $scope.choseTrack1 = function(track) {
@@ -695,13 +694,13 @@ app.directive('reforrelists', function($http) {
           auto_play: false,
           show_artwork: true,
           callback: function() {
-            playerWidget.getCurrentSound(function(track) {
-              console.log(track);
-              $scope.fillMakeEvent(track);
-            })
+          playerWidget.getCurrentSound(function(track) {
+            $scope.fillMakeEvent(track);
+          })
           }
         });
         document.getElementById('scPlayer').style.visibility = "visible";
+         $scope.showPlayer = true;
       }
 
       $scope.choseAutoFillTrack = function(track) {
@@ -766,6 +765,7 @@ app.directive('reforrelists', function($http) {
           var unrepostDate = new Date(data.trackInfo.unrepostDate);
           var diff = Math.abs(new Date(unrepostDate).getTime() - new Date(repostDate).getTime()) / 3600000;
           $scope.makeEvent.unrepostHours = diff;
+          $scope.makeEvent.unrepostDate = unrepostDate;
           var d = new Date(day).getDay();
           var channels = data.trackInfo.otherChannels;
           $scope.displayChannels = [];
@@ -778,11 +778,7 @@ app.directive('reforrelists', function($http) {
           var calendarDay = $scope.calendar.find(function(calD) {
             return calD.day.toLocaleDateString() == day.toLocaleDateString();
           });
-          SC.Widget('scPlayer').load($scope.makeEvent.url, {
-            auto_play: false,
-            show_artwork: true
-          });
-          document.getElementById('scPlayer').style.visibility = "visible";
+          $scope.showPlayer = false;
         }
       }
 
