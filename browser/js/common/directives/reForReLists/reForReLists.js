@@ -151,7 +151,7 @@ app.directive('reforrelists', function($http) {
         });
         if (item.trackInfo.type == 'traded' && item.trackInfo.trackURL) {
           document.getElementById('scPlayer').style.visibility = "visible";
-           $scope.showPlayer = true;
+          $scope.showPlayer = true;
         }
         $scope.newEvent = false;
         $scope.makeEvent.day = $scope.selectedSlot;
@@ -317,15 +317,15 @@ app.directive('reforrelists', function($http) {
               show_artwork: false
             });
             document.getElementById('scPopupPlayer').style.visibility = "visible";
-             $scope.showPlayer = true;
+            $scope.showPlayer = true;
           }
           var playerWidg = SC.Widget('scPlayer')
-          playerWidget.load($scope.makeEvent.trackURL, {
+          playerWidg.load($scope.makeEvent.trackURL, {
             auto_play: false,
             show_artwork: true
           });
           document.getElementById('scPlayer').style.visibility = "visible";
-           $scope.showPlayer = true;
+          $scope.showPlayer = true;
           count = count + 1;
         } else {
           $scope.showOverlay = false;
@@ -591,11 +591,11 @@ app.directive('reforrelists', function($http) {
             show_artwork: false
           });
           document.getElementById('scPopupPlayer').style.visibility = "visible";
-           $scope.showPlayer = true;
+          $scope.showPlayer = true;
         } else {
           $scope.isView = false;
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
-           $scope.showPlayer = false;
+          $scope.showPlayer = false;
         }
       }
 
@@ -669,13 +669,13 @@ app.directive('reforrelists', function($http) {
           auto_play: false,
           show_artwork: false,
           callback: function() {
-          popupPlayerWidget.getCurrentSound(function(track) {
-            $scope.fillMakeEvent(track);
-          })
+            popupPlayerWidget.getCurrentSound(function(track) {
+              $scope.fillMakeEvent(track);
+            })
           }
         });
         document.getElementById('scPopupPlayer').style.visibility = "visible";
-         $scope.showPlayer = true;
+        $scope.showPlayer = true;
       }
 
       $scope.fillMakeEvent = function(track) {
@@ -694,13 +694,13 @@ app.directive('reforrelists', function($http) {
           auto_play: false,
           show_artwork: true,
           callback: function() {
-          playerWidget.getCurrentSound(function(track) {
-            $scope.fillMakeEvent(track);
-          })
+            playerWidget.getCurrentSound(function(track) {
+              $scope.fillMakeEvent(track);
+            })
           }
         });
         document.getElementById('scPlayer').style.visibility = "visible";
-         $scope.showPlayer = true;
+        $scope.showPlayer = true;
       }
 
       $scope.choseAutoFillTrack = function(track) {

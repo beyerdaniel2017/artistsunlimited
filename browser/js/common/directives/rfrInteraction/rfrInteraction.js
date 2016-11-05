@@ -738,7 +738,6 @@ app.directive('rfrinteraction', function($http) {
               event.day = new Date((new Date(slot.day)).getTime() + i * 7 * 24 * 60 * 60 * 1000);
               event.unrepostDate = new Date(event.day.getTime() + 24 * 60 * 60 * 1000);
               $scope.createEventWithUserTradeSettings(event, $scope.trade.p1.user);
-
             })
 
             p2WeekSlots.forEach(function(slot) {

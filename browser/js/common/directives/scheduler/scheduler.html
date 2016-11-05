@@ -249,13 +249,13 @@
             <div class="row">                
               <h1 class="au-title-head text-center">AVAILABLE SLOT</h1>               
               <div class="col-md-6 col-xs-12 search search-big">
-                <scsearch kind='track' returnitem='choseTrack(item)'></scsearch>
+                <scsearch kind='track' returnitem='choseTrack(item)' ng-if="!isTraded"></scsearch>
                 <div class="space-10"></div>
-                <button class="form-control" ng-click="getAutoFillTracks()">AUTOFILL</button>
+                <button class="form-control" ng-click="getAutoFillTracks()" ng-if="!isTraded">AUTOFILL</button>
                 <div class="space-10"></div>
                 <label class="text-block">Next Available Repost Time</label>
                 <div class="form-group">
-                  <select class="form-control" ng-if="!isEdit && !isSchedule" ng-model="selectedSlot" ng-change="clickAvailableSlots(selectedSlot);">
+                  <select class="form-control" ng-if="!isEdit && !isSchedule" ng-disabled="isTraded" ng-model="selectedSlot" ng-change="clickAvailableSlots(selectedSlot);">
                     <option style="color:black;text:center;" ng-repeat="slot in listAvailableSlots"
                     value="{{slot}}">{{slot.slotdate.toString().split(' ')[1] + ' ' +slot.slotdate.toString().split(' ')[2] + ' ' + slot.slotdate.toString().split(' ')[3]}} {{slot.slottime}}</option>
                   </select>
@@ -269,10 +269,10 @@
                 <ul>
                   <li class="switch-btn">
                     <label class="switch">
-                      <input checked="" type="checkbox" ng-model="unrepostEnable" ng-click="setRepostHours()">
+                      <input checked="" type="checkbox" ng-disabled="isTraded" ng-model="unrepostEnable" ng-click="setRepostHours()">
                       <div class="slider round"></div>
                     </label> 
-                    <label>Unrepost after<input  class="form-control input-hour text-center" placeholder="24" ng-model="unrepostHours">hours</label>
+                    <label>Unrepost after<input class="form-control input-hour text-center" placeholder="24" ng-model="unrepostHours" ng-disabled="isTraded">hours</label>
                   </li>
                 </ul> 
                 <br/>
@@ -383,13 +383,13 @@
         <div ng-class="{'disabled': isView}" >
           <div class="row">
             <div class="col-md-12 search">
-              <scsearch kind='track' returnitem='choseTrack1(item)'></scsearch>
+              <scsearch kind='track' returnitem='choseTrack1(item)' ng-if="!isTraded"></scsearch>
             </div>
           </div>
           <div class="space-10"></div>
           <div class="row">
            <div class="col-md-12">
-             <button class="btn btn-border b-radius-10 btn-block margin-0" ng-click="getAutoFillTracks()">AUTOFILL</button>
+             <button class="btn btn-border b-radius-10 btn-block margin-0" ng-if="!isTraded" ng-click="getAutoFillTracks()">AUTOFILL</button>
            </div>
          </div>
          <div class="space-10"></div>
@@ -449,10 +449,10 @@
               <li class="switch-btn" style="font-size: 12px;vertical-align: middle;
               list-style: outside none none;">
               <label class="switch" style="vertical-align: middle;">
-                <input checked="" type="checkbox" ng-model="unrepostEnable" ng-click="setRepostHours()">
+                <input checked="" type="checkbox" ng-model="unrepostEnable" ng-click="setRepostHours()" ng-disabled="isTraded">
                 <div class="slider round"></div>
               </label> 
-              <label>Unrepost after<input  class="form-control input-hour" style="color: #868686;" placeholder="24" ng-model="unrepostHours">hours</label>
+              <label>Unrepost after<input  class="form-control input-hour" style="color: #868686;" placeholder="24" ng-model="unrepostHours" ng-disabled="isTraded">hours</label>
             </li>
           </div>
         </div>
