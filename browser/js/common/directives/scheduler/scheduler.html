@@ -294,83 +294,84 @@
                       <p>
                         <label class="with-square-checkbox">
                           <input style="" id="{{group}}" ng-click="setGroup(group);" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" >
-                          <span>{{group}}</span> </label>
-                        </p>
-                      </div>
-                      <div class="checkbox demo-radio-btn" ng-show="user.role == 'admin'" ng-show="displayType == 'channel'" ng-repeat="channel in user.paidRepost">
-                        <p>
-                          <label class="with-square-checkbox">
-                            <input style="" id="{{channel.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(channel.username);" type="checkbox">
-                            <span>{{channel.username}}</span> 
-                          </label>
-                        </p>
-                      </div>
-                      <div class="checkbox demo-radio-btn" ng-show="user.role == 'user'" ng-show="displayType == 'channel'" ng-repeat="u in linkedAccounts">
-                        <p>
-                          <label class="with-square-checkbox">
-                            <input style="" id="{{u.soundcloud.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(u.soundcloud.username);" type="checkbox" ng-checked="channelArr.indexOf(u.soundcloud.username) >-1">
-                            <span>{{u.soundcloud.username}}</span> 
-                          </label>
-                        </p>
-                      </div>
+                          <span>{{group}}</span> 
+                        </label>
+                      </p>
+                    </div>
+                    <div class="checkbox demo-radio-btn" ng-show="user.role == 'admin'" ng-show="displayType == 'channel'" ng-repeat="channel in user.paidRepost">
+                      <p>
+                        <label class="with-square-checkbox">
+                          <input style="" id="{{channel.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(channel.username);" type="checkbox">
+                          <span>{{channel.username}}</span> 
+                        </label>
+                      </p>
+                    </div>
+                    <div class="checkbox demo-radio-btn" ng-show="user.role == 'user'" ng-show="displayType == 'channel'" ng-repeat="u in linkedAccounts">
+                      <p>
+                        <label class="with-square-checkbox">
+                          <input style="" id="{{u.soundcloud.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(u.soundcloud.username);" type="checkbox" ng-checked="channelArr.indexOf(u.soundcloud.username) >-1">
+                          <span>{{u.soundcloud.username}}</span> 
+                        </label>
+                      </p>
                     </div>
                   </div>
-                  <div class="form-group">
-                    <div class="col-xs-12">
-                      <h5 class="text-pink text-center">Total Reach: {{followCounts}} followers</h5>
-                    </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-xs-12">
+                    <h5 class="text-pink text-center">Total Reach: {{followCounts}} followers</h5>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-xs-12">
-               <iframe id="scPlayer" ng-show="showPlayer" width="100%" height="160" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>   
-             </div>
-           </div><!--row end-->
-           <div class="row">
+          </div>
+          <div class="row">
             <div class="col-xs-12">
-              <div class="pull-right">
-                <ul class="like-comment">
-                  <li>
-                    <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('like');"><img src="{{likeSrc}}" class="img-responsive"></a>
-                  </li>
-                  <li >
-                    <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('comment');"><img src="{{commentSrc}}" class="img-responsive"></a>
-                  </li>
-                </ul>                      
-              </div>
+             <iframe id="scPlayer" ng-show="showPlayer" width="100%" height="160" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>   
+           </div>
+         </div><!--row end-->
+         <div class="row">
+          <div class="col-xs-12">
+            <div class="pull-right">
+              <ul class="like-comment">
+                <li>
+                  <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('like');"><img src="{{likeSrc}}" class="img-responsive"></a>
+                </li>
+                <li >
+                  <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('comment');"><img src="{{commentSrc}}" class="img-responsive"></a>
+                </li>
+              </ul>                      
             </div>
-          </div><!--row end-->
-          <div class="row">
-            <div class="col-md-12">                     
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <textarea class="form-control" ng-disabled="disable" ng-model="eventComment">{{comment}}</textarea>
-                  </div>
-                  <div class="next-previous">
-                    <button class="btn btn-border b-radius-10 pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">PREVIOUS</button>
-                    <button class="btn btn-border b-radius-10 pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">NEXT</button>
-                  </div>
+          </div>
+        </div><!--row end-->
+        <div class="row">
+          <div class="col-md-12">                     
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <textarea class="form-control" ng-disabled="disable" ng-model="eventComment">{{comment}}</textarea>
+                </div>
+                <div class="next-previous">
+                  <button class="btn btn-border b-radius-10 pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">PREVIOUS</button>
+                  <button class="btn btn-border b-radius-10 pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">NEXT</button>
                 </div>
               </div>
             </div>
-          </div><!--row end-->
-          <div class="row">
-            <div class="col-md-12">
-              <div class="next-previous text-center">
-               <button class="btn btn-border b-radius-10 save-share" ng-class="{'disabled': isView}" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
-               <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
-               <button class="btn btn-pink b-radius-10 save-share" ng-click="saveEvent();">SAVE</button>
-             </div>
+          </div>
+        </div><!--row end-->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="next-previous text-center">
+             <button class="btn btn-border b-radius-10 save-share" ng-class="{'disabled': isView}" ng-if="isEdit" ng-click="deleteEvent();">DELETE</button>
+             <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
+             <button class="btn btn-pink b-radius-10 save-share" ng-click="saveEvent();">SAVE</button>
            </div>
+         </div>
 
-         </div><!--row end-->                    
-       </div><!--row end-->
-     </div>
-   </div><!--row end-->
- </div>
+       </div><!--row end-->                    
+     </div><!--row end-->
+   </div>
+ </div><!--row end-->
+</div>
 </div>
 <div class="space-10"></div>
 </div>
@@ -442,7 +443,7 @@
               </div>
             </div>
           </div>
-          <h5 class="text-pink" ng-if="isEdit">Total Reach: {{followCounts}} followers</h5>
+          <h5 class="text-pink" ng-if="!isEdit">Total Reach: {{followCounts}} followers</h5>
           <div class="row">
             <div class="col-md-12 text-center">
               <li class="switch-btn" style="font-size: 12px;vertical-align: middle;

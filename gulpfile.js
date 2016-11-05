@@ -140,7 +140,7 @@ gulp.task('default', function() {
     gulp.start('build');
 
     // Run when anything inside of browser/js changes.
-    gulp.watch('browser/js/**', function() {
+    gulp.watch('browser/**/*.js', function() {
         runSeq('buildJS', 'reload');
     });
 
@@ -152,7 +152,8 @@ gulp.task('default', function() {
     gulp.watch('server/**/*.js', ['lintJS']);
 
     // Reload when a template (.html) file changes.
-    gulp.watch(['browser/**/*.html', 'server/app/views/*.html'], ['reload']);
+    //'browser/**/*.html',
+    gulp.watch(['server/app/views/*.html'], ['reload']);
 
     // Run server tests when a server file or server test file changes.
     gulp.watch(['tests/server/**/*.js'], ['testServerJS']);

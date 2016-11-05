@@ -746,7 +746,7 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
   margin-top: 20px; }
 
 /******** 12-9-2016 ********/
-.search-suggetion {
+.search-suggestion {
   position: relative; }
 
 .search {

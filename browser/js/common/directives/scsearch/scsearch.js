@@ -36,9 +36,9 @@ app.directive('scsearch', function($http) {
                 $scope.searchError = "We could not find a " + $scope.kind + "."
               }
             }
-            if ($scope.searching || $scope.searchError !="" || $scope.searchSelection.length > 0) {
-              window.onclick = function (event) {
-                $scope.searching  = false;
+            if ($scope.searching || $scope.searchError != "" || $scope.searchSelection.length > 0) {
+              window.onclick = function(event) {
+                $scope.searching = false;
                 $scope.searchError = "";
                 $scope.searchSelection = [];
                 $scope.$apply();
@@ -48,9 +48,9 @@ app.directive('scsearch', function($http) {
             $scope.searching = false;
             console.log('We could not find a ' + $scope.kind);
             $scope.searchError = "We could not find a " + $scope.kind + "."
-            if ($scope.searching || $scope.searchError !="" || $scope.searchSelection.length > 0) {
-              window.onclick = function (event) {
-                $scope.searching  = false;
+            if ($scope.searching || $scope.searchError != "" || $scope.searchSelection.length > 0) {
+              window.onclick = function(event) {
+                $scope.searching = false;
                 $scope.searchError = "";
                 $scope.searchSelection = [];
                 $scope.$apply();
@@ -89,6 +89,12 @@ app.directive('scsearch', function($http) {
           $scope.sendSearch();
           keyEvent.stopPropagation();
           keyEvent.preventDefault();
+        }
+      }
+
+      $scope.changedSearch = function() {
+        if ($scope.searchString.includes("soundcloud.com")) {
+          $scope.sendSearch();
         }
       }
     }]

@@ -235,7 +235,6 @@ app.directive('rfrinteraction', function($http) {
         // if ($scope.user.queue && $scope.user.queue.length == 0) {
         //   $('#autoFillTrack').modal('show');
         // } else {
-        console.log('trade');
         if ($scope.trade.p1.user._id == $scope.user._id) {
           $scope.trade.p1.accepted = true;
           $scope.trade.p2.accepted = false;
@@ -243,35 +242,39 @@ app.directive('rfrinteraction', function($http) {
           $scope.trade.p2.accepted = true;
           $scope.trade.p1.accepted = false;
         }
-        $.Zebra_Dialog("Request trade? Giving " + $scope.trade.user.slots.length + " for " + $scope.trade.other.slots.length + ".", {
-          'type': 'confirmation',
-          'buttons': [{
-            caption: 'Cancel',
-            callback: function() {
-              console.log('No was clicked');
-            }
-          }, {
-            caption: 'Request',
-            callback: function() {
-              $scope.processing = true;
-              $http.put('/api/trades', $scope.trade)
-                .then(function(res) {
-                  res.data.other = ($scope.trade.p1.user._id == $scope.user._id) ? $scope.trade.p2 : $scope.trade.p1;
-                  res.data.user = ($scope.trade.p1.user._id == $scope.user._id) ? $scope.trade.p1 : $scope.trade.p2;
-                  $scope.trade = res.data;
-                  $scope.emitMessage($scope.user.soundcloud.username + " requested/updated this trade.", 'alert');
-                  $scope.processing = false;
-                  $scope.showUndo = false;
-                })
-                .then(null, function(err) {
-                  $scope.showOverlay = false;
-                  $scope.processing = false;
-                  $.Zebra_Dialog('Error requesting');
-                })
-            }
-          }]
-        });
-        // }
+        console.log($scope.trade);
+        if ($scope.trade.p1.slots.length == 0 || $scope.trade.p2.slots.length == 0) {
+          $.Zebra_Dialog("Issue! At least one slot on each account must be selected.");
+        } else {
+          $.Zebra_Dialog("Request trade? Giving " + $scope.trade.user.slots.length + " for " + $scope.trade.other.slots.length + ".", {
+            'type': 'confirmation',
+            'buttons': [{
+              caption: 'Cancel',
+              callback: function() {
+                console.log('No was clicked');
+              }
+            }, {
+              caption: 'Request',
+              callback: function() {
+                $scope.processing = true;
+                $http.put('/api/trades', $scope.trade)
+                  .then(function(res) {
+                    res.data.other = ($scope.trade.p1.user._id == $scope.user._id) ? $scope.trade.p2 : $scope.trade.p1;
+                    res.data.user = ($scope.trade.p1.user._id == $scope.user._id) ? $scope.trade.p1 : $scope.trade.p2;
+                    $scope.trade = res.data;
+                    $scope.emitMessage($scope.user.soundcloud.username + " requested/updated this trade.", 'alert');
+                    $scope.processing = false;
+                    $scope.showUndo = false;
+                  })
+                  .then(null, function(err) {
+                    $scope.showOverlay = false;
+                    $scope.processing = false;
+                    $.Zebra_Dialog('Error requesting');
+                  })
+              }
+            }]
+          });
+        }
       }
 
       $scope.openChat = function() {
