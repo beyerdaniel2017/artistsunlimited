@@ -8,25 +8,25 @@ app.config(function($stateProvider) {
         var eventid = $location.search().id;
         var paid = $location.search().paid;
         var url = '/api/events/respostEvent/' + eventid;
-        if(paid != undefined){
+        if (paid != undefined) {
           url = '/api/events/respostEvent/getPaidReposts/' + eventid;
         }
-        console.log('url',url);
+        console.log('url', url);
         return $http.get(url)
-        .then(function(res) {
-          return res.data;
-        })
-        .then(null, function(err) {
-          $.Zebra_Dialog("error getting your events");
-          return;
-        })
+          .then(function(res) {
+            return res.data;
+          })
+          .then(null, function(err) {
+            $.Zebra_Dialog("This repost event does not exist.");
+            return;
+          })
       }
     }
   });
 });
 app.controller('RepostEventsController', function($rootScope, $state, $scope, repostEvent, $http, $location, $window, $q, $sce, $auth, SessionService) {
   $scope.user = SessionService.getUser();
-  $scope.itemview = "calender";  
+  $scope.itemview = "calender";
   $scope.setView = function(view) {
     $scope.itemview = view;
   };
@@ -41,15 +41,15 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
   $scope.decrDay = function() {
     if ($scope.dayIncr > 0) $scope.dayIncr--;
   }
-  
-   $scope.dayOfWeekAsString = function(date) {
+
+  $scope.dayOfWeekAsString = function(date) {
     var dayIndex = date.getDay();
     if (screen.width > '744') {
       return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex];
     }
     return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dayIndex];
   }
-  
+
   $scope.getEventStyle = function(repostEvent) {
     if (repostEvent.type == 'empty') {
       return {}
@@ -107,25 +107,23 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
     $scope.showOverlay = false;
   }
 
-  $scope.calendar = $scope.fillDateArrays(repostEvent); 
-  $scope.clickedSlot = function(day, hour ,data) { 
-    if(data.trackInfo)
-    {
-      $scope.makeEvent={};
+  $scope.calendar = $scope.fillDateArrays(repostEvent);
+  $scope.clickedSlot = function(day, hour, data) {
+    if (data.trackInfo) {
+      $scope.makeEvent = {};
       $scope.popup = true;
       var makeDay = new Date(day);
       makeDay.setHours(hour);
       $scope.makeEvent.day = new Date(makeDay);
       $scope.makeEvent.url = data.trackInfo.trackURL;
       $scope.makeEvent.comment = data.trackInfo.comment;
-      $scope.makeEvent.unrepostHours =data.trackInfo.unrepostHours; 
-      $scope.makeEvent.timeGap =data.trackInfo.timeGap;
+      $scope.makeEvent.unrepostHours = data.trackInfo.unrepostHours;
+      $scope.makeEvent.timeGap = data.trackInfo.timeGap;
       var d = new Date(day).getDay();
       var channels = data.trackInfo.otherChannels;
-      $scope.displayChannels=[];
-      for(var i=0; i< repostEvent.length; i++)
-      {
-        if(channels.indexOf(repostEvent[i].userInfo.id) > -1){
+      $scope.displayChannels = [];
+      for (var i = 0; i < repostEvent.length; i++) {
+        if (channels.indexOf(repostEvent[i].userInfo.id) > -1) {
           $scope.displayChannels.push(repostEvent[i].userInfo.username);
         }
       }
@@ -135,13 +133,13 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
       var calendarDay = $scope.calendar.find(function(calD) {
         return calD.day.toLocaleDateString() == day.toLocaleDateString();
       })
-      
-       SC.Widget('scPopupPlayer').load($scope.makeEvent.url, {
-          auto_play: false,
-          show_artwork: false
+
+      SC.Widget('scPopupPlayer').load($scope.makeEvent.url, {
+        auto_play: false,
+        show_artwork: false
       });
       document.getElementById('scPopupPlayer').style.visibility = "visible";
-    }   
-  } 
+    }
+  }
   $scope.fillDateArrays(repostEvent);
 });
