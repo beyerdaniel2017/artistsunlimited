@@ -35,33 +35,40 @@ router.get('/respostEvent/:id', function(req, res, next) {
       _id: req.params.id,
     })
     .then(function(event) {
-      RepostEvent.find({
-          trackID: event.trackID
-        })
-        .then(function(tracks) {
-          var i = -1;
-
-          function next() {
-            i++;
-            if (i < tracks.length) {
-              var userid = parseInt(tracks[i].userID);
-              User.findOne({
-                'soundcloud.id': userid
-              }, function(err, user) {
-                var result = {
-                  trackInfo: tracks[i],
-                  userInfo: user.soundcloud
-                }
-                data.push(result);
-                next();
-              });
-            } else {
-              res.send(data);
+      if (event && event.trackID) {
+        RepostEvent.find({
+            trackID: event.trackID
+          })
+          .then(function(tracks) {
+            var i = -1;
+            var cont = function() {
+              i++;
+              if (i < tracks.length) {
+                var userid = parseInt(tracks[i].userID);
+                User.findOne({
+                  'soundcloud.id': userid
+                }, function(err, user) {
+                  if (err) next(err);
+                  if (user) {
+                    var result = {
+                      trackInfo: tracks[i],
+                      userInfo: user.soundcloud
+                    }
+                    data.push(result);
+                    cont();
+                  }
+                });
+              } else {
+                res.send(data);
+              }
             }
-          }
-          next();
-        })
-        .then(null, next);
+            cont();
+          })
+          .then(null, next);
+      } else {
+        console.log(event);
+        next(new Error("No events found."));
+      }
     })
     .then(null, next);
 })
