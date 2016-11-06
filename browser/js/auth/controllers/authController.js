@@ -65,6 +65,7 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
         val: 'Error in processing your request',
         visible: true
       };
+
     }
   };
 
@@ -152,13 +153,15 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
             $state.go($window.localStorage.getItem('returnstate'));
           }
         } else {
-          $state.go('reForReLists');
+          console.log('go')
+          $state.go('artistToolsScheduler');
         }
-
       })
       .then(null, function(err) {
-        $.Zebra_Dialog('Error: Could not log in');
+        console.log(err);
         $scope.processing = false;
+        $scope.$apply();
+        $.Zebra_Dialog('Error: Could not log in');
       });
   };
 });
