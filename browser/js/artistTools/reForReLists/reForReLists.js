@@ -18,11 +18,7 @@ app.config(function($stateProvider) {
                 return trades;
               })
           } else {
-            if (!SessionService.getUser()) {
-              window.localStorage.setItem('returnstate', 'reForReLists');
-              state.go('login');
-              return;
-            }
+            return [];
           }
         },
         favorites: function($http, SessionService) {
