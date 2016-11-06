@@ -298,12 +298,10 @@ app.directive('reforrelists', function($http) {
           });
       };
 
-      var count = 0;
+      var count = Math.floor(Math.random() * $scope.user.queue.length);
       $scope.getAutoFillTracks = function() {
+        console.log(count);
         if ($scope.user.queue.length > 0) {
-          if (count >= $scope.autoFillTracks.length) {
-            count = 0;
-          }
           var track = $scope.autoFillTracks[count];
           $scope.makeEventURL = track.permalink_url;
           $scope.makeEvent.trackID = track.id;
@@ -326,7 +324,7 @@ app.directive('reforrelists', function($http) {
           });
           document.getElementById('scPlayer').style.visibility = "visible";
           $scope.showPlayer = true;
-          count = count + 1;
+          count = (count + 1) % $scope.autoFillTracks.length;
         } else {
           $scope.showOverlay = false;
           $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {
@@ -346,46 +344,64 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.openTrade = function(user) {
-        var trade = {
-          messages: [{
-            date: new Date(),
-            senderId: SessionService.getUser()._id,
-            text: SessionService.getUser().soundcloud.username + ' opened a trade.',
-            type: 'alert'
-          }],
-          repeatFor: 0,
-          p1: {
-            user: SessionService.getUser()._id,
-            alert: "none",
-            slots: [],
-            accepted: true
-          },
-          p2: {
-            user: user._id,
-            alert: "change",
-            slots: [],
-            accepted: false
+        console.log(user);
+        console.log($scope.currentTrades);
+        var found = $scope.currentTrades.find(function(trade) {
+          return (trade.other.user._id == user._id);
+        });
+        console.log(found);
+        if (found) {
+          if ($scope.isAdminRoute) {
+            $state.go('adminreForReInteraction', {
+              tradeID: found._id
+            })
+          } else {
+            $state.go('reForReInteraction', {
+              tradeID: found._id
+            })
           }
-        }
-        $scope.processing = true;
-        $http.post('/api/trades/new', trade)
-          .then(function(res) {
-            $scope.processing = false;
-            if ($scope.isAdminRoute) {
-              $state.go('adminreForReInteraction', {
-                tradeID: res.data._id
-              })
-            } else {
-              $state.go('reForReInteraction', {
-                tradeID: res.data._id
-              })
+        } else {
+          var trade = {
+            messages: [{
+              date: new Date(),
+              senderId: SessionService.getUser()._id,
+              text: SessionService.getUser().soundcloud.username + ' opened a trade.',
+              type: 'alert'
+            }],
+            repeatFor: 0,
+            p1: {
+              user: SessionService.getUser()._id,
+              alert: "none",
+              slots: [],
+              accepted: true
+            },
+            p2: {
+              user: user._id,
+              alert: "change",
+              slots: [],
+              accepted: false
             }
+          }
+          $scope.processing = true;
+          $http.post('/api/trades/new', trade)
+            .then(function(res) {
+              $scope.processing = false;
+              if ($scope.isAdminRoute) {
+                $state.go('adminreForReInteraction', {
+                  tradeID: res.data._id
+                })
+              } else {
+                $state.go('reForReInteraction', {
+                  tradeID: res.data._id
+                })
+              }
 
-          })
-          .then(null, function(err) {
-            $scope.processing = false;
-            $.Zebra_Dialog("Error in creating trade");
-          });
+            })
+            .then(null, function(err) {
+              $scope.processing = false;
+              $.Zebra_Dialog("Error in creating trade");
+            });
+        }
       }
 
       $scope.manage = function(trade) {
@@ -795,6 +811,13 @@ app.directive('reforrelists', function($http) {
       $scope.loadMore();
       $scope.setView("inbox");
       $scope.loadQueueSongs();
+
+      console.log('state');
+      console.log($window.localStorage.getItem('inboxState'));
+      if ($window.localStorage.getItem('inboxState')) {
+        $scope.setView($window.localStorage.getItem('inboxState'));
+        $window.localStorage.removeItem('inboxState');
+      }
     }
   }
 })

@@ -247,7 +247,7 @@
         <div class="col-md-12">
           <div ng-class="{'disabled': isView}">
             <div class="row">                
-              <h1 class="au-title-head text-center">AVAILABLE SLOT</h1>               
+              <span class="au-title-head text-center" ng-if="(makeEvent.type == 'traded')">Owned by {{makeEvent.owner.soundcloud.username}}</span>
               <div class="col-md-6 col-xs-12 search search-big">
                 <scsearch kind='track' returnitem='choseTrack(item)' ng-if="!isTraded"></scsearch>
                 <div class="space-10"></div>
@@ -318,7 +318,8 @@
                 </div>
                 <div class="form-group">
                   <div class="col-xs-12">
-                    <h5 class="text-pink text-center">Total Reach: {{followCounts}} followers</h5>
+                    <h5 class="text-pink text-center" ng-if="(makeEvent.type!='traded')">Total Reach: {{followCounts}} followers</h5>
+                    <h5 class="text-pink text-center" ng-if="(makeEvent.type=='traded') && !makeEvent.trackID">Waiting for {{makeEvent.owner.soundcloud.username}} to select a track.</h5>
                   </div>
                 </div>
               </div>
@@ -381,6 +382,7 @@
     <div class="label-scheduler label-smaller slot-box" ng-click="$event.stopPropagation();">
       <div class="">
         <div ng-class="{'disabled': isView}" >
+          <span class="au-title-head text-center" ng-if="(makeEvent.type == 'traded')">Owned by {{makeEvent.owner.soundcloud.username}}</span>
           <div class="row">
             <div class="col-md-12 search">
               <scsearch kind='track' returnitem='choseTrack1(item)' ng-if="!isTraded"></scsearch>
@@ -392,77 +394,78 @@
              <button class="btn btn-border b-radius-10 btn-block margin-0" ng-if="!isTraded" ng-click="getAutoFillTracks()">AUTOFILL</button>
            </div>
          </div>
-         <div class="space-10"></div>
          <div class="row">
-          <div class="col-md-12 col-xs-12">   
-            <!--   <h4>{{makeEvent.day | date:'EEE MM/dd h:mma'}}</h4> -->
-            <select class="form-control" ng-disabled="true">
-              <option value="{{makeEvent.day | date:'EEE MM/dd h:mma'}}">{{makeEvent.day | date:'EEE MM/dd h:mma'}}</option>
-            </select>
-          </div>
+          <div class="col-md-12">
+           <iframe id="scPopupPlayer" ng-show="showPlayer" width="300" height="120" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe> 
+         </div>
+       </div><!--row end-->
+       <div class="space-10"></div>
+       <div class="row">
+        <div class="col-md-12 col-xs-12">   
+          <!--   <h4>{{makeEvent.day | date:'EEE MM/dd h:mma'}}</h4> -->
+          <select class="form-control" ng-disabled="true">
+            <option value="{{makeEvent.day | date:'EEE MM/dd h:mma'}}">{{makeEvent.day | date:'EEE MM/dd h:mma'}}</option>
+          </select>
         </div>
-        <div class="space-10"></div>
-        <div class="row">
-          <div class="col-md-12" ng-if="!isEdit">
-            <div class="btn-group channel-group" ng-if="user.role == 'admin'" role="group" aria-label="...">
-              <a class="btn btn-default b-radius-10 active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender');setActive('channel')">Channels</a>
-              <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
+      </div>
+      <div class="space-10"></div>
+      <div class="row">
+        <div class="col-md-12" ng-if="!isEdit">
+          <div class="btn-group channel-group" ng-if="user.role == 'admin'" role="group" aria-label="...">
+            <a class="btn btn-default b-radius-10 active" ng-model="displayType" ng-value="'channels'" ng-class="{active : itemview == 'calender'}" href="javascript:void(0)" ng-click="setView('calender');setActive('channel')">Channels</a>
+            <a class="btn btn-default b-radius-10" ng-class="{active : itemview == 'list'}" href="javascript:void(0)" ng-click="setView('list');setActive('group')">Groups</a>
+          </div>
+          <div class="channel-check" style="font-size: 11px;" ng-if="uniqueGroup.length > 0 || linkedAccounts.length > 0">
+            <div class="channel-masege">
+              <ul>
+                <li class="" ng-show="channelArr.length > 0" ng-repeat="chan in channelArr">{{chan}}<span></span></li>
+                <li class="" ng-show="groupArr.length > 0" ng-repeat="group in groupArr">{{group}}<span></span></li>
+              </ul>
             </div>
-            <div class="channel-check" style="font-size: 11px;" ng-if="uniqueGroup.length > 0 || linkedAccounts.length > 0">
-              <div class="channel-masege">
-                <ul>
-                  <li class="" ng-show="channelArr.length > 0" ng-repeat="chan in channelArr">{{chan}}<span></span></li>
-                  <li class="" ng-show="groupArr.length > 0" ng-repeat="group in groupArr">{{group}}<span></span></li>
-                </ul>
-              </div>
-              <div class="check-list text-left">
-                <div class="checkbox demo-radio-btn" ng-show="displayType == 'group'" ng-repeat="group in uniqueGroup">
+            <div class="check-list text-left">
+              <div class="checkbox demo-radio-btn" ng-show="displayType == 'group'" ng-repeat="group in uniqueGroup">
+                <p>
+                  <label class="with-square-checkbox">
+                    <input style="" id="{{group}}" ng-click="setGroup(group);" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" >
+                    <span>{{group}}</span> </label>
+                  </p>
+                </div>
+                <div class="checkbox demo-radio-btn" ng-show="user.role == 'admin'" ng-show="displayType == 'channel'" ng-repeat="channel in user.paidRepost">
                   <p>
                     <label class="with-square-checkbox">
-                      <input style="" id="{{group}}" ng-click="setGroup(group);" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" >
-                      <span>{{group}}</span> </label>
-                    </p>
-                  </div>
-                  <div class="checkbox demo-radio-btn" ng-show="user.role == 'admin'" ng-show="displayType == 'channel'" ng-repeat="channel in user.paidRepost">
-                    <p>
-                      <label class="with-square-checkbox">
-                        <input style="" id="{{channel.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(channel.username);" type="checkbox">
-                        <span>{{channel.username}}</span> 
-                      </label>
-                    </p>
-                  </div>
-                  <div class="checkbox demo-radio-btn" ng-show="user.role == 'user'" ng-show="displayType == 'channel'" ng-repeat="u in linkedAccounts">
-                    <p>
-                      <label class="with-square-checkbox">
-                        <input style="" id="{{u.soundcloud.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(u.soundcloud.username);" type="checkbox" ng-checked="channelArr.indexOf(u.soundcloud.username) >-1">
-                        <span>{{u.soundcloud.username}}</span> 
-                      </label>
-                    </p>
-                  </div>
+                      <input style="" id="{{channel.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(channel.username);" type="checkbox">
+                      <span>{{channel.username}}</span> 
+                    </label>
+                  </p>
+                </div>
+                <div class="checkbox demo-radio-btn" ng-show="user.role == 'user'" ng-show="displayType == 'channel'" ng-repeat="u in linkedAccounts">
+                  <p>
+                    <label class="with-square-checkbox">
+                      <input style="" id="{{u.soundcloud.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(u.soundcloud.username);" type="checkbox" ng-checked="channelArr.indexOf(u.soundcloud.username) >-1">
+                      <span>{{u.soundcloud.username}}</span> 
+                    </label>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-          <h5 class="text-pink">Total Reach: {{followCounts}} followers</h5>
-          <div class="row">
-            <div class="col-md-12 text-center">
-              <li class="switch-btn" style="font-size: 12px;vertical-align: middle;
-              list-style: outside none none;">
-              <label class="switch" style="vertical-align: middle;">
-                <input checked="" type="checkbox" ng-model="unrepostEnable" ng-click="setRepostHours()" ng-disabled="isTraded">
-                <div class="slider round"></div>
-              </label> 
-              <label>Unrepost after<input  class="form-control input-hour" style="color: #868686;" placeholder="24" ng-model="unrepostHours" ng-disabled="isTraded">hours</label>
-            </li>
-          </div>
+        </div>
+        <h5 class="text-pink" ng-if="(makeEvent.type!='traded')">Total Reach: {{followCounts}} followers</h5>
+        <h5 class="text-pink" ng-if="(makeEvent.type=='traded') && !makeEvent.trackID">Waiting for {{makeEvent.owner.soundcloud.username}} to select a track.</h5>
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <li class="switch-btn" style="font-size: 12px;vertical-align: middle;
+            list-style: outside none none;">
+            <label class="switch" style="vertical-align: middle;">
+              <input checked="" type="checkbox" ng-model="unrepostEnable" ng-click="setRepostHours()" ng-disabled="isTraded">
+              <div class="slider round"></div>
+            </label> 
+            <label>Unrepost after<input  class="form-control input-hour" style="color: #868686;" placeholder="24" ng-model="unrepostHours" ng-disabled="isTraded">hours</label>
+          </li>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-         <iframe id="scPopupPlayer" ng-show="showPlayer" width="300" height="120" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe> 
-       </div>
-     </div><!--row end-->
-     <div class="row">
+    </div>
+    <div class="row">
       <div class="col-xs-12">
         <div class="pull-right">
           <ul class="like-comment">

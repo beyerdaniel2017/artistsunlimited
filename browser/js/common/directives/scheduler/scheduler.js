@@ -1210,12 +1210,12 @@ app.directive('scheduler', function($http) {
       if ($scope.user && $scope.user.queue) {
         $scope.loadQueueSongs();
       }
-      var count = 0;
+      var count = Math.floor(Math.random() * $scope.user.queue.length);
+      console.log(count);
       $scope.getAutoFillTracks = function() {
         if ($scope.user.queue.length > 0) {
-          if (count >= $scope.autoFillTracks.length) {
-            count = 0;
-          }
+          console.log($scope.autoFillTracks);
+          console.log(count);
           var track = $scope.autoFillTracks[count];
           $scope.makeEventURL = track.permalink_url;
           $scope.makeEvent.trackID = track.id;
@@ -1236,7 +1236,7 @@ app.directive('scheduler', function($http) {
             });
             document.getElementById('scPlayer').style.visibility = "visible";
           }
-          count = count + 1;
+          count = (count + 1) % $scope.autoFillTracks.length;
         } else {
           $scope.showOverlay = false;
           $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {
@@ -1338,7 +1338,6 @@ app.directive('scheduler', function($http) {
           }
 
           dayEvents.forEach(function(ev) {
-            console.log(ev.day);
             eventArray[ev.day.getHours()] = ev;
           });
           calDay.events = eventArray;

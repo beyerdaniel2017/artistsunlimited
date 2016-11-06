@@ -267,11 +267,11 @@ app.directive('rfrinteraction', function($http) {
           $scope.trade.p2.accepted = true;
           $scope.trade.p1.accepted = false;
         }
-
         if ($scope.trade.p1.slots.length == 0 || $scope.trade.p2.slots.length == 0) {
           $.Zebra_Dialog("Issue! At least one slot on each account must be selected.");
         } else {
-          $.Zebra_Dialog("Request trade? Giving " + $scope.trade.user.slots.length + " for " + $scope.trade.other.slots.length + ".", {
+          var multiple = ($scope.trade.repeatFor != 0) ? $scope.trade.repeatFor : 1;
+          $.Zebra_Dialog("Request trade? Giving " + $scope.trade.user.slots.length * multiple + " for " + $scope.trade.other.slots.length * multiple + ".", {
             'type': 'confirmation',
             'buttons': [{
               caption: 'Cancel',
@@ -282,6 +282,7 @@ app.directive('rfrinteraction', function($http) {
               caption: 'Request',
               callback: function() {
                 $scope.processing = true;
+                $scope.trade.changed = true;
                 $http.put('/api/trades', $scope.trade)
                   .then(function(res) {
                     res.data.other = ($scope.trade.p1.user._id == $scope.user._id) ? $scope.trade.p2 : $scope.trade.p1;
@@ -290,6 +291,14 @@ app.directive('rfrinteraction', function($http) {
                     $scope.emitMessage($scope.user.soundcloud.username + " requested/updated this trade.", 'alert');
                     $scope.processing = false;
                     $scope.showUndo = false;
+                    console.log('done');
+                    $window.localStorage.setItem('activetab', '2');
+                    $window.localStorage.setItem('inboxState', 'sent');
+                    if ($scope.isAdminRoute) {
+                      $state.go('adminRepostTraders');
+                    } else {
+                      $state.go('reForReLists');
+                    }
                   })
                   .then(null, function(err) {
                     $scope.showOverlay = false;
@@ -460,7 +469,8 @@ app.directive('rfrinteraction', function($http) {
           // } else {
           //   var accString = $scope.trade.p1.accepted ? "If you accept, the trade will be made. You will have the right to schedule the slots you are trading for, and the other person will have rights to the slots you are trading with." : "If you click accept, you will not be able to make changes to the trade being negotiated. If the other person makes a change, you will then be given the right to make changes and accept those changes again. If the other person also accepts, the trade will be made.";
           // }
-          $.Zebra_Dialog("Accept trade? Giving " + $scope.trade.user.slots.length + " for " + $scope.trade.other.slots.length + ".", {
+          var multiple = ($scope.trade.repeatFor != 0) ? $scope.trade.repeatFor : 1;
+          $.Zebra_Dialog("Accept trade? Giving " + $scope.trade.user.slots.length * multiple + " for " + $scope.trade.other.slots.length * multiple + ".", {
             'type': 'confirmation',
             'buttons': [{
               caption: 'Cancel',
@@ -765,6 +775,7 @@ app.directive('rfrinteraction', function($http) {
         }
         $scope.trade.p1.accepted = $scope.trade.p2.accepted = true;
         $scope.trade.p1.slots = $scope.trade.p2.slots = [];
+        $scope.trade.changed = true;
         $http.put('/api/trades', $scope.trade)
           .then(function(res) {
             $window.localStorage.setItem('activetab', '3');

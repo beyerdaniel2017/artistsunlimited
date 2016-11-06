@@ -78,14 +78,16 @@ router.put('/', function(req, res, next) {
         new: true
       }).populate('p1.user').populate('p2.user')
       .then(function(trade) {
-        if (trade.p1.accepted && trade.p2.accepted) {
-          var user = (req.user._id == trade.p1.user._id ? req.user : trade.p2.user);
-          var other = (req.user._id == trade.p1.user._id ? trade.p2.user : req.user);
-          notificationCenter.sendNotifications(other._id, 'tradeRequest', 'Trade request', user.soundcloud.username + " accepted your trade.", "https://artistsunlimited.com/artistTools/reForReLists#managereposts");
-        } else if (trade.p1.accepted && !trade.p2.accepted) {
-          notificationCenter.sendNotifications(trade.p2.user._id, 'tradeRequest', 'Trade request', trade.p1.user.soundcloud.username + " requests a trade.", "https://artistsunlimited.com/artistTools/reForReInteraction/" + trade._id);
-        } else {
-          notificationCenter.sendNotifications(trade.p1.user._id, 'tradeRequest', 'Trade request', trade.p2.user.soundcloud.username + " requests a trade.", "https://artistsunlimited.com/artistTools/reForReInteraction/" + trade._id);
+        if (req.body.changed) {
+          if (trade.p1.accepted && trade.p2.accepted) {
+            var user = (req.user._id == trade.p1.user._id ? req.user : trade.p2.user);
+            var other = (req.user._id == trade.p1.user._id ? trade.p2.user : req.user);
+            notificationCenter.sendNotifications(other._id, 'tradeRequest', 'Trade request', user.soundcloud.username + " accepted your trade.", "https://artistsunlimited.com/artistTools/reForReLists#managereposts");
+          } else if (trade.p1.accepted && !trade.p2.accepted) {
+            notificationCenter.sendNotifications(trade.p2.user._id, 'tradeRequest', 'Trade request', trade.p1.user.soundcloud.username + " requests a trade with " + trade.p2.user.soundcloud.username + ".", "https://artistsunlimited.com/artistTools/reForReInteraction/" + trade._id);
+          } else {
+            notificationCenter.sendNotifications(trade.p1.user._id, 'tradeRequest', 'Trade request', trade.p2.user.soundcloud.username + " requests a trade with " + trade.p1.user.soundcloud.username + ".", "https://artistsunlimited.com/artistTools/reForReInteraction/" + trade._id);
+          }
         }
         res.send(trade);
       })

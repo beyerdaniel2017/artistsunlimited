@@ -5,7 +5,7 @@ app.config(function($stateProvider) {
       templateUrl: 'js/artistTools/reForReLists/reForReLists.html',
       controller: 'ReForReListsController',
       resolve: {
-        currentTrades: function($http, SessionService) {
+        currentTrades: function($http, SessionService, state, window) {
           var user = SessionService.getUser();
           if (user) {
             return $http.get('/api/trades/withUser/' + user._id)
@@ -18,7 +18,11 @@ app.config(function($stateProvider) {
                 return trades;
               })
           } else {
-            return [];
+            if (!SessionService.getUser()) {
+              window.localStorage.setItem('returnstate', 'reForReLists');
+              state.go('login');
+              return;
+            }
           }
         },
         favorites: function($http, SessionService) {
@@ -107,6 +111,7 @@ app.config(function($stateProvider) {
 
 app.controller("ReForReListsController", function($scope, $rootScope, currentTrades, favorites, openTrades, repostEvents, $http, SessionService, $state, $timeout, $window) {
   if (!SessionService.getUser()) {
+    $window.localStorage.setItem('returnstate', 'reForReLists');
     $state.go('login');
     return;
   }
@@ -121,19 +126,18 @@ app.controller("ReForReListsController", function($scope, $rootScope, currentTra
   });
   $scope.events = repostEvents;
   angular.forEach(repostEvents, function(e) {
-    if(getshortdate(new Date(e.trackInfo.day)) >= getshortdate(new Date())){
+    if (getshortdate(new Date(e.trackInfo.day)) >= getshortdate(new Date())) {
       $scope.listevents.push(e);
     }
   });
   $scope.manageSlots = false;
-  for(var i=0; i<$scope.listevents.length; i++)
-  {
-    if($scope.listevents[i].trackInfo.trackURL == undefined)
-    {
+  for (var i = 0; i < $scope.listevents.length; i++) {
+    if ($scope.listevents[i].trackInfo.trackURL == undefined) {
       $scope.manageSlots = true;
       return;
     }
   }
+
   function getshortdate(d) {
     var YYYY = d.getFullYear();
     var M = d.getMonth() + 1;

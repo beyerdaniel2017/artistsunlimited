@@ -17,13 +17,12 @@ router.get('/forUser/:id', function(req, res, next) {
   }
   var date = moment().month(new Date().getMonth()).date(new Date().getDate() - 7).hours(0).minutes(0).seconds(0).milliseconds(0).format();
   RepostEvent.find({
-    userID: req.params.id,
-    day: {
-      $gte: date
-    }
-  })
-
-  .then(function(events) {
+      userID: req.params.id,
+      day: {
+        $gte: date
+      }
+    }).populate('owner')
+    .then(function(events) {
       res.send(events);
     })
     .then(null, next);

@@ -16,7 +16,7 @@ module.exports = doRepost;
 function doRepost() {
   setTimeout(function() {
     doRepost();
-  }, 60000);
+  }, 120000);
   var lowerDate = new Date();
   lowerDate.setTime(lowerDate.getTime() - lowerDate.getMinutes() * 60 * 1000 - lowerDate.getSeconds() * 1000);
   var upperDate = new Date();
@@ -84,7 +84,7 @@ function repostAndRemove(event, user, repCount) {
         console.log(data);
         var now = new Date();
 
-        if (now.getMinutes() >= 55) {
+        if (now.getMinutes() >= 58) {
           if (JSON.stringify(err).includes('too many reposts')) {
             err = ((typeof err) == 'string' ? JSON.parse(err) : err)[0];
             user.blockRelease = new Date(err.release_at);
