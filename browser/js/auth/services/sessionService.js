@@ -1,4 +1,4 @@
-app.factory('SessionService', function($cookies, $http, $window) {
+app.factory('SessionService', function($cookies, $http, $window, $state) {
 
 	function create(data) {
 		$window.localStorage.setItem('user', JSON.stringify(data));
@@ -102,6 +102,8 @@ app.factory('SessionService', function($cookies, $http, $window) {
 			$http.get('/api/users/byId/' + curUser._id)
 				.then(function(res) {
 					create(res.data);
+				}).then(null, function() {
+					$state.go('login')
 				})
 		}
 	}
