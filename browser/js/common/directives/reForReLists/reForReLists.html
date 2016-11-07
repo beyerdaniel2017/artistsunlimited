@@ -142,13 +142,13 @@
 <!-- MANAGE REPOSTS : Start -->
 <div role="tabpanel" class="tab-pane fade" ng-class="{in: activeTab == '3', active: activeTab == '3'}" id="managetrades"> 
   <div class="container-90">            
-    <div class="col-md-2 col-xs-6">
+    <div class="col-md-3 col-xs-6">
       <div class="btn-group view-padding-left" role="group" aria-label="..." ng-show="manageView != 'newsong'">
         <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'calendar'}" href="javascript:void(0)" ng-click="setManageView('calendar')"><img src="assets/images/box-view.svg" /></a>
         <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'list'}" href="javascript:void(0)" ng-click="setManageView('list')"><img src="assets/images/list-view.svg" /></a>
       </div>
     </div>             
-    <div class="col-md-10 col-xs-6 text-center">
+    <div class="col-md-9 col-xs-6 text-center">
       <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
         <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
         <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getNextEvents()"><img src="assets/images/dropdown-arrow.png" /></a>
@@ -266,9 +266,9 @@
             <scsearch kind='track' returnitem='choseAutoFillTrack(item)'></scsearch>
             </div>
             <div class="col-md-6">
-             <div class="tracks-box" ng-if="autoFillTracks.length > 0">
-              <div class="track-item-list" ng-repeat="song in autoFillTracks" >
-                  <img class="avatar-20" ng-src="{{song.artwork_url}}">
+             <div class="tracks-box" ui-sortable="sortableOptions" ng-model="list" ng-if="autoFillTracks.length > 0">
+              <div class="track-item-list" ng-repeat="song in list" >
+                  <span class="pull-left" style="margin-right: 5px; padding-top: 3px;">{{$index+1}}</span> <img class="avatar-20" ng-src="{{song.artwork_url}}">
                   <div class="tracks-title">
                     <a class="tracks-title-name" href="{{song.permalink_url}}" target="_blank">
                     {{' ' + song.title}}</a> 
@@ -279,6 +279,7 @@
             </div>
           </div>
         </div>
+        <div class="height-10"> </div>
       </div>
     </div>
   </div>
