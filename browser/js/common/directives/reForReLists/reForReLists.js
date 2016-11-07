@@ -525,19 +525,36 @@ app.directive('reforrelists', function($http) {
       $scope.getEventStyle = function(repostEvent) {
         if (repostEvent.type == 'empty') {
           return {}
-        } else if (repostEvent.trackInfo.type == 'traded' && repostEvent.trackInfo.trackID) {
+        } else if (repostEvent.type == 'traded' && repostEvent.trackInfo.trackID) {
           return {
             'background-color': '#B22222',
             'height': '19px',
             'margin': '2px',
           }
-        } else if (repostEvent.trackInfo.type == 'traded' && !repostEvent.trackInfo.trackID) {
+        } else if (repostEvent.type == 'traded' && !repostEvent.trackInfo.trackID) {
           return {
             'background-color': '#2b9fda',
             'height': '19px',
             'margin': '2px',
           }
+        } else if (repostEvent.type == 'multiple') {
+          var unfilled = false;
+          repostEvent.events.forEach(function(event) {
+            if (!event.trackID) unfilled = true;
+          })
+          if (unfilled) {
+            return {
+              'background-color': '#7A549B',
+              'height': '19px',
+              'margin': '2px',
+            }
+          }
         }
+      }
+
+      $scope.getEventText = function(repostEvent) {
+        if (repostEvent.type == 'traded') return repostEvent.userInfo.username
+        else if (repostEvent.type == 'multiple') return 'Multiple Slots'
       }
 
       $scope.fillDateArrays = function(repostEvent) {
@@ -550,7 +567,6 @@ app.directive('reforrelists', function($http) {
           var dayEvents = repostEvent.filter(function(ev) {
             return (new Date(ev.trackInfo.day).toLocaleDateString() == calDay.day.toLocaleDateString());
           });
-
           var eventArray = [];
           for (var j = 0; j < 24; j++) {
             eventArray[j] = {
@@ -558,25 +574,65 @@ app.directive('reforrelists', function($http) {
             };
           }
           dayEvents.forEach(function(ev) {
-            eventArray[new Date(ev.trackInfo.day).getHours()] = ev;
+            if (eventArray[new Date(ev.trackInfo.day).getHours()].type == 'empty') {
+              ev.type = 'traded';
+              eventArray[new Date(ev.trackInfo.day).getHours()] = ev;
+            } else if (eventArray[new Date(ev.trackInfo.day).getHours()].type == 'traded') {
+              console.log('two');
+              var event = {
+                type: 'multiple',
+                events: []
+              }
+              event.events.push(eventArray[new Date(ev.trackInfo.day).getHours()])
+              event.events.push(ev);
+              eventArray[new Date(ev.trackInfo.day).getHours()] = event;
+              console.log(event)
+            } else if (eventArray[new Date(ev.trackInfo.day).getHours()].type == 'multiple') {
+              console.log('more than 3');
+              eventArray[new Date(ev.trackInfo.day).getHours()].events.push(ev);
+              console.log(eventArray[new Date(ev.trackInfo.day).getHours()])
+            }
           });
-
           calDay.events = eventArray;
           calendar.push(calDay);
         }
         return calendar;
       };
 
+      console.log('events');
+      console.log($scope.events);
       $scope.calendar = $scope.fillDateArrays($scope.events);
       $scope.isView = false;
       $scope.clickedSlot = function(day, hour, data) {
+        if (data.type == 'multiple') {
+          var buttons = [];
+          data.events.forEach(function(ev) {
+            var button = {
+              caption: ev.userInfo.username,
+              callback: function() {
+                $scope.openPopup(day, hour, ev);
+              }
+            }
+            buttons.push(button);
+          })
+          $.Zebra_Dialog('Which slot do you want to edit?', {
+            'type': 'question',
+            'buttons': buttons
+          });
+        } else {
+          $scope.openPopup(day, hour, data);
+        }
+      }
+
+      $scope.openPopup = function(day, hour, data) {
+        console.log(data);
         $scope.deleteEventData = data;
         document.getElementById('scPopupPlayer').style.visibility = "hidden";
         document.getElementById('scPopupPlayer').innerHTML = "";
         $scope.makeEvent = {};
         var makeDay = new Date(day);
         makeDay.setHours(hour);
-        $scope.makeEvent = data.trackInfo;
+        $scope.makeEvent = JSON.parse(JSON.stringify(data.trackInfo));
         $scope.makeEvent._id = data.trackInfo._id;
         $scope.makeEvent.day = new Date(data.trackInfo.day);
         $scope.makeEvent.url = data.trackInfo.trackURL;
@@ -613,6 +669,7 @@ app.directive('reforrelists', function($http) {
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
           $scope.showPlayer = false;
         }
+        $scope.$apply();
       }
 
       $scope.closeModal = function() {
@@ -645,6 +702,7 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.saveEvent = function() {
+        $scope.processing = true;
         var req = $http.put('/api/events/repostEvents', $scope.makeEvent)
           .then(function(res) {
             $scope.makeEventURL = "";
@@ -661,8 +719,12 @@ app.directive('reforrelists', function($http) {
             }
             $http.get("/api/events/getRepostEvents/" + $scope.user._id)
               .then(function(res) {
+                $scope.processing = false;
                 $scope.calendar = $scope.fillDateArrays(res.data);
                 $scope.listevents = res.data;
+              }).then(null, function(err) {
+                $scope.processing = false;
+                $.Zebra_Dialog(err.data);
               });
             $scope.showOverlay = false;
           })

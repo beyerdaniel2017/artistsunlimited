@@ -99,46 +99,48 @@
           <br>
           <div class="row" ng-repeat="trade in shownTrades | filter : searchURL track by $index">
             <div class="col-md-12">
-              <div ng-class="{'vertical-container-last': $last, 'vertical-container': !$last}">
+              <div class='vertical-container' >
                 <ul>
-                  <li> <div class="list-img-container">
-                    <img class="img-responsive" src="{{trade.other.user.soundcloud.avatarURL}}">
+                  <li> 
+                    <div class="list-img-container">
+                      <img class="img-responsive" src="{{trade.other.user.soundcloud.avatarURL}}">
+                    </div>
+                  </li>
+                  <li> 
+                    <div class="vertical-text">
+                      <span><strong>{{trade.other.user.soundcloud.username}}</strong></span>
+                      <p>{{trade.other.user.soundcloud.followers | number:0}} Followers</p>
+                    </div>
+                  </li>
+                  <li> 
+                    <div class="vertical-text">
+                      <p ng-show="itemView=='sent'">You are offering {{trade.user.slots.length}} slots and asking for {{trade.other.slots.length}} slots</p>
+                      <p ng-show="itemView=='inbox'">{{trade.other.user.soundcloud.username}} is offering {{trade.other.slots.length}} slots<br>and asking for {{trade.user.slots.length}} slots</p>
+                    </div>
+                  </li>
+                  <li><div class="vertical-text">
+                    <p ng-show="trade.repeatFor==0">One time</p>
+                    <p ng-show="trade.repeatFor!=0">{{trade.repeatFor}} weeks</p>
                   </div>
                 </li>
                 <li> <div class="vertical-text">
-                  <span><strong>{{trade.other.user.soundcloud.username}}</strong></span>
-                  <p>{{trade.other.user.soundcloud.followers | number:0}} Followers</p>
+                  <button class="btn btn-pink btn-block" ng-click="manage(trade)">Manage</button>
+                  <div class="row">
+                   <div class="col-md-6">
+                    <button class="btn btn-border btn-block" ng-click="deleteTrade(trade._id, $index)">Delete</button>
+                  </div>
+                  <div class="col-md-6">
+                    <button class="btn btn-border btn-block" ng-click="remindTrade(trade._id, $index)" ng-show="!trade.other.accepted">Remind</button>
+                  </div>
                 </div>
-              </li>
-              <li> 
-                <div class="vertical-text">
-                  <p ng-show="itemView=='sent'">You are offering {{trade.user.slots.length}} slots and asking for {{trade.other.slots.length}} slots</p>
-                  <p ng-show="itemView=='inbox'">{{trade.other.user.soundcloud.username}} is offering {{trade.other.slots.length}} slots<br>and asking for {{trade.user.slots.length}} slots</p>
-                </div>
-              </li>
-              <li><div class="vertical-text">
-                <p ng-show="trade.repeatFor==0">One time</p>
-                <p ng-show="trade.repeatFor!=0">{{trade.repeatFor}} weeks</p>
               </div>
             </li>
-            <li> <div class="vertical-text">
-              <button class="btn btn-pink btn-block" ng-click="manage(trade)">Manage</button>
-              <div class="row">
-               <div class="col-md-6">
-                <button class="btn btn-border btn-block" ng-click="deleteTrade(trade._id, $index)">Delete</button>
-              </div>
-              <div class="col-md-6">
-                <button class="btn btn-border btn-block" ng-click="remindTrade(trade._id, $index)" ng-show="!trade.other.accepted">Remind</button>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
+          </ul>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-</div><!--row ::end-->
-<br>                                                     
+  </div><!--row ::end-->
+  <br>                                                     
 </div><!-- ORGANIZE SCHEDULE :End -->        
 <!-- MANAGE REPOSTS : Start -->
 <div role="tabpanel" class="tab-pane fade" ng-class="{in: activeTab == '3', active: activeTab == '3'}" id="managetrades"> 
@@ -173,7 +175,7 @@
         </div>   
         <div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">
           <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="getStyle(calendar[l+dayIncr].events[p], calendar[l+dayIncr].day, l, p)" class="row-scheduler" ng-click="clickedSlot(calendar[l+dayIncr].day, p,calendar[l+dayIncr].events[p])" style="position:relative;">
-            <div ng-style="getEventStyle(calendar[l+dayIncr].events[p])" class="text-left scheduler-yellow calendar-grid" style="width:100%;"><img ng-if="calendar[l+dayIncr].events[p].userInfo" src="{{calendar[l+dayIncr].events[p].userInfo.avatarURL}}" style="height:17px;width:17px;">&nbsp;&nbsp;<span style="color:#fff;">{{calendar[l+dayIncr].events[p].userInfo.username}}</span></div>
+            <div ng-style="getEventStyle(calendar[l+dayIncr].events[p])" class="text-left scheduler-yellow calendar-grid" style="width:100%;"><img ng-if="calendar[l+dayIncr].events[p].userInfo" src="{{calendar[l+dayIncr].events[p].userInfo.avatarURL}}" style="height:17px;width:17px;">&nbsp;&nbsp;<span style="color:#fff;" ng-bind-html='getEventText(calendar[l+dayIncr].events[p])'></span></div>
             <!--  <img ng-show="unrepostSymbol(calendar[l+dayIncr].events[p])" class='unrepost-symbol-scheduler' src="assets/images/unrepost_symbol.png"></img> -->
           </div>
         </div>

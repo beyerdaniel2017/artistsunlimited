@@ -5,7 +5,7 @@ app.config(function($stateProvider) {
       templateUrl: 'js/artistTools/reForReLists/reForReLists.html',
       controller: 'ReForReListsController',
       resolve: {
-        currentTrades: function($http, SessionService, state, window) {
+        currentTrades: function($http, SessionService) {
           var user = SessionService.getUser();
           if (user) {
             return $http.get('/api/trades/withUser/' + user._id)

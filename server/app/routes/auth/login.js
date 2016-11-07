@@ -194,15 +194,6 @@ router.post('/soundCloudAuthentication', function(req, res, next) {
               'token': req.body.token,
               'followers': data.followers_count,
               'role': 'user'
-            },
-            'availableSlots': {
-              'sunday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
-              'monday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
-              'tuesday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
-              'wednesday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
-              'thursday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
-              'friday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22],
-              'saturday': [2, 4, 6, 8, 10, 12, 14, 16, 18, 22]
             }
           });
           newUser.save();
