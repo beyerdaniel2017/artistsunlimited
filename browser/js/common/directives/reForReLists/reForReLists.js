@@ -540,11 +540,17 @@ app.directive('reforrelists', function($http) {
         } else if (repostEvent.type == 'multiple') {
           var unfilled = false;
           repostEvent.events.forEach(function(event) {
-            if (!event.trackID) unfilled = true;
+            if (!event.trackInfo.trackID) unfilled = true;
           })
           if (unfilled) {
             return {
               'background-color': '#7A549B',
+              'height': '19px',
+              'margin': '2px',
+            }
+          } else {
+            return {
+              'background-color': '#B22222',
               'height': '19px',
               'margin': '2px',
             }
