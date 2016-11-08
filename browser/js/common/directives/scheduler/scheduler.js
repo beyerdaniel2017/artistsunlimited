@@ -1197,12 +1197,42 @@ app.directive('scheduler', function($http) {
         $scope.loadQueueSongs();
       }
 
+        /*sort start*/
+      var tmpList = []; 
+      $scope.sortingLog = [];
+      $scope.sortableOptions = {
+        update: function(e, ui) {
+          //$scope.autoFillTracks = [];
+          var logEntry = tmpList.map(function(i){
+            return i.id;
+          });
+          $scope.user.queue = [];
+          $scope.sortingLog.push('Update: ' + logEntry);
+          $scope.user.queue = logEntry;
+          $scope.saveUser();
+        },
+        stop: function(e, ui) {
+          // this callback has the changed model
+          var logEntry = tmpList.map(function(i){
+            return i.id;
+          });
+          $scope.user.queue = [];
+          $scope.sortingLog.push('Stop: ' + logEntry);
+          $scope.user.queue = logEntry;
+          $scope.saveUser();
+        }
+      };
+      /*sort end*/
       $scope.loadQueueSongs = function(queue) {
+        var i = 0;
         $scope.autoFillTracks = [];
         $scope.user.queue.forEach(function(songID) {
           SC.get('/tracks/' + songID)
             .then(function(track) {
               $scope.autoFillTracks.push(track);
+               i++;
+                tmpList = $scope.autoFillTracks;
+                $scope.list = tmpList;
               $scope.$digest();
             }, console.log);
         })

@@ -83,7 +83,7 @@ app.directive('scsearch', function($http) {
       $scope.selectedItem = function(item) {
         $scope.searchSelection = [];
         $scope.searchError = undefined;
-        $scope.searchString = "";
+        $scope.searchString = item.displayName;
         $scope.searching = false;
         $scope.returnitem({
           item: item
