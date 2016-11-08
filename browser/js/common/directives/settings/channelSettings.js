@@ -175,12 +175,12 @@ app.directive('channelsettings', function($http) {
 	        $scope.AccountsStepData.queue = [];
 	        $scope.sortingLog.push('Update: ' + logEntry);
 	        $scope.AccountsStepData.queue = logEntry;
-	        $scope.saveUser();
+	        //$scope.saveUser();
 	      },
 	      stop: function(e, ui) {
 	        // this callback has the changed model
 	        var logEntry = tmpList.map(function(i){
-	          return i.index;
+	          return i.id;
 	        });
 	        $scope.AccountsStepData.queue = [];
 	        $scope.sortingLog.push('Stop: ' + logEntry);
