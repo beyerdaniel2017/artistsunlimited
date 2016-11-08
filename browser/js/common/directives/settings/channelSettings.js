@@ -167,7 +167,6 @@ app.directive('channelsettings', function($http) {
         /*sort start*/
      	var tmpList = []; 
      	$scope.sortingLog = [];
-	    
      	$scope.sortableOptions = {
       	update: function(e, ui) {
 	        var logEntry = tmpList.map(function(i){
@@ -190,8 +189,8 @@ app.directive('channelsettings', function($http) {
 	      }
 	    };
       	/*sort end*/
-
 	    $scope.loadQueueSongs = function(queue) {      
+	   setTimeout(function(){
 			if ($scope.AccountsStepData.queue == undefined) {
 	        	$scope.AccountsStepData.queue=[];  
 	      }
@@ -207,6 +206,8 @@ app.directive('channelsettings', function($http) {
 	          $scope.$digest();
 	        }, console.log);
 	      })
+	   }, 3000);
+	    
 	    }
 	    $scope.loadQueueSongs();
 	    $scope.choseAutoFillTrack = function(track) {
@@ -489,6 +490,8 @@ app.directive('channelsettings', function($http) {
 	            })
 	            .then(function(res) {
 	              $scope.processing = false;
+	              $scope.AccountsStepData.queue = res.data.queue;
+	              $scope.loadQueueSongs();
 	              $scope.activeTab.push('manageReposts');
 	              $('.nav-tabs a[href="#manageReposts"]').tab('show');
 
