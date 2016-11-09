@@ -320,7 +320,7 @@ app.directive('reforrelists', function($http) {
             document.getElementById('scPopupPlayer').style.visibility = "visible";
              $scope.showPlayer = true;
           }
-          var playerWidg = SC.Widget('scPlayer')
+          var playerWidget = SC.Widget('scPlayer')
           playerWidget.load($scope.makeEvent.trackURL, {
             auto_play: false,
             show_artwork: true
@@ -409,6 +409,11 @@ app.directive('reforrelists', function($http) {
         $.Zebra_Dialog('Are you sure you want to delete this trade?', {
           'type': 'confirmation',
           'buttons': [{
+            caption: 'No',
+            callback: function() {
+             console.log('No was clicked');
+            }
+          }, {
             caption: 'Yes',
             callback: function() {
               $scope.processing = true;
@@ -423,11 +428,6 @@ app.directive('reforrelists', function($http) {
                   $scope.processing = false;
                   $.Zebra_Dialog('Error accepting');
                 })
-            }
-          }, {
-            caption: 'No',
-            callback: function() {
-              console.log('No was clicked');
             }
           }]
         });

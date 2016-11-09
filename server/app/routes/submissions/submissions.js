@@ -602,6 +602,48 @@ function calcHour(hour, destOffset) {
   return retHour;
 }
 
+router.get('/getSoldReposts', function(req, res) {
+    if (!req.user) {
+        next(new Error('Unauthorized'));
+        return;
+    }
+    var newObj = {};
+    var accounts = req.user.paidRepost;
+    var results = [];
+    var i = -1;
+    var next = function() {
+        i++;
+        if (i < accounts.length) {
+            var acc = accounts[i];
+            User.findOne({
+                _id: acc.userID
+            }, function(e, user) {
+                if (user) {
+
+                    RepostEvent.find({
+                        userID: user.soundcloud.id,
+                        type: "paid"
+                    }, function(err, data) {
+                        for (var i = 0; i < data.length; i++) {
+                            var newObj = {
+                                username: user.name,
+                                data: data[i]
+                            }
+                            results.push(newObj);
+                        }
+                        next();
+                    })
+                } else {
+                    next();
+                }
+            });
+        } else {
+            res.send(results);
+        }
+    }
+    next();
+});
+
 //reschedule repost
 // router.post('/rescheduleRepost', function(req, res, next) {
 //   var eventHolder;
