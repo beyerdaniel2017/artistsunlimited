@@ -337,7 +337,7 @@ function distributeEarnings(user, event) {
       event.payout = payout;
       event.save();
     }).then(null, function(err) {
-      sendEmail('Christian Ayscue', 'coayscue@gmail.com', "Artists Unlimited", "coayscue@gmail.com", "Error distributing funds", "Error: " + JSON.stringify(err) + "\nATUser: " + JSON.stringify(user) + "\nEvent: " + JSON.stringify(event));
+      sendEmail('Christian Ayscue', 'coayscue@gmail.com', "Artists Unlimited", "coayscue@artistsunlimited.com", "Error distributing funds", "Error: " + JSON.stringify(err) + "\nATUser: " + JSON.stringify(user) + "\nEvent: " + JSON.stringify(event));
       console.log(err);
     })
   }
