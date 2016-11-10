@@ -497,6 +497,16 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $scope.sortReverse  = false; 
     $scope.searchTerm   = ''; 
 }
+
+  /*Account Earnings*/
+  $scope.getEarnings = function()
+  {
+     $http.get('/api/submissions/getEarnings').then(function(res) {
+      $scope.earnings = res.data;
+     });
+  }
+
+  $scope.getEarnings();
   $scope.getSoldReposts();
   $scope.getPaidRepostAccounts();
   $scope.loadSubmissions();
