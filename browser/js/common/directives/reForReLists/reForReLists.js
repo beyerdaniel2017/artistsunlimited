@@ -318,8 +318,8 @@ app.directive('reforrelists', function($http) {
             document.getElementById('scPopupPlayer').style.visibility = "visible";
             $scope.showPlayer = true;
           }
-          var playerWidg = SC.Widget('scPlayer')
-          playerWidg.load($scope.makeEvent.trackURL, {
+          var playerWidget = SC.Widget('scPlayer')
+          playerWidget.load($scope.makeEvent.trackURL, {
             auto_play: false,
             show_artwork: true
           });
@@ -425,6 +425,11 @@ app.directive('reforrelists', function($http) {
         $.Zebra_Dialog('Are you sure you want to delete this trade?', {
           'type': 'confirmation',
           'buttons': [{
+            caption: 'No',
+            callback: function() {
+              console.log('No was clicked');
+            }
+          }, {
             caption: 'Yes',
             callback: function() {
               $scope.processing = true;
@@ -439,11 +444,6 @@ app.directive('reforrelists', function($http) {
                   $scope.processing = false;
                   $.Zebra_Dialog('Error accepting');
                 })
-            }
-          }, {
-            caption: 'No',
-            callback: function() {
-              console.log('No was clicked');
             }
           }]
         });
@@ -801,40 +801,40 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.addSong = function() {
-        if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
-        $scope.user.queue.push($scope.newQueueID);
-        $scope.saveUser();
-        $scope.loadQueueSongs();
-      }
-           /*sort start*/
-      var tmpList = []; 
+          if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
+          $scope.user.queue.push($scope.newQueueID);
+          $scope.saveUser();
+          $scope.loadQueueSongs();
+        }
+        /*sort start*/
+      var tmpList = [];
       $scope.sortingLog = [];
 
-  $scope.sortableOptions = {
-    update: function(e, ui) {
-      //$scope.autoFillTracks = [];
-      var logEntry = tmpList.map(function(i){
-        return i.id;
-      });
-      $scope.user.queue = [];
-      $scope.sortingLog.push('Update: ' + logEntry);
-      $scope.user.queue = logEntry;
-      $scope.saveUser();
-    },
-    stop: function(e, ui) {
-      // this callback has the changed model
-      var logEntry = tmpList.map(function(i){
-        return i.id;
-      });
-      $scope.user.queue = [];
-      $scope.sortingLog.push('Stop: ' + logEntry);
-       $scope.user.queue = logEntry;
-       $scope.saveUser();
-    }
-  };
+      $scope.sortableOptions = {
+        update: function(e, ui) {
+          //$scope.autoFillTracks = [];
+          var logEntry = tmpList.map(function(i) {
+            return i.id;
+          });
+          $scope.user.queue = [];
+          $scope.sortingLog.push('Update: ' + logEntry);
+          $scope.user.queue = logEntry;
+          $scope.saveUser();
+        },
+        stop: function(e, ui) {
+          // this callback has the changed model
+          var logEntry = tmpList.map(function(i) {
+            return i.id;
+          });
+          $scope.user.queue = [];
+          $scope.sortingLog.push('Stop: ' + logEntry);
+          $scope.user.queue = logEntry;
+          $scope.saveUser();
+        }
+      };
       /*sort end*/
       $scope.loadQueueSongs = function(queue) {
-        var i= 0;
+        var i = 0;
         $scope.autoFillTracks = [];
         $scope.user.queue.forEach(function(songID) {
           SC.get('/tracks/' + songID)

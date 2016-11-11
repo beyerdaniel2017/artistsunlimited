@@ -97,7 +97,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
          $('.nav-tabs a[href="#managesubmissions"]').tab('show');
       }
 
-   $scope.sendTestMail = function(index) {
+    $scope.sendTestMail = function(index) {
       $scope.showTestEmailModal = true;
       $scope.emailIndex = index;
       $('#emailModal').modal('show');
@@ -488,7 +488,26 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
          $("#ytube").modal('show');
         }
 
-  //$scope.getSubmissionByGenre();
+   /*Sold Reposts*/
+   $scope.getSoldReposts = function() {
+     $http.get('/api/submissions/getSoldReposts').then(function(res) {
+      $scope.soldReposts = res.data;
+     });
+    $scope.sortType     = 'name'; 
+    $scope.sortReverse  = false; 
+    $scope.searchTerm   = ''; 
+}
+
+  /*Account Earnings*/
+  $scope.getEarnings = function()
+  {
+     $http.get('/api/submissions/getEarnings').then(function(res) {
+      $scope.earnings = res.data;
+     });
+  }
+
+  $scope.getEarnings();
+  $scope.getSoldReposts();
   $scope.getPaidRepostAccounts();
   $scope.loadSubmissions();
   $scope.loadMarketSubmissions();

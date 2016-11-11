@@ -3720,6 +3720,47 @@ td {
     min-height: 300px;
 
 }
+.tabs-5 .nav-tabs {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+}
+.tabs-5 .nav-tabs li {
+    width: 25%;
+    display: inline-block;
+    margin: 0px;
+    text-align: center;
+    background: #F8F8F8;
+    border-right: 1px solid #ECECEC;
+}
+.tabs-5 .nav-tabs li:last-child {
+    border-right: 0px solid transparent;
+}
+.tabs-5 .nav-tabs li img {
+    display: inline-block;
+    padding: 11px 0px;
+    width: 22px;
+    margin: 0 9px;
+}
+.tabs-5 .nav-tabs > li > a {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    color: #ccc;
+    outline: 0;
+    height: 55px;
+    letter-spacing: 1px;
+    font-size: 13px;
+}
+.tabs-5 .nav-tabs > li.active > a,
+.tabs-5 .nav-tabs > li.active > a:hover,
+.tabs-5 .nav-tabs > li.active > a:focus {
+    color: #686868;
+    cursor: default;
+    background-color: #fff;
+    border: 0px solid transparent;
+    border-bottom-color: transparent;
+}
 .settings-tabs-5 .nav-tabs {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;

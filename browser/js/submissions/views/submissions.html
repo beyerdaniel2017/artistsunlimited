@@ -16,13 +16,14 @@
       <div class="col-md-12">
         <div class="page-content right-side">
           <!--page-contant Start-->
-          <div class="scheduler-tabs">
+          <div class="tabs-5">
             <!-- Nav tabs :Start-->
             <ul class="nav nav-tabs" role="tablist">
               <li role="presentation" class="active"><a href="#mysubmissions" aria-controls="mysubmissions" role="tab" data-toggle="tab"><img src="assets/images/music-icon-big.svg"/>MY SUBMISSIONS</a>
               </li>
               <li role="presentation"><a href="#marketplace" aria-controls="marketplace" role="tab" data-toggle="tab"><img src="assets/images/mysubmissions-cart.svg"/> AU MARKETPLACE</a></li>
               <li role="presentation"><a href="#managesubmissions" aria-controls="managesubmissions" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.svg"/>CUSTOM BUTTONS</a></li>
+              <li role="presentation"><a href="#soldReposts" aria-controls="soldReposts" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.svg"/>SOLD REPOST</a></li>
             </ul>
             <!-- Nav tabs :End-->
             <!-- Tab panes :: Start-->
@@ -264,6 +265,185 @@
                   <div class="space-20"></div>
                 </div>
                 <!-- MANAGE REPOSTS : End -->                
+                <!-- SOLD REPOSTS START --> 
+                <div role="tabpanel" class="tab-pane fade" id="soldReposts">
+                  <div class="managesubmissions margin0" style="width:94%; border:none;">
+                    <div class="row">
+                      <div class="row margin0">
+                        <div class="col-md-12 bg-white">
+                          <form>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Search Reposts" ng-model="searchTerm">
+                                </div>
+                            </div>
+                        </form>
+                        <div class="space-10"></div> 
+                        <div class="table-responsive">
+                          <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        <a href="#" ng-click="sortType = 'username'; sortReverse = !sortReverse">
+                                      Account Name
+                                      <span ng-show="sortType == 'username' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'username' && sortReverse" class="fa fa-caret-up"></span>
+                                    </a>
+                                    </td>
+                                    <td>
+                                        <a href="#" ng-click="sortType = 'title'; sortReverse = !sortReverse">
+                                    Song Name 
+                                      <span ng-show="sortType == 'title' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'title' && sortReverse" class="fa fa-caret-up"></span>
+                                    </a>
+                                    </td>
+                                    <td>
+                                        <a href="#" ng-click="sortType = 'trackURL'; sortReverse = !sortReverse">
+                                    Track Url 
+                                      <span ng-show="sortType == 'trackURL' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'trackURL' && sortReverse" class="fa fa-caret-up"></span>
+                                    </a>
+                                    </td>
+                                     <td>
+                                        <a href="#" ng-click="sortType = 'day'; sortReverse = !sortReverse">
+                                    Day
+                                      <span ng-show="sortType == 'day' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'day' && sortReverse" class="fa fa-caret-up"></span>
+                                    </a>
+                                    </td>
+                                    <td>
+                                        <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+                                    Submitter Name
+                                      <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
+                                    </a>
+                                    </td>
+                                     <td>
+                                        <a href="#" ng-click="sortType = 'email'; sortReverse = !sortReverse">
+                                    Submitter Email
+                                      <span ng-show="sortType == 'email' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'email' && sortReverse" class="fa fa-caret-up"></span>
+                                    </a>
+                                    </td>
+                                     <td>
+                                        <a href="#" ng-click="sortType = 'completed'; sortReverse = !sortReverse">
+                                    Completed
+                                      <span ng-show="sortType == 'completed' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'completed' && sortReverse" class="fa fa-caret-up"></span>
+                                    </a>
+                                    </td>
+                                     <td>
+                                        <a href="#" ng-click="sortType = 'price'; sortReverse = !sortReverse">
+                                    Price
+                                      <span ng-show="sortType == 'price' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'price' && sortReverse" class="fa fa-caret-up"></span>
+                                    </a>
+                                    </td>
+                                     <td>
+                                        <a href="#" ng-click="sortType = 'tastiness'; sortReverse = !sortReverse">
+                                    Amount Received
+                                      <span ng-show="sortType == 'tastiness' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'tastiness' && sortReverse" class="fa fa-caret-up"></span>
+                                    </a>
+                                    </td>
+                                     <td>
+                                        <a href="#" ng-click="sortType = 'tastiness'; sortReverse = !sortReverse">
+                                    Refunded
+                                      <span ng-show="sortType == 'tastiness' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'tastiness' && sortReverse" class="fa fa-caret-up"></span>
+                                    </a>
+                                    </td>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr ng-repeat="item in soldReposts | orderBy:sortType:sortReverse | filter:searchTerm">
+                                    <td>{{ item.username }}</td>
+                                    <td>{{ item.data.title }}</td>
+                                    <td>{{ item.data.trackURL }}</td>
+                                    <td>{{ item.data.day |date}}</td>
+                                    <td>{{ item.data.name }}</td>
+                                    <td>{{ item.data.email }}</td>
+                                    <td>{{ item.data.completed }}</td>
+                                    <td>{{ item.data.price }}</td>
+                                    <td>{{ item.data.payout.batch_header ? item.data.payout.batch_header.amount.value : 0 |currency }}</td>
+                                    <td>{{ item.data.payout.batch_header ? true :false }}</td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                        </div>
+                        </div>
+                      </div>
+                    </div>  
+                    <div class="space-20"></div> 
+                    <!-- Earnings start -->
+                    <div class="row">
+                      <div class="row margin0">
+                        <div class="col-md-12 bg-white">
+                        <div class="table-responsive">
+                          <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <td>
+                                      <a href="#" ng-click="sortType = 'username'; sortReverse = !sortReverse">
+                                      Account Name
+                                      <span ng-show="sortType == 'username' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'username' && sortReverse" class="fa fa-caret-up"></span>
+                                     </a>
+                                     <td>
+                                     <a href="#" ng-click="sortType = 'username'; sortReverse = !sortReverse">
+                                      Amount
+                                      <span ng-show="sortType == 'username' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'username' && sortReverse" class="fa fa-caret-up"></span>
+                                     </a>
+                                     </td>
+                                     <td>
+                                     <a href="#" ng-click="sortType = 'username'; sortReverse = !sortReverse">
+                                      Percentage Paid
+                                      <span ng-show="sortType == 'username' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'username' && sortReverse" class="fa fa-caret-up"></span>
+                                     </a>
+                                    </td>
+                                    <td>
+                                       <a href="#" ng-click="sortType = 'username'; sortReverse = !sortReverse">
+                                      Number of submissions
+                                      <span ng-show="sortType == 'username' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'username' && sortReverse" class="fa fa-caret-up"></span>
+                                     </a>
+                                     </td>
+                                    <td>
+                                      <a href="#" ng-click="sortType = 'username'; sortReverse = !sortReverse">
+                                      Number of payments
+                                      <span ng-show="sortType == 'username' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'username' && sortReverse" class="fa fa-caret-up"></span>
+                                     </a>
+                                    </td>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr ng-repeat="item in earnings | orderBy:sortType:sortReverse | filter:searchTerm">
+                                    <td>{{ item.username }}</td>
+                                    <td>{{ item.amount }}</td>
+                                    <td>{{ item.percentage }}</td>
+                                    <td>{{ item.submissions }}</td>
+                                    <td>{{ item.paymentCount }}</td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- Earnings end -->
+                  </div>
+                  <div class="space-20"></div>
+                </div>
+                <!-- SOLD REPOSTS END -->             
               </div>
               <!-- Tab panes :: End-->
             </div>
