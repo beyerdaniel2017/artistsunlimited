@@ -504,6 +504,9 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
      $http.get('/api/submissions/getEarnings').then(function(res) {
       $scope.earnings = res.data;
      });
+    $scope.sortReverse1  = false;
+    $scope.sortType1     = 'username'; 
+    $scope.searchTerm1   = ''; 
   }
 
   $scope.getEarnings();
