@@ -602,7 +602,7 @@ function calcHour(hour, destOffset) {
   return retHour;
 }
 
-router.get('/getSoldReposts', function(req, res) {
+router.get('/getSoldReposts', function(req, res, next) {
     if (!req.user) {
         next(new Error('Unauthorized'));
         return;
@@ -643,7 +643,7 @@ router.get('/getSoldReposts', function(req, res) {
     }
     next();
 });
-router.get('/getEarnings', function(req, res) {
+router.get('/getEarnings', function(req, res, next) {
     if (!req.user) {
         next(new Error('Unauthorized'));
         return;

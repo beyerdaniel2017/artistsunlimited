@@ -42,6 +42,7 @@
     "express-session": "^1.10.3",
     "eyed3": "0.0.1",
     "fb": "1.1.1",
+    "font-awesome": "^4.7.0",
     "forever": "^0.15.2",
     "gulp": "^3.8.11",
     "gulp-babel": "^5.1.0",
