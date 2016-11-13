@@ -9,10 +9,10 @@
     background-color:#FFC0CB;
     color:#000000 !important;
   }
-.white {
+  .white {
     background-color: #FFFFFF;
     color: #000000 !important;
-}
+  }
   .borderless td, .borderless th {
     border: none !important;
   }
@@ -45,55 +45,55 @@
                   <br><br>
                   <div class="row" >
                     <div class="col-md-12">
-                        <div class="account-vertical-container" ng-repeat="userdata in paidRepostAccounts">
-                          <ul>
-                            <li>
-                              <div class="list-img-container">
-                                 <img src="{{userdata.user.avatarURL}}" class="img-responsive">
-                               </div>
-                            </li>
-                              <li>
-                                <div>
-                                  <p><strong>{{userdata.user.username}}</strong></p>
-                                  <p>{{userdata.user.followers}} Followers</p>
-                                  <span class="ac-link-trunk">
-                                    <a href="{{userdata.submissionUrl}}" target="_blank">{{userdata.submissionUrl}}</a>
-                                    <br/>
-                                    <a href="{{userdata.premierUrl}}" target="_blank">{{userdata.premierUrl}}</a>
-                                  </span>
+                      <div class="account-vertical-container" ng-repeat="userdata in paidRepostAccounts">
+                        <ul>
+                          <li>
+                            <div class="list-img-container">
+                             <img src="{{userdata.user.avatarURL}}" class="img-responsive">
+                           </div>
+                         </li>
+                         <li>
+                          <div>
+                            <p><strong>{{userdata.user.username}}</strong></p>
+                            <p>{{userdata.user.followers}} Followers</p>
+                            <span class="ac-link-trunk">
+                              <input readonly ng-model='userdata.submissionUrl'><!-- <span><a ng-click='copy(userdata.premierUrl)'>Copy</a></span> -->
+                              <br>
+                              <input readonly ng-model='userdata.premierUrl'><!-- <span><a ng-click='copy(userdata.premierUrl)'>Copy</a></span> -->
+                            </span>
                                   <!-- <p><a href="{{userdata.submissionUrl}}" target="_blank">{{userdata.submissionUrl}}</a></p>
                                   <p><a href="{{userdata.premierUrl}}" target="_blank">{{userdata.premierUrl}}</a></p> -->
                                 </div>
                               </li>
-                               <li>
+                              <li>
                                 <div class="price-box vertical-text text-center" >
-                                    <div style="display: inline-block;">
-                                      <span class="pull-left" style="margin-right: 10px; padding-top: 7px; font-size: 13px;">Price for each repost: $</span>
-                                        <span class="pull-right" style="position: relative;"> <input type="" name="" placeholder="price" class="price-input-box price-input" ng-model="userdata.price" ng-blur="editprice($index, userdata)"></span>
-                                    </div>
-                                    <p class="small-text" style="font-size:12px; color:#c2c2c2;">Recommended: 1$ for every 3,000 followers
+                                  <div style="display: inline-block;">
+                                    <span class="pull-left" style="margin-right: 10px; padding-top: 7px; font-size: 13px;">Price for each repost: $</span>
+                                    <span class="pull-right" style="position: relative;"> <input type="" name="" placeholder="price" class="price-input-box price-input" ng-model="userdata.price" ng-blur="editprice($index, userdata)"></span>
+                                  </div>
+                                  <p class="small-text" style="font-size:12px; color:#c2c2c2;">Recommended: 1$ for every 3,000 followers
                                     60,000 followers  =  $20</p>       
-                                </div>
-                              </li>
-                              <li> 
-                               <div  class="text-center vertical-text">
-                                 <a class="btn btn-pink" href="javascript:void(0)" ng-click="addAccounts('Edit',userdata.userID);">Edit</a> 
-                                 <a class="btn btn-border" href="javascript:void(0)" ng-click="deletePaidRepost($index)">Delete</a>
-                               </div>
-                              </li> 
-                          </ul>
-                        </div>
-                    </div>
-                  </div>
-                  <br>                                                                           
-                </div>
-              </div>
-            </div>                    
-          </div> 
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Content End  -->
-<ng-include src="'js/home/views/loader.html'"></ng-include>
+                                  </div>
+                                </li>
+                                <li> 
+                                 <div  class="text-center vertical-text">
+                                   <a class="btn btn-pink" href="javascript:void(0)" ng-click="addAccounts('Edit',userdata.userID);">Edit</a> 
+                                   <a class="btn btn-border" href="javascript:void(0)" ng-click="deletePaidRepost($index)">Delete</a>
+                                 </div>
+                               </li> 
+                             </ul>
+                           </div>
+                         </div>
+                       </div>
+                       <br>                                                                           
+                     </div>
+                   </div>
+                 </div>                    
+               </div> 
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+     <!-- Content End  -->
+     <ng-include src="'js/home/views/loader.html'"></ng-include>

@@ -7,6 +7,14 @@ var RepostEvent = mongoose.model('RepostEvent');
 var moment = require('moment');
 var User = mongoose.model('User');
 var scheduleRepost = require("../../scheduleRepost/scheduleRepost.js");
+var scConfig = require('./../../../env').SOUNDCLOUD;
+var scWrapper = require("../../SCWrapper/SCWrapper.js");
+
+scWrapper.init({
+  id: scConfig.clientID,
+  secret: scConfig.clientSecret,
+  uri: scConfig.callbackURL
+});
 
 
 //----------Public Repost Events----------
@@ -173,20 +181,86 @@ router.put('/repostEvents', function(req, res, next) {
     }).then(null, next)
 });
 
+router.put('/repostEvents/autofillAll', function(req, res, next) {
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
+  RepostEvent.find({
+    completed: false,
+    owner: req.user._id,
+    trackID: null
+  }).then(function(events) {
+    var eventInd = 0;
+
+    function nextEvent() {
+      if (eventInd < events.length) {
+        var event = events[eventInd];
+        var queueInd = 0;
+
+        function nextQueueItem() {
+          if (queueInd < req.user.queue.length) {
+            event.trackID = req.user.queue[queueInd];
+            denyTradeOverlap(event)
+              .then(function(ok) {
+                scWrapper.setToken(req.user.soundcloud.token);
+                var reqObj = {
+                  method: 'GET',
+                  path: '/tracks/' + event.trackID,
+                  qs: {}
+                }
+                scWrapper.request(reqObj, function(err, data) {
+                  if (!err && data.title) {
+                    event.title = data.title;
+                    event.trackURL = data.permalink_url;
+                    event.trackArtUrl = data.artwork_url;
+                    event.artistName = data.user.username;
+                    event.save();
+                    console.log(event);
+                    eventInd++;
+                    nextEvent();
+                  } else {
+                    event.trackURL = "http://api.soundcloud.com/tracks/" + event.id;
+                    event.save();
+                    console.log(event);
+                    eventInd++;
+                    nextEvent();
+                  }
+                });
+              })
+              .then(null, function(err) {
+                console.log(err);
+                queueInd++;
+                nextQueueItem();
+              })
+          } else {
+            eventInd++;
+            nextEvent();
+          }
+        }
+        nextQueueItem();
+      } else {
+        res.send('ok');
+      }
+    }
+    nextEvent();
+  }).then(null, next)
+});
+
 function denyTradeOverlap(repostEvent) {
   repostEvent.day = new Date(repostEvent.day);
   var unrepostDate = new Date(repostEvent.day.getTime() + (parseInt(repostEvent.unrepostHours) * 60 * 60 * 1000));
-  console.log(repostEvent);
   return RepostEvent.find({
     userID: repostEvent.userID,
     trackID: repostEvent.trackID
   }).then(function(events) {
     var blockEvents = events.filter(function(event) {
+      if (repostEvent._id == event._id) return false;
       event.day = new Date(event.day);
       event.unrepostDate = new Date(event.unrepostDate);
       return (repostEvent.trackID == event.trackID && (Math.abs(event.unrepostDate.getTime() - repostEvent.day.getTime()) < 24 * 3600000 || Math.abs(event.day.getTime() - repostEvent.unrepostDate.getTime()) < 24 * 3600000));
     })
-    if (blockEvents.length > 0) throw new Error('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. If you are unreposting, please allow 48 hours between scheduled reposts.')
+    if (blockEvents.length > 0) throw new Error('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. Please allow 24 hours between unrepost and re-repost.')
     else return 'ok';
   })
 }

@@ -11,7 +11,6 @@
              'paidRepost.userID': userID
            })
            .then(function(adminUser) {
-             console.log(adminUser);
              if (adminUser) user = adminUser;
              if (user.notificationSettings.facebookMessenger[type]) {
                messengerAPI.buttons(user.notificationSettings.facebookMessenger.messengerID, heading + ':\n' + message, [{

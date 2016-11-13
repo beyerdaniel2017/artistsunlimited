@@ -83,7 +83,7 @@ app.directive('scheduler', function($http) {
         }
       }
 
-      $scope.choseTrack = function(track) {
+      $scope.choseTrack1 = function(track) {
         $scope.searchString = track.title;
         $scope.makeEventURL = track.permalink_url;
         $scope.makeEvent.trackID = track.id;
@@ -92,20 +92,14 @@ app.directive('scheduler', function($http) {
         $scope.makeEvent.artistName = track.user.username;
         $scope.makeEvent.trackURL = track.permalink_url
         $scope.showPlayer = true;
-        document.getElementById('scPlayer').style.visibility = "visible";
-        var playerWidget = SC.Widget('scPlayer').load($scope.makeEventURL, {
+        var playerWidget = SC.Widget('scPopupPlayer');
+        playerWidget.load($scope.makeEventURL, {
           auto_play: false,
-          show_artwork: true,
+          show_artwork: false,
           callback: function() {
-            playerWidget.getCurrentSound(function(track) {
-              $scope.searchString = track.title;
-              $scope.makeEventURL = track.permalink_url;
-              $scope.makeEvent.trackID = track.id;
-              $scope.makeEvent.title = track.title;
-              $scope.makeEvent.trackArtUrl = track.artwork_url;
-              $scope.makeEvent.artistName = track.user.username;
-              $scope.makeEvent.trackURL = track.permalink_url
-            })
+            document.getElementById('scPopupPlayer').style.visibility = "visible";
+            console.log(document.getElementById('scPopupPlayer'));
+            $scope.$digest();
           }
         });
       }
@@ -117,31 +111,23 @@ app.directive('scheduler', function($http) {
         $scope.showPlayer = true;
       }
 
-      $scope.choseTrack1 = function(track) {
-        $scope.searchString = track.title;
+      $scope.choseTrack = function(track) {
         $scope.makeEventURL = track.permalink_url;
+        $scope.searchString = track.title;
         $scope.makeEvent.trackID = track.id;
         $scope.makeEvent.title = track.title;
         $scope.makeEvent.trackArtUrl = track.artwork_url;
         $scope.makeEvent.artistName = track.user.username;
         $scope.makeEvent.trackURL = track.permalink_url;
-        document.getElementById('scPopupPlayer').innerHTML = "";
         $scope.showPlayer = true;
-        document.getElementById('scPopupPlayer').style.visibility = "visible";
-        var popupPlayerWidget = SC.Widget('scPopupPlayer')
+        var popupPlayerWidget = SC.Widget('scPlayer');
         popupPlayerWidget.load($scope.makeEventURL, {
           auto_play: false,
-          show_artwork: false,
+          show_artwork: true,
           callback: function() {
-            popupPlayerWidget.getCurrentSound(function(track) {
-              $scope.searchString = track.title;
-              $scope.makeEventURL = track.permalink_url;
-              $scope.makeEvent.trackID = track.id;
-              $scope.makeEvent.title = track.title;
-              $scope.makeEvent.trackArtUrl = track.artwork_url;
-              $scope.makeEvent.artistName = track.user.username;
-              $scope.makeEvent.trackURL = track.permalink_url;
-            })
+            document.getElementById('scPlayer').style.visibility = "visible";
+            console.log(document.getElementById('scPlayer'));
+            $scope.$digest();
           }
         });
       }
@@ -376,6 +362,7 @@ app.directive('scheduler', function($http) {
 
       $scope.isSchedule = false;
       $scope.scheduleSong = function(date) {
+        $scope.afcount = 0;
         $scope.isEdit = false;
         $scope.isSchedule = true;
         $scope.tabSelected = false;
@@ -406,7 +393,7 @@ app.directive('scheduler', function($http) {
 
       $scope.isEdit = false;
       $scope.EditNewSong = function(item, editable) {
-        console.log(item);
+        $scope.afcount = 0;
         $scope.editChannelArr = [];
         $scope.tabSelected = false;
         $scope.isEdit = true;
@@ -716,11 +703,12 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.clickedSlot = function(day, hour, data) {
+        $scope.afcount = 0;
         $scope.isView = false;
         $scope.popup = true;
         $scope.slotType = 'track';
         var d = new Date(day).getDay();
-        if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1) return;
+        if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1 && data.type == 'empty') return;
         var today = new Date();
         if (today.toLocaleDateString() == day.toLocaleDateString() && today.getHours() > hour) return;
         var makeDay = new Date(day);
@@ -896,61 +884,6 @@ app.directive('scheduler', function($http) {
         console.log($scope.otherChannels);
       }
 
-      $scope.changeURL = function() {
-        if ($scope.makeEventURL) {
-          $scope.processing = true;
-          var player = (($scope.popup == false) ? document.getElementById('scPlayer') : document.getElementById('scPopupPlayer'));
-          $http.post('/api/soundcloud/resolve', {
-              url: $scope.makeEventURL
-            })
-            .then(function(res) {
-              if (!$scope.makeEvent) {
-                $scope.makeEvent = {};
-              }
-              $scope.makeEvent.type = "track";
-              $scope.trackArtistID = res.data.user.id;
-              $scope.trackType = res.data.kind;
-              if (res.data.kind != "playlist") {
-                if (res.data.user.id != $scope.user.soundcloud.id) {
-                  $scope.makeEvent.trackID = res.data.id;
-                  $scope.makeEvent.title = res.data.title;
-                  $scope.makeEvent.trackURL = res.data.trackURL;
-                  $scope.makeEvent.trackArtUrl = res.data.artwork_url;
-                  if (res.data.user) {
-                    $scope.makeEvent.artistName = res.data.user.username;
-                  }
-
-                  SC.oEmbed($scope.makeEventURL, {
-                    element: player,
-                    auto_play: false,
-                    maxheight: 150
-                  })
-                  if ($scope.popup == false) {
-                    player.style.visibility = "visible";
-                  } else {
-                    player.style.visibility = "visible";
-                  }
-                  $scope.notFound = false;
-                  $scope.processing = false;
-                } else {
-                  $scope.notFound = false;
-                  $scope.processing = false;
-                  $.Zebra_Dialog("You cannot repost your own track.");
-                }
-              } else {
-                $scope.notFound = false;
-                $scope.processing = false;
-                $.Zebra_Dialog("Sorry! We don't allow scheduling playlists here. Please enter a track url instead.");
-              }
-            }).then(null, function(err) {
-              $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
-              player.style.visibility = "hidden";
-              $scope.notFound = true;
-              $scope.processing = false;
-            });
-        }
-      }
-
       $scope.deleteEvent = function() {
         if (!$scope.newEvent) {
           $scope.processing = true;
@@ -999,9 +932,10 @@ app.directive('scheduler', function($http) {
       $scope.findUnrepostOverlap = function() {
         if (!$scope.makeEvent.trackID) return false;
         var blockEvents = $scope.events.filter(function(event) {
+          if (event._id == $scope.makeEvent._id) return false;
           event.day = new Date(event.day);
           event.unrepostDate = new Date(event.unrepostDate);
-          return ($scope.makeEvent.trackID == event.trackID && (Math.abs(event.unrepostDate.getTime() - $scope.makeEvent.day.getTime()) < 36 * 3600000 || Math.abs(event.day.getTime() - $scope.makeEvent.unrepostDate.getTime()) < 36 * 3600000));
+          return ($scope.makeEvent.trackID == event.trackID && (Math.abs(event.unrepostDate.getTime() - $scope.makeEvent.day.getTime()) < 24 * 3600000 || Math.abs(event.day.getTime() - $scope.makeEvent.unrepostDate.getTime()) < 24 * 3600000));
         })
         return blockEvents.length > 0;
       }
@@ -1066,7 +1000,7 @@ app.directive('scheduler', function($http) {
           $.Zebra_Dialog("Sorry! You cannot schedule your own track to be reposted.")
           return;
         } else if ($scope.findUnrepostOverlap()) {
-          $.Zebra_Dialog('Issue! This repost will cause this track to be both unreposted and reposted within a 36 hour time period. If you are unreposting, please allow 36 hours between scheduled reposts.');
+          $.Zebra_Dialog('Issue! This repost will cause this track to be both unreposted then reposted within a 24 hour time period. Please allow 24 hours between unrepost and re-repost.');
           return;
         }
         if (!$scope.makeEvent.trackID && ($scope.makeEvent.type == "track")) {
@@ -1197,13 +1131,13 @@ app.directive('scheduler', function($http) {
         $scope.loadQueueSongs();
       }
 
-        /*sort start*/
-      var tmpList = []; 
+      /*sort start*/
+      var tmpList = [];
       $scope.sortingLog = [];
       $scope.sortableOptions = {
         update: function(e, ui) {
           //$scope.autoFillTracks = [];
-          var logEntry = tmpList.map(function(i){
+          var logEntry = tmpList.map(function(i) {
             return i.id;
           });
           $scope.user.queue = [];
@@ -1213,7 +1147,7 @@ app.directive('scheduler', function($http) {
         },
         stop: function(e, ui) {
           // this callback has the changed model
-          var logEntry = tmpList.map(function(i){
+          var logEntry = tmpList.map(function(i) {
             return i.id;
           });
           $scope.user.queue = [];
@@ -1224,49 +1158,61 @@ app.directive('scheduler', function($http) {
       };
       /*sort end*/
       $scope.loadQueueSongs = function(queue) {
-        var i = 0;
         $scope.autoFillTracks = [];
-        $scope.user.queue.forEach(function(songID) {
-          SC.get('/tracks/' + songID)
-            .then(function(track) {
-              $scope.autoFillTracks.push(track);
-               i++;
-                tmpList = $scope.autoFillTracks;
-                $scope.list = tmpList;
-              $scope.$digest();
-            }, console.log);
-        })
+        var ind = 0;
+
+        function getNext() {
+          if (ind < $scope.user.queue.length) {
+            $scope.showAutofillPlayer = true;
+            var autofillWidget = SC.Widget('autofillPlayer');
+            autofillWidget.load("http://api.soundcloud.com/tracks/" + $scope.user.queue[ind], {
+              auto_play: false,
+              show_artwork: false,
+              callback: function() {
+                autofillWidget.getCurrentSound(function(track) {
+                  console.log(track);
+                  $scope.autoFillTracks.push(track);
+                  tmpList = $scope.autoFillTracks;
+                  $scope.list = tmpList;
+                  ind++;
+                  getNext();
+                });
+              }
+            });
+          } else {
+            $scope.showAutofillPlayer = false;
+            $scope.$digest();
+          }
+        }
+        getNext();
       }
+
       if ($scope.user && $scope.user.queue) {
         $scope.loadQueueSongs();
       }
-      var count = Math.floor(Math.random() * $scope.user.queue.length);
-      console.log(count);
+
+      $scope.afcount = 0;
       $scope.getAutoFillTracks = function() {
+        function waitForAutofill() {
+          $scope.processing = true;
+          setTimeout(function() {
+            if ($scope.autoFillTracks.length > 0) {
+              $scope.processing = false;
+              $scope.getAutoFillTracks();
+            } else {
+              waitForAutofill();
+            }
+          }, 500);
+        }
         if ($scope.user.queue.length > 0) {
-          console.log($scope.autoFillTracks);
-          console.log(count);
-          var track = $scope.autoFillTracks[count];
-          $scope.makeEventURL = track.permalink_url;
-          $scope.makeEvent.trackID = track.id;
-          $scope.makeEvent.title = track.title;
-          $scope.makeEvent.trackArtUrl = track.artwork_url;
-          $scope.makeEvent.trackURL = track.permalink_url;
-          $scope.showPlayer = true;
-          if ($scope.showOverlay) {
-            SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
-              auto_play: false,
-              show_artwork: false
-            });
-            document.getElementById('scPopupPlayer').style.visibility = "visible";
-          } else {
-            SC.Widget('scPlayer').load($scope.makeEventURL, {
-              auto_play: false,
-              show_artwork: true
-            });
-            document.getElementById('scPlayer').style.visibility = "visible";
+          if ($scope.autoFillTracks.length == 0) {
+            waitForAutofill();
+            return;
           }
-          count = (count + 1) % $scope.autoFillTracks.length;
+          var track = JSON.parse(JSON.stringify($scope.autoFillTracks[$scope.afcount]));
+          if ($scope.showOverlay) $scope.choseTrack1(track);
+          else $scope.choseTrack(track);
+          $scope.afcount = ($scope.afcount + 1) % $scope.autoFillTracks.length;
         } else {
           $scope.showOverlay = false;
           $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {

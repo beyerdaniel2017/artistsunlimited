@@ -10,6 +10,7 @@ app.config(function($stateProvider) {
     controller: 'SubmitSongController',
     resolve: {
       getUserByURL: function($stateParams, $http, $window) {
+        console.log('controllla');
         var username = $stateParams.username;
         var submitpart = $stateParams.submitpart;
         if (submitpart.indexOf('submit') != -1) {
@@ -27,51 +28,29 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   $scope.submission = {};
   $scope.userID = $location.search().id;
   $scope.searchString = "";
-  // $scope.genreArray = [
-  //   'Alternative Rock',
-  //   'Ambient',
-  //   'Creative',
-  //   'Chill',
-  //   'Classical',
-  //   'Country',
-  //   'Dance & EDM',
-  //   'Dancehall',
-  //   'Deep House',
-  //   'Disco',
-  //   'Drum & Bass',
-  //   'Dubstep',
-  //   'Electronic',
-  //   'Festival',
-  //   'Folk',
-  //   'Hip-Hop/RNB',
-  //   'House',
-  //   'Indie/Alternative',
-  //   'Latin',
-  //   'Trap',
-  //   'Vocalists/Singer-Songwriter'
-  // ];
 
-  // $scope.choseTrack = function(track) {
-  //   $scope.searchString = track.title;
-  //   $scope.submission.trackID = track.id;
-  //   $scope.submission.title = track.title;
-  //   $scope.submission.trackURL = track.permalink_url;
-  //   SC.oEmbed($scope.submission.trackURL, {
-  //     element: document.getElementById('scPlayer'),
-  //     auto_play: false,
-  //     maxheight: 150
-  //   })
-  //   document.getElementById('scPlayer').style.visibility = "visible";
-  // }
+  console.log('controlla');
 
   $scope.choseTrack = function(track) {
-    $scope.searchString = track.title;
     $scope.submission.trackID = track.id;
     $scope.submission.title = track.title;
     $scope.submission.trackURL = track.permalink_url;
-    SC.Widget('scPlayer').load(track.permalink_url, {
+    console.log($scope.submission);
+    var widget = SC.Widget('scPlayer');
+    widget.load(track.permalink_url, {
       auto_play: false,
-      show_artwork: true
+      show_artwork: true,
+      callback: function() {
+        console.log($scope.submission);
+        if ($scope.submission.title == "--unknown--") {
+          widget.getCurrentSound(function(track) {
+            console.log(track);
+            $scope.submission.trackID = track.id;
+            $scope.submission.title = track.title;
+            $scope.submission.trackURL = track.permalink_url
+          })
+        }
+      }
     });
     document.getElementById('scPlayer').style.visibility = "visible";
   }

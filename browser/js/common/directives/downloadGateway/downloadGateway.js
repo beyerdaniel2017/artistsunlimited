@@ -17,7 +17,7 @@ app.directive('dlgate', function($http) {
         artists: [],
         playlists: [],
         youtube: [],
-        twitter:[],
+        twitter: [],
         showDownloadTracks: 'user',
         admin: $scope.user.admin,
         file: {}
@@ -27,8 +27,7 @@ app.directive('dlgate', function($http) {
       $scope.isAdminRoute = false;
       if (path.indexOf("admin/") != -1) {
         $scope.isAdminRoute = true
-      }
-      else{
+      } else {
         $scope.isAdminRoute = false;
       }
 
@@ -87,12 +86,11 @@ app.directive('dlgate', function($http) {
       };
 
       $scope.openHelpModal = function() {
-         $("#ytube").modal('show');
+        $("#ytube").modal('show');
       }
-      
-      $scope.openYoutubeModal = function()
-      {
-          $('#youtube').modal('show');
+
+      $scope.openYoutubeModal = function() {
+        $('#youtube').modal('show');
       }
 
       $scope.removeSMLink = function(index) {
@@ -100,15 +98,14 @@ app.directive('dlgate', function($http) {
       };
 
       $scope.saveDownloadGate = function() {
-        if ($scope.track.youtube && $scope.track.youtube.length > 0){
+        if ($scope.track.youtube && $scope.track.youtube.length > 0) {
           $scope.track.socialPlatformValue = $scope.track.youtube.toString();
-        }        
-        else if ($scope.track.twitter && $scope.track.twitter.length > 0){ 
+        } else if ($scope.track.twitter && $scope.track.twitter.length > 0) {
           $scope.track.socialPlatformValue = $scope.track.twitter.toString();
         }
 
-        if (!($scope.track.downloadURL || ($scope.track.file && $scope.track.file.name))) {
-          $.Zebra_Dialog('Enter a download file');
+        if (!($scope.track.downloadURL.includes('http') || ($scope.track.file && $scope.track.file.name))) {
+          $.Zebra_Dialog('Provide a download file or link (include "http://").');
           return false;
         }
 
@@ -158,33 +155,27 @@ app.directive('dlgate', function($http) {
           .then(function(res) {
             $scope.processing = false;
             if ($stateParams.submission) {
-              if($scope.isAdminRoute)
-              {
+              if ($scope.isAdminRoute) {
                 $state.go('adminDownloadGatewayList', {
-                'submission': $stateParams.submission
-              });
+                  'submission': $stateParams.submission
+                });
+              } else {
+                $state.go('artistToolsDownloadGatewayList', {
+                  'submission': $stateParams.submission
+                });
               }
-              else
-              {
-              $state.go('artistToolsDownloadGatewayList', {
-                'submission': $stateParams.submission
-              });
-              }
-              
+
             } else {
               if ($scope.user.soundcloud.id == $scope.track.artistID) {
                 $.Zebra_Dialog('Download gateway was saved and added to the track.');
               } else {
                 $.Zebra_Dialog('Download gateway saved.');
               }
-             if($scope.isAdminRoute)
-              {
-                 $state.go('adminDownloadGateway');
+              if ($scope.isAdminRoute) {
+                $state.go('adminDownloadGateway');
+              } else {
+                $state.go('artistToolsDownloadGatewayList');
               }
-              else
-              {
-              $state.go('artistToolsDownloadGatewayList');
-            }
             }
           })
           .then(null, function(err) {
@@ -244,11 +235,11 @@ app.directive('dlgate', function($http) {
         }
       }
 
-     $scope.resolveTwitter = function(twitter) {
-          var length = $scope.track.twitter.length;
-          if ($scope.track.twitter.indexOf(twitter) == -1) {
-            $scope.track.twitter[length - 1] = twitter;
-          }
+      $scope.resolveTwitter = function(twitter) {
+        var length = $scope.track.twitter.length;
+        if ($scope.track.twitter.indexOf(twitter) == -1) {
+          $scope.track.twitter[length - 1] = twitter;
+        }
       }
 
       $scope.trackURLChange = function() {
@@ -368,10 +359,6 @@ app.directive('dlgate', function($http) {
         });
       }
       $scope.choseTrack = function(item) {
-        var player = document.getElementById('scPopupPlayer');
-        if ($scope.tabSelected == false) {
-          player = document.getElementById('scPlayer');
-        }
         $scope.searchSelection = [];
         $scope.searchError = undefined;
         $scope.searchString = item.displayName;
@@ -499,8 +486,7 @@ app.directive('dlgate', function($http) {
           $scope.track.youtube = [];
           $scope.track.twitter = [];
           if ($scope.track.socialPlatformValue) {
-            if($scope.track.socialPlatform == 'youtubeSubscribe')
-            {              
+            if ($scope.track.socialPlatform == 'youtubeSubscribe') {
               if ($scope.track.socialPlatformValue.indexOf(',') > -1) {
                 var urls = $scope.track.socialPlatformValue.split(',');
                 for (var i = 0; i < urls.length; i++) {
@@ -509,9 +495,7 @@ app.directive('dlgate', function($http) {
               } else {
                 $scope.track.youtube.push($scope.track.socialPlatformValue);
               }
-            }
-            else if($scope.track.socialPlatform == 'twitterFollow')
-            {
+            } else if ($scope.track.socialPlatform == 'twitterFollow') {
               $scope.track.twitter = [];
               if ($scope.track.socialPlatformValue.indexOf(',') > -1) {
                 var urls = $scope.track.socialPlatformValue.split(',');
@@ -519,7 +503,7 @@ app.directive('dlgate', function($http) {
                   $scope.track.twitter.push(urls[i]);
                 }
               } else {
-               $scope.track.twitter.push($scope.track.socialPlatformValue);
+                $scope.track.twitter.push($scope.track.socialPlatformValue);
               }
             }
           }

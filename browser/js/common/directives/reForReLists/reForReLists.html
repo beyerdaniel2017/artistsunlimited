@@ -150,7 +150,10 @@
         <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'calendar'}" href="javascript:void(0)" ng-click="setManageView('calendar')"><img src="assets/images/box-view.svg" /></a>
         <a class="btn btn-default b-radius-10" ng-class="{active : manageView == 'list'}" href="javascript:void(0)" ng-click="setManageView('list')"><img src="assets/images/list-view.svg" /></a>
       </div>
-    </div>             
+    </div> 
+    <div class="col-md-3 col-xs-6 col-md-offset-6">
+      <a class="btn btn-border b-radius-10" ng-click="autofillAll()">Autofill All</a>
+    </div> 
     <div class="col-md-9 col-xs-6 text-center">
       <div class="btn-group" role="group" aria-label="..." ng-show="itemview == 'list'">
         <a class="btn btn-default b-radius-10" href="javascript:void(0)" ng-click="getPreviousEvents()"><img src="assets/images/dropup-arrow.png" /></a>
@@ -208,64 +211,16 @@
        </tbody>
      </table>
    </div>
-   <div class="col-md-12" ng-show="manageView == 'newsong'">
-    <div class="songScheduler">
-      <div class="row extrapadding">
-        <div class="col-md-12">
-          <div class="row">              
-            <h1 class="title">{{makeEvent.artist.username}}</h1>               
-            <div class="col-md-12 col-xs-12">              
-              <div class="search">
-                <scsearch kind='track' returnitem='choseTrack1(item)'></scsearch>
-              </div>
-              <div class="row">
-               <div class="col-md-12">
-                <br>   
-                <button class="form-control" ng-click="getAutoFillTracks()">AUTOFILL</button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12 col-xs-12">
-                <br>   
-                <select class="form-control" ng-disabled="true">
-                 <option>{{makeEvent.day | date:'EEE MM/dd h:mma'}}</option>
-               </select>
-             </div>
-           </div>
-           <ul>
-            <li class="switch-btn">
-              <label class="switch">
-                <input ng-disabled="true" checked="makeEvent.day < makeEvent.unrepostDate" type="checkbox">>
-                <div class="slider round"></div>
-              </label> 
-              <label>Unrepost after<input ng-disabled="true" class="form-control input-hour" placeholder="1" ng-model="makeEvent.unrepostHours">hours</label>
-            </li>
-          </ul><br/>
-        </div>                              
-      </div><!--row end-->
-      <div class="row">
-        <div class="col-xs-12">
-         <iframe id="scPlayer" ng-show="showPlayer" width="650" height="160" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>             
-       </div>
-     </div>
-     <div class="row">
-      <div class="col-md-12">
-        <div class="next-previous text-center">
-          <!--  <button class="btn active">SKIP TO NEXT AUTOFILL</button> -->
-          <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
-          <button class="btn btn-pink b-radius-10 save-share" data-toggle="modal" data-target="#saveAndShareModal" ng-click="saveEvent();">SAVE & SHARE</button>
+   <div class="row" ng-show="manageView != 'newsong'" style='padding-bottom:20px'>
+     <div class="col-md-8 col-md-offset-2">
+      <div class="permanent-links search" style="text-align: center;">
+        <h1 class="au-title-head text-center text-uppercase">Auto-fill Tracks</h1>
+        <div class="col-md-4">
+          <scsearch kind='track' returnitem='choseAutoFillTrack(item)'></scsearch>
         </div>
-      </div>
-    </div><!--row end-->
-    <div class="row" ng-show="manageView != 'newsong'">
-      <div class="col-md-12">
-        <div class="permanent-links search" style="text-align: center;">
-          <h1 class="au-title-head text-center text-uppercase">Auto-fill Tracks</h1>
-          <div class="col-md-6 ">
-            <scsearch kind='track' returnitem='choseAutoFillTrack(item)'></scsearch>
-          </div>
-          <div class="col-md-6">
-           <div class="tracks-box" ui-sortable="sortableOptions" ng-model="list" ng-if="autoFillTracks.length > 0">
+        <div class="col-md-8">
+          <h5 ng-show="showAutofillPlayer">loading...</h5>
+          <div class="tracks-box" ui-sortable="sortableOptions" ng-model="list" ng-if="autoFillTracks.length > 0">
             <div class="track-item-list" ng-repeat="song in list" >
               <span class="pull-left" style="margin-right: 5px; padding-top: 3px;">{{$index+1}}</span> <img class="avatar-20" ng-src="{{song.artwork_url}}">
               <div class="tracks-title">
@@ -277,12 +232,63 @@
             </div>                             
           </div>
         </div>
+        <br>
+        <iframe id="autofillPlayer" ng-show="showAutofillPlayer" width="300" height="5" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
       </div>
       <div class="height-10"> </div>
     </div>
+    <div class="col-md-12" ng-show="manageView == 'newsong'">
+      <div class="songScheduler">
+        <div class="row extrapadding">
+          <div class="col-md-12">
+            <div class="row">              
+              <h1 class="title">{{makeEvent.artist.username}}</h1>               
+              <div class="col-md-12 col-xs-12">              
+                <div class="search">
+                  <scsearch kind='track' returnitem='choseTrack1(item)'></scsearch>
+                </div>
+                <div class="row">
+                 <div class="col-md-12">
+                  <br>   
+                  <button class="form-control" ng-click="getAutoFillTracks()">AUTOFILL</button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 col-xs-12">
+                  <br>   
+                  <select class="form-control" ng-disabled="true">
+                   <option>{{makeEvent.day | date:'EEE MM/dd h:mma'}}</option>
+                 </select>
+               </div>
+             </div>
+             <ul>
+              <li class="switch-btn">
+                <label class="switch">
+                  <input ng-disabled="true" checked="makeEvent.day < makeEvent.unrepostDate" type="checkbox">>
+                  <div class="slider round"></div>
+                </label> 
+                <label>Unrepost after<input ng-disabled="true" class="form-control input-hour" placeholder="1" ng-model="makeEvent.unrepostHours">hours</label>
+              </li>
+            </ul><br/>
+          </div>                              
+        </div><!--row end-->
+        <div class="row">
+          <div class="col-md-12">
+            <iframe id="scPlayer" ng-show="showPlayer" width="100%" height="160" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>             
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="next-previous text-center">
+              <!--  <button class="btn active">SKIP TO NEXT AUTOFILL</button> -->
+              <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
+              <button class="btn btn-pink b-radius-10 save-share" ng-show='allowSave()' ng-click="saveEvent();">SAVE</button>
+            </div>
+          </div>
+        </div><!--row end-->
+      </div>
+    </div>
   </div>
-</div>
-</div>
 </div>
 </div>
 </div>
@@ -305,24 +311,22 @@
             <h5 class="text-center">REPOST ON {{makeEvent.artist.username}}</h5>
           </div>
         </div>
-        <div class="row">
+        <div class="row" style='padding-top:5px'>
           <div class="col-md-12 search">
             <scsearch kind='track' returnitem='choseTrack(item)'></scsearch>
           </div>
         </div>
-        <br>
-        <div class="row">
+        <div class="row" style='padding-top:5px'>
           <div class="col-md-12">
             <button class="form-control" ng-click="getAutoFillTracks()">AUTOFILL</button>
           </div>
         </div>
-        <div class="row">
+        <div class="row" style='padding-top:5px'>
           <div class="col-md-12">
             <iframe id="scPopupPlayer" ng-show="showPlayer" width="300" height="120" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>          
           </div>
         </div>
-        <br>
-        <div class="row">
+        <div class="row" style='padding-top:5px'>
           <div class="col-md-12 col-xs-12">   
            <select class="form-control" ng-disabled="true">
              <option>{{makeEvent.day | date:'EEE MM/dd h:mma'}}</option>
@@ -330,8 +334,8 @@
          </div>
        </div>
        <!-- <span style="font-size:11px;">Total Reach: {{followCounts}} followers</span> -->
-       <div class="row">
-        <div class="col-md-13 text-center">
+       <div class="row" style='padding-top:5px'>
+         <div class="col-md-13 text-center">
           <li class="switch-btn" style="font-size: 12px;vertical-align: middle;
           list-style: outside none none;">
           <label class="switch" style="vertical-align: middle;">

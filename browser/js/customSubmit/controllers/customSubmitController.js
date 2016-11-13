@@ -34,7 +34,7 @@ app.controller('CustomSubmitController', function($rootScope, $state, $scope, $h
     'Trap',
     'Vocalists/Singer-Songwriter'
   ];
-
+  console.log('two');
   $scope.urlChange = function() {
     if ($scope.url != "") {
       $scope.processing = true;

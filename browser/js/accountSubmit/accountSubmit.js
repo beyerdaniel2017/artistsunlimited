@@ -4,27 +4,27 @@ app.config(function($stateProvider) {
     templateUrl: 'js/accountSubmit/accountsubmit.view.html',
     controller: 'AccountSubmitSongController',
     resolve: {
-      userID : function($stateParams, $http, $window) {
+      userID: function($stateParams, $http, $window) {
         var username = $stateParams.username;
         var submitpart = $stateParams.submitpart;
         return $http.get('/api/users/getUserByURL/' + username + '/' + submitpart)
-        .then(function(res) {
-          return res.data;
-        })
-        .then(null, function(err) {
-          $.Zebra_Dialog("error getting your events");
-          return;
-        })
+          .then(function(res) {
+            return res.data;
+          })
+          .then(null, function(err) {
+            $.Zebra_Dialog("error getting your events");
+            return;
+          })
       },
       customizeSettings: function($http, customizeService, userID) {
         return customizeService.getCustomPageSettings(userID, 'submit')
-        .then(function(response) {
-          return response;
-        })
-        .then(null, function(err) {
-          $.Zebra_Dialog("error getting your customize settings");
-          return;
-        })
+          .then(function(response) {
+            return response;
+          })
+          .then(null, function(err) {
+            $.Zebra_Dialog("error getting your customize settings");
+            return;
+          })
       }
     }
   });
@@ -40,10 +40,23 @@ app.controller('AccountSubmitSongController', function($rootScope, $state, $scop
     $scope.submission.trackID = track.id;
     $scope.submission.title = track.title;
     $scope.submission.trackURL = track.permalink_url;
-    SC.Widget('scPlayerCustom').load($scope.submission.trackURL, {
+    console.log($scope.submission);
+    var widget = SC.Widget('scPlayerCustom');
+    widget.load($scope.submission.trackURL, {
       auto_play: false,
-          show_artwork: true
-        });
+      show_artwork: true,
+      callback: function() {
+        console.log($scope.submission);
+        if ($scope.submission.title == "--unknown--") {
+          widget.getCurrentSound(function(track) {
+            console.log(track);
+            $scope.submission.trackID = track.id;
+            $scope.submission.title = track.title;
+            $scope.submission.trackURL = track.permalink_url
+          })
+        }
+      }
+    });
     $scope.showPlayer = true;
     document.getElementById('scPlayerCustom').style.visibility = "visible";
   }
@@ -54,29 +67,29 @@ app.controller('AccountSubmitSongController', function($rootScope, $state, $scop
     } else {
       $scope.processing = true;
       $http.post('/api/submissions', {
-        email: $scope.submission.email,
-        trackID: $scope.submission.trackID,
-        name: $scope.submission.name,
-        title: $scope.submission.title,
-        trackURL: $scope.submission.trackURL,
-        channelIDS: [],
-        invoiceIDS: [],
-        userID: userID,
-        genre: ''
-      })
-      .then(function(res) {
-        $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
-        $scope.processing = false;
-        $scope.notFound = false;
-        $scope.submission = {};
-        $scope.searchString = "";
-        document.getElementById('scPlayerCustom').style.visibility = "hidden";
-        $scope.url = "";
-      })
-      .then(null, function(err) {
-        $scope.processing = false;
-        $.Zebra_Dialog("Error: Could not submit song.");
-      });
+          email: $scope.submission.email,
+          trackID: $scope.submission.trackID,
+          name: $scope.submission.name,
+          title: $scope.submission.title,
+          trackURL: $scope.submission.trackURL,
+          channelIDS: [],
+          invoiceIDS: [],
+          userID: userID,
+          genre: ''
+        })
+        .then(function(res) {
+          $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
+          $scope.processing = false;
+          $scope.notFound = false;
+          $scope.submission = {};
+          $scope.searchString = "";
+          document.getElementById('scPlayerCustom').style.visibility = "hidden";
+          $scope.url = "";
+        })
+        .then(null, function(err) {
+          $scope.processing = false;
+          $.Zebra_Dialog("Error: Could not submit song.");
+        });
     }
   }
 });

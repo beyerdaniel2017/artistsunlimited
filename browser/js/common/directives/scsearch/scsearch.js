@@ -10,53 +10,68 @@ app.directive('scsearch', function($http) {
     controller: ['$scope', function scSearchController($scope) {
       $scope.searchSelection = [];
       $scope.sendSearch = function() {
-        console.log('here')
         $scope.searchSelection = [];
         $scope.searchError = undefined;
         $scope.searching = true;
         if ($scope.searchString != "") {
-          $http.post('/api/search', {
-            q: $scope.searchString,
-            kind: $scope.kind
-          }).then(function(res) {
-            $scope.searching = false;
-            if (res.data.item) {
-              if (res.data.item.kind != $scope.kind) {
-                $scope.searchError = "Please enter a " + $scope.kind + " URL.";
-              } else {
-                $scope.selectedItem(res.data.item);
+          if ($scope.searchString.includes('soundcloud.com')) {
+            console.log('includes');
+            $scope.showSearchPlayer = true;
+            var searchWidget = SC.Widget('searchPlayer');
+            searchWidget.load($scope.searchString, {
+              auto_play: false,
+              show_artwork: false,
+              callback: function() {
+                searchWidget.getCurrentSound(function(track) {
+                  $scope.showSearchPlayer = false;
+                  if (!track || track.kind != $scope.kind) {
+                    $scope.searchError = "Please enter a " + $scope.kind + " Url.";
+                  } else {
+                    track.displayName = track.title + ' - ' + track.user.username;
+                    $scope.selectedItem(track);
+                  }
+                  $scope.$digest();
+                })
               }
-            } else {
+            });
+
+          } else {
+            $http.post('/api/search', {
+              q: $scope.searchString,
+              kind: $scope.kind
+            }).then(function(res) {
+              $scope.searching = false;
+
               if (res.data.collection.length > 0) {
                 $scope.searchSelection = res.data.collection;
                 $scope.searchSelection.forEach(function(item) {
-                  $scope.setItemText(item)
+                  $scope.setItemText(item);
                 })
               } else {
                 $scope.searchError = "We could not find a " + $scope.kind + "."
               }
-            }
-            if ($scope.searching || $scope.searchError != "" || $scope.searchSelection.length > 0) {
-              window.onclick = function(event) {
-                $scope.searching = false;
-                $scope.searchError = "";
-                $scope.searchSelection = [];
-                $scope.$apply();
-              };
-            }
-          }).then(null, function(err) {
-            $scope.searching = false;
-            console.log('We could not find a ' + $scope.kind);
-            $scope.searchError = "We could not find a " + $scope.kind + "."
-            if ($scope.searching || $scope.searchError != "" || $scope.searchSelection.length > 0) {
-              window.onclick = function(event) {
-                $scope.searching = false;
-                $scope.searchError = "";
-                $scope.searchSelection = [];
-                $scope.$apply();
-              };
-            }
-          });
+              if ($scope.searching || $scope.searchError != "" || $scope.searchSelection.length > 0) {
+                window.onclick = function(event) {
+                  $scope.searching = false;
+                  $scope.searchError = "";
+                  $scope.searchSelection = [];
+                  $scope.$apply();
+                };
+              }
+            }).then(null, function(err) {
+              $scope.searching = false;
+              console.log('We could not find a ' + $scope.kind);
+              $scope.searchError = "We could not find a " + $scope.kind + "."
+              if ($scope.searching || $scope.searchError != "" || $scope.searchSelection.length > 0) {
+                window.onclick = function(event) {
+                  $scope.searching = false;
+                  $scope.searchError = "";
+                  $scope.searchSelection = [];
+                  $scope.$apply();
+                };
+              }
+            });
+          }
         }
       }
 

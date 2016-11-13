@@ -49,13 +49,15 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
   };
 
   $scope.showSignUp = false;
-  if($state.$current.name == "downloadnew")
-  {
+  if ($state.$current.name == "downloadnew") {
     $scope.showSignUp = true;
   }
 
   $scope.toggle = true;
   $scope.togglePlay = function() {
+    if (!playerObj) {
+      $.Zebra_Dialog("Playing not allowed");
+    }
     $scope.toggle = !$scope.toggle;
     if ($scope.toggle) {
       playerObj.pause();
@@ -68,7 +70,7 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
   $scope.downloadURLNotFound = false;
   $scope.errorText = '';
   $scope.followBoxImageUrl = 'assets/images/who-we-are.png';
-  
+
   $scope.initiateDownload = function() {
     $scope.processing = false;
     if ($scope.track.downloadURL && $scope.track.downloadURL !== '') {
@@ -111,27 +113,27 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
         } else {
           twitterUsers.push($scope.track.socialPlatformValue);
         }
-        function followTwitterUser(index){
-          if(index < twitterUsers.length){
+
+        function followTwitterUser(index) {
+          if (index < twitterUsers.length) {
             $http({
-              method: "POST",
-              url: '/api/download/twitter/follow',
-              data: {
-                screen_name: twitterUsers[index],
-                accessToken: response.data,
-                trackID: $scope.track._id
-              }
-            })
-            .then(function(records) {
-              index++;
-              followTwitterUser(index)
-            });
-          }
-          else{
+                method: "POST",
+                url: '/api/download/twitter/follow',
+                data: {
+                  screen_name: twitterUsers[index],
+                  accessToken: response.data,
+                  trackID: $scope.track._id
+                }
+              })
+              .then(function(records) {
+                index++;
+                followTwitterUser(index)
+              });
+          } else {
             window.location.replace($scope.track.downloadURL);
           }
-        }   
-        followTwitterUser(0);     
+        }
+        followTwitterUser(0);
       } else if ($scope.track.socialPlatform == 'twitterPost') {
         response.data.socialPlatformValue = $scope.track.socialPlatformValue;
         $http({
@@ -170,42 +172,42 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
       //var totalArray = [$scope.track.socialPlatformValue, "https://www.youtube.com/channel/UCbfKEQZZzHN0egYXinbb7jg", "https://www.youtube.com/channel/UCvQyEDsKwJoJLKXeCvY2OfQ", "https://www.youtube.com/channel/UCcqpdWD_k3xM4AOjvs-FitQ", "https://www.youtube.com/channel/UCbA0xiM4E5Sbf1WMmhTGOOg", "https://www.youtube.com/channel/UC2HG82SETkcx8pOE75bYJ6g"]
       var promiseArr = [];
       totalArray.forEach(function(url) {
-      var idPromise = new Promise(function(resolve, reject) {
-        if (url.includes('/channel/')) {
-          resolve(url.substring(url.indexOf('/channel/') + 9, url.length));
-        } else {
-          var username = url.substring(url.indexOf('/user/') + 6, url.length)
-          var idArray = [];
-          $http.get('https://www.googleapis.com/youtube/v3/channels?key=AIzaSyBOuRHx25VQ69MrTEcvn-hIdkZ8NsZwsLw&forUsername=' + username + '&part=id')
-          .then(function(res) {
-            if (res.data.items[0]) resolve(res.data.items[0].id);
-          })
-          .then(null, reject);
-        }
-      });
+        var idPromise = new Promise(function(resolve, reject) {
+          if (url.includes('/channel/')) {
+            resolve(url.substring(url.indexOf('/channel/') + 9, url.length));
+          } else {
+            var username = url.substring(url.indexOf('/user/') + 6, url.length)
+            var idArray = [];
+            $http.get('https://www.googleapis.com/youtube/v3/channels?key=AIzaSyBOuRHx25VQ69MrTEcvn-hIdkZ8NsZwsLw&forUsername=' + username + '&part=id')
+              .then(function(res) {
+                if (res.data.items[0]) resolve(res.data.items[0].id);
+              })
+              .then(null, reject);
+          }
+        });
         promiseArr.push(idPromise);
       })
       Promise.all(promiseArr)
-      .then(function(idArray) {
-        return $http({
-          method: "GET",
-          url: '/api/download/subscribe',
-          params: {
-            downloadURL: $scope.track.downloadURL,
-            channelIDS: idArray,
-            trackID: $scope.track._id
-          }
+        .then(function(idArray) {
+          return $http({
+            method: "GET",
+            url: '/api/download/subscribe',
+            params: {
+              downloadURL: $scope.track.downloadURL,
+              channelIDS: idArray,
+              trackID: $scope.track._id
+            }
+          })
         })
-      })
-      .then(function(response) {
-        $scope.processing = false;
-        window.open(response.data.url, '_self')
-        window.focus()
-      })
-      .then(null, function() {
-        $scope.processing = false;
-        $.Zebra_Dialog('Youtube channel to subscribe to not found');
-      })
+        .then(function(response) {
+          $scope.processing = false;
+          window.open(response.data.url, '_self')
+          window.focus()
+        })
+        .then(null, function() {
+          $scope.processing = false;
+          $.Zebra_Dialog('Youtube channel to subscribe to not found');
+        })
     }
   }
 
@@ -220,19 +222,22 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
 
   $scope.getTrackByID = function(trackID) {
     DownloadTrackService
-    .getDownloadTrack(trackID)
-    .then(receiveDownloadTrack)
-    .catch(catchDownloadTrackError);
+      .getDownloadTrack(trackID)
+      .then(receiveDownloadTrack)
+      .catch(catchDownloadTrackError);
 
     function receiveDownloadTrack(result) {
-      if(result.data){
+      if (result.data) {
         var username = result.data.userid.soundcloud.username;
         var title = result.data.title;
-        $state.go('downloadnew',{username: username, title: title})
-      }      
+        $state.go('downloadnew', {
+          username: username,
+          title: title
+        })
+      }
     }
 
-    function catchDownloadTrackError() {
+    function catchDownloadTrackError(err) {
       $.Zebra_Dialog('Song Not Found');
       $scope.processing = false;
       $scope.embedTrack = false;
@@ -241,11 +246,14 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
 
   $scope.getTrackByUrl = function(username, title) {
     DownloadTrackService
-    .getDownloadTrackByUrl({username: username, title: title})
-    .then(receiveDownloadTrack)
-    .then(receiveRecentTracks)
-    .then(initPlay)
-    .catch(catchDownloadTrackError);
+      .getDownloadTrackByUrl({
+        username: username,
+        title: title
+      })
+      .then(receiveDownloadTrack)
+      .then(receiveRecentTracks)
+      .then(initPlay)
+      .catch(catchDownloadTrackError);
 
     function receiveDownloadTrack(result) {
       $scope.track = result.data;
@@ -271,18 +279,21 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
     function receiveRecentTracks(res) {
       if ((typeof res === 'object') && res.data) {
         $scope.recentTracks = res.data;
-      }      
+      }
       return SC.stream('/tracks/' + $scope.track.trackID);
     }
 
     function initPlay(player) {
+      console.log(player);
       playerObj = player;
     }
 
-    function catchDownloadTrackError() {
-      $.Zebra_Dialog('Song Not Found');
-      $scope.processing = false;
-      $scope.embedTrack = false;
+    function catchDownloadTrackError(err) {
+      if (!err.status == 403) {
+        $.Zebra_Dialog('Song Not Found');
+        $scope.processing = false;
+        $scope.embedTrack = false;
+      }
     }
   }
 
@@ -290,10 +301,9 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
   $scope.getDownloadTrack = function() {
     $scope.processing = true;
     var trackID = $location.search().trackid;
-    if(trackID != undefined){
+    if (trackID != undefined) {
       $scope.getTrackByID(trackID);
-    }
-    else{
+    } else {
       var username = $stateParams.username;
       var title = $stateParams.title;
       $scope.getTrackByUrl(username, title);
@@ -310,9 +320,9 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
     $scope.errorText = '';
 
     SC.connect()
-    .then(performTasks)
-    .then(initDownload)
-    .catch(catchTasksError)
+      .then(performTasks)
+      .then(initDownload)
+      .catch(catchTasksError)
 
     function performTasks(res) {
       $scope.track.token = res.oauth_token;
@@ -378,16 +388,16 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
   }
 
   $scope.downloadTrackFacebookLike = function(fblikeid) {
-    setTimeout(function(){
+    setTimeout(function() {
       //window.fbAsyncInit = function() {
-        FB.init({
-          appId: '1576897469267996',
-          xfbml: true,
-          version: 'v2.6'
-        });
-        FB.Event.subscribe('edge.create', function(href, widget) {
-          window.location = fblikeid.downloadURL;
-        });
+      FB.init({
+        appId: '1576897469267996',
+        xfbml: true,
+        version: 'v2.6'
+      });
+      FB.Event.subscribe('edge.create', function(href, widget) {
+        window.location = fblikeid.downloadURL;
+      });
       //};
       (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
@@ -399,6 +409,6 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
         js.src = "//connect.facebook.net/en_US/sdk.js";
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
-    },500);      
+    }, 500);
   };
 });

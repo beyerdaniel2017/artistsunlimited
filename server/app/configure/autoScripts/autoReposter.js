@@ -77,6 +77,26 @@ function repostAndRemove(event, user, repCount) {
             distributeEarnings(user, event);
           }
           notificationCenter.sendNotifications(user._id, 'trackRepost', 'Track repost', ((!!event.title) ? event.title : 'A track') + ' was reposted on ' + user.soundcloud.username, 'https://artistsunlimited.com/artistTools/scheduler');
+          console.log('event');
+          console.log(event);
+          if (!event.title) {
+            scWrapper.setToken(user.soundcloud.token);
+            var reqObj = {
+              method: 'GET',
+              path: '/tracks/' + event.trackID,
+              qs: {}
+            }
+            scWrapper.request(reqObj, function(err, data) {
+              if (!err && data.title) {
+                console.log(data);
+                event.title = data.title;
+                event.trackURL = data.permalink_url;
+                event.trackArtUrl = data.artwork_url;
+                event.artistName = data.user.username;
+                event.save();
+              }
+            });
+          }
         }).then(null, console.log);
       } else {
         console.log('error ------------------');
@@ -151,11 +171,8 @@ function getID(event, user) {
     var id;
     var count = 0;
     var findAgain = function(person) {
-      if (count >= person.queue.length) {
-        reject();
-      } else {
-        id = person.queue.splice(0, 1)[0];
-        person.queue.push(id);
+      if (count < person.queue.length) {
+        id = person.queue[count];
         scWrapper.setToken(user.soundcloud.token);
         var reqObj = {
           method: 'GET',
@@ -166,12 +183,17 @@ function getID(event, user) {
           if (!err && data.user.id != person.soundcloud.id) {
             RepostEvent.find({
                 trackID: id,
-                day: {
-                  $lt: new Date(event.unrepostDate.getTime() + 24 * 3600000)
-                },
-                unrepostDate: {
-                  $gt: new Date(event.day.getTime() - 24 * 3600000)
-                },
+                $or: [{
+                  day: {
+                    $lt: new Date(event.unrepostDate.getTime() + 24 * 3600000),
+                    $gt: new Date(event.unrepostDate.getTime())
+                  }
+                }, {
+                  unrepostDate: {
+                    $gt: new Date(event.day.getTime() - 24 * 3600000),
+                    $lt: new Date(event.day.getTime())
+                  }
+                }],
                 _id: {
                   $ne: event._id
                 }
@@ -197,6 +219,8 @@ function getID(event, user) {
             })
           }
         });
+      } else {
+        reject();
       }
     }
 

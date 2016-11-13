@@ -277,7 +277,7 @@ button:hover,
 .slot-box {
     width: 500px;
     background-color: white;
-    margin: 40px auto;
+    margin: 150px auto;
     padding: 50px 0;
     border-radius: 12px;
     border: 1px solid #C1C1C1;
@@ -487,29 +487,29 @@ button:hover,
   }
 
   **/
-    
-    .rfr-chat {
-        margin-top: 0;
-    }
-    .rfr-chatbox {
-        width: 100%;
-    }
-    .trade-options {
-        float: none;
-        width: 100%;
-        margin: auto;
-        margin-top: 10px;
-        padding-bottom: 10px;
-    }
-    .btn-option {
-        margin-left: 0;
-    }
-    .select-rfr {
-        margin-left: 0;
-    }
-    .form-message {
-        width: 75%;
-    }
+  
+  .rfr-chat {
+    margin-top: 0;
+}
+.rfr-chatbox {
+    width: 100%;
+}
+.trade-options {
+    float: none;
+    width: 100%;
+    margin: auto;
+    margin-top: 10px;
+    padding-bottom: 10px;
+}
+.btn-option {
+    margin-left: 0;
+}
+.select-rfr {
+    margin-left: 0;
+}
+.form-message {
+    width: 75%;
+}
 }
 /** LISTS PAGE **/
 
@@ -3836,7 +3836,7 @@ td {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    width: 200px;
+    width: 250px;
 }
 .chat-count{
     position: absolute;
@@ -3866,28 +3866,28 @@ td {
     padding-right: 55px;
     padding-top: 290px;
   }*/
-    
-    .manage-btn {
-        margin-top: 25px;
-        margin-left: 15px;
-    }
-    .manage-delete-btn {
-        bottom: 20px;
-        margin-left: 15px;
-    }
-    .slide-img-box div {
-        padding: 0 0 0 2%;
-    }
-    .ZebraDialog {
-        width: 600px !important;
-        left: 32% !important;
-    }
-    .min-ht {
-        min-height: 1024px;
-    }
-    .download-group-btn button {
-        padding: 10px 23px;
-    }
+  
+  .manage-btn {
+    margin-top: 25px;
+    margin-left: 15px;
+}
+.manage-delete-btn {
+    bottom: 20px;
+    margin-left: 15px;
+}
+.slide-img-box div {
+    padding: 0 0 0 2%;
+}
+.ZebraDialog {
+    width: 600px !important;
+    left: 32% !important;
+}
+.min-ht {
+    min-height: 1024px;
+}
+.download-group-btn button {
+    padding: 10px 23px;
+}
 }
 @media screen and (max-width: 980px) {
     .manage-btn {
@@ -3958,81 +3958,81 @@ td {
     /*.scroll-bar1 {
     padding-top: 340px;
   }*/
-    .nav-tabs .nav > li {
-        width: 50%;
-    }
-    .ZebraDialog {
-        left: 279px !important;
-        top: 201px !important;
-        width: 450px !important;
-    }
-    .rfr-chat {
-        margin-top: 70px;
-    }
-    .main-scroll-body .pad-right {
-        margin-right: 40px;
-    }
-    .question-btn {
-        margin: 10px 50px;
-    }
-    .songScheduler {
-        width: 100%;
-    }
-    .songScheduler .channel-group {
-        margin: 20px auto;
-    }
-    .songScheduler {
-        padding: 0 10px;
-    }
-    .download-group-btn button {
-        padding: 10px 23px;
-    }
-    .admin-ui-tabs > li {
-        width: 100%;
-    }
-    .account-vertical-container li {
-        width: 100%;
-        text-align: center;
-    }
-    .account-vertical-container li:first-child {
-        width: 100%;
-    }
-    .account-vertical-container li:nth-child(2) {
-        width: 100%;
-        text-align: center;
-    }
-    .left-side-profile {
-        top:0px;
-        border-radius: 10px;
-    }
-    .vertical-container li > .list-img-container img {
-        margin: 0 auto;
-    }
-    .vertical-container li {
-        width: 100%;
-    }
-    .vertical-container li:first-child {
-        width: 100%;
-    }
-    .vertical-container li:last-child {
-        width: 100%;
-    }
-    .vertical-container li:nth-child(2) {
-        text-align: center;
-    }
-    .vertical-container li:nth-child(3) {
-        width:100%;
-    }
-     .settings-tabs-5 .nav-tabs li{
-        width: 100%;
-    }
-    .settings-tabs-6 .nav-tabs li{
-        width: 100%;
-    }
-    .view-padding-left {
-        padding-left: 0;
-    }
-     
+  .nav-tabs .nav > li {
+    width: 50%;
+}
+.ZebraDialog {
+    left: 279px !important;
+    top: 201px !important;
+    width: 450px !important;
+}
+.rfr-chat {
+    margin-top: 70px;
+}
+.main-scroll-body .pad-right {
+    margin-right: 40px;
+}
+.question-btn {
+    margin: 10px 50px;
+}
+.songScheduler {
+    width: 100%;
+}
+.songScheduler .channel-group {
+    margin: 20px auto;
+}
+.songScheduler {
+    padding: 0 10px;
+}
+.download-group-btn button {
+    padding: 10px 23px;
+}
+.admin-ui-tabs > li {
+    width: 100%;
+}
+.account-vertical-container li {
+    width: 100%;
+    text-align: center;
+}
+.account-vertical-container li:first-child {
+    width: 100%;
+}
+.account-vertical-container li:nth-child(2) {
+    width: 100%;
+    text-align: center;
+}
+.left-side-profile {
+    top:0px;
+    border-radius: 10px;
+}
+.vertical-container li > .list-img-container img {
+    margin: 0 auto;
+}
+.vertical-container li {
+    width: 100%;
+}
+.vertical-container li:first-child {
+    width: 100%;
+}
+.vertical-container li:last-child {
+    width: 100%;
+}
+.vertical-container li:nth-child(2) {
+    text-align: center;
+}
+.vertical-container li:nth-child(3) {
+    width:100%;
+}
+.settings-tabs-5 .nav-tabs li{
+    width: 100%;
+}
+.settings-tabs-6 .nav-tabs li{
+    width: 100%;
+}
+.view-padding-left {
+    padding-left: 0;
+}
+
 }
 @media screen and (max-width: 667px) {
     .img-btn {
@@ -4042,14 +4042,14 @@ td {
         min-height: .01%;
         overflow-x: auto;
     }
-      .cell-date {
+    .cell-date {
         line-height: 20px;
-     }
-     .left-side-profile{
+    }
+    .left-side-profile{
         top: 0;
         border-radius: 10px;
-     }
-     .vertical-container li > .list-img-container img {
+    }
+    .vertical-container li > .list-img-container img {
         margin: 0 auto;
     }
     .tracks-box {
@@ -4091,7 +4091,7 @@ td {
     .view-padding-left {
         padding-left: 0;
     }
- 
+    
 }
 @media screen and (max-width: 640px) {
     .organize-text {
@@ -4186,86 +4186,86 @@ td {
     padding-right: 38px;
     padding-left: 40px;
   }*/
-    .img-btn {
-        margin-left: 121px;
-    }
-    .page-header ul li {
-        float: left;
-    }
-    .page-header ul li {
-        float: left;
-        padding: 0 9px;
-    }
-    .inner-head {
-        float: right;
-    }
-    .inner-head .navbar-nav {
-        margin: 0;
-    }
-    .page-header ul li img {
-        width: 22px;
-    }
-    .ZebraDialog {
-        left: 0 !important;
-        top: 20% !important;
-        width: 100% !important;
-    }
-    .nav-tabs .nav > li {
-        width: 100%;
-    }
-    .slot-box {
-        width: 375px;
-        margin: 10px auto;
-    }
-    .btn-enter {
-        padding: 14px 20px;
-        margin: 0;
-    }
-    .left-menus ul li a {
-        padding: 15px 10px;
-    }
-    .slot-date {
-        margin-bottom: 20px;
-    }
-    .scheduler-small {
-        margin-top: 30px;
-    }
-    .label-username {
-        height: initial;
-    }
-    .rfr-chat {
-        margin-top: 160px;
-    }
-    .main-scroll-body .pad-right {
-        margin-right: 40px;
-    }
-    .question-btn {
-        margin: 10px 50px;
-    }
-    .download-group-btn button {
-        padding: 10px 12px;
-        font-size: 10px;
-    }
-    .date-top-strip {
-        margin-bottom: 36px;
-    }
-    .tab-content .form-group {
-        margin-left: 0;
-    }
-    .tab-content .form-group .form-control {
-        margin-left: 0;
-    }
-    .submi-section {
-        padding: 0;
-        margin: 0;
-    }
-    .two-tabs .nav-tabs li {
-        width: 100% ;
-    }
-    .vertical-container li{
-        width: 100%;
-    }
-  
+  .img-btn {
+    margin-left: 121px;
+}
+.page-header ul li {
+    float: left;
+}
+.page-header ul li {
+    float: left;
+    padding: 0 9px;
+}
+.inner-head {
+    float: right;
+}
+.inner-head .navbar-nav {
+    margin: 0;
+}
+.page-header ul li img {
+    width: 22px;
+}
+.ZebraDialog {
+    left: 0 !important;
+    top: 20% !important;
+    width: 100% !important;
+}
+.nav-tabs .nav > li {
+    width: 100%;
+}
+.slot-box {
+    width: 375px;
+    margin: 10px auto;
+}
+.btn-enter {
+    padding: 14px 20px;
+    margin: 0;
+}
+.left-menus ul li a {
+    padding: 15px 10px;
+}
+.slot-date {
+    margin-bottom: 20px;
+}
+.scheduler-small {
+    margin-top: 30px;
+}
+.label-username {
+    height: initial;
+}
+.rfr-chat {
+    margin-top: 160px;
+}
+.main-scroll-body .pad-right {
+    margin-right: 40px;
+}
+.question-btn {
+    margin: 10px 50px;
+}
+.download-group-btn button {
+    padding: 10px 12px;
+    font-size: 10px;
+}
+.date-top-strip {
+    margin-bottom: 36px;
+}
+.tab-content .form-group {
+    margin-left: 0;
+}
+.tab-content .form-group .form-control {
+    margin-left: 0;
+}
+.submi-section {
+    padding: 0;
+    margin: 0;
+}
+.two-tabs .nav-tabs li {
+    width: 100% ;
+}
+.vertical-container li{
+    width: 100%;
+}
+
 }
 @media screen and (max-width: 360px) {
     .accpect,

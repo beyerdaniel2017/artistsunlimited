@@ -126,6 +126,7 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.editRepostEvent = function(item) {
+        $scope.afcount = 0;
         $scope.makeEvent = {};
         $scope.deleteEventData = item;
         $scope.manageView = "newsong";
@@ -299,33 +300,28 @@ app.directive('reforrelists', function($http) {
           });
       };
 
-      var count = Math.floor(Math.random() * $scope.user.queue.length);
+      $scope.afcount = 0;
       $scope.getAutoFillTracks = function() {
-        console.log(count);
+        function waitForAutofill() {
+          $scope.processing = true;
+          setTimeout(function() {
+            if ($scope.autoFillTracks.length > 0) {
+              $scope.processing = false;
+              $scope.getAutoFillTracks();
+            } else {
+              waitForAutofill();
+            }
+          }, 500);
+        }
         if ($scope.user.queue.length > 0) {
-          var track = $scope.autoFillTracks[count];
-          $scope.makeEventURL = track.permalink_url;
-          $scope.makeEvent.trackID = track.id;
-          $scope.makeEvent.title = track.title;
-          $scope.makeEvent.trackArtUrl = track.artwork_url;
-          $scope.makeEvent.trackURL = track.permalink_url;
-          if ($scope.showOverlay) {
-            var popupPlayerWidget = SC.Widget('scPopupPlayer')
-            popupPlayerWidget.load($scope.makeEvent.trackURL, {
-              auto_play: false,
-              show_artwork: false
-            });
-            document.getElementById('scPopupPlayer').style.visibility = "visible";
-            $scope.showPlayer = true;
+          if ($scope.autoFillTracks.length == 0) {
+            waitForAutofill();
+            return;
           }
-          var playerWidget = SC.Widget('scPlayer')
-          playerWidget.load($scope.makeEvent.trackURL, {
-            auto_play: false,
-            show_artwork: true
-          });
-          document.getElementById('scPlayer').style.visibility = "visible";
-          $scope.showPlayer = true;
-          count = (count + 1) % $scope.autoFillTracks.length;
+          var track = JSON.parse(JSON.stringify($scope.autoFillTracks[$scope.afcount]));
+          if ($scope.showOverlay) $scope.choseTrack(track);
+          else $scope.choseTrack1(track);
+          $scope.afcount = ($scope.afcount + 1) % $scope.autoFillTracks.length;
         } else {
           $scope.showOverlay = false;
           $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {
@@ -345,12 +341,9 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.openTrade = function(user) {
-        console.log(user);
-        console.log($scope.currentTrades);
         var found = $scope.currentTrades.find(function(trade) {
           return (trade.other.user._id == user._id);
         });
-        console.log(found);
         if (found) {
           if ($scope.isAdminRoute) {
             $state.go('adminreForReInteraction', {
@@ -585,7 +578,6 @@ app.directive('reforrelists', function($http) {
               ev.type = 'traded';
               eventArray[new Date(ev.trackInfo.day).getHours()] = ev;
             } else if (eventArray[new Date(ev.trackInfo.day).getHours()].type == 'traded') {
-              console.log('two');
               var event = {
                 type: 'multiple',
                 events: []
@@ -593,11 +585,8 @@ app.directive('reforrelists', function($http) {
               event.events.push(eventArray[new Date(ev.trackInfo.day).getHours()])
               event.events.push(ev);
               eventArray[new Date(ev.trackInfo.day).getHours()] = event;
-              console.log(event)
             } else if (eventArray[new Date(ev.trackInfo.day).getHours()].type == 'multiple') {
-              console.log('more than 3');
               eventArray[new Date(ev.trackInfo.day).getHours()].events.push(ev);
-              console.log(eventArray[new Date(ev.trackInfo.day).getHours()])
             }
           });
           calDay.events = eventArray;
@@ -606,8 +595,6 @@ app.directive('reforrelists', function($http) {
         return calendar;
       };
 
-      console.log('events');
-      console.log($scope.events);
       $scope.calendar = $scope.fillDateArrays($scope.events);
       $scope.isView = false;
       $scope.clickedSlot = function(day, hour, data) {
@@ -632,7 +619,7 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.openPopup = function(day, hour, data) {
-        console.log(data);
+        $scope.afcount = 0;
         $scope.deleteEventData = data;
         document.getElementById('scPopupPlayer').style.visibility = "hidden";
         document.getElementById('scPopupPlayer').innerHTML = "";
@@ -747,20 +734,20 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.choseTrack = function(track) {
-        $scope.searchString = track.title;
+        $scope.showPlayer = true;
         $scope.fillMakeEvent(track);
-        var popupPlayerWidget = SC.Widget('scPopupPlayer')
-        popupPlayerWidget.load($scope.makeEvent.trackURL, {
+        var popupPlayerWidget = SC.Widget('scPopupPlayer');
+        popupPlayerWidget.load(track.permalink_url, {
           auto_play: false,
           show_artwork: false,
           callback: function() {
-            popupPlayerWidget.getCurrentSound(function(track) {
-              $scope.fillMakeEvent(track);
-            })
+            console.log($scope.showPlayer);
+            console.log($scope.makeEvent);
+            document.getElementById('scPopupPlayer').style.visibility = "visible";
+            console.log(document.getElementById('scPopupPlayer'));
+            $scope.$digest();
           }
         });
-        document.getElementById('scPopupPlayer').style.visibility = "visible";
-        $scope.showPlayer = true;
       }
 
       $scope.fillMakeEvent = function(track) {
@@ -773,19 +760,17 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.choseTrack1 = function(track) {
+        $scope.showPlayer = true;
         $scope.fillMakeEvent(track);
         var playerWidget = SC.Widget('scPlayer');
-        playerWidget.load($scope.makeEvent.trackURL, {
+        playerWidget.load(track.permalink_url, {
           auto_play: false,
           show_artwork: true,
           callback: function() {
-            playerWidget.getCurrentSound(function(track) {
-              $scope.fillMakeEvent(track);
-            })
+            document.getElementById('scPlayer').style.visibility = "visible";
+            $scope.$digest();
           }
         });
-        document.getElementById('scPlayer').style.visibility = "visible";
-        $scope.showPlayer = true;
       }
 
       $scope.choseAutoFillTrack = function(track) {
@@ -834,22 +819,35 @@ app.directive('reforrelists', function($http) {
       };
       /*sort end*/
       $scope.loadQueueSongs = function(queue) {
-        var i = 0;
         $scope.autoFillTracks = [];
-        $scope.user.queue.forEach(function(songID) {
-          SC.get('/tracks/' + songID)
-            .then(function(track) {
-              if ($scope.autoFillTracks.indexOf(track) == -1) {
-                track.index = i;
-                $scope.autoFillTracks.push(track);
-                i++;
-                tmpList = $scope.autoFillTracks;
-                $scope.list = tmpList;
+        var ind = 0;
+
+        function getNext() {
+          if (ind < $scope.user.queue.length) {
+            $scope.showAutofillPlayer = true;
+            var autofillWidget = SC.Widget('autofillPlayer');
+            autofillWidget.load("http://api.soundcloud.com/tracks/" + $scope.user.queue[ind], {
+              auto_play: false,
+              show_artwork: false,
+              callback: function() {
+                autofillWidget.getCurrentSound(function(track) {
+                  $scope.autoFillTracks.push(track);
+                  tmpList = $scope.autoFillTracks;
+                  $scope.list = tmpList;
+                  ind++;
+                  getNext();
+                });
               }
-              $scope.$digest();
-            }, console.log);
-        })
+            });
+          } else {
+            $scope.showAutofillPlayer = false;
+            $scope.$digest();
+          }
+        }
+        getNext();
       }
+
+
       $scope.saveUser = function() {
         $scope.processing = true;
         $http.put("/api/database/profile", $scope.user)
@@ -902,7 +900,35 @@ app.directive('reforrelists', function($http) {
         $scope.manageView = "list";
       }
 
-      $scope.fillDateArrays($scope.events);
+      $scope.allowSave = function() {
+        if (!$scope.makeEvent) return false;
+        return new Date($scope.makeEvent.day) > new Date();
+      }
+
+      $scope.autofillAll = function() {
+        $.Zebra_Dialog('Are you sure you want to fill all your slots with your autofill tracks?', {
+          'type': 'question',
+          'buttons': [{
+            caption: 'Cancel',
+            callback: function() {}
+          }, {
+            caption: 'Yes',
+            callback: function() {
+              $scope.processing = true;
+              $http.put("/api/events/repostEvents/autofillAll")
+                .then(function(res) {
+                  return $http.get('api/events/getRepostEvents/' + $scope.user._id)
+                })
+                .then(function(res) {
+                  console.log(res.data);
+                  $scope.calendar = $scope.fillDateArrays(res.data);
+                  $scope.processing = false;
+                }).then(null, console.log);
+            }
+          }]
+        });
+      }
+
       /*Manage Trades end*/
       $scope.getUserNetwork();
       $scope.verifyBrowser();
@@ -912,8 +938,6 @@ app.directive('reforrelists', function($http) {
       $scope.setView("inbox");
       $scope.loadQueueSongs();
 
-      console.log('state');
-      console.log($window.localStorage.getItem('inboxState'));
       if ($window.localStorage.getItem('inboxState')) {
         $scope.setView($window.localStorage.getItem('inboxState'));
         $window.localStorage.removeItem('inboxState');

@@ -6,6 +6,7 @@ var chalk = require('chalk');
 var DATABASE_URI = require(path.join(__dirname, '../env')).DATABASE_URI;
 
 var mongoose = require('mongoose');
+mongoose.set('debug', false);
 // var db = mongoose.connect(DATABASE_URI).connection;
 
 // Require our models -- these should register the model into mongoose
@@ -24,20 +25,20 @@ require('./models');
 // });
 
 /*
-	* The promise has to be returned in case of promise chaining. The 'open' and 'error' events are not fired
-	* right now, may be due to version changes. For now this is a working solution.
-*/
+ * The promise has to be returned in case of promise chaining. The 'open' and 'error' events are not fired
+ * right now, may be due to version changes. For now this is a working solution.
+ */
 
 var startDbPromise = function() {
-	return new Promise(function (resolve, reject) {
-    mongoose.connect(DATABASE_URI, function(err){
-    	if(err) {
-    	 	reject(err);
-    	} else {
-				resolve();
-			}
+  return new Promise(function(resolve, reject) {
+    mongoose.connect(DATABASE_URI, function(err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
     });
-	});
+  });
 };
 
 
