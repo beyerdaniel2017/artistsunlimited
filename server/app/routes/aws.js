@@ -7,10 +7,9 @@ var AWS = require('aws-sdk');
 var awsConfig = require('./../../env').AWS;
 var mongoose = require('mongoose');
 var Post = mongoose.model('Posts');
-mongoose.set('debug', true);
 
 //============= UPLOAD FILE TO AWS =============
-router.post('/', function(req, res, next){
+router.post('/', function(req, res, next) {
 	var s3 = new AWS.S3();
 	var body = {
 		fields: {},
@@ -19,12 +18,12 @@ router.post('/', function(req, res, next){
 
 	function parseMultiPart() {
 		return new Promise(function(resolve, reject) {
-			var busboy = new Busboy({ 
+			var busboy = new Busboy({
 				headers: req.headers,
 				limits: {
-		          fileSize: 100 * 1024 * 1024,
-		          files: 1
-		        }
+					fileSize: 100 * 1024 * 1024,
+					files: 1
+				}
 			});
 			busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
 				var buffer = new Buffer('');
@@ -36,8 +35,8 @@ router.post('/', function(req, res, next){
 				});
 
 				file.on('limit', function() {
-		          reject('Error: File size cannot be more than 20 MB');
-		        });
+					reject('Error: File size cannot be more than 20 MB');
+				});
 
 				file.on('end', function() {
 					body.file = {
@@ -65,47 +64,49 @@ router.post('/', function(req, res, next){
 	}
 
 	parseMultiPart()
-	.then(function(){
-		if(body.file && body.file.newfilename){
-			AWS.config.update({
-		        accessKeyId: awsConfig.accessKeyId,
-		        secretAccessKey: awsConfig.secretAccessKey,
-	      	});
+		.then(function() {
+			if (body.file && body.file.newfilename) {
+				AWS.config.update({
+					accessKeyId: awsConfig.accessKeyId,
+					secretAccessKey: awsConfig.secretAccessKey,
+				});
 
-	      	var uploadData = {
-	        	Key: body.file.newfilename,
-	        	Body: body.file.buffer,
-	        	ContentType: body.file.mimetype
-	      	};
-	      	var s3 = new AWS.S3({
-		        params: {
-		          Bucket: "releaserposts"
-		        }
-	      	});
-	      	s3.upload(uploadData, function(err, data) {
-		        if (err) {
-		          res.json(err);
-		        } else {
-		          res.json(data);
-		        }
-	      	});
-      	}
-      	else{
-      		res.json({key: "", Location: ""});
-      	}	
-	});
+				var uploadData = {
+					Key: body.file.newfilename,
+					Body: body.file.buffer,
+					ContentType: body.file.mimetype
+				};
+				var s3 = new AWS.S3({
+					params: {
+						Bucket: "releaserposts"
+					}
+				});
+				s3.upload(uploadData, function(err, data) {
+					if (err) {
+						res.json(err);
+					} else {
+						res.json(data);
+					}
+				});
+			} else {
+				res.json({
+					key: "",
+					Location: ""
+				});
+			}
+		});
 });
 
 //======== DELETE A SINGLE FILE FROM AWS =======
 router.delete('/:keyName', function(req, res, next) {
 	var s3 = new AWS.S3();
 	var params = {
-		Bucket: "releaserposts", 
+		Bucket: "releaserposts",
 		Key: req.params.keyName
 	};
 
 	s3.deleteObject(params, function(err, data) {
-		if (err){
+		if (err) {
 			console.log(err);
 			res.end();
 		} else {
@@ -117,28 +118,31 @@ router.delete('/:keyName', function(req, res, next) {
 
 //========= DELETE BOTH FILES FROM AWS =========
 router.delete('/:postId/both', function(req, res, next) {
-	Post.findOne({'_id': req.params.postId})
-	.then(function(post){
-		console.log('post from inside delete both files', post);
-		var s3 = new AWS.S3();
-		var params = {
-			Bucket: "releaserposts", 
-			Delete: {
-				Objects: [
-					{ Key: post.awsAudioKeyName },
-					{ Key: post.awsVideoKeyName }
-				]			
-			}
-		};
+	Post.findOne({
+			'_id': req.params.postId
+		})
+		.then(function(post) {
+			console.log('post from inside delete both files', post);
+			var s3 = new AWS.S3();
+			var params = {
+				Bucket: "releaserposts",
+				Delete: {
+					Objects: [{
+						Key: post.awsAudioKeyName
+					}, {
+						Key: post.awsVideoKeyName
+					}]
+				}
+			};
 
-		s3.deleteObjects(params, function(err, data) {
-			if (err){
-				console.log(err);
-				res.end();
-			} else {
-				console.log('data from deleting BOTH files', data);
-				res.status(204).end();			
-			}
+			s3.deleteObjects(params, function(err, data) {
+				if (err) {
+					console.log(err);
+					res.end();
+				} else {
+					console.log('data from deleting BOTH files', data);
+					res.status(204).end();
+				}
+			});
 		});
-	});
 });

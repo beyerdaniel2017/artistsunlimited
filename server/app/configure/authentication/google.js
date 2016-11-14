@@ -3,9 +3,8 @@ var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var mongoose = require('mongoose');
 var UserModel = mongoose.model('User');
-mongoose.set('debug', true);
 var loggedInUser = null;
-module.exports = function (app) {
+module.exports = function(app) {
     var googleConfig = app.getValue('env').GOOGLE;
     var googleCredentials = {
         clientID: googleConfig.clientID,
@@ -13,7 +12,7 @@ module.exports = function (app) {
         callbackURL: googleConfig.callbackURL
     };
 
-    var createNewUser = function (token, refreshToken, profile) {
+    var createNewUser = function(token, refreshToken, profile) {
         return UserModel.create({
             email: profile.emails[0].value,
             google: {
@@ -26,7 +25,7 @@ module.exports = function (app) {
         });
     };
 
-    var updateUserCredentials = function (user, token, refreshToken, profile) {
+    var updateUserCredentials = function(user, token, refreshToken, profile) {
         user.google.id = profile.id;
         user.google.name = profile.displayName;
         user.google.email = profile.emails[0].value;
@@ -35,27 +34,29 @@ module.exports = function (app) {
         return user.save();
     };
 
-    var verifyCallback = function (accessToken, refreshToken, profile, done) {
-        UserModel.findOne({_id: loggedInUser._id})
-        .then(function (user) {
-            if (user) { 
-                return updateUserCredentials(user, accessToken, refreshToken, profile);
-            } 
-        })
-        .then(function (userToLogin) {
-            done(null, userToLogin);
-        }, function (err) {
-            console.error('Error creating user from Google authentication', err);
-            done(err);
-        });
+    var verifyCallback = function(accessToken, refreshToken, profile, done) {
+        UserModel.findOne({
+                _id: loggedInUser._id
+            })
+            .then(function(user) {
+                if (user) {
+                    return updateUserCredentials(user, accessToken, refreshToken, profile);
+                }
+            })
+            .then(function(userToLogin) {
+                done(null, userToLogin);
+            }, function(err) {
+                console.error('Error creating user from Google authentication', err);
+                done(err);
+            });
     };
 
     /*
-      * Get information of Logged In user
-    */
-    app.use(function(req,res,next){
-      loggedInUser = req.user;
-      next();
+     * Get information of Logged In user
+     */
+    app.use(function(req, res, next) {
+        loggedInUser = req.user;
+        next();
     });
 
     passport.use(new GoogleStrategy(googleCredentials, verifyCallback));
@@ -68,8 +69,10 @@ module.exports = function (app) {
     }));
 
     app.get('/auth/google/callback',
-        passport.authenticate('google', { failureRedirect: '/login' }),
-    function (req, res) {
-        res.redirect('/artistTools/releaser');
-    });
+        passport.authenticate('google', {
+            failureRedirect: '/login'
+        }),
+        function(req, res) {
+            res.redirect('/artistTools/releaser');
+        });
 };

@@ -6,6 +6,7 @@ var chalk = require('chalk');
 var DATABASE_URI = require(path.join(__dirname, '../env')).DATABASE_URI;
 
 var mongoose = require('mongoose');
+if (process.env.MONGOOSE_DEBUG == "ON") mongoose.set('debug', true);
 // var db = mongoose.connect(DATABASE_URI).connection;
 
 // Require our models -- these should register the model into mongoose

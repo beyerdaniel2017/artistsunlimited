@@ -4,7 +4,6 @@ var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
 var mongoose = require('mongoose');
 var UserModel = mongoose.model('User');
-mongoose.set('debug', true);
 var loggedInUser = null;
 module.exports = function(app) {
   var twitterConfig = app.getValue('env').TWITTER;
