@@ -117,8 +117,15 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
       $scope.makeEvent.day = new Date(makeDay);
       $scope.makeEvent.url = data.trackInfo.trackURL;
       $scope.makeEvent.comment = data.trackInfo.comment;
-      $scope.makeEvent.unrepostHours = data.trackInfo.unrepostHours;
+      var diff = (new Date(data.trackInfo.unrepostDate).getTime() - new Date(data.trackInfo.day).getTime()) / 3600000;
+      if (diff > 0) $scope.makeEvent.unrepostHours = diff;
+      $scope.unrepostEnable = diff > 0;
       $scope.makeEvent.timeGap = data.trackInfo.timeGap;
+      $scope.makeEvent.username = data.userInfo.username;
+      if (data.trackInfo.like) $scope.likeSrc = 'assets/images/likeTrue.svg';
+      else $scope.likeSrc = 'assets/images/like.svg';
+      if (data.trackInfo.comment) $scope.commentSrc = 'assets/images/comment.svg';
+      else $scope.commentSrc = 'assets/images/noComment.svg';
       var d = new Date(day).getDay();
       var channels = data.trackInfo.otherChannels;
       $scope.displayChannels = [];

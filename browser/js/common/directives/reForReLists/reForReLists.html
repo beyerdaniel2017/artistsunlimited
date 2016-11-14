@@ -213,28 +213,7 @@
    </div>
    <div class="row" ng-show="manageView != 'newsong'" style='padding-bottom:20px'>
      <div class="col-md-8 col-md-offset-2">
-      <div class="permanent-links search" style="text-align: center;">
-        <h1 class="au-title-head text-center text-uppercase">Auto-fill Tracks</h1>
-        <div class="col-md-4">
-          <scsearch kind='track' returnitem='choseAutoFillTrack(item)'></scsearch>
-        </div>
-        <div class="col-md-8">
-          <h5 ng-show="showAutofillPlayer">loading...</h5>
-          <div class="tracks-box" ui-sortable="sortableOptions" ng-model="list" ng-if="autoFillTracks.length > 0">
-            <div class="track-item-list" ng-repeat="song in list" >
-              <span class="pull-left" style="margin-right: 5px; padding-top: 3px;">{{$index+1}}</span> <img class="avatar-20" ng-src="{{song.artwork_url}}">
-              <div class="tracks-title">
-                <a class="tracks-title-name" href="{{song.permalink_url}}" target="_blank">
-                  {{' ' + song.title}}</a> 
-                  <a class="close-tracks pull-right" href="#"><img src="assets/images/close.png" ng-click="removeQueueSong(song)"></a> 
-                </div>
-              </div> 
-            </div>                             
-          </div>
-        </div>
-        <br>
-        <iframe id="autofillPlayer" ng-show="showAutofillPlayer" width="300" height="5" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
-      </div>
+      <autofill></autofill>
       <div class="height-10"> </div>
     </div>
     <div class="col-md-12" ng-show="manageView == 'newsong'">

@@ -30,7 +30,7 @@
               </div>
               <div class="col-md-6 text-left">
                 <div>
-                  <img src="{{trackImage}}" class="img-responsive" style="float: left;margin-right: 10px;">
+                  <img src="{{trackImage}}" class="img-responsive" style="float: left;margin-right: 10px; border-radius:10px;">
                   <br>
                   <h6>{{listevents[0].trackInfo.artistName}}</h6>
                   <h6>{{listevents[0].trackInfo.title}}</h6>                  
@@ -86,80 +86,71 @@
       </div>
     </div>
   </div>
-</div>
-<div class="overlay" ng-show="showOverlay" id="scheduleModal" ng-click="backEvent()" style="z-index: 999;">
-  <div class="available-popup-box" ng-class="{'disabled': true}">
-    <div class="label-scheduler label-smaller slot-box" ng-click="$event.stopPropagation();">
-      <div class="">
-        <div class="row">
-          <div class="col-md-12">
-            <br>
-            <h5 class="text-center">AVAILABLE SLOT</h5>
-            <br>
+  <div class="overlay" ng-show="showOverlay" id="scheduleModal" ng-click="backEvent();" style="z-index: 999;">
+    <div class="available-popup-box">
+      <div class="label-scheduler label-smaller slot-box" ng-click="$event.stopPropagation();">
+        <div class="">
+          <div class="row">
+            <div class="col-md-12">
+              <h5 class="text-center">Repost on {{makeEvent.username}}</h5>
+            </div>
           </div>
-        </div>
-        <br>
-        <div class="row">
-          <div class="col-md-12 col-xs-12">   
-           <select class="form-control" ng-disabled="true">
-             <option>{{makeEvent.day | date:'MMMM dd yyyy h:mma'}}</option>
-           </select>
+          <div class="row">
+            <div class="col-md-12">
+              <iframe id="scPopupPlayer" width="300" height="120" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>         
+            </div>
+          </div><!--row end-->
+          <div class="row">
+            <div class="col-md-12 col-xs-12">   
+             <select class="form-control" ng-disabled="true">
+               <option>{{makeEvent.day | date:'MMMM dd yyyy h:mma'}}</option>
+             </select>
+           </div>
          </div>
-       </div>
-       <br>
-       <div class="row">
-        <div class="col-md-12 text-left">
-          <li class="switch-btn" style="font-size: 12px;vertical-align: middle;
-          list-style: outside none none;">
-          <label class="switch" style="vertical-align: middle;">
-            <input checked="" type="checkbox">
-            <div class="slider round"></div>
-          </label> 
-          <span>Unrepost after<input  class="form-control input-hour" placeholder="1" ng-model="makeEvent.unrepostHours">hours</span>
-        </li>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <iframe id="scPopupPlayer" width="300" height="120" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>         
-      </div>
-    </div><!--row end-->
-    <br> 
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="pull-right">
-          <ul class="like-comment">
-            <li>
-              <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('like');"><img src="{{likeSrc}}" class="img-responsive"></a>
-            </li>
-            <li>
-              <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('comment');"><img src="{{commentSrc}}" class="img-responsive"></a>
-            </li>
-          </ul>                      
+         <div class="row">
+          <div class="col-md-12 text-left">
+            <li class="switch-btn" style="font-size: 12px;vertical-align: middle;
+            list-style: outside none none;">
+            <label class="switch" style="vertical-align: middle;">
+              <input checked="" type="checkbox" ng-model="unrepostEnable" ng-disabled="true">
+              <div class="slider round"></div>
+            </label> 
+            <label>Unrepost after<input  class="form-control input-hour" style="color: #868686;" placeholder="24" ng-model="makeEvent.unrepostHours" ng-disabled="true">hours</label>
+          </li>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">                        
-        <div class="acceptance">
-          <div class="channel-check">
-            <textarea class="form-control" ng-disabled="disable">{{makeEvent.comment}}</textarea>
-            
-          </div>  
-          <div class="next-previous">
-            <button class="btn btn-border b-radius-10 pull-left" ng-disabled="disable" ng-click="getPrevNextComment('previous')">Previous</button>
-            <button class="btn btn-border b-radius-10 pull-right" ng-disabled="disable" ng-click="getPrevNextComment('next')">Next</button>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="pull-right">
+            <ul class="like-comment">
+              <li>
+                Like: <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('like');"><img src="{{likeSrc}}"></a>
+              </li>
+              <li>
+                Comment: <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('comment');"><img src="{{commentSrc}}"></a>
+              </li>
+            </ul>                      
           </div>
-        </div>                         
+        </div>
       </div>
+      <div class="row">
+        <div class="col-md-12">                        
+          <div class="acceptance">
+            <div class="channel-check">
+              <textarea class="form-control" readonly>{{makeEvent.comment}}</textarea>          
+            </div>  
+          </div>                         
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <button class="btn btn-border b-radius-10  btn-block" ng-click="backEvent();">Back</button>
+        </div>
+      </div><!--row end-->                  
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <button class="btn btn-border b-radius-10  btn-block" ng-click="backEvent();">Back</button>
-      </div>
-    </div><!--row end-->                  
   </div>
 </div>
+
 </div>
 </div>
 <ng-include src="'js/home/views/loader.html'"></ng-include>

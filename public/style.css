@@ -1192,7 +1192,8 @@ button:hover,
   margin: 150px auto;
   padding: 50px 0;
   border-radius: 12px;
-  border: 1px solid #C1C1C1; }
+  border: 1px solid #C1C1C1;
+  box-shadow: 3px 3px 8px gray; }
 
 @media screen and (max-width: 774px) {
   #scheduler-container {
@@ -4348,6 +4349,7 @@ td {
   max-height: 250px;
   overflow-x: hidden;
   max-width: 320px;
+  min-width: 320px;
   margin: 0px auto;
   padding: 10px; }
 
