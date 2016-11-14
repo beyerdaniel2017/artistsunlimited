@@ -253,26 +253,6 @@
           </div>
         </div>
       </div>
-     <!--  <div class="modal fade" id="remindModal" role="dialog">
-        <div class="modal-dialog">    
-        
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">Share Your Link</h4>
-            </div>
-            <div class="modal-body">
-              {{sharelink}}
-              <br>
-              <button class="btn btn-default btn-block" ng-click="sendMail(sharelink)">Send Email</button>
-              <div id="fb-root"></div>
-              <div class="fb-send" data-href="https://jsfiddle.net/37eL5smy/"></div>
-            </div>
-            <div class="modal-footer">
-            </div>
-          </div>
-        </div>
-      </div> -->
       <slmodal lolo="modal1" modal-body="body" modal-footer="footer" modal-header="header" event-id="trade._id" event-type="type"></slmodal>
       <youtube-modal you-tube="youtubeModalId" modal-body="body" modal-footer="footer" modal-header="header" event-id="repostResponse" event-type="type"></youtube-modal>
     </div>
@@ -300,4 +280,8 @@
       }(document, 'script', 'facebook-jssdk'));
     })
   },200);
+</script>
+
+<script>
+  $('meta[name=description]').attr('content', 'Repost trade.');
 </script>

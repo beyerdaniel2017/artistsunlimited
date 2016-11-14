@@ -257,6 +257,8 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
 
     function receiveDownloadTrack(result) {
       $scope.track = result.data;
+      $('meta[name=description]').attr('content', 'Download gate for ' + $scope.track.title + '.');
+
       $scope.backgroundStyle = function() {
         return {
           'background-image': 'url(' + $scope.track.trackArtworkURL + ')',
