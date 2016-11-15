@@ -30,7 +30,7 @@
               </div>
               <div class="col-md-6 text-left">
                 <div>
-                  <img src="{{trackImage}}" class="img-responsive" style="float: left;margin-right: 10px; border-radius:10px;">
+                  <img src="{{trackImage}}" class="img-responsive" style="float: left; margin-right: 10px; border-radius:10px; margin-left: 150px;">
                   <br>
                   <h6>{{listevents[0].trackInfo.artistName}}</h6>
                   <h6>{{listevents[0].trackInfo.title}}</h6>                  
@@ -75,10 +75,76 @@
                       <td class="text-center">{{item.userInfo.username}}</td>
                       <td class="text-center">{{item.trackInfo.day | date: 'MMM dd yyyy hh:mm a'}}</td>
                       <td class="text-center"><span ng-if="item.trackInfo" style="color:{{item.trackInfo.type == 'track'? '#FF0000' : '#FF6347'}}">{{item.trackInfo.type}}</span></td>
+                      <td><a class="btn btn-pink btn-block btn-sm margin-0" href="javascript:void(0)" ng-click="detailView(item)">View</a></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
+              <!-- list details start -->
+              <div class="col-md-12" ng-show="itemview == 'detailListView'">
+    <div class="songScheduler">
+        <div class="row">
+            <div class="col-md-12">
+                <iframe id="scPlayer" width="100%" height="160" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                <select class="form-control" ng-disabled="true">
+                    <option>{{makeEvent.day | date:'MMMM dd yyyy h:mma'}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ul>
+                    <li class="switch-btn">
+                        <label class="switch">
+                            <input ng-disabled="true" checked="makeEvent.day < makeEvent.unrepostDate" type="checkbox">
+                            <div class="slider round"></div>
+                        </label>
+                        <label>Unrepost after
+                            <input ng-disabled="true" class="form-control input-hour" placeholder="1" ng-model="makeEvent.unrepostHours">hours</label>
+                    </li>
+                </ul>
+                <br/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="pull-right">
+                    <ul class="like-comment">
+                        <li>
+                            Like:
+                            <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('like');"><img src="{{likeSrc}}">
+                            </a>
+                        </li>
+                        <li>
+                            Comment:
+                            <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('comment');"><img src="{{commentSrc}}">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="acceptance">
+                    <div class="channel-check">
+                        <textarea class="form-control" readonly>{{makeEvent.comment}}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center"><br/>
+                <button class="btn btn-border b-radius-10" ng-click="backToListEvent();">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+              <!-- list details end -->
             </div>
           </div>
           <div class="space-10"></div>
@@ -154,6 +220,3 @@
 </div>
 </div>
 <ng-include src="'js/home/views/loader.html'"></ng-include>
-<script>
-  $('meta[name=description]').attr('content', 'Shared repost events.');
-</script>

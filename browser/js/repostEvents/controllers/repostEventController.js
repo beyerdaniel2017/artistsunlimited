@@ -11,7 +11,6 @@ app.config(function($stateProvider) {
         if (paid != undefined) {
           url = '/api/events/respostEvent/getPaidReposts/' + eventid;
         }
-        console.log('url', url);
         return $http.get(url)
           .then(function(res) {
             return res.data;
@@ -33,7 +32,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
   var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   $scope.listevents = repostEvent;
   $scope.trackImage = repostEvent[0].trackInfo.trackArtUrl;
-  $scope.dayIncr = 0;
+  $scope.dayIncr = 7;
   $scope.incrDay = function() {
     if ($scope.dayIncr < 21) $scope.dayIncr++;
   }
@@ -76,6 +75,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
   $scope.fillDateArrays = function(repostEvent) {
     var calendar = [];
     var today = new Date();
+    today.setDate(today.getDate() - 7);
     for (var i = 0; i < 29; i++) {
       var calDay = {};
       calDay.day = new Date()
@@ -149,4 +149,29 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
     }
   }
   $scope.fillDateArrays(repostEvent);
+  $scope.detailView = function(data){
+      $scope.itemview = "detailListView";
+      $scope.makeEvent = {};
+      var day = new Date(data.trackInfo.day);
+      $scope.makeEvent._id = data.trackInfo._id;
+      $scope.makeEvent.day = new Date(data.trackInfo.day);
+      $scope.makeEvent.url = data.trackInfo.trackURL;
+      $scope.makeEvent.comment = data.trackInfo.comment;
+      if (data.trackInfo.like) $scope.likeSrc = 'assets/images/likeTrue.svg';
+      else $scope.likeSrc = 'assets/images/like.svg';
+      if (data.trackInfo.comment) $scope.commentSrc = 'assets/images/comment.svg';
+      else $scope.commentSrc = 'assets/images/noComment.svg';
+      $scope.makeEvent.artist = data.userInfo;
+      var repostDate = new Date(data.trackInfo.day);
+      $scope.makeEvent.unrepostHours = data.trackInfo.unrepostHours;
+      SC.Widget('scPlayer').load(data.trackInfo.trackURL, {
+        auto_play: false,
+        show_artwork: false
+      });
+      document.getElementById('scPlayer').style.visibility = "visible";
+  }
+  $scope.backToListEvent = function()
+  {
+     $scope.itemview = "list";
+  }
 });

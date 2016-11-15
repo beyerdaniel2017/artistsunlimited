@@ -97,7 +97,6 @@ app.directive('scheduler', function($http) {
           show_artwork: false,
           callback: function() {
             document.getElementById('scPopupPlayer').style.visibility = "visible";
-            console.log(document.getElementById('scPopupPlayer'));
             $scope.$digest();
           }
         });
@@ -118,7 +117,6 @@ app.directive('scheduler', function($http) {
           show_artwork: true,
           callback: function() {
             document.getElementById('scPlayer').style.visibility = "visible";
-            console.log(document.getElementById('scPlayer'));
             $scope.$digest();
           }
         });
@@ -408,7 +406,6 @@ app.directive('scheduler', function($http) {
         $scope.timeGap = newObj.event.timeGap;
         $scope.unrepostHours = newObj.event.unrepostHours;
         $scope.unrepostEnable = new Date(newObj.event.unrepostDate) > new Date(1000);
-        console.log($scope.unrepostEnable);
         var channels = newObj.event.otherChannels;
         if (channels.length > 0) {
           for (var i = 0; i < channels.length; i++) {
@@ -427,7 +424,6 @@ app.directive('scheduler', function($http) {
         $scope.slotType = item.event.type;
         if ($scope.slotType == "traded")
           $scope.isTraded = true;
-        console.log(item);
         $scope.showPlayer = true;
         document.getElementById('scPlayer').style.visibility = "visible";
         if (item.event.type == 'traded' && item.event.trackURL) {
@@ -718,7 +714,6 @@ app.directive('scheduler', function($http) {
         $scope.trackListSlotObj = undefined;
         $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
         $scope.unrepostEnable = new Date($scope.makeEvent.unrepostDate) > new Date(1000);
-        console.log($scope.unrepostEnable);
         $scope.unrepostHours = "";
         $scope.updateReach();
         $scope.setScheduleLikeComment();
@@ -746,7 +741,6 @@ app.directive('scheduler', function($http) {
           if (data.type == 'traded') {
             $scope.isTraded = true;
           }
-          console.log($scope.makeEvent);
           $scope.isEdit = true;
           $scope.likeSrc = (data.like == true) ? 'assets/images/likeTrue.svg' : 'assets/images/like.svg';
           $scope.likeEvent = data.like;

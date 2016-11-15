@@ -1,6 +1,10 @@
-
-<div class="modal fade" id="{{handler}}" role="dialog">
-    <div class="modal-dialog">    
+<style type="text/css">
+  .modal-backdrop {
+   background-color: transparent;
+}
+</style>
+<div class="modal" id="{{handler}}" role="dialog">
+    <div class="modal-dialog" style="width: 450px;">    
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -14,15 +18,19 @@
             <span class="input-group-addon" ngclipboard data-clipboard-target="#foo" id="basic-addon2">Copy</span>
           </div>
           <br>
+          <div class="row">
+          <div class="col-md-12">
+           <div class="col-md-6 col-md-offset-2 ">
           <button class="btn btn-pink btn-block" ng-click="sendMail(eventId)">Send Email</button>
-          <br>
-        <div id="fb-root" >
         </div>
-        <div class="text-center">
+          <div class="col-md-3" style="height: 34px; padding-top: 8px;">
         <div class="fb-send" data-href="{{messengerLink}}"></div>
         </div>
-        <div class="modal-footer">
         </div>
+      </div>
+    </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
       </div>
     </div>
   </div>
