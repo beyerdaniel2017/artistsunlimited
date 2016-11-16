@@ -91,38 +91,37 @@
                               <br />
                               <div class="row margin-bottom-10" ng-repeat="item in customEmailButtons track by $index" style="border-bottom: solid 1px #dcdcdc;">
                                 <div class="col-md-12">
-                                  <div class="col-md-1 margin-bottom-10">&nbsp;</div>
-                                  <div class="col-md-10 margin-bottom-10">
+                                  <div class="col-md-8 margin-bottom-10">
                                     <input type="text" ng-model="item.buttonText" class="form-control" placeholder="Button Title">
                                     <br/>
                                     <input type="text" ng-model="item.toEmail" class="form-control" placeholder="To Email">
                                     <br/>
                                     <input type="text" ng-model="item.subject" class="form-control" placeholder="Subject">
+                                    <br/>
+                                    <textarea ng-model="item.emailBody" class="form-control emailBodyArea{{$index}}" rows="15" placeholder="Email body" index="{{$index}}" ng-click="addEventClass($index,'emailBodyArea');"></textarea>
+                                    <br/>
+                                    <div class="col-md-12 text-center">
+                                      <button class="btn btn-default" ng-click="sendTestMail($index)">Send test mail</button>
+                                      <button class="btn btn-default" ng-click="removeItem($index)">Delete</button>                                  
                                   </div>
-                                  <div class="col-md-1 margin-bottom-10">
-                                    <span ng-click="removeItem($index)">X</span>
                                   </div>
-                                </div>
-                                <div class="col-md-12 margin-bottom-10">
-                                  <div class="col-md-1">&nbsp;</div>
-                                  <div class="col-md-10">
-                                    <label>Email Body</label>
-                                    <textarea ng-model="item.emailBody" class="form-control emailBodyArea{{$index}}" rows="10" placeholder="Email body" index="{{$index}}" ng-click="addEventClass($index,'emailBodyArea');"></textarea>
-                                  </div>
-                                  <div class="col-md-1">&nbsp;</div>
-                                </div>
-                                <br/>
-                                <div class="col-md-12 text-center">
-                                  <button class="btn btn-default" ng-click="sendTestMail($index)">Send test mail</button>
-                                  <div class="button-list text-center">
+                                  <div class="col-md-4 margin-bottom-10">
                                     <input ng-repeat="btn in dynamicButton " type="button" name="{{btn.name}}" class="btn btn-border organize-btn" style="margin-left:20px;" value="{{btn.name}}" ng-click="appendBody(btn)">
                                   </div>
                                 </div>
-                                <div class="space-20">&nbsp;</div>
+     <!--                            <div class="col-md-12 margin-bottom-10">
+                                  <div class="col-md-1">&nbsp;</div>
+                                  <div class="col-md-10">
+                                    <label>Email Body</label>
+                                    
+                                  </div>
+                                  <div class="col-md-1">&nbsp;</div>
+                                </div> -->
+                                <div class="space-10">&nbsp;</div>
                               </div>
                               <br/>
                               <div class="text-center margin-bottom-10">
-                                <a href="#" class="btn btn-pink btn-enter" ng-click="addItem()">+ Add More</a>
+                                <a href="#" class="btn btn-default" ng-click="addItem()">+ Add More</a>
                               </div> 
                               <br/>
                               <div class="">
