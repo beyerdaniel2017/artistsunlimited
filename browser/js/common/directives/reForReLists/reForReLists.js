@@ -476,20 +476,28 @@ app.directive('reforrelists', function($http) {
         return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dayIndex];
       }
 
+      $scope.getStyle = function() {
+        return {
+          'border-radius': '4px'
+        };
+      }
+
       $scope.getEventStyle = function(repostEvent) {
         if (repostEvent.type == 'empty') {
           return {}
         } else if (repostEvent.type == 'traded' && repostEvent.trackInfo.trackID) {
           return {
             'background-color': '#B22222',
-            'height': '19px',
-            'margin': '2px',
+            'height': '20px',
+            // 'margin': '2px',
+            'border-radius': '4px'
           }
         } else if (repostEvent.type == 'traded' && !repostEvent.trackInfo.trackID) {
           return {
             'background-color': '#2b9fda',
-            'height': '19px',
-            'margin': '2px',
+            'height': '20px',
+            // 'margin': '2px',
+            'border-radius': '4px'
           }
         } else if (repostEvent.type == 'multiple') {
           var unfilled = false;
@@ -499,14 +507,14 @@ app.directive('reforrelists', function($http) {
           if (unfilled) {
             return {
               'background-color': '#7A549B',
-              'height': '19px',
-              'margin': '2px',
+              'height': '10px',
+              'border-radius': '4px'
             }
           } else {
             return {
               'background-color': '#B22222',
-              'height': '19px',
-              'margin': '2px',
+              'height': '20px',
+              'border-radius': '4px'
             }
           }
         }
@@ -693,7 +701,7 @@ app.directive('reforrelists', function($http) {
         $scope.sendSearch();
       }
 
-      $scope.choseTrack = function(track) {
+      $scope.choseTrack1 = function(track) {
         $scope.showPlayer = true;
         $scope.fillMakeEvent(track);
         var popupPlayerWidget = SC.Widget('scPopupPlayer');
@@ -719,7 +727,7 @@ app.directive('reforrelists', function($http) {
         $scope.makeEvent.artistName = track.user.username;
       }
 
-      $scope.choseTrack1 = function(track) {
+      $scope.choseTrack = function(track) {
         $scope.showPlayer = true;
         $scope.fillMakeEvent(track);
         var playerWidget = SC.Widget('scPlayer');
@@ -802,11 +810,12 @@ app.directive('reforrelists', function($http) {
               $scope.processing = true;
               $http.put("/api/events/repostEvents/autofillAll")
                 .then(function(res) {
-                  return $http.get('api/events/getRepostEvents/' + $scope.user._id)
+                  return $http.get('/api/events/getRepostEvents/' + $scope.user._id)
                 })
                 .then(function(res) {
                   console.log(res.data);
                   $scope.calendar = $scope.fillDateArrays(res.data);
+                  $scope.listevents = res.data;
                   $scope.processing = false;
                 }).then(null, console.log);
             }

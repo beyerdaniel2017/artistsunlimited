@@ -10,7 +10,7 @@ var request = require('request');
 var notificationCenter = require('../../notificationCenter/notificationCenter.js');
 var paypalCalls = require('../../payPal/paypalCalls.js');
 var scheduleRepost = require('../../scheduleRepost/scheduleRepost.js');
-
+var denyUnrepostOverlap = require('../../scheduleRepost/denyUnrepostOverlap.js');
 module.exports = doRepost;
 //executes every min
 function doRepost() {
@@ -181,37 +181,18 @@ function getID(event, user) {
         }
         scWrapper.request(reqObj, function(err, data) {
           if (!err && data.user.id != person.soundcloud.id) {
-            RepostEvent.find({
-                trackID: id,
-                $or: [{
-                  day: {
-                    $lt: new Date(event.unrepostDate.getTime() + 24 * 3600000),
-                    $gt: new Date(event.unrepostDate.getTime())
-                  }
-                }, {
-                  unrepostDate: {
-                    $gt: new Date(event.day.getTime() - 24 * 3600000),
-                    $lt: new Date(event.day.getTime())
-                  }
-                }],
-                _id: {
-                  $ne: event._id
-                }
+            denyUnrepostOverlap(event)
+              .then(function(ok) {
+                resolve(id);
               })
-              .then(function(events) {
-                if (events.length > 0) {
+              .then(null, function(err) {
+                if (err.message == 'overlap') {
                   count++;
-                  person.save().then(function() {
-                    findAgain(person);
-                  })
+                  findAgain(person);
                 } else {
-                  count++;
-                  person.save().then(function() {
-                    resolve(id);
-                  })
+                  console.log(err);
                 }
               })
-              .then(null, console.log);
           } else {
             count++;
             person.save().then(function() {
@@ -240,6 +221,7 @@ function getID(event, user) {
     }
   })
 }
+
 
 // function sendMessage(err, event, user) {
 //   if (err) {
