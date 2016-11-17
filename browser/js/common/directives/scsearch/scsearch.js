@@ -9,6 +9,7 @@ app.directive('scsearch', function($http) {
     },
     controller: ['$scope', function scSearchController($scope) {
       $scope.searchSelection = [];
+      $scope.searchString = "";
       $scope.sendSearch = function() {
         $scope.searchSelection = [];
         $scope.searchError = undefined;
@@ -85,12 +86,18 @@ app.directive('scsearch', function($http) {
         switch (item.kind) {
           case 'track':
             item.displayName = item.title + ' - ' + item.user.username;
+            item.header = item.title;
+            item.subheader = item.user.username;
             break;
           case 'playlist':
             item.displayName = item.title + ' - ' + item.user.username;
+            item.header = item.title;
+            item.subheader = item.user.username;
             break;
           case 'user':
-            item.displayName = item.username;
+            item.displayName = item.username + ' - ' + item.followers_count + " followers";
+            item.header = item.username;
+            item.subheader = item.followers_count + " followers";
             break;
         }
       }

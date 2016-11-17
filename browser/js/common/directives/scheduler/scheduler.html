@@ -112,6 +112,7 @@
           <h3 style="text-align:center;">{{user.displayName}}</h3>
           <div id="scheduler-container" >
             <div class="date-top-strip">
+              <div style="width:28%"></div>
               <div class="bold cell-date" ng-repeat="t in ['Sunday','Monday','Tuesday','Wednesday','Thusday','Friday','Saturday']">{{t}}
               </div>                   
             </div>
@@ -120,7 +121,7 @@
                 <div ng-repeat="i in ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16', '17', '18', '19', '20', '21', '22', '23']" class="cell-time bold">{{i}}</div>
               </div>   
               <div ng-repeat="l in [0,1,2,3,4,5,6]" class="column-day">                        
-                <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="setSlotStyle(l,p)" class="row-scheduler" ng-click="clickedSlotsave(l, p)" style="position:relative; border-width:1px 1px 1px 1px;">
+                <div ng-repeat="p in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-style="setSlotStyle(l,p)" class="row-scheduler" ng-click="toggleAvailableSlot(l, p)" style="position:relative; border-width:1px 1px 1px 1px;">
                 </div>
               </div>
             </div>
@@ -236,7 +237,7 @@
               <div class="col-md-6 col-xs-12 search search-big">
                 <scsearch kind='track' returnitem='choseTrack(item)' ng-if="!isTraded"></scsearch>
                 <div class="space-10"></div>
-                <button class="form-control" ng-click="getAutoFillTracks()" ng-if="!isTraded">AUTOFILL</button>
+                <button class="form-control" ng-click="getAutoFillTracks()" ng-if="!isTraded" ng-bind-html="afcount > 0?'NEXT AUTOFILL':'AUTOFILL'"></button>
                 <div class="space-10"></div>
                 <label class="text-block">Repost Time</label>
                 <div class="form-group">
@@ -346,17 +347,17 @@
           <div class="row">
             <div class="col-md-12">
               <div class="next-previous text-center">
-               <button class="btn btn-border b-radius-10" ng-class="{'disabled': isView}" ng-if="isEdit && !isTraded" ng-click="deleteEvent();">DELETE</button>
-               <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
-               <button class="btn btn-pink b-radius-10 save-share" ng-click="saveEvent();">SAVE</button>
-             </div>
-           </div>
-         </div>
+                <button class="btn btn-border b-radius-10" ng-class="{'disabled': isView}" ng-if="isEdit && !isTraded && makeEvent.day > now" ng-click="deleteEvent();">DELETE</button>
+                <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
+                <button class="btn btn-pink b-radius-10 save-share" ng-click="saveEvent();" ng-if="makeEvent.day>now">SAVE</button>
+              </div>
+            </div>
+          </div>
 
-       </div><!--row end-->                    
-     </div><!--row end-->
-   </div>
- </div><!--row end-->
+        </div><!--row end-->                    
+      </div><!--row end-->
+    </div>
+  </div><!--row end-->
 </div>
 </div>
 <div class="space-10"></div>
@@ -376,7 +377,7 @@
           <div class="space-10"></div>
           <div class="row">
            <div class="col-md-12">
-             <button class="btn btn-border b-radius-10 btn-block margin-0" ng-if="!isTraded" ng-click="getAutoFillTracks()">AUTOFILL</button>
+             <button class="btn btn-border b-radius-10 btn-block margin-0" ng-if="!isTraded" ng-click="getAutoFillTracks()" ng-bind-html="afcount > 0?'NEXT AUTOFILL':'AUTOFILL'"></button>
            </div>
          </div>
          <div class="row">
@@ -455,10 +456,10 @@
         <div class="pull-right">
           <ul class="like-comment">
             <li>
-              Like: <a href="javascript:void(0);"><img src="{{likeSrc}}"></a>
+              Like: <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('like');"><img src="{{likeSrc}}"></a>
             </li>
             <li>
-              Comment: <a href="javascript:void(0);"><img src="{{commentSrc}}"></a>
+              Comment: <a href="javascript:void(0);" ng-click="changeLikeCommentIcons('comment');"><img src="{{commentSrc}}"></a>
             </li>
           </ul>                      
         </div>
@@ -481,9 +482,9 @@
     <div class="space-10"></div>
     <div class="row">
       <div class="col-md-12 text-center">
-        <button class="btn btn-border b-radius-10" ng-class="{'disabled': isView}" ng-if="isEdit && !isTraded" ng-click="deleteEvent();">DELETE</button>
+        <button class="btn btn-border b-radius-10" ng-class="{'disabled': isView}" ng-if="isEdit && !isTraded && makeEvent.day > now" ng-click="deleteEvent();">DELETE</button>
         <button class="btn btn-border b-radius-10 " ng-click="backEvent();">CANCEL</button>
-        <button class="btn btn-pink b-radius-10" ng-click="saveEvent();">SAVE</button>
+        <button class="btn btn-pink b-radius-10" ng-click="saveEvent();" ng-if="makeEvent.day > now">SAVE</button>
       </div>
     </div><!--row end-->                  
   </div>
