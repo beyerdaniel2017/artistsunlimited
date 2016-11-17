@@ -7,6 +7,7 @@ var RepostEvent = mongoose.model('RepostEvent');
 var moment = require('moment');
 var User = mongoose.model('User');
 var scheduleRepost = require("../../scheduleRepost/scheduleRepost.js");
+var denyUnrepostOverlap = require('../../scheduleRepost/denyUnrepostOverlap.js');
 var scConfig = require('./../../../env').SOUNDCLOUD;
 var scWrapper = require("../../SCWrapper/SCWrapper.js");
 
@@ -162,7 +163,7 @@ router.put('/repostEvents', function(req, res, next) {
     return;
   }
   req.body.unrepostDate = new Date(req.body.unrepostDate);
-  denyTradeOverlap(req.body)
+  denyUnrepostOverlap(req.body)
     .then(function(ok) {
       console.log('ok');
       return RepostEvent.findByIdAndUpdate(req.body._id, req.body, {
@@ -178,7 +179,11 @@ router.put('/repostEvents', function(req, res, next) {
     .then(function(ev) {
       ev.day = new Date(ev.day);
       res.send(ev);
-    }).then(null, next)
+    }).then(null, function(err) {
+      if (err.message == 'overlap') {
+        next(new Error('Issue! Please allow at least 24 hours between unreposting a track and re-reposting it and at least 48 hours between reposts of the same track.'));
+      }
+    })
 });
 
 router.put('/repostEvents/autofillAll', function(req, res, next) {
@@ -201,7 +206,7 @@ router.put('/repostEvents/autofillAll', function(req, res, next) {
         function nextQueueItem() {
           if (queueInd < req.user.queue.length) {
             event.trackID = req.user.queue[queueInd];
-            denyTradeOverlap(event)
+            denyUnrepostOverlap(event)
               .then(function(ok) {
                 scWrapper.setToken(req.user.soundcloud.token);
                 var reqObj = {
@@ -220,7 +225,7 @@ router.put('/repostEvents/autofillAll', function(req, res, next) {
                     eventInd++;
                     nextEvent();
                   } else {
-                    event.trackURL = "http://api.soundcloud.com/tracks/" + event.id;
+                    event.trackURL = "http://api.soundcloud.com/tracks/" + event.trackID;
                     event.save();
                     console.log(event);
                     eventInd++;
@@ -246,24 +251,6 @@ router.put('/repostEvents/autofillAll', function(req, res, next) {
     nextEvent();
   }).then(null, next)
 });
-
-function denyTradeOverlap(repostEvent) {
-  repostEvent.day = new Date(repostEvent.day);
-  var unrepostDate = new Date(repostEvent.day.getTime() + (parseInt(repostEvent.unrepostHours) * 60 * 60 * 1000));
-  return RepostEvent.find({
-    userID: repostEvent.userID,
-    trackID: repostEvent.trackID
-  }).then(function(events) {
-    var blockEvents = events.filter(function(event) {
-      if (repostEvent._id == event._id) return false;
-      event.day = new Date(event.day);
-      event.unrepostDate = new Date(event.unrepostDate);
-      return (repostEvent.trackID == event.trackID && (Math.abs(event.unrepostDate.getTime() - repostEvent.day.getTime()) < 24 * 3600000 || Math.abs(event.day.getTime() - repostEvent.unrepostDate.getTime()) < 24 * 3600000));
-    })
-    if (blockEvents.length > 0) throw new Error('Issue! This repost will cause this track to be both unreposted and reposted within a 24 hour time period. Please allow 24 hours between unrepost and re-repost.')
-    else return 'ok';
-  })
-}
 
 router.post('/repostEvents', function(req, res, next) {
   if (!req.user) {
@@ -294,7 +281,7 @@ router.post('/repostEventsScheduler', function(req, res, next) {
         delete eventDetails._id;
         eventDetails.comment = undefined;
         eventDetails.userID = channelID;
-        scheduleRepost(eventDetails, scheduleDate);
+        scheduleRepost(eventDetails, scheduleDate).then(console.log, console.log);
       })
       res.send(ev)
     }).then(null, next);

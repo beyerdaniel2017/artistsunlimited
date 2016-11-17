@@ -23,25 +23,6 @@ app.directive('autofill', function($http) {
         $scope.loadQueueSongs();
       }
 
-      $scope.changeQueueSong = function() {
-        if ($scope.newQueueSong != "") {
-          $scope.processing = true;
-          $http.post('/api/soundcloud/resolve', {
-              url: $scope.newQueueSong
-            })
-            .then(function(res) {
-              $scope.processing = false;
-              var track = res.data;
-              $scope.newQueue = track;
-              $scope.newQueueID = track.id;
-            })
-            .then(null, function(err) {
-              $.Zebra_Dialog("We are not allowed to access tracks by this artist with the Soundcloud API. We apologize for the inconvenience, and we are working with Soundcloud to resolve this issue.");
-              $scope.processing = false;
-            });
-        }
-      }
-
       $scope.moveUp = function(index) {
         if (index == 0) return;
         var s = $scope.user.queue[index];
@@ -87,37 +68,50 @@ app.directive('autofill', function($http) {
       };
       /*sort end*/
       $scope.loadQueueSongs = function(queue) {
-        $scope.autoFillTracks = [];
-        var ind = 0;
+        if ($scope.disallowQueueLoad) return;
+        $scope.disallowQueueLoad = true;
+        setTimeout(function() {
+          $scope.disallowQueueLoad = false;
+        }, 1000);
         var autofillWidget = SC.Widget('autofillPlayer');
-
-        function getNext() {
-          if (ind < $scope.user.queue.length) {
-            $scope.showAutofillPlayer = true;
-            autofillWidget.load("http://api.soundcloud.com/tracks/" + $scope.user.queue[ind], {
-              auto_play: false,
-              show_artwork: false,
-              callback: function() {
-                autofillWidget.getCurrentSound(function(track) {
-                  $scope.autoFillTracks.push(track);
-                  tmpList = $scope.autoFillTracks;
-                  $scope.list = tmpList;
-                  ind++;
-                  getNext();
-                });
+        $scope.autoFillTracks = [];
+        $scope.user.queue.forEach(function(trackID, index) {
+          SC.get('/tracks/' + trackID)
+            .then(function(data) {
+              $scope.autoFillTracks[index] = data;
+              if (!$scope.$$phase) $scope.$apply();
+            }).then(null, function(err) {
+              if (err.status == 403) {
+                function loadTrack(id, ind) {
+                  if (!$scope.loadingAFWidget) {
+                    $scope.loadingAFWidget = true;
+                    $scope.showAutofillPlayer = true;
+                    autofillWidget.load("http://api.soundcloud.com/tracks/" + id, {
+                      auto_play: false,
+                      show_artwork: false,
+                      callback: function() {
+                        autofillWidget.getCurrentSound(function(track) {
+                          $scope.loadingAFWidget = false;
+                          $scope.showAutofillPlayer = false;
+                          $scope.autoFillTracks[ind] = track;
+                          if (!$scope.$$phase) $scope.$apply();
+                        });
+                      }
+                    });
+                  } else {
+                    setTimeout(function() {
+                      loadTrack(id, ind);
+                    }, 300)
+                  }
+                }
+                loadTrack(trackID, index);
               }
-            });
-          } else {
-            var loaded = $scope.showAutofilPlayer;
-            $scope.showAutofillPlayer = false;
-            if (loaded) $scope.$apply();
-          }
-        }
-        getNext();
+            }).then(null, console.log);
+        });
       }
-
-      if ($scope.user && $scope.user.queue) {
+      if ($scope.user && $scope.user.queue && !$scope.alreadyLoaded) {
         $scope.loadQueueSongs();
+        $scope.alreadyLoaded == true;
       }
 
       $scope.choseAutoFillTrack = function(track) {
@@ -132,8 +126,9 @@ app.directive('autofill', function($http) {
         function waitForAutofill() {
           $scope.processing = true;
           setTimeout(function() {
-            if ($scope.autoFillTracks.length > 0) {
+            if (!$scope.showAutofillPlayer) {
               $scope.processing = false;
+              if (!$scope.$$phase) $scope.$apply();
               $scope.getAutoFillTracks();
             } else {
               waitForAutofill();
@@ -141,17 +136,30 @@ app.directive('autofill', function($http) {
           }, 500);
         }
         if ($scope.user.queue.length > 0) {
-          if ($scope.autoFillTracks.length == 0) {
+          if ($scope.autoFillTracks.includes(undefined) || $scope.autoFillTracks.length < $scope.user.queue.length) {
             waitForAutofill();
             return;
           }
           var track = JSON.parse(JSON.stringify($scope.autoFillTracks[$scope.afcount]));
-          if ($scope.showOverlay) $scope.choseTrack1(track);
-          else $scope.choseTrack(track);
           $scope.afcount = ($scope.afcount + 1) % $scope.autoFillTracks.length;
+          $scope.makeEvent.trackID = track.id;
+          if (window.location.href.includes('scheduler') && $scope.findUnrepostOverlap() && track.user.id != $scope.user.id) {
+            if ($scope.afcount == 0) {
+              $scope.showPlayer = false;
+              $scope.makeEvent.trackID = undefined;
+              $.Zebra_Dialog("No more autofill songs can be scheduled here. You are not allowed to repost a track within 24 hours of an unrepost of that track or within 48 hours of a repost of the same track.");
+            } else {
+              $scope.makeEvent.trackID = undefined;
+              $scope.getAutoFillTracks();
+            }
+            return;
+          } else {
+            if ($scope.showOverlay) $scope.choseTrack1(track);
+            else $scope.choseTrack(track);
+          }
         } else {
           $scope.showOverlay = false;
-          $.Zebra_Dialog('You do not have any tracks by other artists in your auto fill list', {
+          $.Zebra_Dialog('You do not have any tracks by other artists in your autofill list.', {
             'type': 'question',
             'buttons': [{
               caption: 'Cancel',
@@ -169,3 +177,8 @@ app.directive('autofill', function($http) {
     }]
   }
 });
+
+function stackTrace() {
+  var err = new Error();
+  return err.stack;
+}

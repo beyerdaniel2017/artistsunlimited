@@ -37,6 +37,8 @@ app.directive('scheduler', function($http) {
       $scope.tradeCommentsArr = [];
       $scope.popup = false;
       $scope.selectedSlot = {};
+      $scope.now = new Date();
+      $scope.alreadyLoaded = false;
       $scope.unrepostHours = 24;
       var commentIndex = 0;
       $scope.isView = false;
@@ -100,6 +102,7 @@ app.directive('scheduler', function($http) {
             $scope.$digest();
           }
         });
+        $scope.warnAboutPrevRepost();
       }
 
       $scope.choseTrack = function(track) {
@@ -120,6 +123,19 @@ app.directive('scheduler', function($http) {
             $scope.$digest();
           }
         });
+        $scope.warnAboutPrevRepost();
+      }
+
+      $scope.warnAboutPrevRepost = function() {
+        var filtered = $scope.events.filter(function(event) {
+          return event.trackID == $scope.makeEvent.trackID && event.day < $scope.makeEvent.day;
+        })
+        filtered.sort(function(a, b) {
+          return b.day - a.day;
+        })
+        if (filtered[0].unrepostDate < filtered[0].day) {
+          $.Zebra_Dialog('FYI: This song will not be reposted unless you unrepost the previous repost of this track, which is scheduled for ' + filtered[0].day.toLocaleString() + '.');
+        }
       }
 
       $scope.linkedAccounts = [];
@@ -180,15 +196,19 @@ app.directive('scheduler', function($http) {
         }
       }
       $scope.changeLikeCommentIcons = function(type) {
+        console.log(type);
         if (type == 'like') {
+          console.log($scope.likeSrc);
           if ($scope.likeSrc == 'assets/images/like.svg') {
             $scope.likeSrc = 'assets/images/likeTrue.svg';
             $scope.likeEvent = true;
           } else {
             $scope.likeSrc = 'assets/images/like.svg';
-            $scope.likeEvent = false
+            $scope.likeEvent = false;
           }
+          console.log($scope.likeSrc)
         } else {
+          console.log($scope.commentSrc);
           if ($scope.commentSrc == 'assets/images/comment.svg') {
             $scope.commentSrc = 'assets/images/noComment.svg';
             $scope.makeEvent.isComment = false;
@@ -535,7 +555,7 @@ app.directive('scheduler', function($http) {
         }
       }
 
-      $scope.clickedSlotsave = function(day, hour) {
+      $scope.toggleAvailableSlot = function(day, hour) {
         var pushhour = parseInt(hour);
         if ($scope.availableSlots[daysArray[day]].indexOf(pushhour) > -1) {
           $scope.availableSlots[daysArray[day]].splice($scope.availableSlots[daysArray[day]].indexOf(pushhour), 1);
@@ -574,7 +594,7 @@ app.directive('scheduler', function($http) {
         allSlots.forEach(function(slot) {
           var i = 0;
           while (i < checkingSlots.length) {
-            if (Math.abs(checkingSlots[i] - slot) > 24) checkingSlots.splice(i, 1);
+            if (Math.abs(checkingSlots[i] - slot) >= 24) checkingSlots.splice(i, 1);
             else i++;
           }
           checkingSlots.push(slot);
@@ -586,11 +606,14 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.setSlotStyle = function(day, hour) {
-        var style = {};
+        var style = {
+          'border-radius': '4px'
+        };
         if ($scope.availableSlots && $scope.availableSlots[daysArray[day]].indexOf(hour) > -1) {
           style = {
             'background-color': "#fff",
-            'border-color': "#999"
+            'border-color': "#999",
+            'border-radius': '4px',
           };
         }
         return style;
@@ -691,14 +714,13 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.clickedSlot = function(day, hour, data) {
+        console.log(data);
         $scope.afcount = 0;
         $scope.isView = false;
         $scope.popup = true;
         $scope.slotType = 'track';
         var d = new Date(day).getDay();
         if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1 && data.type == 'empty') return;
-        var today = new Date();
-        if (today.toLocaleDateString() == day.toLocaleDateString() && today.getHours() > hour) return;
         var makeDay = new Date(day);
         makeDay.setHours(hour);
         if ($scope.user.blockRelease && new Date($scope.user.blockRelease).getTime() > new Date(makeDay).getTime()) {
@@ -732,6 +754,7 @@ app.directive('scheduler', function($http) {
             $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.schedule && $scope.user.repostSettings.schedule.comments && $scope.user.repostSettings.schedule.comments.length > 0) ? $scope.user.repostSettings.schedule.comments[Math.random() * $scope.user.repostSettings.schedule.comments.length >> 0] : '';
           $scope.isComment = "";
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
+          $scope.showPlayer = false;
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
           $scope.makeEvent.unrepost = true;
           $scope.newEvent = true;
@@ -906,22 +929,17 @@ app.directive('scheduler', function($http) {
         calendarDay.events[event.day.getHours()] = event;
       }
 
-      $scope.changeUnrepost = function() {
-        if ($scope.makeEvent.unrepost) {
-          $scope.makeEvent.day = new Date($scope.makeEvent.day);
-          $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
-        } else {
-          $scope.makeEvent.unrepostDate = new Date(0);
-        }
-      }
-
       $scope.findUnrepostOverlap = function() {
         if (!$scope.makeEvent.trackID) return false;
         var blockEvents = $scope.events.filter(function(event) {
-          if (event._id == $scope.makeEvent._id) return false;
+          if (event._id == $scope.makeEvent._id || $scope.makeEvent.trackID != event.trackID) return false;
           event.day = new Date(event.day);
           event.unrepostDate = new Date(event.unrepostDate);
-          return ($scope.makeEvent.trackID == event.trackID && (Math.abs(event.unrepostDate.getTime() - $scope.makeEvent.day.getTime()) < 24 * 3600000 || Math.abs(event.day.getTime() - $scope.makeEvent.unrepostDate.getTime()) < 24 * 3600000));
+          var eventLowerBound = $scope.makeEvent.day.getTime();
+          var eventUpperBound = $scope.makeEvent.unrepostDate > $scope.makeEvent.day ? $scope.makeEvent.unrepostDate.getTime() + 24 * 3600000 : $scope.makeEvent.day.getTime() + 48 * 3600000;
+          var makeEventLowerBound = event.day.getTime();
+          var makeEventUpperBound = event.unrepostDate > event.day ? event.unrepostDate.getTime() + 24 * 3600000 : event.day.getTime() + 48 * 3600000;
+          return ((event.day.getTime() > eventLowerBound && event.day.getTime() < eventUpperBound) || ($scope.makeEvent.day.getTime() > makeEventLowerBound && $scope.makeEvent.day.getTime() < makeEventUpperBound));
         })
         return blockEvents.length > 0;
       }
@@ -986,7 +1004,7 @@ app.directive('scheduler', function($http) {
           $.Zebra_Dialog("Sorry! You cannot schedule your own track to be reposted.")
           return;
         } else if ($scope.findUnrepostOverlap()) {
-          $.Zebra_Dialog('Issue! This repost will cause this track to be both unreposted then reposted within a 24 hour time period. Please allow 24 hours between unrepost and re-repost.');
+          $.Zebra_Dialog('Issue! Please allow at least 24 hours between unreposting a track and re-reposting it and at least 48 hours between reposts of the same track.');
           return;
         }
         if (!$scope.makeEvent.trackID && ($scope.makeEvent.type == "track")) {
@@ -1078,7 +1096,9 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.getStyle = function(event, date, day, hour) {
-        var style = {};
+        var style = {
+          'border-radius': '4px'
+        };
         var currentDay = new Date(date).getDay();
 
         var date = (new Date(date)).setHours(hour)
@@ -1086,6 +1106,7 @@ app.directive('scheduler', function($http) {
           style = {
             'background-color': '#fff',
             'border-color': "#999",
+            'border-radius': '4px'
           }
         }
         return style;
@@ -1098,17 +1119,20 @@ app.directive('scheduler', function($http) {
           return {
             'background-color': '#FF7676',
             'margin': '2px',
-            'height': '18px'
+            'height': '18px',
+            'border-radius': '4px'
           }
         } else if (event.type == 'traded') {
           return {
             'background-color': '#FFD450',
             'margin': '2px',
-            'height': '18px'
+            'height': '18px',
+            'border-radius': '4px'
           }
         } else if (event.type == 'paid') {
           return {
-            'background-color': '#FFBBDD'
+            'background-color': '#FFBBDD',
+            'border-radius': '4px'
           }
         }
       }
@@ -1119,6 +1143,7 @@ app.directive('scheduler', function($http) {
             var events = res.data
             events.forEach(function(ev) {
               ev.day = new Date(ev.day);
+              ev.unrepostDate = ev.unrepostDate ? new Date(ev.unrepostDate) : new Date(0);
             });
             $scope.events = events;
             $scope.calendar = $scope.fillDateArrays(events);
