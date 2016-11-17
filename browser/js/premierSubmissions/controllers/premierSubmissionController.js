@@ -33,47 +33,38 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   $scope.skip = 0;
   $scope.limit = 5;
   $scope.dynamicButton = [{
-   "name": "TRACK TITLE WITH LINK", 
-   "appendText": " {TRACK_TITLE_WITH_LINK} " 
-  },
-  { 
-    "name": "SUBMITTERS EMAIL", 
-    "appendText": " {SUBMITTERS_EMAIL} " 
-  },
-  { 
     "name": "TRACK TITLE", 
     "appendText": " {TRACK_TITLE} " 
-  },
-  { 
-    "name": "TRACK ARTIST WITH LINK", 
-    "appendText": " {TRACK_ARTIST_WITH_LINK} " 
-  },
-  { 
-    "name": "TRACK ARTIST", 
-    "appendText": " {TRACK_ARTIST} " 
-  },
-  { 
-    "name": "TRACK ARTWORK", 
-    "appendText": " {TRACK_ARTWORK} " 
-  },
-  { 
-    "name": "SUBMITTED TO ACCOUNT NAME", 
-    "appendText": " {SUBMITTED_TO_ACCOUNT_NAME} " 
-  },
-  { 
-    "name": "SUBMITTED ACCOUNT NAME WITH LINK", 
-    "appendText": " {SUBMITTED_ACCOUNT_NAME_WITH_LINK} " 
-  },
-  { 
-    "name": "ACCEPTED CHANNEL LIST", 
-    "appendText": " {ACCEPTED_CHANNEL_LIST} " 
-  },
-  { 
-    "name": "ACCEPTED CHANNEL LIST WITH LINK", 
-    "appendText": " {ACCEPTED_CHANNEL_LIST_WITH_LINK} " },
-  { 
+  },{
     "name": "TODAYS DATE", 
     "appendText": " {TODAYSDATE} " 
+  }, {
+    "name": "TRACK ARTIST", 
+    "appendText": " {TRACK_ARTIST} " 
+  }, {
+    "name": "TRACK ARTWORK", 
+    "appendText": " {TRACK_ARTWORK} " 
+  },{
+    "name": "SUBMITTERS EMAIL", 
+    "appendText": " {SUBMITTERS_EMAIL} " 
+  },{
+   "name": "TRACK TITLE WITH LINK", 
+   "appendText": " {TRACK_TITLE_WITH_LINK} " 
+  },  {
+    "name": "TRACK ARTIST WITH LINK", 
+    "appendText": " {TRACK_ARTIST_WITH_LINK} " 
+  }, {
+    "name": "ACCEPTED CHANNEL LIST", 
+    "appendText": " {ACCEPTED_CHANNEL_LIST} " 
+  },{
+    "name": "SUBMITTED TO ACCOUNT NAME", 
+    "appendText": " {SUBMITTED_TO_ACCOUNT_NAME} " 
+  },{
+    "name": "ACCEPTED CHANNEL LIST WITH LINK", 
+    "appendText": " {ACCEPTED_CHANNEL_LIST_WITH_LINK} "
+  }, {
+    "name": "SUBMITTED ACCOUNT NAME WITH LINK", 
+    "appendText": " {SUBMITTED_ACCOUNT_NAME_WITH_LINK} " 
   }];
   $scope.genreArray = [
     'Alternative Rock',
