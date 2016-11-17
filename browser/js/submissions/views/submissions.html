@@ -213,37 +213,34 @@
                         <div class="col-md-12 bg-white">
                           <form ng-submit="saveSettings()">
                             <br />
-                            <p class="text-center">To use a value from the submission, you can write: {name} for the submitter's name, {title} for the title of the track, {email} for the submitter's email or {url} for the url of the track.</p>
-                            <br />
                             <div class="row margin-bottom-10" ng-repeat="item in customEmailButtons track by $index" style="border-bottom: solid 1px #dcdcdc;">
                               <div class="col-md-12">
-                                <div class="col-md-1 margin-bottom-10">&nbsp;</div>
-                                <div class="col-md-10 margin-bottom-10">
+                                <div class="col-md-8 margin-bottom-10">
                                   <input type="text" ng-model="item.buttonText" class="form-control" placeholder="Button Title">
                                   <br/>
                                   <input type="text" ng-model="item.toEmail" class="form-control" placeholder="To Email">
                                   <br/>
                                   <input type="text" ng-model="item.subject" class="form-control" placeholder="Subject">
+                                  <br/>
+                                  <textarea ng-model="item.emailBody" class="form-control emailBodyArea{{$index}}" rows="15" placeholder="Email body" index="{{$index}}" ng-click="addEventClass($index,'emailBodyArea');"></textarea>
+                                  <br/>
+                                  <div class="col-md-12 text-center">
+                                    <button class="btn btn-default" ng-click="sendTestMail($index)">Send test mail</button>
+                                    <button class="btn btn-default" ng-click="removeItem($index)">Delete</button>
+                                  </div>
                                 </div>
-                                <div class="col-md-1 margin-bottom-10">
-                                  <span class="btn btn-border" ng-click="removeItem($index)">X</span>
-                                </div>
-                              </div>
-                              <div class="col-md-12 margin-bottom-10">
-                                <div class="col-md-1">&nbsp;</div>
-                                <div class="col-md-10">
-                                  <textarea ng-model="item.emailBody" class="form-control emailBodyArea{{$index}}" rows="10" placeholder="Email body" index="{{$index}}" ng-click="addEventClass($index,'emailBodyArea');"></textarea>
-                                </div>
-                                <div class="col-md-1">&nbsp;</div>
-                              </div>
-                              <br/>
-                              <div class="col-md-12 text-center">
-                                <button class="btn btn-default" ng-click="sendTestMail($index)">Send test mail</button>
-                                <div class="button-list text-center">
+                                <div class="col-md-4 margin-bottom-10">
                                   <input ng-repeat="btn in dynamicButton " type="button" name="{{btn.name}}" class="btn btn-border organize-btn" style="margin-left:20px;" value="{{btn.name}}" ng-click="appendBody(btn)">
                                 </div>
                               </div>
-                              <div class="space-20">&nbsp;</div>
+    <!--                      <div class="col-md-12 margin-bottom-10">
+                                <div class="col-md-1">&nbsp;</div>
+                                <div class="col-md-10">
+                                  
+                                </div>
+                                <div class="col-md-1">&nbsp;</div>
+                              </div> -->                              
+                              <div class="space-10">&nbsp;</div>
                             </div>
                             <br/>
                             <div class="text-center margin-bottom-10">
@@ -280,69 +277,69 @@
                               </div>
                             </div>
                           </form>
-                        <div class="space-10"></div> 
-                        <div class="table-responsive">
-                          <table class="table table-bordered table-striped">
-                            <thead>
+                          <div class="space-10"></div> 
+                          <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                              <thead>
                                 <tr>
                                   <td>
                                     <a href="#" ng-click="sortType = 'username'; sortReverse = !sortReverse">Account Name
-                                    <span ng-show="sortType == 'username' && !sortReverse" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType == 'username' && sortReverse" class="fa fa-caret-up"></span>
+                                      <span ng-show="sortType == 'username' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'username' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
                                   </td>
                                   <td>
                                     <a href="#" ng-click="sortType = 'title'; sortReverse = !sortReverse">Song Name 
-                                    <span ng-show="sortType == 'title' && !sortReverse" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType == 'title' && sortReverse" class="fa fa-caret-up"></span>
+                                      <span ng-show="sortType == 'title' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'title' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
                                   </td>
                                   <td>
                                     <a href="#" ng-click="sortType = 'trackURL'; sortReverse = !sortReverse">Track Url 
-                                    <span ng-show="sortType == 'trackURL' && !sortReverse" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType == 'trackURL' && sortReverse" class="fa fa-caret-up"></span>
+                                      <span ng-show="sortType == 'trackURL' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'trackURL' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
                                   </td>
                                   <td>
                                     <a href="#" ng-click="sortType = 'day'; sortReverse = !sortReverse">Day
-                                    <span ng-show="sortType == 'day' && !sortReverse" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType == 'day' && sortReverse" class="fa fa-caret-up"></span>
+                                      <span ng-show="sortType == 'day' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'day' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
                                   </td>
                                   <td>
                                     <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">Submitter Name
-                                    <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
+                                      <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
                                   </td>
                                   <td>
                                     <a href="#" ng-click="sortType = 'email'; sortReverse = !sortReverse">Submitter Email
-                                    <span ng-show="sortType == 'email' && !sortReverse" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType == 'email' && sortReverse" class="fa fa-caret-up"></span>
+                                      <span ng-show="sortType == 'email' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'email' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
                                   </td>
-                                   <td>
+                                  <td>
                                     <a href="#" ng-click="sortType = 'completed'; sortReverse = !sortReverse">Completed
-                                    <span ng-show="sortType == 'completed' && !sortReverse" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType == 'completed' && sortReverse" class="fa fa-caret-up"></span>
+                                      <span ng-show="sortType == 'completed' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'completed' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
                                   </td>
                                   <td>
                                     <a href="#" ng-click="sortType = 'price'; sortReverse = !sortReverse">Price
-                                    <span ng-show="sortType == 'price' && !sortReverse" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType == 'price' && sortReverse" class="fa fa-caret-up"></span>
+                                      <span ng-show="sortType == 'price' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'price' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
                                   </td>
                                   <td>
                                     <a href="#" ng-click="sortType = 'tastiness'; sortReverse = !sortReverse">Amount Received
-                                    <span ng-show="sortType == 'tastiness' && !sortReverse" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType == 'tastiness' && sortReverse" class="fa fa-caret-up"></span>
+                                      <span ng-show="sortType == 'tastiness' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'tastiness' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
                                   </td>
                                   <td>
                                     <a href="#" ng-click="sortType = 'tastiness'; sortReverse = !sortReverse">Refunded
-                                    <span ng-show="sortType == 'tastiness' && !sortReverse" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType == 'tastiness' && sortReverse" class="fa fa-caret-up"></span>
+                                      <span ng-show="sortType == 'tastiness' && !sortReverse" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType == 'tastiness' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
                                   </td>
                                 </tr>
@@ -371,26 +368,26 @@
                     <div class="row">
                       <div class="row margin0">
                         <div class="col-md-12 bg-white">
-                        <div class="table-responsive">
-                          <table class="table table-bordered table-striped">
-                            <thead>
-                              <tr>
-                                <td>
-                                  <a href="#" ng-click="sortType1 = 'username'; sortReverse1 = !sortReverse1">Account Name
-                                    <span ng-show="sortType1 == 'username' && !sortReverse1" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType1 == 'username' && sortReverse1" class="fa fa-caret-up"></span>
-                                  </a>
-                                </td>
-                                <td>
-                                  <a href="#" ng-click="sortType1 = 'amount'; sortReverse1 = !sortReverse1">Amount
-                                    <span ng-show="sortType1 == 'amount' && !sortReverse1" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType1 == 'amount' && sortReverse1" class="fa fa-caret-up"></span>
-                                  </a>
-                                </td>
-                                <td>
-                                  <a href="#" ng-click="sortType1 = 'percentage'; sortReverse1 = !sortReverse1">Percentage Paid
-                                    <span ng-show="sortType1 == 'percentage' && !sortReverse1" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType1 == 'percentage' && sortReverse1" class="fa fa-caret-up"></span>
+                          <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                              <thead>
+                                <tr>
+                                  <td>
+                                    <a href="#" ng-click="sortType1 = 'username'; sortReverse1 = !sortReverse1">Account Name
+                                      <span ng-show="sortType1 == 'username' && !sortReverse1" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType1 == 'username' && sortReverse1" class="fa fa-caret-up"></span>
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <a href="#" ng-click="sortType1 = 'amount'; sortReverse1 = !sortReverse1">Amount
+                                      <span ng-show="sortType1 == 'amount' && !sortReverse1" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType1 == 'amount' && sortReverse1" class="fa fa-caret-up"></span>
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <a href="#" ng-click="sortType1 = 'percentage'; sortReverse1 = !sortReverse1">Percentage Paid
+                                      <span ng-show="sortType1 == 'percentage' && !sortReverse1" class="fa fa-caret-down"></span>
+                                      <span ng-show="sortType1 == 'percentage' && sortReverse1" class="fa fa-caret-up"></span>
                                     </a>
                                   </td>
                                   <td>

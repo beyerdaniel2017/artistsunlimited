@@ -7,7 +7,7 @@
         <img src="assets/images/myschedule.png" />NEW TRADE</a>
       </li>
       <li role="presentation" ng-class="{active: activeTab == '2'}"><a href="#organizeschedule" aria-controls="organizeschedule" role="tab" data-toggle="tab"> <img src="assets/images/organizeschedule.png"/>INCOMPLETE TRADES<span class="badge notification-bubble-left-menu" ng-show="shownotification">!</span></a></li>
-      <li role="presentation" ng-class="{active: activeTab == '3'}"><a href="#managetrades" aria-controls="" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.png"/>MANAGE TRADED SLOTS<span class="badge notification-bubble-left-menu" ng-show="manageSlots">!</span></a></li>
+      <li role="presentation" ng-class="{active: activeTab == '3'}"><a href="#managetrades" aria-controls="managetrades" role="tab" data-toggle="tab"> <img src="assets/images/managereposts.png"/>MANAGE TRADED SLOTS<span class="badge notification-bubble-left-menu" ng-show="manageSlots">!</span></a></li>
     </ul>
     <!-- Nav tabs :End-->
     <!-- Tab panes :: Start-->
@@ -257,7 +257,7 @@
             <div class="next-previous text-center">
               <!--  <button class="btn active">SKIP TO NEXT AUTOFILL</button> -->
               <button class="btn btn-border b-radius-10" ng-click="addNewSongCancel()">CANCEL</button>
-              <button class="btn btn-pink b-radius-10 save-share" ng-show='allowSave()' ng-click="saveEvent();">SAVE</button>
+              <button class="btn btn-pink b-radius-10 save-share" ng-show='allowSave()' ng-if="makeEvent.day > now" ng-click="saveEvent();">SAVE</button>
             </div>
           </div>
         </div><!--row end-->
@@ -272,7 +272,6 @@
   <div class="height-10"> </div>
 </div> 
 </div>           
-</div>
 </div><!-- MANAGE REPOSTS : End -->                
 </div><!-- Tab panes :: End-->
 </div><!--page-contant End-->
@@ -331,7 +330,7 @@
         <button class="btn btn-border b-radius-10 organize-btn" style="width:100%;" ng-click="closeModal();">CANCEL</button>
       </div>
       <div class="col-md-6">
-        <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-click="saveEvent();">SAVE</button>
+        <button class="btn btn-pink b-radius-10 organize-btn" style="width:100%;" ng-if="makeEvent.day > now" ng-click="saveEvent();">SAVE</button>
       </div>
     </div>
   </div><!--row end-->                  

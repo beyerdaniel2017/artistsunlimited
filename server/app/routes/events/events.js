@@ -181,7 +181,7 @@ router.put('/repostEvents', function(req, res, next) {
       res.send(ev);
     }).then(null, function(err) {
       if (err.message == 'overlap') {
-        next('Issue! Please allow at least 24 hours between unreposting a track and re-reposting it and at least 48 hours between reposts of the same track.');
+        next(new Error('Issue! Please allow at least 24 hours between unreposting a track and re-reposting it and at least 48 hours between reposts of the same track.'));
       }
     })
 });

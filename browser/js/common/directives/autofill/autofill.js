@@ -143,7 +143,7 @@ app.directive('autofill', function($http) {
           var track = JSON.parse(JSON.stringify($scope.autoFillTracks[$scope.afcount]));
           $scope.afcount = ($scope.afcount + 1) % $scope.autoFillTracks.length;
           $scope.makeEvent.trackID = track.id;
-          if ($scope.findUnrepostOverlap() && track.user.id != $scope.user.id) {
+          if (window.location.href.includes('scheduler') && $scope.findUnrepostOverlap() && track.user.id != $scope.user.id) {
             if ($scope.afcount == 0) {
               $scope.showPlayer = false;
               $scope.makeEvent.trackID = undefined;

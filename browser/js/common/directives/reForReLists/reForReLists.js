@@ -11,6 +11,7 @@ app.directive('reforrelists', function($http) {
       $scope.otherUsers = [];
       $scope.type = 'remind';
       $scope.listDayIncr = 0;
+      $scope.now = new Date();
       var path = window.location.pathname;
       $scope.isAdminRoute = false;
       if (path.indexOf("admin/") != -1) {
@@ -459,7 +460,7 @@ app.directive('reforrelists', function($http) {
         //     })
         // }
 
-      $scope.dayIncr = 0;
+      $scope.dayIncr = 7;
       $scope.incrDay = function() {
         if ($scope.dayIncr < 21) $scope.dayIncr++;
       }
@@ -528,6 +529,7 @@ app.directive('reforrelists', function($http) {
       $scope.fillDateArrays = function(repostEvent) {
         var calendar = [];
         var today = new Date();
+        today.setDate(today.getDate() - 7);
         for (var i = 0; i < 29; i++) {
           var calDay = {};
           calDay.day = new Date()
@@ -631,7 +633,7 @@ app.directive('reforrelists', function($http) {
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
           $scope.showPlayer = false;
         }
-        $scope.$apply();
+        // $scope.$apply();
       }
 
       $scope.closeModal = function() {

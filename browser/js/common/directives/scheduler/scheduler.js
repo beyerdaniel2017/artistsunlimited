@@ -99,10 +99,10 @@ app.directive('scheduler', function($http) {
           show_artwork: false,
           callback: function() {
             document.getElementById('scPopupPlayer').style.visibility = "visible";
-            console.log(document.getElementById('scPopupPlayer'));
             $scope.$digest();
           }
         });
+        $scope.warnAboutPrevRepost();
       }
 
       $scope.choseTrack = function(track) {
@@ -120,10 +120,22 @@ app.directive('scheduler', function($http) {
           show_artwork: true,
           callback: function() {
             document.getElementById('scPlayer').style.visibility = "visible";
-            console.log(document.getElementById('scPlayer'));
             $scope.$digest();
           }
         });
+        $scope.warnAboutPrevRepost();
+      }
+
+      $scope.warnAboutPrevRepost = function() {
+        var filtered = $scope.events.filter(function(event) {
+          return event.trackID == $scope.makeEvent.trackID && event.day < $scope.makeEvent.day;
+        })
+        filtered.sort(function(a, b) {
+          return b.day - a.day;
+        })
+        if (filtered[0].unrepostDate < filtered[0].day) {
+          $.Zebra_Dialog('FYI: This song will not be reposted unless you unrepost the previous repost of this track, which is scheduled for ' + filtered[0].day.toLocaleString() + '.');
+        }
       }
 
       $scope.linkedAccounts = [];
@@ -414,7 +426,6 @@ app.directive('scheduler', function($http) {
         $scope.timeGap = newObj.event.timeGap;
         $scope.unrepostHours = newObj.event.unrepostHours;
         $scope.unrepostEnable = new Date(newObj.event.unrepostDate) > new Date(1000);
-        console.log($scope.unrepostEnable);
         var channels = newObj.event.otherChannels;
         if (channels.length > 0) {
           for (var i = 0; i < channels.length; i++) {
@@ -433,7 +444,6 @@ app.directive('scheduler', function($http) {
         $scope.slotType = item.event.type;
         if ($scope.slotType == "traded")
           $scope.isTraded = true;
-        console.log(item);
         $scope.showPlayer = true;
         document.getElementById('scPlayer').style.visibility = "visible";
         if (item.event.type == 'traded' && item.event.trackURL) {
@@ -726,7 +736,6 @@ app.directive('scheduler', function($http) {
         $scope.trackListSlotObj = undefined;
         $scope.makeEvent = JSON.parse(JSON.stringify(calendarDay.events[hour]));
         $scope.unrepostEnable = new Date($scope.makeEvent.unrepostDate) > new Date(1000);
-        console.log($scope.unrepostEnable);
         $scope.unrepostHours = "";
         $scope.updateReach();
         $scope.setScheduleLikeComment();
@@ -755,7 +764,6 @@ app.directive('scheduler', function($http) {
           if (data.type == 'traded') {
             $scope.isTraded = true;
           }
-          console.log($scope.makeEvent);
           $scope.isEdit = true;
           $scope.likeSrc = (data.like == true) ? 'assets/images/likeTrue.svg' : 'assets/images/like.svg';
           $scope.likeEvent = data.like;
@@ -1135,6 +1143,7 @@ app.directive('scheduler', function($http) {
             var events = res.data
             events.forEach(function(ev) {
               ev.day = new Date(ev.day);
+              ev.unrepostDate = ev.unrepostDate ? new Date(ev.unrepostDate) : new Date(0);
             });
             $scope.events = events;
             $scope.calendar = $scope.fillDateArrays(events);
