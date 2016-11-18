@@ -81,46 +81,52 @@ router.get('/getUserID', function(req, res, next) {
 });
 
 router.get('/getUserByURL/:username/:page', function(req, res, next) {
-  if (!req.user) {
-    next(new Error('Unauthorized'));
-    return;
-  }
+  // if (!req.user) {
+  //     next(new Error('Unauthorized'));
+  //     return;
+  // }
   var query = {};
-  var url = rootURL + "/custom/" + req.params.username + "/" + req.params.page;
+  var url = rootURL+"/"+req.params.username+"/"+req.params.page;
+  var customUrl = rootURL+"/custom/"+req.params.username+"/"+req.params.page;
   if (req.params.page.indexOf('submit') != -1) {
-    query = {
+    query = { $or: [{
       'paidRepost.submissionUrl': url
+      }, {
+        'paidRepost.submissionUrl': customUrl
+      }]
     };
   } else {
-    query = {
+     query = { $or: [{
       'paidRepost.premierUrl': url
+      }, {
+        'paidRepost.premierUrl': customUrl
+      }]
     };
   }
   User.findOne(query)
-
   .then(function(user) {
       if (user && user.paidRepost.length > 0) {
         if (req.params.page.indexOf('submit') != -1) {
           var u = user.paidRepost.find(function(pr) {
-            return pr.submissionUrl == url;
+          return pr.submissionUrl == url || pr.submissionUrl == customUrl;
           })
           if (u) {
             res.send(u.userID);
           } else {
-            res.send(null);
+          res.send("nouser");
           }
         } else {
           var u = user.paidRepost.find(function(pr) {
-            return pr.premierUrl == url;
+          return pr.premierUrl == url || pr.premierUrl == customUrl;
           })
           if (u) {
             res.send(u.userID);
           } else {
-            res.send(null);
+          res.send("nouser");
           }
         }
       } else {
-        res.send(null);
+      res.send("nouser");
       }
     })
     .then(null, next);

@@ -1,15 +1,15 @@
 app.config(function($stateProvider) {
   $stateProvider.state('customsubmit', {
-    url: '/customsubmit/:username/:submitpart',
+    url: '/:username/submit',
     templateUrl: 'js/accountSubmit/accountsubmit.view.html',
     controller: 'AccountSubmitSongController',
     resolve: {
       userID: function($stateParams, $http, $window) {
         var username = $stateParams.username;
-        var submitpart = $stateParams.submitpart;
-        return $http.get('/api/users/getUserByURL/' + username + '/' + submitpart)
+        //var submitpart = $stateParams.submitpart;
+        return $http.get('/api/users/getUserByURL/' + username + '/submit')
           .then(function(res) {
-            return res.data;
+          return {userid: res.data, username: username, submitpart: 'submit'};
           })
           .then(null, function(err) {
             $.Zebra_Dialog("error getting your events");
@@ -17,7 +17,10 @@ app.config(function($stateProvider) {
           })
       },
       customizeSettings: function($http, customizeService, userID) {
-        return customizeService.getCustomPageSettings(userID, 'submit')
+        if(userID.userid == "nouser"){
+          $location.path("/"+userID.username+"/"+userID.submitpart);
+        }
+        return customizeService.getCustomPageSettings(userID.userid, userID.submitpart)
           .then(function(response) {
             return response;
           })
@@ -40,13 +43,11 @@ app.controller('AccountSubmitSongController', function($rootScope, $state, $scop
     $scope.submission.trackID = track.id;
     $scope.submission.title = track.title;
     $scope.submission.trackURL = track.permalink_url;
-    console.log($scope.submission);
     var widget = SC.Widget('scPlayerCustom');
     widget.load($scope.submission.trackURL, {
       auto_play: false,
       show_artwork: true,
       callback: function() {
-        console.log($scope.submission);
         if ($scope.submission.title == "--unknown--") {
           widget.getCurrentSound(function(track) {
             console.log(track);
@@ -74,7 +75,7 @@ app.controller('AccountSubmitSongController', function($rootScope, $state, $scop
           trackURL: $scope.submission.trackURL,
           channelIDS: [],
           invoiceIDS: [],
-          userID: userID,
+        userID: userID.userid,
           genre: ''
         })
         .then(function(res) {

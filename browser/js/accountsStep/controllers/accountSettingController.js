@@ -185,6 +185,9 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
         .then(function(res) {
           $scope.AccountsStepData.submissionData = res.data;
           $scope.AccountsStepData.submissionData.submissionUrl = res.data.submissionUrl.replace(/ /g, '');
+          $scope.AccountsStepData.submissionData.submissionUrl = $scope.AccountsStepData.submissionData.submissionUrl.replace('/custom','');
+           $scope.AccountsStepData.submissionData.premierUrl = res.data.premierUrl.replace(/ /g, '');
+          $scope.AccountsStepData.submissionData.premierUrl = $scope.AccountsStepData.submissionData.premierUrl.replace('/custom','');
           $scope.AccountsStepData.submissionData.username = res.data.user.username;
           $scope.AccountsStepData.submissionData.avatarURL = res.data.user.avatarURL;
           $scope.AccountsStepData.submissionData.followers = res.data.user.followers;

@@ -1,15 +1,14 @@
 app.config(function($stateProvider) {
   $stateProvider.state('custompremier', {
-    url: '/custompremiere/:username/:submitpart',
+    url: '/:username/premiere',
     templateUrl: 'js/accountPremiere/accountPremier.view.html',
     controller: 'AccountPremierController',
     resolve: {
       userID : function($stateParams, $http, $window) {
         var username = $stateParams.username;
-        var submitpart = $stateParams.submitpart;
-        return $http.get('/api/users/getUserByURL/' + username + '/' + submitpart)
+        return $http.get('/api/users/getUserByURL/' + username + '/premiere')
         .then(function(res) {
-          return res.data;
+          return {userid: res.data,username: username,submitpart: 'premiere'};
         })
         .then(null, function(err) {
           $.Zebra_Dialog("error getting your events");
@@ -17,7 +16,10 @@ app.config(function($stateProvider) {
         })
       },
       customizeSettings: function($http, customizeService, userID) {
-        return customizeService.getCustomPageSettings(userID, 'premiere')
+        if(userID.userid == "nouser"){
+          $location.path("/"+userID.username+"/"+userID.submitpart);
+        }
+        return customizeService.getCustomPageSettings(userID.userid, userID.submitpart)
         .then(function(response) {
           return response;
         })
@@ -46,7 +48,7 @@ app.controller('AccountPremierController', function($rootScope, $state, $scope, 
     for (var prop in $scope.premierObj) {
       data.append(prop, $scope.premierObj[prop]);
     }
-    data.append("userID", userID);
+    data.append("userID", userID.userid);
     PremierService
     .savePremier(data)
     .then(receiveResponse)
