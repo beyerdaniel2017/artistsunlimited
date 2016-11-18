@@ -15,34 +15,41 @@ app.directive('scsearch', function($http) {
         $scope.searchError = undefined;
         $scope.searching = true;
         if ($scope.searchString != "") {
-          if ($scope.searchString.includes('soundcloud.com')) {
-            console.log('includes');
-            $scope.showSearchPlayer = true;
-            var searchWidget = SC.Widget('searchPlayer');
-            searchWidget.load($scope.searchString, {
-              auto_play: false,
-              show_artwork: false,
-              callback: function() {
-                searchWidget.getCurrentSound(function(track) {
-                  $scope.showSearchPlayer = false;
-                  if (!track || track.kind != $scope.kind) {
-                    $scope.searchError = "Please enter a " + $scope.kind + " Url.";
-                  } else {
-                    track.displayName = track.title + ' - ' + track.user.username;
-                    $scope.selectedItem(track);
+          $http.post('/api/search', {
+            q: $scope.searchString,
+            kind: $scope.kind
+          }).then(function(res) {
+            $scope.searching = false;
+            var item = res.data.item;
+            if (item) {
+              if (item.title == '--unknown--') {
+                $scope.showSearchPlayer = true;
+                var searchWidget = SC.Widget('searchPlayer');
+                searchWidget.load($scope.searchString, {
+                  auto_play: false,
+                  show_artwork: false,
+                  callback: function() {
+                    searchWidget.getCurrentSound(function(item) {
+                      $scope.showSearchPlayer = false;
+                      if (!item || item.kind != $scope.kind) {
+                        $scope.searchError = "Please enter a " + $scope.kind + " Url.";
+                      } else {
+                        $scope.setItemText(item);
+                        $scope.selectedItem(item);
+                      }
+                      $scope.$digest();
+                    })
                   }
-                  $scope.$digest();
-                })
+                });
+              } else {
+                if (item.kind != $scope.kind) {
+                  $scope.searchError = "Please enter a " + $scope.kind + " Url.";
+                } else {
+                  $scope.setItemText(item);
+                  $scope.selectedItem(item);
+                }
               }
-            });
-
-          } else {
-            $http.post('/api/search', {
-              q: $scope.searchString,
-              kind: $scope.kind
-            }).then(function(res) {
-              $scope.searching = false;
-
+            } else {
               if (res.data.collection.length > 0) {
                 $scope.searchSelection = res.data.collection;
                 $scope.searchSelection.forEach(function(item) {
@@ -51,28 +58,29 @@ app.directive('scsearch', function($http) {
               } else {
                 $scope.searchError = "We could not find a " + $scope.kind + "."
               }
-              if ($scope.searching || $scope.searchError != "" || $scope.searchSelection.length > 0) {
-                window.onclick = function(event) {
-                  $scope.searching = false;
-                  $scope.searchError = "";
-                  $scope.searchSelection = [];
-                  $scope.$apply();
-                };
-              }
-            }).then(null, function(err) {
-              $scope.searching = false;
-              console.log('We could not find a ' + $scope.kind);
-              $scope.searchError = "We could not find a " + $scope.kind + "."
-              if ($scope.searching || $scope.searchError != "" || $scope.searchSelection.length > 0) {
-                window.onclick = function(event) {
-                  $scope.searching = false;
-                  $scope.searchError = "";
-                  $scope.searchSelection = [];
-                  $scope.$apply();
-                };
-              }
-            });
-          }
+            }
+            if ($scope.searching || $scope.searchError != "" || $scope.searchSelection.length > 0) {
+              window.onclick = function(event) {
+                $scope.searching = false;
+                $scope.searchError = "";
+                $scope.searchSelection = [];
+                $scope.$apply();
+              };
+            }
+          }).then(null, function(err) {
+            console.log(err);
+            $scope.searching = false;
+            console.log('We could not find a ' + $scope.kind);
+            $scope.searchError = "We could not find a " + $scope.kind + "."
+            if ($scope.searching || $scope.searchError != "" || $scope.searchSelection.length > 0) {
+              window.onclick = function(event) {
+                $scope.searching = false;
+                $scope.searchError = "";
+                $scope.searchSelection = [];
+                $scope.$apply();
+              };
+            }
+          });
         }
       }
 
