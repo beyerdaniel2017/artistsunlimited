@@ -8,7 +8,7 @@
   </div>
   <div class="col-md-6"> 
     <h5 ng-show="showAutofillPlayer">loading...</h5>
-    <div class="tracks-box" ui-sortable="sortableOptions" ng-model="list" ng-if="autoFillTracks.length > 0">
+    <div class="tracks-box" ui-sortable="sortableOptions" ng-model="autoFillTracks" ng-if="autoFillTracks.length > 0">
       <div class="track-item-list" ng-repeat="song in autoFillTracks track by $index" >
         <span class="pull-left" style="margin-right: 5px; padding-top: 3px;">{{$index+1}}</span> <img class="avatar-20" ng-src="{{song.artwork_url}}">
         <div class="tracks-title">

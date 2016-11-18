@@ -20,45 +20,12 @@ app.directive('autofill', function($http) {
         $scope.loadQueueSongs();
       }
 
-      $scope.moveUp = function(index) {
-        if (index == 0) return;
-        var s = $scope.user.queue[index];
-        $scope.user.queue[index] = $scope.user.queue[index - 1];
-        $scope.user.queue[index - 1] = s;
-        $scope.saveUser();
-        $scope.loadQueueSongs();
-      }
-
-      $scope.moveDown = function(index) {
-        if (index == $scope.user.queue.length - 1) return;
-        var s = $scope.user.queue[index];
-        $scope.user.queue[index] = $scope.user.queue[index + 1];
-        $scope.user.queue[index + 1] = s;
-        $scope.saveUser();
-        $scope.loadQueueSongs();
-      }
-
       /*sort start*/
-      var tmpList = [];
-      $scope.sortingLog = [];
       $scope.sortableOptions = {
-        update: function(e, ui) {
-          //$scope.autoFillTracks = [];
-          var logEntry = tmpList.map(function(i) {
-            return i.id;
-          });
-          $scope.user.queue = [];
-          $scope.sortingLog.push('Update: ' + logEntry);
-          $scope.user.queue = logEntry;
-          $scope.saveUser();
-        },
         stop: function(e, ui) {
-          // this callback has the changed model
-          var logEntry = tmpList.map(function(i) {
+          var logEntry = $scope.autoFillTracks.map(function(i) {
             return i.id;
           });
-          $scope.user.queue = [];
-          $scope.sortingLog.push('Stop: ' + logEntry);
           $scope.user.queue = logEntry;
           $scope.saveUser();
         }
