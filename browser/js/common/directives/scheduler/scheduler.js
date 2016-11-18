@@ -133,7 +133,7 @@ app.directive('scheduler', function($http) {
         filtered.sort(function(a, b) {
           return b.day - a.day;
         })
-        if (filtered[0].unrepostDate < filtered[0].day) {
+        if (filtered[0] && filtered[0].unrepostDate < filtered[0].day) {
           $.Zebra_Dialog('FYI: This song will not be reposted unless you unrepost the previous repost of this track, which is scheduled for ' + filtered[0].day.toLocaleString() + '.');
         }
       }
@@ -359,8 +359,11 @@ app.directive('scheduler', function($http) {
         $scope.isEdit = false;
         $scope.tabSelected = false;
         $scope.makeEventURL = "";
-        $scope.makeEvent = {};
-        $scope.unrepostHours = "";
+        $scope.makeEvent = {
+          type: 'track'
+        };
+        $scope.unrepostHours = "24";
+        $scope.unrepostEnable = true;
         $scope.eventComment = "";
         $scope.channelArr = [];
         $scope.selectedSlot = "";
@@ -368,17 +371,21 @@ app.directive('scheduler', function($http) {
         $scope.setScheduleLikeComment();
         $scope.showPlayer = false;
         $scope.getListEvents();
+        console.log($scope.linkedAccounts)
+        console.log($scope.isEdit);
+        console.log($scope.uniqueGroup);
       }
 
       $scope.isSchedule = false;
       $scope.scheduleSong = function(date) {
+        $scope.isTraded = false;
         $scope.afcount = 0;
         $scope.isEdit = false;
         $scope.isSchedule = true;
         $scope.tabSelected = false;
         $scope.isView = false;
-        $scope.unrepostEnable = false;
-        $scope.unrepostHours = "";
+        $scope.unrepostEnable = true;
+        $scope.unrepostHours = "24";
         $scope.newEvent = true;
         $scope.showPlayer = false;
         $scope.isComment = "";
@@ -467,6 +474,7 @@ app.directive('scheduler', function($http) {
         $scope.makeEvent.trackURL = $scope.makeEventURL;
         $scope.makeEvent.title = newObj.event.title;
         $scope.makeEvent.type = item.event.type;
+        $scope.makeEvent.owner = newObj.event.owner;
       }
 
       $scope.addNewSongCancel = function() {
@@ -751,6 +759,8 @@ app.directive('scheduler', function($http) {
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
           $scope.showPlayer = false;
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
+          $scope.unrepostEnable = true;
+          $scope.unrepostHours = "24";
           $scope.makeEvent.unrepost = true;
           $scope.newEvent = true;
           $scope.editChannelArr = [];
