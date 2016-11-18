@@ -4365,7 +4365,7 @@ td {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 12px;
-  width: 210px;
+  width: 200px;
   overflow: hidden;
   position: relative;
   top: 3px; }

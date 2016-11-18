@@ -51,7 +51,7 @@ app.directive('rfrinteraction', function($http) {
       $scope.activeUser = $scope.user;
       $scope.changeActiveUser = function(user) {
         $scope.activeUser = user;
-        $scope.$digest();
+        if (!$scope.$$phase) $scope.$apply();
       }
 
       $scope.changeRepeatOn = function() {
@@ -90,11 +90,11 @@ app.directive('rfrinteraction', function($http) {
             .then(function(tracks) {
               $scope.trackList = tracks;
               $scope.processing = false;
-              $scope.$apply();
+              if (!$scope.$$phase) $scope.$apply();
             })
             .catch(function(response) {
               $scope.processing = false;
-              $scope.$apply();
+              if (!$scope.$$phase) $scope.$apply();
             });
         }
       }

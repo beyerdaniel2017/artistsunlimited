@@ -17,9 +17,6 @@ app.directive('autofill', function($http) {
         if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
         $scope.user.queue.push($scope.newQueueID);
         $scope.saveUser();
-        $scope.newQueueSong = undefined;
-        $scope.trackListObj = "";
-        $scope.newQueue = undefined;
         $scope.loadQueueSongs();
       }
 
@@ -115,10 +112,16 @@ app.directive('autofill', function($http) {
       }
 
       $scope.choseAutoFillTrack = function(track) {
-        $scope.searchString = track.title;
         $scope.newQueueID = track.id;
         $scope.addSong();
-        $scope.showPlayer = true;
+      }
+
+      $scope.choseAutoFillPlaylist = function(playlist) {
+        playlist.tracks.forEach(function(track) {
+          if ($scope.user.queue.indexOf(track.id) == -1) $scope.user.queue.push(track.id);
+        })
+        $scope.saveUser();
+        $scope.loadQueueSongs();
       }
 
       $scope.afcount = 0;

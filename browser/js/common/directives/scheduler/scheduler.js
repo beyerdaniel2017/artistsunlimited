@@ -623,11 +623,6 @@ app.directive('scheduler', function($http) {
         $scope.channels = ["Emil", "Tobias", "Linus"];
       }
 
-      $scope.trackListChange = function(index) {
-        $scope.newQueueSong = $scope.trackListObj.permalink_url;
-        $scope.changeQueueSong();
-      };
-
       $scope.getTrackListFromSoundcloud = function() {
         var profile = $scope.user;
         if (profile.soundcloud) {

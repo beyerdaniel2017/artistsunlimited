@@ -8,15 +8,28 @@ var SCResolve = require('soundcloud-resolve-jsonp/node');
 var http = require('http');
 
 router.post('/', function(req, res, next) {
-  Promise.all([acSearch(req.body.q, req.body.kind), regSearch(req.body.q, req.body.kind)])
-    .then(function(results) {
-      var searchArray = results[0].concat(results[1]);
-      var sendObj = {
-        searchString: req.body.q,
-        collection: searchArray
-      }
-      res.send(sendObj);
-    }).then(null, next)
+  if (req.body.q.includes("soundcloud.com")) {
+    resolveURL(req.body.q)
+      .then(function(item) {
+        var sendObj = {
+          item: item,
+          searchString: req.body.q,
+          collection: []
+        }
+        res.send(sendObj);
+      })
+      .then(null, next);
+  } else {
+    Promise.all([acSearch(req.body.q, req.body.kind), regSearch(req.body.q, req.body.kind)])
+      .then(function(results) {
+        var searchArray = results[0].concat(results[1]);
+        var sendObj = {
+          searchString: req.body.q,
+          collection: searchArray
+        }
+        res.send(sendObj);
+      }).then(null, next)
+  }
 })
 
 
