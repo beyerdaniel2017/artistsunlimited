@@ -308,6 +308,7 @@ router.put('/save', function(req, res, next) {
               body = body.replace('{NAME}', sub.name);
               body = body.replace('{TRACK_TITLE_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.title + '</a>');
               body = body.replace('{TRACK_TITLE}', sub.title);
+              body = body.replace('{SUBMITTERS_EMAIL}', sub.email);
               body = body.replace('{TRACK_ARTIST_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.name + '</a>');
               body = body.replace('{TRACK_ARTIST}', sub.name);
               body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
@@ -370,6 +371,7 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
             body = body.replace('{TRACK_TITLE}', sub.title);
             body = body.replace('{TRACK_ARTIST_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.name + '</a>');
             body = body.replace('{TRACK_ARTIST}', sub.name);
+            body = body.replace('{SUBMITTERS_EMAIL}', sub.email);
             body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
             body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', '<a href="' + sub.userID.soundcloud.permalinkURL + '">' + sub.userID.soundcloud.username + '</a>');
             body = body.replace('{TRACK_ARTWORK}', '<img src="' + sub.track_art_url + '" style="width:200px; height: 200px"/>');
@@ -583,7 +585,6 @@ function schedulePaidRepost(channel, submission) {
         console.log(eventDetails);
         scheduleRepost(eventDetails, new Date())
           .then(function(event) {
-
             fulfill({
               channelName: channel.user.username,
               date: event.day,

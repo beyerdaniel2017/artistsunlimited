@@ -14,9 +14,9 @@ app.config(function($stateProvider) {
         var username = $stateParams.username;
         var submitpart = $stateParams.submitpart;
         if (submitpart.indexOf('submit') != -1) {
-          $window.location.href = '/customsubmit/' + username + '/' + submitpart;
+          $window.location.href = '/' + username + '/submit';
         } else {
-          $window.location.href = '/custompremiere/' + username + '/' + submitpart;
+          $window.location.href = '/' + username + '/premiere';
         }
         return new Promise(function(fulfill, reject) {});
       }

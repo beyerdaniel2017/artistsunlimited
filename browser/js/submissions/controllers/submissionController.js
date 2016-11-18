@@ -29,17 +29,11 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.uniqueGroup = [];
   $scope.paidRepostAccounts = [];
   $scope.dynamicButton = [{
-   "name": "TRACK TITLE WITH LINK", 
-   "appendText": " {TRACK_TITLE_WITH_LINK} " 
-  }, {
-    "name": "SUBMITTERS EMAIL", 
-    "appendText": " {SUBMITTERS_EMAIL} " 
-  }, {
     "name": "TRACK TITLE", 
     "appendText": " {TRACK_TITLE} " 
   }, {
-    "name": "TRACK ARTIST WITH LINK", 
-    "appendText": " {TRACK_ARTIST_WITH_LINK} " 
+    "name": "TODAYS DATE", 
+    "appendText": " {TODAYSDATE} " 
   }, {
     "name": "TRACK ARTIST", 
     "appendText": " {TRACK_ARTIST} " 
@@ -47,20 +41,26 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     "name": "TRACK ARTWORK", 
     "appendText": " {TRACK_ARTWORK} " 
   }, {
-    "name": "SUBMITTED TO ACCOUNT NAME", 
-    "appendText": " {SUBMITTED_TO_ACCOUNT_NAME} " 
+    "name": "SUBMITTERS EMAIL", 
+    "appendText": " {SUBMITTERS_EMAIL} " 
   }, {
-    "name": "SUBMITTED ACCOUNT NAME WITH LINK", 
-    "appendText": " {SUBMITTED_ACCOUNT_NAME_WITH_LINK} " 
+   "name": "TRACK TITLE WITH LINK", 
+   "appendText": " {TRACK_TITLE_WITH_LINK} " 
+  }, {
+    "name": "TRACK ARTIST WITH LINK", 
+    "appendText": " {TRACK_ARTIST_WITH_LINK} " 
   }, {
     "name": "ACCEPTED CHANNEL LIST", 
     "appendText": " {ACCEPTED_CHANNEL_LIST} " 
   }, {
+    "name": "SUBMITTED TO ACCOUNT NAME", 
+    "appendText": " {SUBMITTED_TO_ACCOUNT_NAME} " 
+  },{
     "name": "ACCEPTED CHANNEL LIST WITH LINK", 
     "appendText": " {ACCEPTED_CHANNEL_LIST_WITH_LINK} "
   }, {
-    "name": "TODAYS DATE", 
-    "appendText": " {TODAYSDATE} " 
+    "name": "SUBMITTED ACCOUNT NAME WITH LINK", 
+    "appendText": " {SUBMITTED_ACCOUNT_NAME_WITH_LINK} " 
   }];
   
   $scope.genreArray = [
@@ -182,10 +182,9 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       }
       setTimeout(function() {
         $scope.marketSubmissions.forEach(function(sub) {
-          SC.oEmbed(sub.trackURL, {
-            element: document.getElementById(sub.trackID + "_player"),
+          SC.Widget(sub.trackID + "_player").load(sub.trackURL, {
             auto_play: false,
-            maxheight: 150
+            show_artwork: true
           });
         }, 50)
       });
@@ -462,7 +461,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       var boxIndex = $('.selectedBox').attr("index");
       var cursorPos = $('.selectedBox').prop('selectionStart');
       var v = $('.selectedBox').val();
-      console.log('boxIndex',boxIndex);
       var textBefore = v.substring(0, cursorPos);
       var textAfter = v.substring(cursorPos, v.length);
       var newtext = textBefore + btn.appendText + textAfter;

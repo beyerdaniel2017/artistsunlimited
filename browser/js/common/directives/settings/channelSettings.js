@@ -348,16 +348,16 @@ app.directive('channelsettings', function($http) {
 	            $scope.AccountsStepData.submissionData = res.data.user.soundcloud;
 	            $scope.AccountsStepData.submissionData.userID = res.data.user._id;
 	            var usernames = res.data.user.soundcloud.username.replace(" ", "");
-	            var url = window.location.origin + '/custom/' + usernames + '/submit';
-	            var premierurl = window.location.origin + '/custom/' + usernames + '/premiere';
+	            var url = window.location.origin + '/' + usernames + '/submit';
+	            var premierurl = window.location.origin +'/' + usernames + '/premiere';
 	            AccountSettingServices.checkUsercount({
 	              "url": url,
 	              'action': "url"
 	            })
 	            .then(function(result) {
 	              if (result.data) {
-	                url = 'https://artistsunlimited.com/custom/' + usernames + '/submit' + result.data;
-	                premierurl = 'https://artistsunlimited.com/custom/' + usernames + '/premiere' + result.data;
+	                url = window.location.origin + '/' +usernames + '/submit/' + result.data;
+	                premierurl = window.location.origin + '/' + usernames + '/premiere/' + result.data;
 	                $scope.AccountsStepData.submissionData.submissionUrl = url;
 	                $scope.AccountsStepData.submissionData.premierUrl = premierurl;
 	              } else {
