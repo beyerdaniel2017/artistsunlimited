@@ -9,7 +9,12 @@ app.config(function($stateProvider) {
         //var submitpart = $stateParams.submitpart;
         return $http.get('/api/users/getUserByURL/' + username + '/submit')
           .then(function(res) {
-          return {userid: res.data, username: username, submitpart: 'submit'};
+            console.log(res)
+            return {
+              userid: res.data,
+              username: username,
+              submitpart: 'submit'
+            };
           })
           .then(null, function(err) {
             $.Zebra_Dialog("error getting your events");
@@ -17,11 +22,12 @@ app.config(function($stateProvider) {
           })
       },
       customizeSettings: function($http, customizeService, userID) {
-        if(userID.userid == "nouser"){
-          $location.path("/"+userID.username+"/"+userID.submitpart);
+        if (userID.userid == "nouser") {
+          $location.path("/" + userID.username + "/" + userID.submitpart);
         }
         return customizeService.getCustomPageSettings(userID.userid, userID.submitpart)
           .then(function(response) {
+            console.log(response);
             return response;
           })
           .then(null, function(err) {
@@ -36,6 +42,7 @@ app.config(function($stateProvider) {
 app.controller('AccountSubmitSongController', function($rootScope, $state, $scope, userID, customizeSettings, $http, customizeService, $location) {
   $scope.submission = {};
   $scope.customizeSettings = customizeSettings;
+  console.log($scope.customizeSettings);
   $scope.searchString = "";
   $scope.showPlayer = false;
   $scope.choseTrack = function(track) {
@@ -75,7 +82,7 @@ app.controller('AccountSubmitSongController', function($rootScope, $state, $scop
           trackURL: $scope.submission.trackURL,
           channelIDS: [],
           invoiceIDS: [],
-        userID: userID.userid,
+          userID: userID.userid,
           genre: ''
         })
         .then(function(res) {

@@ -449,7 +449,7 @@ app.directive('scheduler', function($http) {
           show_artwork: true
         });
         $scope.slotType = item.event.type;
-        if ($scope.slotType == "traded")
+        if ($scope.slotType == "traded" || $scope.slotType == 'paid')
           $scope.isTraded = true;
         $scope.showPlayer = true;
         document.getElementById('scPlayer').style.visibility = "visible";
@@ -766,9 +766,7 @@ app.directive('scheduler', function($http) {
           $scope.editChannelArr = [];
           $scope.channelArr = [];
         } else {
-          if (data.type == 'traded') {
-            $scope.isTraded = true;
-          }
+          if (data.type == 'traded' || data.type == 'paid') $scope.isTraded = true;
           $scope.isEdit = true;
           $scope.likeSrc = (data.like == true) ? 'assets/images/likeTrue.svg' : 'assets/images/like.svg';
           $scope.likeEvent = data.like;
@@ -1137,6 +1135,8 @@ app.directive('scheduler', function($http) {
         } else if (event.type == 'paid') {
           return {
             'background-color': '#FFBBDD',
+            'margin': '2px',
+            'height': '18px',
             'border-radius': '4px'
           }
         }

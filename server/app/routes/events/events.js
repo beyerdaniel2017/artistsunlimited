@@ -37,7 +37,7 @@ router.get('/forUser/:id', function(req, res, next) {
     .then(null, next);
 })
 
-router.get('/respostEvent/:id', function(req, res, next) {
+router.get('/repostEvent/:id', function(req, res, next) {
   var data = [];
   RepostEvent.findOne({
       _id: req.params.id,
@@ -81,57 +81,38 @@ router.get('/respostEvent/:id', function(req, res, next) {
     .then(null, next);
 })
 
-router.get('/respostEvent/getPaidReposts/:id', function(req, res, next) {
-  if (!req.user) {
-    next(new Error('Unauthorized'));
-    return;
-  }
+router.get('/repostEvent/getPaidReposts/:id', function(req, res, next) {
   var data = [];
   RepostEvent.findOne({
       _id: req.params.id,
     })
     .then(function(event) {
-      RepostEvent.find({
-          trackID: event.trackID
-        })
-        .then(function(tracks) {
-          var users = [];
-          for (var x = 0; x < tracks.length; x++) {
-            users.push(parseInt(tracks[x].userID));
-          }
-          RepostEvent.find({
-              userID: {
-                $in: users
-              },
-              type: 'paid'
-            })
-            .then(function(events) {
-              var i = -1;
+      return RepostEvent.find({
+        trackID: event.trackID,
+        day: {
+          $gt: (new Date()).getTime() - 7 * 24 * 3600000
+        },
+        type: 'paid'
+      })
 
-              function next() {
-                i++;
-                if (i < events.length) {
-                  var userid = parseInt(events[i].userID);
-                  User.findOne({
-                    'soundcloud.id': userid
-                  }, function(err, user) {
-                    var result = {
-                      trackInfo: events[i],
-                      userInfo: user.soundcloud
-                    }
-                    data.push(result);
-                    next();
-                  });
-                } else {
-                  res.send(data);
-                }
-              }
-              next();
-            });
-        })
-        .then(null, next);
     })
-    .then(null, next);
+    .then(function(tracks) {
+      tracks.forEach(function(track) {
+        User.findOne({
+            'soundcloud.id': track.userID
+          })
+          .then(function(user) {
+            var result = {
+              trackInfo: track,
+              userInfo: user.soundcloud
+            }
+            data.push(result);
+            if (data.length == tracks.length) {
+              res.send(data);
+            }
+          }).then(null, next);
+      })
+    }).then(null, next);
 })
 
 /*Get Repost events for List*/

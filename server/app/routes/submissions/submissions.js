@@ -336,8 +336,7 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
   } else {
     Submission.findByIdAndRemove(req.params.subID)
       .populate("userID")
-
-    .then(function(sub) {
+      .then(function(sub) {
         User.find({
             'soundcloud.id': {
               $in: sub.channelIDS
@@ -604,101 +603,104 @@ function calcHour(hour, destOffset) {
 }
 
 router.get('/getSoldReposts', function(req, res, next) {
-    if (!req.user) {
-        next(new Error('Unauthorized'));
-        return;
-    }
-    var newObj = {};
-    var accounts = req.user.paidRepost;
-    var results = [];
-    var i = -1;
-    var next = function() {
-        i++;
-        if (i < accounts.length) {
-            var acc = accounts[i];
-            User.findOne({
-                _id: acc.userID
-            }, function(e, user) {
-                if (user) {
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
+  var newObj = {};
+  var accounts = req.user.paidRepost;
+  var results = [];
+  var i = -1;
+  var next = function() {
+    i++;
+    if (i < accounts.length) {
+      var acc = accounts[i];
+      User.findOne({
+        _id: acc.userID
+      }, function(e, user) {
+        if (user) {
 
-                    RepostEvent.find({
-                        userID: user.soundcloud.id,
-                        type: "paid"
-                    }, function(err, data) {
-                        for (var i = 0; i < data.length; i++) {
-                            var newObj = {
-                                username: user.name,
-                                data: data[i]
-                            }
-                            results.push(newObj);
-                        }
-                        next();
-                    })
-                } else {
-                    next();
-                }
-            });
+          RepostEvent.find({
+            userID: user.soundcloud.id,
+            type: "paid"
+          }, function(err, data) {
+            for (var i = 0; i < data.length; i++) {
+              var newObj = {
+                username: user.name,
+                data: data[i]
+              }
+              results.push(newObj);
+            }
+            next();
+          })
         } else {
-            res.send(results);
+          next();
         }
+      });
+    } else {
+      res.send(results);
     }
-    next();
+  }
+  next();
 });
 router.get('/getEarnings', function(req, res, next) {
-    if (!req.user) {
-        next(new Error('Unauthorized'));
-        return;
-    }
-    var results = [];
-    var i = -1;
-    var accounts = req.user.paidRepost;
-    var next = function() {
-        i++;
-        if (i < accounts.length) {
-            var acc = accounts[i];
-            User.findOne({
-                _id: acc.userID
-            }, function(e, user) {
-                if (user) {
-                    RepostEvent.find({
-                        userID: user.soundcloud.id,
-                        type: "paid",
-                    }, function(err, data) {
-                            var count = 0;
-                            for(var i=0; i<data.length; i++){
-                            count = count + data[i].price;
-                           }
-                            Submission.find({'userID':user._id},function(err,item){
-                              var channelIDS = 0; var pooledChannelIDS = 0;
-                              var paidChannels = 0; var paidPooledChannels = 0;
-                              for(var j=0; j<item.length; j++)
-                              {
-                                 channelIDS += item[j].channelIDS.length;
-                                 pooledChannelIDS += item[j].pooledChannelIDS.length;
-                                 paidChannels += item[j].paidChannels.length;
-                                 paidPooledChannels += item[j].paidPooledChannels.length;
-                              } 
-                              var percentage =(paidPooledChannels+paidChannels)/(channelIDS+pooledChannelIDS);
-                              var newObj = {
-                              username: user.name,
-                              amount: count,
-                              submissions: item.length,
-                              paymentCount: data.length,
-                              percentage:percentage
-                            }
-                            results.push(newObj);
-                            next();
-                            });
-                    })
-                } else {
-                    next();
-                }
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
+  var results = [];
+  var i = -1;
+  var accounts = req.user.paidRepost;
+  var next = function() {
+    i++;
+    if (i < accounts.length) {
+      var acc = accounts[i];
+      User.findOne({
+        _id: acc.userID
+      }, function(e, user) {
+        if (user) {
+          RepostEvent.find({
+            userID: user.soundcloud.id,
+            type: "paid",
+          }, function(err, data) {
+            var count = 0;
+            for (var i = 0; i < data.length; i++) {
+              count = count + data[i].price;
+            }
+            Submission.find({
+              'userID': user._id
+            }, function(err, item) {
+              var channelIDS = 0;
+              var pooledChannelIDS = 0;
+              var paidChannels = 0;
+              var paidPooledChannels = 0;
+              for (var j = 0; j < item.length; j++) {
+                channelIDS += item[j].channelIDS.length;
+                pooledChannelIDS += item[j].pooledChannelIDS.length;
+                paidChannels += item[j].paidChannels.length;
+                paidPooledChannels += item[j].paidPooledChannels.length;
+              }
+              var percentage = (paidPooledChannels + paidChannels) / (channelIDS + pooledChannelIDS);
+              var newObj = {
+                username: user.name,
+                amount: count,
+                submissions: item.length,
+                paymentCount: data.length,
+                percentage: percentage
+              }
+              results.push(newObj);
+              next();
             });
+          })
         } else {
-            res.send(results);
+          next();
         }
+      });
+    } else {
+      res.send(results);
     }
-    next();
+  }
+  next();
 });
 
 //reschedule repost

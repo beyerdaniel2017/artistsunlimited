@@ -87,7 +87,7 @@
                     <td class="text-center">{{item.event.title}}</td>
                     <td class="text-center">{{user.soundcloud.username}}</td>
                     <td class="text-center">{{item.date | date:'EEE MM/dd h:mma'}}</td>
-                    <td><span ng-if="item.event" style="color:{{item.event.type == 'track'? '#FF0000' : '#FFD450'}}">{{item.event.type}}</span></td>
+                    <td><span ng-if="item.event" style="color:{{item.event.type == 'track'? '#FF0000' : (item.event.type == 'traded'?'#FFD450':'#FFBBDD')}}">{{item.event.type}}</span></td>
                     <td class="text-center">
                       <!-- <a href="javascript:void(0)" style="color:#FF7676" ng-if="item.event" ng-click="EditNewSong(item);">View</a>&nbsp;&nbsp; -->
                       <a class="btn btn-pink btn-block btn-sm margin-0" href="javascript:void(0)" ng-if="item.event" ng-click="EditNewSong(item, 'editable');">Edit</a>

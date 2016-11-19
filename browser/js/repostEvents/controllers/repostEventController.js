@@ -5,11 +5,12 @@ app.config(function($stateProvider) {
     controller: 'RepostEventsController',
     resolve: {
       repostEvent: function($http, $location) {
+        console.log($location.search());
         var eventid = $location.search().id;
         var paid = $location.search().paid;
-        var url = '/api/events/respostEvent/' + eventid;
-        if (paid != undefined) {
-          url = '/api/events/respostEvent/getPaidReposts/' + eventid;
+        var url = '/api/events/repostEvent/' + eventid;
+        if (paid) {
+          url = '/api/events/repostEvent/getPaidReposts/' + eventid;
         }
         return $http.get(url)
           .then(function(res) {
@@ -30,6 +31,13 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
     $scope.itemview = view;
   };
   var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  if (!repostEvent[0].trackInfo.trackArtUrl) {
+    SC.get('/tracks/' + repostEvent[0].trackInfo.trackID)
+      .then(function(track) {
+        $scope.trackImage = track.artwork_url;
+        $scope.listevents[0].trackInfo.artistName = track.user.username;
+      })
+  }
   $scope.listevents = repostEvent;
   $scope.trackImage = repostEvent[0].trackInfo.trackArtUrl;
   $scope.dayIncr = 7;
@@ -51,18 +59,23 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
 
   $scope.getEventStyle = function(repostEvent) {
     if (repostEvent.type == 'empty') {
-      return {}
+      return {
+        'border-radius': '4px'
+      }
     } else if (repostEvent.trackInfo.type == 'track' || repostEvent.trackInfo.type == 'queue') {
       return {
-        'background-color': '#FF7676'
+        'background-color': '#FF7676',
+        'border-radius': '4px'
       }
     } else if (repostEvent.trackInfo.type == 'traded') {
       return {
-        'background-color': '#FFD450'
+        'background-color': '#FFD450',
+        'border-radius': '4px'
       }
     } else if (repostEvent.trackInfo.type == 'paid') {
       return {
-        'background-color': '#FFBBDD'
+        'background-color': '#FFBBDD',
+        'border-radius': '4px'
       }
     }
   }
@@ -149,29 +162,28 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
     }
   }
   $scope.fillDateArrays(repostEvent);
-  $scope.detailView = function(data){
-      $scope.itemview = "detailListView";
-      $scope.makeEvent = {};
-      var day = new Date(data.trackInfo.day);
-      $scope.makeEvent._id = data.trackInfo._id;
-      $scope.makeEvent.day = new Date(data.trackInfo.day);
-      $scope.makeEvent.url = data.trackInfo.trackURL;
-      $scope.makeEvent.comment = data.trackInfo.comment;
-      if (data.trackInfo.like) $scope.likeSrc = 'assets/images/likeTrue.svg';
-      else $scope.likeSrc = 'assets/images/like.svg';
-      if (data.trackInfo.comment) $scope.commentSrc = 'assets/images/comment.svg';
-      else $scope.commentSrc = 'assets/images/noComment.svg';
-      $scope.makeEvent.artist = data.userInfo;
-      var repostDate = new Date(data.trackInfo.day);
-      $scope.makeEvent.unrepostHours = data.trackInfo.unrepostHours;
-      SC.Widget('scPlayer').load(data.trackInfo.trackURL, {
-        auto_play: false,
-        show_artwork: false
-      });
-      document.getElementById('scPlayer').style.visibility = "visible";
+  $scope.detailView = function(data) {
+    $scope.itemview = "detailListView";
+    $scope.makeEvent = {};
+    var day = new Date(data.trackInfo.day);
+    $scope.makeEvent._id = data.trackInfo._id;
+    $scope.makeEvent.day = new Date(data.trackInfo.day);
+    $scope.makeEvent.url = data.trackInfo.trackURL;
+    $scope.makeEvent.comment = data.trackInfo.comment;
+    if (data.trackInfo.like) $scope.likeSrc = 'assets/images/likeTrue.svg';
+    else $scope.likeSrc = 'assets/images/like.svg';
+    if (data.trackInfo.comment) $scope.commentSrc = 'assets/images/comment.svg';
+    else $scope.commentSrc = 'assets/images/noComment.svg';
+    $scope.makeEvent.artist = data.userInfo;
+    var repostDate = new Date(data.trackInfo.day);
+    $scope.makeEvent.unrepostHours = data.trackInfo.unrepostHours;
+    SC.Widget('scPlayer').load(data.trackInfo.trackURL, {
+      auto_play: false,
+      show_artwork: false
+    });
+    document.getElementById('scPlayer').style.visibility = "visible";
   }
-  $scope.backToListEvent = function()
-  {
-     $scope.itemview = "list";
+  $scope.backToListEvent = function() {
+    $scope.itemview = "list";
   }
 });

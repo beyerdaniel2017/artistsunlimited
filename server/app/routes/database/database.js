@@ -1352,3 +1352,18 @@ router.get('/updateAllDefaults', function(req, res, next) {
     })
     .then(null, next);
 })
+
+router.get('/updateSubs/:post', function(req, res, next) {
+  if (req.query.post == 'subs') {
+    Submission.find({})
+      .then(function(submissions) {
+        submissions.forEach(function(sub) {
+          sub.save();
+        });
+      })
+  } else {
+    next(new Error('wrong code'));
+  }
+})
+
+//respond to all premier submissions

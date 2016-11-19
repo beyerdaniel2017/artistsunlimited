@@ -868,14 +868,17 @@ app.directive('rfrinteraction', function($http) {
       }
 
       $scope.getStyle = function(event, date, day, hour) {
-        var style = {};
+        var style = {
+          'border-radius': '4px'
+        };
         var currentDay = new Date(date).getDay();
         var date = (new Date(date)).setHours(hour)
-        if ($scope.activeUser.availableSlots[daysArray[currentDay]] && $scope.activeUser.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date()) && event.type == 'empty' && !($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease).getTime() > date)) {
+        if ($scope.activeUser.availableSlots[daysArray[currentDay]] && $scope.activeUser.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date()) && (event.type == 'empty' || event.type == 'trade') && !($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease).getTime() > date)) {
           style = {
             'background-color': '#fff',
             'border-color': "#999",
-            'border-width': '1px'
+            'border-width': '1px',
+            'border-radius': '4px'
           }
         }
         return style;
@@ -884,26 +887,11 @@ app.directive('rfrinteraction', function($http) {
       $scope.getEventStyle = function(event) {
         if (event && event.type == 'trade') {
           return {
-            'background-color': '#ADD8E6',
-            'height': '19px',
-            'margin': '2px'
+            'background-color': '#FFD450',
+            'height': '18px',
+            'margin': '2px',
+            'border-radius': '4px'
           }
-          // } else if (event.type == 'track' || event.type == 'queue' || event.type == 'paid') {
-          //   return {
-          //     'background-color': '#eeeeee',
-          //     'color': 'rgba(0,0,0,0)'
-          //   }
-          // } else if (event.type == 'traded') {
-          //   if (event.owner == $scope.trade.p1.user._id || event.owner == $scope.trade.p2.user._id) {
-          //     return {
-          //       'background-color': '#FFE1AB'
-          //     }
-          //   } else {
-          //     return {
-          //       'background-color': '#eeeeee',
-          //       'color': 'rgba(0,0,0,0)'
-          //     }
-          //   }
         } else {
           return {}
         }
