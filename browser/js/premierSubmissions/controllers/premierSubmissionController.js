@@ -11,14 +11,14 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
-  $scope.user=SessionService.getUser();
-  $scope.user.isAdmin = $scope.user.role=='admin' ? true : false;
+  $scope.user = SessionService.getUser();
+  $scope.user.isAdmin = $scope.user.role == 'admin' ? true : false;
   $scope.uniqueGroup = [];
   for (var i = 0; i < $scope.user.paidRepost.length; i++) {
     $scope.user.paidRepost[i].groups.forEach(function(acc) {
       if (acc != "" && $scope.uniqueGroup.indexOf(acc) === -1) {
         $scope.uniqueGroup.push(acc);
-      } 
+      }
     });
   }
   $scope.counter = 0;
@@ -33,38 +33,38 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   $scope.skip = 0;
   $scope.limit = 5;
   $scope.dynamicButton = [{
-    "name": "TRACK TITLE", 
-    "appendText": " {TRACK_TITLE} " 
-  },{
-    "name": "TODAYS DATE", 
-    "appendText": " {TODAYSDATE} " 
+    "name": "TRACK TITLE",
+    "appendText": " {TRACK_TITLE} "
   }, {
-    "name": "TRACK ARTIST", 
-    "appendText": " {TRACK_ARTIST} " 
+    "name": "TODAYS DATE",
+    "appendText": " {TODAYSDATE} "
   }, {
-    "name": "TRACK ARTWORK", 
-    "appendText": " {TRACK_ARTWORK} " 
-  },{
-    "name": "SUBMITTERS EMAIL", 
-    "appendText": " {SUBMITTERS_EMAIL} " 
-  },{
-   "name": "TRACK TITLE WITH LINK", 
-   "appendText": " {TRACK_TITLE_WITH_LINK} " 
-  },  {
-    "name": "TRACK ARTIST WITH LINK", 
-    "appendText": " {TRACK_ARTIST_WITH_LINK} " 
+    "name": "TRACK ARTIST",
+    "appendText": " {TRACK_ARTIST} "
   }, {
-    "name": "ACCEPTED CHANNEL LIST", 
-    "appendText": " {ACCEPTED_CHANNEL_LIST} " 
-  },{
-    "name": "SUBMITTED TO ACCOUNT NAME", 
-    "appendText": " {SUBMITTED_TO_ACCOUNT_NAME} " 
-  },{
-    "name": "ACCEPTED CHANNEL LIST WITH LINK", 
+    "name": "TRACK ARTWORK",
+    "appendText": " {TRACK_ARTWORK} "
+  }, {
+    "name": "SUBMITTERS EMAIL",
+    "appendText": " {SUBMITTERS_EMAIL} "
+  }, {
+    "name": "TRACK TITLE WITH LINK",
+    "appendText": " {TRACK_TITLE_WITH_LINK} "
+  }, {
+    "name": "TRACK ARTIST WITH LINK",
+    "appendText": " {TRACK_ARTIST_WITH_LINK} "
+  }, {
+    "name": "ACCEPTED CHANNEL LIST",
+    "appendText": " {ACCEPTED_CHANNEL_LIST} "
+  }, {
+    "name": "SUBMITTED TO ACCOUNT NAME",
+    "appendText": " {SUBMITTED_TO_ACCOUNT_NAME} "
+  }, {
+    "name": "ACCEPTED CHANNEL LIST WITH LINK",
     "appendText": " {ACCEPTED_CHANNEL_LIST_WITH_LINK} "
   }, {
-    "name": "SUBMITTED ACCOUNT NAME WITH LINK", 
-    "appendText": " {SUBMITTED_ACCOUNT_NAME_WITH_LINK} " 
+    "name": "SUBMITTED ACCOUNT NAME WITH LINK",
+    "appendText": " {SUBMITTED_ACCOUNT_NAME_WITH_LINK} "
   }];
   $scope.genreArray = [
     'Alternative Rock',
@@ -90,13 +90,11 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     'Vocalists/Singer-Songwriter'
   ];
 
-  if(window.location.href.indexOf('admin/premiersubmissions#mysubmissions') != -1)
-      {
-        $('.nav-tabs a[href="#mysubmissions"]').tab('show');
-      }else if(window.location.href.indexOf('admin/premiersubmissions#managesubmissions') != -1)
-      {
-        $('.nav-tabs a[href="#managesubmissions"]').tab('show');
-      }
+  if (window.location.href.indexOf('admin/premiersubmissions#mysubmissions') != -1) {
+    $('.nav-tabs a[href="#mysubmissions"]').tab('show');
+  } else if (window.location.href.indexOf('admin/premiersubmissions#managesubmissions') != -1) {
+    $('.nav-tabs a[href="#managesubmissions"]').tab('show');
+  }
 
   $scope.getSubmissionsByGenre = function() {
     $scope.showingElements = [];
@@ -153,23 +151,22 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
 
   $scope.changeBoxGroup = function(sub, group) {
     var ind = $scope.selectedGroups.indexOf(group);
-    if(sub[group]){
+    if (sub[group]) {
       if (ind == -1) {
         $scope.selectedGroups.push(group);
       }
-    }
-    else{
+    } else {
       $scope.selectedGroups.splice(ind, 1);
     }
     $scope.selectedGroupChannelIDS = [];
-    $scope.selectedGroups.forEach(function(g){
-    $scope.user.paidRepost.forEach(function(acc){
-        if(acc.groups.indexOf(g) != -1){
-          if($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1){
+    $scope.selectedGroups.forEach(function(g) {
+      $scope.user.paidRepost.forEach(function(acc) {
+        if (acc.groups.indexOf(g) != -1) {
+          if ($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1) {
             $scope.selectedGroupChannelIDS.push(acc.id);
-        }      
-      }
-    });    
+          }
+        }
+      });
     });
   }
   $scope.accept = function(submi) {
@@ -248,31 +245,29 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     });
   }
 
-  $scope.openEmailClient = function(sub, item){
+  $scope.openEmailClient = function(sub, item) {
     var toEmail = (item.toEmail == '{email}' ? sub.email : item.toEmail);
     var subject = (item.subject != undefined ? item.subject : "");
-    if(subject != ""){
+    if (subject != "") {
       subject = subject.replace('{title}', sub.title);
       subject = subject.replace('{name}', sub.name);
       subject = subject.replace('{url}', sub.trackURL);
-    }    
+    }
     var body = (item.emailBody != undefined ? item.emailBody : "");
-    if(body != ""){
+    if (body != "") {
       body = body.replace('{NAME}', sub.name);
       body = body.replace('{SUBMITTERS_EMAIL}', toEmail);
-      body = body.replace('{TRACK_TITLE_WITH_LINK}', sub.title + ' ('+ sub.trackURL+')');
+      body = body.replace('{TRACK_TITLE_WITH_LINK}', sub.title + ' (' + sub.trackURL + ')');
       body = body.replace('{TRACK_TITLE}', sub.title);
-      body = body.replace('{TRACK_ARTIST_WITH_LINK}', sub.name + ' ('+ sub.trackURL+')');
+      body = body.replace('{TRACK_ARTIST_WITH_LINK}', sub.name + ' (' + sub.trackURL + ')');
       body = body.replace('{TRACK_ARTIST}', sub.name);
       body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
-      body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', sub.userID.soundcloud.username + ' ('+ sub.userID.soundcloud.permalinkURL+')');
-      body = body.replace('{ACCEPTED_CHANNEL_LIST}', "");      
-      body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', "");      
+      body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', sub.userID.soundcloud.username + ' (' + sub.userID.soundcloud.permalinkURL + ')');
+      body = body.replace('{ACCEPTED_CHANNEL_LIST}', "");
+      body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', "");
       body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
     }
-    var link = "mailto:"+ toEmail
-    + "?subject=" + escape(subject)
-    + "&body=" + escape(body); 
+    var link = "mailto:" + toEmail + "?subject=" + escape(subject) + "&body=" + escape(body);
     $window.location.href = link;
   }
 
@@ -320,7 +315,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   }
 
   $scope.customEmailButtons = $scope.user.premierCustomEmailButtons.length > 0 ? $scope.user.premierCustomEmailButtons : [];
-  if($scope.customEmailButtons.length == 0){
+  if ($scope.customEmailButtons.length == 0) {
     $scope.customEmailButtons.push({
       toEmail: '',
       subject: '',
@@ -329,18 +324,18 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
       buttonBgColor: ''
     });
   }
-  $scope.saveSettings=function(){
+  $scope.saveSettings = function() {
     var valid = true;
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     angular.forEach($scope.customEmailButtons, function(cb) {
-      if(cb.toEmail != "{email}"){
+      if (cb.toEmail != "{email}") {
         var validEmail = re.test(cb.toEmail);
         if (!validEmail) {
           valid = false;
         }
       }
     });
-    if(!valid){
+    if (!valid) {
       $.Zebra_Dialog('Please enter {email} or a well formatted email id in To Email field.');
       return;
     }
@@ -369,9 +364,9 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     $scope.customEmailButtons.splice(index, 1);
   }
 
-  $scope.addEventClass = function(index,type) {
+  $scope.addEventClass = function(index, type) {
     $('textarea').removeClass("selectedBox");
-    $("." + type+index).addClass("selectedBox");
+    $("." + type + index).addClass("selectedBox");
   }
 
   $scope.appendBody = function(btn) {
@@ -379,7 +374,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
       var boxIndex = $('.selectedBox').attr("index");
       var cursorPos = $('.selectedBox').prop('selectionStart');
       var v = $('.selectedBox').val();
-      console.log('boxIndex',boxIndex);
+      console.log('boxIndex', boxIndex);
       var textBefore = v.substring(0, cursorPos);
       var textAfter = v.substring(cursorPos, v.length);
       var newtext = textBefore + btn.appendText + textAfter;
@@ -393,9 +388,8 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     $scope.emailIndex = index;
     $('#emailModal').modal('show');
   }
- 
-  $scope.testEmail = function(email)
-  {
+
+  $scope.testEmail = function(email) {
     $scope.showTestEmailModal = false;
     $('#emailModal').modal('hide');
     var subject = $scope.customEmailButtons[$scope.emailIndex].subject;
@@ -407,15 +401,11 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     body = body.replace('{TRACK_ARTIST}', "Jhonny Submitter");
     body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', "La Tropical");
     body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', "La Tropical" + ' (https://soundcloud.com/latropical)');
-    body = body.replace('{ACCEPTED_CHANNEL_LIST}', "La Tropical, Etiquette Noir and Le Sol");      
-    body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', "La Tropical(https://soundcloud.com/latropical),Etiquette Noir(https://soundcloud.com/etiquettenoir),Le Sol(https://soundcloud.com/lesolmusique)");      
+    body = body.replace('{ACCEPTED_CHANNEL_LIST}', "La Tropical, Etiquette Noir and Le Sol");
+    body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', "La Tropical(https://soundcloud.com/latropical),Etiquette Noir(https://soundcloud.com/etiquettenoir),Le Sol(https://soundcloud.com/lesolmusique)");
     body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
-    $window.open("mailto:"+email +"?body=" + body+"&subject="+subject, "_self");
+    $window.open("mailto:" + email + "?body=" + body + "&subject=" + subject, "_self");
 
-  }
-
-  $scope.openHelpModal = function() {
-   $("#ytube").modal('show');
   }
   $scope.loadSubmissions();
 });

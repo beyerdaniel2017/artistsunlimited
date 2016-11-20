@@ -85,10 +85,6 @@ app.directive('dlgate', function($http) {
         }
       };
 
-      $scope.openHelpModal = function() {
-        $("#ytube").modal('show');
-      }
-
       $scope.openYoutubeModal = function() {
         $('#youtube').modal('show');
       }

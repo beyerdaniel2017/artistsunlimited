@@ -4459,9 +4459,19 @@ td {
   margin-top: 4px !important; }
 
 .ZebraDialog_Button_1 {
-  background: transparent !important;
-  border: 1px solid #333;
-  color: #333 !important;
+  color: #686868 !important;
+  border: 1px solid #686868 !important;
+  background: #FFFFFF !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  text-shadow: none !important; }
+
+.ZebraDialog_Button_0 {
+  color: #f9f9f9 !important;
+  background-color: #FF7676 !important;
+  border-color: #FF7676 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
   text-shadow: none !important; }
 
 .view-padding-left {

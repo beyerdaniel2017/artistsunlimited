@@ -2,7 +2,7 @@ var router = require('express').Router();
 module.exports = router;
 var mongoose = require('mongoose');
 var Trade = mongoose.model('Trade');
-var Users = mongoose.model('User');
+var User = mongoose.model('User');
 var RepostEvent = mongoose.model('RepostEvent');
 var notificationCenter = require('../../notificationCenter/notificationCenter.js')
 
@@ -54,6 +54,10 @@ router.post('/new', function(req, res, next) {
   var trade = new Trade(req.body);
   trade.save()
     .then(function(trade) {
+      return Trade.populate(trade, {
+        path: 'p1.user p2.user'
+      })
+    }).then(function(trade) {
       res.send(trade);
     })
     .then(null, next);
@@ -93,6 +97,47 @@ router.put('/', function(req, res, next) {
       })
       .then(null, next);
   }
+})
+
+router.get('/withUsers/:user1Name/:user2Name', function(req, res, next) {
+  if (!req.user) {
+    next(new Error('Unauthorized'));
+    return;
+  }
+  User.findOne({
+      'soundcloud.username': req.params.user1Name.replace('_', ' ')
+    }).then(function(p1) {
+      return User.findOne({
+        'soundcloud.username': req.params.user2Name.replace('_', ' ')
+      }).then(function(p2) {
+        return Trade.find({
+          $or: [{
+            'p1.user': p1._id,
+            'p2.user': p2._id
+          }, {
+            'p1.user': p2._id,
+            'p2.user': p1._id
+          }]
+        }).populate('p1.user').populate('p2.user')
+      })
+    })
+    .then(function(trades) {
+      var trade = trades.find(function(trade) {
+        return !(trade.p1.accepted && trade.p2.accepted);
+      })
+      if (trade) {
+        if (JSON.stringify(req.user._id) != JSON.stringify(trade.p1.user._id) && JSON.stringify(req.user._id) != JSON.stringify(trade.p2.user._id)) {
+          next({
+            message: 'Forbidden',
+            status: 403
+          })
+        } else {
+          res.send(trade);
+        }
+      } else {
+        next(new Error('did not find a trade'))
+      }
+    }).then(null, next);
 })
 
 router.get('/byID/:tradeID', function(req, res, next) {

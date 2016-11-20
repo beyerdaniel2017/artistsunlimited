@@ -650,10 +650,6 @@ app.directive('scheduler', function($http) {
         }
       }
 
-      $scope.openHelpModal = function() {
-        $("#ytube").modal('show');
-      }
-
       $scope.saveUser = function() {
         $scope.processing = true;
         $http.put("/api/database/profile", $scope.user)

@@ -21,6 +21,26 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
     val: '',
     visible: false
   };
+
+  if ($window.localStorage.getItem('returnstate') == 'reForReInteraction') {
+    $.Zebra_Dialog("Please log in with the account who's trade you wish to view.", {
+      'type': 'question',
+      'buttons': [{
+        caption: 'Cancel',
+        callback: function() {
+          $window.localStorage.removeItem('returnstate');
+          $window.localStorage.removeItem('user1Name');
+          $window.localStorage.removeItem('user2Name');
+        }
+      }, {
+        caption: 'Log In',
+        callback: function() {
+          $scope.soundcloudLogin();
+        }
+      }]
+    });
+  }
+
   if (SessionService.getUser()) {
     $state.go('reForReLists')
   }
@@ -34,7 +54,6 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
       });
     }
   };
-
 
   $scope.login = function() {
     $scope.message = {
@@ -140,11 +159,11 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
           return;
         }
         $scope.processing = false;
+        if (!$scope.$$phase) $rootScope.$apply();
+        console.log($window.localStorage.getItem('returnstate'));
         if ($window.localStorage.getItem('returnstate') != undefined) {
           if ($window.localStorage.getItem('returnstate') == "reForReInteraction") {
-            $state.go($window.localStorage.getItem('returnstate'), {
-              tradeID: $window.localStorage.getItem('tid')
-            });
+            window.location.href = '/artistTools/trade/' + $window.localStorage.getItem('user1Name') + '/' + $window.localStorage.getItem('user2Name');
           } else if ($window.localStorage.getItem('returnstate') == "artistToolsDownloadGatewayEdit") {
             $state.go($window.localStorage.getItem('returnstate'), {
               gatewayID: $window.localStorage.getItem('tid')

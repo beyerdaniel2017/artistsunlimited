@@ -1,17 +1,52 @@
 app.config(function($stateProvider) {
   $stateProvider
     .state('adminreForReInteraction', {
-      url: '/admin/reForReInteraction/:tradeID',
+      url: '/admin/trade/:user1Name/:user2Name',
       templateUrl: 'js/repostTraders/_reForReInteraction.html',
       controller: 'AdminReForReInteractionController',
       resolve: {
-        trade: function($http, $stateParams, $window, SessionService) {
-          if (!SessionService.getUser()) {
+        login: function($rootScope, $http, $stateParams, $window, SessionService, $state) {
+          if (SessionService.getUser()) {
+            return $rootScope.getUserNetwork()
+              .then(function() {
+                var repName = !!SessionService.getUser().soundcloud ? SessionService.getUser().soundcloud.username.replace(' ', '_') : ' ';
+                if (repName == $stateParams.user1Name || repName == $stateParams.user2Name) {
+                  return 'ok'
+                } else {
+                  var found = $rootScope.userlinkedAccounts.find(function(user) {
+                    var repName = user.soundcloud.username.replace(' ', '_');
+                    return (repName == $stateParams.user1Name || repName == $stateParams.user2Name)
+                  })
+                  console.log(found);
+                  if (found) {
+                    $rootScope.changeUserAdmin(found)
+                  } else {
+                    if ($window.localStorage.getItem('returnstate') == 'reForReInteraction') {
+                      $window.localStorage.removeItem('returnstate');
+                      $window.localStorage.removeItem('user1Name');
+                      $window.localStorage.removeItem('user2Name');
+                      $state.go('scheduler');
+                    } else {
+                      $window.localStorage.setItem('returnstate', 'reForReInteraction');
+                      $window.localStorage.setItem('user1Name', $stateParams.user1Name);
+                      $window.localStorage.setItem('user2Name', $stateParams.user2Name);
+                      SessionService.deleteUser();
+                      window.location.href = '/login';
+                    }
+                  }
+                }
+              });
+          } else {
+            console.log('moving');
             $window.localStorage.setItem('returnstate', 'reForReInteraction');
-            $window.localStorage.setItem('tid', $stateParams.tradeID);
-            $window.location.href = '/login';
+            $window.localStorage.setItem('user1Name', $stateParams.user1Name);
+            $window.localStorage.setItem('user2Name', $stateParams.user2Name);
+            SessionService.deleteUser();
+            window.location.href = '/login';
           }
-          return $http.get('/api/trades/byID/' + $stateParams.tradeID)
+        },
+        trade: function($rootScope, $http, $stateParams, $window, SessionService) {
+          return $http.get('/api/trades/withUsers/' + $stateParams.user1Name + '/' + $stateParams.user2Name)
             .then(function(res) {
               var user = SessionService.getUser('subAdmin');
               var trade = res.data;
@@ -21,10 +56,6 @@ app.config(function($stateProvider) {
             }).then(null, console.log)
         },
         events: function($http, $window, SessionService) {
-          if (!SessionService.getUser()) {
-            $window.localStorage.setItem('returnstate', 'artistToolsScheduler');
-            $window.location.href = '/login';
-          }
           return $http.get('/api/events/forUser/' + SessionService.getUser().soundcloud.id)
             .then(function(res) {
               return res.data;
@@ -69,25 +100,18 @@ app.config(function($stateProvider) {
                 trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
               });
               trades.sort(function(a, b) {
-                  if (a.user.alert == "change") {
-                    return -1;
-                  } else if (a.user.alert == "placement") {
-                    return -1
-                  } else {
-                    return 1;
-                  }
-                })
-                // console.log(trades);
+                if (a.user.alert == "change") {
+                  return -1;
+                } else if (a.user.alert == "placement") {
+                  return -1
+                } else {
+                  return 1;
+                }
+              })
               return trades;
             })
         }
-      },
-      // onExit: function($http, $stateParams, SessionService, socket) {
-      //   $http.put('/api/trades/offline', {
-      //     tradeID: $stateParams.tradeID
-      //   });
-      //   socket.disconnect();
-      // }
+      }
     })
 });
 
@@ -97,7 +121,8 @@ app.controller("AdminReForReInteractionController", function($rootScope, $state,
     $state.go('login');
   } else {
     $window.localStorage.removeItem('returnstate');
-    $window.localStorage.removeItem('tid');
+    $window.localStorage.removeItem('user1ID');
+    $window.localStorage.removeItem('user2ID');
   }
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
   $scope.trade = trade;

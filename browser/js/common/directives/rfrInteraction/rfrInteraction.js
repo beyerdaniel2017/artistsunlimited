@@ -869,7 +869,8 @@ app.directive('rfrinteraction', function($http) {
 
       $scope.getStyle = function(event, date, day, hour) {
         var style = {
-          'border-radius': '4px'
+          'border-radius': '4px',
+          'border-width': '1px'
         };
         var currentDay = new Date(date).getDay();
         var date = (new Date(date)).setHours(hour)
@@ -916,11 +917,6 @@ app.directive('rfrinteraction', function($http) {
 
       $scope.followerShow = function() {
         return (screen.width > '436');
-      }
-
-
-      $scope.openHelpModal = function() {
-        $("#ytube").modal('show');
       }
 
       $scope.updateEmail = function(email) {

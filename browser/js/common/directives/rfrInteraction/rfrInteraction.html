@@ -10,6 +10,7 @@
                 <small>Total Reach:</small><br/>
                 {{trade.user.user.soundcloud.followers}} Followers
               </p>
+              <p class="ng-binding">( {{trade.user.slots.length}} Slots )</p>
             </div>
           </div>
         </div><!--left-side-manu ::end-->
@@ -19,6 +20,7 @@
               <p class="ng-binding">
                 <small>Total Reach:</small><br/>
                 {{trade.other.user.soundcloud.followers}} Followers</p>
+                <p class="ng-binding">( {{trade.other.slots.length}} Slots )</p>
               </div>
             </div><!--left-side-manu ::end-->
             <div class="refor-chate-box">
@@ -253,7 +255,7 @@
           </div>
         </div>
       </div>
-      <slmodal lolo="modal1" modal-body="body" modal-footer="footer" modal-header="header" event-id="trade._id" event-type="type"></slmodal>
+      <slmodal lolo="modal1" modal-body="body" modal-footer="footer" modal-header="header" event-id="trade._id" event-type="type" trade="trade"></slmodal>
       <youtube-modal you-tube="youtubeModalId" modal-body="body" modal-footer="footer" modal-header="header" event-id="repostResponse" event-type="type"></youtube-modal>
     </div>
   </div>

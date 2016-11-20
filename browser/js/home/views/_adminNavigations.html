@@ -21,14 +21,14 @@
     <!--tropical end-->
     <div class="left-menus">
       <nav class="nav">
-        <ul class="nav nav-navabar">
-          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom SETTINGS"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin'); gotoSettings();">SETTINGS</a></li>
-          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom SCHEDULER"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/scheduler')">SCHEDULER</a></li>
-          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom REPOSTTRADES"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/reposttraders');">REPOST TRADER</a></li>
-          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom"><a href="javascript:void(0)" ui-sref="submissions" ng-click="changeUserAdmin('admin', '/admin/submissions');">REPOST SUBMISSIONS <!-- <div class="badge notification-bubble-submission-count" ng-show="submissionsCount > 0">{{submissionsCount}}</div> --></a></li>
-          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom PREMIERSUBMISSIONS"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin', '/admin/premiersubmissions');">PREMIER SUBMISSIONS</a></li>
-          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom"><a href="javascript:void(0)" ui-sref="accounts" ng-click="changeUserAdmin('admin', '/admin/accounts');">ACCOUNTS</a></li>
-          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom DOWNLOADGATEWAY"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/downloadGateway');">DOWNLOAD GATEWAY</a></li>
+        <ul class="nav nav-navabar"> 
+          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom SCHEDULER"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/scheduler','scheduler')">SCHEDULER</a></li>
+          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom REPOSTTRADES"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/reposttraders','adminRepostTraders');">REPOST TRADER</a></li>
+          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom DOWNLOADGATEWAY"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/downloadGateway','adminDownloadGateway');">DOWNLOAD GATEWAY</a></li>
+          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom"><a href="javascript:void(0)" ui-sref="submissions" ng-click="changeUserAdmin('admin', '/admin/submissions','submissions');">REPOST SUBMISSIONS <!-- <div class="badge notification-bubble-submission-count" ng-show="submissionsCount > 0">{{submissionsCount}}</div> --></a></li>
+          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom PREMIERSUBMISSIONS"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin', '/admin/premiersubmissions','premiersubmissions');">PREMIER SUBMISSIONS</a></li>
+          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom"><a href="javascript:void(0)" ui-sref="accounts" ng-click="changeUserAdmin('admin', '/admin/accounts','accounts');">ACCOUNTS</a></li> 
+          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom SETTINGS"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin','','basicstep1'); gotoSettings();">SETTINGS</a></li>
          <!--  <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="customizesubmission">CUSTOM SUBMISSIONS</a></li>
          <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="customemailbuttons">CUSTOM EMAIL BUTTONS</a></li> -->
        </ul>

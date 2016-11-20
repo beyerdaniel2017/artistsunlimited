@@ -504,8 +504,8 @@
       <div class="modal-content">
         <div style="text-align:center; padding:10px;">        
           <div style="text-align:center;padding-bottom:10px;">
-            <p>Please enter your email. To use the repost scheduling tools, we need your email to alert you when your soundcloud access token expires.</p>
-            <form ng-submit="updateEmail(modal.email)">
+           <p>Please enter your email so we can notify you if a repost ever fails (only 1% do). You can also add your Facebook messenger account in the settings tab so that we can notify you that way.</p>
+           <form ng-submit="updateEmail(modal.email)">
              <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="modal.email" />
              <button class="btn btn-pink btn-small" type="submit" id="closeModal">Add</button>
            </form>

@@ -308,11 +308,13 @@ app.directive('reforrelists', function($http) {
         if (found) {
           if ($scope.isAdminRoute) {
             $state.go('adminreForReInteraction', {
-              tradeID: found._id
+              user1Name: found.p1.user.soundcloud.username.replace(' ', '_'),
+              user2Name: found.p2.user.soundcloud.username.replace(' ', '_')
             })
           } else {
             $state.go('reForReInteraction', {
-              tradeID: found._id
+              user1Name: found.p1.user.soundcloud.username.replace(' ', '_'),
+              user2Name: found.p2.user.soundcloud.username.replace(' ', '_')
             })
           }
         } else {
@@ -341,13 +343,16 @@ app.directive('reforrelists', function($http) {
           $http.post('/api/trades/new', trade)
             .then(function(res) {
               $scope.processing = false;
+              console.log(res.data);
               if ($scope.isAdminRoute) {
                 $state.go('adminreForReInteraction', {
-                  tradeID: res.data._id
+                  user1Name: res.data.p1.user.soundcloud.username.replace(' ', '_'),
+                  user2Name: res.data.p2.user.soundcloud.username.replace(' ', '_')
                 })
               } else {
                 $state.go('reForReInteraction', {
-                  tradeID: res.data._id
+                  user1Name: res.data.p1.user.soundcloud.username.replace(' ', '_'),
+                  user2Name: res.data.p2.user.soundcloud.username.replace(' ', '_')
                 })
               }
 
@@ -360,14 +365,24 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.manage = function(trade) {
-        $state.go('reForReInteraction', {
-          tradeID: trade._id
-        })
+        console.log(trade);
+        if ($scope.isAdminRoute) {
+          $state.go('adminreForReInteraction', {
+            user1Name: trade.p1.user.soundcloud.username.replace(' ', '_'),
+            user2Name: trade.p2.user.soundcloud.username.replace(' ', '_')
+          })
+        } else {
+          $state.go('reForReInteraction', {
+            user1Name: trade.p1.user.soundcloud.username.replace(' ', '_'),
+            user2Name: trade.p2.user.soundcloud.username.replace(' ', '_')
+          })
+        }
       }
 
-      $scope.remindTrade = function(tradeID, index) {
+      $scope.remindTrade = function(trade, index) {
         $('#pop').modal('show');
-        $scope.tradeID = tradeID;
+        $scope.tradeID = trade._id;
+        $scope.theTrade = trade;
       }
 
       $scope.sendMail = function(sharelink) {
@@ -431,10 +446,6 @@ app.directive('reforrelists', function($http) {
         $scope.currentTab = currentTab;
       }
 
-      $scope.openHelpModal = function() {
-        $("#ytube").modal('show');
-      }
-
       $scope.verifyBrowser = function() {
           if (navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1) {
             var position = navigator.userAgent.search("Version") + 8;
@@ -479,7 +490,8 @@ app.directive('reforrelists', function($http) {
 
       $scope.getStyle = function() {
         return {
-          'border-radius': '4px'
+          'border-radius': '4px',
+          'border-width': '1px'
         };
       }
 
@@ -508,7 +520,7 @@ app.directive('reforrelists', function($http) {
           if (unfilled) {
             return {
               'background-color': '#7A549B',
-              'height': '10px',
+              'height': '20px',
               'border-radius': '4px'
             }
           } else {
@@ -575,6 +587,7 @@ app.directive('reforrelists', function($http) {
               caption: ev.userInfo.username,
               callback: function() {
                 $scope.openPopup(day, hour, ev);
+                if (!$scope.$$phase) $scope.$apply();
               }
             }
             buttons.push(button);
