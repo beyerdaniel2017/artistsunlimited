@@ -32,33 +32,28 @@ scWrapper.init({
 });
 
 router.get('/track', function(req, res, next) {
-  if (!req.user) {
-    next(new Error('Unauthorized'));
-    return;
-  }
   DownloadTrack.findById(req.query.trackID)
-  .populate('userid')
-
-  .then(function(downloadTrack) {
-    downloadTrack = downloadTrack.toJSON();
-    var username =  downloadTrack.userid.soundcloud.username;
-    var title =  downloadTrack.trackTitle.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/?])+/g, '').replace(/ /g,'-');
-    var trackDownloadUrl = rootURL + "/download/" + username + "/" + title;
-    DownloadTrack.update({
-      _id: req.query.trackID
-    }, {
-      $set:{
-        trackDownloadUrl:trackDownloadUrl.toLowerCase()
-      }
+    .populate('userid')
+    .then(function(downloadTrack) {
+      downloadTrack = downloadTrack.toJSON();
+      var username = downloadTrack.userid.soundcloud.username;
+      var title = downloadTrack.trackTitle.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/?])+/g, '').replace(/ /g, '-');
+      var trackDownloadUrl = rootURL + "/download/" + username + "/" + title;
+      DownloadTrack.update({
+        _id: req.query.trackID
       }, {
-      new: true
-    }, function(track){
-      downloadTrack.trackDownloadUrl = trackDownloadUrl.toLowerCase();
-      downloadTrack.title = title.toLowerCase();
-      res.send(downloadTrack);
+        $set: {
+          trackDownloadUrl: trackDownloadUrl.toLowerCase()
+        }
+      }, {
+        new: true
+      }, function(track) {
+        downloadTrack.trackDownloadUrl = trackDownloadUrl.toLowerCase();
+        downloadTrack.title = title.toLowerCase();
+        res.send(downloadTrack);
+      })
     })
-  })
-  .then(null, next);
+    .then(null, next);
 });
 
 router.get('/trackByURL/:username/:title', function(req, res, next) {
@@ -67,11 +62,11 @@ router.get('/trackByURL/:username/:title', function(req, res, next) {
   DownloadTrack.findOne({
       trackDownloadUrl: trackDownloadUrl
     })
-  .then(function(downloadTrack) {
-    console.log('downloadTrack',downloadTrack);
-    res.send(downloadTrack);
-  })
-  .then(null, next);
+    .then(function(downloadTrack) {
+      console.log('downloadTrack', downloadTrack);
+      res.send(downloadTrack);
+    })
+    .then(null, next);
 });
 
 router.post('/tasks', function(req, res, next) {
@@ -497,11 +492,11 @@ router.get("/subscribe", function(req, res, next) {
   });
 
   DownloadTrack.findById(req.query.trackID)
-  .then(function(t) {
-    if (t.downloadCount) t.downloadCount++;
-    else t.downloadCount = 1;
-    t.save();
-  })
+    .then(function(t) {
+      if (t.downloadCount) t.downloadCount++;
+      else t.downloadCount = 1;
+      t.save();
+    })
 
   res.json({
     msg: "Redirected to youtube authentication",
