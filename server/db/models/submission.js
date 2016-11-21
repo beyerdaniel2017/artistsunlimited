@@ -6,16 +6,15 @@ var schema = new mongoose.Schema({
     ref: 'User'
   },
   channelIDS: {
-    type: [Number]
-  },
-  invoiceIDS: {
-    type: [String]
+    type: Array,
+    default: []
   },
   events: {
     type: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Event'
-    }]
+    }],
+    default: []
   },
   email: {
     type: String
@@ -42,10 +41,12 @@ var schema = new mongoose.Schema({
     type: Object
   },
   paidChannels: {
-    type: []
+    type: Array,
+    default: []
   },
   paidPooledChannels: {
-    type: []
+    type: Array,
+    default: []
   },
   paid: {
     type: Boolean
@@ -55,9 +56,6 @@ var schema = new mongoose.Schema({
   },
   refundDate: {
     type: Date
-  },
-  genre: {
-    type: String
   },
   status: {
     type: String,
@@ -70,7 +68,10 @@ var schema = new mongoose.Schema({
     type: Array,
     default: []
   },
-  ignoredBy: []
+  ignoredBy: {
+    type: Array,
+    default: []
+  }
 });
 
 mongoose.model("Submission", schema);

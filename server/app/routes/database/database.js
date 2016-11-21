@@ -29,6 +29,7 @@ var nodeID3 = require('node-id3');
 var scWrapper = require("../../SCWrapper/SCWrapper.js");
 var crypto = require('crypto');
 var NetworkAccounts = mongoose.model('NetworkAccounts');
+var Submission = mongoose.model('Submission');
 
 scWrapper.init({
   id: scConfig.clientID,
@@ -1335,12 +1336,7 @@ router.get('/updateAllDefaults', function(req, res, next) {
   User.find({})
     .then(function(users) {
       users.forEach(function(user) {
-        user.repostSettings.paid = {
-          like: false,
-          comment: false,
-          comments: []
-        }
-        user.save();
+        user.save()
       })
       return RepostEvent.find({})
     })
@@ -1354,12 +1350,14 @@ router.get('/updateAllDefaults', function(req, res, next) {
 })
 
 router.get('/updateSubs/:post', function(req, res, next) {
-  if (req.query.post == 'subs') {
+  if (req.params.post == 'subs') {
     Submission.find({})
       .then(function(submissions) {
         submissions.forEach(function(sub) {
+          // sub.userID = 'ltuserid'
           sub.save();
         });
+        res.send('ok');
       })
   } else {
     next(new Error('wrong code'));
