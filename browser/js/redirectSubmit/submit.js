@@ -1,12 +1,12 @@
 app.config(function($stateProvider) {
   $stateProvider.state('submitSong', {
     url: '/submit',
-    templateUrl: 'js/submit/submit.view.html',
-    controller: 'SubmitSongController'
+    templateUrl: 'js/accountSubmit/accountsubmit.view.html',
+    controller: 'redirectController'
   });
   $stateProvider.state('customsubmits', {
     url: '/custom/:username/:submitpart',
-    templateUrl: 'js/submit/submit.view.html',
+    templateUrl: 'js/accountSubmit/accountsubmit.view.html',
     controller: 'SubmitSongController',
     resolve: {
       getUserByURL: function($stateParams, $http, $window) {
@@ -23,6 +23,9 @@ app.config(function($stateProvider) {
     }
   });
 });
+app.controller('redirectController', function() {
+  window.location.href = '/LaTropicál/submit'
+})
 
 app.controller('SubmitSongController', function($rootScope, $state, $scope, $http, $location) {
   $scope.submission = {};

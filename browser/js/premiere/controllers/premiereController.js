@@ -14,6 +14,7 @@ app.controller('PremierController', ['$rootScope',
   '$window',
   'PremierService',
   function($rootScope, $state, $scope, $http, $location, $window, PremierService) {
+    window.location.href = '/LaTropicál/premiere'
     $scope.userID = $location.search().id;
     $scope.genreArray = [
       'Alternative Rock',
@@ -78,26 +79,26 @@ app.controller('PremierController', ['$rootScope',
       function catchError(res) {
         $scope.processing = false;
         $.Zebra_Dialog('Error processing. Please try again or send your track to edward@peninsulamgmt.com.')
-        // if (res.status === 400) {
-        //   $scope.message = {
-        //     visible: true,
-        //     val: res.data
-        //   };
-        //   return;
-        // }
-        // $scope.message = {
-        //   visible: true,
-        //   val: 'Error in processing the request. Please try again or send the submissions to edward@peninsulamgmt.com.'
-        // };
+          // if (res.status === 400) {
+          //   $scope.message = {
+          //     visible: true,
+          //     val: res.data
+          //   };
+          //   return;
+          // }
+          // $scope.message = {
+          //   visible: true,
+          //   val: 'Error in processing the request. Please try again or send the submissions to edward@peninsulamgmt.com.'
+          // };
       }
     };
 
     $scope.getUserID = function() {
-      if($scope.userID == undefined){
+      if ($scope.userID == undefined) {
         $http.get('/api/users/getUserID')
-        .then(function(res) {
-          $scope.userID = res.data;
-        });
+          .then(function(res) {
+            $scope.userID = res.data;
+          });
       }
     }
     $scope.getUserID();
