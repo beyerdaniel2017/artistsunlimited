@@ -74,14 +74,14 @@ app.directive('dlgate', function($http) {
           });
           $scope.isTrackAvailable = true;
           $scope.processing = false;
-          $scope.$apply();
+          if (!$scope.$$phase) $scope.$apply();
         }
 
         function handleError(err) {
           $scope.track.trackID = null;
           $.Zebra_Dialog('Song not found or forbidden');
           $scope.processing = false;
-          $scope.$apply();
+          if (!$scope.$$phase) $scope.$apply();
         }
       };
 
@@ -197,11 +197,11 @@ app.directive('dlgate', function($http) {
             .then(function(tracks) {
               $scope.trackList = tracks;
               $scope.processing = false;
-              $scope.$apply();
+              if (!$scope.$$phase) $scope.$apply();
             })
             .catch(function(response) {
               $scope.processing = false;
-              $scope.$apply();
+              if (!$scope.$$phase) $scope.$apply();
             });
         }
       }
@@ -382,14 +382,14 @@ app.directive('dlgate', function($http) {
           });
           $scope.isTrackAvailable = true;
           $scope.processing = false;
-          $scope.$apply();
+          if (!$scope.$$phase) $scope.$apply();
         }
 
         function handleError(err) {
           $scope.track.trackID = null;
           $.Zebra_Dialog('Song not found or forbidden');
           $scope.processing = false;
-          $scope.$apply();
+          if (!$scope.$$phase) $scope.$apply();
         }
       }
 

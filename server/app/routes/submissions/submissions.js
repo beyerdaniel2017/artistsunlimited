@@ -547,9 +547,15 @@ router.put('/completedPayment', function(req, res, next) {
         var wouldBeRefundDate = new Date(new Date(event.event.day).getTime() + 4 * 60 * 60 * 1000)
         if (wouldBeRefundDate > sub.refundDate) sub.refundDate = wouldBeRefundDate;
       })
-      responseObj.events = events;
       sub.save();
-      res.send(responseObj);
+      User.findOne({
+        'soundcloud.id': events[0].userID
+      }).then(function(user) {
+        res.send({
+          username: user.soundcloud.username,
+          title: events[0].title
+        });
+      }).then(null, next)
     })
     .then(null, next);
 })

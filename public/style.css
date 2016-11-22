@@ -1139,6 +1139,7 @@ button:hover,
 
 .column-day {
   width: 14.2857142857%;
+  min-width: 14.2%;
   height: 100%;
   margin: 0 !important; }
 

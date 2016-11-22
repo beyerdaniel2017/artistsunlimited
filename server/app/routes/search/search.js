@@ -72,7 +72,11 @@ function resolveURL(url) {
           body += chunk
         });
         res.on('end', function() {
-          var location = JSON.parse(body).location;
+          try {
+            var location = JSON.parse(body).location;
+          } catch (e) {
+            reject(e);
+          }
           request.get(location, function(err, response, body) {
             if (err) {
               reject(err)
@@ -90,7 +94,12 @@ function resolveURL(url) {
                 id: id
               });
             } else {
-              fulfill(JSON.parse(body));
+              try {
+                body = JSON.parse(body)
+                fulfill(body);
+              } catch (e) {
+                reject(e)
+              }
             }
           });
         })

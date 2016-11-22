@@ -184,7 +184,7 @@ app.directive('reforrelists', function($http) {
           }
         });
         $scope.currentTrades = cTrades;
-        $scope.$apply();
+        if (!$scope.$$phase) $scope.$apply();
       }
 
       $scope.tradeType = {
@@ -308,13 +308,13 @@ app.directive('reforrelists', function($http) {
         if (found) {
           if ($scope.isAdminRoute) {
             $state.go('adminreForReInteraction', {
-              user1Name: found.p1.user.soundcloud.username.replace(' ', '_'),
-              user2Name: found.p2.user.soundcloud.username.replace(' ', '_')
+              user1Name: found.p1.user.soundcloud.username.replace(/ /g, '_'),
+              user2Name: found.p2.user.soundcloud.username.replace(/ /g, '_')
             })
           } else {
             $state.go('reForReInteraction', {
-              user1Name: found.p1.user.soundcloud.username.replace(' ', '_'),
-              user2Name: found.p2.user.soundcloud.username.replace(' ', '_')
+              user1Name: found.p1.user.soundcloud.username.replace(/ /g, '_'),
+              user2Name: found.p2.user.soundcloud.username.replace(/ /g, '_')
             })
           }
         } else {
@@ -346,13 +346,13 @@ app.directive('reforrelists', function($http) {
               console.log(res.data);
               if ($scope.isAdminRoute) {
                 $state.go('adminreForReInteraction', {
-                  user1Name: res.data.p1.user.soundcloud.username.replace(' ', '_'),
-                  user2Name: res.data.p2.user.soundcloud.username.replace(' ', '_')
+                  user1Name: res.data.p1.user.soundcloud.username.replace(/ /g, '_'),
+                  user2Name: res.data.p2.user.soundcloud.username.replace(/ /g, '_')
                 })
               } else {
                 $state.go('reForReInteraction', {
-                  user1Name: res.data.p1.user.soundcloud.username.replace(' ', '_'),
-                  user2Name: res.data.p2.user.soundcloud.username.replace(' ', '_')
+                  user1Name: res.data.p1.user.soundcloud.username.replace(/ /g, '_'),
+                  user2Name: res.data.p2.user.soundcloud.username.replace(/ /g, '_')
                 })
               }
 
@@ -368,13 +368,13 @@ app.directive('reforrelists', function($http) {
         console.log(trade);
         if ($scope.isAdminRoute) {
           $state.go('adminreForReInteraction', {
-            user1Name: trade.p1.user.soundcloud.username.replace(' ', '_'),
-            user2Name: trade.p2.user.soundcloud.username.replace(' ', '_')
+            user1Name: trade.p1.user.soundcloud.username.replace(/ /g, '_'),
+            user2Name: trade.p2.user.soundcloud.username.replace(/ /g, '_')
           })
         } else {
           $state.go('reForReInteraction', {
-            user1Name: trade.p1.user.soundcloud.username.replace(' ', '_'),
-            user2Name: trade.p2.user.soundcloud.username.replace(' ', '_')
+            user1Name: trade.p1.user.soundcloud.username.replace(/ /g, '_'),
+            user2Name: trade.p2.user.soundcloud.username.replace(/ /g, '_')
           })
         }
       }
@@ -646,7 +646,6 @@ app.directive('reforrelists', function($http) {
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
           $scope.showPlayer = false;
         }
-        // $scope.$apply();
       }
 
       $scope.closeModal = function() {
@@ -728,7 +727,7 @@ app.directive('reforrelists', function($http) {
             console.log($scope.makeEvent);
             document.getElementById('scPopupPlayer').style.visibility = "visible";
             console.log(document.getElementById('scPopupPlayer'));
-            $scope.$digest();
+            if (!$scope.$$phase) $scope.$apply();
           }
         });
       }
@@ -751,7 +750,7 @@ app.directive('reforrelists', function($http) {
           show_artwork: true,
           callback: function() {
             document.getElementById('scPlayer').style.visibility = "visible";
-            $scope.$digest();
+            if (!$scope.$$phase) $scope.$apply();
           }
         });
       }

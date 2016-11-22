@@ -37,40 +37,40 @@ router.get('/forUser/:id', function(req, res, next) {
     .then(null, next);
 })
 
-router.get('/repostEvent/:id', function(req, res, next) {
+router.get('/repostEvent/:username/:trackTitle', function(req, res, next) {
   var data = [];
-  RepostEvent.findOne({
-      _id: req.params.id,
+  User.findOne({
+      'soundcloud.username': req.params.username.replace(/_/g, ' ')
+    })
+    .then(function(user) {
+      console.log(user)
+      return RepostEvent.findOne({
+        userID: user.soundcloud.id,
+        title: req.params.trackTitle.replace(/_/g, ' ')
+      })
     })
     .then(function(event) {
+      console.log(event);
       if (event && event.trackID) {
         RepostEvent.find({
             trackID: event.trackID
           })
           .then(function(tracks) {
-            var i = -1;
-            var cont = function() {
-              i++;
-              if (i < tracks.length) {
-                var userid = parseInt(tracks[i].userID);
-                User.findOne({
-                  'soundcloud.id': userid
-                }, function(err, user) {
-                  if (err) next(err);
-                  if (user) {
-                    var result = {
-                      trackInfo: tracks[i],
-                      userInfo: user.soundcloud
-                    }
-                    data.push(result);
-                    cont();
+            tracks.forEach(function(track) {
+              User.findOne({
+                  'soundcloud.id': track.userID
+                })
+                .then(function(user) {
+                  var result = {
+                    trackInfo: track,
+                    userInfo: user.soundcloud
                   }
-                });
-              } else {
-                res.send(data);
-              }
-            }
-            cont();
+                  data.push(result);
+                  if (data.length == tracks.length) {
+                    res.send(data);
+                  }
+                }).then(null, next);
+            })
           })
           .then(null, next);
       } else {
@@ -81,10 +81,17 @@ router.get('/repostEvent/:id', function(req, res, next) {
     .then(null, next);
 })
 
-router.get('/repostEvent/getPaidReposts/:id', function(req, res, next) {
+router.get('/repostEvent/getPaidReposts/:username/:trackTitle', function(req, res, next) {
   var data = [];
-  RepostEvent.findOne({
-      _id: req.params.id,
+  User.findOne({
+      'soundcloud.username': req.params.username.replace(/_/g, ' ')
+    })
+    .then(function(user) {
+      console.log(user)
+      return RepostEvent.findOne({
+        userID: user.soundcloud.id,
+        title: req.params.trackTitle.replace(/_/g, ' ')
+      })
     })
     .then(function(event) {
       return RepostEvent.find({
@@ -94,7 +101,6 @@ router.get('/repostEvent/getPaidReposts/:id', function(req, res, next) {
         },
         type: 'paid'
       })
-
     })
     .then(function(tracks) {
       tracks.forEach(function(track) {

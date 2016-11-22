@@ -513,13 +513,18 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
         })
         .then(null, function(err) {
           console.log(err);
-          $scope.processing = false;
-          $.Zebra_Dialog('Please retry in 1 second.');
-          setTimeout(function() {
+          if (err.message == 'already added') {
+            $scope.processing = false;
+            window.localStorage.setItem('samelinkedaccount', true);
             window.location.reload();
-          }, 1000);
+          }
         });
     };
+
+    if (window.localStorage.getItem('samelinkedaccount')) {
+      window.localStorage.removeItem('samelinkedaccount');
+      $scope.soundcloudLogin();
+    }
 
     $scope.verifyBrowser = function() {
       if (navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1) {

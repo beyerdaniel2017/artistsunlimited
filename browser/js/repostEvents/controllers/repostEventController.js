@@ -1,16 +1,16 @@
 app.config(function($stateProvider) {
   $stateProvider.state('repostevents', {
-    url: '/repostevents',
+    url: '/repostevents/:username/:trackTitle',
     templateUrl: 'js/repostEvents/views/repostEvents.html',
     controller: 'RepostEventsController',
     resolve: {
-      repostEvent: function($http, $location) {
+      repostEvent: function($http, $location, $stateParams) {
         console.log($location.search());
         var eventid = $location.search().id;
         var paid = $location.search().paid;
-        var url = '/api/events/repostEvent/' + eventid;
+        var url = '/api/events/repostEvent/' + $stateParams.username + '/' + $stateParams.trackTitle;
         if (paid) {
-          url = '/api/events/repostEvent/getPaidReposts/' + eventid;
+          url = '/api/events/repostEvent/getPaidReposts/' + $state.params.username + '/' + $state.params.trackTitle;
         }
         return $http.get(url)
           .then(function(res) {
@@ -62,6 +62,12 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
       return {
         'border-radius': '4px'
       }
+    } else if (repostEvent.type == 'multiple') {
+      return {
+        'background-color': '#7A549B',
+        'height': '20px',
+        'border-radius': '4px'
+      }
     } else if (repostEvent.trackInfo.type == 'track' || repostEvent.trackInfo.type == 'queue') {
       return {
         'background-color': '#FF7676',
@@ -80,8 +86,11 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
     }
   }
 
+  $scope.followCounts = 0;
+  console.log(repostEvent);
   repostEvent.forEach(function(ev) {
     ev.day = new Date(ev.day);
+    $scope.followCounts += ev.userInfo.followers;
   });
 
   $scope.events = repostEvent;
@@ -96,7 +105,6 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
       var dayEvents = repostEvent.filter(function(ev) {
         return (new Date(ev.trackInfo.day).toLocaleDateString() == calDay.day.toLocaleDateString());
       });
-
       var eventArray = [];
       for (var j = 0; j < 24; j++) {
         eventArray[j] = {
@@ -104,14 +112,31 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
         };
       }
       dayEvents.forEach(function(ev) {
-        eventArray[new Date(ev.trackInfo.day).getHours()] = ev;
+        if (eventArray[new Date(ev.trackInfo.day).getHours()].type == 'empty') {
+          ev.type = 'track';
+          eventArray[new Date(ev.trackInfo.day).getHours()] = ev;
+        } else if (eventArray[new Date(ev.trackInfo.day).getHours()].type == 'track') {
+          var event = {
+            type: 'multiple',
+            events: []
+          }
+          event.events.push(eventArray[new Date(ev.trackInfo.day).getHours()])
+          event.events.push(ev);
+          eventArray[new Date(ev.trackInfo.day).getHours()] = event;
+        } else if (eventArray[new Date(ev.trackInfo.day).getHours()].type == 'multiple') {
+          eventArray[new Date(ev.trackInfo.day).getHours()].events.push(ev);
+        }
       });
-
       calDay.events = eventArray;
       calendar.push(calDay);
     }
     return calendar;
   };
+
+  $scope.getEventText = function(repostEvent) {
+    if (repostEvent.type == 'track') return repostEvent.userInfo.username
+    else if (repostEvent.type == 'multiple') return 'Multiple Reposts'
+  }
 
   $scope.backEvent = function() {
     $scope.makeEvent = null;
@@ -122,6 +147,28 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
 
   $scope.calendar = $scope.fillDateArrays(repostEvent);
   $scope.clickedSlot = function(day, hour, data) {
+    if (data.type == 'multiple') {
+      var buttons = [];
+      data.events.forEach(function(ev) {
+        var button = {
+          caption: ev.userInfo.username,
+          callback: function() {
+            $scope.openPopup(day, hour, ev);
+            if (!$scope.$$phase) $scope.$apply();
+          }
+        }
+        buttons.push(button);
+      })
+      $.Zebra_Dialog('Which slot do you want to edit?', {
+        'type': 'question',
+        'buttons': buttons
+      });
+    } else {
+      $scope.openPopup(day, hour, data);
+    }
+  }
+
+  $scope.openPopup = function(day, hour, data) {
     if (data.trackInfo) {
       $scope.makeEvent = {};
       $scope.popup = true;
@@ -135,6 +182,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
       $scope.unrepostEnable = diff > 0;
       $scope.makeEvent.timeGap = data.trackInfo.timeGap;
       $scope.makeEvent.username = data.userInfo.username;
+      $scope.makeEvent.followers = data.userInfo.followers;
       if (data.trackInfo.like) $scope.likeSrc = 'assets/images/likeTrue.svg';
       else $scope.likeSrc = 'assets/images/like.svg';
       if (data.trackInfo.comment) $scope.commentSrc = 'assets/images/comment.svg';
@@ -161,6 +209,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
       document.getElementById('scPopupPlayer').style.visibility = "visible";
     }
   }
+
   $scope.fillDateArrays(repostEvent);
   $scope.detailView = function(data) {
     $scope.itemview = "detailListView";
@@ -170,6 +219,8 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
     $scope.makeEvent.day = new Date(data.trackInfo.day);
     $scope.makeEvent.url = data.trackInfo.trackURL;
     $scope.makeEvent.comment = data.trackInfo.comment;
+    $scope.makeEvent.followers = data.userInfo.followers;
+    $scope.makeEvent.username = data.userInfo.username;
     if (data.trackInfo.like) $scope.likeSrc = 'assets/images/likeTrue.svg';
     else $scope.likeSrc = 'assets/images/like.svg';
     if (data.trackInfo.comment) $scope.commentSrc = 'assets/images/comment.svg';

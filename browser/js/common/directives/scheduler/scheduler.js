@@ -99,7 +99,7 @@ app.directive('scheduler', function($http) {
           show_artwork: false,
           callback: function() {
             document.getElementById('scPopupPlayer').style.visibility = "visible";
-            $scope.$digest();
+            if (!$scope.$$phase) $scope.$apply();
           }
         });
         $scope.warnAboutPrevRepost();
@@ -120,7 +120,7 @@ app.directive('scheduler', function($http) {
           show_artwork: true,
           callback: function() {
             document.getElementById('scPlayer').style.visibility = "visible";
-            $scope.$digest();
+            if (!$scope.$$phase) $scope.$apply();
           }
         });
         $scope.warnAboutPrevRepost();
@@ -641,11 +641,11 @@ app.directive('scheduler', function($http) {
             .then(function(tracks) {
               $scope.trackList = tracks;
               $scope.processing = false;
-              $scope.$apply();
+              if (!$scope.$$phase) $scope.$apply();
             })
             .catch(function(response) {
               $scope.processing = false;
-              $scope.$apply();
+              if (!$scope.$$phase) $scope.$apply();
             });
         }
       }
@@ -1024,7 +1024,8 @@ app.directive('scheduler', function($http) {
           req
             .then(function(res) {
               if (res) {
-                $scope.repostResponse = res.data._id;
+                $scope.repostResponse = res.data;
+                $scope.repostResponse.user = $scope.user;
                 $('#pop').modal('show');
               }
               $scope.makeEventURL = "";
@@ -1041,7 +1042,8 @@ app.directive('scheduler', function($http) {
             })
             .then(function(res) {
               if (res) {
-                $scope.repostResponse = res.data._id;
+                $scope.repostResponse = res.data;
+                $scope.repostResponse.user = $scope.user;
                 $('#pop').modal('show');
               }
               $scope.makeEventURL = "";
@@ -1279,16 +1281,19 @@ app.directive('scheduler', function($http) {
             .then(function(tracks) {
               $scope.trackList = tracks;
               $scope.processing = false;
-              $scope.$apply();
+              if (!$scope.$$phase) $scope.$apply();
             })
             .catch(function(response) {
               $scope.processing = false;
-              $scope.$apply();
+              if (!$scope.$$phase) $scope.$apply();
             });
         }
       }
 
-      $scope.getUserNetwork();
+      $scope.getUserNetwork()
+        .then(function() {
+          if (!$scope.$$phase) $scope.$apply();
+        });
       $scope.followersCount();
       $scope.checkCommentEnable();
       $scope.checkLikeEnable();
