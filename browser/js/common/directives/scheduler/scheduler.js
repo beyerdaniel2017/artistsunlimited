@@ -719,7 +719,7 @@ app.directive('scheduler', function($http) {
         $scope.popup = true;
         $scope.slotType = 'track';
         var d = new Date(day).getDay();
-        if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1 && data.type == 'empty') return;
+        // if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1 && data.type == 'empty') return;
         var makeDay = new Date(day);
         makeDay.setHours(hour);
         if ($scope.user.blockRelease && new Date($scope.user.blockRelease).getTime() > new Date(makeDay).getTime()) {
