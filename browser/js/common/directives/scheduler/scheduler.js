@@ -141,14 +141,13 @@ app.directive('scheduler', function($http) {
       $scope.linkedAccounts = [];
       /*Get Linked Accounts*/
       $scope.getLinkedAccounts = function() {
-        setTimeout(function() {
-          var linked = $rootScope.userlinkedAccounts;
-          for (var i = 0; i < linked.length; i++) {
-            if (linked[i]._id != $scope.user._id) {
-              $scope.linkedAccounts.push(linked[i]);
-            }
+        var linked = $rootScope.userlinkedAccounts;
+        for (var i = 0; i < linked.length; i++) {
+          if (linked[i]._id != $scope.user._id) {
+            $scope.linkedAccounts.push(linked[i]);
           }
-        }, 1000);
+        }
+        if (!$scope.$$phase) $scope.$apply();
       }
 
       $scope.checkCommentEnable = function() {
@@ -228,7 +227,6 @@ app.directive('scheduler', function($http) {
             }
           }
         }
-        //$scope.saveRepostSettings();
       }
 
       $scope.getPrevNextComment = function(type) {
@@ -535,7 +533,6 @@ app.directive('scheduler', function($http) {
             var dt = new Date(strDdate);
             dt.setHours(s);
             item.date = new Date(dt);
-            //item.date = strDdate + " " + time;
             if (!item.event) {
               if (new Date(item.date).getTime() > new Date().getTime()) {
                 $scope.listevents.push(item);
@@ -568,7 +565,7 @@ app.directive('scheduler', function($http) {
         if ($scope.availableSlots[daysArray[day]].indexOf(pushhour) > -1) {
           $scope.availableSlots[daysArray[day]].splice($scope.availableSlots[daysArray[day]].indexOf(pushhour), 1);
         } else if ($scope.tooManyReposts(day, hour)) {
-          $.Zebra_Dialog("Cannot schedule slot. We only allow 8 reposts within 24 hours to prevent you from being repost blocked.");
+          $.Zebra_Dialog("Cannot schedule slot. We only allow 10 reposts within 24 hours to prevent you from being repost blocked.");
           return;
         } else {
           $scope.availableSlots[daysArray[day]].push(pushhour);
@@ -606,7 +603,7 @@ app.directive('scheduler', function($http) {
             else i++;
           }
           checkingSlots.push(slot);
-          if (checkingSlots.length > 8) {
+          if (checkingSlots.length > 10) {
             status = true;
           }
         })
@@ -697,7 +694,6 @@ app.directive('scheduler', function($http) {
         var calendarDay = $scope.calendar.find(function(calD) {
           return calD.day.toLocaleDateString() == day.toLocaleDateString();
         });
-        //$scope.updateReach();
         if (!$scope.makeEvent) {
           $scope.makeEvent = {
             userID: $scope.user.soundcloud.id,
@@ -826,8 +822,6 @@ app.directive('scheduler', function($http) {
             $scope.setTradedLikeComment();
             $scope.slotType = 'traded';
             $scope.showPlayer = false;
-            // if ($scope.commentEvent)
-            //   $scope.eventComment = ($scope.user.repostSettings && $scope.user.repostSettings.trade && $scope.user.repostSettings.trade.comments && $scope.user.repostSettings.trade.comments.length > 0) ? $scope.user.repostSettings.trade.comments[Math.random() * $scope.user.repostSettings.trade.comments.length >> 0] : '';
           }
         }
       }
@@ -1292,14 +1286,13 @@ app.directive('scheduler', function($http) {
 
       $scope.getUserNetwork()
         .then(function() {
-          if (!$scope.$$phase) $scope.$apply();
+          $scope.getLinkedAccounts();
         });
       $scope.followersCount();
       $scope.checkCommentEnable();
       $scope.checkLikeEnable();
       $scope.updateReach();
       $scope.verifyBrowser();
-      $scope.getLinkedAccounts();
     }
   }
 })

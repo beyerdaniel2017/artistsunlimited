@@ -7,7 +7,6 @@ var Submission = mongoose.model('Submission');
 var Channel = mongoose.model('Channel');
 var User = mongoose.model('User');
 var RepostEvent = mongoose.model('RepostEvent');
-var Event = mongoose.model('Event');
 var Email = mongoose.model('Email');
 var rootURL = require('../../../env').ROOTURL;
 var Promise = require('promise');
@@ -65,31 +64,31 @@ router.get('/unaccepted', function(req, res, next) {
       .populate('userID')
       .skip(skipcount)
       .limit(limitcount)
-
-    .then(function(subs) {
+      .then(function(subs) {
         var i = -1;
-        var next = function() {
+        var cont = function() {
           i++;
           if (i < subs.length) {
             var sub = subs[i].toJSON();
             sub.approvedChannels = [];
             Submission.find({
-              email: sub.email
-            })
-
-            .then(function(oldSubs) {
+                email: sub.email
+              })
+              .then(function(oldSubs) {
                 oldSubs.forEach(function(oldSub) {
-                  sub.approvedChannels = sub.approvedChannels.concat(oldSub.paidChannelIDS)
+                  oldSub.paidChannels.forEach(function(pc) {
+                    sub.approvedChannels.push(pc.user.id)
+                  })
                 });
                 resultSubs.push(sub);
-                next();
+                cont();
               })
               .then(null, next);
           } else {
             res.send(resultSubs);
           }
         }
-        next();
+        cont();
       })
       .then(null, next);
   }
@@ -587,7 +586,6 @@ function schedulePaidRepost(channel, submission) {
         }
         if (user.repostSettings && user.repostSettings.paid && user.repostSettings.paid.like) eventDetails.like = true;
         if (user.repostSettings && user.repostSettings.paid && user.repostSettings.paid.comment) eventDetails.comment = user.repostSettings.paid.comments[Math.floor(Math.random() * user.repostSettings.paid.comments.length)];
-        console.log(eventDetails);
         scheduleRepost(eventDetails, new Date())
           .then(function(event) {
             fulfill({
@@ -708,106 +706,3 @@ router.get('/getEarnings', function(req, res, next) {
   }
   next();
 });
-
-//reschedule repost
-// router.post('/rescheduleRepost', function(req, res, next) {
-//   var eventHolder;
-//   console.log(req.body);
-//   Event.findByIdAndRemove(req.body.id)
-//     .then(function(remEvent) {
-//       eventHolder = remEvent;
-//       return Event.find({
-//         paid: true,
-//         trackID: null,
-//         channelID: eventHolder.channelID
-//       })
-//     })
-//     .then(function(events) {
-//       events.forEach(function(event) {
-//         event.day = new Date(event.day);
-//       });
-//       events.sort(function(a, b) {
-//         return a.day.getTime() - b.day.getTime();
-//       });
-//       var index = 0;
-//       var today = new Date();
-//       var ev = events[index];
-//       while (ev && ev.day.getTime() < today.getTime()) {
-//         index++;
-//         ev = events[index];
-//       }
-//       Channel.findOne({
-//           channelID: eventHolder.channelID
-//         })
-//         .then(function(channel) {
-//           scWrapper.setToken(channel.accessToken);
-//           var reqObj = {
-//             method: 'GET',
-//             path: '/e1/me/track_reposts/' + eventHolder.trackID,
-//             qs: {
-//               oauth_token: channel.accessToken
-//             }
-//           };
-//           scWrapper.request(reqObj, function(err, data) {
-//             if (err) {
-//               if (!ev) {
-//                 Event.find({
-//                     channelID: eventHolder.channelID
-//                   })
-//                   .then(function(allEvents) {
-//                     allEvents.forEach(function(event1) {
-//                       event1.day = new Date(event1.day);
-//                     });
-//                     var searchHours = [24, 26, 28, 30, 32, 34];
-//                     var continu = true;
-//                     var ind = 1;
-//                     while (continu) {
-//                       searchHours.forEach(function(hour) {
-//                         var actualHour = calcHour(hour, -5);
-//                         var desiredDay = new Date();
-//                         var releaseDay = new Date();
-//                         if (channel.blockRelease) releaseDay = new Date(channel.blockRelease);
-//                         if (releaseDay > desiredDay) desiredDay = releaseDay;
-//                         desiredDay.setDate(desiredDay.getDate() + ind);
-//                         desiredDay.setHours(actualHour);
-//                         if (continu) {
-//                           var event = allEvents.find(function(eve) {
-//                             return eve.day.getHours() == actualHour && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
-//                           });
-//                           if (!event) {
-//                             continu = false;
-//                             eventHolder.day = desiredDay;
-//                             var newEve = new Event(eventHolder);
-//                             newEve.save()
-//                               .then(function(eve) {
-//                                 eve.day = new Date(eve.day);
-//                                 sendEmail(eve.name, eve.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>We are terribly sorry for the inconvenience, but we had to reschedule your repost of <a href='" + eve.trackURL + "'>" + eve.title + "</a> on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". If your song has already been reposted, please ignore this email and we hope you enjoyed the results! We appologize the inconvenience.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
-//                                 res.send(err);
-//                               })
-//                               .then(null, next);
-//                           }
-//                         }
-//                       });
-//                       ind++;
-//                     }
-//                   });
-//               } else {
-//                 ev.trackID = eventHolder.trackID;
-//                 ev.email = eventHolder.email;
-//                 ev.name = eventHolder.name;
-//                 ev.title = eventHolder.title;
-//                 ev.trackURL = eventHolder.trackURL;
-//                 ev.save().then(function(eve) {
-//                   eve.day = new Date(eve.day);
-//                   sendEmail(eve.name, eve.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + eve.name + ",<br><br>We are terribly sorry for the inconvenience, but we had to reschedule your repost of <a href='" + eve.trackURL + "'>" + eve.title + "</a> on <a href='" + channel.url + "'>" + channel.displayName + "</a> for " + eve.day.toLocaleDateString() + ". If your song has already been reposted, please ignore this email and we hope you enjoyed the results! We appologize the inconvenience.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
-//                   res.send(err);
-//                 })
-//               }
-//             } else {
-//               res.send('Song was already reposted');
-//             }
-//           });
-//         })
-//     })
-//     .then(null, next);
-// });

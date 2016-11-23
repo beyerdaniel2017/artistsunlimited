@@ -11,6 +11,9 @@ app.config(function($stateProvider) {
             return $http.get('/api/trades/withUser/' + user._id)
               .then(function(res) {
                 var trades = res.data;
+                trades = trades.filter(function(trade) {
+                  return (!!trade.p1.user && !!trade.p2.user)
+                })
                 trades.forEach(function(trade) {
                   trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
                   trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
@@ -27,6 +30,9 @@ app.config(function($stateProvider) {
             return $http.get('/api/trades/doneWithUser/' + user._id)
               .then(function(res) {
                 var trades = res.data;
+                trades = trades.filter(function(trade) {
+                  return (!!trade.p1.user && !!trade.p2.user)
+                })
                 var favs = trades.map(function(trade) {
                   return ((trade.p1.user._id == user._id) ? trade.p2.user : trade.p1.user)
                 });

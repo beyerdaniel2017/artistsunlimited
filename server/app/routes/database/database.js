@@ -455,12 +455,12 @@ router.post('/downloadurl', function(req, res, next) {
     if (body.fields.admin == 'undefined') {
       body.fields.admin = false;
     }
+    body.fields.pseudoname = body.fields.artistUsername.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_") + "/" + body.fields.trackTitle.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
     body.fields.userid = req.user._id;
-    body.fields.trackDownloadUrl = rootURL + "/download/" + req.user.soundcloud.username + "/" + body.fields.trackTitle.replace(/ /g, '-').replace(/./g, '-');
+    body.fields.trackDownloadUrl = rootURL + "/download/" + body.fields.pseudoname;
     if (body.fields.adminaction == "admin") {
       var users = JSON.parse(body.fields.user);
       body.fields.userid = users._id;
-      body.fields.trackDownloadUrl = rootURL + "/download/" + users.soundcloud.username + "/" + body.fields.trackTitle.replace(/ /g, '-').replace(/./g, '-');
     }
     body.fields.downloadURL = (body.location !== '') ? body.location : body.fields.downloadURL;
     if (body.fields._id) {
@@ -511,8 +511,7 @@ router.post('/downloadurl', function(req, res, next) {
 router.get('/downloadurl/admin', function(req, res, next) {
   DownloadTrack
     .find({})
-
-  .then(function(tracks) {
+    .then(function(tracks) {
       res.send(tracks);
     })
     .then(null, function(err) {
@@ -547,7 +546,7 @@ router.get('/adminUserNetwork/:id', function(req, res, next) {
         network.push(pr.userID);
       })
       res.send(network);
-    })
+    }).then(null, next);
 })
 
 router.get('/downloadurl/:id', function(req, res, next) {
@@ -1299,14 +1298,13 @@ router.get('/userNetworks', function(req, res, next) {
       channels: userID
     })
     .populate('channels')
-
-  .then(function(una) {
-    if (una) {
-      res.send(una.channels)
-    } else {
-      res.send([]);
-    }
-  });
+    .then(function(una) {
+      if (una) {
+        res.send(una.channels)
+      } else {
+        res.send([]);
+      }
+    }).then(null, next);
 });
 
 router.put('/updateRepostSettings', function(req, res, next) {
@@ -1362,6 +1360,36 @@ router.get('/updateSubs/:post', function(req, res, next) {
   } else {
     next(new Error('wrong code'));
   }
+})
+
+router.get('/updatePseudonames', function(req, res, next) {
+  User.find({})
+    .then(function(users) {
+      users.forEach(function(user) {
+        if (user.soundcloud && user.soundcloud.username) {
+          user.soundcloud.pseudoname = user.soundcloud.username.replace(/[^a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ0-9 ]/g, "").replace(/ /g, "_");
+          user.save();
+        }
+      })
+      return RepostEvent.find({})
+    })
+    .then(function(events) {
+      events.forEach(function(event) {
+        if (event.title) {
+          event.pseudoname = event.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_");
+          event.save()
+        }
+      });
+      return DownloadTrack.find({})
+    })
+    .then(function(dltracks) {
+      dltracks.forEach(function(dltrack) {
+        dltrack.pseudoname = dltrack.artistUsername.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_") + "/" + dltrack.trackTitle.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_");
+        dltrack.trackDownloadUrl = rootURL + "/download/" + dltrack.pseudoname;
+        dltrack.save();
+      })
+      res.send('ok');
+    }).then(null, next);
 })
 
 //respond to all premier submissions

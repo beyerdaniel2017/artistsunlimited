@@ -5,6 +5,9 @@ var schema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
+  pseudoname: {
+    type: String
+  },
   trackURL: {
     type: String
   },

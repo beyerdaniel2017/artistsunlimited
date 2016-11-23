@@ -93,6 +93,7 @@ function repostAndRemove(event, user, repCount) {
                 event.trackURL = data.permalink_url;
                 event.trackArtUrl = data.artwork_url;
                 event.artistName = data.user.username;
+                if (event.title) event.pseudoname = event.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_");
                 event.save();
               }
             });

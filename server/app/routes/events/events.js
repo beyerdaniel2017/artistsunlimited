@@ -2,10 +2,10 @@
 var router = require('express').Router();
 module.exports = router;
 var mongoose = require('mongoose');
-var Event = mongoose.model('Event');
 var RepostEvent = mongoose.model('RepostEvent');
 var moment = require('moment');
 var User = mongoose.model('User');
+var NetworkAccount = mongoose.model('NetworkAccounts');
 var scheduleRepost = require("../../scheduleRepost/scheduleRepost.js");
 var denyUnrepostOverlap = require('../../scheduleRepost/denyUnrepostOverlap.js');
 var scConfig = require('./../../../env').SOUNDCLOUD;
@@ -40,57 +40,104 @@ router.get('/forUser/:id', function(req, res, next) {
 router.get('/repostEvent/:username/:trackTitle', function(req, res, next) {
   var data = [];
   User.findOne({
-      'soundcloud.username': req.params.username.replace(/_/g, ' ')
+      'soundcloud.pseudoname': req.params.username
     })
     .then(function(user) {
-      console.log(user)
-      return RepostEvent.findOne({
-        userID: user.soundcloud.id,
-        title: req.params.trackTitle.replace(/_/g, ' ')
-      })
-    })
-    .then(function(event) {
-      console.log(event);
-      if (event && event.trackID) {
-        RepostEvent.find({
-            trackID: event.trackID
+      getUserNetwork(user._id)
+        .then(function(network) {
+          var networkDocIds = [];
+          var networkUserIds = [];
+          network.forEach(function(user) {
+            networkDocIds.push(user._id);
+            networkUserIds.push(user.soundcloud.id);
           })
-          .then(function(tracks) {
-            tracks.forEach(function(track) {
-              User.findOne({
-                  'soundcloud.id': track.userID
-                })
-                .then(function(user) {
-                  var result = {
-                    trackInfo: track,
-                    userInfo: user.soundcloud
-                  }
-                  data.push(result);
-                  if (data.length == tracks.length) {
-                    res.send(data);
-                  }
-                }).then(null, next);
+          RepostEvent.findOne({
+              userID: user.soundcloud.id,
+              pseudoname: req.params.trackTitle
             })
-          })
-          .then(null, next);
-      } else {
-        console.log(event);
-        next(new Error("No events found."));
-      }
-    })
-    .then(null, next);
+            .then(function(event) {
+              if (event && event.trackID) {
+                RepostEvent.find({
+                    trackID: event.trackID,
+                    $or: [{
+                      userID: {
+                        $in: networkUserIds
+                      }
+                    }, {
+                      owner: {
+                        $in: networkDocIds
+                      }
+                    }]
+                  })
+                  .then(function(tracks) {
+                    tracks.forEach(function(track) {
+                      User.findOne({
+                          'soundcloud.id': track.userID
+                        })
+                        .then(function(user) {
+                          var result = {
+                            trackInfo: track,
+                            userInfo: user.soundcloud
+                          }
+                          data.push(result);
+                          if (data.length == tracks.length) {
+                            res.send(data);
+                          }
+                        }).then(null, next);
+                    })
+                  })
+                  .then(null, next);
+              } else {
+                console.log(event);
+                next(new Error("No events found."));
+              }
+            }).then(null, next);
+        }).then(null, next)
+    }).then(null, next);
 })
+
+function getUserNetwork(userID) {
+  return new Promise(function(resolve, reject) {
+    User.findOne({
+        'paidRepost.userID': userID
+      })
+      .then(function(adminUser) {
+        if (adminUser) {
+          User.findById(adminUser._id).populate('paidRepost.userID')
+            .then(function(user) {
+              var network = [];
+              user.paidRepost.forEach(function(pr) {
+                network.push(pr.userID);
+              })
+              resolve(network);
+            }).then(null, reject)
+        } else {
+          NetworkAccount.findOne({
+              channels: userID
+            })
+            .populate('channels')
+            .then(function(una) {
+              if (una) {
+                resolve(una.channels);
+              } else {
+                resolve([]);
+              }
+            }).then(null, reject);
+        }
+      }).then(null, reject);
+  })
+}
 
 router.get('/repostEvent/getPaidReposts/:username/:trackTitle', function(req, res, next) {
   var data = [];
   User.findOne({
-      'soundcloud.username': req.params.username.replace(/_/g, ' ')
+      'soundcloud.pseudoname': req.params.username
     })
     .then(function(user) {
       console.log(user)
       return RepostEvent.findOne({
         userID: user.soundcloud.id,
-        title: req.params.trackTitle.replace(/_/g, ' ')
+        pseudoname: req.params.trackTitle
       })
     })
     .then(function(event) {
@@ -161,6 +208,7 @@ router.put('/repostEvents', function(req, res, next) {
       event.trackID = req.body.trackID;
       event.title = req.body.title;
       event.trackURL = req.body.trackURL;
+      if (event.title) event.pseudoname = event.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
       return event.save()
     })
     .then(function(ev) {
@@ -207,6 +255,7 @@ router.put('/repostEvents/autofillAll', function(req, res, next) {
                     event.trackURL = data.permalink_url;
                     event.trackArtUrl = data.artwork_url;
                     event.artistName = data.user.username;
+                    if (event.title) event.pseudoname = event.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
                     event.save();
                     console.log(event);
                     eventInd++;
@@ -245,6 +294,7 @@ router.post('/repostEvents', function(req, res, next) {
     return;
   }
   var event = new RepostEvent(req.body);
+  if (event.title) event.pseudoname = event.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
   event.save()
     .then(function(ev) {
       ev.day = new Date(ev.day);
@@ -259,6 +309,7 @@ router.post('/repostEventsScheduler', function(req, res, next) {
     return;
   }
   var event = new RepostEvent(req.body);
+  if (event.title) event.pseudoname = event.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
   event.save()
     .then(function(ev) {
       var scheduleDate = new Date(ev.day);
@@ -344,37 +395,3 @@ router.get('/getRepostEvents/:id', function(req, res, next) {
     })
     .then(null, next);
 });
-
-// router.put('/', function(req, res, next) {
-//   Event.findByIdAndUpdate(req.body._id, req.body, {
-//       new: true
-//     })
-//     .then(function(event) {
-//       event.trackID = req.body.trackID;
-//       return event.save()
-//     })
-//     .then(function(ev) {
-//       ev.day = new Date(ev.day);
-//       res.send(ev);
-//     })
-//     .then(null, next);
-// });
-
-// router.post('/', function(req, res, next) {
-//   var event = new Event(req.body);
-//   event.save()
-//     .then(function(ev) {
-//       ev.day = new Date(ev.day);
-//       res.send(ev)
-//     })
-//     .then(null, next);
-// });
-
-// router.delete('/:id', function(req, res, next) {
-//   Event.findByIdAndRemove(req.params.id)
-//     .then(function(event) {
-//       event.day = new Date(event.day);
-//       res.send(event);
-//     })
-//     .then(null, next);
-// });

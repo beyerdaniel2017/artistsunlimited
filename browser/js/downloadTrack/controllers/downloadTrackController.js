@@ -228,12 +228,7 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
 
     function receiveDownloadTrack(result) {
       if (result.data) {
-        var username = result.data.userid.soundcloud.username;
-        var title = result.data.title;
-        $state.go('downloadnew', {
-          username: username,
-          title: title
-        })
+        window.location.href = result.data.trackDownloadUrl
       }
     }
 
@@ -257,6 +252,7 @@ app.controller('DownloadTrackController', function($rootScope, $state, $scope, $
 
     function receiveDownloadTrack(result) {
       $scope.track = result.data;
+      console.log($scope.track);
       $scope.backgroundStyle = function() {
         return {
           'background-image': 'url(' + $scope.track.trackArtworkURL + ')',

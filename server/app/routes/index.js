@@ -4,7 +4,6 @@ module.exports = router;
 
 router.use('/login', require('./auth/login.js'));
 router.use('/signup', require('./auth/signup.js'));
-router.use('/channels', require('./channels/channels.js'));
 router.use('/submissions', require('./submissions/submissions.js'));
 router.use('/accountsteps', require('./accountsteps/accountsteps.js'));
 router.use('/events', require('./events/events.js'));

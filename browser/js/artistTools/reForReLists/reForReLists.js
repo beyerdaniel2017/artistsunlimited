@@ -11,6 +11,10 @@ app.config(function($stateProvider) {
             return $http.get('/api/trades/withUser/' + user._id)
               .then(function(res) {
                 var trades = res.data;
+                trades = trades.filter(function(trade) {
+                  return (!!trade.p1.user && !!trade.p2.user)
+                })
+                console.log(trades);
                 trades.forEach(function(trade) {
                   trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
                   trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
@@ -27,18 +31,12 @@ app.config(function($stateProvider) {
             return $http.get('/api/trades/doneWithUser/' + user._id)
               .then(function(res) {
                 var trades = res.data;
+                trades = trades.filter(function(trade) {
+                  return (!!trade.p1.user && !!trade.p2.user)
+                })
                 var favs = trades.map(function(trade) {
                   return ((trade.p1.user._id == user._id) ? trade.p2.user : trade.p1.user)
                 });
-                // favs = favs.filter(function(favUser) {
-                //     var ok = true;
-                //     currentTrades.forEach(function(trade) {
-                //       if (trade.p1.user._id == favUser._id || trade.p2.user._id == favUser._id) {
-                //         ok = false;
-                //       }
-                //     })
-                //     return ok;
-                //   })
                 var favsNoDups = [];
                 favs.forEach(function(favUser) {
                   var ok = true;
@@ -57,7 +55,7 @@ app.config(function($stateProvider) {
           var user = SessionService.getUser();
           if (user) {
             var minFollower = ((user.soundcloud.followers && user.soundcloud.followers > 0) ? parseInt(user.soundcloud.followers / 2) : 0);
-            var maxFollower = ((user.soundcloud.followers && user.soundcloud.followers > 0) ? parseInt(user.soundcloud.followers * 2) : 1000);
+            var maxFollower = ((user.soundcloud.followers && user.soundcloud.followers > 0) ? parseInt(user.soundcloud.followers * 1.2) : 1000);
             return $http.post('/api/users/bySCURL/', {
                 url: '',
                 minFollower: minFollower,
@@ -69,20 +67,6 @@ app.config(function($stateProvider) {
               })
               .then(function(res) {
                 var users = res.data;
-                // users = users.filter(function(openUser) {
-                //   var ok = true;
-                //   currentTrades.forEach(function(trade) {
-                //     if (trade.p1.user._id == openUser._id || trade.p2.user._id == openUser._id) {
-                //       ok = false;
-                //     }
-                //   })
-                //   favorites.forEach(function(favUser) {
-                //     if (favUser._id == user._id) {
-                //       ok = false;
-                //     }
-                //   })
-                //   return ok;
-                // })
                 return users;
               }).then(null, console.log);
           } else {

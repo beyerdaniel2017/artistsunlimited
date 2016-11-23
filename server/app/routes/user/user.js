@@ -80,53 +80,51 @@ router.get('/getUserID', function(req, res, next) {
     })
 });
 
-router.get('/getUserByURL/:username/:page', function(req, res, next) {
-  // if (!req.user) {
-  //     next(new Error('Unauthorized'));
-  //     return;
-  // }
+router.get('/getUserByURL/:username/:lastpart', function(req, res, next) {
   var query = {};
-  var url = rootURL+"/"+req.params.username+"/"+req.params.page;
-  var customUrl = rootURL+"/custom/"+req.params.username+"/"+req.params.page;
-  if (req.params.page.indexOf('submit') != -1) {
-    query = { $or: [{
-      'paidRepost.submissionUrl': url
+  var url = rootURL + "/" + req.params.username + "/" + req.params.lastpart;
+  var customUrl = rootURL + "/custom/" + req.params.username + "/" + req.params.lastpart;
+  if (req.params.lastpart.indexOf('submit') != -1) {
+    query = {
+      $or: [{
+        'paidRepost.submissionUrl': url
       }, {
         'paidRepost.submissionUrl': customUrl
       }]
     };
   } else {
-     query = { $or: [{
-      'paidRepost.premierUrl': url
+    query = {
+      $or: [{
+        'paidRepost.premierUrl': url
       }, {
         'paidRepost.premierUrl': customUrl
       }]
     };
   }
   User.findOne(query)
-  .then(function(user) {
+    .then(function(user) {
       if (user && user.paidRepost.length > 0) {
-        if (req.params.page.indexOf('submit') != -1) {
+        if (req.params.lastpart.indexOf('submit') != -1) {
           var u = user.paidRepost.find(function(pr) {
-          return pr.submissionUrl == url || pr.submissionUrl == customUrl;
+            return pr.submissionUrl == url || pr.submissionUrl == customUrl;
           })
           if (u) {
             res.send(u.userID);
           } else {
-          res.send("nouser");
+            res.send("nouser");
           }
         } else {
           var u = user.paidRepost.find(function(pr) {
-          return pr.premierUrl == url || pr.premierUrl == customUrl;
+            return pr.premierUrl == url || pr.premierUrl == customUrl;
           })
           if (u) {
             res.send(u.userID);
           } else {
-          res.send("nouser");
+            res.send("nouser");
           }
         }
       } else {
-      res.send("nouser");
+        res.send("nouser");
       }
     })
     .then(null, next);
@@ -241,7 +239,8 @@ router.post('/bySCURL', function(req, res, next) {
                         'username': user.username,
                         'permalinkURL': user.permalink_url,
                         'avatarURL': user.avatar_url.replace('large', 't500x500'),
-                        'followers': user.followers_count
+                        'followers': user.followers_count,
+                        'pseudoname': user.username.replace(/[^a-zA-Z ]/g, "").replace(/ /g, "_")
                       }
                     });
                     newUser.save();
@@ -507,7 +506,6 @@ router.get('/getUserPaidRepostAccounts', function(req, res) {
         next();
       });
     } else {
-      console.log('results', results);
       res.send(results);
     }
   }
@@ -542,44 +540,3 @@ router.get('/syncUsers', function(req, res, next) {
       }
     });
 });
-
-// router.post('/syncSCEmails', function(req, res, next) {
-//   var sCount = 0;
-//   var page = 0;
-//   var lCount = 10000;
-//   var processEmails = function(skipCount, limitCount) {
-//     SCEmails.find({})
-//       .skip(skipCount)
-//       .limit(limitCount)
-//       
-//       .then(function(scemails) {
-//         if (scemails.length > 0) {
-//           scemails.forEach(function(sce, index) {
-//             User.update({
-//               'soundcloud.id': sce.soundcloudID
-//             }, {
-//               $set: {
-//                 'soundcloud.followers': sce.followers,
-//                 'soundcloud.permalinkURL': sce.soundcloudURL,
-//                 'soundcloud.id': sce.soundcloudID,
-//                 'soundcloud.username': sce.username,
-//                 name: sce.username,
-//                 email: sce.email,
-//                 queue: []
-//               }
-//             }, {
-//               upsert: true
-//             }, function(err, user) {
-//               if (index == (scemails.length - 1)) {
-//                 page++;
-//                 sCount = (page * lCount);
-//                 console.log(page + "===" + sCount + "===" + lCount)
-//                 processEmails(sCount, lCount)
-//               }
-//             });
-//           });
-//         }
-//       });
-//   }
-//   processEmails(sCount, lCount);
-// });

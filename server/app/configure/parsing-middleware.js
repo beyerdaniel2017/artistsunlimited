@@ -7,8 +7,12 @@ module.exports = function(app) {
   // No session at all.
   app.use(cookieParser());
   // Parse our POST and PUT bodies.
-  app.use(bodyParser.json());
+  var bodyParser = require('body-parser');
+  app.use(bodyParser.json({
+    limit: '50mb'
+  }));
   app.use(bodyParser.urlencoded({
+    limit: '50mb',
     extended: true
   }));
 };

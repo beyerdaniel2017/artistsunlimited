@@ -31,13 +31,13 @@
               <!-- MY SCHEDULE : Start-->
               <div role="tabpanel" class="tab-pane fade in active" id="mysubmissions">
                 <div class="container-90">
-                  <div class="submi-section" ng-repeat="sub in showingElements"  ng-if="sub.invoiceIDS.length == 0" ng-class="{'border-bottom':!$last}" >
+                  <div class="submi-section" ng-repeat="sub in showingElements" ng-class="{'border-bottom':!$last}" >
                     <div class="">
                       <div class="row">
                         <div class="col-md-12">
                           <ul class="submissions-tab-list">
                             <li><strong>{{sub.name}} </strong>submitted a track <strong>{{sub.datedata}}</strong> to <strong>{{sub.userID.name}}</strong></li>
-                            <li><a href="{{sub.trackURL}}">Listen on Soundcloud</a></li>
+                            <a href="{{sub.trackURL}}" target="_blank">Listen on Soundcloud</a>
                           </ul>   
                         </div>
                       </div>

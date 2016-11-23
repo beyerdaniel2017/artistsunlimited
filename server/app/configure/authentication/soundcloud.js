@@ -36,18 +36,18 @@ module.exports = function(app) {
                                 'permalinkURL': data.permalink_url,
                                 'avatarURL': data.avatar_url.replace('large', 't200x200'),
                                 'token': req.body.token,
-                                'followers': data.followers_count
+                                'followers': data.followers_count,
+                                'pseudoname': data.username.replace(/[^a-zA-Z ]/g, "").replace(/ /g, "_")
                             }
                         };
                         User.findOneAndUpdate({
-                            _id: user._id
-                        }, {
-                            $set: updateObj
-                        }, {
-                            new: true
-                        })
-
-                        .then(function(user) {
+                                _id: user._id
+                            }, {
+                                $set: updateObj
+                            }, {
+                                new: true
+                            })
+                            .then(function(user) {
                                 done(null, user);
                             })
                             .then(null, function(err) {
@@ -63,8 +63,9 @@ module.exports = function(app) {
                                 'avatarURL': data.avatar_url.replace('large', 't200x200'),
                                 'token': req.body.token,
                                 'followers': data.followers_count,
-                                'role': 'user'
-                            }
+                                'pseudoname': data.username.replace(/[^a-zA-Z ]/g, "").replace(/ /g, "_")
+                            },
+                            'role': 'user'
                         });
                         newUser.save();
                         return done(null, newUser);

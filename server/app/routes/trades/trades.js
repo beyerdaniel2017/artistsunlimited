@@ -105,10 +105,10 @@ router.get('/withUsers/:user1Name/:user2Name', function(req, res, next) {
     return;
   }
   User.findOne({
-      'soundcloud.username': req.params.user1Name.replace(/_/g, ' ')
+      'soundcloud.pseudoname': req.params.user1Name
     }).then(function(p1) {
       return User.findOne({
-        'soundcloud.username': req.params.user2Name.replace(/_/g, ' ')
+        'soundcloud.pseudoname': req.params.user2Name
       }).then(function(p2) {
         return Trade.find({
           $or: [{

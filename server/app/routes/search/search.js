@@ -114,7 +114,7 @@ function regSearch(q, kind) {
   var sQuery = {
     q: q,
     client_id: scClientID,
-    limit: 30
+    limit: kind == 'playlist' ? 100 : 50
   };
   return (new Promise(function(fulfill, reject) {
     var regularSearch = 'https://api-v2.soundcloud.com/search?' + queryString.stringify(sQuery)

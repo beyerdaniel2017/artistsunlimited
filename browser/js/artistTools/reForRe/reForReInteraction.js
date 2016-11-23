@@ -6,22 +6,21 @@ app.config(function($stateProvider) {
       controller: 'ReForReInteractionController',
       resolve: {
         login: function($rootScope, $http, $stateParams, $window, SessionService, $state) {
+          return 'ok';
           if ($window.localStorage.getItem('isAdminAuthenticate')) {
             $window.location.href = '/admin/trade/' + $stateParams.user1Name + '/' + $stateParams.user2Name;
           } else {
             if (SessionService.getUser()) {
               return $rootScope.getUserNetwork()
                 .then(function() {
-                  console.log($rootScope.userlinkedAccounts);
-                  var repName = SessionService.getUser().soundcloud.username.replace(/ /g, '_');
+                  var repName = SessionService.getUser().soundcloud.pseudoname;
                   if (repName == $stateParams.user1Name || repName == $stateParams.user2Name) {
                     return 'ok'
                   } else {
                     var found = $rootScope.userlinkedAccounts.find(function(user) {
-                      var repName = user.soundcloud.username.replace(/ /g, '_');
+                      var repName = user.soundcloud.pseudoname;
                       return (repName == $stateParams.user1Name || repName == $stateParams.user2Name)
                     })
-                    console.log(found);
                     if (found) {
                       $rootScope.changeUserAdmin(found)
                     } else {
@@ -31,7 +30,6 @@ app.config(function($stateProvider) {
                         $window.localStorage.removeItem('user2Name');
                         $state.go('artistToolsScheduler');
                       } else {
-                        console.log('setting');
                         $window.localStorage.setItem('returnstate', 'reForReInteraction');
                         $window.localStorage.setItem('user1Name', $stateParams.user1Name);
                         $window.localStorage.setItem('user2Name', $stateParams.user2Name);

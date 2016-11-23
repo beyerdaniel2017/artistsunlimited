@@ -54,7 +54,10 @@ var schema = new mongoose.Schema({
   artistName: String,
   otherChannels: [],
   timeGap: {},
-  unrepostHours: {}
+  unrepostHours: {},
+  pseudoname: {
+    type: String
+  }
 });
 
 mongoose.model("RepostEvent", schema);

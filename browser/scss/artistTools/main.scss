@@ -2227,10 +2227,8 @@ input:checked + .slider:before {
     color: rgb(138, 138, 138);
 }
 .check-list {
-    /* max-height: 140px; */
-    /* overflow-y: auto; */
-    /* min-height: 140px; */
-    
+    max-height:140px;
+    overflow-y:scroll;
     padding: 5px 0;
 }
 .songScheduler .title {

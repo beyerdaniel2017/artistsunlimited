@@ -56,6 +56,7 @@ module.exports = function(eventDetails, minDate) {
                     console.log('ok');
                     console.log(eventDetails);
                     var newEvent = new RepostEvent(eventDetails);
+                    if (newEvent.title) newEvent.pseudoname = newEvent.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
                     return newEvent.save()
                   })
                   .then(function(newEvent) {

@@ -21,15 +21,15 @@ app.directive('slmodal', function($http) {
       $scope.origin = window.location.origin;
       $scope.$watch('eventId', function() {
         if ($scope.eventType == 'share') {
-          if ($scope.event) $scope.messengerLink = 'https://artistsunlimited.com' + "/repostevents/" + $scope.event.user.soundcloud.username.replace(/ /g, '_') + "/" + $scope.event.title.replace(/ /g, '_');
+          if ($scope.event) $scope.messengerLink = 'https://artistsunlimited.com' + "/repostevents/" + $scope.event.user.soundcloud.pseudoname + "/" + $scope.event.pseudoname;
         } else {
           if ($scope.trade) {
-            $scope.messengerLink = 'https://artistsunlimited.com/artistTools/trade/' + $scope.trade.p1.user.soundcloud.username.replace(/ /g, '_') + '/' + $scope.trade.p2.user.soundcloud.username.replace(/ /g, '_');
+            $scope.messengerLink = 'https://artistsunlimited.com/artistTools/trade/' + $scope.trade.p1.user.soundcloud.pseudoname + '/' + $scope.trade.p2.user.soundcloud.pseudoname;
           }
         }
         console.log($scope.messengerLink);
         $rootScope.reloadFB();
-      })
+      });
       $scope.sendMail = function(id) {
         window.open("mailto:example@demo.com?body=" + $scope.messengerLink, "_self");
       };

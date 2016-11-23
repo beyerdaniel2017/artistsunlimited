@@ -4,7 +4,6 @@ module.exports = router;
 var mongoose = require('mongoose');
 var Channel = mongoose.model('Channel');
 var Submission = mongoose.model('Submission');
-var Event = mongoose.model('Event');
 var User = mongoose.model('User');
 var passport = require('passport');
 var https = require('https');
@@ -193,8 +192,9 @@ router.post('/soundCloudAuthentication', function(req, res, next) {
               'avatarURL': data.avatar_url.replace('large', 't500x500'),
               'token': req.body.token,
               'followers': data.followers_count,
-              'role': 'user'
-            }
+              'pseudoname': data.username.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
+            },
+            'role': 'user'
           });
           newUser.save();
           return res.json({

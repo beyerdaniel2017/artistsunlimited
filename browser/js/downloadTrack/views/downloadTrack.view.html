@@ -2,7 +2,7 @@
 <!-- Sidebar Start -->
 <div class="sidebar-tracks" ng-show="recentTracks.length > 0">
  <div class="songs-list text-right" ng-repeat="item in recentTracks">
-   <a ng-href="/download?trackid={{item._id}}" target="_blank">
+   <a ng-href="item.trackDownloadUrl" target="_blank">
     <span ng-show="!!showTitle[item]">{{item.trackTitle}}</span>
     <img class="avatar" ng-src="{{item.trackArtworkURL}}" ng-mouseleave="showTitle[item] = !showTitle[item]" ng-mouseover="showTitle[item] = !showTitle[item]"/>
   </a>

@@ -20,7 +20,7 @@ app.config(function($stateProvider) {
             $.Zebra_Dialog("This repost event does not exist.");
             return;
           })
-      }
+      },
     }
   });
 });
@@ -159,7 +159,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
         }
         buttons.push(button);
       })
-      $.Zebra_Dialog('Which slot do you want to edit?', {
+      $.Zebra_Dialog('Which slot do you want to view?', {
         'type': 'question',
         'buttons': buttons
       });

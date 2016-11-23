@@ -139,6 +139,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
             $scope.showingElements.push(d)
           });
         }
+        if (!$scope.$$phase) $scope.$apply();
         setTimeout(function() {
           $scope.showingElements.forEach(function(sub) {
             SC.Widget(sub.trackID + "player").load(sub.trackURL, {

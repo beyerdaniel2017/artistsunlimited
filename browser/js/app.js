@@ -546,3 +546,17 @@ app.directive('whenScrolled', function() {
         });
     };
 });
+
+function getQueryString(field, url) {
+    var href = url ? url : window.location.href;
+    var reg = new RegExp('[?&]' + field + '=([^&#]*)', 'i');
+    var string = reg.exec(href);
+    return string ? string[1] : null;
+};
+
+function queryStringify(obj) {
+    return '?' + Object.keys(obj).reduce(function(a, k) {
+        a.push(k + '=' + encodeURIComponent(obj[k]));
+        return a
+    }, []).join('&')
+}

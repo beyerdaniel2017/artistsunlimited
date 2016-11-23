@@ -10,7 +10,6 @@ app.config(function($stateProvider) {
     controller: 'SubmitSongController',
     resolve: {
       getUserByURL: function($stateParams, $http, $window) {
-        console.log('controllla');
         var username = $stateParams.username;
         var submitpart = $stateParams.submitpart;
         if (submitpart.indexOf('submit') != -1) {
@@ -24,7 +23,7 @@ app.config(function($stateProvider) {
   });
 });
 app.controller('redirectController', function() {
-  window.location.href = '/LaTropicál/submit'
+  window.location.href = '/EtiquetteNoir/submit'
 })
 
 app.controller('SubmitSongController', function($rootScope, $state, $scope, $http, $location) {
@@ -32,7 +31,6 @@ app.controller('SubmitSongController', function($rootScope, $state, $scope, $htt
   $scope.userID = $location.search().id;
   $scope.searchString = "";
 
-  console.log('controlla');
 
   $scope.choseTrack = function(track) {
     $scope.submission.trackID = track.id;

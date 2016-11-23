@@ -6,10 +6,8 @@ app.config(function($stateProvider) {
     resolve: {
       userID: function($stateParams, $http, $window) {
         var username = $stateParams.username;
-        //var submitpart = $stateParams.submitpart;
         return $http.get('/api/users/getUserByURL/' + username + '/submit')
           .then(function(res) {
-            console.log(res)
             return {
               userid: res.data,
               username: username,
@@ -27,7 +25,6 @@ app.config(function($stateProvider) {
         }
         return customizeService.getCustomPageSettings(userID.userid, userID.submitpart)
           .then(function(response) {
-            console.log(response);
             return response;
           })
           .then(null, function(err) {

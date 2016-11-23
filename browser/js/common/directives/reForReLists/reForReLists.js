@@ -35,7 +35,7 @@ app.directive('reforrelists', function($http) {
       $scope.currentTab = "SearchTrade";
       $scope.searchURL = "";
       $scope.sliderSearchMin = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers / 2) : 0)) / Math.log(1.1);
-      $scope.sliderSearchMax = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers * 2) : 200000000)) / Math.log(1.1);
+      $scope.sliderSearchMax = Math.log((($scope.user.soundcloud.followers) ? parseInt($scope.user.soundcloud.followers * 1.2) : 200000000)) / Math.log(1.1);
       $scope.minSearchTradefollowers = Math.pow(1.1, $scope.sliderSearchMin);
       $scope.maxSearchTradefollowers = Math.pow(1.1, $scope.sliderSearchMax);
       $scope.sliderManageMin = 0;
@@ -184,6 +184,7 @@ app.directive('reforrelists', function($http) {
           }
         });
         $scope.currentTrades = cTrades;
+        console.log($scope.currentTrades);
         if (!$scope.$$phase) $scope.$apply();
       }
 
@@ -200,12 +201,14 @@ app.directive('reforrelists', function($http) {
         $http.get('/api/trades/withUser/' + $scope.user._id + '?tradeType=' + tradeType)
           .then(function(res) {
             var trades = res.data;
+            console.log(trades);
             $scope.currentTrades = [];
             trades.forEach(function(trade) {
               trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
               trade.user = (trade.p1.user._id == $scope.user._id) ? trade.p1 : trade.p2;
             });
             $scope.currentTrades = trades;
+            console.log($scope.currentTrades);
             $scope.processing = false;
           })
       }
@@ -306,17 +309,7 @@ app.directive('reforrelists', function($http) {
           return (trade.other.user._id == user._id);
         });
         if (found) {
-          if ($scope.isAdminRoute) {
-            $state.go('adminreForReInteraction', {
-              user1Name: found.p1.user.soundcloud.username.replace(/ /g, '_'),
-              user2Name: found.p2.user.soundcloud.username.replace(/ /g, '_')
-            })
-          } else {
-            $state.go('reForReInteraction', {
-              user1Name: found.p1.user.soundcloud.username.replace(/ /g, '_'),
-              user2Name: found.p2.user.soundcloud.username.replace(/ /g, '_')
-            })
-          }
+          $scope.goToTrade(found);
         } else {
           var trade = {
             messages: [{
@@ -344,18 +337,7 @@ app.directive('reforrelists', function($http) {
             .then(function(res) {
               $scope.processing = false;
               console.log(res.data);
-              if ($scope.isAdminRoute) {
-                $state.go('adminreForReInteraction', {
-                  user1Name: res.data.p1.user.soundcloud.username.replace(/ /g, '_'),
-                  user2Name: res.data.p2.user.soundcloud.username.replace(/ /g, '_')
-                })
-              } else {
-                $state.go('reForReInteraction', {
-                  user1Name: res.data.p1.user.soundcloud.username.replace(/ /g, '_'),
-                  user2Name: res.data.p2.user.soundcloud.username.replace(/ /g, '_')
-                })
-              }
-
+              $scope.goToTrade(res.data);
             })
             .then(null, function(err) {
               $scope.processing = false;
@@ -364,25 +346,31 @@ app.directive('reforrelists', function($http) {
         }
       }
 
+      $scope.goToTrade = function(trade) {
+        if ($scope.isAdminRoute) {
+          window.location.href = '/admin/trade/' + trade.p1.user.soundcloud.pseudoname + '/' + trade.p2.user.soundcloud.pseudoname;
+        } else {
+          window.location.href = '/artistTools/trade/' + trade.p1.user.soundcloud.pseudoname + '/' + trade.p2.user.soundcloud.pseudoname;
+        }
+      }
+
       $scope.manage = function(trade) {
         console.log(trade);
-        if ($scope.isAdminRoute) {
-          $state.go('adminreForReInteraction', {
-            user1Name: trade.p1.user.soundcloud.username.replace(/ /g, '_'),
-            user2Name: trade.p2.user.soundcloud.username.replace(/ /g, '_')
-          })
-        } else {
-          $state.go('reForReInteraction', {
-            user1Name: trade.p1.user.soundcloud.username.replace(/ /g, '_'),
-            user2Name: trade.p2.user.soundcloud.username.replace(/ /g, '_')
-          })
-        }
+        $scope.goToTrade(trade);
       }
 
       $scope.remindTrade = function(trade, index) {
         $('#pop').modal('show');
         $scope.tradeID = trade._id;
         $scope.theTrade = trade;
+      }
+
+      if (window.localStorage.getItem("showPopup")) {
+        var trade = JSON.parse(window.localStorage.getItem("showPopup"));
+        window.localStorage.removeItem("showPopup");
+        setTimeout(function() {
+          $scope.remindTrade(trade, 0);
+        }, 500)
       }
 
       $scope.sendMail = function(sharelink) {
@@ -447,29 +435,23 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.verifyBrowser = function() {
-          if (navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1) {
-            var position = navigator.userAgent.search("Version") + 8;
-            var end = navigator.userAgent.search(" Safari");
-            var version = navigator.userAgent.substring(position, end);
-            if (parseInt(version) < 9) {
-              $.Zebra_Dialog('You have old version of safari. Click <a href="https://support.apple.com/downloads/safari">here</a> to download the latest version of safari for better site experience.', {
-                'type': 'confirmation',
-                'buttons': [{
-                  caption: 'OK'
-                }],
-                'onClose': function() {
-                  $window.location.href = "https://support.apple.com/downloads/safari";
-                }
-              });
-            }
+        if (navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1) {
+          var position = navigator.userAgent.search("Version") + 8;
+          var end = navigator.userAgent.search(" Safari");
+          var version = navigator.userAgent.substring(position, end);
+          if (parseInt(version) < 9) {
+            $.Zebra_Dialog('You have old version of safari. Click <a href="https://support.apple.com/downloads/safari">here</a> to download the latest version of safari for better site experience.', {
+              'type': 'confirmation',
+              'buttons': [{
+                caption: 'OK'
+              }],
+              'onClose': function() {
+                $window.location.href = "https://support.apple.com/downloads/safari";
+              }
+            });
           }
         }
-        // $scope.getUserNetwork = function() {
-        //   $http.get("/api/database/userNetworks")
-        //     .then(function(networks) {
-        //       $rootScope.userlinkedAccounts = networks.data;
-        //     })
-        // }
+      }
 
       $scope.dayIncr = 7;
       $scope.incrDay = function() {
@@ -835,6 +817,14 @@ app.directive('reforrelists', function($http) {
             }
           }]
         });
+      }
+
+      $scope.offer = function(trade) {
+        if ($scope.itemView == 'sent') {
+          return "You are offering " + trade.user.slots.length * (trade.repeatFor > 0 ? trade.repeatFor : 1) + " slots (" + (trade.user.slots.length * trade.user.user.soundcloud.followers * (trade.repeatFor > 0 ? trade.repeatFor : 1)).toLocaleString() + " follower exposure)<br>and asking for " + trade.other.slots.length * (trade.repeatFor > 0 ? trade.repeatFor : 1) + " slots (" + (trade.other.slots.length * trade.other.user.soundcloud.followers * (trade.repeatFor > 0 ? trade.repeatFor : 1)).toLocaleString() + " follower exposure)."
+        } else {
+          return trade.other.user.soundcloud.username + " is offering " + trade.other.slots.length * (trade.repeatFor > 0 ? trade.repeatFor : 1) + " slots (" + (trade.other.slots.length * trade.other.user.soundcloud.followers * (trade.repeatFor > 0 ? trade.repeatFor : 1)).toLocaleString() + " follower exposure)<br>and asking for " + trade.user.slots.length * (trade.repeatFor > 0 ? trade.repeatFor : 1) + " slots (" + (trade.user.slots.length * trade.user.user.soundcloud.followers * (trade.repeatFor > 0 ? trade.repeatFor : 1)).toLocaleString() + " follower exposure)."
+        }
       }
 
       /*Manage Trades end*/

@@ -1,7 +1,6 @@
 'use strict';
 var mongoose = require('mongoose');
 var Submission = mongoose.model('Submission');
-var Channel = mongoose.model('Channel');
 var paypal = require('paypal-rest-sdk');
 var ppConfig = require('./../../env').PAYPAL;
 var Promise = require('promise');

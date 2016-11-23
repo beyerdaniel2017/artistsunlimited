@@ -349,17 +349,17 @@ app.directive('channelsettings', function($http) {
 									scInfo.price = 1;
 									$scope.AccountsStepData.submissionData = res.data.user.soundcloud;
 									$scope.AccountsStepData.submissionData.userID = res.data.user._id;
-									var usernames = res.data.user.soundcloud.username.replace(/ /g, "");
-									var url = window.location.origin + '/' + usernames + '/submit';
-									var premierurl = window.location.origin + '/' + usernames + '/premiere';
+									var username = res.data.user.soundcloud.username.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
+									var url = window.location.origin + '/' + username + '/submit';
+									var premierurl = window.location.origin + '/' + username + '/premiere';
 									AccountSettingServices.checkUsercount({
 											"url": url,
 											'action': "url"
 										})
 										.then(function(result) {
 											if (result.data) {
-												url = window.location.origin + '/' + usernames + result.data + '/submit';
-												premierurl = window.location.origin + '/' + usernames + result.data + '/premiere';
+												url = window.location.origin + '/' + username + result.data + '/submit';
+												premierurl = window.location.origin + '/' + username + result.data + '/premiere';
 												$scope.AccountsStepData.submissionData.submissionUrl = url;
 												$scope.AccountsStepData.submissionData.premierUrl = premierurl;
 											} else {
@@ -368,7 +368,6 @@ app.directive('channelsettings', function($http) {
 											}
 											scInfo.submissionUrl = url;
 											scInfo.premierUrl = premierurl;
-
 											$http.post('/api/database/updateUserAccount', {
 												soundcloudInfo: scInfo,
 											}).then(function(user) {
@@ -417,7 +416,6 @@ app.directive('channelsettings', function($http) {
 							SessionService.createAdminUser($scope.AccountsStepData);
 							$scope.activeTab.push('setPrice');
 							$('.nav-tabs a[href="#setPrice"]').tab('show');
-							$.Zebra_Dialog('Changes saved successfully.');
 							break;
 						case 3:
 							var next = true;
@@ -439,7 +437,6 @@ app.directive('channelsettings', function($http) {
 										$scope.activeTab.push('customSubmission');
 										$('.nav-tabs a[href="#customSubmission"]').tab('show');
 										SessionService.createAdminUser($scope.AccountsStepData);
-										$.Zebra_Dialog('Changes saved successfully.');
 									})
 									.catch(function() {});
 							} else {
@@ -461,7 +458,6 @@ app.directive('channelsettings', function($http) {
 									$scope.activeTab.push('customPremiereSubmission');
 									$('.nav-tabs a[href="#customPremiereSubmission"]').tab('show');
 									SessionService.createAdminUser($scope.AccountsStepData);
-									$.Zebra_Dialog('Changes saved successfully.');
 								})
 								.catch(function() {});
 							break;
@@ -481,7 +477,6 @@ app.directive('channelsettings', function($http) {
 									SessionService.createAdminUser($scope.AccountsStepData);
 									$scope.activeTab.push('repostPreferences');
 									$('.nav-tabs a[href="#repostPreferences"]').tab('show');
-									$.Zebra_Dialog('Changes saved successfully.');
 								})
 								.catch(function() {});
 							break;
@@ -499,7 +494,6 @@ app.directive('channelsettings', function($http) {
 
 								})
 								.catch(function() {});
-							$.Zebra_Dialog('Changes saved successfully.');
 							break;
 						case 7:
 							SessionService.removeAccountusers($scope.AccountsStepData);
@@ -551,9 +545,7 @@ app.directive('channelsettings', function($http) {
 						else i++;
 					}
 					checkingSlots.push(slot);
-					if (checkingSlots.length > 8) {
-						console.log('errorSlots');
-						console.log(checkingSlots);
+					if (checkingSlots.length > 10) {
 						status = true;
 					}
 				})
@@ -566,7 +558,7 @@ app.directive('channelsettings', function($http) {
 				if ($scope.AccountsStepData.availableSlots != undefined && $scope.AccountsStepData.availableSlots[daysArray[day]].indexOf(pushhour) > -1) {
 					$scope.AccountsStepData.availableSlots[daysArray[day]].splice($scope.AccountsStepData.availableSlots[daysArray[day]].indexOf(pushhour), 1);
 				} else if ($scope.tooManyReposts(day, hour)) {
-					$.Zebra_Dialog("Cannot enable slot. We only allow 8 reposts within 24 hours to prevent you from being repost blocked.");
+					$.Zebra_Dialog("Cannot enable slot. We only allow 10 reposts within 24 hours to prevent you from being repost blocked.");
 					return;
 				} else if ($scope.AccountsStepData.availableSlots != undefined) {
 					$scope.AccountsStepData.availableSlots[daysArray[day]].push(pushhour);
