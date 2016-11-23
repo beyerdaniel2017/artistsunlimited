@@ -106,27 +106,32 @@ function getUserNetwork(userID) {
         'paidRepost.userID': userID
       })
       .then(function(adminUser) {
-        if (adminUser) {
-          User.findById(adminUser._id).populate('paidRepost.userID')
-            .then(function(user) {
-              var network = [];
-              user.paidRepost.forEach(function(pr) {
-                network.push(pr.userID);
-              })
-              resolve(network);
-            }).then(null, reject)
-        } else {
+        var network = [];
+
+        function addLinkedAccounts() {
           NetworkAccount.findOne({
               channels: userID
             })
             .populate('channels')
             .then(function(una) {
               if (una) {
-                resolve(una.channels);
+                network = network.concat(una.channels);
+                resolve(network);
               } else {
-                resolve([]);
+                resolve(network);
               }
             }).then(null, reject);
+        }
+        if (adminUser) {
+          User.findById(adminUser._id).populate('paidRepost.userID')
+            .then(function(user) {
+              user.paidRepost.forEach(function(pr) {
+                network.push(pr.userID);
+              })
+              addLinkedAccounts();
+            }).then(null, reject)
+        } else {
+          addLinkedAccounts();
         }
       }).then(null, reject);
   })
