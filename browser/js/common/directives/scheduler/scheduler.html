@@ -283,15 +283,7 @@
                         </label>
                       </p>
                     </div>
-                    <div class="checkbox demo-radio-btn" ng-show="user.role == 'admin'" ng-show="displayType == 'channel'" ng-repeat="channel in user.paidRepost">
-                      <p>
-                        <label class="with-square-checkbox">
-                          <input style="" id="{{channel.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(channel.username);" type="checkbox">
-                          <span>{{channel.username}}</span> 
-                        </label>
-                      </p>
-                    </div>
-                    <div class="checkbox demo-radio-btn" ng-show="user.role == 'user'" ng-show="displayType == 'channel'" ng-repeat="u in linkedAccounts">
+                    <div class="checkbox demo-radio-btn" ng-repeat="u in linkedAccounts">
                       <p>
                         <label class="with-square-checkbox">
                           <input style="" id="{{u.soundcloud.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(u.soundcloud.username);" type="checkbox" ng-checked="channelArr.indexOf(u.soundcloud.username) >-1">
@@ -415,15 +407,7 @@
                     <span>{{group}}</span> </label>
                   </p>
                 </div>
-                <div class="checkbox demo-radio-btn" ng-show="user.role == 'admin'" ng-show="displayType == 'channel'" ng-repeat="channel in user.paidRepost">
-                  <p>
-                    <label class="with-square-checkbox">
-                      <input style="" id="{{channel.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(channel.username);" type="checkbox">
-                      <span>{{channel.username}}</span> 
-                    </label>
-                  </p>
-                </div>
-                <div class="checkbox demo-radio-btn" ng-show="user.role == 'user'" ng-show="displayType == 'channel'" ng-repeat="u in linkedAccounts">
+                <div class="checkbox demo-radio-btn" ng-repeat="u in linkedAccounts">
                   <p>
                     <label class="with-square-checkbox">
                       <input style="" id="{{u.soundcloud.username}}" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" ng-click="setChannel(u.soundcloud.username);" type="checkbox" ng-checked="channelArr.indexOf(u.soundcloud.username) >-1">

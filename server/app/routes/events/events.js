@@ -57,8 +57,12 @@ router.get('/repostEvent/:username/:trackTitle', function(req, res, next) {
             })
             .then(function(event) {
               if (event && event.trackID) {
+                var lowDate = new Date((new Date()).getTime() - 24 * 7 * 3600000)
                 RepostEvent.find({
                     trackID: event.trackID,
+                    day: {
+                      $gt: lowDate
+                    },
                     $or: [{
                       userID: {
                         $in: networkUserIds
@@ -141,10 +145,11 @@ router.get('/repostEvent/getPaidReposts/:username/:trackTitle', function(req, re
       })
     })
     .then(function(event) {
+      var lowDate = new Date((new Date()).getTime() - 24 * 7 * 3600000)
       return RepostEvent.find({
         trackID: event.trackID,
         day: {
-          $gt: (new Date()).getTime() - 7 * 24 * 3600000
+          $gt: lowDate
         },
         type: 'paid'
       })
@@ -314,7 +319,7 @@ router.post('/repostEventsScheduler', function(req, res, next) {
     .then(function(ev) {
       var scheduleDate = new Date(ev.day);
       req.body.otherChannels.forEach(function(channelID) {
-        scheduleDate = new Date(scheduleDate.getTime() + 5 * 3600000);
+        // scheduleDate = new Date(scheduleDate.getTime() + 5 * 3600000);
         var eventDetails = JSON.parse(JSON.stringify(ev));
         delete eventDetails._id;
         eventDetails.comment = undefined;

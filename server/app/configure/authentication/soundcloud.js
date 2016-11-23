@@ -37,7 +37,7 @@ module.exports = function(app) {
                                 'avatarURL': data.avatar_url.replace('large', 't200x200'),
                                 'token': req.body.token,
                                 'followers': data.followers_count,
-                                'pseudoname': data.username.replace(/[^a-zA-Z ]/g, "").replace(/ /g, "_")
+                                'pseudoname': data.username.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
                             }
                         };
                         User.findOneAndUpdate({
@@ -63,7 +63,7 @@ module.exports = function(app) {
                                 'avatarURL': data.avatar_url.replace('large', 't200x200'),
                                 'token': req.body.token,
                                 'followers': data.followers_count,
-                                'pseudoname': data.username.replace(/[^a-zA-Z ]/g, "").replace(/ /g, "_")
+                                'pseudoname': data.username.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
                             },
                             'role': 'user'
                         });

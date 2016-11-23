@@ -1,19 +1,19 @@
 <div class="container-fluid height-100pr " ng-init="checkIfEdit();getTrackListFromSoundcloud();checkIfSubmission()"> 
-   <!--  <div class="content-area bg-white"> -->
-   <div class="row height-100pr">
+ <!--  <div class="content-area bg-white"> -->
+ <div class="row height-100pr">
     <div class="col-md-12">
       <div class="page-content right-side">
-       <div class="col-md-12">
-        <div class="row extrapadding">
-            <!-- Download Section Start -->
-            <div class="col-md-4">
-                <div class="song-container search">
-                    <h4>Song</h4>
-                    <div class="search-suggetion">
-                      <scsearch kind='track' returnitem='choseTrack(item)'></scsearch>
-                  </div>
-                  <br />
-                  <iframe id="scPopupPlayer" ng-show="showPlayer" width="300" height="120" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
+         <div class="col-md-12">
+            <div class="row extrapadding">
+                <!-- Download Section Start -->
+                <div class="col-md-4">
+                    <div class="song-container search">
+                        <h4>Song</h4>
+                        <div class="search-suggetion">
+                          <scsearch kind='track' returnitem='choseTrack(item)'></scsearch>
+                      </div>
+                      <br />
+                      <iframe id="scPopupPlayer" ng-show="showPlayer" width="300" height="120" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
                     <!-- <div class="song-url">
                         <input class="form-control" placeholder="Enter Song URL" ng-model="track.trackURL" ng-change="trackURLChange()" required/>
                     </div> -->
@@ -58,13 +58,13 @@
                             <h4>Download File</h4>
                             <div>                                                   
                                 <input class="form-control" type="file" accept=".mp3" fileread="track.file" message="message" ng-click="clearOrInput()"/>
-                                <div class="text-center">This will add the album artwork, artist, and title to the metadata of the .mp3.</div>
-                                <div class="text-center">Or</div>
-                                <input class="form-control" type="text" placeholder="Link" ng-model="track.downloadURL" ng-keyup="clearOrFile()"/>
+                                <div >This will add the album artwork, artist, and title to the metadata of the .mp3.</div>
+                                <div >Or give a link:</div>
+                                <input class="form-control" type="text" placeholder="Link to download" ng-model="track.downloadURL" ng-keyup="clearOrFile()"/>
                             </div>
                         </div>
                         <div class="social-container">
-                            <h4>Show all download tracks for: </h4>
+                            <h4>Show other download tracks for: </h4>
                             <div>
                                 <label>
                                     <input type="radio" ng-model="track.showDownloadTracks" ng-value="'user'"> This user </label>
@@ -77,8 +77,8 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="social-container">
-                                    <h4>Required Steps to download track</h4>
-                                    <small class="orange-text">Users must complete each step before they can access this track.</small><br/><br/>
+                                    <h4>Required Steps</h4>
+                                    <small class="orange-text">Users must complete each step before they can download the file.</small><br/><br/>
                                     <select class="form-control" ng-model="track.socialPlatform" ng-change="track.socialPlatformValue=''" ng-init="track.socialPlatform = 'actionsOnSoundcloud'">
                                         <option ng-selected="true" value="actionsOnSoundcloud">Actions on Soundcloud</option>
                                         <option value="facebookLike">Like Facebook page</option>

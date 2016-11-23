@@ -87,10 +87,9 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
   }
 
   $scope.followCounts = 0;
-  console.log(repostEvent);
   repostEvent.forEach(function(ev) {
-    ev.day = new Date(ev.day);
-    $scope.followCounts += ev.userInfo.followers;
+    ev.day = new Date(ev.trackInfo.day);
+    if (ev.day > new Date()) $scope.followCounts += ev.userInfo.followers;
   });
 
   $scope.events = repostEvent;

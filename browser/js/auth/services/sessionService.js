@@ -103,6 +103,7 @@ app.factory('SessionService', function($cookies, $http, $window, $state) {
 				.then(function(res) {
 					create(res.data);
 				}).then(null, function() {
+					$window.localStorage.removeItem('user');
 					$state.go('login')
 				})
 		}
