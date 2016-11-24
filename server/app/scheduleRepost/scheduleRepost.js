@@ -86,7 +86,7 @@ module.exports = function(eventDetails, minDate) {
 
 function createPseudoAvailableSlots(user) {
   var pseudoSlots = {};
-  var tzOffset = ((new Date()).getTimezoneOffset() - (new Date(user.slotsTimezone)).getTimezoneOffset()) / 60;
+  var tzOffset = (-(new Date()).getTimezoneOffset() - user.astzOffset) / 60;
   daysOfWeek.forEach(function(day) {
     if (user.availableSlots[day]) {
       var daySlots = [];

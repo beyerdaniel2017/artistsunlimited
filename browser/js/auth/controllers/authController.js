@@ -167,7 +167,6 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
         }
         $scope.processing = false;
         if (!$scope.$$phase) $rootScope.$apply();
-        console.log($window.localStorage.getItem('returnstate'));
         if ($window.localStorage.getItem('returnstate') != undefined) {
           if ($window.localStorage.getItem('returnstate') == "reForReInteraction") {
             window.location.href = '/artistTools/trade/' + $window.localStorage.getItem('user1Name') + '/' + $window.localStorage.getItem('user2Name');
@@ -179,7 +178,6 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
             $state.go($window.localStorage.getItem('returnstate'));
           }
         } else {
-          console.log('go')
           $state.go('artistToolsScheduler');
         }
       })
