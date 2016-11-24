@@ -371,14 +371,15 @@ router.put('/updateAdmin', function(req, res, next) {
 
 
 router.put('/updateuserRecord', function(req, res, next) {
-    var id = req.body._id;
-    delete req.body._id;
-    User.findByIdAndUpdate(id, req.body)
-      .then(function(user) {
-        res.send(user);
-      }).then(null, next);
-  })
-  /*Admin profile update start*/
+  var id = req.body._id;
+  delete req.body._id;
+  User.findByIdAndUpdate(id, req.body)
+    .then(function(user) {
+      res.send(user);
+    }).then(null, next);
+})
+
+/*Admin profile update start*/
 router.post('/updateAdminProfile', function(req, res, next) {
   if (!req.user) {
     next(new Error('Unauthorized'));
@@ -510,33 +511,4 @@ router.get('/getUserPaidRepostAccounts', function(req, res) {
     }
   }
   next();
-});
-
-router.get('/syncUsers', function(req, res, next) {
-  var finalResult = [];
-  User.find({
-      availableSlots: {
-        $exists: false
-      }
-    })
-    .then(function(result) {
-      var count = 0;
-      result.forEach(function(user) {
-        updateUser(user);
-      });
-      //res.send(finalResult);
-      function updateUser(user) {
-        var objUser = user.toJSON();
-        User.update({
-            '_id': objUser._id
-          }, {
-            $set: objUser
-          }, {
-            new: true
-          })
-          .then(function(u) {
-            finalResult.push(u);
-          })
-      }
-    });
 });

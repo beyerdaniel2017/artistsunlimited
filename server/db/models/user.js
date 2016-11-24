@@ -128,6 +128,10 @@ var schema = new mongoose.Schema({
             'saturday': [1, 4, 8, 11, 14, 17, 20]
         }
     },
+    slotsTimezone: {
+        type: Date,
+        default: new Date()
+    },
     repostSettings: {
         trade: {
             comments: {

@@ -339,7 +339,7 @@ app.directive('scheduler', function($http) {
         var strTime = (hours < 10 ? hours : hours) + ':' + minutes + ampm;
         return strTime;
       }
-      $scope.availableSlots = (($scope.user.availableSlots != undefined) ? $scope.user.availableSlots : defaultAvailableSlots);
+      $scope.pseudoAvailableSlots = (($scope.user.pseudoAvailableSlots != undefined) ? $scope.user.pseudoAvailableSlots : defaultAvailableSlots);
       $scope.setView = function(view) {
         $scope.itemview = view;
         $scope.getListEvents();
@@ -506,7 +506,7 @@ app.directive('scheduler', function($http) {
           d.setDate(d.getDate() + i);
           var currentDay = parseInt(d.getDay());
           var strDdate = getshortdate(d);
-          var slots = $scope.availableSlots[daysArray[currentDay]];
+          var slots = $scope.pseudoAvailableSlots[daysArray[currentDay]];
           slots = slots.sort(function(a, b) {
             return a - b
           });
@@ -562,28 +562,29 @@ app.directive('scheduler', function($http) {
 
       $scope.toggleAvailableSlot = function(day, hour) {
         var pushhour = parseInt(hour);
-        if ($scope.availableSlots[daysArray[day]].indexOf(pushhour) > -1) {
-          $scope.availableSlots[daysArray[day]].splice($scope.availableSlots[daysArray[day]].indexOf(pushhour), 1);
+        if ($scope.pseudoAvailableSlots[daysArray[day]].indexOf(pushhour) > -1) {
+          $scope.pseudoAvailableSlots[daysArray[day]].splice($scope.pseudoAvailableSlots[daysArray[day]].indexOf(pushhour), 1);
         } else if ($scope.tooManyReposts(day, hour)) {
           $.Zebra_Dialog("Cannot schedule slot. We only allow 10 reposts within 24 hours to prevent you from being repost blocked.");
           return;
         } else {
-          $scope.availableSlots[daysArray[day]].push(pushhour);
+          $scope.pseudoAvailableSlots[daysArray[day]].push(pushhour);
         }
+        //do transformation here
         $http.post('/api/events/saveAvailableSlots', {
-          availableslots: $scope.availableSlots,
+          availableslots: $scope.pseudoAvailableSlots,
           id: $scope.user._id
         }).then(function(res) {
           SessionService.create(res.data);
           $scope.user = SessionService.getUser();
-          $scope.availableSlots = $scope.user.availableSlots;
+          $scope.pseudoAvailableSlots = $scope.user.pseudoAvailableSlots;
         }).then(null, console.log);
       }
 
       $scope.tooManyReposts = function(day, hour) {
         var startDayInt = (day + 6) % 7;
         var allSlots = []
-        var wouldBeSlots = JSON.parse(JSON.stringify($scope.availableSlots));
+        var wouldBeSlots = JSON.parse(JSON.stringify($scope.pseudoAvailableSlots));
         wouldBeSlots[daysArray[day]].push(hour);
         for (var i = 0; i < 3; i++) {
           wouldBeSlots[daysArray[(startDayInt + i) % 7]]
@@ -614,7 +615,7 @@ app.directive('scheduler', function($http) {
         var style = {
           'border-radius': '4px'
         };
-        if ($scope.availableSlots && $scope.availableSlots[daysArray[day]].indexOf(hour) > -1) {
+        if ($scope.pseudoAvailableSlots && $scope.pseudoAvailableSlots[daysArray[day]].indexOf(hour) > -1) {
           style = {
             'background-color': "#fff",
             'border-color': "#999",
@@ -715,7 +716,7 @@ app.directive('scheduler', function($http) {
         $scope.popup = true;
         $scope.slotType = 'track';
         var d = new Date(day).getDay();
-        // if ($scope.availableSlots[daysArray[d]].indexOf(hour) == -1 && data.type == 'empty') return;
+        // if ($scope.pseudoAvailableSlots[daysArray[d]].indexOf(hour) == -1 && data.type == 'empty') return;
         var makeDay = new Date(day);
         makeDay.setHours(hour);
         if ($scope.user.blockRelease && new Date($scope.user.blockRelease).getTime() > new Date(makeDay).getTime()) {
@@ -1097,7 +1098,7 @@ app.directive('scheduler', function($http) {
         var currentDay = new Date(date).getDay();
 
         var date = (new Date(date)).setHours(hour)
-        if ($scope.availableSlots[daysArray[currentDay]] && $scope.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date())) {
+        if ($scope.pseudoAvailableSlots[daysArray[currentDay]] && $scope.pseudoAvailableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date())) {
           style = {
             'background-color': '#fff',
             'border-color': "#999",

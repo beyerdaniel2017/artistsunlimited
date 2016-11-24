@@ -4,7 +4,6 @@ var User = mongoose.model('User');
 var denyUnrepostOverlap = require("./denyUnrepostOverlap.js")
 var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 
-
 module.exports = function(eventDetails, minDate) {
   minDate = new Date(minDate);
   if (minDate < new Date()) minDate = new Date();
@@ -28,17 +27,18 @@ module.exports = function(eventDetails, minDate) {
             var startDate = user.blockRelease > minDate ? user.blockRelease : minDate;
             var dayInd = 1;
             var hourInd = 0;
+            user.pseudoAvailableSlots = createPseudoAvailableSlots(user);
 
             function findNext() {
               console.log('findNext');
               var day = daysOfWeek[(startDate.getDay() + dayInd) % 7];
-              if (user.availableSlots[day].length == 0) {
+              if (user.pseudoAvailableSlots[day].length == 0) {
                 dayInd++;
                 hourInd = 0;
                 findNext();
                 return;
               }
-              var hour = user.availableSlots[day][hourInd];
+              var hour = user.pseudoAvailableSlots[day][hourInd];
               var desiredDay = new Date(startDate);
               desiredDay.setTime(desiredDay.getTime() + dayInd * 24 * 60 * 60 * 1000);
               desiredDay.setHours(hour);
@@ -64,7 +64,7 @@ module.exports = function(eventDetails, minDate) {
                     fulfill(newEvent);
                   }).then(null, function(err) {
                     if (err.message == 'overlap') {
-                      hourInd = (hourInd + 1) % user.availableSlots[day].length;
+                      hourInd = (hourInd + 1) % user.pseudoAvailableSlots[day].length;
                       if (hourInd == 0) dayInd++;
                       findNext();
                     } else {
@@ -72,7 +72,7 @@ module.exports = function(eventDetails, minDate) {
                     }
                   })
               } else {
-                hourInd = (hourInd + 1) % user.availableSlots[day].length;
+                hourInd = (hourInd + 1) % user.pseudoAvailableSlots[day].length;
                 if (hourInd == 0) dayInd++;
                 findNext();
               }
@@ -81,4 +81,19 @@ module.exports = function(eventDetails, minDate) {
           }).then(null, reject);
       }).then(null, reject);
   })
+}
+
+function createPseudoAvailableSlots(user) {
+  var pseudoSlots = {};
+  var tzOffset = ((new Date()).getTimezoneOffset() - user.slotsTimezone.getTimezoneOffset()) / 60;
+  daysOfWeek.forEach(function(day) {
+    if (user.availableSlots[day]) {
+      var daySlots = [];
+      user.availableSlots[day].forEach(function(hour) {
+        daySlots.push((hour - tzOffset + 24) % 24);
+      })
+      pseudoSlots[day] = daySlots;
+    }
+  })
+  return pseudoSlots;
 }

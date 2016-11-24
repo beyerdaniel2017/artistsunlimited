@@ -53,6 +53,8 @@ app.config(function($stateProvider) {
             .then(function(res) {
               var user = SessionService.getUser('subAdmin');
               var trade = res.data;
+              trade.p1.user.pseudoAvailableSlots = createPseudoAvailableSlots(trade.p1.user);
+              trade.p2.user.pseudoAvailableSlots = createPseudoAvailableSlots(trade.p2.user);
               trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
               trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
               return trade;
@@ -99,6 +101,8 @@ app.config(function($stateProvider) {
             .then(function(res) {
               var trades = res.data;
               trades.forEach(function(trade) {
+                trade.p1.user.pseudoAvailableSlots = createPseudoAvailableSlots(trade.p1.user);
+                trade.p2.user.pseudoAvailableSlots = createPseudoAvailableSlots(trade.p2.user);
                 trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
                 trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
               });

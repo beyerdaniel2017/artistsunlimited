@@ -196,10 +196,11 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
           $scope.AccountsStepData.repostSettings = res.data.repostSettings;
           $scope.AccountsStepData.price = res.data.price;
           $scope.AccountsStepData.description = res.data.description;
+          $scope.AccountsStepData.slotsTimezone = res.data.slotsTimezone;
           if (res.data.availableSlots) {
-            $scope.AccountsStepData.availableSlots = res.data.availableSlots;
+            $scope.AccountsStepData.pseudoAvailableSlots = createPseudoAvailableSlots(res.data);
           } else {
-            $scope.AccountsStepData.availableSlots = {
+            $scope.AccountsStepData.pseudoAvailableSlots = {
               'sunday': [1, 4, 8, 11, 14, 17, 20],
               'monday': [1, 4, 8, 11, 14, 17, 20],
               'tuesday': [1, 4, 8, 11, 14, 17, 20],
@@ -215,10 +216,11 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                 // $scope.AccountsStepData.repostSettings = response.data.repostSettings;
                 $scope.AccountsStepData.queue = response.data.queue;
                 $scope.AccountsStepData.repostSettings = response.data.repostSettings;
+                $scope.AccountsStepData.slotsTimezone = response.data.slotsTimezone;
                 if (response.data.availableSlots) {
-                  $scope.AccountsStepData.availableSlots = response.data.availableSlots;
+                  $scope.AccountsStepData.pseudoAvailableSlots = createPseudoAvailableSlots(response.data);
                 } else {
-                  $scope.AccountsStepData.availableSlots = {
+                  $scope.AccountsStepData.pseudoAvailableSlots = {
                     'sunday': [1, 4, 8, 11, 14, 17, 20],
                     'monday': [1, 4, 8, 11, 14, 17, 20],
                     'tuesday': [1, 4, 8, 11, 14, 17, 20],

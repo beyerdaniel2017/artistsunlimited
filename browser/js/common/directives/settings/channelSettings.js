@@ -473,7 +473,7 @@ app.directive('channelsettings', function($http) {
 									button: $scope.AccountsStepData.premier.button
 								})
 								.then(function(res) {
-									if ($scope.AccountsStepData.availableSlots == undefined) $scope.AccountsStepData.availableSlots = defaultAvailableSlots;
+									if ($scope.AccountsStepData.pseudoAvailableSlots == undefined) $scope.AccountsStepData.pseudoAvailableSlots = defaultAvailableSlots;
 									SessionService.createAdminUser($scope.AccountsStepData);
 									$scope.activeTab.push('repostPreferences');
 									$('.nav-tabs a[href="#repostPreferences"]').tab('show');
@@ -481,6 +481,9 @@ app.directive('channelsettings', function($http) {
 								.catch(function() {});
 							break;
 						case 6:
+							//update from pseudo
+							console.log($scope.AccountsStepData);
+							$scope.AccountsStepData.availableSlots = createAvailableSlots($scope.AccountsStepData, $scope.AccountsStepData.pseudoAvailableSlots)
 							AccountSettingServices.updateUserAvailableSlot({
 									_id: $scope.AccountsStepData.submissionData.userID,
 									availableSlots: $scope.AccountsStepData.availableSlots
@@ -491,7 +494,6 @@ app.directive('channelsettings', function($http) {
 									$scope.loadQueueSongs();
 									$scope.activeTab.push('manageReposts');
 									$('.nav-tabs a[href="#manageReposts"]').tab('show');
-
 								})
 								.catch(function() {});
 							break;
@@ -511,8 +513,8 @@ app.directive('channelsettings', function($http) {
 
 			$scope.setSlotStyle = function(day, hour) {
 				var style = {};
-				if ($scope.AccountsStepData.availableSlots != undefined) {
-					if ($scope.AccountsStepData.availableSlots[daysArray[day]] != undefined && $scope.AccountsStepData.availableSlots[daysArray[day]].indexOf(hour) > -1) {
+				if ($scope.AccountsStepData.pseudoAvailableSlots != undefined) {
+					if ($scope.AccountsStepData.pseudoAvailableSlots[daysArray[day]] != undefined && $scope.AccountsStepData.pseudoAvailableSlots[daysArray[day]].indexOf(hour) > -1) {
 						style = {
 							'background-color': "#fff",
 							'border-color': "#999"
@@ -525,7 +527,7 @@ app.directive('channelsettings', function($http) {
 			$scope.tooManyReposts = function(day, hour) {
 				var startDayInt = (day + 6) % 7;
 				var allSlots = []
-				var wouldBeSlots = JSON.parse(JSON.stringify($scope.AccountsStepData.availableSlots));
+				var wouldBeSlots = JSON.parse(JSON.stringify($scope.AccountsStepData.pseudoAvailableSlots));
 				wouldBeSlots[daysArray[day]].push(hour);
 				for (var i = 0; i < 3; i++) {
 					wouldBeSlots[daysArray[(startDayInt + i) % 7]]
@@ -554,14 +556,13 @@ app.directive('channelsettings', function($http) {
 
 			$scope.clickedSlotsave = function(day, hour) {
 				var pushhour = parseInt(hour);
-
-				if ($scope.AccountsStepData.availableSlots != undefined && $scope.AccountsStepData.availableSlots[daysArray[day]].indexOf(pushhour) > -1) {
-					$scope.AccountsStepData.availableSlots[daysArray[day]].splice($scope.AccountsStepData.availableSlots[daysArray[day]].indexOf(pushhour), 1);
+				if ($scope.AccountsStepData.pseudoAvailableSlots != undefined && $scope.AccountsStepData.pseudoAvailableSlots[daysArray[day]].indexOf(pushhour) > -1) {
+					$scope.AccountsStepData.pseudoAvailableSlots[daysArray[day]].splice($scope.AccountsStepData.pseudoAvailableSlots[daysArray[day]].indexOf(pushhour), 1);
 				} else if ($scope.tooManyReposts(day, hour)) {
 					$.Zebra_Dialog("Cannot enable slot. We only allow 10 reposts within 24 hours to prevent you from being repost blocked.");
 					return;
-				} else if ($scope.AccountsStepData.availableSlots != undefined) {
-					$scope.AccountsStepData.availableSlots[daysArray[day]].push(pushhour);
+				} else if ($scope.AccountsStepData.pseudoAvailableSlots != undefined) {
+					$scope.AccountsStepData.pseudoAvailableSlots[daysArray[day]].push(pushhour);
 				}
 			}
 

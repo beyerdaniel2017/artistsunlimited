@@ -331,8 +331,6 @@ app.directive('rfrinteraction', function($http) {
         return person.slots.length * ($scope.trade.repeatFor > 0 ? $scope.trade.repeatFor : 1) + " slots";
       }
 
-
-
       $scope.emailSlot = function() {
         var mailto_link = "mailto:?subject=Repost of " + $scope.makeEvent.title + '&body=Hey,\n\n I am reposting your song ' + $scope.makeEvent.title + ' on ' + $scope.makeEventAccount.username + ' on ' + $scope.makeEvent.day.toLocaleDateString() + '.\n\n Best, \n' + $scope.user.soundcloud.username;
         location.href = encodeURI(mailto_link);
@@ -352,8 +350,7 @@ app.directive('rfrinteraction', function($http) {
         var currentDay = new Date(day).getDay();
 
         var date = (new Date(day)).setHours(hour);
-        if (!($scope.activeUser.availableSlots[daysArray[currentDay]] && $scope.activeUser.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date())) || ($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease) > date)) {
-
+        if (!($scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]] && $scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date())) || ($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease) > date)) {
           return false;
         }
 
@@ -714,7 +711,7 @@ app.directive('rfrinteraction', function($http) {
           d.setDate(d.getDate() + i);
           var currentDay = d.getDay();
           var strDdate = getshortdate(d);
-          var slots = $scope.trade[userNum].user.availableSlots[daysArray[currentDay]];
+          var slots = $scope.trade[userNum].user.pseudoAvailableSlots[daysArray[currentDay]];
           slots = slots.sort(function(a, b) {
             return a - b
           });
@@ -749,7 +746,7 @@ app.directive('rfrinteraction', function($http) {
         };
         var currentDay = new Date(date).getDay();
         var date = (new Date(date)).setHours(hour)
-        if ($scope.activeUser.availableSlots[daysArray[currentDay]] && $scope.activeUser.availableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date()) && (event.type == 'empty' || event.type == 'trade') && !($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease).getTime() > date)) {
+        if ($scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]] && $scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date()) && (event.type == 'empty' || event.type == 'trade') && !($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease).getTime() > date)) {
           style = {
             'background-color': '#fff',
             'border-color': "#999",

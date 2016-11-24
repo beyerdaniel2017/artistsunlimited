@@ -329,7 +329,7 @@ router.post('/repostEventsScheduler', function(req, res, next) {
         delete eventDetails._id;
         eventDetails.comment = undefined;
         eventDetails.userID = channelID;
-        scheduleRepost(eventDetails, scheduleDate).then(console.log, console.log);
+        scheduleRepost(eventDetails, new Date()).then(console.log, console.log);
       })
       res.send(ev)
     }).then(null, next);

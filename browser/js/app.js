@@ -560,3 +560,35 @@ function queryStringify(obj) {
         return a
     }, []).join('&')
 }
+
+var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+
+function createPseudoAvailableSlots(user) {
+    var pseudoSlots = {};
+    var tzOffset = ((new Date()).getTimezoneOffset() - (new Date(user.slotsTimezone)).getTimezoneOffset()) / 60;
+    daysOfWeek.forEach(function(day) {
+        if (user.availableSlots[day]) {
+            var daySlots = [];
+            user.availableSlots[day].forEach(function(hour) {
+                daySlots.push((hour - tzOffset + 24) % 24);
+            })
+            pseudoSlots[day] = daySlots;
+        }
+    })
+    return pseudoSlots;
+}
+
+function createAvailableSlots(user, pseudoSlots) {
+    var availableSlots = {};
+    var tzOffset = ((new Date()).getTimezoneOffset() - (new Date(user.slotsTimezone)).getTimezoneOffset()) / 60;
+    daysOfWeek.forEach(function(day) {
+        if (pseudoSlots[day]) {
+            var daySlots = [];
+            pseudoSlots[day].forEach(function(hour) {
+                daySlots.push((hour + tzOffset + 24) % 24);
+            })
+            availableSlots[day] = daySlots;
+        }
+    })
+    return availableSlots;
+}
