@@ -6,7 +6,14 @@ app.config(function($stateProvider) {
         submission: null
       },
       templateUrl: 'js/auth/views/login.html',
-      controller: 'AuthController'
+      controller: 'AuthController',
+      resolve: {
+        config: function(AppConfig) {
+          return AppConfig.fetchConfig().then(function(res) {
+            return AppConfig.setConfig(res.data);
+          })
+        }
+      }
     })
     .state('signup', {
       url: '/signup',

@@ -48,6 +48,7 @@
                 redirect_uri: data.callbackURL,
                 scope: "non-expiring"
             });
+            return 'ok';
         }
 
         function getConfig() {
