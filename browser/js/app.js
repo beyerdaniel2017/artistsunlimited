@@ -562,7 +562,6 @@ function queryStringify(obj) {
 }
 
 var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-
 function createPseudoAvailableSlots(user) {
     var pseudoSlots = {};
     var tzOffset = ((new Date()).getTimezoneOffset() - (new Date(user.slotsTimezone)).getTimezoneOffset()) / 60;
