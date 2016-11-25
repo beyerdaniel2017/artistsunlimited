@@ -570,7 +570,7 @@ app.directive('scheduler', function($http) {
         } else {
           $scope.pseudoAvailableSlots[daysArray[day]].push(pushhour);
         }
-        $scope.user.availableSlots = $scope.createAvailableSlots($scope.user, $scope.pseudoAvailableSlots);
+        $scope.user.availableSlots = createAvailableSlots($scope.user, $scope.pseudoAvailableSlots);
         $http.post('/api/events/saveAvailableSlots', {
           availableslots: $scope.user.availableSlots,
           id: $scope.user._id

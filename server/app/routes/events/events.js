@@ -45,8 +45,8 @@ router.get('/repostEvent/:username/:trackTitle', function(req, res, next) {
     .then(function(user) {
       getUserNetwork(user._id)
         .then(function(network) {
-          var networkDocIds = [];
-          var networkUserIds = [];
+          var networkDocIds = [user._id];
+          var networkUserIds = [user.soundcloud.id];
           network.forEach(function(user) {
             networkDocIds.push(user._id);
             networkUserIds.push(user.soundcloud.id);
@@ -89,6 +89,9 @@ router.get('/repostEvent/:username/:trackTitle', function(req, res, next) {
                           }
                         }).then(null, next);
                     })
+                    if (tracks.length == 0) {
+                      next(new Error('No events found'));
+                    }
                   })
                   .then(null, next);
               } else {
