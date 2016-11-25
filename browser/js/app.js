@@ -571,7 +571,11 @@ function createPseudoAvailableSlots(user) {
         if (user.availableSlots[day]) {
             var daySlots = [];
             user.availableSlots[day].forEach(function(hour) {
-                daySlots.push((hour - tzOffset + 24) % 24);
+                daySlots.push((hour + tzOffset + 24) % 24);
+            })
+            daySlots.sort(function(a, b) {
+                if (a < b) return -1;
+                else return 1;
             })
             pseudoSlots[day] = daySlots;
         }
@@ -587,7 +591,11 @@ function createAvailableSlots(user, pseudoSlots) {
         if (pseudoSlots[day]) {
             var daySlots = [];
             pseudoSlots[day].forEach(function(hour) {
-                daySlots.push((hour + tzOffset + 24) % 24);
+                daySlots.push((hour - tzOffset + 24) % 24);
+            })
+            daySlots.sort(function(a, b) {
+                if (a < b) return -1;
+                else return 1;
             })
             availableSlots[day] = daySlots;
         }

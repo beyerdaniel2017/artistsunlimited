@@ -15,7 +15,6 @@ module.exports = function(eventDetails, minDate) {
         }
       })
       .then(function(allEvents) {
-        console.log(eventDetails);
         allEvents.forEach(function(event) {
           event.day = new Date(event.day);
         });
@@ -30,7 +29,6 @@ module.exports = function(eventDetails, minDate) {
             user.pseudoAvailableSlots = createPseudoAvailableSlots(user);
 
             function findNext() {
-              console.log('findNext');
               var day = daysOfWeek[(startDate.getDay() + dayInd) % 7];
               if (user.pseudoAvailableSlots[day].length == 0) {
                 dayInd++;
@@ -47,14 +45,10 @@ module.exports = function(eventDetails, minDate) {
               });
               if (!event) {
                 eventDetails.day = desiredDay;
-                console.log('creating event')
-                console.log(eventDetails);
                 if ((new Date(eventDetails.unrepostDate)).getTime() > 1000000000) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + 24 * 3600000)
                 else eventDetails.unrepostDate = new Date(0);
                 denyUnrepostOverlap(eventDetails)
                   .then(function(ok) {
-                    console.log('ok');
-                    console.log(eventDetails);
                     var newEvent = new RepostEvent(eventDetails);
                     if (newEvent.title) newEvent.pseudoname = newEvent.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
                     return newEvent.save()
@@ -91,7 +85,11 @@ function createPseudoAvailableSlots(user) {
     if (user.availableSlots[day]) {
       var daySlots = [];
       user.availableSlots[day].forEach(function(hour) {
-        daySlots.push((hour - tzOffset + 24) % 24);
+        daySlots.push((hour + tzOffset + 24) % 24);
+      })
+      daySlots.sort(function(a, b) {
+        if (a < b) return -1;
+        else return 1;
       })
       pseudoSlots[day] = daySlots;
     }
