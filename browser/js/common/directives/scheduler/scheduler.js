@@ -570,14 +570,13 @@ app.directive('scheduler', function($http) {
         } else {
           $scope.pseudoAvailableSlots[daysArray[day]].push(pushhour);
         }
-        //do transformation here
+        $scope.user.availableSlots = $scope.createAvailableSlots($scope.user, $scope.pseudoAvailableSlots);
         $http.post('/api/events/saveAvailableSlots', {
-          availableslots: $scope.pseudoAvailableSlots,
+          availableslots: $scope.user.availableSlots,
           id: $scope.user._id
         }).then(function(res) {
           SessionService.create(res.data);
           $scope.user = SessionService.getUser();
-          $scope.pseudoAvailableSlots = $scope.user.pseudoAvailableSlots;
         }).then(null, console.log);
       }
 

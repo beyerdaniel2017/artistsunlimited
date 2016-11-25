@@ -566,7 +566,6 @@ var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "frida
 function createPseudoAvailableSlots(user) {
     var pseudoSlots = {};
     var tzOffset = (-(new Date()).getTimezoneOffset() - user.astzOffset) / 60;
-    console.log(tzOffset);
     daysOfWeek.forEach(function(day) {
         if (user.availableSlots[day]) {
             var daySlots = [];
@@ -586,7 +585,6 @@ function createPseudoAvailableSlots(user) {
 function createAvailableSlots(user, pseudoSlots) {
     var availableSlots = {};
     var tzOffset = (-(new Date()).getTimezoneOffset() - user.astzOffset) / 60;
-    console.log(tzOffset);
     daysOfWeek.forEach(function(day) {
         if (pseudoSlots[day]) {
             var daySlots = [];
