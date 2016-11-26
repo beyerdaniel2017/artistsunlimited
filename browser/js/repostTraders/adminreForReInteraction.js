@@ -87,39 +87,39 @@ app.config(function($stateProvider) {
               return;
             })
         },
-        currentTrades: function($http, SessionService) {
-          var tradeType = {
-            Requests: true,
-            Requested: true,
-            TradePartners: true
-          };
-          var user = SessionService.getUser();
-          return $http.get('/api/trades/withUser/' + user._id + '?tradeType=' + JSON.stringify(tradeType))
-            .then(function(res) {
-              var trades = res.data;
-              trades.forEach(function(trade) {
-                trade.p1.user.pseudoAvailableSlots = createPseudoAvailableSlots(trade.p1.user);
-                trade.p2.user.pseudoAvailableSlots = createPseudoAvailableSlots(trade.p2.user);
-                trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
-                trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
-              });
-              trades.sort(function(a, b) {
-                if (a.user.alert == "change") {
-                  return -1;
-                } else if (a.user.alert == "placement") {
-                  return -1
-                } else {
-                  return 1;
-                }
-              })
-              return trades;
-            })
-        }
+        // currentTrades: function($http, SessionService) {
+        //   var tradeType = {
+        //     Requests: true,
+        //     Requested: true,
+        //     TradePartners: true
+        //   };
+        //   var user = SessionService.getUser();
+        //   return $http.get('/api/trades/withUser/' + user._id + '?tradeType=' + JSON.stringify(tradeType))
+        //     .then(function(res) {
+        //       var trades = res.data;
+        //       trades.forEach(function(trade) {
+        //         trade.p1.user.pseudoAvailableSlots = createPseudoAvailableSlots(trade.p1.user);
+        //         trade.p2.user.pseudoAvailableSlots = createPseudoAvailableSlots(trade.p2.user);
+        //         trade.other = (trade.p1.user._id == user._id) ? trade.p2 : trade.p1;
+        //         trade.user = (trade.p1.user._id == user._id) ? trade.p1 : trade.p2;
+        //       });
+        //       trades.sort(function(a, b) {
+        //         if (a.user.alert == "change") {
+        //           return -1;
+        //         } else if (a.user.alert == "placement") {
+        //           return -1
+        //         } else {
+        //           return 1;
+        //         }
+        //       })
+        //       return trades;
+        //     })
+        // }
       }
     })
 });
 
-app.controller("AdminReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, SessionService, socket, $stateParams, trade, p1Events, p2Events, currentTrades) {
+app.controller("AdminReForReInteractionController", function($rootScope, $state, $scope, $http, AuthService, $window, SessionService, socket, $stateParams, trade, p1Events, p2Events) {
   $scope.user = SessionService.getUser();
   if (!SessionService.getUser()) {
     $state.go('login');
@@ -131,7 +131,7 @@ app.controller("AdminReForReInteractionController", function($rootScope, $state,
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
   $scope.trade = trade;
   $scope.msgHistory = trade.messages;
-  $scope.currentTrades = currentTrades;
+  // $scope.currentTrades = currentTrades;
   $scope.p1Events = p1Events;
   $scope.p2Events = p2Events;
   $scope.stateParams = $stateParams;

@@ -407,16 +407,10 @@ app.directive('reforrelists', function($http) {
       }
 
       $scope.checkNotification = function() {
-        angular.forEach($scope.currentTrades, function(trade) {
-          if (trade.p1.user._id == $scope.user._id) {
-            if (trade.p1.alert == "change") {
-              $scope.$parent.shownotification = true;
-            }
-          }
-          if (trade.p2.user._id == $scope.user._id) {
-            if (trade.p2.alert == "change") {
-              $scope.$parent.shownotification = true;
-            }
+        $scope.$parent.shownotification = false
+        $scope.currentTrades.forEach(function(trade) {
+          if (trade.other.accepted) {
+            $scope.$parent.shownotification = true;
           }
         });
       }

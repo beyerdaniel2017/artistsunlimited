@@ -28,9 +28,9 @@ app.directive('rfrinteraction', function($http) {
       $scope.trackArtistID = 0;
       $scope.trackType = "";
       $scope.listDayIncr = 0;
-      $scope.selectTrade = $scope.currentTrades.find(function(el) {
-        return el._id == $scope.trade._id;
-      });
+      // $scope.selectTrade = $scope.currentTrades.find(function(el) {
+      //   return el._id == $scope.trade._id;
+      // });
       var person = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1 : $scope.trade.p2;
       $scope.user.accepted = person.accepted;
       $scope.p1dayIncr = 0;
@@ -104,13 +104,12 @@ app.directive('rfrinteraction', function($http) {
       }
 
       $scope.user.accepted = $scope.trade.p1.user._id == $scope.user._id ? $scope.trade.p1.accepted : $scope.trade.p2.accepted;
-      $scope.curTrade = JSON.stringify($.grep($scope.currentTrades, function(e) {
-        return e._id == $scope.trade._id;
-      }));
+      // $scope.curTrade = JSON.stringify($.grep($scope.currentTrades, function(e) {
+      //   return e._id == $scope.trade._id;
+      // }));
 
       $scope.refreshCalendar = function() {
         $scope.fillCalendar();
-        $scope.updateAlerts();
         $scope.checkNotification();
       }
 
@@ -233,6 +232,8 @@ app.directive('rfrinteraction', function($http) {
                 }
               }
             });
+        } else {
+          return 'ok';
         }
       }
       $scope.saveTrade = function() {
@@ -290,7 +291,6 @@ app.directive('rfrinteraction', function($http) {
         $scope.chatOpen = true;
         $scope.msgCount = 0;
         $scope.shownotification = false;
-        $scope.updateAlerts();
       }
 
       $scope.undo = function() {
@@ -471,11 +471,13 @@ app.directive('rfrinteraction', function($http) {
       });
 
       socket.on('send:message', function(message) {
-        if (message.tradeID == $scope.stateParams.tradeID) {
+        console.log('send');
+        console.log(message);
+        if (message.tradeID == $scope.trade._id) {
           $scope.msgHistory.push(message);
           $scope.message = message.message;
           $scope.checkNotification();
-          // $scope.trade.messages.push(message);
+          $scope.trade.messages.push(message);
           if (message.type == "alert") {
             $scope.refreshCalendar();
           }
@@ -483,27 +485,32 @@ app.directive('rfrinteraction', function($http) {
       });
 
       socket.on('get:message', function(data) {
+        console.log('get')
+        console.log(data);
         $scope.msgCount = 0;
-        if (data != '') {
-          if (data._id == $scope.stateParams.tradeID) {
-            $scope.msgHistory = data ? data.messages : [];
-            $scope.msgCount++;
+        if (data != '' && data._id == $scope.trade._id) {
+          $scope.msgHistory = data ? data.messages : [];
+          $scope.msgCount++;
+          $scope.checkNotification();
+          if ($scope.msgHistory[$scope.msgHistory.length - 1].type == "alert") {
+            $scope.undo();
           }
         }
       });
+
       $scope.msgCount = 0;
       $scope.emitMessage = function(message, type) {
         socket.emit('send:message', {
           message: message,
           type: type,
           id: $scope.user._id,
-          tradeID: $scope.stateParams.tradeID
+          tradeID: $scope.trade._id
         });
         $scope.message = '';
       }
 
       $scope.getMessage = function() {
-        socket.emit('get:message', $scope.stateParams.tradeID);
+        socket.emit('get:message', $scope.trade._id);
       }
 
       $scope.fillDateArrays = function(events, slots) {
@@ -586,17 +593,17 @@ app.directive('rfrinteraction', function($http) {
       }
       $scope.fillCalendar();
 
-      $scope.updateAlerts = function() {
-        if ($scope.trade.p1.user._id == $scope.user._id) {
-          $scope.trade.p1.alert = "none";
-        }
+      // $scope.updateAlerts = function() {
+      //   if ($scope.trade.p1.user._id == $scope.user._id) {
+      //     $scope.trade.p1.alert = "none";
+      //   }
 
-        if ($scope.trade.p2.user._id == $scope.user._id) {
-          $scope.trade.p2.alert = "none";
-        }
-        $http.put('/api/trades', $scope.trade);
-        $scope.shownotification = false;
-      }
+      //   if ($scope.trade.p2.user._id == $scope.user._id) {
+      //     $scope.trade.p2.alert = "none";
+      //   }
+      //   $http.put('/api/trades', $scope.trade);
+      //   $scope.shownotification = false;
+      // }
 
       $scope.completeTrade = function() {
         $scope.processing = true;

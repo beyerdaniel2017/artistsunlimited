@@ -1334,7 +1334,15 @@ router.get('/updateAllDefaults', function(req, res, next) {
   User.find({})
     .then(function(users) {
       users.forEach(function(user) {
-        user.save()
+        for (var name in user.availableSlots) {
+          var newAvSlots = [];
+          user.availableSlots[name].forEach(function(hour) {
+            if (!newAvSlots.includes(hour)) newAvSlots.push(hour);
+          })
+          user.availableSlots[name] = newAvSlots;
+        }
+        User.findByIdAndUpdate(user._id, user)
+          .then(console.log, console.log);
       })
       return RepostEvent.find({})
     })
@@ -1352,7 +1360,6 @@ router.get('/updateSubs/:post', function(req, res, next) {
     Submission.find({})
       .then(function(submissions) {
         submissions.forEach(function(sub) {
-          // sub.userID = 'ltuserid'
           sub.save();
         });
         res.send('ok');

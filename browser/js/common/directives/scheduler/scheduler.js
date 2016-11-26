@@ -571,12 +571,14 @@ app.directive('scheduler', function($http) {
           $scope.pseudoAvailableSlots[daysArray[day]].push(pushhour);
         }
         $scope.user.availableSlots = createAvailableSlots($scope.user, $scope.pseudoAvailableSlots);
+        $scope.processing = true;
         $http.post('/api/events/saveAvailableSlots', {
           availableslots: $scope.user.availableSlots,
           id: $scope.user._id
         }).then(function(res) {
           SessionService.create(res.data);
           $scope.user = SessionService.getUser();
+          $scope.processing = false;
         }).then(null, console.log);
       }
 

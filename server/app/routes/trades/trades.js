@@ -82,6 +82,7 @@ router.put('/', function(req, res, next) {
         new: true
       }).populate('p1.user').populate('p2.user')
       .then(function(trade) {
+        console.log(trade);
         if (req.body.changed) {
           if (trade.p1.accepted && trade.p2.accepted) {
             var user = (req.user._id == trade.p1.user._id ? req.user : trade.p2.user);
