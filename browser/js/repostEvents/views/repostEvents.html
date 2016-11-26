@@ -29,12 +29,14 @@
                 </div>
               </div>
               <div class="col-md-6 text-left">
-                <div>
-                  <img src="{{trackImage}}" class="img-responsive" style="float: left; margin-right: 10px; border-radius:10px; margin-left: 150px;">
-                  <br>
-                  <h6>{{listevents[0].trackInfo.artistName}}</h6>
-                  <h6>{{listevents[0].trackInfo.title}}</h6> 
-                </div>
+                <a href="{{listevents[0].trackInfo.trackURL}}" target="_blank">
+                  <div>
+                    <img src="{{trackImage}}" class="img-responsive" style="float: left; margin-right: 10px; border-radius:10px; margin-left: 150px;">
+                    <br>
+                    <h6>{{listevents[0].trackInfo.artistName}}</h6>
+                    <h6>{{listevents[0].trackInfo.title}}</h6> 
+                  </div>
+                </a>
               </div>
               <h5 class="text-pink text-center">Total Reach: {{followCounts | number:0}} Followers</h5>
             </div>
