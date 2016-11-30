@@ -172,38 +172,37 @@ router.post('/soundCloudAuthentication', function(req, res, next) {
       next(err);
     } else {
       User.findOne({
-        'soundcloud.id': data.id
-      })
-
-      .then(function(user) {
-        if (user) {
-          return res.json({
-            'success': true,
-            'message': '',
-            'user': user
-          });
-        } else {
-          var newUser = new User({
-            'name': data.username,
-            'soundcloud': {
-              'id': data.id,
-              'username': data.username,
-              'permalinkURL': data.permalink_url,
-              'avatarURL': data.avatar_url.replace('large', 't500x500'),
-              'token': req.body.token,
-              'followers': data.followers_count,
-              'pseudoname': data.username.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
-            },
-            'role': 'user'
-          });
-          newUser.save();
-          return res.json({
-            'success': true,
-            'message': '',
-            'user': newUser
-          });
-        }
-      });
+          'soundcloud.id': data.id
+        })
+        .then(function(user) {
+          if (user) {
+            return res.json({
+              'success': true,
+              'message': '',
+              'user': user
+            });
+          } else {
+            var newUser = new User({
+              'name': data.username,
+              'soundcloud': {
+                'id': data.id,
+                'username': data.username,
+                'permalinkURL': data.permalink_url,
+                'avatarURL': data.avatar_url.replace('large', 't500x500'),
+                'token': req.body.token,
+                'followers': data.followers_count,
+                'pseudoname': data.username.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
+              },
+              'role': 'user'
+            });
+            newUser.save();
+            return res.json({
+              'success': true,
+              'message': '',
+              'user': newUser
+            });
+          }
+        }).then(null, next);
     }
   });
 });

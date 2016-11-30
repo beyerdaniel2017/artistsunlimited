@@ -6,7 +6,7 @@ app.config(function($stateProvider) {
   });
 });
 
-app.controller('SubmissionController', function($rootScope, $state, $scope, $http, $window, AuthService, SessionService) {
+app.controller('SubmissionController', function($rootScope, $state, $scope, $http, $window, AuthService, SessionService, AccountSettingServices) {
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.marketSubmissions = [];
@@ -25,6 +25,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $state.go('admin');
   }
   $scope.user = SessionService.getUser();
+  console.log($scope.user);
   $scope.user.isAdmin = $scope.user.role == 'admin' ? true : false;
   $scope.uniqueGroup = [];
   $scope.paidRepostAccounts = [];
@@ -32,11 +33,17 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     "name": "TRACK TITLE",
     "appendText": " {TRACK_TITLE} "
   }, {
+    "name": "TRACK TITLE W/ LINK",
+    "appendText": " {TRACK_TITLE_WITH_LINK} "
+  }, {
     "name": "TODAYS DATE",
     "appendText": " {TODAYSDATE} "
   }, {
     "name": "TRACK ARTIST",
     "appendText": " {TRACK_ARTIST} "
+  }, {
+    "name": "TRACK ARTIST W/ LINK",
+    "appendText": " {TRACK_ARTIST_WITH_LINK} "
   }, {
     "name": "TRACK ARTWORK",
     "appendText": " {TRACK_ARTWORK} "
@@ -44,22 +51,16 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     "name": "SUBMITTERS EMAIL",
     "appendText": " {SUBMITTERS_EMAIL} "
   }, {
-    "name": "TRACK TITLE WITH LINK",
-    "appendText": " {TRACK_TITLE_WITH_LINK} "
-  }, {
-    "name": "TRACK ARTIST WITH LINK",
-    "appendText": " {TRACK_ARTIST_WITH_LINK} "
-  }, {
     "name": "ACCEPTED CHANNEL LIST",
     "appendText": " {ACCEPTED_CHANNEL_LIST} "
+  }, {
+    "name": "ACCEPTED CHANNEL LIST W/ LINK",
+    "appendText": " {ACCEPTED_CHANNEL_LIST_WITH_LINK} "
   }, {
     "name": "SUBMITTED TO ACCOUNT NAME",
     "appendText": " {SUBMITTED_TO_ACCOUNT_NAME} "
   }, {
-    "name": "ACCEPTED CHANNEL LIST WITH LINK",
-    "appendText": " {ACCEPTED_CHANNEL_LIST_WITH_LINK} "
-  }, {
-    "name": "SUBMITTED ACCOUNT NAME WITH LINK",
+    "name": "SUBMITTED ACCOUNT NAME W/ LINK",
     "appendText": " {SUBMITTED_ACCOUNT_NAME_WITH_LINK} "
   }];
 
@@ -124,6 +125,19 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $scope.loadSubmissions();
   }
 
+  $scope.togglePoolOn = function() {
+    // $scope.user.repostSettings.poolOn = !$scope.user.repostSettings.poolOn;
+    console.log($scope.user.repostSettings.poolOn);
+    SessionService.create($scope.user);
+    AccountSettingServices.updateAdminProfile({
+      'repostSettings.poolOn': $scope.user.repostSettings.poolOn
+    });
+  }
+
+  $scope.whatIsPool = function() {
+    $.Zebra_Dialog("By enabling the AU Marketplace you agree that every submission that you accept will also be shared to all other AU Admins in the AU Marketplace. By doing so, you will gain access to all submissions from other admins that have enabled the AU MarketPlace. As well, you will make 10% of every sale that is made from a submission that originated to one of your network accounts.");
+  }
+
   $scope.loadSubmissions = function() {
     var genre = $scope.genre.replace(/[0-9]/g, '');
     var selectedGenre = genre.replace('(', '').replace(')', '').trim();
@@ -167,6 +181,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $scope.processing = true;
     $http.get('/api/submissions/getMarketPlaceSubmission?genre=' + encodeURIComponent(selectedGenre) + "&skip=" + $scope.marketSkip + "&limit=" + $scope.marketLimit)
       .then(function(res) {
+        console.log(res.data);
         $scope.processing = false;
         if (res.data.length > 0) {
           angular.forEach(res.data, function(d) {
@@ -183,6 +198,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
               auto_play: false,
               show_artwork: true
             });
+            if (!$scope.$$phase) $scope.$apply();
           }, 50)
         });
       })
@@ -191,6 +207,15 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
         $.Zebra_Dialog('Error: Could not get channels.')
         console.log(err);
       });
+  }
+
+  $scope.checkboxStyle = function(sub, chan) {
+    if (sub.approvedChannels.includes(chan.user.id)) return {
+      'background-color': '#E5FEE5',
+      'border-radius': '5px',
+      'padding': '5px 5px'
+    }
+    else return {}
   }
 
   $scope.changeBox = function(sub, chan) {
@@ -243,7 +268,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       $http.put("/api/submissions/save", submi)
         .then(function(sub) {
           $scope.showingElements.splice($scope.showingElements.indexOf(submi), 1);
-          $.Zebra_Dialog("Saved");
           $scope.processing = false;
         })
         .then(null, function(err) {
@@ -259,7 +283,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       .then(function(res) {
         var index = $scope.showingElements.indexOf(submission);
         $scope.showingElements.splice(index, 1);
-        $.Zebra_Dialog("Ignored");
         $scope.processing = false;
       })
       .then(null, function(err) {
@@ -274,7 +297,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       .then(function(res) {
         var index = $scope.showingElements.indexOf(submission);
         $scope.showingElements.splice(index, 1);
-        $.Zebra_Dialog("Declined");
         $scope.processing = false
       })
       .then(null, function(err) {
@@ -290,25 +312,20 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       }
     });
     submi.pooledChannelIDS = $scope.selectedGroupChannelIDS;
-    if (submi.pooledChannelIDS.length == 0) {
-      $scope.decline(submi);
-    } else {
-      delete submi.selectedGroups;
-      delete submi.selectedChannelIDS;
-      delete submi.selectedChannelName;
-      submi.password = $rootScope.password;
-      $scope.processing = true;
-      $http.put("/api/submissions/save", submi)
-        .then(function(sub) {
-          $scope.marketSubmissions.splice($scope.marketSubmissions.indexOf(submi), 1);
-          $.Zebra_Dialog("Saved");
-          $scope.processing = false;
-        })
-        .then(null, function(err) {
-          $scope.processing = false;
-          $.Zebra_Dialog("ERROR: did not Save")
-        })
-    }
+    delete submi.selectedGroups;
+    delete submi.selectedChannelIDS;
+    delete submi.selectedChannelName;
+    submi.password = $rootScope.password;
+    $scope.processing = true;
+    $http.put("/api/submissions/save", submi)
+      .then(function(sub) {
+        $scope.marketSubmissions.splice($scope.marketSubmissions.indexOf(submi), 1);
+        $scope.processing = false;
+      })
+      .then(null, function(err) {
+        $scope.processing = false;
+        $.Zebra_Dialog("ERROR: did not Save")
+      })
   }
 
   $scope.marketIgnore = function(submission) {
@@ -317,7 +334,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       .then(function(res) {
         var index = $scope.marketSubmissions.indexOf(submission);
         $scope.marketSubmissions.splice(index, 1);
-        $.Zebra_Dialog("Ignored");
         $scope.processing = false;
       })
       .then(null, function(err) {
@@ -332,31 +348,12 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       .then(function(res) {
         var index = $scope.marketSubmissions.indexOf(submission);
         $scope.marketSubmissions.splice(index, 1);
-        $.Zebra_Dialog("Declined");
         $scope.processing = false
       })
       .then(null, function(err) {
         $scope.processing = false;
         $.Zebra_Dialog("ERROR: did not Decline");
       });
-  }
-
-  $scope.youtube = function(submission) {
-    $scope.processing = true;
-    $http.post('/api/submissions/youtubeInquiry', submission)
-      .then(function(res) {
-        $scope.processing = false;
-        $.Zebra_Dialog('Sent to Zach');
-      })
-  }
-
-  $scope.sendMore = function(submission) {
-    $scope.processing = true;
-    $http.post('/api/submissions/sendMoreInquiry', submission)
-      .then(function(res) {
-        $scope.processing = false;
-        $.Zebra_Dialog('Sent Email');
-      })
   }
 
   $scope.openEmailClient = function(sub, item) {
@@ -469,6 +466,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.getPaidRepostAccounts = function() {
     $http.get('/api/submissions/getPaidRepostAccounts').then(function(res) {
       $scope.paidRepostAccounts = res.data;
+      console.log(res.data);
       for (var i = 0; i < $scope.paidRepostAccounts.length; i++) {
         $scope.paidRepostAccounts[i].groups.forEach(function(acc) {
           if (acc != "" && $scope.uniqueGroup.indexOf(acc) === -1) {

@@ -53,6 +53,9 @@ router.get('/unaccepted', function(req, res, next) {
       userID: {
         $in: paidRepostIds
       },
+      ignoredBy: {
+        $ne: req.user._id
+      },
       status: "submitted"
     };
     if (genre != undefined && genre != 'null') {
@@ -110,9 +113,8 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
       })
     }
     var query = {
-      pooledChannelIDS: [],
-      userID: {
-        $nin: paidRepostIds
+      pooledSendDate: {
+        $gt: new Date()
       },
       ignoredBy: {
         $ne: req.user._id
@@ -128,31 +130,35 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
       .populate('userID')
       .skip(skipcount)
       .limit(limitcount)
-
-    .then(function(subs) {
+      .then(function(subs) {
+        console.log(subs);
         var i = -1;
-        var next = function() {
+        var cont = function() {
           i++;
           if (i < subs.length) {
             var sub = subs[i].toJSON();
             sub.approvedChannels = [];
             Submission.find({
-              email: sub.email
-            })
-
-            .then(function(oldSubs) {
+                email: sub.email
+              })
+              .then(function(oldSubs) {
                 oldSubs.forEach(function(oldSub) {
-                  sub.approvedChannels = sub.approvedChannels.concat(oldSub.paidChannelIDS)
+                  oldSub.paidChannels.forEach(function(chan) {
+                    sub.approvedChannels.push(chan.user.id);
+                  })
+                  oldSub.paidPooledChannels.forEach(function(chan) {
+                    sub.approvedChannels.push(chan.user.id);
+                  })
                 });
                 resultSubs.push(sub);
-                next();
+                cont();
               })
               .then(null, next);
           } else {
             res.send(resultSubs);
           }
         }
-        next();
+        cont();
       })
       .then(null, next);
   }
@@ -162,7 +168,10 @@ router.get('/getUnacceptedSubmissions', function(req, res, next) {
   if (req.user) {
     var query = {
       channelIDS: [],
-      userID: req.user._id
+      userID: req.user._id,
+      ignoredBy: {
+        $ne: req.user._id
+      }
     };
     Submission.count(query)
       .then(function(subs) {
@@ -249,10 +258,8 @@ router.get('/getAccountsByIndex/:user_id', function(req, res) {
   });
 });
 
-
-
 router.put('/save', function(req, res, next) {
-  if (!req.user.role == 'admin') {
+  if (!req.user || req.user.role != 'admin') {
     next(new Error('Unauthorized'));
     return;
   } else {
@@ -266,15 +273,14 @@ router.put('/save', function(req, res, next) {
         .then(null, next);
     } else {
       req.body.status = "pooled";
-      var poolSentDate = new Date();
-      poolSentDate.setHours(poolSentDate.getHours() + 48);
-      req.body.pooledSendDate = poolSentDate;
+      if (req.user.repostSettings.poolOn) req.body.pooledSendDate = new Date((new Date()).getTime() + 48 * 3600000);
+      else req.body.pooledSendDate = new Date(0);
+      req.body.ignoredBy = [req.user._id];
       Submission.findByIdAndUpdate(req.body._id, req.body, {
           new: true
         })
         .populate("userID")
-
-      .then(function(sub) {
+        .then(function(sub) {
           User.find({
               'soundcloud.id': {
                 $in: sub.channelIDS

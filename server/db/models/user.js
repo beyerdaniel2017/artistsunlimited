@@ -174,6 +174,10 @@ var schema = new mongoose.Schema({
                 type: Boolean,
                 default: false
             }
+        },
+        poolOn: {
+            type: Boolean,
+            default: true
         }
     },
     notificationSettings: {

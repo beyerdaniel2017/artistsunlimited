@@ -4526,7 +4526,7 @@ td {
 .tabs-5 .nav-tabs li img {
   display: inline-block;
   padding: 11px 0px;
-  width: 22px;
+  height: 45px;
   margin: 0 9px; }
 
 .tabs-5 .nav-tabs > li > a {
@@ -4535,7 +4535,7 @@ td {
   border-radius: 0;
   color: #ccc;
   outline: 0;
-  height: 55px;
+  height: 60px;
   letter-spacing: 1px;
   font-size: 13px; }
 

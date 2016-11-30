@@ -1342,7 +1342,6 @@ router.get('/updateAllDefaults', function(req, res, next) {
           user.availableSlots[name] = newAvSlots;
         }
         User.findByIdAndUpdate(user._id, user)
-          .then(console.log, console.log);
       })
       return RepostEvent.find({})
     })
@@ -1398,5 +1397,3 @@ router.get('/updatePseudonames', function(req, res, next) {
       res.send('ok');
     }).then(null, next);
 })
-
-//respond to all premier submissions

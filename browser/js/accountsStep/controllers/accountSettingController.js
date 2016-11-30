@@ -170,7 +170,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     }
     $scope.AccountsStepData.postData.heading.text = "Submission for Promotion";
     $scope.AccountsStepData.postData.subHeading.text = "Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.";
-    $scope.AccountsStepData.premier.heading.text = "Premier Submission for Promotion";
+    $scope.AccountsStepData.premier.heading.text = "Premiere Submission for Promotion";
     $scope.AccountsStepData.premier.subHeading.text = "Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.";
     $scope.AccountsStepData.formActions = formActions;
   } else if (formActions == "Edit") {
@@ -196,7 +196,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
           $scope.AccountsStepData.repostSettings = res.data.repostSettings;
           $scope.AccountsStepData.price = res.data.price;
           $scope.AccountsStepData.description = res.data.description;
-          $scope.AccountsStepData.slotsTimezone = res.data.slotsTimezone;
+          $scope.AccountsStepData.astzOffset = res.data.astzOffset;
           if (res.data.availableSlots) {
             $scope.AccountsStepData.pseudoAvailableSlots = createPseudoAvailableSlots(res.data);
           } else {
@@ -216,7 +216,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                 // $scope.AccountsStepData.repostSettings = response.data.repostSettings;
                 $scope.AccountsStepData.queue = response.data.queue;
                 $scope.AccountsStepData.repostSettings = response.data.repostSettings;
-                $scope.AccountsStepData.slotsTimezone = response.data.slotsTimezone;
+                $scope.AccountsStepData.astzOffset = response.data.astzOffset;
                 if (response.data.availableSlots) {
                   $scope.AccountsStepData.pseudoAvailableSlots = createPseudoAvailableSlots(response.data);
                 } else {

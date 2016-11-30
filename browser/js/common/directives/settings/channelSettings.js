@@ -404,6 +404,8 @@ app.directive('channelsettings', function($http) {
 				}
 			}
 
+			console.log($scope.AccountsStepData);
+
 			$scope.isPaidRepost();
 
 			$scope.nextStep = function(step, currentData, type) {
@@ -473,7 +475,9 @@ app.directive('channelsettings', function($http) {
 									button: $scope.AccountsStepData.premier.button
 								})
 								.then(function(res) {
+									console.log($scope.AccountsStepData);
 									if ($scope.AccountsStepData.pseudoAvailableSlots == undefined) $scope.AccountsStepData.pseudoAvailableSlots = defaultAvailableSlots;
+									if (!$scope.AccountsStepData.astzOffset) $scope.AccountsStepData.astzOffset = -300;
 									SessionService.createAdminUser($scope.AccountsStepData);
 									$scope.activeTab.push('repostPreferences');
 									$('.nav-tabs a[href="#repostPreferences"]').tab('show');
@@ -482,8 +486,9 @@ app.directive('channelsettings', function($http) {
 							break;
 						case 6:
 							//update from pseudo
-							console.log($scope.AccountsStepData);
 							$scope.AccountsStepData.availableSlots = createAvailableSlots($scope.AccountsStepData, $scope.AccountsStepData.pseudoAvailableSlots)
+							console.log($scope.AccountsStepData.pseudoAvailableSlots)
+							console.log($scope.AccountsStepData.availableSlots)
 							AccountSettingServices.updateUserAvailableSlot({
 									_id: $scope.AccountsStepData.submissionData.userID,
 									availableSlots: $scope.AccountsStepData.availableSlots

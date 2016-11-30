@@ -31,6 +31,11 @@
               <!-- MY SCHEDULE : Start-->
               <div role="tabpanel" class="tab-pane fade in active" id="mysubmissions">
                 <div class="container-90">
+                  <label class="switch">
+                    <input type="checkbox" checked="" ng-model="user.repostSettings.poolOn" ng-change="togglePoolOn()">
+                    <div class="slider round"></div>
+                  </label>
+                  <span style='font-size:1.2em; vertical-align:middle;'>AU Marketplace <a href="" ng-click="whatIsPool()">?</a></span>
                   <div class="submi-section" ng-repeat="sub in showingElements" ng-class="{'border-bottom':!$last}" >
                     <div class="">
                       <div class="row">
@@ -122,7 +127,12 @@
               <!-- ORGANIZE SCHEDULE :Start -->
               <div role="tabpanel" class="tab-pane fade" id="marketplace">
                 <div class="container-90">
-                  <div class="submi-section" ng-repeat="sub in marketSubmissions"  ng-if="sub.invoiceIDS.length == 0" ng-class="{'border-bottom':!$last}" >
+                  <label class="switch">
+                    <input type="checkbox" checked="" ng-model="user.repostSettings.poolOn" ng-change="togglePoolOn()">
+                    <div class="slider round"></div>
+                  </label>
+                  <span style='font-size:1.2em; vertical-align:middle'>AU Marketplace<a href="" ng-click="whatIsPool()">?</a></span>
+                  <div class="submi-section" ng-repeat="sub in marketSubmissions"  ng-if=" user.repostSettings.poolOn" ng-class="{'border-bottom':!$last}" >
                     <div class="">
                       <div class="row">
                         <div class="col-md-12">
@@ -163,8 +173,8 @@
                             <div class="check-list">
                               <form action="#">
                                 <div class="pull-left" style="width:50%;" ng-repeat="chan in paidRepostAccounts">
-                                  <p>
-                                    <label class="with-square-checkbox">
+                                  <p >
+                                    <label class="with-square-checkbox" ng-style="checkboxStyle(sub, chan)">
                                       <input style="" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-pristine ng-empty" type="checkbox" ng-model="sub[chan.user.username]" ng-change="changeBox(sub, chan)">
                                       <span>{{chan.user.username}}</span> </label>
                                     </p>
@@ -199,7 +209,7 @@
                     </div>
                     <br/>
                     <div class="col-md-12 text-center margin-20" >
-                      <button class="btn btn-pink" ng-click="loadMore()">LOAD MORE</button>           
+                      <button class="btn btn-pink" ng-if="user.repostSettings.poolOn" ng-click="loadMore()">LOAD MORE</button>           
                     </div>
 
                   </div>
@@ -208,6 +218,9 @@
                 <!-- ORGANIZE SCHEDULE :End -->
                 <!-- MANAGE REPOSTS : Start -->
                 <div role="tabpanel" class="tab-pane fade" id="managesubmissions">
+                  <div class="managesubmissions">
+                    <h4>Here you can create custom buttons which will trigger an email draft to launch in your mail client. We do this to make it easier for you to organize your submissions according to how you want to move forward with them. Examples of custom buttons can be "More" which could be a template email you send if you want to hear more music from the artist submitting for repost consideration.</h4>
+                  </div>
                   <div class="managesubmissions">
                     <div class="row">
                       <div class="row nav-tabs margin0">
@@ -226,12 +239,12 @@
                                   <textarea ng-model="item.emailBody" class="form-control emailBodyArea{{$index}}" rows="15" placeholder="Email body" index="{{$index}}" ng-click="addEventClass($index,'emailBodyArea');"></textarea>
                                   <br/>
                                   <div class="col-md-12 text-center">
-                                    <button class="btn btn-default" ng-click="sendTestMail($index)">Send test mail</button>
+                                    <button class="btn btn-default" ng-click="sendTestMail($index)">Send Test Email</button>
                                     <button class="btn btn-default" ng-click="removeItem($index)">Delete</button>
                                   </div>
                                 </div>
                                 <div class="col-md-4 margin-bottom-10">
-                                  <input ng-repeat="btn in dynamicButton " type="button" name="{{btn.name}}" class="btn btn-border organize-btn" style="margin-left:20px;" value="{{btn.name}}" ng-click="appendBody(btn)">
+                                  <input ng-repeat="btn in dynamicButton " type="button" name="{{btn.name}}" class="btn btn-border organize-btn" style="margin-left:20px; display:block;" value="{{btn.name}}" ng-click="appendBody(btn)">
                                 </div>
                               </div>
     <!--                      <div class="col-md-12 margin-bottom-10">
