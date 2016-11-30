@@ -1342,7 +1342,10 @@ router.get('/updateAllDefaults', function(req, res, next) {
           user.availableSlots[name] = newAvSlots;
         }
         if (user.repostSettings.poolOn == undefined) user.repostSettings.poolOn = true;
-        User.findByIdAndUpdate(user._id, user)
+        User.findByIdAndUpdate(user._id, user, {
+            new: true
+          })
+          .then(null, null)
       })
       return RepostEvent.find({})
     })
