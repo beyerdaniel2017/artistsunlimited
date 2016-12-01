@@ -14,7 +14,8 @@ function doPoolSent() {
   Submission.find({
       $where: "this.pooledChannelIDS.length > 0",
       pooledSendDate: {
-        $lte: currentDate
+        $lte: currentDate,
+        $gt: new Date(25 * 3600000)
       },
       status: 'pooled'
     })
