@@ -94,7 +94,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
     today.setDate(today.getDate() - 7);
     for (var i = 0; i < 29; i++) {
       var calDay = {};
-      calDay.day = new Date()
+      calDay.day = new Date(today);
       calDay.day.setDate(today.getDate() + i);
       var dayEvents = repostEvent.filter(function(ev) {
         return (new Date(ev.trackInfo.day).toLocaleDateString() == calDay.day.toLocaleDateString());
@@ -140,6 +140,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
   }
 
   $scope.calendar = $scope.fillDateArrays(repostEvent);
+  console.log($scope.calendar);
   $scope.clickedSlot = function(day, hour, data) {
     if (data.type == 'multiple') {
       var buttons = [];
@@ -203,8 +204,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
       document.getElementById('scPopupPlayer').style.visibility = "visible";
     }
   }
-
-  $scope.fillDateArrays(repostEvent);
+  console.log(repostEvent);
   $scope.detailView = function(data) {
     $scope.itemview = "detailListView";
     $scope.makeEvent = {};
