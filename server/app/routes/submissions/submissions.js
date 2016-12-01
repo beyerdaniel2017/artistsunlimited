@@ -54,7 +54,7 @@ router.get('/unaccepted', function(req, res, next) {
         $in: paidRepostIds
       },
       ignoredBy: {
-        $ne: req.user._id
+        $ne: req.user._id.toJSON()
       },
       status: "submitted"
     };
@@ -117,10 +117,11 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
         $gt: new Date()
       },
       ignoredBy: {
-        $ne: req.user._id
+        $ne: req.user._id.toJSON()
       },
       status: "pooled"
     };
+    console.log(query);
     if (genre != undefined && genre != 'null') {
       query.genre = genre;
     }
@@ -170,7 +171,7 @@ router.get('/getUnacceptedSubmissions', function(req, res, next) {
       channelIDS: [],
       userID: req.user._id,
       ignoredBy: {
-        $ne: req.user._id
+        $ne: req.user._id.toJSON()
       }
     };
     Submission.count(query)
@@ -264,6 +265,7 @@ router.put('/save', function(req, res, next) {
     return;
   } else {
     if (req.body.status == "pooled") {
+      req.body.ignoredBy.push(req.user._id.toJSON());
       Submission.findByIdAndUpdate(req.body._id, req.body, {
           new: true
         })
@@ -275,7 +277,7 @@ router.put('/save', function(req, res, next) {
       req.body.status = "pooled";
       if (req.user.repostSettings.poolOn) req.body.pooledSendDate = new Date((new Date()).getTime() + 48 * 3600000);
       else req.body.pooledSendDate = new Date(0);
-      req.body.ignoredBy = [req.user._id];
+      req.body.ignoredBy = [req.user._id.toJSON()];
       Submission.findByIdAndUpdate(req.body._id, req.body, {
           new: true
         })
@@ -304,27 +306,16 @@ router.put('/save', function(req, res, next) {
                 nameStringWithLink += addStringWithLink;
                 nameString += addString;
               });
+              sub.nameString = nameString;
+              sub.nameStringWithLink = nameStringWithLink;
               var acceptEmail = {};
               if (req.user.repostCustomizeEmails && req.user.repostCustomizeEmails.length > 0) {
                 acceptEmail = req.user.repostCustomizeEmails[0].acceptance;
               }
-              var body = "";
-              var body = acceptEmail.body;
-              body = body.replace('{NAME}', sub.name);
-              body = body.replace('{TRACK_TITLE_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.title + '</a>');
-              body = body.replace('{TRACK_TITLE}', sub.title);
-              body = body.replace('{SUBMITTERS_EMAIL}', sub.email);
-              body = body.replace('{TRACK_ARTIST_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.name + '</a>');
-              body = body.replace('{TRACK_ARTIST}', sub.name);
-              body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
-              body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', '<a href="' + sub.userID.soundcloud.permalinkURL + '">' + sub.userID.soundcloud.username + '</a>');
-              body = body.replace('{TRACK_ARTWORK}', '<img src="' + sub.track_art_url + '" style="width:200px; height: 200px"/>');
-              body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);
-              body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', nameStringWithLink);
-              body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
-              body = body.replace(/\n/g, "<br />");
-              var emailBody = '<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:0"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse"><tr><td><table border="0" cellpadding="0" cellspacing="0" width="100%" style="background:url(' + 'https://artistsunlimited.com' + '/assets/images/fade-background.png) no-repeat;color:white;background-size:cover;background-position:center;"><tr><td align="left" style="padding:20px" width="50%"><a href="https://artistsunlimited.com"><img src="' + 'https://artistsunlimited.com' + '/assets/images/logo-white.png" height="45" style="height:45px" alt="AU"/></a></td><td align="right" style="font-size:22px;color:white;font-weight:bold;padding:20px" width="50%">Artists <br/>Unlimited</td></tr><tr><td colspan="2" align="center" style="padding:40px 0 30px 0;font-size:28px;font-weight:bold;font-family:Arial,sans-serif;color:white"><h2>' + acceptEmail.subject + '</h2></td></tr></table></td></tr><tr><td bgcolor="#ffffff" style="padding:40px 30px 40px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="color:#153643;font-family:Arial,sans-serif;">' + body + '</td></tr></table></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/pay/' + sub._id + '" style="background-color:#f5bbbc;border:transparent;border-radius:0;padding:14px 50px;color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:3px;text-decoration:none;margin:30px 0;" class="btn btn-enter">Get promoted</a></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/login" style="color:#f5d3b5">Artist Tools</a></td></tr></table></td></tr></table></td></tr></table>';
-              sendEmail(sub.name, sub.email, "Artists Unlimited", "coayscue@artistsunlimited.com", acceptEmail.subject, emailBody);
+              var body = formatForEmail(acceptEmail.body, sub);
+              var subject = formatForEmail(acceptEmail.subject, sub);
+              var emailBody = '<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:0"><table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse"><tr><td><table border="0" cellpadding="0" cellspacing="0" width="100%" style="background:url(' + 'https://artistsunlimited.com' + '/assets/images/fade-background.png) no-repeat;color:white;background-size:cover;background-position:center;"><tr><td align="left" style="padding:20px" width="50%"><a href="https://artistsunlimited.com"><img src="' + 'https://artistsunlimited.com' + '/assets/images/logo-white.png" height="45" style="height:45px" alt="AU"/></a></td><td align="right" style="font-size:22px;color:white;font-weight:bold;padding:20px" width="50%">Artists <br/>Unlimited</td></tr><tr><td colspan="2" align="center" style="padding:40px 0 30px 0;font-size:28px;font-weight:bold;font-family:Arial,sans-serif;color:white"><h2>' + 'Your Submission Was Accepted' + '</h2></td></tr></table></td></tr><tr><td bgcolor="#ffffff" style="padding:40px 30px 40px 30px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td style="color:#153643;font-family:Arial,sans-serif;">' + body + '</td></tr></table></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/pay/' + sub._id + '" style="background-color:#f5bbbc;border:transparent;border-radius:0;padding:14px 50px;color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:3px;text-decoration:none;margin:30px 0;" class="btn btn-enter">Get promoted</a></td></tr><tr><td align="center" width="100%" style="padding:30px 30px 50px 30px"><a href="' + rootURL + '/login" style="color:#f5d3b5">Artist Tools</a></td></tr></table></td></tr></table></td></tr></table>';
+              sendEmail(sub.name, sub.email, "Artists Unlimited", "coayscue@artistsunlimited.com", subject, emailBody);
               res.send(sub);
             }).then(null, next);
         })
@@ -332,6 +323,10 @@ router.put('/save', function(req, res, next) {
     }
   }
 });
+
+function formatForEmail(item, sub) {
+  return item.replace('{TRACK_TITLE_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.title + '</a>').replace('{TRACK_TITLE}', sub.title).replace('{SUBMITTERS_EMAIL}', sub.email).replace('{SUBMITTERS_NAME}', sub.name).replace('{TRACK_ARTIST_WITH_LINK}', '<a href="' + sub.trackArtistURL + '">' + sub.trackArtist + '</a>').replace('{TRACK_ARTIST}', sub.trackArtist).replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username).replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', '<a href="' + sub.userID.soundcloud.permalinkURL + '">' + sub.userID.soundcloud.username + '</a>').replace('{TRACK_ARTWORK}', '<img src="' + sub.artworkURL + '" style="width:200px; height: 200px"/>').replace('{ACCEPTED_CHANNEL_LIST}', sub.nameString).replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', sub.nameStringWithLink).replace('{TODAYSDATE}', new Date().toLocaleDateString()).replace(/\n/g, "<br>");
+}
 
 router.delete('/decline/:subID/:password', function(req, res, next) {
   if (!req.user.role == 'admin') {
@@ -347,42 +342,15 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
             }
           })
           .then(function(channels) {
-            var nameString = "";
-            var nameStringWithLink = "";
-            channels.forEach(function(cha, index) {
-              var addString = cha.soundcloud.username;
-              var addStringWithLink = "<a href='" + cha.soundcloud.permalinkURL + "'>" + cha.soundcloud.username + "</a>";
-              if (index == channels.length - 1) {
-                if (channels.length > 1) {
-                  addString = "and " + addString;
-                  addStringWithLink = "and " + addStringWithLink;
-                }
-              } else {
-                addString += ", ";
-                addStringWithLink += ", ";
-              }
-              nameString += addString;
-              nameStringWithLink += addStringWithLink;
-            });
             var declineEmail = {};
             if (req.user.repostCustomizeEmails && req.user.repostCustomizeEmails.length > 0) {
               declineEmail = req.user.repostCustomizeEmails[0].decline;
             }
-            var body = declineEmail.body;
-            body = body.replace('{NAME}', sub.name);
-            body = body.replace('{TRACK_TITLE_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.title + '</a>');
-            body = body.replace('{TRACK_TITLE}', sub.title);
-            body = body.replace('{TRACK_ARTIST_WITH_LINK}', '<a href="' + sub.trackURL + '">' + sub.name + '</a>');
-            body = body.replace('{TRACK_ARTIST}', sub.name);
-            body = body.replace('{SUBMITTERS_EMAIL}', sub.email);
-            body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
-            body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', '<a href="' + sub.userID.soundcloud.permalinkURL + '">' + sub.userID.soundcloud.username + '</a>');
-            body = body.replace('{TRACK_ARTWORK}', '<img src="' + sub.track_art_url + '" style="width:200px; height: 200px"/>');
-            body = body.replace('{ACCEPTEDCHANNELLIST}', nameString);
-            body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', nameStringWithLink);
-            body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
-            body = body.replace(/\n/g, "<br />");
-            sendEmail(sub.name, sub.email, "Artists Unlimited", "coayscue@artistsunlimited.com", declineEmail.subject, body);
+            sub.nameStringWithLink = ""
+            sub.nameString = "";
+            var body = formatForEmail(declineEmail.body, sub);
+            var subject = formatForEmail(declineEmail.subject, sub);
+            sendEmail(sub.name, sub.email, "Artists Unlimited", "coayscue@artistsunlimited.com", subject, body);
             res.send(sub);
           });
       })
@@ -553,11 +521,11 @@ router.put('/completedPayment', function(req, res, next) {
       })
       sub.save();
       User.findOne({
-        'soundcloud.id': events[0].userID
+        'soundcloud.id': events[0].event.userID
       }).then(function(user) {
-        res.send({
+        res.json({
           username: user.soundcloud.username,
-          title: events[0].title
+          title: events[0].event.pseudoname
         });
       }).then(null, next)
     })

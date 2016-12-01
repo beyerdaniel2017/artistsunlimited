@@ -84,10 +84,10 @@
                 <div class="acceptance">
                   <div class="channel-check">
                     <div class="channel-masege">
-                      <input type="text" ng-model="custom.acceptance.subject" placeholder="Subject..." class="acceptance-input">
+                      <input type="text" ng-model="custom.acceptance.subject" placeholder="Subject" class="acceptance-input repAcceptSubject{{$index}}" ng-click="addEventClass($index,'repAcceptSubject');" index="{{$index}}">
                     </div>
                     <div class="check-list">
-                      <textarea ng-model="custom.acceptance.body" index="{{$index}}" ng-click="addEventClass($index,'acceptancebox');" class="acceptance-textareas acceptancebox"></textarea>
+                      <textarea ng-model="custom.acceptance.body" index="{{$index}}" ng-click="addEventClass($index,'repAcceptbox');" class="acceptance-textareas repAcceptbox{{$index}}"></textarea>
                     </div>
                   </div>
                 </div>
@@ -102,10 +102,10 @@
                 <div class="acceptance">
                   <div class="channel-check">
                     <div class="channel-masege">
-                      <input type="text" placeholder="Subject..." ng-model="custom.decline.subject" class="acceptance-input">
+                      <input type="text" placeholder="Subject" ng-model="custom.decline.subject" class="acceptance-input repDeclineSubject{{$index}}" ng-click="addEventClass($index,'repDeclineSubject');" index="{{$index}}">
                     </div>
                     <div class="check-list">
-                      <textarea ng-model="custom.decline.body" index="{{$index}}" ng-click="addEventClass($index,'declinebox');" class="acceptance-textareas declinebox">
+                      <textarea ng-model="custom.decline.body" index="{{$index}}" ng-click="addEventClass($index,'repDeclinebox');" class="acceptance-textareas repDeclinebox{{$index}}">
                       </textarea>
                     </div>
                   </div>
@@ -119,7 +119,7 @@
             <div class="col-md-12">
               <div class="button-list text-center">
                 <input ng-repeat="btn in stepButton " type="button" name="{{btn.name}}" class="btn btn-border b-radius-10 organize-btn" style="margin-left:5px;" value="{{btn.name}}" 
-                ng-click="appendBody(btn,'repost')">
+                ng-click="appendBody(btn, 'repost')">
               </div>
             </div>
           </div>
@@ -145,10 +145,10 @@
                 <div class="acceptance">
                   <div class="channel-check">
                     <div class="channel-masege">
-                      <input type="text" ng-model="custom.acceptance.subject" placeholder="Subject..." class="acceptance-input">
+                      <input type="text" ng-model="custom.acceptance.subject" placeholder="Subject" class="acceptance-input premAcceptSubject{{$index}}" ng-click="addEventClass($index,'premAcceptSubject');" index="{{$index}}">
                     </div>
                     <div class="check-list">
-                      <textarea ng-model="custom.acceptance.body" index="{{$index}}" ng-click="addEventClass($index,'acceptancebox');" class="acceptance-textareas acceptancebox"></textarea>
+                      <textarea ng-model="custom.acceptance.body" class="acceptance-textareas premAcceptbox{{$index}}" ng-click="addEventClass($index,'premAcceptbox');" index="{{$index}}"></textarea>
                     </div>
                   </div>
                 </div>
@@ -163,10 +163,10 @@
                 <div class="acceptance">
                   <div class="channel-check">
                     <div class="channel-masege">
-                      <input type="text" placeholder="Subject..." ng-model="custom.decline.subject" class="acceptance-input">
+                      <input type="text" placeholder="Subject" ng-model="custom.decline.subject" class="acceptance-input premDeclineSubject{{$index}}" ng-click="addEventClass($index,'premDeclineSubject');" index="{{$index}}">
                     </div>
                     <div class="check-list">
-                      <textarea ng-model="custom.decline.body" index="{{$index}}" ng-click="addEventClass($index,'declinebox');" class="acceptance-textareas declinebox">
+                      <textarea ng-model="custom.decline.body" index="{{$index}}" ng-click="addEventClass($index,'declinebox');" class="acceptance-textareas premDeclinebox{{$index}}" ng-click="addEventClass($index,'premDeclinebox');" index="{{$index}}">
                       </textarea>
                     </div>
                   </div>
@@ -179,7 +179,7 @@
           <div class="">
             <div class="col-md-12">
               <div class="button-list text-center">
-                <input ng-repeat="btn in stepButton " type="button" name="{{btn.name}}" class="btn btn-border b-radius-10 organize-btn" style="margin-left:5px;" value="{{btn.name}}" ng-click="appendBody(btn,'premier')">
+                <input ng-repeat="btn in stepButton " type="button" name="{{btn.name}}" class="btn btn-border b-radius-10 organize-btn" style="margin-left:5px;" value="{{btn.name}}" ng-click="appendBody(btn, 'premier')">
               </div>
             </div>
           </div>

@@ -37,7 +37,7 @@ router.get('/forUser/:id', function(req, res, next) {
     .then(null, next);
 })
 
-router.get('/repostEvent/:username/:trackTitle', function(req, res, next) {
+router.get('/repostEvent/:username/:trackTitle/:paid', function(req, res, next) {
   var data = [];
   User.findOne({
       'soundcloud.pseudoname': req.params.username
@@ -56,23 +56,32 @@ router.get('/repostEvent/:username/:trackTitle', function(req, res, next) {
               pseudoname: req.params.trackTitle
             })
             .then(function(event) {
+
               if (event && event.trackID) {
                 var lowDate = new Date((new Date()).getTime() - 24 * 7 * 3600000)
-                RepostEvent.find({
-                    trackID: event.trackID,
-                    day: {
-                      $gt: lowDate
-                    },
-                    $or: [{
-                      userID: {
-                        $in: networkUserIds
-                      }
-                    }, {
-                      owner: {
-                        $in: networkDocIds
-                      }
-                    }]
-                  })
+                var query = {
+                  trackID: event.trackID,
+                  day: {
+                    $gt: lowDate
+                  },
+                  $or: [{
+                    userID: {
+                      $in: networkUserIds
+                    }
+                  }, {
+                    owner: {
+                      $in: networkDocIds
+                    }
+                  }]
+                }
+                if (req.params.paid == 'true') query = {
+                  type: "paid",
+                  trackID: event.trackID,
+                  day: {
+                    $gt: lowDate
+                  }
+                }
+                RepostEvent.find(query)
                   .then(function(tracks) {
                     tracks.forEach(function(track) {
                       User.findOne({
@@ -139,47 +148,6 @@ function getUserNetwork(userID) {
       }).then(null, reject);
   })
 }
-
-router.get('/repostEvent/getPaidReposts/:username/:trackTitle', function(req, res, next) {
-  var data = [];
-  User.findOne({
-      'soundcloud.pseudoname': req.params.username
-    })
-    .then(function(user) {
-      console.log(user)
-      return RepostEvent.findOne({
-        userID: user.soundcloud.id,
-        pseudoname: req.params.trackTitle
-      })
-    })
-    .then(function(event) {
-      var lowDate = new Date((new Date()).getTime() - 24 * 7 * 3600000)
-      return RepostEvent.find({
-        trackID: event.trackID,
-        day: {
-          $gt: lowDate
-        },
-        type: 'paid'
-      })
-    })
-    .then(function(tracks) {
-      tracks.forEach(function(track) {
-        User.findOne({
-            'soundcloud.id': track.userID
-          })
-          .then(function(user) {
-            var result = {
-              trackInfo: track,
-              userInfo: user.soundcloud
-            }
-            data.push(result);
-            if (data.length == tracks.length) {
-              res.send(data);
-            }
-          }).then(null, next);
-      })
-    }).then(null, next);
-})
 
 /*Get Repost events for List*/
 router.get('/listEvents/:id', function(req, res, next) {

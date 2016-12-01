@@ -30,14 +30,17 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.uniqueGroup = [];
   $scope.paidRepostAccounts = [];
   $scope.dynamicButton = [{
+    "name": "SUBMITTER'S NAME",
+    "appendText": " {SUBMITTERS_NAME} "
+  }, {
+    "name": "SUBMITTER'S EMAIL",
+    "appendText": " {SUBMITTERS_EMAIL} "
+  }, {
     "name": "TRACK TITLE",
     "appendText": " {TRACK_TITLE} "
   }, {
     "name": "TRACK TITLE W/ LINK",
     "appendText": " {TRACK_TITLE_WITH_LINK} "
-  }, {
-    "name": "TODAYS DATE",
-    "appendText": " {TODAYSDATE} "
   }, {
     "name": "TRACK ARTIST",
     "appendText": " {TRACK_ARTIST} "
@@ -45,17 +48,8 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     "name": "TRACK ARTIST W/ LINK",
     "appendText": " {TRACK_ARTIST_WITH_LINK} "
   }, {
-    "name": "TRACK ARTWORK",
-    "appendText": " {TRACK_ARTWORK} "
-  }, {
-    "name": "SUBMITTERS EMAIL",
-    "appendText": " {SUBMITTERS_EMAIL} "
-  }, {
-    "name": "ACCEPTED CHANNEL LIST",
-    "appendText": " {ACCEPTED_CHANNEL_LIST} "
-  }, {
-    "name": "ACCEPTED CHANNEL LIST W/ LINK",
-    "appendText": " {ACCEPTED_CHANNEL_LIST_WITH_LINK} "
+    "name": "TODAYS DATE",
+    "appendText": " {TODAYSDATE} "
   }, {
     "name": "SUBMITTED TO ACCOUNT NAME",
     "appendText": " {SUBMITTED_TO_ACCOUNT_NAME} "
@@ -102,23 +96,20 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.testEmail = function(email) {
+    console.log(email);
     $scope.showTestEmailModal = false;
     $('#emailModal').modal('hide');
     var subject = $scope.customEmailButtons[$scope.emailIndex].subject;
     var body = $scope.customEmailButtons[$scope.emailIndex].emailBody;
-    body = body.replace('{SUBMITTERS_EMAIL}', email);
-    body = body.replace('{TRACK_TITLE_WITH_LINK}', "Oliver Nelson ft. Kaleem Taylor - Ain't A Thing" + ' (https://soundcloud.com/olivernelson/oliver-nelson-ft-kaleem-taylor-aint-a-thing-3)');
-    body = body.replace('{TRACK_TITLE}', "Oliver Nelson ft. Kaleem Taylor - Ain't A Thing");
-    body = body.replace('{TRACK_ARTIST_WITH_LINK}', "Oliver Nelson" + ' (https://soundcloud.com/olivernelson)');
-    body = body.replace('{TRACK_ARTIST}', "Jhonny Submitter");
-    body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', "La Tropical");
-    body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', "La Tropical" + ' (https://soundcloud.com/latropical)');
-    body = body.replace('{ACCEPTED_CHANNEL_LIST}', "La Tropical, Etiquette Noir and Le Sol");
-    body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', "La Tropical(https://soundcloud.com/latropical),Etiquette Noir(https://soundcloud.com/etiquettenoir),Le Sol(https://soundcloud.com/lesolmusique)");
-    body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
+    body = formatForTestEmail(body, email);
+    subject = formatForTestEmail(subject, email);
     $window.open("mailto:" + email + "?body=" + body + "&subject=" + subject, "_self");
-
   }
+
+  function formatForTestEmail(item, email) {
+    return encodeURIComponent(item.replace(/{SUBMITTERS_EMAIL}/g, email).replace(/{SUBMITTERS_NAME}/g, "Johnny Submitter").replace(/{TRACK_TITLE_WITH_LINK}/g, "Oliver Nelson ft. Kaleem Taylor - Ain't A Thing" + ' (https://soundcloud.com/olivernelson/oliver-nelson-ft-kaleem-taylor-aint-a-thing-3)').replace(/{TRACK_TITLE}/g, "Oliver Nelson ft. Kaleem Taylor - Ain't A Thing").replace(/{TRACK_ARTIST_WITH_LINK}/g, "Oliver Nelson" + ' (https://soundcloud.com/olivernelson)').replace(/{TRACK_ARTIST}/g, "Oliver Nelson").replace(/{SUBMITTED_TO_ACCOUNT_NAME}/g, "La Tropical").replace(/{SUBMITTED_ACCOUNT_NAME_WITH_LINK}/g, 'La Tropical (https://soundcloud.com/latropical)').replace('{TODAYSDATE}', new Date().toLocaleDateString()));
+  }
+
   $scope.getSubmissionsByGenre = function() {
     $scope.showingElements = [];
     $scope.skip = 0;
@@ -160,8 +151,8 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
               auto_play: false,
               show_artwork: true
             });
-          }, 50)
-        });
+          });
+        }, 50)
       })
       .then(null, function(err) {
         $scope.processing = false;
@@ -311,7 +302,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
         $scope.selectedGroupChannelIDS.push(cid);
       }
     });
-    submi.pooledChannelIDS = $scope.selectedGroupChannelIDS;
+    submi.pooledChannelIDS = submi.pooledChannelIDS.concat($scope.selectedGroupChannelIDS);
     delete submi.selectedGroups;
     delete submi.selectedChannelIDS;
     delete submi.selectedChannelName;
@@ -357,29 +348,14 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.openEmailClient = function(sub, item) {
-    var toEmail = (item.toEmail == '{email}' ? sub.email : item.toEmail);
-    var subject = (item.subject != undefined ? item.subject : "");
-    if (subject != "") {
-      subject = subject.replace('{title}', sub.title);
-      subject = subject.replace('{name}', sub.name);
-      subject = subject.replace('{url}', sub.trackURL);
-    }
-    var body = (item.emailBody != undefined ? item.emailBody : "");
-    if (body != "") {
-      body = body.replace('{SUBMITTERS_EMAIL}', toEmail);
-      body = body.replace('{TRACK_TITLE_WITH_LINK}', sub.title + ' (' + sub.trackURL + ')');
-      body = body.replace('{TRACK_TITLE}', sub.title);
-      body = body.replace('{TRACK_ARTIST_WITH_LINK}', sub.name + ' (' + sub.trackURL + ')');
-      body = body.replace('{TRACK_ARTIST}', sub.name);
-      body = body.replace('{SUBMITTED_TO_ACCOUNT_NAME}', sub.userID.soundcloud.username);
-      body = body.replace('{SUBMITTED_ACCOUNT_NAME_WITH_LINK}', sub.userID.soundcloud.username + ' (' + sub.userID.soundcloud.permalinkURL + ')');
-      body = body.replace('{ACCEPTED_CHANNEL_LIST}', "");
-      body = body.replace('{ACCEPTED_CHANNEL_LIST_WITH_LINK}', "");
-      body = body.replace('{TODAYSDATE}', new Date().toLocaleDateString());
-      //body = body.replace(/\n/g, "<br />");
-    }
-    var link = "mailto:" + toEmail + "?subject=" + escape(subject) + "&body=" + escape(body);
-    $window.location.href = link;
+    var toEmail = formatForEmailClient(item.toEmail, sub);
+    var subject = (item.subject != undefined ? formatForEmailClient(item.subject, sub) : "");
+    var body = (item.emailBody != undefined ? formatForEmailClient(item.emailBody, sub) : "");
+    $window.open("mailto:" + toEmail + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body));
+  }
+
+  function formatForEmailClient(text, sub) {
+    return text.replace(/{SUBMITTERS_EMAIL}/g, sub.email).replace(/{SUBMITTERS_NAME}/g, sub.name).replace(/{TRACK_TITLE_WITH_LINK}/g, sub.title + ' (' + sub.trackURL + ')').replace(/{TRACK_TITLE}/g, sub.title).replace(/{TRACK_ARTIST_WITH_LINK}/g, sub.trackArtist + ' (' + sub.trackArtistURL + ')').replace(/{TRACK_ARTIST}/g, sub.trackArtist).replace(/{SUBMITTED_TO_ACCOUNT_NAME}/g, sub.userID.soundcloud.username).replace(/{SUBMITTED_ACCOUNT_NAME_WITH_LINK}/g, sub.userID.soundcloud.username + ' (' + sub.userID.soundcloud.permalinkURL + ')').replace(/{TODAYSDATE}/g, new Date().toLocaleDateString());
   }
 
   $scope.getSubmissionByGenre = function() {
@@ -409,15 +385,16 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     var valid = true;
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     angular.forEach($scope.customEmailButtons, function(cb) {
-      if (cb.toEmail != "{email}") {
+      console.log(cb);
+      if (!cb.toEmail.includes("{SUBMITTERS_EMAIL}")) {
         var validEmail = re.test(cb.toEmail);
-        if (!validEmail) {
+        if (!validEmail || !cb.buttonText) {
           valid = false;
         }
       }
     });
     if (!valid) {
-      $.Zebra_Dialog('Please enter {email} or a well formatted email id in To Email field.');
+      $.Zebra_Dialog('Please enter {SUBMITTERS_EMAIL} or a well formatted email address in all To Email fields and a title for each button.');
       return;
     }
     $scope.processing = true;
@@ -446,8 +423,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.addEventClass = function(index, type) {
-    $('textarea').removeClass("selectedBox");
+    $('.selectedBox').removeClass("selectedBox");
     $("." + type + index).addClass("selectedBox");
+    console.log("." + type + index);
+    console.log($('.selectedBox'));
   }
 
   $scope.appendBody = function(btn) {
@@ -458,8 +437,9 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       var textBefore = v.substring(0, cursorPos);
       var textAfter = v.substring(cursorPos, v.length);
       var newtext = textBefore + btn.appendText + textAfter;
-      $scope.customEmailButtons[boxIndex].emailBody = newtext;
-      $('textarea').removeClass("selectedBox");
+      $('.selectedBox').val(newtext);
+      $('.selectedBox').trigger('input')
+      $('.selectedBox').removeClass("selectedBox");
     }
   }
 
@@ -502,43 +482,20 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.getPaidRepostAccounts();
   $scope.loadSubmissions();
   $scope.loadMarketSubmissions();
-});
 
-app.directive('countdown', [
-  'Util',
-  '$interval',
-  function(Util, $interval) {
-    return {
-      restrict: 'A',
-      scope: {
-        date: '@'
-      },
-      link: function(scope, element) {
-        var future;
-        future = new Date(scope.date);
-        $interval(function() {
-          var diff;
-          diff = Math.floor((future.getTime() - new Date().getTime()) / 1000);
-          return element.text(Util.dhms(diff));
-        }, 1000);
-      }
-    };
+  $scope.getDiffTimeText = function(date) {
+    var t = Math.floor((new Date(date).getTime() - new Date().getTime()) / 1000);
+    console.log(t);
+    var days, hours, minutes, seconds;
+    hours = (Math.floor(t / 3600));
+    console.log(hours);
+    t -= hours * 3600;
+    minutes = (Math.floor(t / 60));
+    console.log(minutes);
+
+    return [
+      hours + 'h',
+      minutes + 'm'
+    ].join(' ');
   }
-]).factory('Util', [function() {
-  return {
-    dhms: function(t) {
-      var days, hours, minutes, seconds;
-      //days = Math.floor(t / 86400);
-      //t = days * 86400;
-      hours = (Math.floor(t / 3600));
-      t -= hours * 3600;
-      minutes = (Math.floor(t / 60));
-      //t -= minutes * 60;
-      //seconds = t % 60;
-      return [
-        hours + 'h',
-        minutes + 'm'
-      ].join(' ');
-    }
-  };
-}]);
+});

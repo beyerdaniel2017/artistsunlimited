@@ -43,10 +43,16 @@ app.controller('AccountSubmitSongController', function($rootScope, $state, $scop
   $scope.searchString = "";
   $scope.showPlayer = false;
   $scope.choseTrack = function(track) {
+    console.log(track);
     $scope.searchString = track.title;
     $scope.submission.trackID = track.id;
     $scope.submission.title = track.title;
     $scope.submission.trackURL = track.permalink_url;
+    if (track.user) {
+      $scope.submission.trackArtist = track.user.username;
+      $scope.submission.trackArtistURL = track.user.permalink_url;
+    }
+    $scope.submission.artworkURL = track.artwork_url;
     var widget = SC.Widget('scPlayerCustom');
     widget.load($scope.submission.trackURL, {
       auto_play: false,
@@ -55,9 +61,13 @@ app.controller('AccountSubmitSongController', function($rootScope, $state, $scop
         if ($scope.submission.title == "--unknown--") {
           widget.getCurrentSound(function(track) {
             console.log(track);
+            $scope.searchString = track.title;
             $scope.submission.trackID = track.id;
             $scope.submission.title = track.title;
-            $scope.submission.trackURL = track.permalink_url
+            $scope.submission.trackURL = track.permalink_url;
+            $scope.submission.trackArtist = track.user.username;
+            $scope.submission.trackArtistURL = track.user.permalink_url;
+            $scope.submission.artworkURL = track.artwork_url;
           })
         }
       }
@@ -77,6 +87,9 @@ app.controller('AccountSubmitSongController', function($rootScope, $state, $scop
           name: $scope.submission.name,
           title: $scope.submission.title,
           trackURL: $scope.submission.trackURL,
+          trackArtist: $scope.submission.trackArtist,
+          trackArtistURL: $scope.submission.trackArtistURL,
+          artworkURL: $scope.submission.artworkURL,
           channelIDS: [],
           invoiceIDS: [],
           userID: userID.userid,

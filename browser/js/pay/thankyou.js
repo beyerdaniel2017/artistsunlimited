@@ -22,6 +22,7 @@ app.controller('ThankyouController', function($http, $scope, $location) {
       //     ev.date = new Date(ev.date);
       //   })
       // }
+      console.log(res.data);
       $scope.processing = false;
       window.location.href = location.origin + "/repostevents/" + res.data.username.replace(/ /g, '_') + "/" + res.data.title.replace(/ /g, '_') + "?paid=" + true;
     })

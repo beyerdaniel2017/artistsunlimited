@@ -71,6 +71,15 @@ var schema = new mongoose.Schema({
   ignoredBy: {
     type: Array,
     default: []
+  },
+  trackArtist: {
+    type: String
+  },
+  trackArtistURL: {
+    type: String
+  },
+  artworkURL: {
+    type: String
   }
 });
 

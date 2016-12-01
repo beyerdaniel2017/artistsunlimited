@@ -5,13 +5,8 @@ app.config(function($stateProvider) {
     controller: 'RepostEventsController',
     resolve: {
       repostEvent: function($http, $location, $stateParams) {
-        console.log($location.search());
-        var eventid = $location.search().id;
         var paid = $location.search().paid;
-        var url = '/api/events/repostEvent/' + $stateParams.username + '/' + $stateParams.trackTitle;
-        if (paid) {
-          url = '/api/events/repostEvent/getPaidReposts/' + $state.params.username + '/' + $state.params.trackTitle;
-        }
+        var url = '/api/events/repostEvent/' + $stateParams.username + '/' + $stateParams.trackTitle + '/' + paid;
         return $http.get(url)
           .then(function(res) {
             return res.data;
