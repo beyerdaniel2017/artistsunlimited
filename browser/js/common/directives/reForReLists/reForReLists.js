@@ -520,7 +520,7 @@ app.directive('reforrelists', function($http) {
         today.setDate(today.getDate() - 7);
         for (var i = 0; i < 29; i++) {
           var calDay = {};
-          calDay.day = new Date()
+          calDay.day = new Date(today);
           calDay.day.setDate(today.getDate() + i);
           var dayEvents = repostEvent.filter(function(ev) {
             return (new Date(ev.trackInfo.day).toLocaleDateString() == calDay.day.toLocaleDateString());

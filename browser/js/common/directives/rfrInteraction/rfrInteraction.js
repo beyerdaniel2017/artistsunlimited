@@ -518,7 +518,7 @@ app.directive('rfrinteraction', function($http) {
         var today = new Date();
         for (var i = 0; i < 50; i++) {
           var calDay = {};
-          calDay.day = new Date()
+          calDay.day = new Date(today);
           calDay.day.setDate(today.getDate() + i);
           var dayEvents = events.filter(function(ev) {
             return (ev.day.toLocaleDateString() == calDay.day.toLocaleDateString());
