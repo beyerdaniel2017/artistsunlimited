@@ -13,8 +13,8 @@ var rootURL = require('../../../env').ROOTURL;
 
 router.get('/unaccepted', function(req, res, next) {
   var genre = req.query.genre ? req.query.genre : undefined;
-  var skipcount = req.query.skip;
-  var limitcount = req.query.limit;
+  var skipcount = parseInt(req.query.skip);
+  var limitcount = parseInt(req.query.limit);
   var paidRepostIds = [];
   if (req.user.paidRepost.length > 0) {
     req.user.paidRepost.forEach(function(acc) {
@@ -46,6 +46,7 @@ router.get('/unaccepted', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
+
   parseMultiPart()
     .then(uploadToBucket)
     .then(saveToDB)
@@ -95,6 +96,7 @@ router.post('/', function(req, res, next) {
         body.fields[fieldname] = val;
       });
       busboy.on('finish', function() {
+        console.log('finished')
         resolve();
       });
 
@@ -107,6 +109,12 @@ router.post('/', function(req, res, next) {
 
   function uploadToBucket() {
     return new Promise(function(resolve, reject) {
+      console.log(body.file);
+      if (!body.file.buffer) {
+        resolve({
+          Location: undefined
+        })
+      }
       AWS.config.update({
         accessKeyId: awsConfig.accessKeyId,
         secretAccessKey: awsConfig.secretAccessKey,
@@ -133,35 +141,21 @@ router.post('/', function(req, res, next) {
   }
 
   function saveToDB(data) {
-
+    console.log(data);
+    console.log(body);
     var newPremierSubmission = new PremierSubmission({
       userID: body.fields.userID,
       s3URL: data.Location,
       genre: body.fields.genre,
       email: body.fields.email,
       name: body.fields.name,
-      comment: body.fields.comment
+      comment: body.fields.comment,
+      trackLink: body.fields.trackLink
     });
     return newPremierSubmission.save();
   }
 
   function mailData() {
-    // var attachments = [{
-    //   'type': body.file.mimetype,
-    //   'name': body.file.newfilename,
-    //   'content': body.file.buffer.toString('base64')
-    // }];
-    // var email_body = '<b>Sender Comment: </b> ' +
-    //   body.fields.comment +
-    //   '<br />' +
-    //   '<br />' +
-    //   '<b>Sender Name: </b> ' +
-    //   body.fields.name +
-    //   '<br />' +
-    //   '<br />' +
-    //   '<b>Sender Email: </b> ' +
-    //   body.fields.email;
-    // sendEmail('Edward', 'edward@peninsulamgmt.com', 'Artists Unlimited', 'coayscue@artistsunlimited.com', 'Premier Submission', email_body, attachments);
     return res.end();
   }
 
@@ -172,10 +166,10 @@ router.post('/', function(req, res, next) {
 
 router.put('/accept', function(req, res, next) {
   PremierSubmission.findByIdAndUpdate(req.body.submi._id, req.body.submi, {
-    new: true
-  })
+      new: true
+    })
+    .then(function(sub) {
 
-  .then(function(sub) {
       res.send(sub);
     })
     .then(null, next);
@@ -183,10 +177,9 @@ router.put('/accept', function(req, res, next) {
 
 router.put('/decline', function(req, res, next) {
   PremierSubmission.findOneAndRemove({
-    _id: req.body.submission._id
-  })
-
-  .then(function(sub) {
+      _id: req.body.submission._id
+    })
+    .then(function(sub) {
       sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting <a href='" + sub.s3URL + "'>your track</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.<br><br> We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
       res.send(sub);
     })

@@ -418,6 +418,11 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     });
   }
 
+  $http.get('/api/submissions/counts')
+    .then(function(res) {
+      $scope.counts = res.data
+    })
+
   $scope.removeItem = function(index) {
     $scope.customEmailButtons.splice(index, 1);
   }

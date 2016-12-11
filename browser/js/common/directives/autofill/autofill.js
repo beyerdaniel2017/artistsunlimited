@@ -69,6 +69,10 @@ app.directive('autofill', function($http) {
                   }
                 }
                 loadTrack(trackID, index);
+              } else if (err.status == 404) {
+                $scope.user.queue.splice(index, 1);
+                $scope.saveUser()
+                $scope.loadQueueSongs();
               }
             }).then(null, console.log);
         });
@@ -77,7 +81,6 @@ app.directive('autofill', function($http) {
         $scope.loadQueueSongs();
         $scope.alreadyLoaded == true;
       }
-
       $scope.choseAutoFillTrack = function(track) {
         $scope.newQueueID = track.id;
         $scope.addSong();

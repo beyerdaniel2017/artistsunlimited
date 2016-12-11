@@ -349,7 +349,7 @@ app.directive('channelsettings', function($http) {
 									scInfo.price = 1;
 									$scope.AccountsStepData.submissionData = res.data.user.soundcloud;
 									$scope.AccountsStepData.submissionData.userID = res.data.user._id;
-									var username = res.data.user.soundcloud.username.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
+									var username = res.data.user.soundcloud.permalinkURL.substring(res.data.user.soundcloud.permalinkURL.indexOf('.com/') + 5)
 									var url = window.location.origin + '/' + username + '/submit';
 									var premierurl = window.location.origin + '/' + username + '/premiere';
 									AccountSettingServices.checkUsercount({

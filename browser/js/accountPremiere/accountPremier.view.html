@@ -61,7 +61,7 @@
           <br>
           <div class="row">
             <div class="col-sm-6 col-sm-offset-3">
-              <input class="form-control" type="file" accept="All" fileread="premierObj.file" message="message" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
+              <input class="form-control" type="file" accept="All" fileread="premierObj.file" message="message" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}"/>
             </div>
           </div>
             <!-- <br>
@@ -72,6 +72,12 @@
                 </select>
               </div>
             </div> -->
+            <br>
+            <div class="row">
+              <div class="col-sm-6 col-sm-offset-3">
+                <input type="text" placeholder="Link to track" ng-model="premierObj.trackLink" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
+              </div>
+            </div>
             <br>
             <div class="row">
               <div class="col-sm-6 col-sm-offset-3">

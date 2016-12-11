@@ -3,7 +3,6 @@ var Submission = mongoose.model('Submission');
 var sendEmail = require('../../mandrill/sendEmail.js');
 var rootURL = require('../../../env').ROOTURL;
 
-
 module.exports = doPoolSent;
 //executes every 5 min
 function doPoolSent() {

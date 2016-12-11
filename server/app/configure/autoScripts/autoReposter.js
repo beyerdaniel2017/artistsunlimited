@@ -73,7 +73,6 @@ function repostAndRemove(event, user, repCount) {
         event.completed = true;
         event.save().then(function(event) {
           if (event.name && event.email) {
-            // performStatBoosts(user, event.trackID);
             distributeEarnings(user, event);
           }
           notificationCenter.sendNotifications(user._id, 'trackRepost', 'Track repost', ((!!event.title) ? event.title : 'A track') + ' was reposted on ' + user.soundcloud.username, 'https://artistsunlimited.com/artistTools/scheduler');
@@ -123,7 +122,7 @@ function repostAndRemove(event, user, repCount) {
                     'payment.transactions.related_resources.sale.id': ev.saleID
                   }]
                 }).then(function(submission) {
-                  sendEmail(ev.name, ev.email, "AU Server", "coayscue@artistsunlimited.com", "Failed Repost reschedule and refund", "Hi " + ev.name + ",<br><br>There was an error reposting " + ev.title + " on " + user.soundcloud.username + ". <br><br>We will refund you the price of the repost, $" + ev.price + ", on " + (new Date(submission.refundDate)).toLocaleDateString() + " and we have rescheduled the track to be reposted on " + user.soundcloud.username + " on " + ev.day.toLocaleDateString() + ".<br><br>Sorry for the inconvenience and thank you for your patience.<br><br>-<a href='https://artistsunlimited.com'>Artists Unlimited</a>");
+                  sendEmail(ev.name, ev.email, "Artists Unlimited", "coayscue@artistsunlimited.com", "Failed Repost reschedule and refund", "Hi " + ev.name + ",<br><br>There was an error reposting " + ev.title + " on " + user.soundcloud.username + ". <br><br>We will refund you the price of the repost, $" + ev.price + ", on " + (new Date(submission.refundDate)).toLocaleDateString() + " and we have rescheduled the track to be reposted on " + user.soundcloud.username + " on " + ev.day.toLocaleDateString() + ".<br><br>Sorry for the inconvenience and thank you for your patience.<br><br>-<a href='https://artistsunlimited.com'>Artists Unlimited</a>");
                 }).then(null, console.log)
               }).then(null, console.log);
             event.remove();
@@ -140,31 +139,6 @@ function repostAndRemove(event, user, repCount) {
     });
   }).then(null, console.log)
 }
-
-// /*Update Message*/
-// function putMessage(event, user, message) {
-//   var query = {
-//     $or: [{
-//       'p2.user': user._id,
-//       'p1.user': event.owner
-//     }, {
-//       'p2.user': event.owner,
-//       'p1.user': user._id
-//     }]
-//   };
-//   Trade.update(query, {
-//       $addToSet: {
-//         messages: message
-//       }
-//     })
-//     
-//     .then(function(data) {
-//       //Success
-//     })
-//     .then(null, function(error) {
-//       //Error
-//     });
-// }
 
 function getID(event, user) {
   return new Promise(function(resolve, reject) {
@@ -221,29 +195,6 @@ function getID(event, user) {
     }
   })
 }
-
-
-// function sendMessage(err, event, user) {
-//   if (err) {
-//     if (event.email && event.name) {
-
-//       // sendEmail("CHRISTIAN", "coayscue@artistsunlimited.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
-//       // sendEmail("EDWARD", "edward@peninsulamgmt.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
-//       // sendEmail("PENINSULA", "latropicalofficial@gmail.com", "AU Server", "coayscue@artistsunlimited.com", "PAID REPOST ERROR", "-----------------<br>Error with paid repost: " + ((typeof err) == 'object' ? JSON.stringify(err) : err) + "<br><br>-----------------<br><br>  Repost Event: " + JSON.stringify(event) + "<br><br>on<br><br>User: " + user.soundcloud.username);
-//     } else {
-//       User.findById(event.owner)
-//         .then(function(owner) {
-//           // sendEmail(user.soundcloud.username, user.email, "Artists Unlimited", "coayscue@artistsunlimited.com", "ERROR REPOSTING TRACK!", "Hey " + user.soundcloud.username + ",<br><br>There was an error reposting a track!<br><br>Type: " + event.type + (!event.trackID ? " - autofill" : "") + (!!owner ? "<br>Owner: <a href=" + owner.soundcloud.permalinkURL + ">" + owner.soundcloud.username + "</a>" : "") + (!!event.title ? "<br>Title: " + event.title : "") + (!!event.trackURL ? "<br>URL: " + event.trackURL : "") + "<br><br>The issue is likely that your access token has expired. Simply log back into <a href='https://artistsunlimited.com/login'>Artist Tools</a> to fix this.<br><br><br><br>Error: " + ((typeof err) == 'object' ? JSON.stringify(err) : err));
-//           // sendEmail("Peninsula", "latropicalofficial@gmail.com", "Artists Unlimited", "coayscue@artistsunlimited.com", "ERROR REPOSTING TRACK!", "Hey " + user.soundcloud.username + ",<br><br>There was an error reposting a track!<br><br>Type: " + event.type + (!event.trackID ? " - autofill" : "") + (!!owner ? "<br>Owner: <a href=" + owner.soundcloud.permalinkURL + ">" + owner.soundcloud.username + "</a>" : "") + (!!event.title ? "<br>Title: " + event.title : "") + (!!event.trackURL ? "<br>URL: " + event.trackURL : "") + "<br><br>The issue is likely that your access token has expired. Simply log back into <a href='https://artistsunlimited.com/login'>Artist Tools</a> to fix this.<br><br><br><br>Error: " + ((typeof err) == 'object' ? JSON.stringify(err) : err));
-//           // sendEmail("Christian", "coayscue@gmail.com", "Artists Unlimited", "coayscue@artistsunlimited.com", "ERROR REPOSTING TRACK!", "Hey " + user.soundcloud.username + ",<br><br>There was an error reposting a track!<br><br>Type: " + event.type + (!event.trackID ? " - autofill" : "") + (!!owner ? "<br>Owner: <a href=" + owner.soundcloud.permalinkURL + ">" + owner.soundcloud.username + "</a>" : "") + (!!event.title ? "<br>Title: " + event.title : "") + (!!event.trackURL ? "<br>URL: " + event.trackURL : "") + "<br><br>The issue is likely that your access token has expired. Simply log back into <a href='https://artistsunlimited.com/login'>Artist Tools</a> to fix this.<br><br><br><br>Error: " + ((typeof err) == 'object' ? JSON.stringify(err) : err));
-//         });
-//     }
-//   } else {
-//     // if (event.email && event.name) {
-//     //   sendEmail(event.name, event.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + event.name + ",<br><br>We would just like to let you know the track <a href='" + event.trackURL + "'>" + event.title + "</a> has been reposted on <a href='" + user.soundcloud.permalinkURL + "'>" + user.soundcloud.username + "</a>! If you would like to do another round of reposts please resubmit your track to artistsunlimited.com/submit. We will get back to you ASAP and continue to do our best in making our submission process as quick and easy as possible.<br><br>How was this experience by the way? Feel free to email some feedback, suggestions or just positive reviews to feedback@peninsulamgmt.com.<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
-//     // }
-//   }
-// }
 
 function postComment(event, user) {
   scWrapper.request({
@@ -330,11 +281,13 @@ function distributeEarnings(user, event) {
         'pooledPayment.transactions.related_resources.sale.id': event.saleID
       }).then(function(submission) {
         if (submission) {
-          User.findOne({
-            "paidRepost.userID": submission.userID
-          }).then(function(originalAdminUser) {
-            return paypalCalls.sendPayout(originalAdminUser.paypal_email, (event.price * 0.2).toFixed(2), "Repost on " + user.soundcloud.username + ".", event._id)
-          }).then(console.log, console.log);
+          if (submission.userID) {
+            User.findOne({
+              "paidRepost.userID": submission.userID
+            }).then(function(originalAdminUser) {
+              return paypalCalls.sendPayout(originalAdminUser.paypal_email, (event.price * 0.2).toFixed(2), "Repost on " + user.soundcloud.username + ".", event._id)
+            }).then(console.log, console.log);
+          }
           adminUser.cut -= 0.1;
         }
         return paypalCalls.sendPayout(adminUser.paypal_email, (event.price * adminUser.cut).toFixed(2), "Repost on " + user.soundcloud.username + ".", event._id)

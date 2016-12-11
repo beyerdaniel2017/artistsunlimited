@@ -172,11 +172,11 @@
                     <ul>
                       <li class="text-left"  ng-repeat="comment in user.repostSettings.schedule.comments track by $index">
                         <span class="comment-view">{{comment}}</span>
-                        <span class="pull-right" ng-click="editComments(comment,'schedule',$index)">Edit</span></li>
+                        <span class="pull-right" style="cursor:pointer" ng-click="editComments(comment,'schedule',$index)">Edit</span></li>
                       </ul>
                     </div>
                     <br>
-                    <button type="button" class="btn payed-reposts-btn pull-right" data-toggle="modal" data-target="#scheduleCommentModal" ng-click="scheduleCommentIndex=undefined">+ COMMENT</button>
+                    <button type="button" class="btn payed-reposts-btn pull-right" data-toggle="modal" data-target="#scheduleCommentModal" ng-click="scheduleCommentIndex=undefined; scheduleComment=undefined">Add Comment</button>
                   </div>                           
                 </div>
                 <div class="col-md-4 text-center"> 
@@ -196,11 +196,15 @@
                     </li>                           
                     <div class="payed-reposts-list" ng-if="user.repostSettings.trade.comments.length">
                       <ul>
-                        <li class="text-left" ng-repeat="comment in user.repostSettings.trade.comments track by $index"><span class="comment-view">{{comment}}</span><span class="pull-right" ng-click="editComments(comment, 'trade',$index)">Edit</span></li>
+                        <li class="text-left" ng-repeat="comment in user.repostSettings.trade.comments track by $index">
+                          <span class="comment-view">{{comment}}</span>
+                          <span class="pull-right" style="cursor:pointer" ng-click="editComments(comment, 'trade',$index)">Edit</span>
+                        </li>
                       </ul>
                     </div>
                     <br>
-                    <button type="button" class="btn payed-reposts-btn pull-right" data-toggle="modal" data-target="#tradeCommentModal" ng-click="scheduleCommentIndex=undefined">+ COMMENT</button>
+                    <button type="button" class="btn payed-reposts-btn pull-right" data-toggle="modal" data-target="#tradeCommentModal" ng-click="scheduleCommentIndex=undefined;
+                    tradeComment=undefined;">Add Comment</button>
                   </div>                           
                 </div>                         
               </div><!--row ::end-->                
@@ -507,13 +511,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Schedule Comment Box</h4>
+        <h4 class="modal-title">Schedule Comment</h4>
       </div>
       <div class="modal-body">
         <textarea class="form-control" type="text" ng-model="scheduleComment" rows="4"  placeholder="Enter new comment"></textarea>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-default" ng-if="scheduleCommentIndex!=undefined" data-dismiss="modal" ng-click="deleteComment(scheduleCommentIndex,'schedule')">Delete</button>
         <button type="button" class="btn btn-pink" data-dismiss="modal" ng-click="saveComments(scheduleComment,'schedule',scheduleCommentIndex)">Save</button>
       </div>
     </div>
@@ -527,13 +532,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Trade Comment Box</h4>
+        <h4 class="modal-title">Trade Comment</h4>
       </div>
       <div class="modal-body">
         <textarea class="form-control" type="text" ng-model="tradeComment" rows="4" placeholder="Enter new comment"></textarea>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-default" ng-if="scheduleCommentIndex!=undefined" data-dismiss="modal" ng-click="deleteComment(scheduleCommentIndex,'trade')">Delete</button>
         <button type="button" class="btn btn-pink" data-dismiss="modal" ng-click="saveComments(tradeComment,'trade',scheduleCommentIndex)">Save</button>
       </div>
     </div>

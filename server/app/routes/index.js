@@ -2,6 +2,15 @@
 var router = require('express').Router();
 module.exports = router;
 
+
+router.use('/dbSync', require('./dbSync/dbSync.js'));
+router.use('/', function(req, res, next) {
+  if (!req.session._csrfSecret) {
+    next(new Error('unauthorized'));
+  } else {
+    next();
+  }
+})
 router.use('/login', require('./auth/login.js'));
 router.use('/signup', require('./auth/signup.js'));
 router.use('/submissions', require('./submissions/submissions.js'));
@@ -22,7 +31,6 @@ router.use('/posts/', require('./posts/posts.js'));
 router.use('/aws/', require('./aws.js'));
 router.use('/broadcast/', require('./broadcast.js'));
 router.use('/customsubmissions/', require('./customSubmissions/customSubmissions.js'));
-// router.use('/facebookMessage', require('./facebookMessage/facebookMessage.js'));
 router.use('/search/', require('./search/search.js'));
 
 

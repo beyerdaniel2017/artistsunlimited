@@ -22,16 +22,63 @@ scWrapper.init({
 });
 
 router.post('/', function(req, res, next) {
-  var submission = new Submission(req.body);
-  submission.invoiceIDS = [];
-  submission.paidInvoices = [];
-  submission.submissionDate = new Date();
-  submission.save()
-    .then(function(sub) {
-      res.send(sub);
+  User.findOne({
+      'paidRepost.userID': req.body.userID
     })
-    .then(null, next);
+    .then(function(adminUser) {
+      if (adminUser) {
+        var paidRepostIds = [];
+        if (adminUser.paidRepost.length > 0) {
+          adminUser.paidRepost.forEach(function(acc) {
+            paidRepostIds.push(acc.userID);
+          })
+        }
+        return Submission.findOne({
+          trackID: req.body.trackID,
+          userID: {
+            $in: paidRepostIds
+          },
+          submissionDate: {
+            $gt: new Date().getTime() - 48 * 3600000
+          }
+        })
+      } else {
+        throw new Error("Could not find admin user.")
+      }
+    }).then(function(sub) {
+      if (sub) {
+        throw new Error("You have already submitted this track to this merchant in the last 48 hours. Please wait to hear back.")
+      } else {
+        var submission = new Submission(req.body);
+        submission.submissionDate = new Date();
+        return submission.save()
+      }
+    }).then(function(sub) {
+      res.send(sub);
+    }).then(null, next);
 });
+
+router.post('/pool', function(req, res, next) {
+  Submission.findOne({
+    trackID: req.body.trackID,
+    poolSendDate: {
+      $gt: new Date().getTime() - 48 * 3600000
+    }
+  }).then(function(sub) {
+    if (sub) {
+      throw new Error("This track is already submitted to all merchants and is being reviewed.")
+    } else {
+      console.log(req.body);
+      var submission = new Submission(req.body);
+      submission.submissionDate = new Date();
+      submission.status = "pooled";
+      submission.pooledSendDate = new Date((new Date()).getTime() + 48 * 3600000);
+      return submission.save()
+    }
+  }).then(function(sub) {
+    res.send(sub);
+  }).then(null, next);
+})
 
 router.get('/unaccepted', function(req, res, next) {
   if (!req.user.role == 'admin' || !req.user.role == 'superadmin') {
@@ -39,8 +86,8 @@ router.get('/unaccepted', function(req, res, next) {
     return;
   } else {
     var resultSubs = [];
-    var skipcount = req.query.skip;
-    var limitcount = req.query.limit;
+    var skipcount = parseInt(req.query.skip);
+    var limitcount = parseInt(req.query.limit);
     var genre = req.query.genre ? req.query.genre : undefined;
     var paidRepostIds = [];
     if (req.user.paidRepost.length > 0) {
@@ -103,8 +150,8 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
     return;
   } else {
     var resultSubs = [];
-    var skipcount = req.query.skip;
-    var limitcount = req.query.limit;
+    var skipcount = parseInt(req.query.skip);
+    var limitcount = parseInt(req.query.limit);
     var genre = req.query.genre ? req.query.genre : undefined;
     var paidRepostIds = [];
     if (req.user.paidRepost.length > 0) {
@@ -164,6 +211,56 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
       .then(null, next);
   }
 });
+
+router.get('/counts', function(req, res, next) {
+  var paidRepostIds = [];
+  if (req.user.paidRepost.length > 0) {
+    req.user.paidRepost.forEach(function(acc) {
+      paidRepostIds.push(acc.userID);
+    })
+  }
+  var query = {
+    channelIDS: [],
+    userID: {
+      $in: paidRepostIds
+    },
+    ignoredBy: {
+      $ne: req.user._id.toJSON()
+    },
+    status: "submitted"
+  };
+  var resObj = {};
+  Submission.count(query, function(err, count) {
+    if (!err) {
+      resObj.regularCount = count;
+      var paidRepostIds = [];
+      if (req.user.paidRepost.length > 0) {
+        req.user.paidRepost.forEach(function(acc) {
+          paidRepostIds.push(acc.userID);
+        })
+      }
+      var query = {
+        pooledSendDate: {
+          $gt: new Date()
+        },
+        ignoredBy: {
+          $ne: req.user._id.toJSON()
+        },
+        status: "pooled"
+      }
+      Submission.count(query, function(err, countMarket) {
+        if (!err) {
+          resObj.marketCount = countMarket;
+          res.send(resObj);
+        } else {
+          next(err);
+        }
+      })
+    } else {
+      next(err);
+    }
+  })
+})
 
 router.get('/getUnacceptedSubmissions', function(req, res, next) {
   if (req.user) {

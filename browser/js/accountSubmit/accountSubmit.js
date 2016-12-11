@@ -106,7 +106,7 @@ app.controller('AccountSubmitSongController', function($rootScope, $state, $scop
         })
         .then(null, function(err) {
           $scope.processing = false;
-          $.Zebra_Dialog("Error: Could not submit song.");
+          $.Zebra_Dialog(err.data);
         });
     }
   }

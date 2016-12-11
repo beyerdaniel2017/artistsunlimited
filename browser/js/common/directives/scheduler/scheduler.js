@@ -254,11 +254,21 @@ app.directive('scheduler', function($http) {
           repostSettings: $scope.user.repostSettings,
           id: $scope.user._id
         }).then(function(res) {
+          console.log(res.data);
           SessionService.create(res.data);
           $scope.user = SessionService.getUser();
           $scope.checkCommentEnable();
           $scope.checkLikeEnable();
         });
+      }
+
+      $scope.deleteComment = function(commentIndex, type) {
+        if (type == 'schedule') {
+          $scope.user.repostSettings.schedule.comments.splice(commentIndex, 1);
+        } else if (type == 'trade') {
+          $scope.user.repostSettings.trade.comments.splice(commentIndex, 1);
+        }
+        $scope.saveRepostSettings();
       }
 
       $scope.saveComments = function(value, type, index) {
@@ -289,6 +299,7 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.editComments = function(comment, type, index) {
+        console.log(index);
         $scope.scheduleCommentIndex = index;
         if (type == 'schedule') {
           $('#scheduleCommentModal').modal('show');
@@ -548,6 +559,7 @@ app.directive('scheduler', function($http) {
           });
         }
       }
+
       $scope.getNextEvents = function() {
         $scope.listDayIncr++;
         $scope.getListEvents();

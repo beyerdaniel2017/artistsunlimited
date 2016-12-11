@@ -31,11 +31,16 @@
               <!-- MY SCHEDULE : Start-->
               <div role="tabpanel" class="tab-pane fade in active" id="mysubmissions">
                 <div class="container-90">
-                  <label class="switch">
-                    <input type="checkbox" checked="" ng-model="user.repostSettings.poolOn" ng-change="togglePoolOn()">
-                    <div class="slider round"></div>
-                  </label>
-                  <span style='font-size:1.2em; vertical-align:middle;'>AU Marketplace <a href="" ng-click="whatIsPool()">?</a></span>
+                  <row class="col-md-6">
+                    <label class="switch">
+                      <input type="checkbox" checked="" ng-model="user.repostSettings.poolOn" ng-change="togglePoolOn()">
+                      <div class="slider round"></div>
+                    </label>
+                    <span style='font-size:1.2em; vertical-align:middle;'>AU Marketplace <a href="" ng-click="whatIsPool()">?</a></span>
+                  </row>
+                  <row class="col-md-6">
+                    <h4 style="text-align:right;">{{counts.regularCount}} submissions</h4>
+                  </row>   
                   <div class="submi-section" ng-repeat="sub in showingElements" ng-class="{'border-bottom':!$last}" >
                     <div class="">
                       <div class="row">
@@ -126,11 +131,16 @@
               <!-- ORGANIZE SCHEDULE :Start -->
               <div role="tabpanel" class="tab-pane fade" id="marketplace">
                 <div class="container-90">
-                  <label class="switch">
-                    <input type="checkbox" checked="" ng-model="user.repostSettings.poolOn" ng-change="togglePoolOn()">
-                    <div class="slider round"></div>
-                  </label>
-                  <span style='font-size:1.2em; vertical-align:middle'>AU Marketplace<a href="" ng-click="whatIsPool()">?</a></span>
+                  <row class="col-md-6">
+                    <label class="switch">
+                      <input type="checkbox" checked="" ng-model="user.repostSettings.poolOn" ng-change="togglePoolOn()">
+                      <div class="slider round"></div>
+                    </label>
+                    <span style='font-size:1.2em; vertical-align:middle'>AU Marketplace<a href="" ng-click="whatIsPool()">?</a></span>
+                  </row>
+                  <row class="col-md-6">
+                    <h4 style="text-align:right;">{{counts.marketCount}} submissions</h4>
+                  </row>
                   <div class="submi-section" ng-repeat="sub in marketSubmissions"  ng-if=" user.repostSettings.poolOn" ng-class="{'border-bottom':!$last}" >
                     <div class="">
                       <div class="row">

@@ -35,12 +35,12 @@
 </style>
 <ng-include src="'js/home/views/navigation.html'" ng-if="!customizeSettings"></ng-include>
 <!-- Content Start  -->
-<div class="container" ng-show="!customizeSettings" style='background-color: white;'>
+<div class="container" style='background-color: white; border-radius: 20px; text-align:center;'>
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-8 col-md-offset-2">
       <div class="content-area" ng-class="{bgwhite: !customizeSettings}">
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-12 text-center" >
             <h1 class="bold text-center">Submission for Promotion</h1>
             <div class="internal-content">
               <br>
@@ -62,7 +62,11 @@
                         <scsearch kind='track' returnitem='choseTrack(item)'></scsearch>
                       </div>
                     </div>
-                    <br />
+                    <div class="row">
+                      <div class="col-md-12 text-center">
+                        <iframe ng-show="showPlayer" id="scPlayerCustom" width="500" height="160" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
+                      </div>
+                    </div>
                     <div class="row">
                       <div class="col-sm-6 col-sm-offset-3">
                         <input class="form-control" type="text" placeholder="Name"ng-model="submission.name" required/>
@@ -76,17 +80,11 @@
                     </div>
                     <br>
                     <div class="text-center">
-                      <button class="btn btn-pink btn-lg btn-enter">Enter</button>
+                      <button class="btn btn-pink btn-lg btn-enter">Submit</button>
                       <br/><br />
                     </div>
                   </div>
                 </form>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12 text-center">
-                <span ng-if="notFound">Track not found.<br>If a private track, please email it to: edward@peninsulamgmt.com</span>
-                <iframe id="scPlayer" width="500" height="160" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/118596500&auto_play=false" style="margin:10px 0; position:relative; z-index:1; border:none;"></iframe>
               </div>
             </div>
           </div>

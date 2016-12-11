@@ -19,12 +19,15 @@ var schema = new mongoose.Schema({
     name: {
         type: String
     },
-    comment: { 
+    comment: {
         type: String
     },
     status: {
-        type: String, 
+        type: String,
         default: 'new'
+    },
+    trackLink: {
+        type: String
     }
 });
 

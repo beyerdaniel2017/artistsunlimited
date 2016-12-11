@@ -98,6 +98,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
             d.emailBody = "";
             $scope.showingElements.push(d);
           });
+          console.log($scope.showingElements);
         }
       })
       .then(null, function(err) {
