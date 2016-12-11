@@ -21,6 +21,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
       }
     });
   }
+  $scope.viewStatus = 'new';
   $scope.counter = 0;
   $scope.channels = [];
   $scope.selectedGroups = [];
@@ -31,7 +32,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   $scope.selectedChannelName = [];
   $scope.genre = "";
   $scope.skip = 0;
-  $scope.limit = 5;
+  $scope.limit = 20;
   $scope.dynamicButton = [{
     "name": "TRACK TITLE",
     "appendText": " {TRACK_TITLE} "
@@ -109,7 +110,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   }
 
   $scope.loadMore = function() {
-    $scope.skip += 10;
+    $scope.skip += $scope.limit;
     $scope.loadSubmissions();
     //var loadElements = [];
     // for (let i = $scope.counter; i < $scope.counter + 15; i++) {
@@ -157,18 +158,16 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   }
   $scope.accept = function(submi) {
     $scope.processing = true;
-    submi.status = "accepted";
+    submi.status = "saved";
     $http.put("/api/premier/accept", {
         submi: submi
       })
       .then(function(sub) {
-        $scope.showingElements.splice($scope.showingElements.indexOf(submi), 1);
-        $.Zebra_Dialog("Accepted");
         $scope.processing = false;
       })
       .then(null, function(err) {
         $scope.processing = false;
-        $.Zebra_Dialog("ERROR: did not Save")
+        $.Zebra_Dialog(err.data);
       })
   }
 
@@ -208,27 +207,18 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   }
 
   $scope.delete = function(submission) {
-    $.Zebra_Dialog('Are you sure you really want to delete ?', {
-      'buttons': [{
-        caption: 'Yes',
-        callback: function() {
-          $scope.processing = true;
-          $http.post("/api/premier/delete", {
-              id: submission._id
-            })
-            .then(function(sub) {
-              $scope.showingElements.splice($scope.showingElements.indexOf(submission), 1);
-              $scope.processing = false;
-            })
-            .then(null, function(err) {
-              $scope.processing = false;
-            });
-        }
-      }, {
-        caption: 'Cancel',
-        callback: function() {}
-      }]
-    });
+    $scope.processing = true;
+    $http.post("/api/premier/delete", {
+        id: submission._id
+      })
+      .then(function(sub) {
+        $scope.showingElements.splice($scope.showingElements.indexOf(submission), 1);
+        $scope.processing = false;
+      })
+      .then(null, function(err) {
+        $.Zebra_Dialog(err.data);
+        $scope.processing = false;
+      });
   }
 
   $scope.openEmailClient = function(sub, item) {

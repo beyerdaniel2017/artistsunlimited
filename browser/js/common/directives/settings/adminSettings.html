@@ -7,20 +7,20 @@
 <div class=" ">  
   <div class="settings-tabs-5">
     <ul class="nav nav-tabs" role="tablist">
-      <li role="presentation" class="active">
-        <a href="#generalInfo" aria-controls="generalInfo" role="tab" data-toggle="tab" ng-click="showTab();" style="padding-top: 18px">General Info</a>
+      <li role="presentation" class="active" style='border-radius:10px 0 0 0;'>
+        <a href="#generalInfo" aria-controls="generalInfo" role="tab" data-toggle="tab" ng-click="showTab();" style="padding-top: 18px; border-radius:10px 0 0 0;">General Info</a>
       </li>
       <li role="presentation" ng-class="{active : activeTab.indexOf('sce') > -1 && currentTab == 'sce',disabled:activeTab.indexOf('sce') == -1}">
         <a href="#sce" aria-controls="sce" role="tab" data-toggle="tab" ng-click="showTab();">Repost Submissions Customize E-mails</a>
       </li>
-      <li role="presentation" ng-class="{active : activeTab.indexOf('psce') > -1 && currentTab == 'psce',disabled:activeTab.indexOf('psce') == -1}">
+<!--       <li role="presentation" ng-class="{active : activeTab.indexOf('psce') > -1 && currentTab == 'psce',disabled:activeTab.indexOf('psce') == -1}">
         <a href="#psce" aria-controls="psce" role="tab" data-toggle="tab" ng-click="showTab();">Premiere Submissions Customize E-mails</a>
-      </li>
+      </li> -->
       <li role="presentation" ng-class="{active : activeTab.indexOf('notifications') > -1 && currentTab == 'notifications',disabled:activeTab.indexOf('notifications') == -1}">
         <a href="#notifications" aria-controls="notifications" role="tab" data-toggle="tab" ng-click="showTab();" style="padding-top: 18px">Notification Settings</a>
       </li>
-      <li role="presentation" ng-class="{active : activeTab.indexOf('paypalInfo') > -1 && currentTab == 'paypalInfo',disabled:activeTab.indexOf('paypalInfo') == -1}">
-        <a href="#paypalInfo" aria-controls="paypalInfo" role="tab" data-toggle="tab" ng-click="showTab();" style="padding-top: 18px">PayPal Info</a>
+      <li role="presentation" style='border-radius:0 10px 0 0;' ng-class="{active : activeTab.indexOf('paypalInfo') > -1 && currentTab == 'paypalInfo',disabled:activeTab.indexOf('paypalInfo') == -1}">
+        <a href="#paypalInfo" aria-controls="paypalInfo" role="tab" data-toggle="tab" ng-click="showTab();" style="padding-top: 18px; border-radius:0 10px 0 0;">PayPal Info</a>
       </li>
     </ul>
     <div class="tab-content">
@@ -52,7 +52,7 @@
                       <img id="profilePicture" ng-if="!AccountsStepData.profilePictureData" src="{{AccountsStepData.profilePicture}}" class="img-responsive" alt="{{AccountsStepData.name}}" style="height: 240px;width:100%;">
                       <img id="profilePicture" class="img-responsive" ng-if="AccountsStepData.profilePictureData" src="{{AccountsStepData.profilePictureData}}" alt="{{AccountsStepData.name}}" style="height: 240px;width:100%;">
                       <div>
-                        <input type="file" id="uploadImage" file-input="AccountsStepData.profilePicture" name="uploadImage" value="Browse Image" style=" bottom: 60px;position: relative;width:84px;margin:0 auto;">
+                        <input type="file" id="uploadImage" file-input="AccountsStepData.profilePicture" name="uploadImage" value="Browse Image" style=" bottom: 60px;position: relative;width:80px; margin:0 auto;">
                       </div>
                     </div>
                     <div class="clearfix"></div>

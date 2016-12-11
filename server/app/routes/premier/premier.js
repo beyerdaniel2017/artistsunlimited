@@ -22,14 +22,12 @@ router.get('/unaccepted', function(req, res, next) {
     })
   }
   var searchObj = {
-    status: 'new',
     userID: {
       $in: paidRepostIds
     }
   };
   if (genre != undefined && genre != 'null') {
     searchObj = {
-      status: 'new',
       genre: genre
     };
   }
@@ -38,15 +36,13 @@ router.get('/unaccepted', function(req, res, next) {
     .populate('userID')
     .skip(skipcount)
     .limit(limitcount)
-
-  .then(function(subs) {
+    .then(function(subs) {
       res.send(subs);
     })
     .then(null, next);
 });
 
 router.post('/', function(req, res, next) {
-
   parseMultiPart()
     .then(uploadToBucket)
     .then(saveToDB)
@@ -169,18 +165,6 @@ router.put('/accept', function(req, res, next) {
       new: true
     })
     .then(function(sub) {
-
-      res.send(sub);
-    })
-    .then(null, next);
-});
-
-router.put('/decline', function(req, res, next) {
-  PremierSubmission.findOneAndRemove({
-      _id: req.body.submission._id
-    })
-    .then(function(sub) {
-      sendEmail(sub.name, sub.email, "Edward Sanchez", "feedback@peninsulamgmt.com", "Music Submission", "Hey " + sub.name + ",<br><br>First of all thank you so much for submitting <a href='" + sub.s3URL + "'>your track</a> to us! We checked out your submission and our team doesn’t think the track is ready to be reposted and shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have once submitted music to us and others that we’re at one point rejected. There is only 1 secret to success in the music industry and it’s looking as deep as you can into yourself and express what you find to be most raw. Don’t rush the art, it will come.<br><br> We look forward to hearing your future compositions and please remember to submit them at <a href='https://artistsunlimited.com/submit'>Artists Unlimited</a>.<br><br>Goodluck and stay true to the art,<br><br>Edward Sanchez<br> Peninsula MGMT Team <br>www.facebook.com/edwardlatropical");
       res.send(sub);
     })
     .then(null, next);
@@ -191,11 +175,8 @@ router.post('/delete', function(req, res, next) {
     .remove({
       _id: req.body.id
     })
-
-  .then(function() {
+    .then(function() {
       return res.end();
     })
-    .then(null, function(err) {
-      next(err);
-    });
+    .then(null, next);
 });

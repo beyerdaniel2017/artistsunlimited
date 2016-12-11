@@ -20,13 +20,15 @@ app.directive('slmodal', function($http) {
       $scope.handler = 'pop';
       $scope.origin = window.location.origin;
       $scope.$watch('eventId', function() {
-        if ($scope.eventType == 'share') {
-          $scope.shareLink = 'artistsunlimited.com/repostevents/' + $scope.event.user.soundcloud.pseudoname + "/" + $scope.event.pseudoname;
-          if ($scope.event) $scope.messengerLink = 'https://' + $scope.shareLink;
-        } else {
-          if ($scope.trade) {
-            $scope.shareLink = 'artistsunlimited.com/artistTools/trade/' + $scope.trade.p1.user.soundcloud.pseudoname + '/' + $scope.trade.p2.user.soundcloud.pseudoname;
-            $scope.messengerLink = 'https://' + $scope.shareLink;
+        if (!!$scope.event || !!$scope.trade) {
+          if ($scope.eventType == 'share') {
+            $scope.shareLink = 'artistsunlimited.com/repostevents/' + $scope.event.user.soundcloud.pseudoname + "/" + $scope.event.pseudoname;
+            if ($scope.event) $scope.messengerLink = 'https://' + $scope.shareLink;
+          } else {
+            if ($scope.trade) {
+              $scope.shareLink = 'artistsunlimited.com/artistTools/trade/' + $scope.trade.p1.user.soundcloud.pseudoname + '/' + $scope.trade.p2.user.soundcloud.pseudoname;
+              $scope.messengerLink = 'https://' + $scope.shareLink;
+            }
           }
         }
         console.log($scope.messengerLink);

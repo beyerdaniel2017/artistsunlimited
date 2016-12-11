@@ -36,7 +36,7 @@
           <div class="col-md-4 col-xs-12  pull-right padding-right-0">
             <form >
               <div class="schedule-newsong">
-                <button type="button" class="form-control" ng-click="addNewSong();">SCHEDULE NEW SONG</button>  
+                <button type="button" class="form-control" ng-click="addNewSong();">SCHEDULE NEW REPOST</button>  
               </div>
             </form>
           </div>
@@ -245,8 +245,9 @@
                 <label class="text-block">Repost Time</label>
                 <div class="form-group">
                   <select class="form-control" ng-if="!isEdit && !isSchedule" ng-disabled="isTraded" ng-model="selectedSlot" ng-change="clickAvailableSlots(selectedSlot);">
-                    <option style="color:black;text:center;" ng-repeat="slot in listAvailableSlots"
-                    value="{{slot}}">{{slot.slotdate.toString().split(' ')[1] + ' ' +slot.slotdate.toString().split(' ')[2] + ' ' + slot.slotdate.toString().split(' ')[3]}} {{slot.slottime}}</option>
+                    <option style="color:black; text-align:center;"
+                    value="{{firstSlot}}">Next Available Slot</option>
+                    <option style="color:black; text-align:center;" ng-repeat="slot in listAvailableSlots track by $index" ng-if="$index!=0" value="{{slot}}"> {{slot.slotdate.toString().split(' ')[1] + ' ' +slot.slotdate.toString().split(' ')[2] + ' ' + slot.slotdate.toString().split(' ')[3]}} {{slot.slottime}}</option>
                   </select>
                   <select ng-if="isEdit  && !isSchedule" ng-disabled="true" class="form-control">
                     <option>{{selectedSlot | date:'EEE MM/dd h:mma'}}</option>

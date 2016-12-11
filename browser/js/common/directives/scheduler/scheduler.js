@@ -380,9 +380,8 @@ app.directive('scheduler', function($http) {
         $scope.setScheduleLikeComment();
         $scope.showPlayer = false;
         $scope.getListEvents();
-        console.log($scope.linkedAccounts)
-        console.log($scope.isEdit);
-        console.log($scope.uniqueGroup);
+        if ($scope.listAvailableSlots[0]) $scope.selectedSlot = $scope.firstSlot = JSON.stringify($scope.listAvailableSlots[0]);
+        $scope.clickAvailableSlots($scope.firstSlot);
       }
 
       $scope.isSchedule = false;
