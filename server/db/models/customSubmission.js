@@ -5,20 +5,20 @@ var schema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  background:{
-    images:String,
-    blur:Number
+  background: {
+    images: String,
+    blur: Number
   },
-  logo:{
-    images:String,
-      align:String
+  logo: {
+    images: String,
+    align: String
   },
   heading: {
     text: String,
     style: {
       fontSize: Number,
       fontColor: String,
-      fontWeight: String
+      fontFamily: String
     }
   },
   subHeading: {
@@ -26,11 +26,11 @@ var schema = new mongoose.Schema({
     style: {
       fontSize: Number,
       fontColor: String,
-      fontWeight:String
+      fontFamily: String
     }
   },
   inputFields: {
-    style:{
+    style: {
       border: Number,
       borderRadius: Number,
       placeHolder: String,
@@ -45,12 +45,12 @@ var schema = new mongoose.Schema({
       border: Number,
       borderRadius: Number,
       bgColor: String
-    }   
+    }
   },
   backgroundImage: {
     type: String
   },
-  type:String
+  type: String
 
 });
 mongoose.model('CustomSubmission', schema);

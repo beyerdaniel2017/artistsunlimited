@@ -621,7 +621,7 @@ router.put('/completedPayment', function(req, res, next) {
         'soundcloud.id': events[0].event.userID
       }).then(function(user) {
         res.json({
-          username: user.soundcloud.username,
+          username: user.soundcloud.pseudoname,
           title: events[0].event.pseudoname
         });
       }).then(null, next)

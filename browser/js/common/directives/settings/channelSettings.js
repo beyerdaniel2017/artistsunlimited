@@ -632,6 +632,47 @@ app.directive('channelsettings', function($http) {
 					$scope.processing = false;
 				}
 			}
+
+			$scope.fontFamilies = [{
+				file: 'actionis.ttf',
+				title: 'Actions'
+			}, {
+				file: 'Ansley Display-Black.ttf',
+				title: 'Ainsley Display (Black)'
+			}, {
+				file: 'Ansley Display-Bold.ttf',
+				title: 'Ansley Display (Bold)'
+			}, {
+				file: 'Ansley Display-Outline.ttf',
+				title: 'Ansley Display (Outline)'
+			}, {
+				file: 'Ansley Display-Regular.ttf',
+				title: 'Ansley Display (Regular)'
+			}, {
+				file: 'antre.otf',
+				title: 'Antre'
+			}, {
+				file: 'arial.ttf',
+				title: 'Arial (Regular)'
+			}, {
+				file: 'arialbd.ttf',
+				title: 'Arial (Bold)'
+			}, {
+				file: 'arialbi.ttf',
+				title: 'Arial (Bold Italic)'
+			}, {
+				file: 'ariali.ttf',
+				title: 'Arial (Italic)'
+			}, {
+				file: 'ariblk.ttf',
+				title: 'Arial (Black)'
+			}, {
+				file: 'blowbrush.otf',
+				title: 'Blowbrush'
+			}, {
+				file: 'cambria.ttc',
+				title: 'Cambria'
+			}]
 		}
 	}
 });
