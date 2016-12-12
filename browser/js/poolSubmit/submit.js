@@ -1,7 +1,7 @@
 app.config(function($stateProvider) {
   $stateProvider.state('submitSong', {
     url: '/submit',
-    templateUrl: 'js/redirectSubmit/submit.view.html',
+    templateUrl: 'js/poolSubmit/submit.view.html',
     controller: 'SubmitSongController'
   });
   $stateProvider.state('customsubmits', {
@@ -22,11 +22,11 @@ app.config(function($stateProvider) {
     }
   });
 });
-app.controller('redirectController', function() {
-  window.location.href = '/EtiquetteNoir/submit'
-})
 
-app.controller('SubmitSongController', function($rootScope, $state, $scope, $http, $location) {
+app.controller('SubmitSongController', function(SessionService, $rootScope, $state, $scope, $http, $location) {
+
+  $scope.user = SessionService.getUser();
+  $scope.showSignup = true;
   $scope.submission = {};
   $scope.userID = $location.search().id;
   $scope.searchString = "";

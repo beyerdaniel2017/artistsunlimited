@@ -236,11 +236,6 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
     $scope.adminlogout = function() {
         mainService.adminlogout();
     }
-    $scope.getSubmissionCount = function() {
-        $http.get('/api/submissions/getUnacceptedSubmissions').then(function(res) {
-            $scope.submissionsCount = res.data;
-        });
-    }
 
     $scope.gotoSettings = function() {
         $scope.user = SessionService.getUser();
@@ -433,7 +428,6 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
     }
 
     //    $scope.checkNotification();
-    $scope.getSubmissionCount();
 });
 
 app.directive('fbLike', [

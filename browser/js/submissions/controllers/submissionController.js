@@ -6,7 +6,7 @@ app.config(function($stateProvider) {
   });
 });
 
-app.controller('SubmissionController', function($rootScope, $state, $scope, $http, $window, AuthService, SessionService, AccountSettingServices) {
+app.controller('SubmissionController', function($rootScope, $state, $scope, $http, $window, AuthService, SessionService, AccountSettingServices, $sce) {
   $scope.counter = 0;
   $scope.showingElements = [];
   $scope.marketSubmissions = [];
@@ -25,7 +25,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $state.go('admin');
   }
   $scope.user = SessionService.getUser();
-  console.log($scope.user);
   $scope.user.isAdmin = $scope.user.role == 'admin' ? true : false;
   $scope.uniqueGroup = [];
   $scope.paidRepostAccounts = [];
@@ -96,7 +95,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.testEmail = function(email) {
-    console.log(email);
     $scope.showTestEmailModal = false;
     $('#emailModal').modal('hide');
     var subject = $scope.customEmailButtons[$scope.emailIndex].subject;
@@ -118,7 +116,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
 
   $scope.togglePoolOn = function() {
     // $scope.user.repostSettings.poolOn = !$scope.user.repostSettings.poolOn;
-    console.log($scope.user.repostSettings.poolOn);
     SessionService.create($scope.user);
     AccountSettingServices.updateAdminProfile({
       'repostSettings.poolOn': $scope.user.repostSettings.poolOn
@@ -141,18 +138,11 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
             d.selectedChannelName = [];
             d.selectedChannelIDS = [];
             d.selectedGroups = [];
+            d.playerURL = $sce.trustAsResourceUrl("https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/" + d.trackID + "&auto_play=false&show_artwork=true")
             $scope.showingElements.push(d)
           });
         }
         if (!$scope.$$phase) $scope.$apply();
-        setTimeout(function() {
-          $scope.showingElements.forEach(function(sub) {
-            SC.Widget(sub.trackID + "player").load(sub.trackURL, {
-              auto_play: false,
-              show_artwork: true
-            });
-          });
-        }, 50)
       })
       .then(null, function(err) {
         $scope.processing = false;
@@ -172,7 +162,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $scope.processing = true;
     $http.get('/api/submissions/getMarketPlaceSubmission?genre=' + encodeURIComponent(selectedGenre) + "&skip=" + $scope.marketSkip + "&limit=" + $scope.marketLimit)
       .then(function(res) {
-        console.log(res.data);
         $scope.processing = false;
         if (res.data.length > 0) {
           angular.forEach(res.data, function(d) {
@@ -385,7 +374,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     var valid = true;
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     angular.forEach($scope.customEmailButtons, function(cb) {
-      console.log(cb);
       if (!cb.toEmail.includes("{SUBMITTERS_EMAIL}")) {
         var validEmail = re.test(cb.toEmail);
         if (!validEmail || !cb.buttonText) {
@@ -430,8 +418,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.addEventClass = function(index, type) {
     $('.selectedBox').removeClass("selectedBox");
     $("." + type + index).addClass("selectedBox");
-    console.log("." + type + index);
-    console.log($('.selectedBox'));
   }
 
   $scope.appendBody = function(btn) {
@@ -451,7 +437,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.getPaidRepostAccounts = function() {
     $http.get('/api/submissions/getPaidRepostAccounts').then(function(res) {
       $scope.paidRepostAccounts = res.data;
-      console.log(res.data);
       for (var i = 0; i < $scope.paidRepostAccounts.length; i++) {
         $scope.paidRepostAccounts[i].groups.forEach(function(acc) {
           if (acc != "" && $scope.uniqueGroup.indexOf(acc) === -1) {
@@ -490,13 +475,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
 
   $scope.getDiffTimeText = function(date) {
     var t = Math.floor((new Date(date).getTime() - new Date().getTime()) / 1000);
-    console.log(t);
     var days, hours, minutes, seconds;
     hours = (Math.floor(t / 3600));
-    console.log(hours);
     t -= hours * 3600;
     minutes = (Math.floor(t / 60));
-    console.log(minutes);
 
     return [
       hours + 'h',
