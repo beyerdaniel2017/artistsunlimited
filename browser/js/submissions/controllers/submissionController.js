@@ -169,18 +169,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
             d.selectedChannelIDS = [];
             d.selectedGroups = [];
             d.pooledSendDate = new Date(d.pooledSendDate);
+            d.playerURL = $sce.trustAsResourceUrl("https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/" + d.trackID + "&auto_play=false&show_artwork=true")
             $scope.marketSubmissions.push(d)
           });
         }
-        setTimeout(function() {
-          $scope.marketSubmissions.forEach(function(sub) {
-            SC.Widget(sub.trackID + "_player").load(sub.trackURL, {
-              auto_play: false,
-              show_artwork: true
-            });
-            if (!$scope.$$phase) $scope.$apply();
-          }, 50)
-        });
       })
       .then(null, function(err) {
         $scope.processing = false;
