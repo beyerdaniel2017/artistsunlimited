@@ -99,11 +99,9 @@
                 <div class="container-90">
                   <br />
                   <p> Set the price that each repost will cost for this channel </p>
-                  <div class="container-60">
-                    <p class="small-text">Recommended: 1$ for every 3,000 followers
-                      60,000 followers  =  $20
-                    </p>
-                  </div>
+                  <p class="small-text">Recommended: 1$ for every 3,000 followers
+                    60,000 followers  =  $20
+                  </p>
                 </div>
                 <div class="margin-40">
                   <div class="margin-20">                                     
@@ -163,6 +161,8 @@
               <div class="col-md-4">                                    
                 <div class="row">
                   <div class="col-sm-12 custom-submission-accordion">
+                    <button class="btn btn-border" ng-click="defaultsRep()">Defaults</button>
+                    <button class="btn btn-border" ng-click="undoRep()">Undo</button>
                     <div class="panel-group" id="accordion">
                       <div class="panel panel-default">
                         <div class="panel-heading">
@@ -174,16 +174,19 @@
                           <div class="panel-body">
                             <div class="row margin-bottom-10">
                               <div class="col-md-12">
-                                <label>Heading Text</label> 
+                                <label>Heading Text</label>
                                 <input type="text" ng-model="AccountsStepData.postData.heading.text" class="form-control" placeholder="Heading Text">
                               </div>
                             </div>
                             <div class="row margin-bottom-10">
                               <div class="col-md-12">
-                                <label>Font</label> 
-                                <select class="form-control" ng-model="AccountsStepData.postData.heading.style.fontFamily" placeholder="Font Family" ng-init="AccountsStepData.postData.heading.style.fontFamily = 'cambria.ttc'">
-                                  <option ng-repeat='font in fontFamilies' value='{{font.file}}'>{{font.title}}</option>
-                                </select>
+                                <label>Font</label><br>
+                                <div class="btn-group" style='width:100%'>
+                                  <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span style="font-size:1.2em; font-family:{{AccountsStepData.postData.heading.style.fontFamily}};">{{repHeadFont}} </span><span class="caret"></span></button>
+                                  <ul class="dropdown-menu" style="max-height:200px; overflow-y:scroll;">
+                                    <li ng-repeat='font in fontFamilies' ng-style="AccountsStepData.postData.heading.style.fontFamily == font.css?{'background-color':'#FF7F7F'}:{}"><input type="radio" id="{{font.title}}repHead" name="repHeader" value="{{font.css}}" ng-change="changeFont('repHeadFont', font.title)" ng-model="AccountsStepData.postData.heading.style.fontFamily" style="visibility:hidden"><label for="{{font.title}}repHead" style="font-family:{{font.css}}; width:80%;">{{font.title}}</label></li>
+                                  </ul>
+                                </div>
                               </div>
                             </div>
                             <div class="row margin-bottom-10">
@@ -195,7 +198,7 @@
                            <div class="row margin-bottom-10">
                             <div class="col-md-12">
                              <label>Font color</label> 
-                             <input colorpicker type="text" placeholder="Font color" ng-model="AccountsStepData.postData.heading.style.fontColor" class="form-control"/>
+                             <div colorpicker="rgba" style="border:1px solid black; border-radius:8px; width:100%; height:35px; background-color: {{AccountsStepData.postData.heading.style.fontColor}}" ng-model="AccountsStepData.postData.heading.style.fontColor"></div>
                            </div>
                          </div>
                        </div>
@@ -212,15 +215,18 @@
                         <div class="row margin-bottom-10">
                           <div class="col-md-12">
                             <label>Subheading</label>
-                            <textarea ng-model="AccountsStepData.postData.subHeading.text" class="form-control" name="Subheading Text" placeholder="Subheading"></textarea required>
+                            <textarea ng-model="AccountsStepData.postData.subHeading.text" class="form-control" style="height:200px;" name="Subheading Text" placeholder="Subheading"></textarea required>
                             </div>
                           </div>
                           <div class="row margin-bottom-10">
                             <div class="col-md-12">
-                              <label>Font</label>
-                              <select class="form-control" ng-model="AccountsStepData.postData.subHeading.style.fontFamily" placeholder="Font Family" ng-init="AccountsStepData.postData.subHeading.style.fontFamily = 'cambria.ttc'">
-                                <option ng-repeat="font in fontFamilies" value="{{font.file}}">{{font.title}}</option>
-                              </select>
+                              <label>Font</label><br>
+                              <div class="btn-group" style='width:100%'>
+                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span style="font-size:1.2em; font-family:{{AccountsStepData.postData.subHeading.style.fontFamily}};">{{repSubheadFont}} </span><span class="caret"></span></button>
+                                <ul class="dropdown-menu" style="max-height:200px; overflow-y:scroll;">
+                                  <li ng-repeat='font in fontFamilies' ng-style="AccountsStepData.postData.subHeading.style.fontFamily == font.css?{'background-color':'#FF7F7F'}:{}"><input type="radio" id="{{font.title}}repSub" name="repHeader" value="{{font.css}}" ng-change="changeFont('repSubheadFont', font.title)" ng-model="AccountsStepData.postData.subHeading.style.fontFamily" style="visibility:hidden"><label for="{{font.title}}repSub" style="font-family:{{font.css}}; width:80%;">{{font.title}}</label></li>
+                                </ul>
+                              </div>
                             </div>
                           </div>
                           <div class="row margin-bottom-10">
@@ -233,7 +239,7 @@
                           <div class="row margin-bottom-10">
                             <div class="col-md-12">
                               <label>Font color</label>
-                              <input colorpicker type="text" placeholder="Font color" ng-model="AccountsStepData.postData.subHeading.style.fontColor" class="form-control"/>
+                              <div colorpicker="rgba" style="border:1px solid black; border-radius:8px; width:100%; height:35px; background-color: {{AccountsStepData.postData.subHeading.style.fontColor}}" ng-model="AccountsStepData.postData.subHeading.style.fontColor"></div>
                             </div>
                             <br>
                           </div>
@@ -252,6 +258,9 @@
                             <div class="col-md-12">
                               <label>Image</label>
                               <input type="file" name="uploadLogo" file-input="AccountsStepData.postData.logo.images" id="uploadLogo" class="pull-right" style="width:200px">
+                              <br>
+                              <button class="btn btn-border" ng-click="AccountsStepData.postData.logo.images = AccountsStepData.submissionData.avatarURL">Profile Picture</button>
+                              <button class="btn btn-border" ng-click="AccountsStepData.postData.logo.images = ''">Remove Image</button>
                             </div>
                           </div>
                           <div class="row margin-bottom-10">
@@ -279,6 +288,9 @@
                             <div class="col-md-12">
                               <label>Image</label>
                               <input type="file" name="uploadBackground"  file-input="AccountsStepData.postData.background.images" id="uploadBackground"  class="pull-right" style="width:200px">
+                              <br>
+                              <button class="btn btn-border" ng-click="AccountsStepData.postData.background.images = AccountsStepData.submissionData.avatarURL">Profile Picture</button>
+                              <button class="btn btn-border" ng-click="AccountsStepData.postData.background.images = ''">Remove Image</button>
                             </div>
                           </div>
                         </div>
@@ -318,7 +330,7 @@
                           <div class="row margin-bottom-10">
                             <div class="col-md-12">
                               <label>Font color</label>
-                              <input colorpicker type="text" placeholder="Font color" ng-model="AccountsStepData.postData.button.style.fontColor" class="form-control"/>
+                              <div colorpicker="rgba" style="border:1px solid black; border-radius:8px; width:100%; height:35px; background-color: {{AccountsStepData.postData.button.style.fontColor}}" ng-model="AccountsStepData.postData.button.style.fontColor"></div>
                             </div>
                             <br>
                           </div>
@@ -339,7 +351,7 @@
                           <div class="row margin-bottom-10">
                             <div class="col-md-12">
                               <label>BG color</label>
-                              <input colorpicker type="text" placeholder="BG color" ng-model="AccountsStepData.postData.button.style.bgColor" class="form-control"/>
+                              <div colorpicker="rgba" style="border:1px solid black; border-radius:8px; width:100%; height:35px; background-color: {{AccountsStepData.postData.button.style.bgColor}}" ng-model="AccountsStepData.postData.button.style.bgColor"></div>
                             </div>
                             <br>
                           </div>
@@ -371,7 +383,7 @@
                           <div class="row margin-bottom-10">
                             <div class="col-md-12">
                               <label>Border color</label>
-                              <input colorpicker type="text" placeholder="Border color" ng-model="AccountsStepData.postData.inputFields.style.borderColor" class="form-control"/>
+                              <div colorpicker="rgba" style="border:1px solid black; border-radius:8px; width:100%; height:35px; background-color: {{AccountsStepData.postData.inputFields.style.borderColor}}" ng-model="AccountsStepData.postData.inputFields.style.borderColor"></div>
                             </div>
                             <br>
                           </div>
@@ -390,11 +402,12 @@
               <div id="rightTemplate" ng-show="AccountsStepData.postData" class='col-md-12' style="padding:20px;">
                 <p class="text-center" style="color:{{AccountsStepData.postData.heading.style.fontColor}}; font-weight:{{AccountsStepData.postData.heading.style.fontWeight}};
                 font-style:{{AccountsStepData.postData.heading.style.fontWeight}};
+                font-family:{{AccountsStepData.postData.heading.style.fontFamily}};
                 font-size:{{AccountsStepData.postData.heading.style.fontSize}}px; z-index:10;">{{AccountsStepData.postData.heading.text}}</p>
                 <div class="internal-content">
                   <div class="row">
                     <div class="col-md-12">
-                      <p class="text-center" style="color:{{AccountsStepData.postData.subHeading.style.fontColor}};font-size:{{AccountsStepData.postData.subHeading.style.fontSize}}px;font-weight:{{AccountsStepData.postData.subHeading.style.fontWeight}};font-style:{{AccountsStepData.postData.subHeading.style.fontWeight}};" ng-bind-html="AccountsStepData.postData.subHeading.text">
+                      <p class="text-center" style="color:{{AccountsStepData.postData.subHeading.style.fontColor}}; font-size:{{AccountsStepData.postData.subHeading.style.fontSize}}px; font-weight:{{AccountsStepData.postData.subHeading.style.fontWeight}}; font-style:{{AccountsStepData.postData.subHeading.style.fontWeight}}; font-family:{{AccountsStepData.postData.subHeading.style.fontFamily}};" ng-bind-html="AccountsStepData.postData.subHeading.text">
                       </p>
                     </div>
                   </div>
@@ -426,7 +439,7 @@
                       </div>
                       <br>
                       <div class="text-center" ng-show="AccountsStepData.postData.button">
-                        <button class="btn btn-default" style="color:{{AccountsStepData.postData.button.style.fontColor}}; font-size:{{AccountsStepData.postData.button.style.fontSize}}px; background-color:{{AccountsStepData.postData.button.style.bgColor}};border:solid {{AccountsStepData.postData.button.style.border}}px; border-radius:{{AccountsStepData.postData.button.style.borderRadius}}px;">{{AccountsStepData.postData.button.text}}</button>
+                        <button class="btn btn-default" style="color:{{AccountsStepData.postData.button.style.fontColor}}; font-size:{{AccountsStepData.postData.button.style.fontSize}}px; background-color:{{AccountsStepData.postData.button.style.bgColor}}; border:solid {{AccountsStepData.postData.inputFields.style.borderColor}} {{AccountsStepData.postData.button.style.border}}px; border-radius:{{AccountsStepData.postData.button.style.borderRadius}}px;">{{AccountsStepData.postData.button.text}}</button>
                       </div>
                     </form>
                   </div>
@@ -453,10 +466,10 @@
     <div  class="submi-section">
       <div class=""> 
         <div class="col-md-12">
-
           <div class="col-md-4">                                    
-
             <div class="row">
+              <button class="btn btn-border" ng-click="defaultsPrem()">Defaults</button>
+              <button class="btn btn-border" ng-click="undoPrem()">Undo</button>
               <div class="col-sm-12 custom-submission-accordion">
                 <div class="panel-group" id="accordion2">
                   <div class="panel panel-default">
@@ -475,21 +488,24 @@
                         </div>
                         <div class="row margin-bottom-10">
                           <div class="col-md-12">
-                            <label>Font</label> 
-                            <select class="form-control" ng-model="AccountsStepData.premier.heading.style.fontFamily" placeholder="Font Family" ng-init="AccountsStepData.premier.heading.style.fontFamily = 'cambria.ttc'">
-                              <option ng-repeat='font in fontFamilies' value='{{font.file}}'>{{font.title}}</option>
-                            </select>
+                            <label>Font</label> <br>
+                            <div class="btn-group" style='width:100%'>
+                              <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span style="font-size:1.2em; font-family:{{AccountsStepData.premier.heading.style.fontFamily}};">{{premHeadFont}} </span><span class="caret"></span></button>
+                              <ul class="dropdown-menu" style="max-height:200px; overflow-y:scroll;">
+                                <li ng-repeat='font in fontFamilies' ng-style="AccountsStepData.premier.heading.style.fontFamily == font.css?{'background-color':'#FF7F7F'}:{}"><input type="radio" id="{{font.title}}premHead" name="repHeader" value="{{font.css}}" ng-change="changeFont('premHeadFont', font.title)" ng-model="AccountsStepData.premier.heading.style.fontFamily" style="visibility:hidden"><label for="{{font.title}}premHead" style="font-family:{{font.css}}; width:80%;">{{font.title}}</label></li>
+                              </ul>
+                            </div>
                           </div>
                         </div>
                         <div class="row margin-bottom-10">
                           <div class="col-md-12">
-                            <label>Font Size</label><input type="number" ng-model="AccountsStepData.premier.heading.style.fontSize" class="form-control" placeholder="Font Size" ng-init="AccountsStepData.premier.heading.style.fontFamily = 'cambria.ttc'">
+                            <label>Font Size</label><input type="number" ng-model="AccountsStepData.premier.heading.style.fontSize" class="form-control" placeholder="Font Size">
                           </div>
                         </div>                      
                         <div class="row margin-bottom-10">
                           <div class="col-md-12">
                            <label>Font color</label> 
-                           <input colorpicker type="text" placeholder="Font color" ng-model="AccountsStepData.premier.heading.style.fontColor" class="form-control"/>
+                           <div colorpicker="rgba" style="border:1px solid black; border-radius:8px; width:100%; height:35px; background-color: {{AccountsStepData.premier.heading.style.fontColor}}" ng-model="AccountsStepData.premier.heading.style.fontColor"></div>
                          </div>
                        </div>
                      </div>
@@ -506,15 +522,18 @@
                       <div class="row margin-bottom-10">
                         <div class="col-md-12">
                           <label>Subheading</label>
-                          <textarea ng-model="AccountsStepData.premier.subHeading.text" class="form-control" name="Subheading Text" placeholder="Subheading"></textarea required>
+                          <textarea ng-model="AccountsStepData.premier.subHeading.text" class="form-control" style="height:200px;" name="Subheading Text" placeholder="Subheading"></textarea required>
                           </div>
                         </div>
                         <div class="row margin-bottom-10">
                           <div class="col-md-12">
-                            <label>Font</label>
-                            <select class="form-control" ng-model="AccountsStepData.premier.subHeading.style.fontFamily" placeholder="Font Family" ng-init="AccountsStepData.premier.heading.style.fontFamily = 'cambria.ttc'">
-                              <option ng-repeat="font in fontFamilies" value="{{font.file}}">{{font.title}}</option>
-                            </select>
+                            <label>Font</label><br>
+                            <div class="btn-group" style='width:100%'>
+                              <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span style="font-size:1.2em; font-family:{{AccountsStepData.premier.subHeading.style.fontFamily}};">{{premSubheadFont}} </span><span class="caret"></span></button>
+                              <ul class="dropdown-menu" style="max-height:200px; overflow-y:scroll;">
+                                <li ng-repeat='font in fontFamilies' ng-style="AccountsStepData.premier.subHeading.style.fontFamily == font.css?{'background-color':'#FF7F7F'}:{}"><input type="radio" id="{{font.title}}premSub" name="repHeader" value="{{font.css}}" ng-change="changeFont('premSubheadFont', font.title)" ng-model="AccountsStepData.premier.subHeading.style.fontFamily" style="visibility:hidden"><label for="{{font.title}}premSub" style="font-family:{{font.css}}; width:80%;">{{font.title}}</label></li>
+                              </ul>
+                            </div>
                           </div>
                         </div>
                         <div class="row margin-bottom-10">
@@ -527,7 +546,7 @@
                         <div class="row margin-bottom-10">
                          <div class="col-md-12">
                            <label>Font color</label>
-                           <input colorpicker type="text" placeholder="Font color" ng-model="AccountsStepData.premier.subHeading.style.fontColor" class="form-control"/>
+                           <div colorpicker="rgba" style="border:1px solid black; border-radius:8px; width:100%; height:35px; background-color: {{AccountsStepData.premier.subHeading.style.fontColor}}" ng-model="AccountsStepData.premier.subHeading.style.fontColor"></div>
                          </div>
                          <br>
                        </div>
@@ -546,6 +565,9 @@
                         <div class="col-md-12">
                           <label>Image</label>
                           <input type="file" name="uploadpremier"  file-input="AccountsStepData.premier.logo.images" id="uploadpremier" class="pull-right" style="width:200px">
+                          <br>
+                          <button class="btn btn-border" ng-click="AccountsStepData.premier.logo.images = AccountsStepData.submissionData.avatarURL">Profile Picture</button>
+                          <button class="btn btn-border" ng-click="AccountsStepData.premier.logo.images = ''">Remove Image</button>
                         </div>
                       </div>
                       <div class="row margin-bottom-10">
@@ -573,6 +595,9 @@
                       <div class="col-md-12">
                         <label>Image</label>
                         <input type="file" name="uploadpremierBackground"  file-input="AccountsStepData.premier.background.images" id="uploadpremierBackground"  class="pull-right" style="width:200px">
+                        <br>
+                        <button class="btn btn-border" ng-click="AccountsStepData.premier.background.images = AccountsStepData.submissionData.avatarURL">Profile Picture</button>
+                        <button class="btn btn-border" ng-click="AccountsStepData.premier.background.images = ''">Remove Image</button>
                       </div>
                     </div>
                   </div>
@@ -612,7 +637,7 @@
                     <div class="row margin-bottom-10">
                       <div class="col-md-12">
                         <label>Font color</label>
-                        <input colorpicker type="text" placeholder="Font color" ng-model="AccountsStepData.premier.button.style.fontColor" class="form-control"/>
+                        <div colorpicker="rgba" style="border:1px solid black; border-radius:8px; width:100%; height:35px; background-color: {{AccountsStepData.premier.button.style.fontColor}}" ng-model="AccountsStepData.premier.button.style.fontColor"></div>
                       </div>
                       <br>
                     </div>
@@ -633,7 +658,7 @@
                     <div class="row margin-bottom-10">
                       <div class="col-md-12">
                         <label>BG color</label>
-                        <input colorpicker type="text" placeholder="BG color" ng-model="AccountsStepData.premier.button.style.bgColor" class="form-control"/>
+                        <div colorpicker="rgba" style="border:1px solid black; border-radius:8px; width:100%; height:35px; background-color: {{AccountsStepData.premier.button.style.bgColor}}" ng-model="AccountsStepData.premier.button.style.bgColor"></div>
                       </div>
                       <br>
                     </div>
@@ -665,7 +690,7 @@
                     <div class="row margin-bottom-10">
                       <div class="col-md-12">
                         <label>Border color</label>
-                        <input colorpicker type="text" placeholder="Border color" ng-model="AccountsStepData.premier.inputFields.style.borderColor" class="form-control"/>
+                        <div colorpicker="rgba" style="border:1px solid black; border-radius:8px; width:100%; height:35px; background-color: {{AccountsStepData.premier.inputFields.style.borderColor}}" ng-model="AccountsStepData.premier.inputFields.style.borderColor"></div>
                       </div>
                       <br>
                     </div>
@@ -685,11 +710,13 @@
           <p class="text-center" style="color:{{AccountsStepData.premier.heading.style.fontColor}};
           font-weight:{{AccountsStepData.premier.heading.style.fontWeight}};
           font-style:{{AccountsStepData.premier.heading.style.fontWeight}};
+          font-family:{{AccountsStepData.premier.heading.style.fontFamily}};
           font-size:{{AccountsStepData.premier.heading.style.fontSize}}px">{{AccountsStepData.premier.heading.text}}</p>
           <div class="internal-content">
             <div class="row">
               <div class="col-md-12">
                 <p class="text-center" style="color:{{AccountsStepData.premier.subHeading.style.fontColor}};font-size:{{AccountsStepData.premier.subHeading.style.fontSize}}px;font-weight:{{AccountsStepData.premier.subHeading.style.fontWeight}};
+                font-family:{{AccountsStepData.premier.subHeading.style.fontFamily}};
                 font-style:{{AccountsStepData.premier.subHeading.style.fontWeight}};" ng-bind-html="AccountsStepData.premier.subHeading.text"></p>
               </div>
             </div>
@@ -720,7 +747,7 @@
               </div>
               <br>
               <div class="text-center" ng-show="AccountsStepData.premier.button">
-                <button class="btn btn-default" style="color:{{AccountsStepData.premier.button.style.fontColor}}; font-size:{{AccountsStepData.premier.button.style.fontSize}}px; background-color:{{AccountsStepData.premier.button.style.bgColor}};border:solid {{AccountsStepData.premier.button.style.border}}px; border-radius:{{AccountsStepData.premier.button.style.borderRadius}}px;">{{AccountsStepData.premier.button.text}}
+                <button class="btn btn-default" style="color:{{AccountsStepData.premier.button.style.fontColor}}; font-size:{{AccountsStepData.premier.button.style.fontSize}}px; background-color:{{AccountsStepData.premier.button.style.bgColor}};border:solid {{AccountsStepData.premier.inputFields.style.borderColor}} {{AccountsStepData.premier.button.style.border}}px; border-radius:{{AccountsStepData.premier.button.style.borderRadius}}px;">{{AccountsStepData.premier.button.text}}
                 </button>
               </div>
             </div>

@@ -4657,9 +4657,6 @@ td {
     margin-left: 15px; }
   .slide-img-box div {
     padding: 0 0 0 2%; }
-  .ZebraDialog {
-    width: 600px !important;
-    left: 32% !important; }
   .min-ht {
     min-height: 1024px; }
   .download-group-btn button {
@@ -4719,10 +4716,6 @@ td {
   }*/
   .nav-tabs .nav > li {
     width: 50%; }
-  .ZebraDialog {
-    left: 279px !important;
-    top: 201px !important;
-    width: 450px !important; }
   .rfr-chat {
     margin-top: 70px; }
   .main-scroll-body .pad-right {
@@ -4892,10 +4885,6 @@ td {
     margin: 0; }
   .page-header ul li img {
     width: 22px; }
-  .ZebraDialog {
-    left: 0 !important;
-    top: 20% !important;
-    width: 100% !important; }
   .nav-tabs .nav > li {
     width: 100%; }
   .slot-box {
@@ -5038,10 +5027,6 @@ td {
     padding: 0 5px; }
   .left-menus ul li a {
     padding: 15px 10px; }
-  .ZebraDialog {
-    left: 2% !important;
-    top: 18% !important;
-    width: 307px !important; }
   .slot-box {
     width: 320px;
     margin: 10px auto; }

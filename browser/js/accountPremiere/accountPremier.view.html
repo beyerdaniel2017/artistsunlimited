@@ -3,7 +3,11 @@
    background-color:#EEEEEE;
    color:#000000 !important;
  }
- #backgroundImage1 {
+ body {
+  background-color:white !important;
+  background-image: none;
+}
+#backgroundImage1 {
   background-size: cover;
   display: block;
   float: right;
@@ -20,6 +24,9 @@
   z-index: 2;
   padding: 0 10px;
 }
+#rightpremierTemplate::-webkit-scrollbar { 
+  display: none; 
+}
 .submi-section{
  padding-bottom:60px;
 }
@@ -33,19 +40,24 @@
  width: 100%;
 }
 </style>
-<div class="custom-settings" style="background-color:transparent !important;">
+<div class="custom-settings" style="background-color:white !important; text-align:center; height:100%; overflow:hidden;">
   <div id="backgroundImage1" style="background-size:cover;background-image:url({{customizeSettings.background.images}}); filter: blur({{customizeSettings.background.blur}}px);-webkit-filter: blur({{customizeSettings.background.blur}}px);">
   </div>
-  <div id="rightpremierTemplate" class="col-md-12">
+  <div class="col-md-2"></div>
+  <div id="rightpremierTemplate" class="col-md-8" style="overflow-y:scroll; height:100%">
     <p class="text-center" style="color:{{customizeSettings.heading.style.fontColor}};
     font-weight:{{customizeSettings.heading.style.fontWeight}};
+    font-family:{{customizeSettings.heading.style.fontFamily}};
     font-size:{{customizeSettings.heading.style.fontSize}}px">{{customizeSettings.heading.text}}
   </p>
   <div class="internal-content">
     <br>
     <div class="row">
       <div class="col-md-12">
-        <p class="text-center" style="color:{{customizeSettings.subHeading.style.fontColor}};font-size:{{customizeSettings.subHeading.style.fontSize}}px;font-weight:{{customizeSettings.subHeading.style.fontWeight}}" ng-bind-html="customizeSettings.subHeading.text"></p>
+        <p class="text-center" style="color:{{customizeSettings.subHeading.style.fontColor}};
+        font-size:{{customizeSettings.subHeading.style.fontSize}}px;
+        font-family:{{customizeSettings.subHeading.style.fontFamily}}; 
+        font-weight:{{customizeSettings.subHeading.style.fontWeight}}" ng-bind-html="customizeSettings.subHeading.text"></p>
       </div>
     </div>
     <br>
@@ -98,9 +110,10 @@
             </div>
             <br>
             <div class="text-center">
-              <button class="btn btn-default" style="color:{{customizeSettings.button.style.fontColor}}; font-size:{{customizeSettings.button.style.fontSize}}px; background-color:{{customizeSettings.button.style.bgColor}};">{{customizeSettings.button.text}}</button>
-              <br/>
-              <br/>
+              <button class="btn btn-default" style="color:{{customizeSettings.button.style.fontColor}}; font-size:{{customizeSettings.button.style.fontSize}}px; background-color:{{customizeSettings.button.style.bgColor}}; border:solid {{customizeSettings.inputFields.style.borderColor}} {{customizeSettings.button.style.border}}px; border-radius:{{customizeSettings.button.style.borderRadius}}px;">{{customizeSettings.button.text}}</button>
+              <br>
+              <br>
+              <br>
               <!-- <p ng-show="message.visible" class="text-center">{{message.val}}</p> -->
             </div>
           </div>

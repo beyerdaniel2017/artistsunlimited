@@ -42,6 +42,40 @@ app.directive('channelsettings', function($http) {
 				window.location.href = window.location.origin + "/admin/accounts";
 			}
 
+			$scope.defaultsRep = function() {
+				$scope.AccountsStepData.postData = JSON.parse(JSON.stringify($scope.defaultSubmitPage));
+				$scope.AccountsStepData.postData.heading.text = "Submission for Repost";
+				$scope.AccountsStepData.postData.logo.images = $scope.AccountsStepData.postData.background.images = $scope.AccountsStepData.submissionData.avatarURL;
+			}
+
+			$scope.defaultsPrem = function() {
+				$scope.AccountsStepData.premier = JSON.parse(JSON.stringify($scope.defaultSubmitPage));
+				$scope.AccountsStepData.premier.heading.text = "Submission for Premiere";
+				$scope.AccountsStepData.premier.logo.images = $scope.AccountsStepData.premier.background.images = $scope.AccountsStepData.submissionData.avatarURL;
+			}
+
+			$scope.undoRep = function() {
+				if (!$scope.AccountsStepData.postData._id) {
+					$scope.defaultsRep();
+				} else {
+					$http.get('/api/customSubmissions/getCustomSubmission/' + $scope.AccountsStepData.postData.userID + '/' + $scope.AccountsStepData.postData.type)
+						.then(function(res) {
+							$scope.AccountsStepData.postData = res.data;
+						})
+				}
+			}
+
+			$scope.undoPrem = function() {
+				if (!$scope.AccountsStepData.premier._id) {
+					$scope.defaultsPrem();
+				} else {
+					$http.get('/api/customSubmissions/getCustomSubmission/' + $scope.AccountsStepData.premier.userID + '/' + $scope.AccountsStepData.premier.type)
+						.then(function(res) {
+							$scope.AccountsStepData.premier = res.data;
+						})
+				}
+			}
+
 			$scope.saveComments = function(value, type, index) {
 				var comments = [];
 				if (type == 'paid' && value) {
@@ -338,6 +372,7 @@ app.directive('channelsettings', function($http) {
 						var scInfo = {};
 						scInfo.userID = res.data.user._id;
 						$scope.paidRepostId = res.data.user._id;
+						$scope.AccountsStepData.postData.logo.images = $scope.AccountsStepData.postData.background.images = $scope.AccountsStepData.premier.logo.images = $scope.AccountsStepData.premier.background.images = res.data.user.soundcloud.avatarURL;
 						AccountSettingServices.checkUsercount({
 								"userID": scInfo.userID,
 								'action': "id"
@@ -381,6 +416,7 @@ app.directive('channelsettings', function($http) {
 											});
 											SessionService.createAdminUser($scope.AccountsStepData);
 											$scope.processing = false;
+											$scope.nextStep(2, $scope.AccountsStepData, 'channel')
 										})
 										.catch(function() {});
 								} else {
@@ -415,17 +451,18 @@ app.directive('channelsettings', function($http) {
 							$http.get("/connect/logout?return_to=https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https://" + window.location.host + "/callback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_5fead");
 							break;
 						case 2:
+							if (!$scope.AccountsStepData.price) $scope.AccountsStepData.price = Math.floor($scope.AccountsStepData.submissionData.followers / 3000);
 							SessionService.createAdminUser($scope.AccountsStepData);
 							$scope.activeTab.push('setPrice');
 							$('.nav-tabs a[href="#setPrice"]').tab('show');
 							break;
 						case 3:
 							var next = true;
+							console.log($scope.AccountsStepData.price);
 							if ($scope.AccountsStepData.price == "" || $scope.AccountsStepData.price == undefined) {
 								next = false;
-								$.Zebra_Dialog('Error: Enter Price');
+								$.Zebra_Dialog('Please enter a price.');
 							}
-
 							if (next) {
 								AccountSettingServices.updatePaidRepost({
 										userID: $scope.AccountsStepData.submissionData.userID,
@@ -475,7 +512,6 @@ app.directive('channelsettings', function($http) {
 									button: $scope.AccountsStepData.premier.button
 								})
 								.then(function(res) {
-									console.log($scope.AccountsStepData);
 									if ($scope.AccountsStepData.pseudoAvailableSlots == undefined) $scope.AccountsStepData.pseudoAvailableSlots = defaultAvailableSlots;
 									if (!$scope.AccountsStepData.astzOffset) $scope.AccountsStepData.astzOffset = -300;
 									SessionService.createAdminUser($scope.AccountsStepData);
@@ -487,8 +523,6 @@ app.directive('channelsettings', function($http) {
 						case 6:
 							//update from pseudo
 							$scope.AccountsStepData.availableSlots = createAvailableSlots($scope.AccountsStepData, $scope.AccountsStepData.pseudoAvailableSlots)
-							console.log($scope.AccountsStepData.pseudoAvailableSlots)
-							console.log($scope.AccountsStepData.availableSlots)
 							AccountSettingServices.updateUserAvailableSlot({
 									_id: $scope.AccountsStepData.submissionData.userID,
 									availableSlots: $scope.AccountsStepData.availableSlots
@@ -603,20 +637,21 @@ app.directive('channelsettings', function($http) {
 				}
 			}
 			$scope.uploadCustomBackground = function() {
-				$scope.processing = true;
-				if ($scope.AccountsStepData.postData != undefined && $scope.AccountsStepData.postData.background.images != "") {
-					if (!(typeof $scope.AccountsStepData.postData.background.images === 'undefined')) {
-						AccountSettingServices.uploadFile($scope.AccountsStepData.postData.background.images).then(function(res) {
-							if (res) {
-								$scope.AccountsStepData.postData.background.images = res.data.Location;
-								$scope.processing = false;
-							}
-						});
+					$scope.processing = true;
+					if ($scope.AccountsStepData.postData != undefined && $scope.AccountsStepData.postData.background.images != "") {
+						if (!(typeof $scope.AccountsStepData.postData.background.images === 'undefined')) {
+							AccountSettingServices.uploadFile($scope.AccountsStepData.postData.background.images).then(function(res) {
+								if (res) {
+									$scope.AccountsStepData.postData.background.images = res.data.Location;
+									$scope.processing = false;
+								}
+							});
+						}
+					} else {
+						$scope.processing = false;
 					}
-				} else {
-					$scope.processing = false;
 				}
-			}
+				// $scope.fontFam = "'Aref Ruqaa', cursive";
 			$scope.uploadPremierBackground = function() {
 				$scope.processing = true;
 				if ($scope.AccountsStepData.premier != undefined && $scope.AccountsStepData.premier.background.images != "") {
@@ -633,45 +668,121 @@ app.directive('channelsettings', function($http) {
 				}
 			}
 
+			$scope.changeFont = function(fnt, title) {
+				$scope[fnt] = title;
+			}
+
 			$scope.fontFamilies = [{
-				file: 'actionis.ttf',
-				title: 'Actions'
+				title: "Aref Ruqaa",
+				css: "'Aref Ruqaa', serif"
 			}, {
-				file: 'Ansley Display-Black.ttf',
-				title: 'Ainsley Display (Black)'
+				title: "Open Sans",
+				css: "'Open Sans', sans-serif"
 			}, {
-				file: 'Ansley Display-Bold.ttf',
-				title: 'Ansley Display (Bold)'
+				title: "Space Mono",
+				css: "'Space Mono', monospace"
 			}, {
-				file: 'Ansley Display-Outline.ttf',
-				title: 'Ansley Display (Outline)'
+				title: "Roboto Slab",
+				css: "'Roboto Slab', serif"
 			}, {
-				file: 'Ansley Display-Regular.ttf',
-				title: 'Ansley Display (Regular)'
+				title: "Merriweather",
+				css: "'Merriweather', serif"
 			}, {
-				file: 'antre.otf',
-				title: 'Antre'
+				title: "Molle",
+				css: "'Molle', cursive"
 			}, {
-				file: 'arial.ttf',
-				title: 'Arial (Regular)'
+				title: "Playfair Display",
+				css: "'Playfair Display', serif"
 			}, {
-				file: 'arialbd.ttf',
-				title: 'Arial (Bold)'
+				title: "Indie Flower",
+				css: "'Indie Flower', cursive"
 			}, {
-				file: 'arialbi.ttf',
-				title: 'Arial (Bold Italic)'
+				title: "Nova Script",
+				css: "'Nova Script', cursive"
 			}, {
-				file: 'ariali.ttf',
-				title: 'Arial (Italic)'
+				title: "Inconsolata",
+				css: "'Inconsolata', monospace"
 			}, {
-				file: 'ariblk.ttf',
-				title: 'Arial (Black)'
+				title: "Lobster",
+				css: "'Lobster', cursive"
 			}, {
-				file: 'blowbrush.otf',
-				title: 'Blowbrush'
+				title: "Arvo",
+				css: "'Arvo', serif"
 			}, {
-				file: 'cambria.ttc',
-				title: 'Cambria'
+				title: "Yanone Kaffeesatz",
+				css: "'Yanone Kaffeesatz', sans-serif"
+			}, {
+				title: "Abel",
+				css: "'Abel', sans-serif"
+			}, {
+				title: "Gloria Hallelujah",
+				css: "'Gloria Hallelujah', cursive"
+			}, {
+				title: "Pacifico",
+				css: "'Pacifico', cursive"
+			}, {
+				title: "Bungee",
+				css: "'Bungee', cursive"
+			}, {
+				title: "Exo",
+				css: "'Exo', sans-serif"
+			}, {
+				title: "Shadows Into Light",
+				css: "'Shadows Into Light', cursive"
+			}, {
+				title: "Dancing Script",
+				css: "'Dancing Script', cursive"
+			}, {
+				title: "Play",
+				css: "'Play', sans-serif"
+			}, {
+				title: "Amatic SC",
+				css: "'Amatic SC', cursive"
+			}, {
+				title: "Poiret One",
+				css: "'Poiret One', cursive"
+			}, {
+				title: "Orbitron",
+				css: "'Orbitron', sans-serif"
+			}, {
+				title: "Sahitya",
+				css: "'Sahitya', serif"
+			}, {
+				title: "Architects Daughter",
+				css: "'Architects Daughter', cursive"
+			}, {
+				title: "Acme",
+				css: "'Acme', sans-serif"
+			}, {
+				title: "Cinzel",
+				css: "'Cinzel', serif"
+			}, {
+				title: "Josefin Slab",
+				css: "'Josefin Slab', serif"
+			}, {
+				title: "Lobster Two",
+				css: "'Lobster Two', cursive"
+			}, {
+				title: "Permanent Marker",
+				css: "'Permanent Marker', cursive"
+			}, {
+				title: "Chewy",
+				css: "'Chewy', cursive"
+			}, {
+				title: "Special Elite",
+				css: "'Special Elite', cursive"
+			}, {
+				title: "Calligraffitti",
+				css: "'Calligraffitti', cursive"
+			}, {
+				title: "Ceviche One",
+				css: "'Ceviche One', cursive"
+			}, {
+				title: "Press Start 2P",
+				css: "'Press Start 2P', cursive"
+			}, {
+				title: "Cinzel Decorative",
+				css: "'Cinzel Decorative', cursive"
 			}]
 		}
 	}

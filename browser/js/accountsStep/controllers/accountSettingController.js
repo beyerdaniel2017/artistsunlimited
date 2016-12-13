@@ -72,6 +72,59 @@ app.config(function($stateProvider) {
 });
 
 app.controller('accountSettingController', function($rootScope, $state, $scope, $http, $window, AccountSettingServices, SessionService) {
+
+  $scope.defaultSubmitPage = {
+    "type": "submit",
+    "button": {
+      "text": "Submit",
+      "style": {
+        "fontColor": "rgba(0,0,0,1)",
+        "bgColor": "rgba(255,255,255,1)",
+        "fontSize": 15,
+        "border": 1,
+        "borderRadius": 10
+      }
+    },
+    "inputFields": {
+      "style": {
+        "borderColor": "rgba(179,179,179,1)",
+        "borderRadius": 10,
+        "border": 1
+      }
+    },
+    "subHeading": {
+      "text": "Our mission is to connect musicians to their audiences. By submitting your track, you receive the opportunity to be reviewed by countless industry leading music promoters and independent labels. Although we can’t guarantee your track will be accepted, we can ensure that every submission will get heard and considered.",
+      "style": {
+        "fontFamily": "'Open Sans', sans-serif",
+        "fontColor": "rgba(120,120,120,1)",
+        "fontSize": 15
+      }
+    },
+    "heading": {
+      "text": "Submission for Repost",
+      "style": {
+        "fontSize": 32,
+        "fontFamily": "'Open Sans', sans-serif",
+        "fontColor": "rgba(120,120,120,1)"
+      }
+    },
+    "logo": {
+      "align": "center",
+      "images": ""
+    },
+    "background": {
+      "blur": 28,
+      "images": ""
+    }
+  }
+
+  $scope.loadFontNames = function() {
+    $scope.repHeadFont = $scope.AccountsStepData.postData.heading.style.fontFamily ? $scope.AccountsStepData.postData.heading.style.fontFamily.substring(1, $scope.AccountsStepData.postData.heading.style.fontFamily.indexOf("',")) : "";
+    $scope.repSubheadFont = $scope.AccountsStepData.postData.subHeading.style.fontFamily ? $scope.AccountsStepData.postData.subHeading.style.fontFamily.substring(1, $scope.AccountsStepData.postData.subHeading.style.fontFamily.indexOf("',")) : "";
+    $scope.premHeadFont = $scope.AccountsStepData.premier.heading.style.fontFamily ? $scope.AccountsStepData.premier.heading.style.fontFamily.substring(1, $scope.AccountsStepData.premier.heading.style.fontFamily.indexOf("',")) : "";
+    $scope.premSubheadFont = $scope.AccountsStepData.premier.subHeading.style.fontFamily ? $scope.AccountsStepData.premier.subHeading.style.fontFamily.substring(1, $scope.AccountsStepData.premier.subHeading.style.fontFamily.indexOf("',")) : "";
+  }
+
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
   if (!$scope.isLoggedIn) {
     $state.go('admin');
@@ -146,37 +199,14 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
       $scope.AccountsStepData = SessionService.getAdminUser();
   } else if (formActions == "Add") {
     $scope.AccountsStepData = SessionService.getAdminUser() ? SessionService.getAdminUser() : {};
-    $scope.AccountsStepData.postData = {
-      heading: {
-        text: "",
-        style: {
-          fontSize: 18
-        }
-      },
-      subHeading: {
-        text: ""
-      }
-    }
-    $scope.AccountsStepData.premier = {
-      heading: {
-        text: "",
-        style: {
-          fontSize: 18
-        }
-      },
-      subHeading: {
-        text: ""
-      }
-    }
-    $scope.AccountsStepData.postData.heading.text = "Submission for Promotion";
-    $scope.AccountsStepData.postData.subHeading.text = "Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.";
-    $scope.AccountsStepData.premier.heading.text = "Premiere Submission for Promotion";
-    $scope.AccountsStepData.premier.subHeading.text = "Our mission is to simply bring the best music to the people. We also have a strong commitment to providing feedback and guidance for rising artists. We guarantee that your song will be listened to and critiqued by our dedicated staff if it passes our submission process. Although we cannot guarantee support for your submission on our promotional platforms such as SoundCloud, YouTube, and Facebook, we will make sure to get back to you with a response.";
+    $scope.AccountsStepData.postData = JSON.parse(JSON.stringify($scope.defaultSubmitPage));
+    $scope.AccountsStepData.premier = JSON.parse(JSON.stringify($scope.defaultSubmitPage));
+    $scope.loadFontNames();
+    $scope.AccountsStepData.postData.heading.text = "Submission for Repost";
+    $scope.AccountsStepData.premier.heading.text = "Submission for Premiere";
     $scope.AccountsStepData.formActions = formActions;
   } else if (formActions == "Edit") {
-    if ($scope.AccountsStepData == undefined)
-      $scope.AccountsStepData = {};
-
+    if ($scope.AccountsStepData == undefined) $scope.AccountsStepData = {};
     $scope.AccountsStepData.formActions = formActions;
     var user_id = SessionService.getActionsfoAccountIndex();
     if (user_id != undefined && $scope.AccountsStepData.submissionData == undefined && $state.current.url == "/admin/channel/step1") {
@@ -249,6 +279,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
                     }
                   }
                   nextFun();
+                  $scope.loadFontNames();
                 });
             })
         });
