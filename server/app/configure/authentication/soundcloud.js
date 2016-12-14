@@ -29,6 +29,7 @@ module.exports = function(app) {
                 })
                 .then(function(user) {
                     if (user) {
+                        var pseudoname = data.permalink_url.substring(data.permalink_url.indexOf('.com/') + 5)
                         var updateObj = {
                             'soundcloud': {
                                 'id': data.id,
@@ -37,7 +38,7 @@ module.exports = function(app) {
                                 'avatarURL': data.avatar_url.replace('large', 't500x500'),
                                 'token': req.body.token,
                                 'followers': data.followers_count,
-                                'pseudoname': data.username.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
+                                'pseudoname': pseudoname
                             }
                         };
                         User.findOneAndUpdate({
@@ -54,6 +55,7 @@ module.exports = function(app) {
                                 done(err);
                             });
                     } else {
+                        var pseudoname = data.permalink_url.substring(data.permalink_url.indexOf('.com/') + 5)
                         var newUser = new User({
                             'name': data.username,
                             'soundcloud': {
@@ -63,7 +65,7 @@ module.exports = function(app) {
                                 'avatarURL': data.avatar_url.replace('large', 't500x500'),
                                 'token': req.body.token,
                                 'followers': data.followers_count,
-                                'pseudoname': data.username.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
+                                'pseudoname': pseudoname
                             },
                             'role': 'user'
                         });

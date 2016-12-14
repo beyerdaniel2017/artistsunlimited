@@ -10,6 +10,7 @@ var RepostEvent = mongoose.model('RepostEvent');
 var Channel = mongoose.model('Channel');
 var NetworkAccounts = mongoose.model('NetworkAccounts');
 var Submission = mongoose.model('Submission');
+var rootURL = require('./../../../env').ROOTURL;
 
 router.put('/updateRepostSettings', function(req, res, next) {
   if (!req.user) {
@@ -80,8 +81,9 @@ router.get('/updatePseudonames', function(req, res, next) {
   User.find({})
     .then(function(users) {
       users.forEach(function(user) {
-        if (user.soundcloud && user.soundcloud.username) {
-          user.soundcloud.pseudoname = user.soundcloud.username.replace(/[^a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ0-9 ]/g, "").replace(/ /g, "_");
+        if (user.soundcloud && user.soundcloud.permalinkURL) {
+          var pseudoname = user.soundcloud.permalinkURL.substring(user.soundcloud.permalinkURL.indexOf('.com/') + 5)
+          user.soundcloud.pseudoname = pseudoname;
           user.save();
         }
       })
@@ -89,8 +91,10 @@ router.get('/updatePseudonames', function(req, res, next) {
     })
     .then(function(events) {
       events.forEach(function(event) {
-        if (event.title) {
-          event.pseudoname = event.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_");
+        if (event.trackURL) {
+          var pseudoname = event.trackURL.substring(event.trackURL.indexOf('.com/') + 5)
+          pseudoname = pseudoname.substring(pseudoname.indexOf('/') + 1)
+          event.pseudoname = pseudoname;
           event.save()
         }
       });

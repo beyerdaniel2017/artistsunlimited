@@ -50,7 +50,11 @@ module.exports = function(eventDetails, minDate) {
                 denyUnrepostOverlap(eventDetails)
                   .then(function(ok) {
                     var newEvent = new RepostEvent(eventDetails);
-                    if (newEvent.title) newEvent.pseudoname = newEvent.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
+                    if (newEvent.trackURL) {
+                      var pseudoname = newEvent.trackURL.substring(newEvent.trackURL.indexOf('.com/') + 5)
+                      pseudoname = pseudoname.substring(pseudoname.indexOf('/') + 1)
+                      newEvent.pseudoname = pseudoname;
+                    }
                     return newEvent.save()
                   })
                   .then(function(newEvent) {

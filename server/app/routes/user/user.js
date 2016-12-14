@@ -232,6 +232,7 @@ router.post('/bySCURL', function(req, res, next) {
 
                 .then(function(data) {
                   if (!data) {
+                    var pseudoname = user.permalinkURL.substring(user.soundcloud.permalinkURL.indexOf('.com/') + 5);
                     var newUser = new User({
                       'name': user.username,
                       'soundcloud': {
@@ -240,7 +241,7 @@ router.post('/bySCURL', function(req, res, next) {
                         'permalinkURL': user.permalink_url,
                         'avatarURL': user.avatar_url.replace('large', 't500x500'),
                         'followers': user.followers_count,
-                        'pseudoname': user.username.replace(/[^a-zA-Z ]/g, "").replace(/ /g, "_")
+                        'pseudoname': pseudoname
                       }
                     });
                     newUser.save();

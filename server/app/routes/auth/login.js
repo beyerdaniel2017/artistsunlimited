@@ -182,6 +182,7 @@ router.post('/soundCloudAuthentication', function(req, res, next) {
               'user': user
             });
           } else {
+            var pseudoname = data.permalink_url.substring(data.permalink_url.indexOf('.com/') + 5)
             var newUser = new User({
               'name': data.username,
               'soundcloud': {
@@ -191,7 +192,7 @@ router.post('/soundCloudAuthentication', function(req, res, next) {
                 'avatarURL': data.avatar_url.replace('large', 't500x500'),
                 'token': req.body.token,
                 'followers': data.followers_count,
-                'pseudoname': data.username.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
+                'pseudoname': pseudoname
               },
               'role': 'user'
             });

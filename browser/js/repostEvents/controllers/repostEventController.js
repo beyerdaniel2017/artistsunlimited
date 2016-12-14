@@ -19,6 +19,7 @@ app.config(function($stateProvider) {
     }
   });
 });
+
 app.controller('RepostEventsController', function($rootScope, $state, $scope, repostEvent, $http, $location, $window, $q, $sce, $auth, SessionService) {
   $scope.user = SessionService.getUser();
   $scope.itemview = "calender";

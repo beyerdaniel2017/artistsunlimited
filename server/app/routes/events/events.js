@@ -189,7 +189,10 @@ router.put('/repostEvents', function(req, res, next) {
       event.trackID = req.body.trackID;
       event.title = req.body.title;
       event.trackURL = req.body.trackURL;
-      if (event.title) event.pseudoname = event.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
+      if (event.trackURL) {
+        var pseudoname = event.trackURL.substring(event.trackURL.indexOf('.com/') + 5)
+        event.pseudoname = pseudoname.substring(pseudoname.indexOf('/') + 1)
+      }
       return event.save()
     })
     .then(function(ev) {
@@ -236,15 +239,16 @@ router.put('/repostEvents/autofillAll', function(req, res, next) {
                     event.trackURL = data.permalink_url;
                     event.trackArtUrl = data.artwork_url;
                     event.artistName = data.user.username;
-                    if (event.title) event.pseudoname = event.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
+                    if (event.trackURL) {
+                      var pseudoname = event.trackURL.substring(event.trackURL.indexOf('.com/') + 5)
+                      event.pseudoname = pseudoname.substring(pseudoname.indexOf('/') + 1)
+                    }
                     event.save();
-                    console.log(event);
                     eventInd++;
                     nextEvent();
                   } else {
                     event.trackURL = "http://api.soundcloud.com/tracks/" + event.trackID;
                     event.save();
-                    console.log(event);
                     eventInd++;
                     nextEvent();
                   }
@@ -275,7 +279,10 @@ router.post('/repostEvents', function(req, res, next) {
     return;
   }
   var event = new RepostEvent(req.body);
-  if (event.title) event.pseudoname = event.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
+  if (event.trackURL) {
+    var pseudoname = event.trackURL.substring(event.trackURL.indexOf('.com/') + 5)
+    event.pseudoname = pseudoname.substring(pseudoname.indexOf('/') + 1)
+  }
   event.save()
     .then(function(ev) {
       ev.day = new Date(ev.day);
@@ -290,7 +297,10 @@ router.post('/repostEventsScheduler', function(req, res, next) {
     return;
   }
   var event = new RepostEvent(req.body);
-  if (event.title) event.pseudoname = event.title.replace(/[^a-zàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœA-Z0-9 ]/g, "").replace(/ /g, "_")
+  if (event.trackURL) {
+    var pseudoname = event.trackURL.substring(event.trackURL.indexOf('.com/') + 5)
+    event.pseudoname = pseudoname.substring(pseudoname.indexOf('/') + 1)
+  }
   event.save()
     .then(function(ev) {
       var scheduleDate = new Date(ev.day);

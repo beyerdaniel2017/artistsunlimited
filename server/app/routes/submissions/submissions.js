@@ -648,6 +648,8 @@ function schedulePaidRepost(channel, submission) {
           trackID: submission.trackID,
           title: submission.title,
           trackURL: submission.trackURL,
+          trackArtUrl: submission.artworkURL,
+          artistName: submission.trackArtist,
           userID: channel.user.id,
           email: submission.email,
           name: submission.name,
