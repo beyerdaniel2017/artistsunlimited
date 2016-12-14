@@ -12,13 +12,7 @@ app.config(function($stateProvider) {
       },
       channels: function($http, submission) {
         return submission.channels;
-      }/*,
-      track: function(submission) {
-        return SC.get('/tracks/' + submission.trackID)
-        .then(function(track) {
-          return track;
-        });
-      }*/
+      }
     }
   });
 });
@@ -29,30 +23,18 @@ app.filter('calculateDiscount', function() {
   };
 });
 
-app.controller('PayController', function($scope, $rootScope, $http, channels, submission, $state, $uibModal,AppConfig) {
+app.controller('PayController', function($scope, $rootScope, $http, channels, submission, $state, $uibModal, AppConfig) {
   $rootScope.submission = submission;
   $scope.auDLLink = false;
   $scope.showSignUp = false;
-  if($state.$current.name == "pay")
-  {
+  if ($state.$current.name == "pay") {
     $scope.showSignUp = true;
   }
-  //$scope.track = track;
-  /*AppConfig.fetchConfig().then(function(res) {
-    AppConfig.setConfig(res.data)
-    .then(function(){
-      SC.oEmbed(submission.trackURL, {
-        element: document.getElementById('scPlayer'),
-        auto_play: false,
-        maxheight: 150
-      });
-    });
-  })*/
-  
+
   $scope.total = 0;
   $scope.showTotal = 0;
   $scope.channels = channels;
-  
+
   $scope.goToLogin = function() {
     $state.go('login', {
       'submission': $rootScope.submission
@@ -106,26 +88,26 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
     if ($scope.auDLLink) $scope.showTotal = parseFloat($scope.total * 0.9).toFixed(2);
     else $scope.showTotal = parseFloat($scope.total).toFixed(2);
   };
- $scope.getTrack = function() {
+  $scope.getTrack = function() {
 
-  SC.get('/tracks/' + submission.trackID)
-        .then(function(track) {
-          $scope.track = track;
-  });
-  setTimeout(function(){ 
-    //$scope.auDLLink = $scope.track.purchase_url ? true: false;
-    SC.Widget('scPlayer').load(submission.trackURL, {
-      auto_play: false,
-      show_artwork: true
-    });
-    // SC.oEmbed(submission.trackURL, {
-    //     element: document.getElementById('scPlayer'),
-    //     auto_play: false,
-    //     maxheight: 150
-    //   });
- }, 3000);
-}
-$scope.getTrack();
+    SC.get('/tracks/' + submission.trackID)
+      .then(function(track) {
+        $scope.track = track;
+      });
+    setTimeout(function() {
+      //$scope.auDLLink = $scope.track.purchase_url ? true: false;
+      SC.Widget('scPlayer').load(submission.trackURL, {
+        auto_play: false,
+        show_artwork: true
+      });
+      // SC.oEmbed(submission.trackURL, {
+      //     element: document.getElementById('scPlayer'),
+      //     auto_play: false,
+      //     maxheight: 150
+      //   });
+    }, 3000);
+  }
+  $scope.getTrack();
 });
 
 

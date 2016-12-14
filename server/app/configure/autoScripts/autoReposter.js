@@ -304,14 +304,3 @@ function distributeEarnings(user, event) {
     })
   }
 }
-
-function partialRefund(event) {
-  if (event.price) {
-    paypalCalls.sendRefund(event.price, event.saleID)
-      .then(function(refund) {
-        console.log(refund);
-        event.payout = refund;
-        event.save();
-      }).then(null, console.log)
-  }
-}
