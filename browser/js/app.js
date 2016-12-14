@@ -328,6 +328,8 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                         else window.location.reload();
                     })
                     .then(null, function(err) {
+                        console.log(1);
+                        console.log(err);
                         $.Zebra_Dialog('Error: Could not log in');
                         $scope.processing = false;
                     });
@@ -339,7 +341,6 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
             }
         } else if (param == 'admin') {
             var adminUser = JSON.parse($window.localStorage.getItem('adminUser'));
-            console.log(adminUser);
             if (SessionService.getUser()._id != adminUser._id) {
                 $window.localStorage.setItem('prevATUser', JSON.stringify(SessionService.getUser()))
                 $scope.processing = true;
@@ -349,7 +350,6 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                     .catch(console.log);
 
                 function handleLoginResponse(res) {
-                    console.log('res.data');
                     if (res.status === 200 && res.data.success) {
                         var userData = res.data.user;
                         userData.isAdmin = true;
@@ -381,6 +381,8 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                     window.location.reload()
                 })
                 .then(null, function(err) {
+                    console.log(2);
+                    console.log(err);
                     $.Zebra_Dialog('Error: Could not log in');
                     $scope.processing = false;
                 });
@@ -395,10 +397,14 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
             })
             .then(function(res) {
                 $scope.processing = false;
-                SessionService.create(res.data.user);
-                $state.reload();
+                if (res.data.user) {
+                    SessionService.create(res.data.user);
+                    $state.reload();
+                }
             })
             .then(null, function(err) {
+                console.log(3);
+                console.log(err);
                 $.Zebra_Dialog('Error: Could not log in');
                 $scope.processing = false;
             });

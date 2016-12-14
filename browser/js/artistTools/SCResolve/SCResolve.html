@@ -1,12 +1,6 @@
 <br>
 <div style="margin:100px 100px; background-color: white">
-  <input type="text" ng-model="searchString"><button ng-click="changedSearch('track')">Search</button>
-  <div style="width:300px; height:300px; overflow:scroll;" ng-show="searching || seachError || searchSelection.length>0">
-    <button ng-repeat="item in searchSelection" style="width:100%" ng-click="selectedItem(item, 'track')">{{getItemText(item)}}</button>
-    <div ng-show="searching && !searchError && searchSelection.length==0">One moment...</div>
-    <div ng-show="!!searchError">{{searchError}}</div>
-    <div ng-show="searchSelection.length > 0 && !searchError">Enter a Soundcloud URL</div>
-  </div>
+  <input type='text' ng-model='url'></input><button ng-click="resolve()">Search</button>
   <p style="white-space:pre">
     {{response}}
   </p>

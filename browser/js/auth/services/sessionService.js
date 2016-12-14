@@ -104,8 +104,16 @@ app.factory('SessionService', function($cookies, $http, $window, $state) {
 				.then(function(res) {
 					create(res.data);
 				}).then(null, function() {
-					$window.localStorage.removeItem('user');
-					$state.go('login')
+					if (window.location.pathname.indexOf('artistTools') != -1) {
+						$window.localStorage.removeItem('user');
+						$state.go('login')
+					} else if (window.location.pathname.indexOf('admin') != -1) {
+						$window.localStorage.removeItem('user');
+						$state.go('admin')
+					} else {
+						$window.localStorage.removeItem('user');
+					}
+
 				})
 		}
 	}

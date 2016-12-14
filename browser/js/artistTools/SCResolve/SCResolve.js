@@ -10,6 +10,7 @@ app.config(function($stateProvider) {
 app.controller('SCResolveController', function($scope, $http) {
     $scope.response = {};
     $scope.resolve = function() {
+        console.log($scope.url);
         $http.post('/api/soundcloud/resolve', {
                 url: $scope.url
             })

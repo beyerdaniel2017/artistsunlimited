@@ -37,6 +37,8 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
         });
       })
       .then(null, function(err) {
+        console.log(4)
+        console.log(err);
         $.Zebra_Dialog('Error: Could not log in');
         $scope.processing = false;
       });

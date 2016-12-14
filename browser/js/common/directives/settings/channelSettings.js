@@ -367,12 +367,17 @@ app.directive('channelsettings', function($http) {
 						});
 					})
 					.then(function(res) {
+						console.log(res.data)
 						var price = (res.data.user.soundcloud.followers) / 3000;
 						$scope.AccountsStepData.price = parseInt(price);
 						var scInfo = {};
 						scInfo.userID = res.data.user._id;
 						$scope.paidRepostId = res.data.user._id;
 						$scope.AccountsStepData.postData.logo.images = $scope.AccountsStepData.postData.background.images = $scope.AccountsStepData.premier.logo.images = $scope.AccountsStepData.premier.background.images = res.data.user.soundcloud.avatarURL;
+						$scope.AccountsStepData.pseudoAvailableSlots = createPseudoAvailableSlots(res.data.user);
+						$scope.AccountsStepData.astzOffset = res.data.user.astzOffset;
+						$scope.AccountsStepData.repostSettings = res.data.user.repostSettings;
+						console.log(res.data.user);
 						AccountSettingServices.checkUsercount({
 								"userID": scInfo.userID,
 								'action': "id"
@@ -415,18 +420,25 @@ app.directive('channelsettings', function($http) {
 
 											});
 											SessionService.createAdminUser($scope.AccountsStepData);
+											console.log($scope.AccountStepData);
 											$scope.processing = false;
 											$scope.nextStep(2, $scope.AccountsStepData, 'channel')
+										}).then(null, function() {
+											console.log(err);
+											$.Zebra_Dialog("Error logging in")
 										})
-										.catch(function() {});
 								} else {
 									$.Zebra_Dialog('Error: This user already exists');
 									$scope.processing = false;
 									location.reload();
 								}
-							});
+							}).then(null, function() {
+								console.log(err);
+								$.Zebra_Dialog("Error logging in")
+							})
 					})
 					.then(null, function(err) {
+						console.log(err);
 						$.Zebra_Dialog('Error: Could not log in');
 						$scope.processing = false;
 					});
