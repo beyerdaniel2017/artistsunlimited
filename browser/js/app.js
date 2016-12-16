@@ -236,6 +236,13 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
     $scope.adminlogout = function() {
         mainService.adminlogout();
     }
+    $scope.getSubmissionCount = function() {
+        $http.get('/api/submissions/counts').then(function(res) {
+            console.log(res.data);
+            $scope.submissionsCount = res.data.regularCount;
+        });
+    }
+    $scope.getSubmissionCount();
 
     $scope.gotoSettings = function() {
         $scope.user = SessionService.getUser();
@@ -309,6 +316,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
     }
 
     $rootScope.changeUserAdmin = $scope.changeUserAdmin = function(param, location, state) {
+        if (!param) return;
         $scope.processing = true;
         if (typeof param == 'string' && param.length > 15) param = JSON.parse(param);
         if (param == 'user') {

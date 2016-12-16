@@ -25,10 +25,10 @@
           <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom SCHEDULER"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/scheduler','scheduler')">SCHEDULER</a></li>
           <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom REPOSTTRADES"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/reposttraders','adminRepostTraders');">REPOST TRADER</a></li>
           <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom DOWNLOADGATEWAY"><a href="javascript:void(0)" ng-click="changeUserAdmin('user', '/admin/downloadGateway','adminDownloadGateway');">DOWNLOAD GATEWAY</a></li>
-          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin', '/admin/submissions','submissions');">REPOST SUBMISSIONS <!-- <div class="badge notification-bubble-submission-count" ng-show="submissionsCount > 0">{{submissionsCount}}</div> --></a></li>
+          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom REPOSTSUBMISSIONS"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin', '/admin/submissions','submissions');">REPOST SUBMISSIONS<div class="badge notification-bubble-submission-count" ng-show="submissionsCount > 0">{{submissionsCount}}</div></a></li>
           <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom PREMIERSUBMISSIONS"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin', '/admin/premiersubmissions','premiersubmissions');">PREMIERE SUBMISSIONS</a></li>
-          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin', '/admin/accounts','accounts');">ACCOUNTS</a></li> 
-          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom SETTINGS"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin','','basicstep1');">SETTINGS</a></li>
+          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom ACCOUNTS"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin', '/admin/accounts','accounts');">ACCOUNTS</a></li> 
+          <li ui-sref-active-eq="left-menu-active" ng-class="{disabled:enableNavigation}" class="border-bottom SETTINGS"><a href="javascript:void(0)" ng-click="changeUserAdmin('admin','/admin/basic/step1','basicstep1');">SETTINGS</a></li>
          <!--  <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="customizesubmission">CUSTOM SUBMISSIONS</a></li>
          <li ui-sref-active-eq="left-menu-active" class="border-bottom"><a href="javascript:void(0)" ui-sref="customemailbuttons">CUSTOM EMAIL BUTTONS</a></li> -->
        </ul>
@@ -52,8 +52,14 @@
       case "/admin/downloadGateway":
       $(".DOWNLOADGATEWAY").addClass("left-menu-active");
       break;
+      case "/admin/submissions":
+      $(".REPOSTSUBMISSIONS").addClass("left-menu-active");
+      break;
       case "/admin/premiersubmissions":
       $(".PREMIERSUBMISSIONS").addClass("left-menu-active");
+      break;
+      case "/admin/accounts":
+      $(".ACCOUNTS").addClass("left-menu-active");
       break;
       case "/admin/basic/step1":
       $(".SETTINGS").addClass("left-menu-active");

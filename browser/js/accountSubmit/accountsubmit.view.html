@@ -11,11 +11,11 @@
   background-size: cover;
   display: block;
   float: right;
-  height:102%;
-  left: 0;
+  top:-40px;
+  left: -40px;
   position: absolute;
-  right: 0;
-  width: 100%;
+  right: -40px;
+  bottom: -40px;
   z-index: 1;
 }
 #rightpremierTemplate::-webkit-scrollbar { 
@@ -26,6 +26,9 @@
   margin: 20px;  
   z-index: 2;
   padding: 0 10px;
+  overflow-y:scroll; 
+  overflow-x:hidden; 
+  height:100%;
 }
 .submi-section{
  padding-bottom:60px;
@@ -38,18 +41,22 @@
  height: 100%;
  bottom: 0;
  width: 100%;
+ background-color:white !important; 
+ text-align:center;
+ height:100%; 
+ overflow:hidden;
 }
 </style>
-<div class="custom-settings" style="background-color:white !important; text-align:center; height:100%; overflow:hidden;">
-  <div id="backgroundImage1" style="background-size:cover; background-image:url( {{customizeSettings.background.images}}); filter: blur({{customizeSettings.background.blur}}px);-webkit-filter: blur({{customizeSettings.background.blur}}px);"></div>
+<div class="custom-settings">
+  <div id="backgroundImage1" style="background-size:cover; background-image:url( {{customizeSettings.background.images}}); filter: blur({{customizeSettings.background.blur}}px); -webkit-filter: blur({{customizeSettings.background.blur}}px);"></div>
   <div class="col-md-2"></div>
-  <div id="rightpremierTemplate" class="col-md-8" style="overflow-y:scroll; height:100%">
+  <!-- template 1 -->
+  <div id="rightpremierTemplate" class="col-md-8" ng-if='customizeSettings.layout == 1'>
     <p class="text-center" style="color:{{customizeSettings.heading.style.fontColor}};
     font-weight:{{customizeSettings.heading.style.fontWeight}};
     font-family:{{customizeSettings.heading.style.fontFamily}};
     font-size:{{customizeSettings.heading.style.fontSize}}px">{{customizeSettings.heading.text}}</p>
     <div class="internal-content">
-      <br>
       <div class="row">
         <div class="col-md-12">
           <p class="text-center" style="color:{{customizeSettings.subHeading.style.fontColor}};
@@ -57,32 +64,30 @@
           font-family:{{customizeSettings.subHeading.style.fontFamily}}; 
           font-weight:{{customizeSettings.subHeading.style.fontWeight}}" ng-bind-html="customizeSettings.subHeading.text"></p>
         </div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-md-12 text-center">
-          <img class="text-center" style="width:150px;height:150px;" ng-if="customizeSettings.logo.images" id="templatepremierLogo" src="{{customizeSettings.logo.images}}">
+        <div class="col-md-12">
+          <img class="text-center" style="width:80%; max-width:200px; margin:20px auto; margin-bottom:40px;" ng-if="customizeSettings.logo.images" id="templatepremierLogo" src="{{customizeSettings.logo.images}}">
         </div>
-      </div>
-      <br>
-      <div class="row">
         <div class="col-md-12">
           <form role="form" ng-submit="submit()">
-            <br>
             <div class="row">
-              <div class="col-sm-6 col-sm-offset-3 search">
+              <div class="search" style="max-width:350px; width:80%; margin:0 auto;">
                 <scsearch kind='track' returnitem='choseTrack(item)' customstyle="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}"></scsearch>
+              </div>
+            </div>
+            <div class="row text-center" ng-show="showPlayer">
+              <div style="max-width:350px; width:80%; margin:0 auto;">
+                <iframe id="scPlayerCustom" width="700" height="160" src="https://w.soundcloud.com/player/?url=&auto_play=false&show_artwork=true" style="margin-top:10px; position:relative; z-index:1; border:none; max-width:100%"></iframe> 
               </div>
             </div>
             <br>
             <div class="row">
-              <div class="col-sm-6 col-sm-offset-3">
+              <div style="max-width:350px; width:80%; margin: 0 auto;">
                 <input type="text" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
               </div>
             </div>
             <br>
             <div class="row">
-              <div class="col-sm-6 col-sm-offset-3">
+              <div  style="max-width:350px; width:80%; margin: 0 auto;">
                 <input type="email" placeholder="Email" ng-model="submission.email" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px;border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
               </div>
             </div>
@@ -90,21 +95,194 @@
             <div class="text-center">
               <button class="btn btn-default" style="color:{{customizeSettings.button.style.fontColor}}; 
               font-size:{{customizeSettings.button.style.fontSize}}px; 
-              background-color:{{customizeSettings.button.style.bgColor}}; border:solid {{customizeSettings.inputFields.style.borderColor}} {{customizeSettings.button.style.border}}px; border-radius:{{customizeSettings.button.style.borderRadius}}px;">{{customizeSettings.button.text}}
-            </button>
-            <br>
-            <br>
-          </div>
-          <div class="text-center">
-            <div class="col-md-12 text-center" style="margin-bottom:40px;">
-              <iframe id="scPlayerCustom" ng-show="showPlayer" width="700" height="160" src="https://w.soundcloud.com/player/?url=&auto_play=false&show_artwork=true" style="margin:10px 0; position:relative; z-index:1; border:none; max-width:100%"></iframe> 
+              background-color:{{customizeSettings.button.style.bgColor}}; border:solid {{customizeSettings.inputFields.style.borderColor}} {{customizeSettings.button.style.border}}px; border-radius:{{customizeSettings.button.style.borderRadius}}px;">{{customizeSettings.button.text}}</button>
+              <br>
+              <br>
             </div>
-          </div>
-          <br>
-        </form>
-      </div>          
+            <br>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+  <!-- template 2 -->
+  <div id="rightpremierTemplate" class="col-md-8" style="overflow-y:scroll; height:100%" ng-if='customizeSettings.layout == 2'>
+    <p class="text-center" style="color:{{customizeSettings.heading.style.fontColor}};
+    font-weight:{{customizeSettings.heading.style.fontWeight}};
+    font-family:{{customizeSettings.heading.style.fontFamily}};
+    font-size:{{customizeSettings.heading.style.fontSize}}px">{{customizeSettings.heading.text}}</p>
+    <div class="internal-content">
+      <div class="row">
+        <div class='col-md-6 text-center' style="margin-top:20px;">
+          <div class="col-md-12">
+            <p style="color:{{customizeSettings.subHeading.style.fontColor}};
+            font-size:{{customizeSettings.subHeading.style.fontSize}}px; 
+            font-family:{{customizeSettings.subHeading.style.fontFamily}}; 
+            font-weight:{{customizeSettings.subHeading.style.fontWeight}}; width:90%; max-width:350px; margin:0 auto; text-align:left;" ng-bind-html="customizeSettings.subHeading.text"></p>
+          </div>
+          <div class="col-md-12" style="margin-top:20px;">
+            <form role="form" ng-submit="submit()">
+              <div class="row">
+                <div class="search" style="max-width:350px; width:80%; margin:0 auto;">
+                  <scsearch kind='track' returnitem='choseTrack(item)' customstyle="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}"></scsearch>
+                </div>
+              </div>
+              <div class="row text-center" ng-show="showPlayer">
+                <div style="max-width:350px; width:80%; margin:0 auto;">
+                  <iframe id="scPlayerCustom" width="700" height="160" src="https://w.soundcloud.com/player/?url=&auto_play=false&show_artwork=true" style="margin-top:10px; position:relative; z-index:1; border:none; max-width:100%"></iframe> 
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div style="max-width:350px; width:80%; margin: 0 auto;">
+                  <input type="text" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div  style="max-width:350px; width:80%; margin: 0 auto;">
+                  <input type="email" placeholder="Email" ng-model="submission.email" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px;border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
+                </div>
+              </div>
+              <br>
+              <div class="text-center">
+                <button class="btn btn-default" style="color:{{customizeSettings.button.style.fontColor}}; 
+                font-size:{{customizeSettings.button.style.fontSize}}px; 
+                background-color:{{customizeSettings.button.style.bgColor}}; border:solid {{customizeSettings.inputFields.style.borderColor}} {{customizeSettings.button.style.border}}px; border-radius:{{customizeSettings.button.style.borderRadius}}px;">{{customizeSettings.button.text}}</button>
+                <br>
+                <br>
+              </div>
+              <br>
+            </form>
+          </div>  
+        </div>
+        <div class="col-md-6" style="vertical-align:center;">
+          <div class="col-md-12">
+            <img class="text-center" style="width:90%; max-width:350px; margin:20px auto; margin-top:10px;" ng-if="customizeSettings.logo.images" id="templatepremierLogo" src="{{customizeSettings.logo.images}}">
+          </div>
+        </div>          
+      </div>
+    </div>
+  </div>
+  <!-- template 3 -->
+  <div id="rightpremierTemplate" class="col-md-8" style="overflow-y:scroll; height:100%" ng-if='customizeSettings.layout == 3'>
+    <p class="text-center" style="color:{{customizeSettings.heading.style.fontColor}};
+    font-weight:{{customizeSettings.heading.style.fontWeight}};
+    font-family:{{customizeSettings.heading.style.fontFamily}};
+    font-size:{{customizeSettings.heading.style.fontSize}}px">{{customizeSettings.heading.text}}</p>
+    <div class="internal-content">
+      <div class="row">
+        <div class='col-md-12 text-center' style="margin-top:20px;">
+          <div class="col-md-12">
+            <p class="text-center" style="color:{{customizeSettings.subHeading.style.fontColor}};
+            font-size:{{customizeSettings.subHeading.style.fontSize}}px; 
+            font-family:{{customizeSettings.subHeading.style.fontFamily}}; 
+            font-weight:{{customizeSettings.subHeading.style.fontWeight}}" ng-bind-html="customizeSettings.subHeading.text"></p>
+          </div>
+        </div>
+        <div class="col-md-12" style="margin-top:40px;">
+          <div class="col-md-6 text-center" style="margin-bottom:40px;">
+            <img class="text-center" style="width:80%; max-width:350px; margin: 0 auto;" ng-if="customizeSettings.logo.images" id="templatepremierLogo" src="{{customizeSettings.logo.images}}">
+          </div>
+          <div class="col-md-6">
+            <form role="form" ng-submit="submit()">
+              <div class="row">
+                <div class="search" style="max-width:350px; width:80%; margin:0 auto;">
+                  <scsearch kind='track' returnitem='choseTrack(item)' customstyle="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}"></scsearch>
+                </div>
+              </div>
+              <div class="row text-center" ng-show="showPlayer">
+                <div style="max-width:350px; width:80%; margin:0 auto;">
+                  <iframe id="scPlayerCustom" width="700" height="160" src="https://w.soundcloud.com/player/?url=&auto_play=false&show_artwork=true" style="margin-top:10px; position:relative; z-index:1; border:none; max-width:100%"></iframe> 
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div style="max-width:350px; width:80%; margin: 0 auto;">
+                  <input type="text" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div  style="max-width:350px; width:80%; margin: 0 auto;">
+                  <input type="email" placeholder="Email" ng-model="submission.email" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px;border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
+                </div>
+              </div>
+              <br>
+              <div class="text-center">
+                <button class="btn btn-default" style="color:{{customizeSettings.button.style.fontColor}}; 
+                font-size:{{customizeSettings.button.style.fontSize}}px; 
+                background-color:{{customizeSettings.button.style.bgColor}}; border:solid {{customizeSettings.inputFields.style.borderColor}} {{customizeSettings.button.style.border}}px; border-radius:{{customizeSettings.button.style.borderRadius}}px;">{{customizeSettings.button.text}}</button>
+                <br>
+                <br>
+              </div>
+              <br>
+            </form>
+          </div>
+        </div>          
+      </div>
+    </div>
+  </div>
+  <!-- template 4 -->
+  <div id="rightpremierTemplate" class="col-md-8" style="overflow-y:scroll; height:100%" ng-if='customizeSettings.layout == 4'>
+    <p class="text-center" style="color:{{customizeSettings.heading.style.fontColor}};
+    font-weight:{{customizeSettings.heading.style.fontWeight}};
+    font-family:{{customizeSettings.heading.style.fontFamily}};
+    font-size:{{customizeSettings.heading.style.fontSize}}px">{{customizeSettings.heading.text}}</p>
+    <div class="internal-content">
+      <div class="row">
+        <div class='col-md-12 text-center' style="margin-top:20px; border-top:1px solid black; border-bottom:1px solid black;">
+          <div class="row">
+            <div class="col-md-3 vcenter">
+              <img class="text-center" style="width:80%; max-width:350px; margin:20px auto;" ng-if="customizeSettings.logo.images" id="templatepremierLogo" src="{{customizeSettings.logo.images}}">
+            </div>
+            <div class="col-md-8 vcenter">
+              <p class="text-center" style="color:{{customizeSettings.subHeading.style.fontColor}};
+              font-size:{{customizeSettings.subHeading.style.fontSize}}px; 
+              font-family:{{customizeSettings.subHeading.style.fontFamily}}; 
+              font-weight:{{customizeSettings.subHeading.style.fontWeight}}; text-align:left; margin:10px auto;" ng-bind-html="customizeSettings.subHeading.text"></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12" style="margin-top:40px;">
+          <div class="col-md-12">
+            <form role="form" ng-submit="submit()">
+              <div class="row">
+                <div class="search" style="max-width:350px; width:80%; margin:0 auto;">
+                  <scsearch kind='track' returnitem='choseTrack(item)' customstyle="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}};"></scsearch>
+                </div>
+              </div>
+              <div class="row text-center" ng-show="showPlayer">
+                <div style="max-width:350px; width:80%; margin:0 auto;">
+                  <iframe id="scPlayerCustom" width="700" height="160" src="https://w.soundcloud.com/player/?url=&auto_play=false&show_artwork=true" style="margin-top:10px; position:relative; z-index:1; border:none; max-width:100%;"></iframe> 
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div style="max-width:350px; width:80%; margin: 0 auto;">
+                  <input type="text" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}};" required/>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div  style="max-width:350px; width:80%; margin: 0 auto;">
+                  <input type="email" placeholder="Email" ng-model="submission.email" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px;border-color:{{customizeSettings.inputFields.style.borderColor}};" required/>
+                </div>
+              </div>
+              <br>
+              <div class="text-center">
+                <button class="btn btn-default" style="color:{{customizeSettings.button.style.fontColor}}; 
+                font-size:{{customizeSettings.button.style.fontSize}}px; 
+                background-color:{{customizeSettings.button.style.bgColor}}; border:solid {{customizeSettings.inputFields.style.borderColor}} {{customizeSettings.button.style.border}}px; border-radius:{{customizeSettings.button.style.borderRadius}}px;">{{customizeSettings.button.text}}</button>
+                <br>
+                <br>
+              </div>
+              <br>
+            </form>
+          </div>
+        </div>          
+      </div>
+    </div>
+  </div>
 </div>
 <ng-include src="'js/home/views/loader.html'"></ng-include>

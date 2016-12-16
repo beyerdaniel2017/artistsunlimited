@@ -173,7 +173,7 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
       query.genre = genre;
     }
     Submission.find(query).sort({
-        submissionDate: 1
+        pooledSendDate: 1
       })
       .populate('userID')
       .skip(skipcount)
@@ -620,6 +620,9 @@ router.put('/completedPayment', function(req, res, next) {
       User.findOne({
         'soundcloud.id': events[0].event.userID
       }).then(function(user) {
+        var calendarLink = rootURL + "/repostevents/" + user.soundcloud.pseudoname + "/" + events[0].event.pseudoname + "?paid=true";
+        var buyMoreLink = rootURL + "/pay/" + sub._id;
+        sendEmail(sub.name, sub.email, "Artists Unlimited", "coayscue@artistsunlimited.com", "Useful links", "Hello " + sub.name + ",<br><br>Thank you for your purchase! Here are some useful links for your records:<br><br><a href=" + calendarLink + ">Paid Repost Calendar</a><br><br><a href=" + buyMoreLink + ">Buy More Reposts</a><br><br>Thank you,<br>Artists Unlimited");
         res.json({
           username: user.soundcloud.pseudoname,
           title: events[0].event.pseudoname

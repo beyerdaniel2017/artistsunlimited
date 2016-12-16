@@ -227,29 +227,28 @@ router.post('/bySCURL', function(req, res, next) {
               .on("end", function() {
                 var user = JSON.parse(userBody);
                 User.findOne({
-                  'soundcloud.id': user.id
-                })
-
-                .then(function(data) {
-                  if (!data) {
-                    var pseudoname = user.permalinkURL.substring(user.soundcloud.permalinkURL.indexOf('.com/') + 5);
-                    var newUser = new User({
-                      'name': user.username,
-                      'soundcloud': {
-                        'id': user.id,
-                        'username': user.username,
-                        'permalinkURL': user.permalink_url,
-                        'avatarURL': user.avatar_url.replace('large', 't500x500'),
-                        'followers': user.followers_count,
-                        'pseudoname': pseudoname
-                      }
-                    });
-                    newUser.save();
-                    res.send([newUser]);
-                  } else {
-                    res.send([]);
-                  }
-                }).then(null, next);
+                    'soundcloud.id': user.id
+                  })
+                  .then(function(data) {
+                    if (!data) {
+                      var pseudoname = user.permalink_url.substring(user.permalink_url.indexOf('.com/') + 5);
+                      var newUser = new User({
+                        'name': user.username,
+                        'soundcloud': {
+                          'id': user.id,
+                          'username': user.username,
+                          'permalinkURL': user.permalink_url,
+                          'avatarURL': user.avatar_url.replace('large', 't500x500'),
+                          'followers': user.followers_count,
+                          'pseudoname': pseudoname
+                        }
+                      });
+                      newUser.save();
+                      res.send([newUser]);
+                    } else {
+                      res.send([]);
+                    }
+                  }).then(null, next);
               });
           });
         });

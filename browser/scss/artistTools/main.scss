@@ -571,9 +571,9 @@ h3 {
     border-radius: 50%;
     width: 25px;
     height: 25px;
-    padding-top: 7px;
+    padding: 7px 0;
     letter-spacing: 0;
-    padding-left: 5px;
+    text-align:center
 }
 .list-group-item.active > .badge,
 .nav-pills > .active > a > .badge {

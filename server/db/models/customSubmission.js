@@ -50,7 +50,7 @@ var schema = new mongoose.Schema({
   backgroundImage: {
     type: String
   },
-  type: String
-
+  type: String,
+  layout: String
 });
 mongoose.model('CustomSubmission', schema);

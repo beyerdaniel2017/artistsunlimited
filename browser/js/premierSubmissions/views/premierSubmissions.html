@@ -19,7 +19,7 @@
               <li role="presentation" class="active" style="border-radius: 10px 0 0 0;"><a href="#mysubmissions" aria-controls="mysubmissions" role="tab" data-toggle="tab" style="border-radius: 10px 0 0 0;">
                 <img src="assets/images/music-icon-big.png"/>MY SUBMISSIONS</a>
               </li>
-              <li role="presentation" style="border-radius: 0 10px 0 0;"><a href="#managesubmissions" aria-controls="managesubmissions" role="tab" data-toggle="tab" style="border-radius: 0 10px 0 0;"> <img src="assets/images/managereposts.png"/>CUSTOM BUTTONS</a></li>
+              <li role="presentation" style="border-radius: 0 10px 0 0;"><a href="#managesubmissions" aria-controls="managesubmissions" role="tab" data-toggle="tab" style="border-radius: 0 10px 0 0;"> <img src="assets/images/managereposts.png"/>CUSTOM EMAILS</a></li>
             </ul>
           </div>
           <!-- Nav tabs :End-->
@@ -123,17 +123,17 @@
                         <div class="row margin-bottom-10" ng-repeat="item in customEmailButtons track by $index" style="border-bottom: solid 1px #dcdcdc;">
                           <div class="col-md-12">
                             <div class="col-md-8 margin-bottom-10">
-                              <input type="text" ng-model="item.buttonText" class="form-control" placeholder="Button Title">
+                              <input type="text" ng-model="item.buttonText" class="form-control" placeholder="Button Title" index="{{$index}}">
                               <br/>
-                              <input type="text" ng-model="item.toEmail" class="form-control" placeholder="To Email">
+                              <input type="text" ng-model="item.toEmail" class="form-control toEmailArea{{$index}}" placeholder="To Email" index="{{$index}}" ng-click="addEventClass($index,'toEmailArea');">
                               <br/>
-                              <input type="text" ng-model="item.subject" class="form-control" placeholder="Subject">
+                              <input type="text" ng-model="item.subject" class="form-control subjectArea{{$index}}" placeholder="Subject" index="{{$index}}" ng-click="addEventClass($index,'subjectArea');">
                               <br/>
                               <textarea ng-model="item.emailBody" class="form-control emailBodyArea{{$index}}" rows="15" placeholder="Email body" index="{{$index}}" ng-click="addEventClass($index,'emailBodyArea');"></textarea>
                               <br/>
                               <div class="col-md-12 text-center">
-                                <button class="btn btn-default" ng-click="sendTestMail($index)">Send Test Email</button>
-                                <button class="btn btn-default" ng-click="removeItem($index)">Delete</button>                                  
+                                <button class="btn btn-default" ng-click="sendTestMail($index)">TEST EMAIL</button>
+                                <button class="btn btn-default" ng-click="removeItem($index)">DELETE</button>                                  
                               </div>
                             </div>
                             <div class="col-md-4 margin-bottom-10">
@@ -144,12 +144,12 @@
                         </div>
                         <br/>
                         <div class="text-center margin-bottom-10">
-                          <a href="#" class="btn btn-default" ng-click="addItem()">+ Add More</a>
+                          <a href="#" class="btn btn-default" ng-click="addItem()">ADD CUSTOM EMAIL</a>
                         </div> 
                         <br/>
                         <div class="">
                           <div class="col-md-12 text-center" style="padding-top:20px;">
-                            <button type="submit" class="btn btn-pink btn-enter">Save Settings</button>
+                            <button type="submit" class="btn btn-pink btn-enter">SAVE SETTINGS</button>
                           </div>
                         </div>
                         <br>
@@ -175,8 +175,7 @@
   <!--overlay--> 
   <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showTestEmailModal">
     <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
-      <div class="modal-dialog modal-vertical-centered">    
-
+      <div class="modal-dialog modal-vertical-centered">
         <div class="modal-content">
           <div style="text-align:center; padding:10px;">        
             <div style="text-align:center;padding-bottom:10px;">
@@ -184,8 +183,6 @@
                <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="email" required/>
              </div>
              <button type="button" class="btn btn-pink" data-dismiss="modal" ng-click="testEmail(email)">Send</button>
-
-
            </div>
          </div>      
        </div>

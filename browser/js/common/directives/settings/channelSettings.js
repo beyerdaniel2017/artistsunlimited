@@ -43,23 +43,34 @@ app.directive('channelsettings', function($http) {
 			}
 
 			$scope.defaultsRep = function() {
+				var oldId = $scope.AccountsStepData.postData._id;
+				console.log(oldId);
 				$scope.AccountsStepData.postData = JSON.parse(JSON.stringify($scope.defaultSubmitPage));
 				$scope.AccountsStepData.postData.heading.text = "Submission for Repost";
 				$scope.AccountsStepData.postData.logo.images = $scope.AccountsStepData.postData.background.images = $scope.AccountsStepData.submissionData.avatarURL;
+				$scope.AccountsStepData.postData.type = "submit";
+				console.log($scope.AccountsStepData.postData._id);
+				$scope.AccountsStepData.postData._id = oldId;
+				console.log($scope.AccountsStepData.postData._id);
 			}
 
 			$scope.defaultsPrem = function() {
+				var oldId = $scope.AccountsStepData.premier._id;
 				$scope.AccountsStepData.premier = JSON.parse(JSON.stringify($scope.defaultSubmitPage));
 				$scope.AccountsStepData.premier.heading.text = "Submission for Premiere";
 				$scope.AccountsStepData.premier.logo.images = $scope.AccountsStepData.premier.background.images = $scope.AccountsStepData.submissionData.avatarURL;
+				$scope.AccountsStepData.premier.type = "premiere";
+				$scope.AccountsStepData.premier._id = oldId;
 			}
 
 			$scope.undoRep = function() {
+				console.log($scope.AccountsStepData.postData._id);
 				if (!$scope.AccountsStepData.postData._id) {
 					$scope.defaultsRep();
 				} else {
 					$http.get('/api/customSubmissions/getCustomSubmission/' + $scope.AccountsStepData.postData.userID + '/' + $scope.AccountsStepData.postData.type)
 						.then(function(res) {
+							console.log(res.data);
 							$scope.AccountsStepData.postData = res.data;
 						})
 				}
@@ -74,6 +85,17 @@ app.directive('channelsettings', function($http) {
 							$scope.AccountsStepData.premier = res.data;
 						})
 				}
+			}
+
+			$scope.matchRep = function() {
+				var oldId = $scope.AccountsStepData.premier._id;
+				var saveHeading = $scope.AccountsStepData.premier.heading.text;
+				var saveSubheading = $scope.AccountsStepData.premier.subHeading.text;
+				$scope.AccountsStepData.premier = $scope.AccountsStepData.postData;
+				$scope.AccountsStepData.premier.heading.text = saveHeading;
+				$scope.AccountsStepData.premier.subHeading.text = saveSubheading;
+				$scope.AccountsStepData.premier._id = oldId;
+				$scope.AccounsStepData.premier.type = "premiere";
 			}
 
 			$scope.saveComments = function(value, type, index) {
@@ -112,6 +134,7 @@ app.directive('channelsettings', function($http) {
 					return;
 				}
 			}
+
 			$scope.editComments = function(comment, type, index) {
 				$scope.scheduleCommentIndex = index;
 				if (type == 'paid') {
@@ -373,6 +396,7 @@ app.directive('channelsettings', function($http) {
 						var scInfo = {};
 						scInfo.userID = res.data.user._id;
 						$scope.paidRepostId = res.data.user._id;
+						$scope.defaultSubmitPage.userID = scInfo.userID;
 						$scope.AccountsStepData.postData.logo.images = $scope.AccountsStepData.postData.background.images = $scope.AccountsStepData.premier.logo.images = $scope.AccountsStepData.premier.background.images = res.data.user.soundcloud.avatarURL;
 						$scope.AccountsStepData.pseudoAvailableSlots = createPseudoAvailableSlots(res.data.user);
 						$scope.AccountsStepData.astzOffset = res.data.user.astzOffset;
@@ -420,7 +444,6 @@ app.directive('channelsettings', function($http) {
 
 											});
 											SessionService.createAdminUser($scope.AccountsStepData);
-											console.log($scope.AccountStepData);
 											$scope.processing = false;
 											$scope.nextStep(2, $scope.AccountsStepData, 'channel')
 										}).then(null, function() {
@@ -451,8 +474,6 @@ app.directive('channelsettings', function($http) {
 					$scope.activeTab = ['submissionUrl'];
 				}
 			}
-
-			console.log($scope.AccountsStepData);
 
 			$scope.isPaidRepost();
 
@@ -503,7 +524,8 @@ app.directive('channelsettings', function($http) {
 									heading: $scope.AccountsStepData.postData.heading,
 									subHeading: $scope.AccountsStepData.postData.subHeading,
 									inputFields: $scope.AccountsStepData.postData.inputFields,
-									button: $scope.AccountsStepData.postData.button
+									button: $scope.AccountsStepData.postData.button,
+									layout: $scope.AccountsStepData.postData.layout
 								})
 								.then(function(res) {
 									$scope.activeTab.push('customPremiereSubmission');
@@ -521,7 +543,8 @@ app.directive('channelsettings', function($http) {
 									heading: $scope.AccountsStepData.premier.heading,
 									subHeading: $scope.AccountsStepData.premier.subHeading,
 									inputFields: $scope.AccountsStepData.premier.inputFields,
-									button: $scope.AccountsStepData.premier.button
+									button: $scope.AccountsStepData.premier.button,
+									layout: $scope.AccountsStepData.premier.layout
 								})
 								.then(function(res) {
 									if ($scope.AccountsStepData.pseudoAvailableSlots == undefined) $scope.AccountsStepData.pseudoAvailableSlots = defaultAvailableSlots;
@@ -648,6 +671,9 @@ app.directive('channelsettings', function($http) {
 					$scope.processing = false;
 				}
 			}
+
+
+
 			$scope.uploadCustomBackground = function() {
 					$scope.processing = true;
 					if ($scope.AccountsStepData.postData != undefined && $scope.AccountsStepData.postData.background.images != "") {

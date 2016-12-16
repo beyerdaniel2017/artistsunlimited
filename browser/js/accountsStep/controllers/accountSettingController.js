@@ -74,7 +74,6 @@ app.config(function($stateProvider) {
 app.controller('accountSettingController', function($rootScope, $state, $scope, $http, $window, AccountSettingServices, SessionService) {
 
   $scope.defaultSubmitPage = {
-    "type": "submit",
     "button": {
       "text": "Submit",
       "style": {
@@ -113,9 +112,10 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
       "images": ""
     },
     "background": {
-      "blur": 28,
+      "blur": 40,
       "images": ""
-    }
+    },
+    "layout": '4'
   }
 
   $scope.loadFontNames = function() {
@@ -203,7 +203,9 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
     $scope.AccountsStepData.premier = JSON.parse(JSON.stringify($scope.defaultSubmitPage));
     $scope.loadFontNames();
     $scope.AccountsStepData.postData.heading.text = "Submission for Repost";
+    $scope.AccountsStepData.postData.type = "submit";
     $scope.AccountsStepData.premier.heading.text = "Submission for Premiere";
+    $scope.AccountsStepData.premier.type = "premiere";
     $scope.AccountsStepData.formActions = formActions;
   } else if (formActions == "Edit") {
     if ($scope.AccountsStepData == undefined) $scope.AccountsStepData = {};
@@ -223,6 +225,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
           $scope.AccountsStepData.submissionData.followers = res.data.user.followers;
           $scope.AccountsStepData.submissionData.userID = res.data.userID;
           userId = res.data.userID;
+          $scope.defaultSubmitPage.userID = userId;
           $scope.AccountsStepData.repostSettings = res.data.repostSettings;
           $scope.AccountsStepData.price = res.data.price;
           $scope.AccountsStepData.description = res.data.description;

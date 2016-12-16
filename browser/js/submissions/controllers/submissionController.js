@@ -56,30 +56,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     "name": "SUBMITTED ACCOUNT NAME W/ LINK",
     "appendText": " {SUBMITTED_ACCOUNT_NAME_WITH_LINK} "
   }];
-
-  $scope.genreArray = [
-    'Alternative Rock',
-    'Ambient',
-    'Creative',
-    'Chill',
-    'Classical',
-    'Country',
-    'Dance & EDM',
-    'Dancehall',
-    'Deep House',
-    'Disco',
-    'Drum & Bass',
-    'Dubstep',
-    'Electronic',
-    'Festival',
-    'Folk',
-    'Hip-Hop/RNB',
-    'House',
-    'Indie/Alternative',
-    'Latin',
-    'Trap',
-    'Vocalists/Singer-Songwriter'
-  ];
   if (window.location.href.indexOf('admin/submissions#mysubmissions') != -1) {
     $('.nav-tabs a[href="#mysubmissions"]').tab('show');
   } else if (window.location.href.indexOf('admin/submissions#marketplace') != -1) {
@@ -89,9 +65,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.sendTestMail = function(index) {
-    $scope.showTestEmailModal = true;
     $scope.emailIndex = index;
-    $('#emailModal').modal('show');
+    $scope.testEmail("testemail@artistsunlimited.com");
+    // $scope.showTestEmailModal = true;
+    // $('#emailModal').modal('show');
   }
 
   $scope.testEmail = function(email) {
@@ -152,8 +129,13 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.loadMore = function() {
-    $scope.skip += 10;
+    $scope.skip += $scope.limit;
     $scope.loadSubmissions();
+  }
+
+  $scope.loadMoreMarket = function() {
+    $scope.marketSkip += $scope.marketLimit;
+    $scope.loadMarketSubmissions();
   }
 
   $scope.loadMarketSubmissions = function() {
@@ -332,7 +314,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     var toEmail = formatForEmailClient(item.toEmail, sub);
     var subject = (item.subject != undefined ? formatForEmailClient(item.subject, sub) : "");
     var body = (item.emailBody != undefined ? formatForEmailClient(item.emailBody, sub) : "");
-    $window.open("mailto:" + toEmail + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body));
+    $window.open("mailto:" + encodeURIComponent(toEmail) + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body), "_self");
   }
 
   function formatForEmailClient(text, sub) {
