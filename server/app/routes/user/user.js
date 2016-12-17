@@ -512,3 +512,12 @@ router.get('/getUserPaidRepostAccounts', function(req, res) {
   }
   next();
 });
+
+router.post('/saveTemplates', function(req, res, next) {
+  User.findById(req.user._id)
+    .then(function(adminUser) {
+      adminUser.templates = req.body;
+      adminUser.save();
+      res.send(adminUser.templates);
+    }).then(null, next);
+})

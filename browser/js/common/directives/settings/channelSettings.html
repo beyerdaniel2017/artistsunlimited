@@ -187,7 +187,7 @@
       </div>
       <div role="tabpanel" class="tab-pane fade" id="customSubmission">
         <div  class="submi-section" style="height: 750px; overflow:hidden;">
-          <div class="row"> 
+          <div class=""> 
             <div class="col-md-12">
               <div class="col-md-3">                                    
                 <div class="row">
@@ -210,6 +210,16 @@
                                 <label class='radio-inline'><input type="radio" name="optradio" ng-model="AccountsStepData.postData.layout" value="2"/>2</label>
                                 <label class='radio-inline'><input type="radio" name="optradio" ng-model="AccountsStepData.postData.layout" value="3"/>3</label>
                                 <label class='radio-inline'><input type="radio" name="optradio" ng-model="AccountsStepData.postData.layout" value="4"/>4</label>
+                              </div>
+                            </div>
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                                <label>Templates:</label><br>
+                                <button class="btn btn-border" ng-click="saveTemplate()">Save Current</button>
+                                <br>
+                                <ul style="list-style-type: none;">
+                                  <li ng-repeat="template in user.templates track by $index">Template {{$index}}:<a ng-click="enableTemplate(template, 'submit')"> Load </a>-<a ng-click="deleteTemplate($index)" style="color:red">  Delete</a></li>
+                                </ul>
                               </div>
                             </div>
                           </div>
@@ -700,31 +710,43 @@
       </div>
     </div>
     <div role="tabpanel" class="tab-pane fade" id="customPremiereSubmission">
-      <div  class="submi-section">
+      <div  class="submi-section" style="height: 750px; overflow:hidden;">
         <div class=""> 
           <div class="col-md-12">
             <div class="col-md-3">                                    
               <div class="row">
-                <button class="btn btn-border" ng-click="defaultsPrem()">Defaults</button>
-                <button class="btn btn-border" ng-click="undoPrem()">Undo</button>
-                <button class="btn btn-border" ng-click="matchRep()">Match Rep. Page</button>
                 <div class="col-sm-12 custom-submission-accordion">
-                  <div class="panel-group" id="accordion2">
-                    <div class="panel panel-default">
-                      <div class="panel-heading">
-                        <h4 class="panel-title">
-                          <a data-toggle="collapse" data-parent="#accordion2" href="#pnl2Layout" onclick="return false;">LAYOUT</span></a>                            
-                        </h4>
-                      </div>
-                      <div id="pnl2Layout" class="panel-collapse collapse in">
-                        <div class="panel-body">
-                          <div class="row margin-bottom-10">
-                            <div class="col-md-12">
-                              <label>Layout:</label><br>
-                              <label class='radio-inline'><input type="radio" name="optradio2" ng-model="AccountsStepData.premier.layout" value="1">1</label>
-                              <label class='radio-inline'><input type="radio" name="optradio2" ng-model="AccountsStepData.premier.layout" value="2">2</label>
-                              <label class='radio-inline'><input type="radio" name="optradio2" ng-model="AccountsStepData.premier.layout" value="3">3</label>
-                              <label class='radio-inline'><input type="radio" name="optradio2" ng-model="AccountsStepData.premier.layout" value="4">4</label>
+                  <button class="btn btn-border" ng-click="defaultsPrem()">Defaults</button>
+                  <button class="btn btn-border" ng-click="undoPrem()">Undo</button>
+                  <button class="btn btn-border" ng-click="matchRep()">Match Rep. Page</button>
+                  <div class="col-sm-12 custom-submission-accordion" style="padding-left:0;">
+                    <div class="panel-group" id="accordion2">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion2" href="#pnl2Layout" onclick="return false;">LAYOUT</span></a>                            
+                          </h4>
+                        </div>
+                        <div id="pnl2Layout" class="panel-collapse collapse in">
+                          <div class="panel-body">
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                                <label>Layout:</label><br>
+                                <label class='radio-inline'><input type="radio" name="optradio2" ng-model="AccountsStepData.premier.layout" value="1">1</label>
+                                <label class='radio-inline'><input type="radio" name="optradio2" ng-model="AccountsStepData.premier.layout" value="2">2</label>
+                                <label class='radio-inline'><input type="radio" name="optradio2" ng-model="AccountsStepData.premier.layout" value="3">3</label>
+                                <label class='radio-inline'><input type="radio" name="optradio2" ng-model="AccountsStepData.premier.layout" value="4">4</label>
+                              </div>
+                            </div>
+                            <div class="row margin-bottom-10">
+                              <div class="col-md-12">
+                                <label>Templates:</label><br>
+                                <button class="btn btn-border" ng-click="saveTemplate()">Save Current</button>
+                                <br>
+                                <ul style="list-style-type: none;">
+                                  <li ng-repeat="template in user.templates track by $index">Template {{$index}}:<a ng-click="enableTemplate(template, 'premiere')"> Load </a>-<a ng-click="deleteTemplate($index)" style="color:red">  Delete</a></li>
+                                </ul>
+                              </div>
                             </div>
                           </div>
                         </div>

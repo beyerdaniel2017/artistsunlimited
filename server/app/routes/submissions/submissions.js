@@ -9,6 +9,7 @@ var User = mongoose.model('User');
 var RepostEvent = mongoose.model('RepostEvent');
 var Email = mongoose.model('Email');
 var rootURL = require('../../../env').ROOTURL;
+var PremiereSubmission = mongoose.model('PremierSubmission');
 var Promise = require('promise');
 var scConfig = global.env.SOUNDCLOUD;
 var sendEmail = require("../../mandrill/sendEmail.js"); //takes: to_name, to_email, from_name, from_email, subject, message_html
@@ -681,7 +682,7 @@ function calcHour(hour, destOffset) {
   return retHour;
 }
 
-router.get('/getSoldReposts', function(req, res, next) {
+router.post('/getSoldReposts', function(req, res, next) {
   if (!req.user) {
     next(new Error('Unauthorized'));
     return;
@@ -690,7 +691,7 @@ router.get('/getSoldReposts', function(req, res, next) {
   var accounts = req.user.paidRepost;
   var results = [];
   var i = -1;
-  var next = function() {
+  var cont = function() {
     i++;
     if (i < accounts.length) {
       var acc = accounts[i];
@@ -698,30 +699,89 @@ router.get('/getSoldReposts', function(req, res, next) {
         _id: acc.userID
       }, function(e, user) {
         if (user) {
-
           RepostEvent.find({
+            day: {
+              $gt: req.body.lowDate,
+              $lt: req.body.highDate
+            },
             userID: user.soundcloud.id,
             type: "paid"
           }, function(err, data) {
             for (var i = 0; i < data.length; i++) {
               var newObj = {
-                username: user.name,
+                user: user,
                 data: data[i]
               }
               results.push(newObj);
             }
-            next();
+            cont();
           })
         } else {
-          next();
+          cont();
         }
       });
     } else {
       res.send(results);
     }
   }
-  next();
+  cont();
 });
+
+router.post('/submissionData', function(req, res, next) {
+  var resObj = {}
+  User.findById(req.user._id).populate('paidRepost.userID')
+    .then(function(adminUser) {
+      resObj.accounts = adminUser.paidRepost;
+      var adminIDS = adminUser.paidRepost.map(function(element) {
+        return element.userID.soundcloud.id;
+      })
+      var userIDS = adminUser.paidRepost.map(function(element) {
+        return element.userID._id;
+      });
+      Submission.find({
+          submissionDate: {
+            $gt: req.body.lowDate,
+            $lt: req.body.highDate
+          },
+          $or: [{
+            channelIDS: {
+              $in: adminIDS
+            }
+          }, {
+            pooledChannelIDS: {
+              $in: adminIDS
+            }
+          }]
+        }).then(function(subs) {
+          resObj.acceptedSubs = subs
+          return Submission.find({
+            submissionDate: {
+              $gt: req.body.lowDate,
+              $lt: req.body.highDate
+            },
+            userID: {
+              $in: userIDS
+            }
+          })
+        }).then(function(directSubs) {
+          resObj.directSubs = directSubs;
+          return PremiereSubmission.find({
+            submissionDate: {
+              $gt: req.body.lowDate,
+              $lt: req.body.highDate
+            },
+            userID: {
+              $in: userIDS
+            }
+          })
+        })
+        .then(function(premiereSubs) {
+          resObj.premiereSubs = premiereSubs;
+          res.send(resObj);
+        }).then(null, next)
+    }).then(null, next);
+})
+
 router.get('/getEarnings', function(req, res, next) {
   if (!req.user) {
     next(new Error('Unauthorized'));

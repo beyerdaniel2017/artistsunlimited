@@ -23,7 +23,6 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   $scope.selectedGroupChannelIDS = [];
   $scope.selectedChannelName = [];
   $scope.genre = "";
-  $scope.skip = 0;
   $scope.limit = 20;
   $scope.dynamicButton = [{
     "name": "FILE",
@@ -56,7 +55,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
 
   $scope.loadSubmissions = function() {
     $scope.processing = true;
-    $http.get('/api/premier/unaccepted?genre=' + $scope.genre + "&skip=" + $scope.skip + "&limit=" + $scope.limit)
+    $http.get('/api/premier/unaccepted?genre=' + $scope.genre + "&skip=" + $scope.showingElements.length + "&limit=" + $scope.limit)
       .then(function(res) {
         $scope.processing = false;
         if (res.data.length > 0) {
@@ -65,7 +64,6 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
             d.emailBody = "";
             $scope.showingElements.push(d);
           });
-          console.log($scope.showingElements);
         }
       })
       .then(null, function(err) {
@@ -76,7 +74,6 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   }
 
   $scope.loadMore = function() {
-    $scope.skip += $scope.limit;
     $scope.loadSubmissions();
   }
 

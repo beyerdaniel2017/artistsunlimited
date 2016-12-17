@@ -14,11 +14,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.selectedChannelIDS = [];
   $scope.selectedGroupChannelIDS = [];
   $scope.selectedChannelName = [];
+  $scope.adminStats = {};
   $scope.genre = "";
   $scope.displayType = 'channel';
-  $scope.skip = 0;
   $scope.limit = 10;
-  $scope.marketSkip = 0;
   $scope.marketLimit = 10;
   $scope.isLoggedIn = SessionService.getUser() ? true : false;
   if (!SessionService.getUser()) {
@@ -87,7 +86,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
 
   $scope.getSubmissionsByGenre = function() {
     $scope.showingElements = [];
-    $scope.skip = 0;
     $scope.loadSubmissions();
   }
 
@@ -107,7 +105,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     var genre = $scope.genre.replace(/[0-9]/g, '');
     var selectedGenre = genre.replace('(', '').replace(')', '').trim();
     $scope.processing = true;
-    $http.get('/api/submissions/unaccepted?genre=' + encodeURIComponent(selectedGenre) + "&skip=" + $scope.skip + "&limit=" + $scope.limit)
+    $http.get('/api/submissions/unaccepted?genre=' + encodeURIComponent(selectedGenre) + "&skip=" + $scope.showingElements.length + "&limit=" + $scope.limit)
       .then(function(res) {
         $scope.processing = false;
         if (res.data.length > 0) {
@@ -129,12 +127,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.loadMore = function() {
-    $scope.skip += $scope.limit;
     $scope.loadSubmissions();
   }
 
   $scope.loadMoreMarket = function() {
-    $scope.marketSkip += $scope.marketLimit;
     $scope.loadMarketSubmissions();
   }
 
@@ -142,7 +138,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     var genre = $scope.genre.replace(/[0-9]/g, '');
     var selectedGenre = genre.replace('(', '').replace(')', '').trim();
     $scope.processing = true;
-    $http.get('/api/submissions/getMarketPlaceSubmission?genre=' + encodeURIComponent(selectedGenre) + "&skip=" + $scope.marketSkip + "&limit=" + $scope.marketLimit)
+    $http.get('/api/submissions/getMarketPlaceSubmission?genre=' + encodeURIComponent(selectedGenre) + "&skip=" + $scope.marketSubmissions.length + "&limit=" + $scope.marketLimit)
       .then(function(res) {
         $scope.processing = false;
         if (res.data.length > 0) {
@@ -421,28 +417,153 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     });
   }
 
+
   /*Sold Reposts*/
+
   $scope.getSoldReposts = function() {
-    $http.get('/api/submissions/getSoldReposts').then(function(res) {
+    $http.post('/api/submissions/getSoldReposts', {
+      lowDate: $scope.lowDate,
+      highDate: $scope.highDate
+    }).then(function(res) {
+      $scope.adminStats.earnings = 0;
+      $scope.adminStats.refunds = 0;
+      $scope.adminStats.refundAmount = 0;
+      $scope.adminStats.future = 0;
+      res.data.forEach(function(el) {
+        try {
+          if (el.data.payout) {
+            if (el.data.payout.batch_header) {
+              el.payout = "$" + new Number(el.data.payout.batch_header.amount.value).toFixed(2) + " Earned";
+              $scope.adminStats.earnings += new Number(el.data.payout.batch_header.amount.value);
+            } else {
+              el.payout = "$" + new Number(el.data.payout.amount.total).toFixed(2) + " Refunded";
+              $scope.adminStats.refunds += 1;
+              $scope.adminStats.refundAmount += new Number(el.data.payout.amount.total);
+            }
+          } else {
+            el.payout = "Incomplete"
+            $scope.adminStats.future += 1;
+          }
+        } catch (e) {
+          console.log(e)
+        };
+        el.shareLink = window.location.origin + "/repostevents/" + el.user.soundcloud.pseudoname + "/" + el.data.pseudoname;
+      })
+      res.data.sort(function(a, b) {
+        return new Date(b.data.day) - new Date(a.data.day);
+      })
       $scope.soldReposts = res.data;
+      $scope.adminStats.soldReposts = res.data.length;
     });
     $scope.sortType = 'name';
     $scope.sortReverse = false;
     $scope.searchTerm = '';
   }
 
-  /*Account Earnings*/
-  $scope.getEarnings = function() {
-    $http.get('/api/submissions/getEarnings').then(function(res) {
-      $scope.earnings = res.data;
-    });
-    $scope.sortReverse1 = false;
-    $scope.sortType1 = 'username';
-    $scope.searchTerm1 = '';
+
+  $scope.getSubmissionData = function() {
+    $http.post('/api/submissions/submissionData', {
+      lowDate: $scope.lowDate,
+      highDate: $scope.highDate
+    }).then(function(res) {
+      console.log(res);
+      $scope.adminStats.repSubCount = res.data.directSubs.length;
+      $scope.adminStats.premSubCount = res.data.premiereSubs.length;
+      var directSubAmounts = {};
+      res.data.directSubs.forEach(function(el) {
+        if (!!directSubAmounts[el.userID]) directSubAmounts[el.userID] += 1;
+        else directSubAmounts[el.userID] = 1;
+      })
+      var premiereSubAmounts = {};
+      res.data.premiereSubs.forEach(function(el) {
+        if (!!premiereSubAmounts[el.userID]) premiereSubAmounts[el.userID] += 1;
+        else premiereSubAmounts[el.userID] = 1;
+      })
+      $scope.accounts = res.data.accounts;
+      $scope.accounts.forEach(function(acct) {
+        acct.repSubCount = !!directSubAmounts[acct.userID._id] ? directSubAmounts[acct.userID._id] : 0;
+        acct.premSubCount = !!premiereSubAmounts[acct.userID._id] ? premiereSubAmounts[acct.userID._id] : 0;
+        acct.paidSubs = 0;
+        acct.acceptedSubs = 0;
+        res.data.acceptedSubs.forEach(function(el) {
+          if (el.channelIDS.includes(acct.userID.soundcloud.id) || el.pooledChannelIDS.includes(acct.userID.soundcloud.id)) {
+            acct.acceptedSubs++;
+          }
+          var found = false;
+          el.paidPooledChannels.forEach(function(chan) {
+            if (chan.userID == acct.userID._id) found = true;
+          })
+          el.paidChannels.forEach(function(chan) {
+            if (chan.userID == acct.userID._id) found = true;
+          })
+          if (found) acct.paidSubs++;
+        })
+        acct.payAcceptRatio = acct.paidSubs / acct.acceptedSubs * 100;
+      })
+
+      function getAcctReposts() {
+        setTimeout(function() {
+          if ($scope.soldReposts) {
+            var reposts = {};
+            $scope.soldReposts.forEach(function(el) {
+              if (!!reposts[el.data.userID]) reposts[el.data.userID].push(el)
+              else reposts[el.data.userID] = [el];
+            });
+            $scope.accounts.forEach(function(acct) {
+              acct.repostCount = !!reposts[acct.userID.soundcloud.id] ? reposts[acct.userID.soundcloud.id].length : 0;
+              acct.earnings = 0;
+              acct.refunds = 0;
+              acct.refundAmount = 0;
+              acct.future = 0;
+              if (!!reposts[acct.userID.soundcloud.id]) {
+                reposts[acct.userID.soundcloud.id].forEach(function(el) {
+                  if (el.data.payout) {
+                    if (el.data.payout.batch_header) {
+                      acct.earnings += new Number(el.data.payout.batch_header.amount.value);
+                    } else {
+                      acct.refunds += 1;
+                      acct.refundAmount += new Number(el.data.payout.amount.total);
+                    }
+                  } else {
+                    acct.future += 1;
+                  }
+                });
+              }
+            })
+            if (!$scope.$$phase) $scope.$apply();
+          } else getAcctReposts();
+        }, 500);
+      }
+      getAcctReposts();
+    })
+  }
+  $scope.recalculate = function() {
+    $scope.soldReposts = undefined;
+    $scope.accounts = undefined;
+    $scope.adminStats = {};
+    $scope.getSoldReposts();
+    $scope.getSubmissionData();
   }
 
-  $scope.getEarnings();
-  $scope.getSoldReposts();
+  $scope.changeScale = function() {
+    console.log($scope.scale);
+    $scope.highDate = new Date();
+    $scope.lowDate = new Date(new Date().getTime() - parseInt($scope.scale) * 24 * 3600000);
+    $scope.recalculate();
+  }
+  $scope.incrementRange = function() {
+    $scope.highDate = new Date($scope.highDate.getTime() + parseInt($scope.scale) * 24 * 3600000);
+    $scope.lowDate = new Date($scope.lowDate.getTime() + parseInt($scope.scale) * 24 * 3600000);
+    $scope.recalculate();
+  }
+  $scope.decrementRange = function() {
+    $scope.highDate = new Date($scope.highDate.getTime() - parseInt($scope.scale) * 24 * 3600000);
+    $scope.lowDate = new Date($scope.lowDate.getTime() - parseInt($scope.scale) * 24 * 3600000);
+    $scope.recalculate();
+  }
+  $scope.scale = "7";
+  $scope.changeScale();
+
   $scope.getPaidRepostAccounts();
   $scope.loadSubmissions();
   $scope.loadMarketSubmissions();

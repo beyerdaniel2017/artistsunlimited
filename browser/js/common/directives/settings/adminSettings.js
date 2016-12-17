@@ -68,6 +68,7 @@ app.directive('adminsettings', function($http) {
 			} else if (window.location.href.indexOf('admin/basic/step1#paypalInfo') != -1) {
 				$('.nav-tabs a[href="#paypalInfo"]').tab('show');
 			}
+			$scope.showPasswordChange = false;
 
 			$scope.addEventClass = function(index, type) {
 				$('.selectedBox').removeClass("selectedBox");
@@ -175,15 +176,15 @@ app.directive('adminsettings', function($http) {
 											$scope.AccountsStepData.repostCustomizeEmails = (($scope.AccountsStepData.repostCustomizeEmails.length > 0) ? $scope.AccountsStepData.repostCustomizeEmails : [{
 												"acceptance": {
 													"title": "ACCEPTANCE EMAIL",
-													"subject": "Congratulations on your Submission -",
-													"body": "Hey {NAME}!\n\nFirst and foremost thank you for submitting {TRACK_TITLE_WITH_LINK} ! We’ve reviewed your submission and it has been approved for a repost on {nameofchannelsubmitted} and more. All you need to do is click the button below. You are open to repeat your promotion on any of these pages as many times as you would like, and the promotion page will remain active forever.\n\nWe thoroughly enjoyed listening to your production and we hope that in the future you submit your music to us. Keep working hard and put your heart into your productions, we will be here to help you with the rest.",
+													"subject": "Congratulations on your Submission - {TRACK_TITLE}",
+													"body": "Hey {SUBMITTERS_NAME}!\n\nFirst and foremost thank you for submitting {TRACK_TITLE_WITH_LINK}! We’ve reviewed your submission and it has been approved for a repost on {SUBMITTED_TO_ACCOUNT_NAME_WITH_LINK} and more. All you need to do is click the button below. You are open to repeat your promotion on any of these pages as many times as you would like, and the promotion page will remain active forever.\n\nWe thoroughly enjoyed listening to your production and we hope that in the future you submit your music to us. Keep working hard and put your heart into your productions, we will be here to help you with the rest.",
 													"buttonText": "Accept",
 													"buttonBgColor": "#592e2e"
 												},
 												"decline": {
 													"title": "DECLINE EMAIL",
 													"subject": "Music Submission",
-													"body": "Hey {NAME},\n\nThank you for submitting your track {TRACK_TITLE_WITH_LINK} ! Sadly we have to inform you that we don’t think the track is ready to be shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have been turned down before. Keep in touch and we are always here to gladly review more tracks in the future.\n\nGood luck and stay true to yourself.",
+													"body": "Hey {SUBMITTERS_NAME},\n\nThank you for submitting your track {TRACK_TITLE_WITH_LINK}! Sadly we have to inform you that we don’t think the track is ready to be shared by our channels. With that being said, do not get discouraged as many names that are now trending on SoundCloud have been turned down before. Keep in touch and we are always here to gladly review more tracks in the future.\n\nGood luck and stay true to yourself.",
 													"buttonText": "Decline",
 													"buttonBgColor": "#592e2e"
 												}

@@ -32,7 +32,8 @@ var schema = new mongoose.Schema({
     type: String
   },
   submissionDate: {
-    type: Date
+    type: Date,
+    default: new Date()
   },
   payment: {
     type: Object

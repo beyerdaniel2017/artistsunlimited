@@ -44,14 +44,11 @@ app.directive('channelsettings', function($http) {
 
 			$scope.defaultsRep = function() {
 				var oldId = $scope.AccountsStepData.postData._id;
-				console.log(oldId);
 				$scope.AccountsStepData.postData = JSON.parse(JSON.stringify($scope.defaultSubmitPage));
 				$scope.AccountsStepData.postData.heading.text = "Submission for Repost";
 				$scope.AccountsStepData.postData.logo.images = $scope.AccountsStepData.postData.background.images = $scope.AccountsStepData.submissionData.avatarURL;
 				$scope.AccountsStepData.postData.type = "submit";
-				console.log($scope.AccountsStepData.postData._id);
 				$scope.AccountsStepData.postData._id = oldId;
-				console.log($scope.AccountsStepData.postData._id);
 			}
 
 			$scope.defaultsPrem = function() {
@@ -96,6 +93,53 @@ app.directive('channelsettings', function($http) {
 				$scope.AccountsStepData.premier.subHeading.text = saveSubheading;
 				$scope.AccountsStepData.premier._id = oldId;
 				$scope.AccounsStepData.premier.type = "premiere";
+			}
+
+			$scope.enableTemplate = function(template, type) {
+				if (type == 'submit') {
+					var oldId = $scope.AccountsStepData.postData._id;
+					var saveHeading = $scope.AccountsStepData.postData.heading.text;
+					var saveSubheading = $scope.AccountsStepData.postData.subHeading.text;
+					var saveBG = $scope.AccountsStepData.postData.background.images;
+					var saveLogo = $scope.AccountsStepData.postData.logo.images;
+					$scope.AccountsStepData.postData = JSON.parse(JSON.stringify(template));
+					$scope.AccountsStepData.postData.logo.images = saveLogo;
+					$scope.AccountsStepData.postData.background.images = saveBG;
+					$scope.AccountsStepData.postData.heading.text = saveHeading;
+					$scope.AccountsStepData.postData.subHeading.text = saveSubheading;
+					$scope.AccountsStepData.postData.type = "submit";
+					$scope.AccountsStepData.postData._id = oldId;
+				} else {
+					var oldId = $scope.AccountsStepData.premier._id;
+					var saveHeading = $scope.AccountsStepData.premier.heading.text;
+					var saveSubheading = $scope.AccountsStepData.premier.subHeading.text;
+					var saveBG = $scope.AccountsStepData.premier.background.images;
+					var saveLogo = $scope.AccountsStepData.premier.logo.images;
+					$scope.AccountsStepData.premier = JSON.parse(JSON.stringify(template));
+					$scope.AccountsStepData.premier.logo.images = saveLogo;
+					$scope.AccountsStepData.premier.background.images = saveBG;
+					$scope.AccountsStepData.premier.heading.text = saveHeading;
+					$scope.AccountsStepData.premier.subHeading.text = saveSubheading;
+					$scope.AccountsStepData.premier.type = "submit";
+					$scope.AccountsStepData.premier._id = oldId;
+				}
+			}
+
+			$scope.deleteTemplate = function(ind) {
+				$scope.user.templates.splice(ind, 1);
+				$http.post('/api/users/saveTemplates', $scope.user.templates)
+					.then(function(res) {
+						$scope.user.templates = res.data;
+					}).then(null, alert);
+			}
+
+			$scope.saveTemplate = function() {
+				if (!$scope.user.templates) $scope.user.templates = [];
+				$scope.user.templates.push($scope.AccountsStepData.postData);
+				$http.post('/api/users/saveTemplates', $scope.user.templates)
+					.then(function(res) {
+						$scope.user.templates = res.data;
+					}).then(null, alert);
 			}
 
 			$scope.saveComments = function(value, type, index) {
@@ -671,8 +715,6 @@ app.directive('channelsettings', function($http) {
 					$scope.processing = false;
 				}
 			}
-
-
 
 			$scope.uploadCustomBackground = function() {
 					$scope.processing = true;

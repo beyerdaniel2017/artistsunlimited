@@ -36,6 +36,9 @@ router.get('/unaccepted', function(req, res, next) {
     .populate('userID')
     .skip(skipcount)
     .limit(limitcount)
+    .sort({
+      submissionDate: 1
+    })
     .then(function(subs) {
       res.send(subs);
     })

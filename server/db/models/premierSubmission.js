@@ -28,6 +28,10 @@ var schema = new mongoose.Schema({
     },
     trackLink: {
         type: String
+    },
+    submissionDate: {
+        type: Date,
+        default: new Date()
     }
 });
 

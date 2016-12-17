@@ -39,11 +39,14 @@
                     <div class="form-group" style="">
                       <input class="form-control  margin-20" type="text" ng-model="AccountsStepData.email" placeholder="Email address">
                     </div>
-                    <div class="form-group" style="">
-                      <input class="form-control margin-40" type="password" ng-model="AccountsStepData.newpassword" placeholder="Password">
-                    </div>
-                    <div class="form-group" style="">
-                      <input class="form-control" type="password" ng-model="AccountsStepData.newconfirmpassword" placeholder="Confirm Password">
+                    <button ng-click="showPasswordChange=true" class="btn btn-border" style="margin:0 auto;" ng-show="!showPasswordChange">Change Password</button>
+                    <div ng-show="showPasswordChange">
+                      <div class="form-group" style="">
+                        <input class="form-control margin-40" type="password" ng-model="AccountsStepData.newpassword" placeholder="Password">
+                      </div>
+                      <div class="form-group" style="">
+                        <input class="form-control" type="password" ng-model="AccountsStepData.newconfirmpassword" placeholder="Confirm Password">
+                      </div>
                     </div>
                   </div>                                            
                   <div class="col-md-6">               
@@ -83,12 +86,12 @@
                 <input ng-show="$index" class="acceptance-signatur" type="text" ng-model="custom.acceptance.title" placeholder="Title" style="margin-left:0px">
                 <div class="acceptance">
                   <div class="channel-check">
-                    <div class="channel-masege">
-                      <input type="text" ng-model="custom.acceptance.subject" placeholder="Subject" class="acceptance-input repAcceptSubject{{$index}}" ng-click="addEventClass($index,'repAcceptSubject');" index="{{$index}}">
+                    <div class="channel-masege" style="overflow:hidden;">
+                      <input type="text" ng-model="custom.acceptance.subject" placeholder="Subject" class="acceptance-input repAcceptSubject{{$index}}" ng-click="addEventClass($index,'repAcceptSubject');" index="{{$index}}" >
                     </div>
-                    <div class="check-list">
-                      <textarea ng-model="custom.acceptance.body" index="{{$index}}" ng-click="addEventClass($index,'repAcceptbox');" class="acceptance-textareas repAcceptbox{{$index}}"></textarea>
-                    </div>
+                    <!-- <div  style="height:150px; overflow:hidden"> -->
+                    <textarea ng-model="custom.acceptance.body" index="{{$index}}" ng-click="addEventClass($index,'repAcceptbox');" style="padding:5px 5px;height:150px" class="acceptance-textareas repAcceptbox{{$index}} check-list"></textarea>
+                    <!-- </div> -->
                   </div>
                 </div>
                 <div class="space-10"></div>
@@ -101,13 +104,11 @@
                 <input ng-show="$index" class="acceptance-signatur" type="text" ng-model="custom.decline.title" placeholder="Title" style="margin-left:0px">
                 <div class="acceptance">
                   <div class="channel-check">
-                    <div class="channel-masege">
-                      <input type="text" placeholder="Subject" ng-model="custom.decline.subject" class="acceptance-input repDeclineSubject{{$index}}" ng-click="addEventClass($index,'repDeclineSubject');" index="{{$index}}">
+                    <div class="channel-masege" style="overflow:hidden;">
+                      <input type="text" placeholder="Subject" ng-model="custom.decline.subject" class="acceptance-input repDeclineSubject{{$index}}" ng-click="addEventClass($index,'repDeclineSubject');" index="{{$index}}" >
                     </div>
-                    <div class="check-list">
-                      <textarea ng-model="custom.decline.body" index="{{$index}}" ng-click="addEventClass($index,'repDeclinebox');" class="acceptance-textareas repDeclinebox{{$index}}">
-                      </textarea>
-                    </div>
+                    <textarea ng-model="custom.decline.body" index="{{$index}}" ng-click="addEventClass($index,'repDeclinebox');" style="padding:5px 5px;height:150px"" class="acceptance-textareas repDeclinebox{{$index}} check-list">
+                    </textarea>
                   </div>
                 </div>
               </div>
@@ -147,8 +148,8 @@
                     <div class="channel-masege">
                       <input type="text" ng-model="custom.acceptance.subject" placeholder="Subject" class="acceptance-input premAcceptSubject{{$index}}" ng-click="addEventClass($index,'premAcceptSubject');" index="{{$index}}">
                     </div>
-                    <div class="check-list">
-                      <textarea ng-model="custom.acceptance.body" class="acceptance-textareas premAcceptbox{{$index}}" ng-click="addEventClass($index,'premAcceptbox');" index="{{$index}}"></textarea>
+                    <div class="check-list" style="height:140px;">
+                      <textarea ng-model="custom.acceptance.body" class="acceptance-textareas premAcceptbox{{$index}}" ng-click="addEventClass($index,'premAcceptbox');" index="{{$index}}" style="height:100%"></textarea>
                     </div>
                   </div>
                 </div>
@@ -165,8 +166,8 @@
                     <div class="channel-masege">
                       <input type="text" placeholder="Subject" ng-model="custom.decline.subject" class="acceptance-input premDeclineSubject{{$index}}" ng-click="addEventClass($index,'premDeclineSubject');" index="{{$index}}">
                     </div>
-                    <div class="check-list">
-                      <textarea ng-model="custom.decline.body" index="{{$index}}" ng-click="addEventClass($index,'declinebox');" class="acceptance-textareas premDeclinebox{{$index}}" ng-click="addEventClass($index,'premDeclinebox');" index="{{$index}}">
+                    <div class="check-list" style="height:140px;">
+                      <textarea ng-model="custom.decline.body" index="{{$index}}" ng-click="addEventClass($index,'declinebox');" class="acceptance-textareas premDeclinebox{{$index}}" ng-click="addEventClass($index,'premDeclinebox');" index="{{$index}}" style="height:100%">
                       </textarea>
                     </div>
                   </div>

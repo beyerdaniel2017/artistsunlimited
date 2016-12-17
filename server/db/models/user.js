@@ -246,6 +246,10 @@ var schema = new mongoose.Schema({
     cut: {
         type: Number,
         default: 0.7
+    },
+    templates: {
+        type: Array,
+        default: []
     }
 });
 
