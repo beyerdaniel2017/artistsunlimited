@@ -126,19 +126,24 @@ app.directive('channelsettings', function($http) {
 			}
 
 			$scope.deleteTemplate = function(ind) {
+				$scope.processing = true;
 				$scope.user.templates.splice(ind, 1);
 				$http.post('/api/users/saveTemplates', $scope.user.templates)
 					.then(function(res) {
 						$scope.user.templates = res.data;
+						$scope.processing = false;
 					}).then(null, alert);
 			}
 
 			$scope.saveTemplate = function() {
+				$scope.processing = true;
 				if (!$scope.user.templates) $scope.user.templates = [];
 				$scope.user.templates.push($scope.AccountsStepData.postData);
 				$http.post('/api/users/saveTemplates', $scope.user.templates)
 					.then(function(res) {
 						$scope.user.templates = res.data;
+						$scope.processing = false;
+						$.Zebra_Dialog('Template Saved');
 					}).then(null, alert);
 			}
 

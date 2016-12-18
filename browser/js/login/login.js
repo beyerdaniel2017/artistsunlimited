@@ -37,6 +37,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         SessionService.create(userData);
         userData.loginInfo = $scope.loginObj;
         $window.localStorage.setItem('adminUser', JSON.stringify(userData));
+        $scope.getSubmissionCount();
         if (userData.paypal_email == undefined || userData.paypal_email == "")
           $state.go('basicstep1');
         else

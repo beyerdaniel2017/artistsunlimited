@@ -491,10 +491,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
           }
           var found = false;
           el.paidPooledChannels.forEach(function(chan) {
-            if (chan.userID == acct.userID._id) found = true;
+            if (chan.user.id == acct.userID.soundcloud.id) found = true;
           })
           el.paidChannels.forEach(function(chan) {
-            if (chan.userID == acct.userID._id) found = true;
+            if (chan.user.id == acct.userID.soundcloud.id) found = true;
           })
           if (found) acct.paidSubs++;
         })

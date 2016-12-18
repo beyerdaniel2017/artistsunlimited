@@ -242,7 +242,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
             $scope.submissionsCount = res.data.regularCount;
         });
     }
-    $scope.getSubmissionCount();
+    if (window.location.href.includes('/admin/')) $scope.getSubmissionCount();
 
     $scope.gotoSettings = function() {
         $scope.user = SessionService.getUser();

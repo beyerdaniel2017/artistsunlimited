@@ -16,20 +16,20 @@ module.exports = checkTokens;
 function checkTokens() {
   setTimeout(function() {
     checkTokens()
-  }, 4 * 3600000);
+  }, 2 * 3600000);
 
   User.find({})
     .then(function(users) {
       users.forEach(function(user) {
-        RepostEvent.find({
+        RepostEvent.findOne({
             userID: user.soundcloud.id,
             completed: false,
             day: {
               $gt: new Date()
             }
           })
-          .then(function(events) {
-            if (events && events.length > 0) {
+          .then(function(event) {
+            if (events) {
               scWrapper.setToken(user.soundcloud.token);
               var reqObj = {
                 method: 'GET',
@@ -38,7 +38,7 @@ function checkTokens() {
               };
               scWrapper.request(reqObj, function(err, data) {
                 if (err) {
-                  notificationCenter.sendNotifications(user._id, "accessToken", "Bad Access Token", "Hello " + user.soundcloud.username + ", We need you to log back into Artists Unlimited to be able to complete your reposts.", "https://artistsunlimited.com/login");
+                  notificationCenter.sendNotifications(user._id, "accessToken", "Bad Access Token", "Hello " + user.soundcloud.username + ", We need you to log back into Artists Unlimited to be able to complete your upcoming reposts! FYI this happens when you change your password on Soundcloud. Remember to LOG IN WITH " + user.soundcloud.username.toUpperCase(), "https://artistsunlimited.com/login");
                 }
               });
             }
