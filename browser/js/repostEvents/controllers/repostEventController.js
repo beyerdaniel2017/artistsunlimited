@@ -174,6 +174,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
         makeDay.setHours(hour);
         $scope.makeEvent.day = new Date(makeDay);
         $scope.makeEvent.url = data.trackInfo.trackURL;
+        $scope.makeEvent.trackID = data.trackInfo.trackID;
         $scope.makeEvent.comment = data.trackInfo.comment;
         var diff = (new Date(data.trackInfo.unrepostDate).getTime() - new Date(data.trackInfo.day).getTime()) / 3600000;
         if (diff > 0) $scope.makeEvent.unrepostHours = diff;
@@ -199,11 +200,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
         var calendarDay = $scope.calendar.find(function(calD) {
           return calD.day.toLocaleDateString() == day.toLocaleDateString();
         })
-
-        SC.Widget('scPopupPlayer').load($scope.makeEvent.url, {
-          auto_play: false,
-          show_artwork: false
-        });
+        $scope.playerURL = $sce.trustAsResourceUrl("https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/" + $scope.makeEvent.trackID + "&auto_play=false&show_artwork=false")
         document.getElementById('scPopupPlayer').style.visibility = "visible";
       }
     }
@@ -215,6 +212,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
       $scope.makeEvent._id = data.trackInfo._id;
       $scope.makeEvent.day = new Date(data.trackInfo.day);
       $scope.makeEvent.url = data.trackInfo.trackURL;
+      $scope.makeEvent.trackID = data.trackInfo.trackID;
       $scope.makeEvent.comment = data.trackInfo.comment;
       $scope.makeEvent.followers = data.userInfo.followers;
       $scope.makeEvent.username = data.userInfo.username;
@@ -225,10 +223,7 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
       $scope.makeEvent.artist = data.userInfo;
       var repostDate = new Date(data.trackInfo.day);
       $scope.makeEvent.unrepostHours = data.trackInfo.unrepostHours;
-      SC.Widget('scPlayer').load(data.trackInfo.trackURL, {
-        auto_play: false,
-        show_artwork: false
-      });
+      $scope.playerURL = $sce.trustAsResourceUrl("https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/" + $scope.makeEvent.trackID + "&auto_play=false&show_artwork=false")
       document.getElementById('scPlayer').style.visibility = "visible";
     }
     $scope.backToListEvent = function() {

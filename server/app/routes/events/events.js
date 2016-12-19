@@ -47,9 +47,9 @@ router.get('/repostEvent/:username/:trackTitle/:paid', function(req, res, next) 
         .then(function(network) {
           var networkDocIds = [user._id];
           var networkUserIds = [user.soundcloud.id];
-          network.forEach(function(user) {
-            networkDocIds.push(user._id);
-            networkUserIds.push(user.soundcloud.id);
+          network.forEach(function(networkUser) {
+            networkDocIds.push(networkUser._id);
+            networkUserIds.push(networkUser.soundcloud.id);
           })
           RepostEvent.findOne({
               userID: user.soundcloud.id,

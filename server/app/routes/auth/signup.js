@@ -22,7 +22,6 @@ router.post('/', function(req, res, next) {
         'message': '',
         'user': user
       });
-      // });
     }
   })(req, res);
 });
