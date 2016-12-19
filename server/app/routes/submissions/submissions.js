@@ -527,14 +527,15 @@ router.delete('/ignore/:subID/:password', function(req, res, next) {
       status: 403
     })
   } else {
-    Submission.findByIdAndUpdate({
-        _id: req.params.subID
-      }, {
-        $addToSet: {
-          ignoredBy: req.user._id
-        }
-      })
+    Submission.findById(req.params.subID)
       .then(function(sub) {
+        if (!sub.ignoredBy) sub.ignoredBy = [];
+        sub.ignoredBy.push(req.user._id.toJSON());
+        if (sub.status == "submitted") {
+          sub.pooledSendDate = new Date((new Date()).getTime() + 48 * 3600000);
+          sub.status = 'pooled';
+        }
+        sub.save();
         res.send(sub);
       })
       .then(null, next);

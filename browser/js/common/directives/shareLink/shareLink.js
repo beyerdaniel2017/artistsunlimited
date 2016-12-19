@@ -19,7 +19,11 @@ app.directive('slmodal', function($http) {
     controller: function($scope, $rootScope) {
       $scope.handler = 'pop';
       $scope.origin = window.location.origin;
+      $scope.makeChange = function() {
+
+      }
       $scope.$watch('eventId', function() {
+        $scope.makeChange();
         if (!!$scope.event || !!$scope.trade) {
           if ($scope.eventType == 'share') {
             $scope.shareLink = 'artistsunlimited.com/repostevents/' + $scope.event.user.soundcloud.pseudoname + "/" + $scope.event.pseudoname;
@@ -35,10 +39,6 @@ app.directive('slmodal', function($http) {
         }
         $rootScope.reloadFB();
       });
-      $scope.copyThenLink = function(link) {
-
-        window.open('link', '_blank');
-      }
       $scope.sendMail = function(id) {
         window.open("mailto:example@demo.com?body=" + $scope.shareLink, "_self");
       };

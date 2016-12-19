@@ -21,26 +21,27 @@ module.exports = doUnrepost;
 function doUnrepost() {
   setTimeout(function() {
     doUnrepost();
-  }, 1800000);
+  }, 3600000);
 
   var lowerDate = new Date();
   lowerDate.setTime(lowerDate.getTime() - lowerDate.getMinutes(0) * 60 * 1000 - lowerDate.getMinutes(0) * 1000);
   var upperDate = new Date();
   upperDate.setTime(upperDate.getTime() + 60 * 60 * 1000 - upperDate.getMinutes(0) * 60 * 1000 - upperDate.getMinutes(0) * 1000);
 
-  User.find({})
-    .then(function(users) {
-      users.forEach(function(user) {
-        RepostEvent.findOne({
-            userID: user.soundcloud.id,
-            completed: true,
-            unrepostDate: {
-              $gt: lowerDate,
-              $lt: upperDate
-            }
+  RepostEvent.find({
+      completed: true,
+      unrepostDate: {
+        $gt: lowerDate,
+        $lt: upperDate
+      }
+    })
+    .then(function(events) {
+      events.forEach(function(event) {
+        User.findOne({
+            'soundcloud.id': event.userID
           })
-          .then(function(event) {
-            if (event) unrepostEvent(event, user);
+          .then(function(user) {
+            if (user) unrepostEvent(event, user);
           })
           .then(null, function(err) {
             console.log(err);

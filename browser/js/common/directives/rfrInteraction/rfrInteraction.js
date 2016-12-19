@@ -350,8 +350,8 @@ app.directive('rfrinteraction', function($http) {
         var currentDay = new Date(day).getDay();
 
         var date = (new Date(day)).setHours(hour);
-        if (!($scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]] && $scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date())) || ($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease) > date)) {
-          return false;
+        if (!($scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]] && $scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date().getTime() + 24 * 3600000)) || ($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease) > date)) {
+          if (event.type != 'trade') return false;
         }
 
         var makeDay = new Date(day);
@@ -753,7 +753,7 @@ app.directive('rfrinteraction', function($http) {
         };
         var currentDay = new Date(date).getDay();
         var date = (new Date(date)).setHours(hour)
-        if ($scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]] && $scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date()) && (event.type == 'empty' || event.type == 'trade') && !($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease).getTime() > date)) {
+        if ($scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]] && $scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date().getTime() + 24 * 3600000) && (event.type == 'empty' || event.type == 'trade') && !($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease).getTime() > date)) {
           style = {
             'background-color': '#fff',
             'border-color': "#999",

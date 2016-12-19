@@ -270,7 +270,6 @@ app.directive('reforrelists', function($http) {
 
       $scope.loadMoreUsers = function() {
         $scope.loadingMoreUsers = true;
-        console.log('true');
         searchTradeRange.skip += 12;
         searchTradeRange.limit = 12;
         $http.post('/api/users/bySCURL/', {
@@ -280,7 +279,6 @@ app.directive('reforrelists', function($http) {
             recordRange: searchTradeRange
           })
           .then(function(res) {
-            console.log('false');
             $scope.loadingMoreUsers = false;
             $scope.processing = false;
             if (res.data.length > 0) {
@@ -299,7 +297,7 @@ app.directive('reforrelists', function($http) {
       };
 
       $scope.$on('loadTrades', function(e) {
-        if (window.location.href.includes('reForReLists#myschedule')) $scope.loadMoreUsers();
+        if (window.location.href.includes('reForReLists') && !window.location.href.includes('#organizeschedule') && !window.location.href.includes('#managetrades')) $scope.loadMoreUsers();
       });
 
       $scope.openTrade = function(user) {
@@ -359,8 +357,9 @@ app.directive('reforrelists', function($http) {
 
       $scope.remindTrade = function(trade, index) {
         $('#pop').modal('show');
-        $scope.tradeID = trade._id;
         $scope.theTrade = trade;
+        $scope.tradeID = trade._id;
+        if (!$scope.$$phase) $scope.$apply()
       }
 
       if (window.localStorage.getItem("showPopup")) {

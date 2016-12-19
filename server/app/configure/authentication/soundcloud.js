@@ -27,6 +27,7 @@ module.exports = function(app) {
             var updateUser = {
                 'name': user.username,
                 'soundcloud': {
+                    'token': req.body.token,
                     'id': user.id,
                     'username': user.username,
                     'permalinkURL': user.permalink_url,

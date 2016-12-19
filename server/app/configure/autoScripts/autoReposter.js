@@ -12,7 +12,7 @@ var paypalCalls = require('../../payPal/paypalCalls.js');
 var scheduleRepost = require('../../scheduleRepost/scheduleRepost.js');
 var denyUnrepostOverlap = require('../../scheduleRepost/denyUnrepostOverlap.js');
 module.exports = doRepost;
-//executes every min
+//executes every 2 min
 function doRepost() {
   setTimeout(function() {
     doRepost();

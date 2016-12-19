@@ -6,9 +6,9 @@ var HTTPS = require('https');
 var scWrapper = require('./server/app/SCWrapper/SCWrapper.js');
 var request = require('request');
 
-var client_id = "e72f5b4e3b48dc9015fe168cc6d66fa8";
-var client_secret = "ee5f5be9ff2d8ec040098ade0b42e1f2";
-var redirect_uri = "https://artistsunlimited.co/callback.html";
+var client_id = "5c75e089d6ec33d67285c3d1ce641d99";
+var client_secret = "a5745fddf575619b0831ad2653f5a563";
+var redirect_uri = "https://artistsunlimited.com/callback.html";
 var fs = require('fs');
 
 scWrapper.init({

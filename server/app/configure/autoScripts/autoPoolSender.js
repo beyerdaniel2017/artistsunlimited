@@ -11,7 +11,6 @@ function doPoolSent() {
   }, 300000);
   var currentDate = new Date();
   Submission.find({
-      $where: "this.pooledChannelIDS.length > 0",
       pooledSendDate: {
         $lte: currentDate,
         $gt: new Date(25 * 3600000)
@@ -21,13 +20,14 @@ function doPoolSent() {
     .populate('userID')
     .then(function(submissions) {
       submissions.forEach(function(sub) {
-        sendMessage(sub);
-        if (sub.email && sub.name) {
-          Submission.findByIdAndUpdate(sub._id, {
-              status: 'poolSent'
-            })
-            .then(function(sub) {}, console.log)
-        }
+        Submission.findByIdAndUpdate(sub._id, {
+            status: 'poolSent'
+          })
+          .then(function(sub) {
+            if (sub.email && sub.name && sub.pooledChannelIDS.length > 0) {
+              sendMessage(sub);
+            }
+          }, console.log)
       })
     })
     .then(null, function(err) {
