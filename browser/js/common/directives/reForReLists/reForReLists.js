@@ -94,7 +94,6 @@ app.directive('reforrelists', function($http) {
       $scope.sendSearch = function() {
         $scope.processing = true;
         $scope.searchUser = [];
-
         $http.post('/api/users/bySCURL/', {
             url: $scope.searchURL,
             minFollower: $scope.minSearchTradefollowers,
@@ -254,10 +253,6 @@ app.directive('reforrelists', function($http) {
         }
       }
 
-      $scope.$on('loadTrades', function(e) {
-        $scope.loadMore();
-      });
-
       $scope.setView = function(type) {
         $scope.itemView = type;
         $scope.shownTrades = $scope.currentTrades.filter(function(trade) {
@@ -273,7 +268,9 @@ app.directive('reforrelists', function($http) {
         $scope.manageView = type;
       };
 
-      $scope.loadMore = function() {
+      $scope.loadMoreUsers = function() {
+        $scope.loadingMoreUsers = true;
+        console.log('true');
         searchTradeRange.skip += 12;
         searchTradeRange.limit = 12;
         $http.post('/api/users/bySCURL/', {
@@ -283,6 +280,8 @@ app.directive('reforrelists', function($http) {
             recordRange: searchTradeRange
           })
           .then(function(res) {
+            console.log('false');
+            $scope.loadingMoreUsers = false;
             $scope.processing = false;
             if (res.data.length > 0) {
               angular.forEach(res.data, function(d) {
@@ -290,19 +289,18 @@ app.directive('reforrelists', function($http) {
               });
             }
           })
-          .then(undefined, function(err) {
+          .then(null, function(err) {
+            $scope.loadingMoreUsers = false;
             $scope.success = false;
             $scope.processing = false;
             $scope.searchUser = [];
             $.Zebra_Dialog("Please enter Artist url.");
-          })
-          .then(null, function(err) {
-            $scope.success = false;
-            $scope.processing = false;
-            $scope.searchUser = [];
-            $.Zebra_Dialog("Did not find user.");
           });
       };
+
+      $scope.$on('loadTrades', function(e) {
+        if (window.location.href.includes('reForReLists#myschedule')) $scope.loadMoreUsers();
+      });
 
       $scope.openTrade = function(user) {
         var found = $scope.currentTrades.find(function(trade) {
@@ -826,7 +824,7 @@ app.directive('reforrelists', function($http) {
       $scope.verifyBrowser();
       $scope.checkNotification();
       $scope.sortResult($scope.sortby);
-      $scope.loadMore();
+      $scope.loadMoreUsers();
       $scope.setView("inbox");
 
       if ($window.localStorage.getItem('inboxState')) {

@@ -95,6 +95,45 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
     }
   };
 
+  $scope.updateEmail = function(email) {
+    var answer = email;
+    var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
+    if (myArray) {
+      $scope.user.email = answer;
+      return $http.put('/api/database/profile', $scope.user)
+        .then(function(res) {
+          SessionService.create(res.data);
+          $scope.user = SessionService.getUser();
+          $scope.hideall = false;
+          $('#emailModal').modal('hide');
+          $scope.showEmailModal = false;
+          $scope.redirectLogin();
+        })
+        .then(null, function(err) {
+          setTimeout(function() {
+            $scope.showEmailModal = false;
+            $scope.promptForEmail();
+          }, 600);
+        })
+    } else {
+      setTimeout(function() {
+        $scope.showEmailModal = false;
+        $scope.promptForEmail();
+      }, 600);
+    }
+  }
+
+  $scope.closeModal = function() {
+    $('#emailModal').modal('hide');
+  }
+
+  $scope.promptForEmail = function() {
+    console.log('prompting');
+    $scope.showEmailModal = true;
+    $('#emailModal').modal('show');
+    if (!$scope.$$phase) $scope.$apply();
+  }
+
   $scope.thirdPartyLogin = function(userdata) {
     AuthService
       .thirdPartylogin(userdata)
@@ -159,26 +198,11 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
         var userData = res.data.user;
         userData.isAdmin = false;
         SessionService.create(userData);
-        if ($stateParams.submission) {
-          $state.go('artistToolsDownloadGatewayNew', {
-            'submission': $stateParams.submission
-          });
-          return;
-        }
-        $scope.processing = false;
-        if (!$scope.$$phase) $rootScope.$apply();
-        if ($window.localStorage.getItem('returnstate') != undefined) {
-          if ($window.localStorage.getItem('returnstate') == "reForReInteraction") {
-            window.location.href = '/artistTools/trade/' + $window.localStorage.getItem('user1Name') + '/' + $window.localStorage.getItem('user2Name');
-          } else if ($window.localStorage.getItem('returnstate') == "artistToolsDownloadGatewayEdit") {
-            $state.go($window.localStorage.getItem('returnstate'), {
-              gatewayID: $window.localStorage.getItem('tid')
-            });
-          } else {
-            $state.go($window.localStorage.getItem('returnstate'));
-          }
+        $scope.user = SessionService.getUser();
+        if (!$scope.user.email) {
+          $scope.promptForEmail();
         } else {
-          $state.go('artistToolsScheduler');
+          $scope.redirectLogin();
         }
       })
       .then(null, function(err) {
@@ -188,4 +212,31 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
         $.Zebra_Dialog('Error: Could not log in');
       });
   };
+
+  $scope.redirectLogin = function() {
+    if ($stateParams.submission) {
+      $state.go('artistToolsDownloadGatewayNew', {
+        'submission': $stateParams.submission
+      });
+      return;
+    }
+    $scope.processing = false;
+    console.log($window.localStorage.getItem('returnstate'));
+    if (!$scope.$$phase) $rootScope.$apply();
+    if ($window.localStorage.getItem('returnstate') != undefined) {
+      console.log('not undefined');
+      if ($window.localStorage.getItem('returnstate') == "reForReInteraction") {
+        console.log('/artistTools/trade/' + $window.localStorage.getItem('user1Name') + '/' + $window.localStorage.getItem('user2Name'))
+        window.location.href = '/artistTools/trade/' + $window.localStorage.getItem('user1Name') + '/' + $window.localStorage.getItem('user2Name');
+      } else if ($window.localStorage.getItem('returnstate') == "artistToolsDownloadGatewayEdit") {
+        $state.go($window.localStorage.getItem('returnstate'), {
+          gatewayID: $window.localStorage.getItem('tid')
+        });
+      } else {
+        $state.go($window.localStorage.getItem('returnstate'));
+      }
+    } else {
+      $state.go('artistToolsScheduler');
+    }
+  }
 });

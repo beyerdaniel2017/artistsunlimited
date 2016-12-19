@@ -18,7 +18,11 @@ function checkTokens() {
     checkTokens()
   }, 2 * 3600000);
 
-  User.find({})
+  User.find({
+      'soundcloud.token': {
+        $ne: null
+      }
+    })
     .then(function(users) {
       users.forEach(function(user) {
         RepostEvent.findOne({

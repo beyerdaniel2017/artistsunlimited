@@ -17,7 +17,6 @@ app.config(function($stateProvider) {
                     var repName = user.soundcloud.username.replace(/ /g, '_');
                     return (repName == $stateParams.user1Name || repName == $stateParams.user2Name)
                   })
-                  console.log(found);
                   if (found) {
                     $rootScope.changeUserAdmin(found)
                   } else {
@@ -37,7 +36,6 @@ app.config(function($stateProvider) {
                 }
               });
           } else {
-            console.log('moving');
             $window.localStorage.setItem('returnstate', 'reForReInteraction');
             $window.localStorage.setItem('user1Name', $stateParams.user1Name);
             $window.localStorage.setItem('user2Name', $stateParams.user2Name);

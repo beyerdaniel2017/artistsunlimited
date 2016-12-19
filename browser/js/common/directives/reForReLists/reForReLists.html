@@ -70,6 +70,7 @@
                       <p class="ng-binding new-trade-ingtexst">{{otherUser.soundcloud.followers}} Followers</p>
                     </div>
                   </div>
+                  <p class="text-center" ng-if="loadingMoreUsers" style="color:red;">Loading users...</p>
                 </div><!--row ::end-->
               </div>
             </div><!--row ::end-->
@@ -103,13 +104,17 @@
                 <ul>
                   <li> 
                     <div class="list-img-container">
-                      <img class="img-responsive" src="{{trade.other.user.soundcloud.avatarURL}}">
+                      <a href="{{trade.other.user.soundcloud.permalinkURL}}" target="_blank">
+                        <img class="img-responsive" src="{{trade.other.user.soundcloud.avatarURL}}">
+                      </a>
                     </div>
                   </li>
                   <li> 
                     <div class="vertical-text">
-                      <span><strong>{{trade.other.user.soundcloud.username}}</strong></span>
-                      <p>{{trade.other.user.soundcloud.followers | number:0}} Followers</p>
+                      <a href="{{trade.other.user.soundcloud.permalinkURL}}" target="_blank">
+                        <span><strong>{{trade.other.user.soundcloud.username}}</strong></span>
+                        <p>{{trade.other.user.soundcloud.followers | number:0}} Followers</p>
+                      </a>
                     </div>
                   </li>
                   <li> 

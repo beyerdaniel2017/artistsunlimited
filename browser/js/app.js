@@ -228,6 +228,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
     $scope.loadList = function() {
         $scope.$broadcast('loadTrades');
     }
+
     $scope.submissionsCount = 0;
     $scope.shownotification = false;
     $scope.logout = function() {

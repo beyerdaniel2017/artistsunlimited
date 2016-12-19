@@ -1188,39 +1188,7 @@ app.directive('scheduler', function($http) {
       };
 
       $scope.calendar = $scope.fillDateArrays($scope.events);
-      $scope.updateEmail = function(email) {
-        var answer = email;
-        var myArray = answer.match(/[a-z\._\-!#$%&'+/=?^_`{}|~]+@[a-z0-9\-]+\.\S{2,3}/igm);
-        if (myArray) {
-          $scope.user.email = answer;
-          return $http.put('/api/database/profile', $scope.user)
-            .then(function(res) {
-              SessionService.create(res.data);
-              $scope.user = SessionService.getUser();
-              $scope.hideall = false;
-              $('#emailModal').modal('hide');
-              $scope.showEmailModal = false;
-            })
-            .then(null, function(err) {
-              setTimeout(function() {
-                $scope.showEmailModal = false;
-                $scope.promptForEmail();
-              }, 600);
-            })
-        } else {
-          setTimeout(function() {
-            $scope.showEmailModal = false;
-            $scope.promptForEmail();
-          }, 600);
-        }
-      }
 
-      $scope.promptForEmail = function() {
-        if (!$scope.user.email) {
-          $scope.showEmailModal = true;
-          $('#emailModal').modal('show');
-        }
-      }
       $scope.verifyBrowser = function() {
         if (navigator.userAgent.search("Chrome") == -1 && navigator.userAgent.search("Safari") != -1) {
           var position = navigator.userAgent.search("Version") + 8;
@@ -1236,11 +1204,7 @@ app.directive('scheduler', function($http) {
                 $window.location.href = "https://support.apple.com/downloads/safari";
               }
             });
-          } else {
-            $scope.promptForEmail();
           }
-        } else {
-          $scope.promptForEmail();
         }
       }
 

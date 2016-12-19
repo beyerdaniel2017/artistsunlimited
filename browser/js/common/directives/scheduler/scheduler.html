@@ -486,25 +486,6 @@
 <div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,1); z-index: 1000;" ng-show="hideall">
 </div>
 </div>
-<!--overlay-->
-<div ng-show="showEmailModal">
-  <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
-    <div class="modal-dialog modal-vertical-centered">    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div style="text-align:center; padding:10px;">        
-          <div style="text-align:center;padding-bottom:10px;">
-           <p>Please enter your email so we can notify you if a repost ever fails (only 1% do). You can also add your Facebook messenger account in the settings tab so that we can notify you that way.</p>
-           <form ng-submit="updateEmail(modal.email)">
-             <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="modal.email" />
-             <button class="btn btn-pink btn-small" type="submit" id="closeModal">Add</button>
-           </form>
-         </div>
-       </div>      
-     </div>
-   </div>
- </div>
-</div>
 <!-- ManageRepost paidComment overlay start -->
 <div class="modal fade" id="scheduleCommentModal" role="dialog">
   <div class="modal-dialog">    

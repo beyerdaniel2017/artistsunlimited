@@ -161,101 +161,100 @@ router.post('/bySCURL', function(req, res, next) {
   }
   var notInUsers = [];
   Trade.find({
-    $or: [{
-      'p1.user': req.user._id
-    }, {
-      'p2.user': req.user._id
-    }]
-  })
-
-  .then(function(trades) {
-    if (trades.length > 0) {
-      trades.forEach(function(trade, index) {
-        var u1 = trade.p1.user.toString();
-        var u2 = trade.p2.user.toString();
-        if (notInUsers.indexOf(u1) == -1) {
-          notInUsers.push(u1);
-        }
-        if (notInUsers.indexOf(u2) == -1) {
-          notInUsers.push(u2);
-        }
-        if (index == (trades.length - 1)) {
-          searchObj['_id'] = {
-            $nin: notInUsers
-          };
-          findUsers(searchObj);
-        }
-      });
-    } else {
-      searchObj['_id'] = {
-        $nin: req.user._id
-      };
-      findUsers(searchObj);
-    }
-  }).then(null, next);
-  var findUsers = function(sObj) {
-    User.find(sObj)
-      .sort({
-        'soundcloud.followers': -1
-      })
-      .skip(recordRange.skip)
-      .limit(recordRange.limit)
-
-    .then(function(user) {
-      if (user.length > 0) {
-        res.send(user);
-      } else if (originalUrl !== '' && originalUrl !== undefined) {
-        var reqObj = {
-          method: 'GET',
-          path: '/resolve.json',
-          qs: {
-            url: originalUrl
+      $or: [{
+        'p1.user': req.user._id
+      }, {
+        'p2.user': req.user._id
+      }]
+    })
+    .then(function(trades) {
+      if (trades.length > 0) {
+        trades.forEach(function(trade, index) {
+          var u1 = trade.p1.user.toString();
+          var u2 = trade.p2.user.toString();
+          if (notInUsers.indexOf(u1) == -1) {
+            notInUsers.push(u1);
           }
-        };
-        scWrapper.request(reqObj, function(err, result) {
-          if (err) {
-            return res.json({
-              "success": false,
-              message: "Error in processing your request"
-            });
-          };
-          https.get(result.location, function(httpRes2) {
-            var userBody = '';
-            httpRes2.on("data", function(songChunk) {
-                userBody += songChunk;
-              })
-              .on("end", function() {
-                var user = JSON.parse(userBody);
-                User.findOne({
-                    'soundcloud.id': user.id
-                  })
-                  .then(function(data) {
-                    if (!data) {
-                      var pseudoname = user.permalink_url.substring(user.permalink_url.indexOf('.com/') + 5);
-                      var newUser = new User({
-                        'name': user.username,
-                        'soundcloud': {
-                          'id': user.id,
-                          'username': user.username,
-                          'permalinkURL': user.permalink_url,
-                          'avatarURL': user.avatar_url.replace('large', 't500x500'),
-                          'followers': user.followers_count,
-                          'pseudoname': pseudoname
-                        }
-                      });
-                      newUser.save();
-                      res.send([newUser]);
-                    } else {
-                      res.send([]);
-                    }
-                  }).then(null, next);
-              });
-          });
+          if (notInUsers.indexOf(u2) == -1) {
+            notInUsers.push(u2);
+          }
+          if (index == (trades.length - 1)) {
+            searchObj['_id'] = {
+              $nin: notInUsers
+            };
+            findUsers(searchObj);
+          }
         });
       } else {
-        res.send([]);
+        searchObj['_id'] = {
+          $nin: req.user._id
+        };
+        findUsers(searchObj);
       }
     }).then(null, next);
+  var findUsers = function(sObj) {
+    if (originalUrl !== '' && originalUrl !== undefined) {
+      var reqObj = {
+        method: 'GET',
+        path: '/resolve.json',
+        qs: {
+          url: originalUrl
+        }
+      };
+      scWrapper.request(reqObj, function(err, result) {
+        if (err) {
+          return res.json({
+            "success": false,
+            message: "Error in processing your request"
+          });
+        };
+        https.get(result.location, function(httpRes2) {
+          var userBody = '';
+          httpRes2.on("data", function(songChunk) {
+              userBody += songChunk;
+            })
+            .on("end", function() {
+              var user = JSON.parse(userBody);
+              var updateUser = {
+                'name': user.username,
+                'soundcloud': {
+                  'id': user.id,
+                  'username': user.username,
+                  'permalinkURL': user.permalink_url,
+                  'avatarURL': user.avatar_url.replace('large', 't500x500'),
+                  'followers': user.followers_count,
+                  'pseudoname': user.permalink_url.substring(user.permalink_url.indexOf('.com/') + 5),
+                  'role': 'user'
+                }
+              }
+              User.findOneAndUpdate({
+                  'soundcloud.id': user.id
+                }, updateUser, {
+                  upsert: true,
+                  new: true
+                })
+                .then(function(data) {
+                  console.log(data)
+                  res.send([data]);
+                }).then(null, next);
+            });
+        });
+      });
+    } else {
+      User.find(sObj)
+        .sort({
+          'soundcloud.followers': -1
+        })
+        .skip(recordRange.skip)
+        .limit(recordRange.limit)
+        .then(function(user) {
+          if (user.length > 0) {
+            res.send(user);
+          } else {
+            res.send([]);
+          }
+        }).then(null, next);
+    }
   }
 });
 

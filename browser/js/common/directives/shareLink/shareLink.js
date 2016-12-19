@@ -24,16 +24,21 @@ app.directive('slmodal', function($http) {
           if ($scope.eventType == 'share') {
             $scope.shareLink = 'artistsunlimited.com/repostevents/' + $scope.event.user.soundcloud.pseudoname + "/" + $scope.event.pseudoname;
             if ($scope.event) $scope.messengerLink = 'https://' + $scope.shareLink;
+            $scope.scurl = "https://soundcloud.com";
           } else {
             if ($scope.trade) {
               $scope.shareLink = 'artistsunlimited.com/artistTools/trade/' + $scope.trade.p1.user.soundcloud.pseudoname + '/' + $scope.trade.p2.user.soundcloud.pseudoname;
               $scope.messengerLink = 'https://' + $scope.shareLink;
+              $scope.scurl = $scope.trade.other.user.soundcloud.permalinkURL;
             }
           }
         }
-        console.log($scope.messengerLink);
         $rootScope.reloadFB();
       });
+      $scope.copyThenLink = function(link) {
+
+        window.open('link', '_blank');
+      }
       $scope.sendMail = function(id) {
         window.open("mailto:example@demo.com?body=" + $scope.shareLink, "_self");
       };

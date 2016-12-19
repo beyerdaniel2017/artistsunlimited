@@ -1,18 +1,40 @@
 <ng-include src="'js/artistTools/ArtistTools/header-navigation.html'"></ng-include>
-<!-- Content Start  -->
-<div class="container" ng-init="checkIfSubmission()">
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="content-area bg-white">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="internal-content">
-              <br/>
-              <div class="col-sm-6 col-sm-offset-3">
-               <div class="text-center">
-                <button class="btn btn-pink btn-enter cl-sound-btn" ng-click="soundcloudLogin()">Connect with SoundCloud</button>
+<div ng-show="showEmailModal" >
+  <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-vertical-centered">    
+      <!-- Modal content-->
+      <div class="modal-content" style="max-width:300px; margin:0 auto;">
+        <div style="padding:15px;">        
+          <p>Sign up!</p>
+          <form ng-submit="updateEmail(modal.email)">
+            <input class="form-control" placeholder="Email address" style="text-align:left; width:100% margin:10px 0; border-radius:5px;" type="email" ng-model="modal.email" />
+            <div style="width:49%; text-align:left; display:inline-block; margin-top:15px;">
+              <button class="btn btn-pink" type="submit" id="closeModal" style="margin-bottom:0;">
+                SIGN UP</button>
               </div>
-              <!--Third party login-->
+              <div style="width:49%; text-align:right; display:inline-block; margin-top:15px;">
+                <button class="btn btn-border"  ng-click="closeModal()" style="margin-bottom:0;">CLOSE</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Content Start  -->
+  <div class="container" ng-init="checkIfSubmission()">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="content-area bg-white">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="internal-content">
+                <br/>
+                <div class="col-sm-6 col-sm-offset-3">
+                 <div class="text-center">
+                  <button class="btn btn-pink btn-enter cl-sound-btn" ng-click="soundcloudLogin()">Connect with SoundCloud</button>
+                </div>
+                <!--Third party login-->
 <!--          <div class="text-center">
                 <h3>Third Party Login</h3>
                 <form role="form" ng-submit="thirdPartyLogin(thirdParty)">
@@ -60,4 +82,4 @@
 </div>        
 <!-- Content End  -->
 <ng-include src="'js/home/views/loader.html'"></ng-include>
-
+<!--email overlay-->

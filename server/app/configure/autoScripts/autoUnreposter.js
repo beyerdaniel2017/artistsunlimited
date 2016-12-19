@@ -32,15 +32,14 @@ function doUnrepost() {
     .then(function(users) {
       users.forEach(function(user) {
         RepostEvent.findOne({
-          userID: user.soundcloud.id,
-          completed: true,
-          unrepostDate: {
-            $gt: lowerDate,
-            $lt: upperDate
-          }
-        })
-
-        .then(function(event) {
+            userID: user.soundcloud.id,
+            completed: true,
+            unrepostDate: {
+              $gt: lowerDate,
+              $lt: upperDate
+            }
+          })
+          .then(function(event) {
             if (event) unrepostEvent(event, user);
           })
           .then(null, function(err) {

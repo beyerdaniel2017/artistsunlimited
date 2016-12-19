@@ -20,61 +20,31 @@ module.exports = function(app) {
             path: '/me',
             qs: {}
         };
-        scWrapper.request(reqObj, function(err, data) {
+        scWrapper.request(reqObj, function(err, user) {
             if (err) {
                 return done(err, false);
             }
-            User.findOne({
-                    'soundcloud.id': data.id
+            var updateUser = {
+                'name': user.username,
+                'soundcloud': {
+                    'id': user.id,
+                    'username': user.username,
+                    'permalinkURL': user.permalink_url,
+                    'avatarURL': user.avatar_url.replace('large', 't500x500'),
+                    'followers': user.followers_count,
+                    'pseudoname': user.permalink_url.substring(user.permalink_url.indexOf('.com/') + 5),
+                    'role': 'user'
+                }
+            }
+            User.findOneAndUpdate({
+                    'soundcloud.id': user.id
+                }, updateUser, {
+                    upsert: true,
+                    new: true
                 })
-                .then(function(user) {
-                    if (user) {
-                        var pseudoname = data.permalink_url.substring(data.permalink_url.indexOf('.com/') + 5)
-                        var updateObj = {
-                            'soundcloud': {
-                                'id': data.id,
-                                'username': data.username,
-                                'permalinkURL': data.permalink_url,
-                                'avatarURL': data.avatar_url.replace('large', 't500x500'),
-                                'token': req.body.token,
-                                'followers': data.followers_count,
-                                'pseudoname': pseudoname
-                            }
-                        };
-                        User.findOneAndUpdate({
-                                _id: user._id
-                            }, {
-                                $set: updateObj
-                            }, {
-                                new: true
-                            })
-                            .then(function(user) {
-                                done(null, user);
-                            })
-                            .then(null, function(err) {
-                                done(err);
-                            });
-                    } else {
-                        var pseudoname = data.permalink_url.substring(data.permalink_url.indexOf('.com/') + 5)
-                        var newUser = new User({
-                            'name': data.username,
-                            'soundcloud': {
-                                'id': data.id,
-                                'username': data.username,
-                                'permalinkURL': data.permalink_url,
-                                'avatarURL': data.avatar_url.replace('large', 't500x500'),
-                                'token': req.body.token,
-                                'followers': data.followers_count,
-                                'pseudoname': pseudoname
-                            },
-                            'role': 'user'
-                        });
-                        newUser.save();
-                        return done(null, newUser);
-                    }
-                }, function(err) {
-                    done(err);
-                });
+                .then(function(data) {
+                    done(null, data);
+                }).then(null, done);
         });
     };
 

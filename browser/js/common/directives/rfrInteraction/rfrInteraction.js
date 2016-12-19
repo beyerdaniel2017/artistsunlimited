@@ -8,7 +8,7 @@ app.directive('rfrinteraction', function($http) {
       $window.localStorage.setItem('activetab', '1');
       $scope.isAdminRoute = false;
       if (path.indexOf("admin/") != -1) {
-        $scope.isAdminRoute = true
+        $scope.isAdminRoute = true;
       } else {
         $scope.isAdminRoute = false;
       }
