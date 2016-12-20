@@ -11,6 +11,7 @@ paypal.configure({
 });
 module.exports = {
   makePayment: function(price, itemName, returnURL, cancelURL) {
+    if (itemName.length > 120) itemName = "Multiple Reposts";
     var create_payment_json = {
       "intent": "sale",
       "payer": {
@@ -63,6 +64,7 @@ module.exports = {
   },
   sendPayout: function(email, price, itemDescription, itemID) {
     var sender_batch_id = Math.random().toString(36).substring(9);
+    if (itemDescription.length > 120) itemDescription = "Payout for Reposts";
     var create_payout_json = {
       "sender_batch_header": {
         "sender_batch_id": sender_batch_id,

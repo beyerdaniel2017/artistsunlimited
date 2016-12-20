@@ -17,6 +17,6 @@ app.controller('ThankyouController', function($http, $scope, $location) {
     })
     .then(null, function(err) {
       $scope.processing = false;
-      $.Zebra_Dialog(err.message);
+      $.Zebra_Dialog(err.data);
     })
 });
