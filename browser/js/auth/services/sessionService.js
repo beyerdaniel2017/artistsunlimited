@@ -1,6 +1,7 @@
 app.factory('SessionService', function($cookies, $http, $window, $state) {
 
 	function create(data) {
+		console.log(data);
 		data.pseudoAvailableSlots = createPseudoAvailableSlots(data);
 		$window.localStorage.setItem('user', JSON.stringify(data));
 	}

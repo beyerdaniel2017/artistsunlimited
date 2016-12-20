@@ -33,7 +33,6 @@ router.get('/byId/:id', function(req, res, next) {
   }
   User.findById(req.params.id)
     .then(function(user) {
-      //if (user.soundcloud.token) user.soundcloud.token = undefined;
       res.send(user);
     }).then(null, next)
 });

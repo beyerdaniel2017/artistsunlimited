@@ -13,6 +13,12 @@ app.directive('autofill', function($http) {
         $scope.loadQueueSongs();
       }
 
+      $scope.removeAll = function() {
+        $scope.user.queue = [];
+        $scope.saveUser()
+        $scope.loadQueueSongs();
+      }
+
       $scope.addSong = function() {
         if ($scope.user.queue.indexOf($scope.newQueueID) != -1) return;
         $scope.user.queue.push($scope.newQueueID);
