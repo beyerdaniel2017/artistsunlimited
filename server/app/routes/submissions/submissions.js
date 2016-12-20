@@ -431,26 +431,24 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
     next(new Error('Unauthorized'));
     return;
   } else {
-    Submission.findByIdAndRemove(req.params.subID)
+    Submission.findById(req.params.subID)
       .populate("userID")
       .then(function(sub) {
-        User.find({
-            'soundcloud.id': {
-              $in: sub.channelIDS
-            }
-          })
-          .then(function(channels) {
-            var declineEmail = {};
-            if (req.user.repostCustomizeEmails && req.user.repostCustomizeEmails.length > 0) {
-              declineEmail = req.user.repostCustomizeEmails[0].decline;
-            }
-            sub.nameStringWithLink = ""
-            sub.nameString = "";
-            var body = formatForEmail(declineEmail.body, sub);
-            var subject = formatForEmail(declineEmail.subject, sub);
-            sendEmail(sub.name, sub.email, "Artists Unlimited", "coayscue@artistsunlimited.com", subject, body);
-            res.send(sub);
-          });
+        if (!sub.ignoredBy) sub.ignoredBy = [];
+        sub.ignoredBy.push(req.user._id.toJSON());
+        sub.pooledSendDate = new Date((new Date()).getTime() + 48 * 3600000);
+        sub.status = 'pooled';
+        sub.save();
+        var declineEmail = {};
+        if (req.user.repostCustomizeEmails && req.user.repostCustomizeEmails.length > 0) {
+          declineEmail = req.user.repostCustomizeEmails[0].decline;
+          sub.nameStringWithLink = ""
+          sub.nameString = "";
+          var body = formatForEmail(declineEmail.body, sub);
+          var subject = formatForEmail(declineEmail.subject, sub);
+          sendEmail(sub.name, sub.email, "Artists Unlimited", "coayscue@artistsunlimited.com", subject, body);
+        }
+        res.send(sub);
       })
       .then(null, next);
   }
@@ -591,7 +589,7 @@ router.put('/completedPayment', function(req, res, next) {
           payer_id: req.body.PayerID,
           transactions: payment.transactions
         });
-      } else next('submission not found');
+      } else next(new Error('submission not found'));
     })
     .then(function(payment) {
       var promiseArray = [];
@@ -626,8 +624,7 @@ router.put('/completedPayment', function(req, res, next) {
         var buyMoreLink = rootURL + "/pay/" + sub._id;
         sendEmail(sub.name, sub.email, "Artists Unlimited", "coayscue@artistsunlimited.com", "Useful links", "Hello " + sub.name + ",<br><br>Thank you for your purchase! Here are some useful links for your records:<br><br><a href=" + calendarLink + ">Paid Repost Calendar</a><br><br><a href=" + buyMoreLink + ">Buy More Reposts</a><br><br>Thank you,<br>Artists Unlimited");
         res.json({
-          username: user.soundcloud.pseudoname,
-          title: events[0].event.pseudoname
+          link: calendarLink
         });
       }).then(null, next)
     })

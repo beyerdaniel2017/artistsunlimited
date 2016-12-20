@@ -75,6 +75,9 @@ app.controller('PayController', function($scope, $rootScope, $http, channels, su
     $http.post('/api/submissions/getPayment', pricingObj)
       .then(function(res) {
         window.location = res.data;
+      }).then(null, function(err) {
+        $scope.processing = false;
+        $.Zebra_Dialog(err.message);
       })
   }
 

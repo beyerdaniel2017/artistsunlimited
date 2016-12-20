@@ -41,6 +41,7 @@ module.exports = {
     return new Promise(function(fulfill, reject) {
       paypal.payment.create(create_payment_json, function(error, payment) {
         if (error) {
+          console.log(JSON.stringify(error))
           reject(error);
         } else {
           fulfill(payment);
@@ -52,6 +53,7 @@ module.exports = {
     return new Promise(function(fulfill, reject) {
       paypal.payment.execute(paymentID, paymentJSON, function(error, payment) {
         if (error) {
+          console.log(JSON.stringify(error))
           reject(error);
         } else {
           fulfill(payment);
