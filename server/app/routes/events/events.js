@@ -51,15 +51,17 @@ router.get('/repostEvent/:username/:trackTitle/:paid', function(req, res, next) 
             networkDocIds.push(networkUser._id);
             networkUserIds.push(networkUser.soundcloud.id);
           })
-          RepostEvent.findOne({
+          RepostEvent.find({
               userID: user.soundcloud.id,
               pseudoname: req.params.trackTitle
             })
-            .then(function(event) {
-              if (event && event.trackID) {
+            .then(function(events) {
+              if (events[0] && events[0].trackID) {
                 var lowDate = new Date((new Date()).getTime() - 24 * 7 * 3600000)
                 var query = {
-                  trackID: event.trackID,
+                  trackID: {
+                    $in: events[0].trackID
+                  },
                   day: {
                     $gt: lowDate
                   },
@@ -75,12 +77,13 @@ router.get('/repostEvent/:username/:trackTitle/:paid', function(req, res, next) 
                 }
                 if (req.params.paid == 'true') query = {
                   type: "paid",
-                  trackID: event.trackID,
+                  trackID: {
+                    $in: events[0].trackID
+                  },
                   day: {
                     $gt: lowDate
                   }
                 }
-                console.log(query);
                 RepostEvent.find(query)
                   .then(function(tracks) {
                     tracks.forEach(function(track) {

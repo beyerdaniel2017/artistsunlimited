@@ -41,16 +41,18 @@ app.get('/unsubscribe/:followerId', function(req, res) {
 //   }
 // });
 
-app.get('/auth/soundcloud', 
-  passport.authenticate('soundcloud'), 
+app.get('/auth/soundcloud',
+  passport.authenticate('soundcloud'),
   function(req, res) {
 
-});
+  });
 
-app.get('/auth/soundcloud/callback', passport.authenticate('soundcloud', { failureRedirect: '/login' }),
-      function (req, res) {
-          res.redirect('/');
-});
+app.get('/auth/soundcloud/callback', passport.authenticate('soundcloud', {
+    failureRedirect: '/login'
+  }),
+  function(req, res) {
+    res.redirect('/');
+  });
 
 // app.get('/*', function(req, res) {
 //   res.sendFile(app.get('homeHTMLPath'));
