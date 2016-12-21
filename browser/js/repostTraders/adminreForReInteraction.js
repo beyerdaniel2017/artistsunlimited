@@ -9,12 +9,12 @@ app.config(function($stateProvider) {
           if (SessionService.getUser()) {
             return $rootScope.getUserNetwork()
               .then(function() {
-                var repName = !!SessionService.getUser().soundcloud ? SessionService.getUser().soundcloud.username.replace(/ /g, '_') : ' ';
+                var repName = !!SessionService.getUser().soundcloud ? SessionService.getUser().soundcloud.pseudoname : "";
                 if (repName == $stateParams.user1Name || repName == $stateParams.user2Name) {
                   return 'ok'
                 } else {
                   var found = $rootScope.userlinkedAccounts.find(function(user) {
-                    var repName = user.soundcloud.username.replace(/ /g, '_');
+                    var repName = user.soundcloud.pseudoname;
                     return (repName == $stateParams.user1Name || repName == $stateParams.user2Name)
                   })
                   if (found) {
