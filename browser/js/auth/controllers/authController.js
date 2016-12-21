@@ -107,7 +107,7 @@ app.controller('AuthController', function($rootScope, $state, $stateParams, $sco
           $scope.hideall = false;
           $('#emailModal').modal('hide');
           $scope.showEmailModal = false;
-          $scope.redirectLogin();
+          window.location.reload();
         })
         .then(null, function(err) {
           setTimeout(function() {

@@ -57,10 +57,13 @@ router.get('/repostEvent/:username/:trackTitle/:paid', function(req, res, next) 
             })
             .then(function(events) {
               if (events[0] && events[0].trackID) {
+                var trackIDS = events.map(function(ev) {
+                  return ev.trackID
+                })
                 var lowDate = new Date((new Date()).getTime() - 24 * 7 * 3600000)
                 var query = {
                   trackID: {
-                    $in: events[0].trackID
+                    $in: trackIDS
                   },
                   day: {
                     $gt: lowDate

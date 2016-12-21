@@ -4,8 +4,8 @@
     <div class="tropical" ng-if="user">
       <a href="{{user.soundcloud.permalinkURL}}" target="_blank" style="color:#8a8a8a"><span>{{user.soundcloud.username}}</span><img class="img-responsive img-circle" src="{{user.soundcloud.avatarURL ? user.soundcloud.avatarURL.replace('large', 't200x200') : 'https://i1.sndcdn.com/avatars-000223599301-0ns076-t500x500.jpg'}}" style="height:100px;"><p>{{user.soundcloud.followers | number:0}} Followers</p></a>
       <p style="color:red" ng-controller="FullstackGeneratedController" ng-init="isBlock()" ng-show="isBlock">Your reposts are blocked untill {{ user.blockRelease | date:'MMMM dd yyyy h:mma' }}</p>
-      <select class="form-control" style="width:180px; margin:0 auto;" ng-model="linkedUsers"
-      ng-show="userlinkedAccounts.length > 0" ng-change="linkedUsersChange(linkedUsers)">
+      <select class="form-control" style="width:180px; margin:0 auto;" ng-model="selectedToken"
+      ng-show="userlinkedAccounts.length > 0" ng-change="linkedUsersChange(selectedToken)">
       <option value="">{{user.soundcloud.username}}</option>
       <option ng-repeat="u in userlinkedAccounts" ng-if="u._id != user._id" value="{{u.soundcloud.token}}">{{u.soundcloud.username}}</option>
     </select>
