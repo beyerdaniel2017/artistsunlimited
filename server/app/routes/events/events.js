@@ -56,7 +56,6 @@ router.get('/repostEvent/:username/:trackTitle/:paid', function(req, res, next) 
               pseudoname: req.params.trackTitle
             })
             .then(function(event) {
-
               if (event && event.trackID) {
                 var lowDate = new Date((new Date()).getTime() - 24 * 7 * 3600000)
                 var query = {
@@ -81,6 +80,7 @@ router.get('/repostEvent/:username/:trackTitle/:paid', function(req, res, next) 
                     $gt: lowDate
                   }
                 }
+                console.log(query);
                 RepostEvent.find(query)
                   .then(function(tracks) {
                     tracks.forEach(function(track) {
