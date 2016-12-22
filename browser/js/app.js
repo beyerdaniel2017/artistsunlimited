@@ -316,6 +316,33 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
         $scope.curATUser = JSON.stringify(SessionService.getUser());
     }
 
+
+    $scope.rootSoundcloudLogin = function() {
+        $scope.processing = true;
+        SC.connect()
+            .then(function(res) {
+                $rootScope.accessToken = res.oauth_token;
+                return $http.post('/api/login/soundCloudLogin', {
+                    token: res.oauth_token,
+                    password: 'test'
+                });
+            })
+            .then(function(res) {
+                $scope.processing = false;
+                var userData = res.data.user;
+                userData.isAdmin = false;
+                SessionService.create(userData);
+                $scope.user = SessionService.getUser();
+                window.location.reload();
+            })
+            .then(null, function(err) {
+                console.log(err);
+                $scope.processing = false;
+                $scope.soundcloudLogin();
+            });
+    };
+
+
     $rootScope.changeUserAdmin = $scope.changeUserAdmin = function(param, location, state) {
         if (!param) return;
         $scope.processing = true;
@@ -337,10 +364,8 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                         else window.location.reload();
                     })
                     .then(null, function(err) {
-                        console.log(1);
-                        console.log(err);
-                        $.Zebra_Dialog('Error: Could not log in');
                         $scope.processing = false;
+                        $scope.rootSoundcloudLogin();
                     });
             } else {
                 $scope.processing = false;
@@ -390,15 +415,14 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                     window.location.reload()
                 })
                 .then(null, function(err) {
-                    console.log(2);
-                    console.log(err);
-                    $.Zebra_Dialog('Error: Could not log in');
                     $scope.processing = false;
+                    $scope.rootSoundcloudLogin();
                 });
         }
     }
 
     $scope.linkedUsersChange = function(authToken) {
+        console.log(authToken);
         $scope.processing = true;
         $http.post('/api/login/soundCloudLogin', {
                 token: authToken,
@@ -408,14 +432,12 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                 $scope.processing = false;
                 if (res.data.user) {
                     SessionService.create(res.data.user);
-                    $state.reload();
+                    window.location.reload();
                 }
             })
             .then(null, function(err) {
-                console.log(3);
-                console.log(err);
-                $.Zebra_Dialog('Error: Could not log in');
                 $scope.processing = false;
+                $scope.rootSoundcloudLogin();
             });
     }
 

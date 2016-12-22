@@ -273,7 +273,7 @@
         <div class="row">
           <div class="col-md-12 text-center">
             <div class="buttons margin-40">
-              <input type="button" name="SAVE" value="SAVE" ng-click="nextStep(5,AccountsStepData,'basic')" class="btn btn-pink b-radius-10 border-orange-btn">
+              <input type="button" name="SAVE" value="SAVE" ng-click="nextStep(5,AccountsStepData,'basic')" class="btn btn-pink b-radius-10">
             </div>
           </div>
         </div>      
@@ -300,10 +300,10 @@
                 <input ng-model="AccountsStepData.paypal.priceb" placeholder="Enter Payment Amount 2"  class="price-input" type="text">
               </div>
             </br />
-            <input class="btn border-orange-btn" ng-disabled="!AccountsStepData.paypal.pricea || !AccountsStepData.paypal.priceb" style="margin-left: 18px;" type="button" value="Verify Account" ng-click="varifyaccount()">              
+            <button class="btn btn-pink b-radius-10" ng-disabled="!AccountsStepData.paypal.pricea || !AccountsStepData.paypal.priceb" style="margin-left: 18px;" type="button" ng-click="varifyaccount()">Verify Account</button>           
           </div>
           <div class="form-group"  ng-show="!AccountsStepData.paypal.varify">
-            <input class="btn btn-pink b-radius-10 border-orange-btn" ng-disabled="!AccountsStepData.paypal_email" style="margin-left: 18px;" type="button" value="Send Trail Amount" ng-click="sendTrailAmount()">
+            <button class="btn btn-pink b-radius-10" ng-disabled="!AccountsStepData.paypal_email" style="margin-left: 18px;" ng-click="sendTrailAmount()">Send Trial Amount</button>
           </div>
           <div class="clearfix"></div>
           <div ng-show="verified" style="color:green;">Account verified.</div>

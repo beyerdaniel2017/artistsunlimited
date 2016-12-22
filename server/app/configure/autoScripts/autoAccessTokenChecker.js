@@ -12,14 +12,14 @@ scWrapper.init({
 });
 
 module.exports = checkTokens;
-//daily emails
+
 function checkTokens() {
   setTimeout(function() {
     checkTokens()
   }, 2 * 3600000);
 
   User.find({
-      'soundcloud.token': {
+      email: {
         $ne: null
       }
     })
@@ -33,7 +33,7 @@ function checkTokens() {
             }
           })
           .then(function(event) {
-            if (events) {
+            if (event) {
               scWrapper.setToken(user.soundcloud.token);
               var reqObj = {
                 method: 'GET',

@@ -127,16 +127,10 @@ router.post('/authenticated', function(req, res, next) {
 router.post('/soundCloudLogin', function(req, res, next) {
   passport.authenticate('local-soundcloud', function(err, user, info) {
     if (err) {
-      return res.json({
-        success: false,
-        "message": err
-      });
+      next(err);
     }
     if (!user) {
-      return res.json({
-        success: false,
-        "message": "Error in processing your request"
-      });
+      next(err);
     } else {
       req.login(user, function(err) {
         //req.session.cookie.expires = false;
