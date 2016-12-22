@@ -73,7 +73,7 @@ router.post('/pool', function(req, res, next) {
       var submission = new Submission(req.body);
       submission.submissionDate = new Date();
       submission.status = "pooled";
-      submission.pooledSendDate = new Date((new Date()).getTime() + 48 * 3600000);
+      submission.pooledSendDate = new Date((new Date()).getTime() + 72 * 3600000);
       return submission.save()
     }
   }).then(function(sub) {
@@ -373,7 +373,7 @@ router.put('/save', function(req, res, next) {
         .then(null, next);
     } else {
       req.body.status = "pooled";
-      if (req.user.repostSettings.poolOn) req.body.pooledSendDate = new Date((new Date()).getTime() + 48 * 3600000);
+      if (req.user.repostSettings.poolOn) req.body.pooledSendDate = new Date((new Date()).getTime() + 72 * 3600000);
       else req.body.pooledSendDate = new Date(0);
       req.body.ignoredBy = [req.user._id.toJSON()];
       Submission.findByIdAndUpdate(req.body._id, req.body, {
@@ -436,7 +436,7 @@ router.delete('/decline/:subID/:password', function(req, res, next) {
       .then(function(sub) {
         if (!sub.ignoredBy) sub.ignoredBy = [];
         sub.ignoredBy.push(req.user._id.toJSON());
-        sub.pooledSendDate = new Date((new Date()).getTime() + 48 * 3600000);
+        sub.pooledSendDate = new Date((new Date()).getTime() + 72 * 3600000);
         sub.status = 'pooled';
         sub.save();
         var declineEmail = {};
@@ -530,7 +530,7 @@ router.delete('/ignore/:subID/:password', function(req, res, next) {
         if (!sub.ignoredBy) sub.ignoredBy = [];
         sub.ignoredBy.push(req.user._id.toJSON());
         if (sub.status == "submitted") {
-          sub.pooledSendDate = new Date((new Date()).getTime() + 48 * 3600000);
+          sub.pooledSendDate = new Date((new Date()).getTime() + 72 * 3600000);
           sub.status = 'pooled';
         }
         sub.save();
@@ -611,7 +611,7 @@ router.put('/completedPayment', function(req, res, next) {
       }
     })
     .then(function(events) {
-      sub.refundDate = new Date((new Date(sub.pooledSendDate)).getTime() + 48 * 60 * 60 * 1000);
+      sub.refundDate = new Date((new Date(sub.pooledSendDate)).getTime() + 72 * 60 * 60 * 1000);
       events.forEach(function(event) {
         var wouldBeRefundDate = new Date(new Date(event.event.day).getTime() + 4 * 60 * 60 * 1000)
         if (wouldBeRefundDate > sub.refundDate) sub.refundDate = wouldBeRefundDate;

@@ -400,6 +400,7 @@ router.post('/updateAdminProfile', function(req, res, next) {
       '_id': {
         $ne: req.user._id
       },
+      role: 'admin',
       email: body.email
     }, function(err, u) {
       if (u) {
