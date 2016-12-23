@@ -421,23 +421,24 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
     }
 
     $scope.linkedUsersChange = function(authToken) {
-        console.log(authToken);
-        $scope.processing = true;
-        $http.post('/api/login/soundCloudLogin', {
-                token: authToken,
-                password: 'test'
-            })
-            .then(function(res) {
-                $scope.processing = false;
-                if (res.data.user) {
-                    SessionService.create(res.data.user);
-                    window.location.reload();
-                }
-            })
-            .then(null, function(err) {
-                $scope.processing = false;
-                $scope.rootSoundcloudLogin();
-            });
+        if (authToken) {
+            $scope.processing = true;
+            $http.post('/api/login/soundCloudLogin', {
+                    token: authToken,
+                    password: 'test'
+                })
+                .then(function(res) {
+                    $scope.processing = false;
+                    if (res.data.user) {
+                        SessionService.create(res.data.user);
+                        window.location.reload();
+                    }
+                })
+                .then(null, function(err) {
+                    $scope.processing = false;
+                    $scope.rootSoundcloudLogin();
+                });
+        }
     }
 
     $scope.swithUser = function(isadmin) {
