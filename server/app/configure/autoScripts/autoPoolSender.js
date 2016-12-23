@@ -9,6 +9,7 @@ function doPoolSent() {
   setTimeout(function() {
     doPoolSent();
   }, 300000);
+
   var currentDate = new Date();
   Submission.find({
       pooledSendDate: {

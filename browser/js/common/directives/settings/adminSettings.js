@@ -128,12 +128,15 @@ app.directive('adminsettings', function($http) {
 			}
 
 			$scope.isFirstLogin = function() {
-				if ($scope.AccountsStepData.paypal_email != "") {
+				console.log('data');
+				console.log($scope.AccountsStepData)
+				if (!!$scope.AccountsStepData.paypal_email) {
 					$scope.activeTab = ['general', 'sce', 'psce', 'notifications', 'paypalInfo'];
 				} else {
 					$scope.activeTab = ['general'];
 				}
 			}
+
 			$scope.isFirstLogin();
 			$scope.nextStep = function(step, currentData, type) {
 				if (type == "basic") {

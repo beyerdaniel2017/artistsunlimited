@@ -239,8 +239,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
     }
     $scope.getSubmissionCount = function() {
         $http.get('/api/submissions/counts').then(function(res) {
-            console.log(res.data);
-            $scope.submissionsCount = res.data.regularCount;
+            $scope.submissionsCount = res.data.regularCount + res.data.marketCount;
         });
     }
     if (window.location.href.includes('/admin/')) $scope.getSubmissionCount();

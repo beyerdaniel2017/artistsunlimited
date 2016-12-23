@@ -13,10 +13,12 @@ scWrapper.init({
 
 module.exports = checkTokens;
 
+var interval = 2 * 3600000
+
 function checkTokens() {
   setTimeout(function() {
     checkTokens()
-  }, 2 * 3600000);
+  }, interval);
 
   User.find({
       email: {
