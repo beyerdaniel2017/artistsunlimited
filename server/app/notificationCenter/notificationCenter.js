@@ -21,7 +21,7 @@
                  .then(console.log, console.log);
              }
              if (user.notificationSettings.email[type]) {
-               sendEmail(user.soundcloud.username, user.email, 'Artists Unlimited Server', 'coayscue@artistsunlimited.co', heading, message + '<br><br><h3><a href=' + link + '>View on artistsunlimited.com</a></h3>')
+               sendEmail(user.soundcloud.username, user.email, 'Artists Unlimited Notifications', 'coayscue@artistsunlimited.com', heading, message + '<br><br><h3><a href=' + link + '>View on Artists Unlimited</a></h3>');
              }
            }).then(null, console.log);
        }).then(null, console.log);

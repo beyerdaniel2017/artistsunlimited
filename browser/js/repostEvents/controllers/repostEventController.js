@@ -9,7 +9,11 @@ app.config(function($stateProvider) {
         var url = '/api/events/repostEvent/' + $stateParams.username + '/' + $stateParams.trackTitle + '/' + paid;
         return $http.get(url)
           .then(function(res) {
-            return res.data;
+            var events = res.data.sort(function(a, b) {
+              return new Date(a.trackInfo.day).getTime() - new Date(b.trackInfo.day).getTime();
+            });
+            console.log(events);
+            return events;
           })
           .then(null, function(err) {
             $.Zebra_Dialog("This repost event does not exist.");
@@ -30,6 +34,8 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
     var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
     if (!!repostEvent) {
+      $scope.listevents = repostEvent;
+      $scope.trackImage = repostEvent[0].trackInfo.trackArtUrl;
       if (!repostEvent[0].trackInfo.trackArtUrl) {
         SC.get('/tracks/' + repostEvent[0].trackInfo.trackID)
           .then(function(track) {
@@ -37,9 +43,8 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
             $scope.listevents[0].trackInfo.artistName = track.user.username;
           })
       }
-      $scope.listevents = repostEvent;
-      $scope.trackImage = repostEvent[0].trackInfo.trackArtUrl;
     };
+
     $scope.dayIncr = 7;
     $scope.incrDay = function() {
       if ($scope.dayIncr < 21) $scope.dayIncr++;
@@ -143,7 +148,6 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
     }
 
     $scope.calendar = $scope.fillDateArrays(repostEvent);
-    console.log($scope.calendar);
     $scope.clickedSlot = function(day, hour, data) {
       if (data.type == 'multiple') {
         var buttons = [];
@@ -204,7 +208,6 @@ app.controller('RepostEventsController', function($rootScope, $state, $scope, re
         document.getElementById('scPopupPlayer').style.visibility = "visible";
       }
     }
-    console.log(repostEvent);
     $scope.detailView = function(data) {
       $scope.itemview = "detailListView";
       $scope.makeEvent = {};

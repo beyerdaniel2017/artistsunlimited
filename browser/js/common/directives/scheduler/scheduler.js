@@ -32,6 +32,7 @@ app.directive('scheduler', function($http) {
       $scope.listevents = [];
       $scope.tabSelected = true;
       $scope.listAvailableSlots = [];
+      $scope.openSlots = [];
       $scope.displayType = 'channel';
       $scope.paidCommentsArr = [];
       $scope.tradeCommentsArr = [];
@@ -527,9 +528,9 @@ app.directive('scheduler', function($http) {
             var time = '';
             if (h >= 12) {
               h = h - 12;
-              time = h + ":00" + " PM";
+              time = h + " PM";
             } else {
-              time = h + ":00" + " AM";
+              time = h + " AM";
             }
 
             var calendarDay = $scope.calendar.find(function(calD) {
@@ -711,7 +712,6 @@ app.directive('scheduler', function($http) {
             type: "track"
           };
         }
-
         $scope.newEvent = true;
         var makeDay = new Date(selectedSlot.slotdate);
         makeDay.setHours(hour);
@@ -719,8 +719,68 @@ app.directive('scheduler', function($http) {
         $scope.makeEventURL = $scope.makeEvent.trackURL;
       }
 
+      $scope.populateOpenSlots = function() {
+        $scope.openSlots = [];
+        var currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + $scope.listDayIncr);
+        for (var i = 0; i < 7; i++) {
+          var d = new Date(currentDate);
+          d.setDate(d.getDate() + i);
+          var currentDay = parseInt(d.getDay());
+          var strDdate = getshortdate(d);
+          var slots = $scope.pseudoAvailableSlots[daysArray[currentDay]];
+          slots = slots.sort(function(a, b) {
+            return a - b
+          });
+
+          angular.forEach(slots, function(s) {
+            var item = new Object();
+            var h = s;
+            var time = '';
+            if (h >= 12) {
+              h = h - 12;
+              time = h + " PM";
+            } else {
+              time = h + " AM";
+            }
+
+            var calendarDay = $scope.calendar.find(function(calD) {
+              return calD.day.toLocaleDateString() == d.toLocaleDateString();
+            });
+            var event = calendarDay.events.find(function(ev) {
+              return new Date(ev.day).getHours() == s;
+            });
+
+            item.event = event;
+            var dt = new Date(strDdate);
+            dt.setHours(s);
+            item.date = new Date(dt);
+            if (!item.event) {
+              if (new Date(item.date).getTime() > new Date().getTime()) {
+                $scope.listevents.push(item);
+              }
+            } else if (item.event) {
+              $scope.listevents.push(item);
+            }
+            if (event == undefined && new Date(item.date) > new Date()) {
+              item.slotdate = d;
+              item.slottime = time;
+              var newDate = new Date(item.date);
+              newDate.setMinutes(30);
+              // if (newDate.getHours() == $scope.makeEvent.day.getHours() && newDate.toLocaleDateString() == $scope.makeEvent.day.toLocaleDateString()) newDate = new Date($scope.makeEvent.day)
+              $scope.openSlots.push(newDate);
+            }
+          });
+        }
+      }
+
+      $scope.makeEventDayChange = function() {
+        console.log($scope.makeEventDay)
+        $scope.makeEvent.day = new Date(parseInt($scope.makeEventDay));
+        console.log($scope.makeEvent.day);
+      }
+
       $scope.clickedSlot = function(day, hour, data) {
-        console.log(data);
         $scope.afcount = 0;
         $scope.isView = false;
         $scope.popup = true;
@@ -761,6 +821,8 @@ app.directive('scheduler', function($http) {
           $scope.isComment = "";
           document.getElementById('scPopupPlayer').style.visibility = "hidden";
           $scope.showPlayer = false;
+          $scope.makeEvent.day = new Date($scope.makeEvent.day);
+          $scope.makeEventDay = JSON.stringify($scope.makeEvent.day.getTime());
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
           $scope.unrepostEnable = true;
           $scope.unrepostHours = "24";
@@ -801,6 +863,7 @@ app.directive('scheduler', function($http) {
           $scope.makeEvent.unrepostHours = diff;
           $scope.unrepostHours = data.unrepostHours;
           $scope.makeEvent.day = new Date($scope.makeEvent.day);
+          $scope.makeEventDay = JSON.stringify($scope.makeEvent.day.getTime());
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.unrepostDate);
           $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
           $scope.makeEventURL = $scope.makeEvent.trackURL;
@@ -835,6 +898,8 @@ app.directive('scheduler', function($http) {
             $scope.showPlayer = false;
           }
         }
+        console.log($scope.makeEvent.day);
+        $scope.populateOpenSlots();
       }
 
       $scope.setScheduleLikeComment = function() {

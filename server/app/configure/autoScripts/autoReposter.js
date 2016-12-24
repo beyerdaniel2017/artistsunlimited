@@ -12,11 +12,11 @@ var paypalCalls = require('../../payPal/paypalCalls.js');
 var scheduleRepost = require('../../scheduleRepost/scheduleRepost.js');
 var denyUnrepostOverlap = require('../../scheduleRepost/denyUnrepostOverlap.js');
 module.exports = doRepost;
-//executes every 2 min
+//executes every 5 min
 function doRepost() {
   setTimeout(function() {
     doRepost();
-  }, 120000);
+  }, 300000);
   var lowerDate = new Date();
   lowerDate.setTime(lowerDate.getTime() - lowerDate.getMinutes() * 60 * 1000 - lowerDate.getSeconds() * 1000);
   var upperDate = new Date();
@@ -107,8 +107,7 @@ function repostAndRemove(event, user, repCount) {
         console.log(err);
         console.log(data);
         var now = new Date();
-
-        if (now.getMinutes() >= 58) {
+        if (now.getMinutes() >= 55) {
           if (JSON.stringify(err).includes('too many reposts')) {
             err = ((typeof err) == 'string' ? JSON.parse(err) : err)[0];
             user.blockRelease = new Date(err.release_at);
@@ -126,16 +125,13 @@ function repostAndRemove(event, user, repCount) {
                     'payment.transactions.related_resources.sale.id': ev.saleID
                   }]
                 }).then(function(submission) {
-                  sendEmail(ev.name, ev.email, "Artists Unlimited", "coayscue@artistsunlimited.com", "Failed Repost reschedule and refund", "Hi " + ev.name + ",<br><br>There was an error reposting " + ev.title + " on " + user.soundcloud.username + ". <br><br>We will refund you the price of the repost, $" + ev.price + ", on " + (new Date(submission.refundDate)).toLocaleDateString() + " and we have rescheduled the track to be reposted on " + user.soundcloud.username + " on " + ev.day.toLocaleDateString() + ".<br><br>Sorry for the inconvenience and thank you for your patience.<br><br>-<a href='https://artistsunlimited.com'>Artists Unlimited</a>");
+                  sendEmail(ev.name, ev.email, "Artists Unlimited", "coayscue@artistsunlimited.com", "Failed Repost reschedule and refund", "Hi " + ev.name + ",<br><br>There was an error reposting " + ev.title + " on " + user.soundcloud.username + ". <br><br>You will be refunded the price of the repost, $" + ev.price + ", on " + (new Date(submission.refundDate)).toLocaleDateString() + ".<br><br>The track has also been rescheduled to be reposted on " + user.soundcloud.username + " on " + ev.day.toLocaleDateString() + ".<br><br>-<a href='https://artistsunlimited.com'>Artists Unlimited</a>");
                 }).then(null, console.log)
               }).then(null, console.log);
-            event.remove();
           } else if (event.owner) {
             var newEvent = JSON.parse(JSON.stringify(event));
             delete newEvent._id;
             scheduleRepost(newEvent, new Date()).then(null, console.log);
-            event.remove();
-
           }
           notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', event.title + ' did not repost on ' + user.soundcloud.username + ' did not complete.', 'https://artistsunlimited.com/artistTools/scheduler');
         }

@@ -37,7 +37,7 @@ app.directive('rfrinteraction', function($http) {
       $scope.p2dayIncr = 0;
       $scope.repeatOn = ($scope.trade.repeatFor > 0);
       $scope.currentDate = new Date();
-      var daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+      $scope.daysArray = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
       $scope.itemview = "calender";
 
       $scope.setView = function(view) {
@@ -301,7 +301,11 @@ app.directive('rfrinteraction', function($http) {
             $scope.trade = res.data;
             $scope.trade.other = ($scope.trade.p1.user._id == $scope.user._id) ? $scope.trade.p2 : $scope.trade.p1;
             $scope.trade.user = ($scope.trade.p1.user._id == $scope.user._id) ? $scope.trade.p1 : $scope.trade.p2;
+            $scope.trade.user.user.pseudoAvailableSlots = createPseudoAvailableSlots($scope.trade.user.user);
+            $scope.trade.other.user.pseudoAvailableSlots = createPseudoAvailableSlots($scope.trade.other.user);
             $scope.fillCalendar();
+            var personNum = $scope.activeUser._id == $scope.trade.p1.user._id ? 'p1' : 'p2';
+            $scope.getListEvents(personNum);
             $scope.showUndo = false;
           }).then(null, console.log)
       };
@@ -350,7 +354,7 @@ app.directive('rfrinteraction', function($http) {
         var currentDay = new Date(day).getDay();
 
         var date = (new Date(day)).setHours(hour);
-        if (!($scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]] && $scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date().getTime() + 24 * 3600000)) || ($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease) > date)) {
+        if (!($scope.activeUser.pseudoAvailableSlots[$scope.daysArray[currentDay]] && $scope.activeUser.pseudoAvailableSlots[$scope.daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date().getTime() + 24 * 3600000)) || ($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease) > date)) {
           if (event.type != 'trade') return false;
         }
 
@@ -718,7 +722,7 @@ app.directive('rfrinteraction', function($http) {
           d.setDate(d.getDate() + i);
           var currentDay = d.getDay();
           var strDdate = getshortdate(d);
-          var slots = $scope.trade[userNum].user.pseudoAvailableSlots[daysArray[currentDay]];
+          var slots = $scope.trade[userNum].user.pseudoAvailableSlots[$scope.daysArray[currentDay]];
           slots = slots.sort(function(a, b) {
             return a - b
           });
@@ -737,9 +741,11 @@ app.directive('rfrinteraction', function($http) {
             var dt = new Date(d);
             dt.setHours(hour);
             item.date = new Date(dt);
-            $scope.listEvents.push(item);
+            if (item.date > (new Date().getTime() + 24 * 3600000))
+              $scope.listEvents.push(item);
           });
         }
+        if (!$scope.$$phase) $scope.$apply();
       }
 
       $scope.getUnrepostDate = function(item) {
@@ -753,7 +759,7 @@ app.directive('rfrinteraction', function($http) {
         };
         var currentDay = new Date(date).getDay();
         var date = (new Date(date)).setHours(hour)
-        if ($scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]] && $scope.activeUser.pseudoAvailableSlots[daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date().getTime() + 24 * 3600000) && (event.type == 'empty' || event.type == 'trade') && !($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease).getTime() > date)) {
+        if ($scope.activeUser.pseudoAvailableSlots[$scope.daysArray[currentDay]] && $scope.activeUser.pseudoAvailableSlots[$scope.daysArray[currentDay]].indexOf(hour) > -1 && date > (new Date().getTime() + 24 * 3600000) && (event.type == 'empty' || event.type == 'trade') && !($scope.activeUser.blockRelease && new Date($scope.activeUser.blockRelease).getTime() > date)) {
           style = {
             'background-color': '#fff',
             'border-color': "#999",

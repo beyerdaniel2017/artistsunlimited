@@ -150,56 +150,20 @@ router.post('/soundCloudLogin', function(req, res, next) {
 
 
 router.post('/soundCloudAuthentication', function(req, res, next) {
-  scWrapper.init({
-    id: scConfig.clientID,
-    secret: scConfig.clientSecret,
-    uri: scConfig.callbackURL
-  });
-  var reqObj = {
-    method: 'GET',
-    path: '/me',
-    qs: {}
-  };
-  scWrapper.setToken(req.body.token);
-  scWrapper.request(reqObj, function(err, data) {
+  passport.authenticate('local-soundcloud', function(err, user, info) {
     if (err) {
       next(err);
-    } else {
-      User.findOne({
-          'soundcloud.id': data.id
-        })
-        .then(function(user) {
-          if (user) {
-            return res.json({
-              'success': true,
-              'message': '',
-              'user': user
-            });
-          } else {
-            var pseudoname = data.permalink_url.substring(data.permalink_url.indexOf('.com/') + 5)
-            var newUser = new User({
-              'name': data.username,
-              'soundcloud': {
-                'id': data.id,
-                'username': data.username,
-                'permalinkURL': data.permalink_url,
-                'avatarURL': data.avatar_url.replace('large', 't500x500'),
-                'token': req.body.token,
-                'followers': data.followers_count,
-                'pseudoname': pseudoname
-              },
-              'role': 'user'
-            });
-            newUser.save();
-            return res.json({
-              'success': true,
-              'message': '',
-              'user': newUser
-            });
-          }
-        }).then(null, next);
     }
-  });
+    if (!user) {
+      next(err);
+    } else {
+      return res.json({
+        'success': true,
+        'message': '',
+        'user': user
+      });
+    }
+  })(req, res);
 });
 
 /*

@@ -493,7 +493,8 @@ app.controller('ArtistToolsController', function($rootScope, $state, $stateParam
             $scope.processing = true;
             $rootScope.accessToken = res.oauth_token;
             return $http.post('/api/login/soundCloudAuthentication', {
-              token: res.oauth_token
+              token: res.oauth_token,
+              password: 'test'
             });
           }
         })
