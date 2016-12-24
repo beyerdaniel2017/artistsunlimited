@@ -10,7 +10,7 @@ module.exports = function(app) {
   }))
   app.use(lusca.csp({
     policy: {
-      'default-src': '\'self\'',
+      'default-src': '\'self\' https://*.soundcloud.com',
       'script-src': '\'self\' https://*.soundcloud.com https://*.twitter.com https://*.facebook.net \'unsafe-eval\' \'unsafe-inline\'',
       'img-src': '* data:',
       'style-src': '* \'unsafe-inline\'',

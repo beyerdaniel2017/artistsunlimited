@@ -767,7 +767,6 @@ app.directive('scheduler', function($http) {
               item.slottime = time;
               var newDate = new Date(item.date);
               newDate.setMinutes(30);
-              // if (newDate.getHours() == $scope.makeEvent.day.getHours() && newDate.toLocaleDateString() == $scope.makeEvent.day.toLocaleDateString()) newDate = new Date($scope.makeEvent.day)
               $scope.openSlots.push(newDate);
             }
           });
@@ -775,9 +774,7 @@ app.directive('scheduler', function($http) {
       }
 
       $scope.makeEventDayChange = function() {
-        console.log($scope.makeEventDay)
         $scope.makeEvent.day = new Date(parseInt($scope.makeEventDay));
-        console.log($scope.makeEvent.day);
       }
 
       $scope.clickedSlot = function(day, hour, data) {
