@@ -21,7 +21,8 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
       .then(function(res) {
         $rootScope.accessToken = res.oauth_token;
         return $http.post('/api/login/soundCloudAuthentication', {
-          token: res.oauth_token
+          token: res.oauth_token,
+          password: 'test'
         });
       })
       .then(function(res) {

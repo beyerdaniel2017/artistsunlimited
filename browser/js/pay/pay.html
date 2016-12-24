@@ -7,23 +7,24 @@
           <div class="col-md-12">
             <h1 class="bold">Promotion Marketplace</h1>
             <h3>Please select all the channels on which you would like to be reposted.</h3>
-            <div class="col-md-4" ng-repeat="channel in channels" style="margin-top: 70px; margin-left: 0px; padding-left: -10px;">
+            <div class="col-md-3" ng-repeat="channel in channels track by $index" style="float: left; margin-top: 40px; margin-left: 0px; padding-left: -10px;">
               <p class="text-center">
                 <a href="{{channel.user.permalinkURL}}">
                   <strong style="font-size: 18px;">{{channel.user.username}}</strong>
                   <br/>
+                  <span>{{channel.user.followers | number}} Followers</span>
                 </a>
-                <span>{{channel.user.followers | number}} Followers</span>
                 <br>
                 <span ng-if="auDLLink" class="intro"> <span style="text-decoration: line-through;"> ${{channel.price | number: 2}}</span> &nbsp;&nbsp;${{channel.price | calculateDiscount | number: 2}} </span>
                 <span ng-if="!auDLLink" class="intro" style="font-size: 16px;">${{channel.price | number: 2}}</span>
               </p>
               <p><img ng-src="{{channel.user.avatarURL}}" class="img-responsive" alt="" style="border: 1px solid orange;" / height="200px;" width="300px"></p>
-              <p style="height:70px;">{{channel.description}}</p>
+              <p style="min-height:50px; ">{{channel.description?"aweoirhalkej rhtertohewrotqhqel krthqwkler ntqli34uhtrqeiuthlk ajnreglqerjth asdf asdgfer adrtwert erwt;hertpouew oeprht;e iuaerlbglkjerwlwerht":""}}</p>
               <button ng-show="channel.addtocart" class="btn btn-default btn-block" ng-click="addToCart(channel)">
                 REMOVE FROM CART
               </button>
               <button ng-show="!channel.addtocart" class="btn btn-pink btn-block" ng-click="addToCart(channel)">Add to cart</button>
+              <div ng-if="$index%4==3" class="clearfix"></div>
             </div>
             <div class="clearfix"></div>
             <div style="margin: 30px 0px 10px 0px;display: inline-block;width: 100%;">

@@ -163,6 +163,27 @@ router.post('/', function(req, res, next) {
   }
 });
 
+router.get('/count', function(req, res, next) {
+  var paidRepostIds = [];
+  if (req.user.paidRepost.length > 0) {
+    req.user.paidRepost.forEach(function(acc) {
+      paidRepostIds.push(acc.userID);
+    })
+  }
+  var searchObj = {
+    userID: {
+      $in: paidRepostIds
+    },
+    status: 'new'
+  };
+  PremierSubmission.count(searchObj, function(err, count) {
+    if (err) next(err);
+    else {
+      res.send({ count: count });
+    }
+  })
+})
+
 router.put('/accept', function(req, res, next) {
   PremierSubmission.findByIdAndUpdate(req.body.submi._id, req.body.submi, {
       new: true
