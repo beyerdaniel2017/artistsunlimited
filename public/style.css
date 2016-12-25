@@ -925,7 +925,8 @@ label.with-square-checkbox input[type="checkbox"]:checked + span::before {
 html {
   height: 100%; }
 
-html, * {
+html,
+* {
   outline: none; }
 
 a:focus,
@@ -953,6 +954,9 @@ button:active:after {
     background-color: inherit;
     border-color: inherit;
 }*/
+.hidescrollbar::-webkit-scrollbar {
+  display: none; }
+
 select {
   -o-appearance: none;
   -ms-appearance: none;
@@ -1060,12 +1064,22 @@ button:hover,
   padding: 3px;
   height: 100%; }
 
-.btn-scheduler:hover, .btn-scheduler:active, .btn-scheduler:focus {
+.btn-scheduler:hover,
+.btn-scheduler:active,
+.btn-scheduler:focus {
   background: transparent;
   border-color: transparent;
   outline: 0; }
 
-.btn-scheduler:active:hover, .btn-scheduler.active:hover, .open > .dropdown-toggle.btn-scheduler:hover, .btn-scheduler:active:focus, .btn-scheduler.active:focus, .open > .dropdown-toggle.btn-scheduler:focus, .btn-scheduler.focus:active, .btn-scheduler.active.focus, .open > .dropdown-toggle.btn-scheduler.focus {
+.btn-scheduler:active:hover,
+.btn-scheduler.active:hover,
+.open > .dropdown-toggle.btn-scheduler:hover,
+.btn-scheduler:active:focus,
+.btn-scheduler.active:focus,
+.open > .dropdown-toggle.btn-scheduler:focus,
+.btn-scheduler.focus:active,
+.btn-scheduler.active.focus,
+.open > .dropdown-toggle.btn-scheduler.focus {
   background-color: transparent;
   border-color: transparent; }
 

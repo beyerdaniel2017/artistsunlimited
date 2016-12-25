@@ -231,6 +231,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
 
   $scope.submissionsCount = 0;
   $scope.premiereCount = 0;
+  $scope.inboxTrades = 0;
   $scope.shownotification = false;
   $scope.logout = function() {
     mainService.logout();
@@ -238,15 +239,48 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
   $scope.adminlogout = function() {
     mainService.adminlogout();
   }
+
   $scope.getSubmissionCount = function() {
     $http.get('/api/submissions/counts').then(function(res) {
       $scope.submissionsCount = res.data.regularCount + res.data.marketCount;
+      console.log($scope.submissionsCount);
     });
     $http.get('/api/premier/count').then(function(res) {
       $scope.premiereCount = res.data.count;
+      console.log($scope.premiereCount);
     })
   }
-  if (window.location.href.includes('/admin/')) $scope.getSubmissionCount();
+  if (window.location.href.includes('/admin/') && $scope.user) $scope.getSubmissionCount();
+
+  $scope.getIncompleteTradesCount = function() {
+    if (!!$scope.user) {
+      $scope.inboxTrades = 0;
+      $http.get('/api/trades/withUser/' + $scope.user._id).then(function(res) {
+        var trades = res.data;
+        trades = trades.filter(function(trade) {
+          return (!!trade.p1.user && !!trade.p2.user)
+        })
+        if ($scope.user.role == 'admin') {
+          var paidRepostIds = [];
+          if ($scope.user.paidRepost.length > 0) {
+            $scope.user.paidRepost.forEach(function(acc) {
+              paidRepostIds.push(acc.userID);
+            })
+          }
+          trades.forEach(function(trade) {
+            trade.other = paidRepostIds.includes(trade.p1.user._id) ? trade.p2 : trade.p1;
+            if (trade.other.accepted) $scope.inboxTrades++;
+          });
+        } else {
+          trades.forEach(function(trade) {
+            trade.other = (trade.p1.user._id == $scope.user._id) ? trade.p2 : trade.p1;
+            if (trade.other.accepted) $scope.inboxTrades++;
+          });
+        }
+      }).then(null, console.log)
+    }
+  }
+  $scope.getIncompleteTradesCount();
 
   $scope.gotoSettings = function() {
     $scope.user = SessionService.getUser();
@@ -362,8 +396,8 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
             $scope.processing = false;
             SessionService.create(res.data.user);
             $scope.curATUser = SessionService.getUser()
-            if (state) $state.go(state);
-            else if (location) window.location.href = location;
+              // if (state) $state.go(state);
+            if (location) window.location.href = location;
             else window.location.reload();
           })
           .then(null, function(err) {
@@ -372,8 +406,8 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
           });
       } else {
         $scope.processing = false;
-        if (state) $state.go(state);
-        else if (location) window.location.href = location;
+        //if (state) $state.go(state);
+        if (location) window.location.href = location;
         else window.location.reload();
       }
     } else if (param == 'admin') {
@@ -393,15 +427,15 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
             SessionService.create(userData);
             $scope.processing = false;
             $scope.curATUser = SessionService.getUser()
-            if (state) $state.go(state);
-            else if (location) window.location.href = location;
+              // if (state) $state.go(state);
+            if (location) window.location.href = location;
             else window.location.reload();
           } else console.log("Invalid Email or Password.");
         }
       } else {
         $scope.processing = false;
-        if (state) $state.go(state);
-        else if (location) window.location.href = location;
+        // if (state) $state.go(state);
+        if (location) window.location.href = location;
         else window.location.reload();
       }
     } else {

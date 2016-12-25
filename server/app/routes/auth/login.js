@@ -150,20 +150,43 @@ router.post('/soundCloudLogin', function(req, res, next) {
 
 
 router.post('/soundCloudAuthentication', function(req, res, next) {
-  passport.authenticate('local-soundcloud', function(err, user, info) {
+  scWrapper.setToken(req.body.token);
+  var reqObj = {
+    method: 'GET',
+    path: '/me',
+    qs: {}
+  };
+  scWrapper.request(reqObj, function(err, user) {
     if (err) {
-      next(err);
+      return done(err, false);
     }
-    if (!user) {
-      next(err);
-    } else {
-      return res.json({
-        'success': true,
-        'message': '',
-        'user': user
-      });
+    var updateUser = {
+      'name': user.username,
+      'soundcloud': {
+        'token': req.body.token,
+        'id': user.id,
+        'username': user.username,
+        'permalinkURL': user.permalink_url,
+        'avatarURL': user.avatar_url.replace('large', 't500x500'),
+        'followers': user.followers_count,
+        'pseudoname': user.permalink_url.substring(user.permalink_url.indexOf('.com/') + 5),
+        'role': 'user'
+      }
     }
-  })(req, res);
+    User.findOneAndUpdate({
+        'soundcloud.id': user.id
+      }, updateUser, {
+        upsert: true,
+        new: true
+      })
+      .then(function(user) {
+        return res.json({
+          'success': true,
+          'message': '',
+          'user': user
+        });
+      }).then(null, next);
+  });
 });
 
 /*

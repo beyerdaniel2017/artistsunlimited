@@ -214,53 +214,66 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
 });
 
 router.get('/counts', function(req, res, next) {
-  var paidRepostIds = [];
-  if (req.user.paidRepost.length > 0) {
-    req.user.paidRepost.forEach(function(acc) {
-      paidRepostIds.push(acc.userID);
-    })
-  }
-  var query = {
-    channelIDS: [],
-    userID: {
-      $in: paidRepostIds
-    },
-    ignoredBy: {
-      $ne: req.user._id.toJSON()
-    },
-    status: "submitted"
-  };
-  var resObj = {};
-  Submission.count(query, function(err, count) {
-    if (!err) {
-      resObj.regularCount = count;
-      var paidRepostIds = [];
-      if (req.user.paidRepost.length > 0) {
-        req.user.paidRepost.forEach(function(acc) {
-          paidRepostIds.push(acc.userID);
-        })
-      }
-      var query = {
-        pooledSendDate: {
-          $gt: new Date()
-        },
-        ignoredBy: {
-          $ne: req.user._id.toJSON()
-        },
-        status: "pooled"
-      }
-      Submission.count(query, function(err, countMarket) {
-        if (!err) {
-          resObj.marketCount = countMarket;
-          res.send(resObj);
-        } else {
-          next(err);
-        }
+  function getCount(user) {
+    var paidRepostIds = [];
+    if (user.paidRepost.length > 0) {
+      user.paidRepost.forEach(function(acc) {
+        paidRepostIds.push(acc.userID);
       })
-    } else {
-      next(err);
     }
-  })
+    var query = {
+      channelIDS: [],
+      userID: {
+        $in: paidRepostIds
+      },
+      ignoredBy: {
+        $ne: user._id.toJSON()
+      },
+      status: "submitted"
+    };
+    var resObj = {};
+    Submission.count(query, function(err, count) {
+      if (!err) {
+        resObj.regularCount = count;
+        var paidRepostIds = [];
+        if (user.paidRepost.length > 0) {
+          user.paidRepost.forEach(function(acc) {
+            paidRepostIds.push(acc.userID);
+          })
+        }
+        var query = {
+          pooledSendDate: {
+            $gt: new Date()
+          },
+          ignoredBy: {
+            $ne: user._id.toJSON()
+          },
+          status: "pooled"
+        }
+        Submission.count(query, function(err, countMarket) {
+          if (!err) {
+            resObj.marketCount = countMarket;
+            res.send(resObj);
+          } else {
+            next(err);
+          }
+        })
+      } else {
+        next(err);
+      }
+    });
+  }
+  if (req.user.role != 'admin') {
+    User.findOne({
+        'paidRepost.userID': req.user._id
+      })
+      .then(function(adminUser) {
+        if (adminUser) getCount(adminUser);
+        else(next(new Error('user not found')));
+      }).then(null, next)
+  } else {
+    getCount(req.user);
+  }
 })
 
 router.get('/getUnacceptedSubmissions', function(req, res, next) {

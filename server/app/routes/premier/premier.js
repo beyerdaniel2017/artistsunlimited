@@ -10,6 +10,7 @@ var mongoose = require('mongoose');
 var PremierSubmission = mongoose.model('PremierSubmission');
 var awsConfig = require('./../../../env').AWS;
 var rootURL = require('../../../env').ROOTURL;
+var User = mongoose.model('User')
 
 router.get('/unaccepted', function(req, res, next) {
   var genre = req.query.genre ? req.query.genre : undefined;
@@ -164,24 +165,37 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/count', function(req, res, next) {
-  var paidRepostIds = [];
-  if (req.user.paidRepost.length > 0) {
-    req.user.paidRepost.forEach(function(acc) {
-      paidRepostIds.push(acc.userID);
+  function getCount(user) {
+    var paidRepostIds = [];
+    if (user.paidRepost.length > 0) {
+      user.paidRepost.forEach(function(acc) {
+        paidRepostIds.push(acc.userID);
+      })
+    }
+    var searchObj = {
+      userID: {
+        $in: paidRepostIds
+      },
+      status: 'new'
+    };
+    PremierSubmission.count(searchObj, function(err, count) {
+      if (err) next(err);
+      else {
+        res.send({ count: count });
+      }
     })
   }
-  var searchObj = {
-    userID: {
-      $in: paidRepostIds
-    },
-    status: 'new'
-  };
-  PremierSubmission.count(searchObj, function(err, count) {
-    if (err) next(err);
-    else {
-      res.send({ count: count });
-    }
-  })
+  if (req.user.role != 'admin') {
+    User.findOne({
+        'paidRepost.userID': req.user._id
+      })
+      .then(function(adminUser) {
+        if (adminUser) getCount(adminUser);
+        else(next(new Error('user not found')));
+      }).then(null, next)
+  } else {
+    getCount(req.user);
+  }
 })
 
 router.put('/accept', function(req, res, next) {

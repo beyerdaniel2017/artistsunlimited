@@ -11,19 +11,45 @@ router.get('/withUser/:userID', function(req, res, next) {
     next(new Error('Unauthorized'));
     return;
   }
-  Trade.find({
-      $or: [{
-        'p1.user': req.params.userID
-      }, {
-        'p2.user': req.params.userID
-      }]
-    }).populate('p1.user').populate('p2.user')
-    .then(function(trades) {
-      trades = trades.filter(function(trade) {
-        return !(trade.p1.accepted && trade.p2.accepted)
+  if (req.user.role != "admin") {
+    Trade.find({
+        $or: [{
+          'p1.user': req.params.userID
+        }, {
+          'p2.user': req.params.userID
+        }]
+      }).populate('p1.user').populate('p2.user')
+      .then(function(trades) {
+        trades = trades.filter(function(trade) {
+          return !(trade.p1.accepted && trade.p2.accepted)
+        })
+        res.send(trades)
+      }).then(null, next);
+  } else {
+    var paidRepostIds = [];
+    if (req.user.paidRepost.length > 0) {
+      req.user.paidRepost.forEach(function(acc) {
+        paidRepostIds.push(acc.userID);
       })
-      res.send(trades)
-    }).then(null, next);
+    }
+    Trade.find({
+        $or: [{
+          'p1.user': {
+            $in: paidRepostIds
+          }
+        }, {
+          'p2.user': {
+            $in: paidRepostIds
+          }
+        }]
+      }).populate('p1.user').populate('p2.user')
+      .then(function(trades) {
+        trades = trades.filter(function(trade) {
+          return !(trade.p1.accepted && trade.p2.accepted)
+        })
+        res.send(trades)
+      }).then(null, next);
+  }
 });
 
 router.get('/doneWithUser/:userID', function(req, res, next) {
@@ -62,6 +88,7 @@ router.post('/new', function(req, res, next) {
     })
     .then(null, next);
 })
+
 
 router.put('/', function(req, res, next) {
   if (!req.user) {

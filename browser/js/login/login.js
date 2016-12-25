@@ -35,6 +35,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         userData.isAdmin = true;
         $window.localStorage.setItem('isAdminAuthenticate', true);
         SessionService.create(userData);
+        $scope.getIncompleteTradesCount();
         userData.loginInfo = $scope.loginObj;
         $window.localStorage.setItem('adminUser', JSON.stringify(userData));
         $scope.getSubmissionCount();
@@ -49,7 +50,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
             .then(function(res) {
               $window.localStorage.setItem('prevATUser', JSON.stringify(res.data));
               SessionService.removeAccountusers();
-              $state.go('submissions');
+              window.location.href = '/admin/submissions';
             })
             .then(console.debug);
         }
