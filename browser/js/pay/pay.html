@@ -19,7 +19,7 @@
                 <span ng-if="!auDLLink" class="intro" style="font-size: 16px;">${{channel.price | number: 2}}</span>
               </p>
               <p><img ng-src="{{channel.user.avatarURL}}" class="img-responsive" alt="" style="border: 1px solid orange; height:200px" / height="200px;" width="300px"></p>
-              <p class="hidescrollbar" style="max-height:80px; overflow-y: scroll;">{{channel.description?"aweoirhalkej rhtertohewrotqhqel krthqwkler ntqli34uhtrqeiuthlk ajnreglqerjth asdf asdgfer adrtwert erwt;hertpouew oeprht;e iuaerlbglkjerwlwerht":""}}</p>
+              <p class="hidescrollbar" style="max-height:80px; overflow-y: scroll;">{{channel.description}}</p>
               <button ng-show="channel.addtocart" class="btn btn-default btn-block" ng-click="addToCart(channel)">
                 REMOVE FROM CART
               </button>
