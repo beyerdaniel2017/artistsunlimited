@@ -110,246 +110,247 @@
                     <div class="channel-masege" style="overflow:hidden;">
                       <input type="text" placeholder="Subject" ng-model="custom.decline.subject" class="acceptance-input repDeclineSubject{{$index}}" ng-click="addEventClass($index,'repDeclineSubject');" index="{{$index}}">
                     </div>
-                    <textarea ng-model="custom.decline.body" index="{{$index}}" ng-click="addEventClass($index,'repDeclinebox');" style="padding:5px 5px;height:150px" " class="acceptance-textareas repDeclinebox{{$index}} check-list ">
+                    <textarea ng-model="custom.decline.body" index="{{$index}}" ng-click="addEventClass($index,'repDeclinebox');" style="padding:5px 5px;height:150px" class="acceptance-textareas repDeclinebox{{$index}} check-list">
                     </textarea>
                   </div>
                 </div>
               </div>
-              <div class="space-10 "></div>
-              <button class="btn btn-default " ng-click="sendTestMail( 'repostdecline') ">Send Test Email</button>
+              <div class="space-10"></div>
+              <button class="btn btn-default" ng-click="sendTestMail('repostdecline')">Send Test Email</button>
             </div>
           </div>
-          <div class=" ">
-            <div class="col-md-12 ">
-              <div class="button-list text-center ">
-                <input ng-repeat="btn in stepButton " type="button " name="{{btn.name}} " class="btn btn-border b-radius-10 organize-btn " style="margin-left:5px; " value="{{btn.name}} " 
-                ng-click="appendBody(btn, 'repost') ">
+          <div class="">
+            <div class="col-md-12">
+              <div class="button-list text-center">
+                <input ng-repeat="btn in stepButton " type="button" name="{{btn.name}}" class="btn btn-border b-radius-10 organize-btn" style="margin-left:5px;" value="{{btn.name}}" ng-click="appendBody(btn, 'repost')">
               </div>
             </div>
           </div>
           <!--row-->
-          <div class="row ">
-            <div class="col-md-12 text-center ">
-              <div class="buttons margin-40 ">
-                <input type="button " name="SAVE " value="SAVE " ng-click="nextStep(3,AccountsStepData, 'basic') " class="btn btn-pink b-radius-10 border-orange-btn ">
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <div class="buttons margin-40">
+                <input type="button" name="SAVE" value="SAVE" ng-click="nextStep(3,AccountsStepData,'basic')" class="btn btn-pink b-radius-10 border-orange-btn">
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div role="tabpanel " class="tab-pane fade " id="psce ">
-        <div class="container-90 ">
-          <div class="space-20 "></div>
-          <h4 class="text-center ">Here you are able to edit the premiere submissions accept and decline emails that are sent to your clients. We recommend being as personalized as possible so your clients get to know the vibe of your company, network, or brand!</h4>
-          <div class="row " ng-repeat="custom in AccountsStepData.premierCustomizeEmails track by $index ">
-            <div class="col-md-6 text-center ">
-              <div class="container-90 ">
-                <h6 class="text-center " ng-show="!$index ">{{custom.acceptance.title}}</h6>
-                <input ng-show="$index " class="acceptance-signatur " type="text " ng-model="custom.acceptance.title " placeholder="Title " style="margin-left:0px ">
-                <div class="acceptance ">
-                  <div class="channel-check ">
-                    <div class="channel-masege ">
-                      <input type="text " ng-model="custom.acceptance.subject " placeholder="Subject " class="acceptance-input premAcceptSubject{{$index}} " ng-click="addEventClass($index, 'premAcceptSubject'); " index="{{$index}} ">
+      <div role="tabpanel" class="tab-pane fade" id="psce">
+        <div class="container-90">
+          <div class="space-20"></div>
+          <h4 class="text-center">Here you are able to edit the premiere submissions accept and decline emails that are sent to your clients. We recommend being as personalized as possible so your clients get to know the vibe of your company, network, or brand!</h4>
+          <div class="row" ng-repeat="custom in AccountsStepData.premierCustomizeEmails track by $index">
+            <div class="col-md-6 text-center">
+              <div class="container-90">
+                <h6 class="text-center" ng-show="!$index">{{custom.acceptance.title}}</h6>
+                <input ng-show="$index" class="acceptance-signatur" type="text" ng-model="custom.acceptance.title" placeholder="Title" style="margin-left:0px">
+                <div class="acceptance">
+                  <div class="channel-check">
+                    <div class="channel-masege">
+                      <input type="text" ng-model="custom.acceptance.subject" placeholder="Subject" class="acceptance-input premAcceptSubject{{$index}}" ng-click="addEventClass($index,'premAcceptSubject');" index="{{$index}}">
                     </div>
-                    <div class="check-list " style="height:140px; ">
-                      <textarea ng-model="custom.acceptance.body " class="acceptance-textareas premAcceptbox{{$index}} " ng-click="addEventClass($index, 'premAcceptbox'); " index="{{$index}} " style="height:100% "></textarea>
+                    <div class="check-list" style="height:140px;">
+                      <textarea ng-model="custom.acceptance.body" class="acceptance-textareas premAcceptbox{{$index}}" ng-click="addEventClass($index,'premAcceptbox');" index="{{$index}}" style="height:100%"></textarea>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="space-10 "></div>
-              <button class="btn btn-default " ng-click="sendTestMail( 'premieraccept') ">Send Test Email</button>
+              <div class="space-10"></div>
+              <button class="btn btn-default" ng-click="sendTestMail('premieraccept')">Send Test Email</button>
             </div>
-            <div class="col-md-6 text-center ">
-              <div class="container-90 ">
-                <h6 class="text-center " ng-show="!$index ">{{custom.decline.title}}</h6>
-                <input ng-show="$index " class="acceptance-signatur " type="text " ng-model="custom.decline.title " placeholder="Title " style="margin-left:0px ">
-                <div class="acceptance ">
-                  <div class="channel-check ">
-                    <div class="channel-masege ">
-                      <input type="text " placeholder="Subject " ng-model="custom.decline.subject " class="acceptance-input premDeclineSubject{{$index}} " ng-click="addEventClass($index, 'premDeclineSubject'); " index="{{$index}} ">
+            <div class="col-md-6 text-center">
+              <div class="container-90">
+                <h6 class="text-center" ng-show="!$index">{{custom.decline.title}}</h6>
+                <input ng-show="$index" class="acceptance-signatur" type="text" ng-model="custom.decline.title" placeholder="Title" style="margin-left:0px">
+                <div class="acceptance">
+                  <div class="channel-check">
+                    <div class="channel-masege">
+                      <input type="text" placeholder="Subject" ng-model="custom.decline.subject" class="acceptance-input premDeclineSubject{{$index}}" ng-click="addEventClass($index,'premDeclineSubject');" index="{{$index}}">
                     </div>
-                    <div class="check-list " style="height:140px; ">
-                      <textarea ng-model="custom.decline.body " index="{{$index}} " ng-click="addEventClass($index, 'declinebox'); " class="acceptance-textareas premDeclinebox{{$index}} " ng-click="addEventClass($index, 'premDeclinebox'); " index="{{$index}} " style="height:100% ">
+                    <div class="check-list" style="height:140px;">
+                      <textarea ng-model="custom.decline.body" index="{{$index}}" ng-click="addEventClass($index,'declinebox');" class="acceptance-textareas premDeclinebox{{$index}}" ng-click="addEventClass($index,'premDeclinebox');" index="{{$index}}" style="height:100%">
                       </textarea>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="space-10 "></div>
-              <button class="btn btn-default " ng-click="sendTestMail( 'premierdecline') ">Send Test Email</button>
+              <div class="space-10"></div>
+              <button class="btn btn-default" ng-click="sendTestMail('premierdecline')">Send Test Email</button>
             </div>
           </div>
-          <div class=" ">
-            <div class="col-md-12 ">
-              <div class="button-list text-center ">
-                <input ng-repeat="btn in stepButton " type="button " name="{{btn.name}} " class="btn btn-border b-radius-10 organize-btn " style="margin-left:5px; " value="{{btn.name}} " ng-click="appendBody(btn, 'premier') ">
+          <div class="">
+            <div class="col-md-12">
+              <div class="button-list text-center">
+                <input ng-repeat="btn in stepButton " type="button" name="{{btn.name}}" class="btn btn-border b-radius-10 organize-btn" style="margin-left:5px;" value="{{btn.name}}" ng-click="appendBody(btn, 'premier')">
               </div>
             </div>
           </div>
           <!--row-->
-          <div class="row ">
-            <div class="col-md-12 text-center ">
-              <div class="buttons margin-40 ">
-                <input type="button " name="SAVE " value="SAVE " ng-click="nextStep(4,AccountsStepData, 'basic') " class="btn btn-pink b-radius-10 border-orange-btn ">
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <div class="buttons margin-40">
+                <input type="button" name="SAVE" value="SAVE" ng-click="nextStep(4,AccountsStepData,'basic')" class="btn btn-pink b-radius-10 border-orange-btn">
               </div>
             </div>
           </div>
           <!--row ::end-->
         </div>
       </div>
-      <div role="tabpanel " class="tab-pane fade " id="notifications ">
-        <div class="container-90 ">
-          <div class="row ">
-            <div class="col-xs-12 text-center ">
-              <div class="space-10 "></div>
-              <h4 class="bold ">Notification Settings</h4>
+      <div role="tabpanel" class="tab-pane fade" id="notifications">
+        <div class="container-90">
+          <div class="row">
+            <div class="col-xs-12 text-center">
+              <div class="space-10"></div>
+              <h4 class="bold">Notification Settings</h4>
             </div>
           </div>
-          <div class="row margin-20 ">
-            <div class="col-md-8 col-md-offset-2 ">
-              <div style="text-align: left; ">
-                <div class="row ">
-                  <div class="row fb-notifications-check-list ">
-                    <div class="col-md-6 ">
-                      <h5 class="bold ">Facebook Messenger Notifications</h5>
-                      <div class="fb-send-to-messenger " messenger_app_id="1771378846475599 " page_id="499383536933941 " color="blue " size="large " data-ref="{{AccountsStepData._id}} ">
+          <div class="row margin-20">
+            <div class="col-md-8 col-md-offset-2">
+              <div style="text-align: left;">
+                <div class="row">
+                  <div class="row fb-notifications-check-list">
+                    <div class="col-md-6">
+                      <h5 class="bold">Facebook Messenger Notifications</h5>
+                      <div class="fb-send-to-messenger" messenger_app_id="1771378846475599" page_id="499383536933941" color="blue" size="large" data-ref="{{AccountsStepData._id}}">
                       </div>
-                      <span ng-if="!!AccountsStepData.notificationSettings.facebookMessenger.messengerID ">Linked &#10004</span>                       
-                      <br /><br />
-                      <label class="with-square-checkbox ">
-                        <input type="checkbox " ng-model="AccountsStepData.notificationSettings.facebookMessenger.tradeRequest " >
+                      <span ng-if="!!AccountsStepData.notificationSettings.facebookMessenger.messengerID">Linked &#10004</span>
+                      <br />
+                      <br />
+                      <label class="with-square-checkbox">
+                        <input type="checkbox" ng-model="AccountsStepData.notificationSettings.facebookMessenger.tradeRequest">
                         <span>Trade Request</span>
                       </label>
-
-                      <label class="with-square-checkbox ">
-                        <input type="checkbox " ng-model="AccountsStepData.notificationSettings.facebookMessenger.tradeAcceptance " >
+                      <label class="with-square-checkbox">
+                        <input type="checkbox" ng-model="AccountsStepData.notificationSettings.facebookMessenger.tradeAcceptance">
                         <span>Trade Acceptance</span>
                       </label>
-                      
-                      <label class="with-square-checkbox ">
-                        <input type="checkbox " ng-model="AccountsStepData.notificationSettings.facebookMessenger.trackRepost " >
+                      <label class="with-square-checkbox">
+                        <input type="checkbox" ng-model="AccountsStepData.notificationSettings.facebookMessenger.trackRepost">
                         <span>Track Repost</span>
                       </label>
-
-                      <label class="with-square-checkbox ">
-                        <input type="checkbox " ng-model="AccountsStepData.notificationSettings.facebookMessenger.trackUnrepost " >
+                      <label class="with-square-checkbox">
+                        <input type="checkbox" ng-model="AccountsStepData.notificationSettings.facebookMessenger.trackUnrepost">
                         <span>Track Unrepost</span>
                       </label>
-
                     </div>
-                    <div class="col-md-6 ">
-                     <h5 class="bold ">Email Notifications</h5>
-                     <input type="text " ng-model="AccountsStepData.email " style="width:250px ">
-                     <br>
-                     <br>
-                     <label class="with-square-checkbox ">
-                      <input type="checkbox " ng-model="AccountsStepData.notificationSettings.email.tradeRequest " >
-                      <span>Trade Request</span>
-                    </label>
-
-                    <label class="with-square-checkbox ">
-                      <input type="checkbox " ng-model="AccountsStepData.notificationSettings.email.tradeAcceptance " >
-                      <span>Trade Acceptance</span>
-                    </label>
-
-                    <label class="with-square-checkbox ">
-                      <input type="checkbox " ng-model="AccountsStepData.notificationSettings.email.trackRepost " >
-                      <span>Track Repost</span>
-                    </label>
-
-                    <label class="with-square-checkbox ">
-                      <input type="checkbox " ng-model="AccountsStepData.notificationSettings.email.trackUnrepost " >
-                      <span>Track Unrepost</span>
-                    </label>
-
+                    <div class="col-md-6">
+                      <h5 class="bold">Email Notifications</h5>
+                      <input type="text" ng-model="AccountsStepData.email" style="width:250px">
+                      <br>
+                      <br>
+                      <label class="with-square-checkbox">
+                        <input type="checkbox" ng-model="AccountsStepData.notificationSettings.email.tradeRequest">
+                        <span>Trade Request</span>
+                      </label>
+                      <label class="with-square-checkbox">
+                        <input type="checkbox" ng-model="AccountsStepData.notificationSettings.email.tradeAcceptance">
+                        <span>Trade Acceptance</span>
+                      </label>
+                      <label class="with-square-checkbox">
+                        <input type="checkbox" ng-model="AccountsStepData.notificationSettings.email.trackRepost">
+                        <span>Track Repost</span>
+                      </label>
+                      <label class="with-square-checkbox">
+                        <input type="checkbox" ng-model="AccountsStepData.notificationSettings.email.trackUnrepost">
+                        <span>Track Unrepost</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
-
-
-
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <div class="buttons margin-40">
+                <input type="button" name="SAVE" value="SAVE" ng-click="nextStep(5,AccountsStepData,'basic')" class="btn btn-pink b-radius-10">
+              </div>
             </div>
           </div>
-          <div class="clearfix "></div>            
         </div>
-        <div class="row ">
-          <div class="col-md-12 text-center ">
-            <div class="buttons margin-40 ">
-              <input type="button " name="SAVE " value="SAVE " ng-click="nextStep(5,AccountsStepData, 'basic') " class="btn btn-pink b-radius-10 ">
+        <!-- MY SCHEDULE : End-->
+        <div class="clearfix"></div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="paypalInfo">
+        <div class="container-40">
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <br />
+              <div class="form-group" style="">
+                <input class="form-control" type="email" ng-model="AccountsStepData.paypal_email" placeholder="Email address">
+                <br/>
+                <div ng-show="waitoneminute" style="color:#000;">Please allow up to one minute for the trial amounts to be deposited to your account.</div>
+              </div>
+              <div ng-show="AccountsStepData.paypal.varify">
+                <div class="form-group">
+                  <label>Payment Amount 1:&nbsp;&nbsp;$</label>
+                  <input ng-model="AccountsStepData.paypal.pricea" placeholder="Enter Payment Amount 1" class="price-input" type="text">
+                </div>
+                <div class="form-group">
+                  <label>Payment Amount 2:&nbsp;&nbsp;$</label>
+                  <input ng-model="AccountsStepData.paypal.priceb" placeholder="Enter Payment Amount 2" class="price-input" type="text">
+                </div>
+                </br />
+                <button class="btn btn-pink b-radius-10" ng-disabled="!AccountsStepData.paypal.pricea || !AccountsStepData.paypal.priceb" style="margin-left: 18px;" type="button" ng-click="varifyaccount()">Verify Account</button>
+              </div>
+              <div class="form-group" ng-show="!AccountsStepData.paypal.varify">
+                <button class="btn btn-pink b-radius-10" ng-disabled="!AccountsStepData.paypal_email" style="margin-left: 18px;" ng-click="sendTrailAmount()">Send Trial Amount</button>
+              </div>
+              <div class="clearfix"></div>
+              <div ng-show="verified" style="color:green;">Account verified.</div>
+              <div ng-show="errorverification" style="color:red;">Could not verify account</div>
             </div>
           </div>
-        </div>      
-      </div>  
-      <!-- MY SCHEDULE : End-->
-      <div class="clearfix "></div>
-    </div>
-    <div role="tabpanel " class="tab-pane fade " id="paypalInfo ">
-      <div class="container-40 ">
-        <div class="row ">
-          <div class="col-md-12 text-center ">
-            <br />
-            <div class="form-group "  style=" ">
-              <input class="form-control " type="email " ng-model="AccountsStepData.paypal_email " placeholder="Email address "><br/>
-              <div ng-show="waitoneminute " style="color:#000; ">Please allow up to one minute for the trial amounts to be deposited to your account.</div>
-            </div>
-            <div  ng-show="AccountsStepData.paypal.varify ">
-              <div class="form-group ">
-                <label>Payment Amount 1:&nbsp;&nbsp;$</label>
-                <input ng-model="AccountsStepData.paypal.pricea " placeholder="0.05 "  class="price-input " type="text ">
-              </div>
-              <div class="form-group ">
-                <label>Payment Amount 2:&nbsp;&nbsp;$</label>
-                <input ng-model="AccountsStepData.paypal.priceb " placeholder="0.08 "  class="price-input " type="text ">
-              </div>
-            </br />
-            <button class="btn btn-pink b-radius-10 " ng-disabled="!AccountsStepData.paypal.pricea || !AccountsStepData.paypal.priceb " style="margin-left: 18px; " type="button " ng-click="varifyaccount() ">Verify Account</button>           
-          </div>
-          <div class="form-group "  ng-show="!AccountsStepData.paypal.varify ">
-            <button class="btn btn-pink b-radius-10 " ng-disabled="!AccountsStepData.paypal_email " style="margin-left: 18px; " ng-click="sendTrailAmount() ">Send Trial Amount</button>
-          </div>
-          <div class="clearfix "></div>
-          <div ng-show="verified " style="color:green; ">Account verified.</div>
-          <div ng-show="errorverification " style="color:red; ">Could not verify account</div>
-        </div>                     
-      </div>  
-      <div class="clearfix "></div>            
+          <div class="clearfix"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-</div>
-</div>
 <!--overlay-->
-<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center; " ng-show="showTestEmailModal ">
-  <div class="modal fade " id="emailModal " data-backdrop="static " role="dialog ">
-    <div class="modal-dialog modal-vertical-centered ">    
+<div style="position:absolute; top:0; left:0; right:0; height:5000px; background-color: rgba(0,0,0,0.85); text-align:center;" ng-show="showTestEmailModal">
+  <div class="modal fade" id="emailModal" data-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-vertical-centered">
       <!-- Modal content-->
-      <div class="modal-content ">
-        <div style="text-align:center; padding:10px; ">        
-          <div style="text-align:center;padding-bottom:10px; ">
-            <form ng-submit="sendMail(modal.email) ">
-             <input class="form-control form-scheduler " placeholder="Enter email address " style="text-align:center; width:300px; max-width:90%; " type="email " ng-model="modal.email " required/>
-             <button class="btn btn-default " ng-click="closeModal() ">Close</button>
-             <button class="btn btn-default btn-small " type="submit ">Send Mail</button>
-           </form>
-         </div>
-       </div>      
-     </div>
-   </div>
- </div>
-</div><script>
-setTimeout(function(){
-  FB.init({appId: "1771378846475599 ", xfbml: true, version: "v2.6 " });
-  (function(d, s, id){
+      <div class="modal-content">
+        <div style="text-align:center; padding:10px;">
+          <div style="text-align:center;padding-bottom:10px;">
+            <form ng-submit="sendMail(modal.email)">
+              <input class="form-control form-scheduler" placeholder="Enter email address" style="text-align:center; width:300px; max-width:90%;" type="email" ng-model="modal.email" required/>
+              <button class="btn btn-default" ng-click="closeModal()">Close</button>
+              <button class="btn btn-default btn-small" type="submit">Send Mail</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+setTimeout(function() {
+  FB.init({
+    appId: "1771378846475599",
+    xfbml: true,
+    version: "v2.6"
+  });
+  (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) { return; } 
-    js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js "; fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));  }
-  ,500);      
-</script><script type="text/javascript ">
-$("#uploadImage ").change(function() {
-  setTimeout(function(){
-    angular.element('#uploadImage').scope().updateLOGOIMAGE();  
-  },500);  
+    if (d.getElementById(id)) {
+      return;
+    }
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+}, 500);
+</script>
+<script type="text/javascript">
+$("#uploadImage").change(function() {
+  setTimeout(function() {
+    angular.element('#uploadImage').scope().updateLOGOIMAGE();
+  }, 500);
 });
 </script>
