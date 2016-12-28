@@ -21,7 +21,7 @@ function clearMP() {
       subs.forEach(function(sub) {
         if (noDupArray.indexOf(sub.trackID) != -1) {
           console.log(sub.trackID);
-          Submission.findByIdAndRemove(sub._id).then(function() {}).then(null, console.log);
+          Submission.findByIdAndRemove(sub._id).then(function(data) {}).then(null, console.log);
         } else {
           noDupArray.push(sub.trackID);
         }
