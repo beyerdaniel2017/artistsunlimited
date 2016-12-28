@@ -11,10 +11,9 @@ setTimeout(function() {
 setTimeout(function() {
   require('./autoPoolSender.js')();
 }, 4 * 60000);
-// setTimeout(function() {
-require('./cleanMarketPlace.js')();
-
-// }, 5 * 60000);
+setTimeout(function() {
+  require('./cleanMarketPlace.js')();
+}, 5 * 60000);
 setTimeout(function() {
   require('./autoAccessTokenChecker.js')();
 }, 6 * 60000);
