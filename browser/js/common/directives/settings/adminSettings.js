@@ -279,7 +279,7 @@ app.directive('adminsettings', function($http) {
               break;
             case 3:
               var next = true;
-              if ($scope.AccountsStepData.price == "" || $scope.AccountsStepData.price == undefined) {
+              if ($scope.AccountsStepData.price == 0 || $scope.AccountsStepData.price == undefined) {
                 next = false;
                 $.Zebra_Dialog('Error: Enter Price');
               }

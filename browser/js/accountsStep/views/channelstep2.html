@@ -1,8 +1,8 @@
 <style>
-  .grey {
-    background-color: #EEEEEE;
-    color: #000000 !important;
-  }
+.grey {
+  background-color: #EEEEEE;
+  color: #000000 !important;
+}
 </style>
 <ng-include src="'js/home/views/_adminHeaderNavigation.html'"></ng-include>
 <!-- Content Start  -->
@@ -15,27 +15,28 @@
           <!--page-contant Start-->
           <div class="scheduler-tabs" ng-show="AccountsStepData.formActions=='Add' || AccountsStepData.formActions=='Edit'">
             <!-- Nav tabs :Start-->
-            <ul class="nav nav-tabs" role="tablist" >
-              <li role="presentation" class="active" style="width:100%"><a href="javascript:void(0)" style=" background: #f5f5f5 none repeat scroll 0 0;opacity:0.6;"><img src="assets/images/managereposts.svg" />MANAGE ACCOUNTS</a></li>
+            <ul class="nav nav-tabs" role="tablist">
+              <li role="presentation" class="active" style="width:100%">
+                <a href="javascript:void(0)" style=" background: #f5f5f5 none repeat scroll 0 0;opacity:0.6;"><img src="assets/images/managereposts.svg" />MANAGE ACCOUNTS</a>
+              </li>
             </ul>
-          </div>  
+          </div>
           <!-- Nav tabs :Start-->
           <div class="space-10"></div>
           <div ng-hide="AccountsStepData.formActions=='Add' || AccountsStepData.formActions=='Edit'">
             <div class="text-center au-title-head" style="margin-top:30px;margin-bottom:30px;">SET UP YOUR ADMIN ACCOUNT</div>
             <ul class="info-ui-tab" role="tablist">
               <li>
-                <a href="javascript:void(0)">1  Basic Info</a>        
+                <a href="javascript:void(0)">1  Basic Info</a>
               </li>
               <li class="active">
-                <a href="javascript:void(0)"  role="tab" data-toggle="tab">2  Set up your first Channel</a>
+                <a href="javascript:void(0)" role="tab" data-toggle="tab">2  Set up your first Channel</a>
               </li>
             </ul>
             <div class="clearfix"></div>
             <br/>
-          </div>  
+          </div>
           <!-- Nav tabs :End-->
-
           <!-- Tab panes :: Start-->
           <div class="tab-content">
             <!-- MY SCHEDULE : Start-->
@@ -70,38 +71,41 @@
                 <div role="tabpanel" class="tab-pane fade in active" id="tab2">
                   <div class="container-90">
                     <div class="row">
-                      <div class="col-md-12 text-center">                        
+                      <div class="col-md-12 text-center">
                         <div class="add-account text-center container-60">
                           <div class="container-90">
                             <br />
                             <p> Set the price that each repost will cost for this channel</p>
                             <div class="container-60">
-                              <p class="small-text">Recommended: 1$ for every 3,000 followers
-                                60,000 followers  =  $20
+                              <p class="small-text">Recommended: 1$ for every 3,000 followers 60,000 followers = $20
                               </p>
                             </div>
                           </div>
                           <div class="margin-40">
-                            <div class="margin-20">                                     
+                            <div class="margin-20">
                               <span>Price for each repost:&nbsp;$
-                                <input ng-model="AccountsStepData.price" placeholder="0.00"  class="price-input" type="">
-                              </span>                                                          
-                            </div>                           
+                                <input ng-model="AccountsStepData.price" placeholder="0.00"  class="price-input" type="number">
+                              </span>
+                            </div>
                           </div>
                           <div class="container-60">
-                            <div class="margin-20">                                     
+                            <div class="margin-20">
                               <textarea ng-model="AccountsStepData.description" class="form-control" name="Description" placeholder="Channel description"></textarea>
                             </div>
                             <div ng-if="AccountsStepData.formActions=='Add' || AccountsStepData.formActions=='Edit'">
                               <p>Add this channel to one of your existing groups or creating a group to better organize your network!</p>
                               <table width="100%">
                                 <tr>
-                                  <td><input type="text" name="group" id="group" class="form-control" ng-model="group"></td>
-                                  <td><input type="button" class="btn btn-xs" value="Add group" ng-click="addGroup(group)" style="background:#ff7676;padding:6px;color:white;margin-bottom:0px;"></td>
+                                  <td>
+                                    <input type="text" name="group" id="group" class="form-control" ng-model="group">
+                                  </td>
+                                  <td>
+                                    <input type="button" class="btn btn-xs" value="Add group" ng-click="addGroup(group)" style="background:#ff7676;padding:6px;color:white;margin-bottom:0px;">
+                                  </td>
                                 </tr>
                               </table>
                               <br />
-                              <table width="100%" class="table table-bordered" ng-repeat="group in AccountsStepData.submissionData.groups" style="margin-bottom:5px">  
+                              <table width="100%" class="table table-bordered" ng-repeat="group in AccountsStepData.submissionData.groups" style="margin-bottom:5px">
                                 <tr>
                                   <td class="text-left" width="90%">{{group}}</td>
                                   <td class="text-center" width="10%"><img src="assets/images/x-gray.png" width="15px" height="15px;" style="cursor:pointer;" ng-click="removeGroup($index)"></td>
@@ -112,33 +116,34 @@
                               <div class="">
                                 <div class="margin-20">
                                   <p class="ng-binding">
-                                    <strong>{{AccountsStepData.submissionData.username}}</strong><br>{{AccountsStepData.submissionData.followers}} Followers
+                                    <strong>{{AccountsStepData.submissionData.username}}</strong>
+                                    <br>{{AccountsStepData.submissionData.followers}} Followers
                                   </p>
-                                  <img src="{{AccountsStepData.submissionData.avatarURL}}"  class="img-responsive" style="width:110px; height: 100%;margin: 0 auto">
+                                  <img src="{{AccountsStepData.submissionData.avatarURL}}" class="img-responsive" style="width:110px; height: 100%;margin: 0 auto">
                                 </div>
-                              </div>                             
-                            </div>                          
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div> 
+                      </div>
                       <div class="row">
                         <div class="col-md-12 text-center">
                           <div class="buttons margin-40">
                             <input type="button" name="back" value="Back" ng-click="nextStep(1,AccountsStepData,'channel')" class="btn active border-black-btn">
-                            <input type="button" name="back" value="Next" ng-disabled="!AccountsStepData.price" ng-click="nextStep(3,AccountsStepData,'channel')" class="btn btn-pink b-radius-10 border-orange-btn">                                                    
+                            <input type="button" name="back" value="Next" ng-disabled="!AccountsStepData.price" ng-click="nextStep(3,AccountsStepData,'channel')" class="btn btn-pink b-radius-10 border-orange-btn">
                           </div>
                         </div>
-                      </div>  
+                      </div>
                     </div>
                     <div class="clearfix"></div>
                   </div>
                 </div>
               </div>
-              <!-- MY SCHEDULE : End-->                          
+              <!-- MY SCHEDULE : End-->
             </div>
             <!-- Tab panes :: End-->
           </div>
-          <!-- overlay -->                  
+          <!-- overlay -->
           <br />
           <div class="clearfix"></div>
         </div>

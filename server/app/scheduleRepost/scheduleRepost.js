@@ -4,7 +4,7 @@ var User = mongoose.model('User');
 var denyUnrepostOverlap = require("./denyUnrepostOverlap.js")
 var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 
-module.exports = function(eventDetails, minDate) {
+module.exports = function(eventDetails, minDate, unrepostHours) {
   minDate = new Date(minDate);
   if (minDate < new Date()) minDate = new Date();
   return new Promise(function(fulfill, reject) {
@@ -45,7 +45,9 @@ module.exports = function(eventDetails, minDate) {
               });
               if (!event) {
                 eventDetails.day = desiredDay;
-                if ((new Date(eventDetails.unrepostDate)).getTime() > 1000000000) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + 24 * 3600000)
+                if (unrepostHours) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + unrepostHours * 3600000)
+            // else if ((new Date(eventDetails.unrepostDate)).getTime() > 1000000000) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + 24 * 3600000)
+
                 else eventDetails.unrepostDate = new Date(0);
                 denyUnrepostOverlap(eventDetails)
                   .then(function(ok) {

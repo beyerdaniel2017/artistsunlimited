@@ -116,7 +116,7 @@ function repostAndRemove(event, user, repCount) {
           if (event.email && event.name) {
             var newEvent = JSON.parse(JSON.stringify(event));
             delete newEvent._id;
-            scheduleRepost(newEvent, new Date())
+            scheduleRepost(newEvent, new Date(), 7 * 24)
               .then(function(ev) {
                 Submission.findOne({
                   $or: [{
@@ -131,7 +131,7 @@ function repostAndRemove(event, user, repCount) {
           } else if (event.owner) {
             var newEvent = JSON.parse(JSON.stringify(event));
             delete newEvent._id;
-            scheduleRepost(newEvent, new Date()).then(null, console.log);
+            scheduleRepost(newEvent, new Date(), 24).then(null, console.log);
           }
           notificationCenter.sendNotifications(user._id, 'failedRepost', 'Failed repost', event.title + ' did not repost on ' + user.soundcloud.username + ' did not complete.', 'https://artistsunlimited.com/artistTools/scheduler');
         }
