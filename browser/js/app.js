@@ -250,7 +250,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
       console.log($scope.premiereCount);
     })
   }
-  if (window.location.href.includes('/admin/') && $scope.user) $scope.getSubmissionCount();
+  if (window.location.href.includes('/admin') && $scope.user) $scope.getSubmissionCount();
 
   $scope.getIncompleteTradesCount = function() {
     if (!!$scope.user) {

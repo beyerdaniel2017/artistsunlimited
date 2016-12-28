@@ -4,8 +4,9 @@ var messengerAPI = require('../../messengerAPI/messengerAPI.js');
 
 
 module.exports = sendReminder;
-
+//every hour
 function sendReminder() {
+
   setTimeout(function() {
     sendReminder();
   }, 3600000);

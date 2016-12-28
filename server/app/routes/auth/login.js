@@ -170,8 +170,7 @@ router.post('/soundCloudAuthentication', function(req, res, next) {
         'avatarURL': user.avatar_url.replace('large', 't500x500'),
         'followers': user.followers_count,
         'pseudoname': user.permalink_url.substring(user.permalink_url.indexOf('.com/') + 5),
-        'role': 'user'
-      }
+      },
     }
     User.findOneAndUpdate({
         'soundcloud.id': user.id

@@ -208,7 +208,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     });
     submi.channelIDS = $scope.selectedGroupChannelIDS;
     if (submi.channelIDS.length == 0) {
-      $scope.decline(submi);
+      $.Zebra_Dialog("You have not selected any channels to accept repost.");
     } else {
       delete submi.selectedGroups;
       delete submi.selectedChannelIDS;

@@ -440,6 +440,7 @@ function formatForEmail(item, sub) {
 }
 
 router.delete('/decline/:subID/:password', function(req, res, next) {
+
   if (!req.user.role == 'admin') {
     next(new Error('Unauthorized'));
     return;
