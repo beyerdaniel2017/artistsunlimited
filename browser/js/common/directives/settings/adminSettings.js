@@ -55,6 +55,15 @@ app.directive('adminsettings', function($http) {
         }
       };
 
+      if ($scope.AccountsStepData.paypal == undefined) {
+        $scope.AccountsStepData.paypal = {};
+        $scope.AccountsStepData.paypal.varify = false;
+        $scope.AccountsStepData.paypal.processchannel = false;
+      }
+      $scope.errorverification = false;
+      $scope.verified = false;
+      $scope.waitoneminute = false;
+
 
       if (window.location.href.indexOf('admin/basic/step1#generalInfo') != -1) {
         $('.nav-tabs a[href="#generalInfo"]').tab('show');
@@ -109,7 +118,6 @@ app.directive('adminsettings', function($http) {
               if (res.data.success) {
                 $scope.showTestEmailModal = false;
                 $('#emailModal').modal('hide');
-                $.Zebra_Dialog('Mail sent successfully.');
               }
             })
             .catch(function() {
@@ -179,7 +187,7 @@ app.directive('adminsettings', function($http) {
                         "acceptance": {
                           "title": "ACCEPTANCE EMAIL",
                           "subject": "Congratulations on your Submission - {TRACK_TITLE}",
-                          "body": "Hey {SUBMITTERS_NAME}!\n\nFirst and foremost thank you for submitting {TRACK_TITLE_WITH_LINK}! We’ve reviewed your submission and it has been approved for a repost on {SUBMITTED_TO_ACCOUNT_NAME_WITH_LINK} and more. All you need to do is click the button below. You are open to repeat your promotion on any of these pages as many times as you would like, and the promotion page will remain active forever.\n\nWe thoroughly enjoyed listening to your production and we hope that in the future you submit your music to us. Keep working hard and put your heart into your productions, we will be here to help you with the rest.",
+                          "body": "Hey {SUBMITTERS_NAME}!\n\nFirst and foremost thank you for submitting {TRACK_TITLE_WITH_LINK}! We’ve reviewed your submission and it has been approved for a repost on {SUBMITTED_ACCOUNT_NAME_WITH_LINK} and more. All you need to do is click the button below. You are open to repeat your promotion on any of these pages as many times as you would like, and the promotion page will remain active forever.\n\nWe thoroughly enjoyed listening to your production and we hope that in the future you submit your music to us. Keep working hard and put your heart into your productions, we will be here to help you with the rest.",
                           "buttonText": "Accept",
                           "buttonBgColor": "#592e2e"
                         },

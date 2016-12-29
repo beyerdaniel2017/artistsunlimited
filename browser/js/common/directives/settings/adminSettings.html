@@ -236,8 +236,7 @@
                     </div>
                     <div class="col-md-6">
                       <h5 class="bold">Email Notifications</h5>
-                      <input type="text" ng-model="AccountsStepData.email" style="width:250px">
-                      <br>
+                      <input class="form-control" type="text" ng-model="AccountsStepData.email" style="width:250px">
                       <br>
                       <label class="with-square-checkbox">
                         <input type="checkbox" ng-model="AccountsStepData.notificationSettings.email.tradeRequest">
@@ -281,16 +280,16 @@
               <div class="form-group" style="">
                 <input class="form-control" type="email" ng-model="AccountsStepData.paypal_email" placeholder="Email address">
                 <br/>
-                <div ng-show="waitoneminute" style="color:#000;">Please allow up to one minute for the trial amounts to be deposited to your account.</div>
+                <div ng-show="waitoneminute" style="color:#000;">We are sending you 2 trial payments to your PayPal account. Please allow up to one minute for the ammounts to be deposited.</div>
               </div>
               <div ng-show="AccountsStepData.paypal.varify">
                 <div class="form-group">
                   <label>Payment Amount 1:&nbsp;&nbsp;$</label>
-                  <input ng-model="AccountsStepData.paypal.pricea" placeholder="Enter Payment Amount 1" class="price-input" type="text">
+                  <input style="text-align:left" ng-model="AccountsStepData.paypal.pricea" placeholder="0.04" class="price-input" type="text">
                 </div>
                 <div class="form-group">
                   <label>Payment Amount 2:&nbsp;&nbsp;$</label>
-                  <input ng-model="AccountsStepData.paypal.priceb" placeholder="Enter Payment Amount 2" class="price-input" type="text">
+                  <input style="text-align:left" ng-model="AccountsStepData.paypal.priceb" placeholder="0.09" class="price-input" type="text">
                 </div>
                 </br />
                 <button class="btn btn-pink b-radius-10" ng-disabled="!AccountsStepData.paypal.pricea || !AccountsStepData.paypal.priceb" style="margin-left: 18px;" type="button" ng-click="varifyaccount()">Verify Account</button>
