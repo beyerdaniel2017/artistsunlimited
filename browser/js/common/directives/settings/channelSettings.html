@@ -56,7 +56,8 @@
       <li role="presentation" class="active" style="border-radius:10px 0 0 0;">
         <a href="#submissionUrl" aria-controls="submissionUrl" role="tab" data-toggle="tab" style="padding-top: 18px; border-radius:10px 0 0 0;">Set Submission URL</a>
       </li>
-      <li role="presentation" ng-class="{active : activeTab.indexOf('setPrice') > -1 && currentTab == 'setPrice',disabled:activeTab.indexOf('setPrice') == -1}">
+      <li role="presentation" ng-class="{active : activeTab.indexOf('setPrice
+') > -1 && currentTab == 'setPrice',disabled:activeTab.indexOf('setPrice') == -1}">
         <a href="#setPrice" aria-controls="setPrice" role="tab" data-toggle="tab" style="padding-top: 18px">Set Price</a>
       </li>
       <li role="presentation" ng-class="{active : activeTab.indexOf('customSubmission') > -1 && currentTab == 'customSubmission',disabled:activeTab.indexOf('customSubmission') == -1}">
@@ -140,7 +141,7 @@
                 <div class="margin-40">
                   <div class="margin-20">
                     <span>Price for each repost:&nbsp;$
-                      <input ng-model="AccountsStepData.price" placeholder="10.00"  class="price-input" type="number">
+                      <input ng-model="AccountsStepData.price" placeholder="10.00" min="3" class="price-input" type="number">
                     </span>
                   </div>
                 </div>

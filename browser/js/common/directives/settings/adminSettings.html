@@ -285,11 +285,11 @@
               <div ng-show="AccountsStepData.paypal.varify">
                 <div class="form-group">
                   <label>Payment Amount 1:&nbsp;&nbsp;$</label>
-                  <input style="text-align:left" ng-model="AccountsStepData.paypal.pricea" placeholder="0.04" class="price-input" type="text">
+                  <input style="text-align:left" ng-model="AccountsStepData.paypal.pricea" class="price-input" type="text">
                 </div>
                 <div class="form-group">
                   <label>Payment Amount 2:&nbsp;&nbsp;$</label>
-                  <input style="text-align:left" ng-model="AccountsStepData.paypal.priceb" placeholder="0.09" class="price-input" type="text">
+                  <input style="text-align:left" ng-model="AccountsStepData.paypal.priceb" class="price-input" type="text">
                 </div>
                 </br />
                 <button class="btn btn-pink b-radius-10" ng-disabled="!AccountsStepData.paypal.pricea || !AccountsStepData.paypal.priceb" style="margin-left: 18px;" type="button" ng-click="varifyaccount()">Verify Account</button>

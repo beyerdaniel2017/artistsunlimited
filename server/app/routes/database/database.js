@@ -1306,3 +1306,54 @@ router.get('/userNetworks', function(req, res, next) {
       }
     }).then(null, next);
 });
+
+router.get('/paidRepostSignupStatus', function(req, res, next) {
+  var promiseArray = [];
+  var resObj = {
+    admin: [],
+    total: 0
+  }
+  User.find({
+      role: 'admin'
+    })
+    .populate('paidRepost.userID')
+    .then(function(users) {
+      users.forEach(function(admin) {
+        var userData = {
+          name: admin.name,
+          accounts: []
+        }
+        var subtotal = 0;
+        admin.paidRepost.forEach(function(pr) {
+          var acct = {
+            name: pr.userID.soundcloud.username,
+            url: pr.userID.soundcloud.permalinkURL,
+            followers: pr.userID.soundcloud.followers
+          }
+          subtotal += pr.userID.soundcloud.followers;
+          scWrapper.setToken(pr.userID.soundcloud.token);
+          var reqObj = {
+            method: 'GET',
+            path: '/me',
+            qs: {}
+          };
+          promiseArray.push(new Promise(function(resolve, reject) {
+            scWrapper.request(reqObj, function(err, data) {
+              if (data && data.description) acct.bioLink = data.description.includes('artistsunlimited.com');
+              if (err) acct.error = err;
+              userData.accounts.push(acct);
+              resolve('done');
+            })
+          }))
+        })
+        resObj.total += subtotal;
+        userData.subtotal = subtotal;
+        resObj.admin.push(userData);
+      });
+      Promise.all(promiseArray)
+        .then(function(done) {
+          res.send(resObj);
+        }).then(null, next)
+    }).then(null, next);
+
+});
