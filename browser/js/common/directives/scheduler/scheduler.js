@@ -827,6 +827,7 @@ app.directive('scheduler', function($http) {
           $scope.newEvent = true;
           $scope.editChannelArr = [];
           $scope.channelArr = [];
+          $scope.makeEvent.hoursBetween = 1;
         } else {
           if (data.type == 'traded' || data.type == 'paid') $scope.isTraded = true;
           $scope.isEdit = true;
@@ -865,6 +866,7 @@ app.directive('scheduler', function($http) {
           $scope.makeEvent.unrepost = ($scope.makeEvent.unrepostDate > new Date());
           $scope.makeEventURL = $scope.makeEvent.trackURL;
           $scope.makeEvent.trackID = data.trackID;
+          $scope.makeEvent.hoursBetween = 1;
           $scope.newEvent = false;
           SC.Widget('scPopupPlayer').load($scope.makeEventURL, {
             auto_play: false,

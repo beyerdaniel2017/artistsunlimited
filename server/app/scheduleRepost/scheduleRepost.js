@@ -24,7 +24,7 @@ module.exports = function(eventDetails, minDate, unrepostHours) {
           .then(function(user) {
             user.blockRelease = new Date(user.blockRelease);
             var startDate = user.blockRelease > minDate ? user.blockRelease : minDate;
-            var dayInd = 1;
+            var dayInd = 0;
             var hourInd = 0;
             user.pseudoAvailableSlots = createPseudoAvailableSlots(user);
 
@@ -40,13 +40,22 @@ module.exports = function(eventDetails, minDate, unrepostHours) {
               var desiredDay = new Date(startDate);
               desiredDay.setTime(desiredDay.getTime() + dayInd * 24 * 60 * 60 * 1000);
               desiredDay.setHours(hour);
+              if (desiredDay < startDate) {
+                hourInd++;
+                if (hourInd >= user.pseudoAvailableSlots[day].length) {
+                  dayInd++;
+                  hourInd = 0;
+                }
+                findNext();
+                return;
+              }
               var event = allEvents.find(function(eve) {
                 return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
               });
               if (!event) {
                 eventDetails.day = desiredDay;
                 if (unrepostHours) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + unrepostHours * 3600000)
-            // else if ((new Date(eventDetails.unrepostDate)).getTime() > 1000000000) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + 24 * 3600000)
+                  // else if ((new Date(eventDetails.unrepostDate)).getTime() > 1000000000) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + 24 * 3600000)
 
                 else eventDetails.unrepostDate = new Date(0);
                 denyUnrepostOverlap(eventDetails)

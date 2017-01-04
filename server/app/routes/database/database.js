@@ -1311,7 +1311,8 @@ router.get('/paidRepostSignupStatus', function(req, res, next) {
   var promiseArray = [];
   var resObj = {
     admin: [],
-    total: 0
+    total: 0,
+    totalAccepting: 0
   }
   User.find({
       role: 'admin'
@@ -1328,7 +1329,8 @@ router.get('/paidRepostSignupStatus', function(req, res, next) {
           var acct = {
             name: pr.userID.soundcloud.username,
             url: pr.userID.soundcloud.permalinkURL,
-            followers: pr.userID.soundcloud.followers
+            followers: pr.userID.soundcloud.followers,
+            submissionURL: pr.submissionURL
           }
           subtotal += pr.userID.soundcloud.followers;
           scWrapper.setToken(pr.userID.soundcloud.token);
@@ -1341,6 +1343,7 @@ router.get('/paidRepostSignupStatus', function(req, res, next) {
             scWrapper.request(reqObj, function(err, data) {
               if (data && data.description) acct.bioLink = data.description.includes('artistsunlimited.com');
               if (err) acct.error = err;
+              if (acct.bioLink) resObj.totalAccepting += acct.followers;
               userData.accounts.push(acct);
               resolve('done');
             })
