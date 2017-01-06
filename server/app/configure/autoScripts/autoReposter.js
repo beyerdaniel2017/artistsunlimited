@@ -285,7 +285,7 @@ function distributeEarnings(user, event) {
             User.findOne({
               "paidRepost.userID": submission.userID
             }).then(function(originalAdminUser) {
-              return paypalCalls.sendPayout(originalAdminUser.paypal_email, (event.price * 0.2).toFixed(2), "Repost on " + user.soundcloud.username + ".", event._id)
+              return paypalCalls.sendPayout(originalAdminUser.paypal_email, (event.price * 0.15).toFixed(2), "Repost on " + user.soundcloud.username + ".", event._id)
             }).then(console.log, console.log);
           }
           adminUser.cut -= 0.1;

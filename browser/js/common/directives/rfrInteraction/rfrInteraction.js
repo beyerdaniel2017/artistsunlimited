@@ -343,7 +343,7 @@ app.directive('rfrinteraction', function($http) {
       $scope.changeUnrepost = function() {
         if ($scope.makeEvent.unrepost) {
           $scope.makeEvent.day = new Date($scope.makeEvent.day);
-          $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
+          $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 48 * 60 * 60 * 1000);
         } else {
           $scope.makeEvent.unrepostDate = new Date(0);
         }
@@ -372,7 +372,7 @@ app.directive('rfrinteraction', function($http) {
               type: "trade",
               day: makeDay,
               userID: person.user.soundcloud.id,
-              unrepostDate: new Date(makeDay.getTime() + 24 * 60 * 60 * 1000)
+              unrepostDate: new Date(makeDay.getTime() + 48 * 60 * 60 * 1000)
             };
             $scope.saveEvent(calEvent, person);
             break;
@@ -629,7 +629,7 @@ app.directive('rfrinteraction', function($http) {
               event.type = 'traded';
               event.owner = $scope.trade.p2.user._id;
               event.day = new Date((new Date(slot.day)).getTime() + i * 7 * 24 * 60 * 60 * 1000);
-              event.unrepostDate = new Date(event.day.getTime() + 24 * 60 * 60 * 1000);
+              event.unrepostDate = new Date(event.day.getTime() + 48 * 60 * 60 * 1000);
               $scope.createEventWithUserTradeSettings(event, $scope.trade.p1.user);
             })
 
@@ -638,7 +638,7 @@ app.directive('rfrinteraction', function($http) {
               event.type = 'traded';
               event.owner = $scope.trade.p1.user._id
               event.day = new Date((new Date(slot.day)).getTime() + i * 7 * 24 * 60 * 60 * 1000);
-              event.unrepostDate = new Date(event.day.getTime() + 24 * 60 * 60 * 1000);
+              event.unrepostDate = new Date(event.day.getTime() + 48 * 60 * 60 * 1000);
               $scope.createEventWithUserTradeSettings(event, $scope.trade.p2.user);
             })
           }
@@ -749,7 +749,7 @@ app.directive('rfrinteraction', function($http) {
       }
 
       $scope.getUnrepostDate = function(item) {
-        return new Date(item.date.getTime() + 24 * 60 * 60 * 1000)
+        return new Date(item.date.getTime() + 48 * 60 * 60 * 1000)
       }
 
       $scope.getStyle = function(event, date, day, hour) {

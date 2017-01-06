@@ -1340,20 +1340,12 @@ router.get('/paidRepostSignupStatus', function(req, res, next) {
             qs: {}
           };
           promiseArray.push(new Promise(function(resolve, reject) {
-            scWrapper.request(reqObj, function(err1, data1) {
-              var reqObj = {
-                method: 'GET',
-                path: '/me/web-profiles',
-                qs: {}
-              };
-              scWrapper.request(reqObj, function(err2, data2) {
-                if (data2 || data2) acct.bioLink = (JSON.stringify(data1) + JSON.stringify(data2)).includes('artistsunlimited');
-                console.log(JSON.stringify(data1) + JSON.stringify(data2));
-                if (err1 || err2) acct.error = err1;
-                if (acct.bioLink) resObj.totalAccepting += acct.followers;
-                userData.accounts.push(acct);
-                resolve('done');
-              })
+            scWrapper.request(reqObj, function(err, data) {
+              if (data) acct.bioLink = JSON.stringify(data).includes('artistsunlimited');
+              if (err) acct.error = err;
+              if (acct.bioLink) resObj.totalAccepting += acct.followers;
+              userData.accounts.push(acct);
+              resolve('done');
             })
           }))
         })

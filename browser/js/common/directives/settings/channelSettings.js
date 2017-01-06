@@ -692,7 +692,7 @@ app.directive('channelsettings', function($http) {
             case 3:
               var next = true;
               console.log($scope.AccountsStepData.price);
-              if ($scope.AccountsStepData.price == 0 || $scope.AccountsStepData.price == undefined) {
+              if ($scope.AccountsStepData.price < 3 || $scope.AccountsStepData.price == undefined) {
                 next = false;
                 $.Zebra_Dialog('Please enter a price.');
               }

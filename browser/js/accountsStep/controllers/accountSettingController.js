@@ -100,7 +100,7 @@ app.controller('accountSettingController', function($rootScope, $state, $scope, 
       }
     },
     "heading": {
-      "text": "Submission for Repost",
+      "text": "Submission",
       "style": {
         "fontSize": 32,
         "fontFamily": "'Open Sans', sans-serif",

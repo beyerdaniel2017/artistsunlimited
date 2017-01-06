@@ -674,7 +674,7 @@ function schedulePaidRepost(channel, submission) {
         }
         if (user.repostSettings && user.repostSettings.paid && user.repostSettings.paid.like) eventDetails.like = true;
         if (user.repostSettings && user.repostSettings.paid && user.repostSettings.paid.comment) eventDetails.comment = user.repostSettings.paid.comments[Math.floor(Math.random() * user.repostSettings.paid.comments.length)];
-        scheduleRepost(eventDetails, new Date(), 7 * 24)
+        scheduleRepost(eventDetails, new Date(new Date().getTime() + 3600000), 7 * 24)
           .then(function(event) {
             fulfill({
               channelName: channel.user.username,

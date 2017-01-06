@@ -57,7 +57,7 @@
         <a href="#submissionUrl" aria-controls="submissionUrl" role="tab" data-toggle="tab" style="padding-top: 18px; border-radius:10px 0 0 0;">Set Submission URL</a>
       </li>
       <li role="presentation" ng-class="{active : activeTab.indexOf('setPrice
-') > -1 && currentTab == 'setPrice',disabled:activeTab.indexOf('setPrice') == -1}">
+      ') > -1 && currentTab == 'setPrice',disabled:activeTab.indexOf('setPrice') == -1}">
         <a href="#setPrice" aria-controls="setPrice" role="tab" data-toggle="tab" style="padding-top: 18px">Set Price</a>
       </li>
       <li role="presentation" ng-class="{active : activeTab.indexOf('customSubmission') > -1 && currentTab == 'customSubmission',disabled:activeTab.indexOf('customSubmission') == -1}">
@@ -141,7 +141,7 @@
                 <div class="margin-40">
                   <div class="margin-20">
                     <span>Price for each repost:&nbsp;$
-                      <input ng-model="AccountsStepData.price" placeholder="10.00" min="3" class="price-input" type="number">
+                      <input ng-model="AccountsStepData.price" placeholder="10"  class="price-input" type="number">
                     </span>
                   </div>
                 </div>
@@ -240,8 +240,8 @@
                     <div class="panel panel-default">
                       <div class="panel-heading">
                         <h4 class="panel-title">
-                          <a data-toggle="collapse" data-parent="#accordion" href="#pnlHeading" onclick="return false;">HEADING </span></a>                            
-                        </h4>
+                                  <a data-toggle="collapse" data-parent="#accordion" href="#pnlHeading" onclick="return false;">HEADING </span></a>                            
+                                </h4>
                       </div>
                       <div id="pnlHeading" class="panel-collapse collapse">
                         <div class="panel-body">
@@ -284,8 +284,8 @@
                     <div class="panel panel-default">
                       <div class="panel-heading">
                         <h4 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlSubheading">SUB HEADING </a>
-                    </h4>
+                                  <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlSubheading">SUB HEADING </a>
+                                </h4>
                       </div>
                       <div id="pnlSubheading" class="panel-collapse collapse">
                         <div class="panel-body">
@@ -329,8 +329,8 @@
                     <div class="panel panel-default">
                       <div class="panel-heading">
                         <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlLogo">LOGO </a>
-                      </h4>
+                                    <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlLogo">LOGO </a>
+                                  </h4>
                       </div>
                       <div id="pnlLogo" class="panel-collapse collapse">
                         <div class="panel-body">
@@ -359,8 +359,8 @@
                     <div class="panel panel-default">
                       <div class="panel-heading">
                         <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlPremiereBackground">BACKGROUND </a>
-                      </h4>
+                                    <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlPremiereBackground">BACKGROUND </a>
+                                  </h4>
                       </div>
                       <div id="pnlPremiereBackground" class="panel-collapse collapse">
                         <div class="panel-body">
@@ -387,8 +387,8 @@
                     <div class="panel panel-default">
                       <div class="panel-heading">
                         <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlPremiereButton">BUTTON </a>
-                      </h4>
+                                    <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlPremiereButton">BUTTON </a>
+                                  </h4>
                       </div>
                       <div id="pnlPremiereButton" class="panel-collapse collapse">
                         <div class="panel-body">
@@ -440,8 +440,8 @@
                     <div class="panel panel-default">
                       <div class="panel-heading">
                         <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlInput">INPUT FIELDS </a>
-                      </h4>
+                                    <a data-toggle="collapse" data-parent="#accordion" data-target="#pnlInput">INPUT FIELDS </a>
+                                  </h4>
                       </div>
                       <div id="pnlInput" class="panel-collapse collapse">
                         <div class="panel-body">
@@ -480,16 +480,16 @@
                   <!-- template 1 -->
                   <div id="rightpremierTemplate" class="col-md-10" ng-if='AccountsStepData.postData.layout == 1'>
                     <p class="text-center" style="color:{{AccountsStepData.postData.heading.style.fontColor}};
-                  font-weight:{{AccountsStepData.postData.heading.style.fontWeight}};
-                  font-family:{{AccountsStepData.postData.heading.style.fontFamily}};
-                  font-size:{{AccountsStepData.postData.heading.style.fontSize}}px">{{AccountsStepData.postData.heading.text}}</p>
+                              font-weight:{{AccountsStepData.postData.heading.style.fontWeight}};
+                              font-family:{{AccountsStepData.postData.heading.style.fontFamily}};
+                              font-size:{{AccountsStepData.postData.heading.style.fontSize}}px">{{AccountsStepData.postData.heading.text}}</p>
                     <div class="internal-content">
                       <div class="row">
                         <div class="col-md-12">
                           <p class="text-center" style="color:{{AccountsStepData.postData.subHeading.style.fontColor}};
-                        font-size:{{AccountsStepData.postData.subHeading.style.fontSize}}px; 
-                        font-family:{{AccountsStepData.postData.subHeading.style.fontFamily}}; 
-                        font-weight:{{AccountsStepData.postData.subHeading.style.fontWeight}}" ng-bind-html="AccountsStepData.postData.subHeading.text"></p>
+                                    font-size:{{AccountsStepData.postData.subHeading.style.fontSize}}px; 
+                                    font-family:{{AccountsStepData.postData.subHeading.style.fontFamily}}; 
+                                    font-weight:{{AccountsStepData.postData.subHeading.style.fontWeight}}" ng-bind-html="AccountsStepData.postData.subHeading.text"></p>
                         </div>
                         <div class="col-md-12">
                           <img class="text-center" style="width:80%; max-width:200px; margin:20px auto; margin-bottom:40px;" ng-if="AccountsStepData.postData.logo.images" id="templatepremierLogo" src="{{AccountsStepData.postData.logo.images}}">
@@ -521,8 +521,8 @@
                             <br>
                             <div class="text-center">
                               <button class="btn btn-default" style="color:{{AccountsStepData.postData.button.style.fontColor}}; 
-                            font-size:{{AccountsStepData.postData.button.style.fontSize}}px; 
-                            background-color:{{AccountsStepData.postData.button.style.bgColor}}; border:solid {{AccountsStepData.postData.inputFields.style.borderColor}} {{AccountsStepData.postData.button.style.border}}px; border-radius:{{AccountsStepData.postData.button.style.borderRadius}}px;">{{AccountsStepData.postData.button.text}}</button>
+                                        font-size:{{AccountsStepData.postData.button.style.fontSize}}px; 
+                                        background-color:{{AccountsStepData.postData.button.style.bgColor}}; border:solid {{AccountsStepData.postData.inputFields.style.borderColor}} {{AccountsStepData.postData.button.style.border}}px; border-radius:{{AccountsStepData.postData.button.style.borderRadius}}px;">{{AccountsStepData.postData.button.text}}</button>
                               <br>
                               <br>
                             </div>
@@ -535,17 +535,17 @@
                   <!-- template 2 -->
                   <div id="rightpremierTemplate" class="col-md-10" style="overflow-y:scroll; height:100%" ng-if='AccountsStepData.postData.layout == 2'>
                     <p class="text-center" style="color:{{AccountsStepData.postData.heading.style.fontColor}};
-                  font-weight:{{AccountsStepData.postData.heading.style.fontWeight}};
-                  font-family:{{AccountsStepData.postData.heading.style.fontFamily}};
-                  font-size:{{AccountsStepData.postData.heading.style.fontSize}}px">{{AccountsStepData.postData.heading.text}}</p>
+                              font-weight:{{AccountsStepData.postData.heading.style.fontWeight}};
+                              font-family:{{AccountsStepData.postData.heading.style.fontFamily}};
+                              font-size:{{AccountsStepData.postData.heading.style.fontSize}}px">{{AccountsStepData.postData.heading.text}}</p>
                     <div class="internal-content">
                       <div class="row">
                         <div class='col-md-6 text-center' style="margin-top:20px;">
                           <div class="col-md-12">
                             <p style="color:{{AccountsStepData.postData.subHeading.style.fontColor}};
-                          font-size:{{AccountsStepData.postData.subHeading.style.fontSize}}px; 
-                          font-family:{{AccountsStepData.postData.subHeading.style.fontFamily}}; 
-                          font-weight:{{AccountsStepData.postData.subHeading.style.fontWeight}}; width:90%; max-width:350px; margin:0 auto; text-align:left;" ng-bind-html="AccountsStepData.postData.subHeading.text"></p>
+                                      font-size:{{AccountsStepData.postData.subHeading.style.fontSize}}px; 
+                                      font-family:{{AccountsStepData.postData.subHeading.style.fontFamily}}; 
+                                      font-weight:{{AccountsStepData.postData.subHeading.style.fontWeight}}; width:90%; max-width:350px; margin:0 auto; text-align:left;" ng-bind-html="AccountsStepData.postData.subHeading.text"></p>
                           </div>
                           <div class="col-md-12" style="margin-top:20px;">
                             <form role="form" ng-submit="submit()">
@@ -574,8 +574,8 @@
                               <br>
                               <div class="text-center">
                                 <button class="btn btn-default" style="color:{{AccountsStepData.postData.button.style.fontColor}}; 
-                              font-size:{{AccountsStepData.postData.button.style.fontSize}}px; 
-                              background-color:{{AccountsStepData.postData.button.style.bgColor}}; border:solid {{AccountsStepData.postData.inputFields.style.borderColor}} {{AccountsStepData.postData.button.style.border}}px; border-radius:{{AccountsStepData.postData.button.style.borderRadius}}px;">{{AccountsStepData.postData.button.text}}</button>
+                                          font-size:{{AccountsStepData.postData.button.style.fontSize}}px; 
+                                          background-color:{{AccountsStepData.postData.button.style.bgColor}}; border:solid {{AccountsStepData.postData.inputFields.style.borderColor}} {{AccountsStepData.postData.button.style.border}}px; border-radius:{{AccountsStepData.postData.button.style.borderRadius}}px;">{{AccountsStepData.postData.button.text}}</button>
                                 <br>
                                 <br>
                               </div>
@@ -594,17 +594,17 @@
                   <!-- template 3 -->
                   <div id="rightpremierTemplate" class="col-md-10" style="overflow-y:scroll; height:100%" ng-if='AccountsStepData.postData.layout == 3'>
                     <p class="text-center" style="color:{{AccountsStepData.postData.heading.style.fontColor}};
-                  font-weight:{{AccountsStepData.postData.heading.style.fontWeight}};
-                  font-family:{{AccountsStepData.postData.heading.style.fontFamily}};
-                  font-size:{{AccountsStepData.postData.heading.style.fontSize}}px">{{AccountsStepData.postData.heading.text}}</p>
+                              font-weight:{{AccountsStepData.postData.heading.style.fontWeight}};
+                              font-family:{{AccountsStepData.postData.heading.style.fontFamily}};
+                              font-size:{{AccountsStepData.postData.heading.style.fontSize}}px">{{AccountsStepData.postData.heading.text}}</p>
                     <div class="internal-content">
                       <div class="row">
                         <div class='col-md-12 text-center' style="margin-top:20px;">
                           <div class="col-md-12">
                             <p class="text-center" style="color:{{AccountsStepData.postData.subHeading.style.fontColor}};
-                          font-size:{{AccountsStepData.postData.subHeading.style.fontSize}}px; 
-                          font-family:{{AccountsStepData.postData.subHeading.style.fontFamily}}; 
-                          font-weight:{{AccountsStepData.postData.subHeading.style.fontWeight}}" ng-bind-html="AccountsStepData.postData.subHeading.text"></p>
+                                      font-size:{{AccountsStepData.postData.subHeading.style.fontSize}}px; 
+                                      font-family:{{AccountsStepData.postData.subHeading.style.fontFamily}}; 
+                                      font-weight:{{AccountsStepData.postData.subHeading.style.fontWeight}}" ng-bind-html="AccountsStepData.postData.subHeading.text"></p>
                           </div>
                         </div>
                         <div class="col-md-12" style="margin-top:40px;">
@@ -638,8 +638,8 @@
                               <br>
                               <div class="text-center">
                                 <button class="btn btn-default" style="color:{{AccountsStepData.postData.button.style.fontColor}}; 
-                              font-size:{{AccountsStepData.postData.button.style.fontSize}}px; 
-                              background-color:{{AccountsStepData.postData.button.style.bgColor}}; border:solid {{AccountsStepData.postData.inputFields.style.borderColor}} {{AccountsStepData.postData.button.style.border}}px; border-radius:{{AccountsStepData.postData.button.style.borderRadius}}px;">{{AccountsStepData.postData.button.text}}</button>
+                                          font-size:{{AccountsStepData.postData.button.style.fontSize}}px; 
+                                          background-color:{{AccountsStepData.postData.button.style.bgColor}}; border:solid {{AccountsStepData.postData.inputFields.style.borderColor}} {{AccountsStepData.postData.button.style.border}}px; border-radius:{{AccountsStepData.postData.button.style.borderRadius}}px;">{{AccountsStepData.postData.button.text}}</button>
                                 <br>
                                 <br>
                               </div>
@@ -653,9 +653,9 @@
                   <!-- template 4 -->
                   <div id="rightpremierTemplate" class="col-md-10" style="overflow-y:scroll; height:100%" ng-if='AccountsStepData.postData.layout == 4'>
                     <p class="text-center" style="color:{{AccountsStepData.postData.heading.style.fontColor}};
-                  font-weight:{{AccountsStepData.postData.heading.style.fontWeight}};
-                  font-family:{{AccountsStepData.postData.heading.style.fontFamily}};
-                  font-size:{{AccountsStepData.postData.heading.style.fontSize}}px">{{AccountsStepData.postData.heading.text}}</p>
+                              font-weight:{{AccountsStepData.postData.heading.style.fontWeight}};
+                              font-family:{{AccountsStepData.postData.heading.style.fontFamily}};
+                              font-size:{{AccountsStepData.postData.heading.style.fontSize}}px">{{AccountsStepData.postData.heading.text}}</p>
                     <div class="internal-content">
                       <div class="row">
                         <div class='col-md-12 text-center' style="margin-top:20px; border-top:1px solid black; border-bottom:1px solid black;">
@@ -665,9 +665,9 @@
                             </div>
                             <div class="col-md-8 vcenter">
                               <p class="text-center" style="color:{{AccountsStepData.postData.subHeading.style.fontColor}};
-                            font-size:{{AccountsStepData.postData.subHeading.style.fontSize}}px; 
-                            font-family:{{AccountsStepData.postData.subHeading.style.fontFamily}}; 
-                            font-weight:{{AccountsStepData.postData.subHeading.style.fontWeight}}; text-align:left; margin:10px auto;" ng-bind-html="AccountsStepData.postData.subHeading.text"></p>
+                                        font-size:{{AccountsStepData.postData.subHeading.style.fontSize}}px; 
+                                        font-family:{{AccountsStepData.postData.subHeading.style.fontFamily}}; 
+                                        font-weight:{{AccountsStepData.postData.subHeading.style.fontWeight}}; text-align:left; margin:10px auto;" ng-bind-html="AccountsStepData.postData.subHeading.text"></p>
                             </div>
                           </div>
                         </div>
@@ -699,8 +699,8 @@
                               <br>
                               <div class="text-center">
                                 <button class="btn btn-default" style="color:{{AccountsStepData.postData.button.style.fontColor}}; 
-                              font-size:{{AccountsStepData.postData.button.style.fontSize}}px; 
-                              background-color:{{AccountsStepData.postData.button.style.bgColor}}; border:solid {{AccountsStepData.postData.inputFields.style.borderColor}} {{AccountsStepData.postData.button.style.border}}px; border-radius:{{AccountsStepData.postData.button.style.borderRadius}}px;">{{AccountsStepData.postData.button.text}}</button>
+                                          font-size:{{AccountsStepData.postData.button.style.fontSize}}px; 
+                                          background-color:{{AccountsStepData.postData.button.style.bgColor}}; border:solid {{AccountsStepData.postData.inputFields.style.borderColor}} {{AccountsStepData.postData.button.style.border}}px; border-radius:{{AccountsStepData.postData.button.style.borderRadius}}px;">{{AccountsStepData.postData.button.text}}</button>
                                 <br>
                                 <br>
                               </div>
@@ -739,8 +739,8 @@
                     <div class="panel panel-default">
                       <div class="panel-heading">
                         <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion2" href="#pnl2Layout" onclick="return false;">LAYOUT</span></a>                            
-                      </h4>
+                                    <a data-toggle="collapse" data-parent="#accordion2" href="#pnl2Layout" onclick="return false;">LAYOUT</span></a>                            
+                                  </h4>
                       </div>
                       <div id="pnl2Layout" class="panel-collapse collapse in">
                         <div class="panel-body">
@@ -773,8 +773,8 @@
                     <div class="panel panel-default">
                       <div class="panel-heading">
                         <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion2" href="#pnl2Heading" onclick="return false;">HEADING </span></a>                            
-                      </h4>
+                                            <a data-toggle="collapse" data-parent="#accordion2" href="#pnl2Heading" onclick="return false;">HEADING </span></a>                            
+                                          </h4>
                       </div>
                       <div id="pnl2Heading" class="panel-collapse collapse">
                         <div class="panel-body">
@@ -817,8 +817,8 @@
                     <div class="panel panel-default">
                       <div class="panel-heading">
                         <h4 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion2" data-target="#pnl2Subheading">SUB HEADING </a>
-                    </h4>
+                                            <a data-toggle="collapse" data-parent="#accordion2" data-target="#pnl2Subheading">SUB HEADING </a>
+                                          </h4>
                       </div>
                       <div id="pnl2Subheading" class="panel-collapse collapse">
                         <div class="panel-body">
@@ -862,8 +862,8 @@
                     <div class="panel panel-default">
                       <div class="panel-heading">
                         <h4 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion2" data-target="#pnl2Logo">LOGO </a>
-                    </h4>
+                                              <a data-toggle="collapse" data-parent="#accordion2" data-target="#pnl2Logo">LOGO </a>
+                                            </h4>
                       </div>
                       <div id="pnl2Logo" class="panel-collapse collapse">
                         <div class="panel-body">
@@ -892,8 +892,8 @@
                     <div class="panel panel-default">
                       <div class="panel-heading">
                         <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion2" data-target="#pnl2Background">BACKGROUND </a>
-                  </h4>
+                                              <a data-toggle="collapse" data-parent="#accordion2" data-target="#pnl2Background">BACKGROUND </a>
+                                            </h4>
                       </div>
                       <div id="pnl2Background" class="panel-collapse collapse">
                         <div class="panel-body">
@@ -920,8 +920,8 @@
                     <div class="panel panel-default">
                       <div class="panel-heading">
                         <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion2" data-target="#pnl2Button">BUTTON </a>
-                  </h4>
+                                              <a data-toggle="collapse" data-parent="#accordion2" data-target="#pnl2Button">BUTTON </a>
+                                            </h4>
                       </div>
                       <div id="pnl2Button" class="panel-collapse collapse">
                         <div class="panel-body">
@@ -973,8 +973,8 @@
                     <div class="panel panel-default">
                       <div class="panel-heading">
                         <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion2" data-target="#pnl2Input">INPUT FIELDS </a>
-                  </h4>
+                                              <a data-toggle="collapse" data-parent="#accordion2" data-target="#pnl2Input">INPUT FIELDS </a>
+                                            </h4>
                       </div>
                       <div id="pnl2Input" class="panel-collapse collapse">
                         <div class="panel-body">
@@ -1014,16 +1014,16 @@
                   <!-- template 1 -->
                   <div id="rightpremierTemplate" class="col-md-10" ng-if='AccountsStepData.premier.layout == 1'>
                     <p class="text-center" style="color:{{AccountsStepData.premier.heading.style.fontColor}};
-              font-weight:{{AccountsStepData.premier.heading.style.fontWeight}};
-              font-family:{{AccountsStepData.premier.heading.style.fontFamily}};
-              font-size:{{AccountsStepData.premier.heading.style.fontSize}}px">{{AccountsStepData.premier.heading.text}}</p>
+                                        font-weight:{{AccountsStepData.premier.heading.style.fontWeight}};
+                                        font-family:{{AccountsStepData.premier.heading.style.fontFamily}};
+                                        font-size:{{AccountsStepData.premier.heading.style.fontSize}}px">{{AccountsStepData.premier.heading.text}}</p>
                     <div class="internal-content">
                       <div class="row">
                         <div class="col-md-12">
                           <p class="text-center" style="color:{{AccountsStepData.premier.subHeading.style.fontColor}};
-                    font-size:{{AccountsStepData.premier.subHeading.style.fontSize}}px; 
-                    font-family:{{AccountsStepData.premier.subHeading.style.fontFamily}}; 
-                    font-weight:{{AccountsStepData.premier.subHeading.style.fontWeight}}" ng-bind-html="AccountsStepData.premier.subHeading.text"></p>
+                                              font-size:{{AccountsStepData.premier.subHeading.style.fontSize}}px; 
+                                              font-family:{{AccountsStepData.premier.subHeading.style.fontFamily}}; 
+                                              font-weight:{{AccountsStepData.premier.subHeading.style.fontWeight}}" ng-bind-html="AccountsStepData.premier.subHeading.text"></p>
                         </div>
                         <div class="col-md-12">
                           <img class="text-center" style="width:80%; max-width:200px; margin:20px auto; margin-bottom:40px;" ng-if="AccountsStepData.premier.logo.images" id="templatepremierLogo" src="{{AccountsStepData.premier.logo.images}}">
@@ -1062,8 +1062,8 @@
                             <br>
                             <div class="text-center">
                               <button class="btn btn-default" style="color:{{AccountsStepData.premier.button.style.fontColor}}; 
-                        font-size:{{AccountsStepData.premier.button.style.fontSize}}px; 
-                        background-color:{{AccountsStepData.premier.button.style.bgColor}}; border:solid {{AccountsStepData.premier.inputFields.style.borderColor}} {{AccountsStepData.premier.button.style.border}}px; border-radius:{{AccountsStepData.premier.button.style.borderRadius}}px;">{{AccountsStepData.premier.button.text}}</button>
+                                                  font-size:{{AccountsStepData.premier.button.style.fontSize}}px; 
+                                                  background-color:{{AccountsStepData.premier.button.style.bgColor}}; border:solid {{AccountsStepData.premier.inputFields.style.borderColor}} {{AccountsStepData.premier.button.style.border}}px; border-radius:{{AccountsStepData.premier.button.style.borderRadius}}px;">{{AccountsStepData.premier.button.text}}</button>
                             </div>
                           </form>
                           <br>
@@ -1074,17 +1074,17 @@
                   <!-- template 2 -->
                   <div id="rightpremierTemplate" class="col-md-10" style="overflow-y:scroll; height:100%" ng-if='AccountsStepData.premier.layout == 2'>
                     <p class="text-center" style="color:{{AccountsStepData.premier.heading.style.fontColor}};
-              font-weight:{{AccountsStepData.premier.heading.style.fontWeight}};
-              font-family:{{AccountsStepData.premier.heading.style.fontFamily}};
-              font-size:{{AccountsStepData.premier.heading.style.fontSize}}px">{{AccountsStepData.premier.heading.text}}</p>
+                                        font-weight:{{AccountsStepData.premier.heading.style.fontWeight}};
+                                        font-family:{{AccountsStepData.premier.heading.style.fontFamily}};
+                                        font-size:{{AccountsStepData.premier.heading.style.fontSize}}px">{{AccountsStepData.premier.heading.text}}</p>
                     <div class="internal-content">
                       <div class="row">
                         <div class='col-md-6 text-center' style="margin-top:20px;">
                           <div class="col-md-12">
                             <p style="color:{{AccountsStepData.premier.subHeading.style.fontColor}};
-                      font-size:{{AccountsStepData.premier.subHeading.style.fontSize}}px; 
-                      font-family:{{AccountsStepData.premier.subHeading.style.fontFamily}}; 
-                      font-weight:{{AccountsStepData.premier.subHeading.style.fontWeight}}; width:90%; max-width:350px; margin:0 auto; text-align:left;" ng-bind-html="AccountsStepData.premier.subHeading.text"></p>
+                                                font-size:{{AccountsStepData.premier.subHeading.style.fontSize}}px; 
+                                                font-family:{{AccountsStepData.premier.subHeading.style.fontFamily}}; 
+                                                font-weight:{{AccountsStepData.premier.subHeading.style.fontWeight}}; width:90%; max-width:350px; margin:0 auto; text-align:left;" ng-bind-html="AccountsStepData.premier.subHeading.text"></p>
                           </div>
                           <div class="col-md-12" style="margin-top:20px;">
                             <form role="form" ng-submit="savePremier()">
@@ -1120,8 +1120,8 @@
                               <br>
                               <div class="text-center">
                                 <button class="btn btn-default" style="color:{{AccountsStepData.premier.button.style.fontColor}}; 
-                          font-size:{{AccountsStepData.premier.button.style.fontSize}}px; 
-                          background-color:{{AccountsStepData.premier.button.style.bgColor}}; border:solid {{AccountsStepData.premier.inputFields.style.borderColor}} {{AccountsStepData.premier.button.style.border}}px; border-radius:{{AccountsStepData.premier.button.style.borderRadius}}px;">{{AccountsStepData.premier.button.text}}</button>
+                                                    font-size:{{AccountsStepData.premier.button.style.fontSize}}px; 
+                                                    background-color:{{AccountsStepData.premier.button.style.bgColor}}; border:solid {{AccountsStepData.premier.inputFields.style.borderColor}} {{AccountsStepData.premier.button.style.border}}px; border-radius:{{AccountsStepData.premier.button.style.borderRadius}}px;">{{AccountsStepData.premier.button.text}}</button>
                               </div>
                             </form>
                             <br>
@@ -1138,17 +1138,17 @@
                   <!-- template 3 -->
                   <div id="rightpremierTemplate" class="col-md-10" style="overflow-y:scroll; height:100%" ng-if='AccountsStepData.premier.layout == 3'>
                     <p class="text-center" style="color:{{AccountsStepData.premier.heading.style.fontColor}};
-              font-weight:{{AccountsStepData.premier.heading.style.fontWeight}};
-              font-family:{{AccountsStepData.premier.heading.style.fontFamily}};
-              font-size:{{AccountsStepData.premier.heading.style.fontSize}}px">{{AccountsStepData.premier.heading.text}}</p>
+                                        font-weight:{{AccountsStepData.premier.heading.style.fontWeight}};
+                                        font-family:{{AccountsStepData.premier.heading.style.fontFamily}};
+                                        font-size:{{AccountsStepData.premier.heading.style.fontSize}}px">{{AccountsStepData.premier.heading.text}}</p>
                     <div class="internal-content">
                       <div class="row">
                         <div class='col-md-12 text-center' style="margin-top:20px;">
                           <div class="col-md-12">
                             <p class="text-center" style="color:{{AccountsStepData.premier.subHeading.style.fontColor}};
-                      font-size:{{AccountsStepData.premier.subHeading.style.fontSize}}px; 
-                      font-family:{{AccountsStepData.premier.subHeading.style.fontFamily}}; 
-                      font-weight:{{AccountsStepData.premier.subHeading.style.fontWeight}}" ng-bind-html="AccountsStepData.premier.subHeading.text"></p>
+                                                font-size:{{AccountsStepData.premier.subHeading.style.fontSize}}px; 
+                                                font-family:{{AccountsStepData.premier.subHeading.style.fontFamily}}; 
+                                                font-weight:{{AccountsStepData.premier.subHeading.style.fontWeight}}" ng-bind-html="AccountsStepData.premier.subHeading.text"></p>
                           </div>
                         </div>
                         <div class="col-md-12" style="margin-top:40px;">
@@ -1189,8 +1189,8 @@
                               <br>
                               <div class="text-center">
                                 <button class="btn btn-default" style="color:{{AccountsStepData.premier.button.style.fontColor}}; 
-                          font-size:{{AccountsStepData.premier.button.style.fontSize}}px; 
-                          background-color:{{AccountsStepData.premier.button.style.bgColor}}; border:solid {{AccountsStepData.premier.inputFields.style.borderColor}} {{AccountsStepData.premier.button.style.border}}px; border-radius:{{AccountsStepData.premier.button.style.borderRadius}}px;">{{AccountsStepData.premier.button.text}}</button>
+                                                    font-size:{{AccountsStepData.premier.button.style.fontSize}}px; 
+                                                    background-color:{{AccountsStepData.premier.button.style.bgColor}}; border:solid {{AccountsStepData.premier.inputFields.style.borderColor}} {{AccountsStepData.premier.button.style.border}}px; border-radius:{{AccountsStepData.premier.button.style.borderRadius}}px;">{{AccountsStepData.premier.button.text}}</button>
                               </div>
                             </form>
                             <br>
@@ -1202,9 +1202,9 @@
                   <!-- template 4 -->
                   <div id="rightpremierTemplate" class="col-md-10" style="overflow-y:scroll; height:100%" ng-if='AccountsStepData.premier.layout == 4'>
                     <p class="text-center" style="color:{{AccountsStepData.premier.heading.style.fontColor}};
-              font-weight:{{AccountsStepData.premier.heading.style.fontWeight}};
-              font-family:{{AccountsStepData.premier.heading.style.fontFamily}};
-              font-size:{{AccountsStepData.premier.heading.style.fontSize}}px">{{AccountsStepData.premier.heading.text}}</p>
+                                        font-weight:{{AccountsStepData.premier.heading.style.fontWeight}};
+                                        font-family:{{AccountsStepData.premier.heading.style.fontFamily}};
+                                        font-size:{{AccountsStepData.premier.heading.style.fontSize}}px">{{AccountsStepData.premier.heading.text}}</p>
                     <div class="internal-content">
                       <div class="row">
                         <div class='col-md-12 text-center' style="margin-top:20px; border-top:1px solid black; border-bottom:1px solid black;">
@@ -1214,9 +1214,9 @@
                             </div>
                             <div class="col-md-8 vcenter">
                               <p class="text-center" style="color:{{AccountsStepData.premier.subHeading.style.fontColor}};
-                        font-size:{{AccountsStepData.premier.subHeading.style.fontSize}}px; 
-                        font-family:{{AccountsStepData.premier.subHeading.style.fontFamily}}; 
-                        font-weight:{{AccountsStepData.premier.subHeading.style.fontWeight}}; text-align:left; margin:10px auto;" ng-bind-html="AccountsStepData.premier.subHeading.text"></p>
+                                                  font-size:{{AccountsStepData.premier.subHeading.style.fontSize}}px; 
+                                                  font-family:{{AccountsStepData.premier.subHeading.style.fontFamily}}; 
+                                                  font-weight:{{AccountsStepData.premier.subHeading.style.fontWeight}}; text-align:left; margin:10px auto;" ng-bind-html="AccountsStepData.premier.subHeading.text"></p>
                             </div>
                           </div>
                         </div>
@@ -1255,8 +1255,8 @@
                               <br>
                               <div class="text-center">
                                 <button class="btn btn-default" style="color:{{AccountsStepData.premier.button.style.fontColor}}; 
-                          font-size:{{AccountsStepData.premier.button.style.fontSize}}px; 
-                          background-color:{{AccountsStepData.premier.button.style.bgColor}}; border:solid {{AccountsStepData.premier.inputFields.style.borderColor}} {{AccountsStepData.premier.button.style.border}}px; border-radius:{{AccountsStepData.premier.button.style.borderRadius}}px;">{{AccountsStepData.premier.button.text}}</button>
+                                                    font-size:{{AccountsStepData.premier.button.style.fontSize}}px; 
+                                                    background-color:{{AccountsStepData.premier.button.style.bgColor}}; border:solid {{AccountsStepData.premier.inputFields.style.borderColor}} {{AccountsStepData.premier.button.style.border}}px; border-radius:{{AccountsStepData.premier.button.style.borderRadius}}px;">{{AccountsStepData.premier.button.text}}</button>
                               </div>
                             </form>
                           </div>

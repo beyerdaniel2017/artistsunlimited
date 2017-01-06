@@ -4,14 +4,14 @@ var User = mongoose.model('User');
 var denyUnrepostOverlap = require("./denyUnrepostOverlap.js")
 var daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 
-module.exports = function(eventDetails, minDate, unrepostHours) {
+module.exports = function(eventDetails, minDate, unrepostHours, inAvailableSlots = true) {
   minDate = new Date(minDate);
   if (minDate < new Date()) minDate = new Date();
   return new Promise(function(fulfill, reject) {
     RepostEvent.find({
         userID: eventDetails.userID,
         day: {
-          $gt: new Date()
+          $gt: new Date().getTime() - 3600 * 1000
         }
       })
       .then(function(allEvents) {
@@ -24,39 +24,44 @@ module.exports = function(eventDetails, minDate, unrepostHours) {
           .then(function(user) {
             user.blockRelease = new Date(user.blockRelease);
             var startDate = user.blockRelease > minDate ? user.blockRelease : minDate;
+            var scheduleDate = startDate;
             var dayInd = 0;
             var hourInd = 0;
             user.pseudoAvailableSlots = createPseudoAvailableSlots(user);
 
             function findNext() {
-              var day = daysOfWeek[(startDate.getDay() + dayInd) % 7];
-              if (user.pseudoAvailableSlots[day].length == 0) {
-                dayInd++;
-                hourInd = 0;
-                findNext();
-                return;
-              }
-              var hour = user.pseudoAvailableSlots[day][hourInd];
-              var desiredDay = new Date(startDate);
-              desiredDay.setTime(desiredDay.getTime() + dayInd * 24 * 60 * 60 * 1000);
-              desiredDay.setHours(hour);
-              if (desiredDay < startDate) {
-                hourInd++;
-                if (hourInd >= user.pseudoAvailableSlots[day].length) {
+              if (inAvailableSlots) {
+                var day = daysOfWeek[(startDate.getDay() + dayInd) % 7];
+                if (user.pseudoAvailableSlots[day].length == 0) {
                   dayInd++;
                   hourInd = 0;
+                  findNext();
+                  return;
                 }
-                findNext();
-                return;
+                var hour = user.pseudoAvailableSlots[day][hourInd];
+                var desiredDay = new Date(startDate);
+                desiredDay.setTime(desiredDay.getTime() + dayInd * 24 * 60 * 60 * 1000);
+                desiredDay.setHours(hour);
+                if (desiredDay < startDate) {
+                  hourInd++;
+                  if (hourInd >= user.pseudoAvailableSlots[day].length) {
+                    dayInd++;
+                    hourInd = 0;
+                  }
+                  findNext();
+                  return;
+                }
+              } else {
+                desiredDay = scheduleDate;
               }
               var event = allEvents.find(function(eve) {
                 return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
               });
+              console.log(allEvents);
+
               if (!event) {
                 eventDetails.day = desiredDay;
                 if (unrepostHours) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + unrepostHours * 3600000)
-                  // else if ((new Date(eventDetails.unrepostDate)).getTime() > 1000000000) eventDetails.unrepostDate = new Date(eventDetails.day.getTime() + 24 * 3600000)
-
                 else eventDetails.unrepostDate = new Date(0);
                 denyUnrepostOverlap(eventDetails)
                   .then(function(ok) {
@@ -75,6 +80,7 @@ module.exports = function(eventDetails, minDate, unrepostHours) {
                     if (err.message == 'overlap') {
                       hourInd = (hourInd + 1) % user.pseudoAvailableSlots[day].length;
                       if (hourInd == 0) dayInd++;
+                      scheduleDate = new Date(scheduleDate.getTime() + 3600000);
                       findNext();
                     } else {
                       reject(err);
@@ -83,6 +89,7 @@ module.exports = function(eventDetails, minDate, unrepostHours) {
               } else {
                 hourInd = (hourInd + 1) % user.pseudoAvailableSlots[day].length;
                 if (hourInd == 0) dayInd++;
+                scheduleDate = new Date(scheduleDate.getTime() + 3600000);
                 findNext();
               }
             }

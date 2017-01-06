@@ -40,7 +40,7 @@ app.directive('scheduler', function($http) {
       $scope.selectedSlot = {};
       $scope.now = new Date();
       $scope.alreadyLoaded = false;
-      $scope.unrepostHours = 24;
+      $scope.unrepostHours = 48;
       var commentIndex = 0;
       $scope.isView = false;
       $scope.isTraded = false;
@@ -79,7 +79,7 @@ app.directive('scheduler', function($http) {
 
       $scope.setRepostHours = function() {
         if ($scope.unrepostEnable) {
-          $scope.unrepostHours = "24";
+          $scope.unrepostHours = "48";
         } else {
           $scope.unrepostHours = "";
         }
@@ -372,7 +372,7 @@ app.directive('scheduler', function($http) {
         $scope.makeEvent = {
           type: 'track'
         };
-        $scope.unrepostHours = "24";
+        $scope.unrepostHours = "48";
         $scope.unrepostEnable = true;
         $scope.eventComment = "";
         $scope.channelArr = [];
@@ -394,7 +394,7 @@ app.directive('scheduler', function($http) {
         $scope.tabSelected = false;
         $scope.isView = false;
         $scope.unrepostEnable = true;
-        $scope.unrepostHours = "24";
+        $scope.unrepostHours = "48";
         $scope.newEvent = true;
         $scope.showPlayer = false;
         $scope.isComment = "";
@@ -822,7 +822,7 @@ app.directive('scheduler', function($http) {
           $scope.makeEventDay = JSON.stringify($scope.makeEvent.day.getTime());
           $scope.makeEvent.unrepostDate = new Date($scope.makeEvent.day.getTime() + 24 * 60 * 60 * 1000);
           $scope.unrepostEnable = true;
-          $scope.unrepostHours = "24";
+          $scope.unrepostHours = "48";
           $scope.makeEvent.unrepost = true;
           $scope.newEvent = true;
           $scope.editChannelArr = [];
