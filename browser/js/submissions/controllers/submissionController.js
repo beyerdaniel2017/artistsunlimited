@@ -14,7 +14,16 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   $scope.selectedChannelIDS = [];
   $scope.selectedGroupChannelIDS = [];
   $scope.selectedChannelName = [];
-  $scope.adminStats = {};
+  $scope.adminStats = {
+    mpEarnings: 0,
+    subEarnings: 0,
+    earnings: 0,
+    ffEarnings: 0,
+    refunds: 0,
+    refundAmount: 0,
+    future: 0
+  };
+  $scope.allowance = 0;
   $scope.genre = "";
   $scope.displayType = 'channel';
   $scope.limit = 10;
@@ -247,7 +256,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       .then(function(res) {
         var index = $scope.showingElements.indexOf(submission);
         $scope.showingElements.splice(index, 1);
-        $scope.processing = false
+        $scope.processing = false;
       })
       .then(null, function(err) {
         $scope.processing = false;
@@ -256,54 +265,50 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.marketSave = function(submi) {
-    submi.selectedChannelIDS.forEach(function(cid) {
-      if ($scope.selectedGroupChannelIDS.indexOf(cid) == -1) {
-        $scope.selectedGroupChannelIDS.push(cid);
-      }
-    });
-    submi.pooledChannelIDS = submi.pooledChannelIDS.concat($scope.selectedGroupChannelIDS);
-    delete submi.selectedGroups;
-    delete submi.selectedChannelIDS;
-    delete submi.selectedChannelName;
-    submi.password = $rootScope.password;
-    $scope.processing = true;
-    $http.put("/api/submissions/save", submi)
-      .then(function(sub) {
-        $scope.marketSubmissions.splice($scope.marketSubmissions.indexOf(submi), 1);
-        $scope.processing = false;
-      })
-      .then(null, function(err) {
-        $scope.processing = false;
-        $.Zebra_Dialog("ERROR: did not Save")
-      })
+    if ($scope.allowance <= 0) $.Zebra_Dialog('You are out of Marketplace Credits. For every direct submission you respond to, you will be given 5 more Marketplace Credits.')
+    else if ($scope.marketSubmissions.indexOf(submi) != 0) $.Zebra_Dialog('Please respond to the first submission first.');
+    else {
+      submi.selectedChannelIDS.forEach(function(cid) {
+        if ($scope.selectedGroupChannelIDS.indexOf(cid) == -1) {
+          $scope.selectedGroupChannelIDS.push(cid);
+        }
+      });
+      submi.pooledChannelIDS = submi.pooledChannelIDS.concat($scope.selectedGroupChannelIDS);
+      delete submi.selectedGroups;
+      delete submi.selectedChannelIDS;
+      delete submi.selectedChannelName;
+      submi.password = $rootScope.password;
+      $scope.processing = true;
+      $http.put("/api/submissions/save", submi)
+        .then(function(sub) {
+          $scope.marketSubmissions.splice($scope.marketSubmissions.indexOf(submi), 1);
+          $scope.processing = false;
+          $scope.allowance--;
+        })
+        .then(null, function(err) {
+          $scope.processing = false;
+          $.Zebra_Dialog("ERROR: did not Save")
+        })
+    }
   }
 
   $scope.marketIgnore = function(submission) {
-    $scope.processing = true;
-    $http.delete('/api/submissions/ignore/' + submission._id + '/' + $rootScope.password)
-      .then(function(res) {
-        var index = $scope.marketSubmissions.indexOf(submission);
-        $scope.marketSubmissions.splice(index, 1);
-        $scope.processing = false;
-      })
-      .then(null, function(err) {
-        $scope.processing = false;
-        $.Zebra_Dialog("ERROR: did not Ignore");
-      });
-  }
-
-  $scope.marketDecline = function(submission) {
-    $scope.processing = true;
-    $http.delete('/api/submissions/decline/' + submission._id + '/' + $rootScope.password)
-      .then(function(res) {
-        var index = $scope.marketSubmissions.indexOf(submission);
-        $scope.marketSubmissions.splice(index, 1);
-        $scope.processing = false
-      })
-      .then(null, function(err) {
-        $scope.processing = false;
-        $.Zebra_Dialog("ERROR: did not Decline");
-      });
+    if ($scope.allowance <= 0) $.Zebra_Dialog('You are out of Marketplace Credits. For every submission you give to the Marketplace, you will be given 5 Marketplace Credits.')
+    else if ($scope.marketSubmissions.indexOf(submission) != 0) $.Zebra_Dialog('Please respond to the first submission first.');
+    else {
+      $scope.processing = true;
+      $http.delete('/api/submissions/ignore/' + submission._id + '/' + $rootScope.password)
+        .then(function(res) {
+          var index = $scope.marketSubmissions.indexOf(submission);
+          $scope.marketSubmissions.splice(index, 1);
+          $scope.processing = false;
+          $scope.allowance--;
+        })
+        .then(null, function(err) {
+          $scope.processing = false;
+          $.Zebra_Dialog("ERROR: did not Ignore");
+        });
+    }
   }
 
   $scope.openEmailClient = function(sub, item) {
@@ -417,7 +422,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     });
   }
 
-
   /*Sold Reposts*/
 
   $scope.getSoldReposts = function() {
@@ -425,6 +429,8 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       lowDate: $scope.lowDate,
       highDate: $scope.highDate
     }).then(function(res) {
+      $scope.adminStats.mpEarnings = 0;
+      $scope.adminStats.subEarnings = 0;
       $scope.adminStats.earnings = 0;
       $scope.adminStats.refunds = 0;
       $scope.adminStats.refundAmount = 0;
@@ -434,6 +440,8 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
           if (el.data.payout) {
             if (el.data.payout.batch_header) {
               el.payout = "$" + new Number(el.data.payout.batch_header.amount.value).toFixed(2) + " Earned";
+              if (el.marketplace) $scope.mpEarnings += new Number(el.data.payout.batch_header.amount.value);
+              else $scope.subEarnings += new Number(el.data.payout.batch_header.amount.value);
               $scope.adminStats.earnings += new Number(el.data.payout.batch_header.amount.value);
             } else {
               el.payout = "$" + new Number(el.data.payout.amount.total).toFixed(2) + " Refunded";
@@ -466,13 +474,14 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       lowDate: $scope.lowDate,
       highDate: $scope.highDate
     }).then(function(res) {
-      console.log(res);
       $scope.adminStats.repSubCount = res.data.directSubs.length;
       $scope.adminStats.premSubCount = res.data.premiereSubs.length;
       var directSubAmounts = {};
       res.data.directSubs.forEach(function(el) {
         if (!!directSubAmounts[el.userID]) directSubAmounts[el.userID] += 1;
         else directSubAmounts[el.userID] = 1;
+        $scope.adminStats.ffEarnings = 0;
+        $scope.adminStats.ffEarnings += !!el.ffEarnings ? el.ffEarnings : 0;
       })
       var premiereSubAmounts = {};
       res.data.premiereSubs.forEach(function(el) {
@@ -483,27 +492,29 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       $scope.accounts.forEach(function(acct) {
         acct.repSubCount = !!directSubAmounts[acct.userID._id] ? directSubAmounts[acct.userID._id] : 0;
         acct.premSubCount = !!premiereSubAmounts[acct.userID._id] ? premiereSubAmounts[acct.userID._id] : 0;
-        acct.paidSubs = 0;
-        acct.acceptedSubs = 0;
-        res.data.acceptedSubs.forEach(function(el) {
-          if (el.channelIDS.includes(acct.userID.soundcloud.id) || el.pooledChannelIDS.includes(acct.userID.soundcloud.id)) {
-            acct.acceptedSubs++;
-          }
-          var found = false;
-          el.paidPooledChannels.forEach(function(chan) {
-            if (chan.user.id == acct.userID.soundcloud.id) found = true;
-          })
-          el.paidChannels.forEach(function(chan) {
-            if (chan.user.id == acct.userID.soundcloud.id) found = true;
-          })
-          if (found) acct.paidSubs++;
-        })
-        acct.payAcceptRatio = acct.paidSubs / acct.acceptedSubs * 100;
+        // acct.paidSubs = 0;
+        // acct.acceptedSubs = 0;
+        // res.data.acceptedSubs.forEach(function(el) {
+        //   if (el.channelIDS.includes(acct.userID.soundcloud.id) || el.pooledChannelIDS.includes(acct.userID.soundcloud.id)) {
+        //     acct.acceptedSubs++;
+        //   }
+        //   var found = false;
+        //   el.paidPooledChannels.forEach(function(chan) {
+        //     if (chan.user.id == acct.userID.soundcloud.id) found = true;
+        //   })
+        //   el.paidChannels.forEach(function(chan) {
+        //     if (chan.user.id == acct.userID.soundcloud.id) found = true;
+        //   })
+        //   if (found) acct.paidSubs++;
+        // })
+        // acct.payAcceptRatio = acct.paidSubs / acct.acceptedSubs * 100;
+
       })
 
       function getAcctReposts() {
         setTimeout(function() {
           if ($scope.soldReposts) {
+            $scope.adminStats.earnings += $scope.adminStats.ffEarnings;
             var reposts = {};
             $scope.soldReposts.forEach(function(el) {
               if (!!reposts[el.data.userID]) reposts[el.data.userID].push(el)
@@ -537,6 +548,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       getAcctReposts();
     })
   }
+
   $scope.recalculate = function() {
     $scope.soldReposts = undefined;
     $scope.accounts = undefined;
@@ -566,7 +578,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
 
   $scope.getPaidRepostAccounts();
   $scope.loadSubmissions();
-  $scope.loadMarketSubmissions();
 
   $scope.getDiffTimeText = function(date) {
     var t = Math.floor((new Date(date).getTime() - new Date().getTime()) / 1000);
@@ -580,4 +591,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       minutes + 'm'
     ].join(' ');
   }
+
+  $http.get('/api/submissions/currentAllowance')
+    .then(function(res) {
+      $scope.allowance = res.data.allowance;
+      if (!$scope.$$phase) $scope.$apply();
+    }).then(null, console.log);
 });

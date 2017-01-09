@@ -81,7 +81,7 @@
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
   </script>
-  <div class="main-scroll-body" when-scrolled="loadList()">
+  <div class="main-scroll-body" ng-style="embedded?{'overflow':'hidden'}:{}" when-scrolled="loadList()">
     <div id="main" ui-view></div>
   </div>
 </body>

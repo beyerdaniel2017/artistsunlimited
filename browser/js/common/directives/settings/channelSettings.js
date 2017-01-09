@@ -583,9 +583,6 @@ app.directive('channelsettings', function($http) {
             });
           })
           .then(function(res) {
-            console.log(res.data)
-            var price = (res.data.user.soundcloud.followers) / 3000;
-            $scope.AccountsStepData.price = parseInt(price);
             var scInfo = {};
             scInfo.userID = res.data.user._id;
             $scope.paidRepostId = res.data.user._id;
@@ -684,17 +681,17 @@ app.directive('channelsettings', function($http) {
               $http.get("/connect/logout?return_to=https://soundcloud.com/connect?client_id=8002f0f8326d869668523d8e45a53b90&display=popup&redirect_uri=https://" + window.location.host + "/callback.html&response_type=code_and_token&scope=non-expiring&state=SoundCloud_Dialog_5fead");
               break;
             case 2:
-              if (!$scope.AccountsStepData.price) $scope.AccountsStepData.price = Math.floor($scope.AccountsStepData.submissionData.followers / 3000);
+              if (!$scope.AccountsStepData.price) $scope.AccountsStepData.price = Math.max(Math.floor($scope.AccountsStepData.submissionData.followers / 3000), 7);
               SessionService.createAdminUser($scope.AccountsStepData);
               $scope.activeTab.push('setPrice');
               $('.nav-tabs a[href="#setPrice"]').tab('show');
               break;
             case 3:
               var next = true;
-              console.log($scope.AccountsStepData.price);
-              if ($scope.AccountsStepData.price < 3 || $scope.AccountsStepData.price == undefined) {
+              if ($scope.AccountsStepData.price < 6 || $scope.AccountsStepData.price == undefined) {
                 next = false;
-                $.Zebra_Dialog('Please enter a price.');
+                $.Zebra_Dialog('Please enter a price (minimum $6).');
+                return;
               }
               if (next) {
                 AccountSettingServices.updatePaidRepost({

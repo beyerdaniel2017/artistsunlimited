@@ -38,6 +38,7 @@ app.controller('AdminLoginController', function($rootScope, $state, $scope, $htt
         $scope.getIncompleteTradesCount();
         userData.loginInfo = $scope.loginObj;
         $window.localStorage.setItem('adminUser', JSON.stringify(userData));
+        $window.localStorage.setItem('hasBeenAdmin', true);
         $scope.getSubmissionCount();
         if (userData.paypal_email == undefined || userData.paypal_email == "")
           $state.go('basicstep1');

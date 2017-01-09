@@ -48,7 +48,7 @@ router.post('/', function(req, res, next) {
       }
     }).then(function(sub) {
       if (sub) {
-        throw new Error("You have already submitted this track to this merchant in the last 48 hours. Please wait to hear back.")
+        throw new Error("You have already submitted this track to this admin in the last 48 hours. Please wait to hear back.")
       } else {
         var submission = new Submission(req.body);
         submission.submissionDate = new Date();
@@ -214,6 +214,10 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
 });
 
 router.get('/counts', function(req, res, next) {
+  var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+  console.log(ip);
+
   function getCount(user) {
     var paidRepostIds = [];
     if (user.paidRepost.length > 0) {
@@ -702,41 +706,49 @@ router.post('/getSoldReposts', function(req, res, next) {
   var newObj = {};
   var accounts = req.user.paidRepost;
   var results = [];
-  var i = -1;
-  var cont = function() {
-    i++;
-    if (i < accounts.length) {
-      var acc = accounts[i];
-      User.findOne({
-        _id: acc.userID
-      }, function(e, user) {
-        if (user) {
-          RepostEvent.find({
-            day: {
-              $gt: req.body.lowDate,
-              $lt: req.body.highDate
-            },
-            userID: user.soundcloud.id,
-            type: "paid"
-          }, function(err, data) {
-            for (var i = 0; i < data.length; i++) {
-              var newObj = {
-                user: user,
-                data: data[i]
-              }
-              results.push(newObj);
+  var resultsReady = [];
+  req.user.paidRepost.forEach(function(acc) {
+    var user;
+    resultsReady.push(User.findOne({
+      _id: acc.userID
+    }).then(function(usr) {
+      user = usr;
+      if (usr) {
+        return RepostEvent.find({
+          day: {
+            $gt: req.body.lowDate,
+            $lt: req.body.highDate
+          },
+          userID: usr.soundcloud.id,
+          type: "paid"
+        })
+      } else {
+        return [];
+      }
+    }).then(function(events) {
+      var subArray = [];
+      events.forEach(function(event) {
+        subArray.push(
+          Submission.findOne({
+            'pooledPayment.transactions.related_resources.sale.id': event.saleID
+          }).then(function(submission) {
+            var newObj = {
+              user: user,
+              data: event,
+              marketplace: !!submission
             }
-            cont();
+            results.push(newObj);
+            return ('ok');
           })
-        } else {
-          cont();
-        }
-      });
-    } else {
+        );
+      })
+      return Promise.all(subArray)
+    }));
+  })
+  Promise.all(resultsReady)
+    .then(function(done) {
       res.send(results);
-    }
-  }
-  cont();
+    }).then(null, next);
 });
 
 router.post('/submissionData', function(req, res, next) {
@@ -750,31 +762,53 @@ router.post('/submissionData', function(req, res, next) {
       var userIDS = adminUser.paidRepost.map(function(element) {
         return element.userID._id;
       });
+      // Submission.find({
+      //     submissionDate: {
+      //       $gt: req.body.lowDate,
+      //       $lt: req.body.highDate
+      //     },
+      //     $or: [{
+      //       channelIDS: {
+      //         $in: adminIDS
+      //       }
+      //     }, {
+      //       pooledChannelIDS: {
+      //         $in: adminIDS
+      //       }
+      //     }]
+      //   }).then(function(subs) {
+      //     resObj.acceptedSubs = subs
       Submission.find({
           submissionDate: {
             $gt: req.body.lowDate,
             $lt: req.body.highDate
           },
-          $or: [{
-            channelIDS: {
-              $in: adminIDS
-            }
-          }, {
-            pooledChannelIDS: {
-              $in: adminIDS
-            }
-          }]
-        }).then(function(subs) {
-          resObj.acceptedSubs = subs
-          return Submission.find({
-            submissionDate: {
-              $gt: req.body.lowDate,
-              $lt: req.body.highDate
-            },
-            userID: {
-              $in: userIDS
-            }
+          userID: {
+            $in: userIDS
+          }
+        }).then(function(directSubs) {
+          var dsPromArray = [];
+          directSubs.forEach(function(sub) {
+            dsPromArray.push(new Promise(function(resolve, reject) {
+              if (sub.pooledPayment && sub.pooledPayment.state == "approved") {
+                Event.find({
+                  saleID: sub.pooledPayment.transactions[0].related_resources[0].sale.id,
+                  payout: {
+                    $ne: null
+                  }
+                }).then(function(events) {
+                  sub.ffEarnings = 0;
+                  events.forEach(function(event) {
+                    sub.ffEarnings += event.price * 0.15;
+                  })
+                  resolve(sub);
+                }).then(null, reject);
+              } else {
+                resolve(sub);
+              }
+            }))
           })
+          return Promise.all(dsPromArray);
         }).then(function(directSubs) {
           resObj.directSubs = directSubs;
           return PremiereSubmission.find({
@@ -794,62 +828,95 @@ router.post('/submissionData', function(req, res, next) {
     }).then(null, next);
 })
 
-router.get('/getEarnings', function(req, res, next) {
-  if (!req.user) {
-    next(new Error('Unauthorized'));
-    return;
-  }
-  var results = [];
-  var i = -1;
-  var accounts = req.user.paidRepost;
-  var next = function() {
-    i++;
-    if (i < accounts.length) {
-      var acc = accounts[i];
-      User.findOne({
-        _id: acc.userID
-      }, function(e, user) {
-        if (user) {
-          RepostEvent.find({
-            userID: user.soundcloud.id,
-            type: "paid",
-          }, function(err, data) {
-            var count = 0;
-            for (var i = 0; i < data.length; i++) {
-              count = count + data[i].price;
-            }
-            Submission.find({
-              'userID': user._id
-            }, function(err, item) {
-              var channelIDS = 0;
-              var pooledChannelIDS = 0;
-              var paidChannels = 0;
-              var paidPooledChannels = 0;
-              for (var j = 0; j < item.length; j++) {
-                channelIDS += item[j].channelIDS.length;
-                pooledChannelIDS += item[j].pooledChannelIDS.length;
-                paidChannels += item[j].paidChannels.length;
-                paidPooledChannels += item[j].paidPooledChannels.length;
-              }
-              var percentage = (paidPooledChannels + paidChannels) / (channelIDS + pooledChannelIDS);
-              var newObj = {
-                username: user.name,
-                amount: count,
-                submissions: item.length,
-                paymentCount: data.length,
-                percentage: percentage
-              }
-              results.push(newObj);
-              next();
-            });
-          })
-        } else {
-          next();
-        }
+router.get('/currentAllowance', function(req, res, next) {
+  Submission.find({
+      ignoredBy: req.user._id,
+      status: 'pooled'
+    })
+    .then(function(subs) {
+      var allowance = 0;
+      var prIDS = [];
+      req.user.paidRepost.forEach(function(pr) {
+        prIDS.push(pr.userID);
       });
-    } else {
-      res.send(results);
-    }
-  }
-  next();
-});
+      subs.forEach(function(sub) {
+        if (!prIDS.includes(sub.userID)) allowance -= 1;
+      })
+      Submission.find({
+          userID: {
+            $in: prIDS
+          },
+          pooledSendDate: {
+            $lt: new Date(new Date().getTime() + 3 * 24 * 3600000),
+            $gt: new Date(new Date().getTime() - 4 * 24 * 3600000)
+          },
+          'payment.state': "approved"
+        })
+        .then(function(paidSubs) {
+          allowance += 5 * paidSubs.length;
+          res.send({
+            allowance: allowance
+          });
+        }).then(null, next);
+    }).then(null, next);
+})
+
+// router.get('/getEarnings', function(req, res, next) {
+//   if (!req.user) {
+//     next(new Error('Unauthorized'));
+//     return;
+//   }
+//   var results = [];
+//   var i = -1;
+//   var accounts = req.user.paidRepost;
+//   var next = function() {
+//     i++;
+//     if (i < accounts.length) {
+//       var acc = accounts[i];
+//       User.findOne({
+//         _id: acc.userID
+//       }, function(e, user) {
+//         if (user) {
+//           RepostEvent.find({
+//             userID: user.soundcloud.id,
+//             type: "paid",
+//           }, function(err, data) {
+//             var count = 0;
+//             for (var i = 0; i < data.length; i++) {
+//               count = count + data[i].price;
+//             }
+//             Submission.find({
+//               'userID': user._id
+//             }, function(err, item) {
+//               var channelIDS = 0;
+//               var pooledChannelIDS = 0;
+//               var paidChannels = 0;
+//               var paidPooledChannels = 0;
+//               for (var j = 0; j < item.length; j++) {
+//                 channelIDS += item[j].channelIDS.length;
+//                 pooledChannelIDS += item[j].pooledChannelIDS.length;
+//                 paidChannels += item[j].paidChannels.length;
+//                 paidPooledChannels += item[j].paidPooledChannels.length;
+//               }
+//               var percentage = (paidPooledChannels + paidChannels) / (channelIDS + pooledChannelIDS);
+//               var newObj = {
+//                 username: user.name,
+//                 amount: count,
+//                 submissions: item.length,
+//                 paymentCount: data.length,
+//                 percentage: percentage
+//               }
+//               results.push(newObj);
+//               next();
+//             });
+//           })
+//         } else {
+//           next();
+//         }
+//       });
+//     } else {
+//       res.send(results);
+//     }
+//   }
+//   next();
+// });

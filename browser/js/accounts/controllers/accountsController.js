@@ -127,6 +127,11 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
   }
 
   $scope.editprice = function(index, userdata) {
+    if (userdata.price < 6 || userdata.price == undefined) {
+      next = false;
+      $.Zebra_Dialog('Please enter a price (minimum $6).');
+      return;
+    }
     $scope.processing = true;
     $scope.user.paidRepost[index].price = userdata.price;
     $http.post('/api/database/updateGroup', {

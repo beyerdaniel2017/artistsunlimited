@@ -311,12 +311,12 @@ router.post('/repostEventsScheduler', function(req, res, next) {
     .then(function(ev) {
       var nextDate = new Date(ev.day);
       req.body.otherChannels.forEach(function(channelID) {
-        nextDate = new Date(nextDate.getTime() + req.body.hoursBetween * 3600000);
+        // nextDate = new Date(nextDate.getTime() + req.body.hoursBetween * 3600000);
         var eventDetails = JSON.parse(JSON.stringify(ev));
         delete eventDetails._id;
         eventDetails.comment = undefined;
         eventDetails.userID = channelID;
-        scheduleRepost(eventDetails, nextDate, eventDetails.unrepostHours, false).then(console.log, console.log);
+        scheduleRepost(eventDetails, nextDate, eventDetails.unrepostHours).then(console.log, console.log);
       })
       res.send(ev)
     }).then(null, next);

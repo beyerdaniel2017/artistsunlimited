@@ -144,16 +144,16 @@
               <!-- ORGANIZE SCHEDULE :Start -->
               <div role="tabpanel" class="tab-pane fade" id="marketplace">
                 <div class="container-90">
-                  <!--                     <row class="col-md-6">
-                      <label class="switch">
-                        <input type="checkbox" checked="" ng-model="user.repostSettings.poolOn" ng-change="togglePoolOn()">
-                        <div class="slider round"></div>
-                      </label>
-                      <span style='font-size:1.2em; vertical-align:middle'>AU Marketplace<a href="" ng-click="whatIsPool()">?</a></span>
-                    </row>
-                    <row class="col-md-6">
-                      <h4 style="text-align:right;">{{counts.marketCount}} submissions</h4>
-                    </row> -->
+                  <!-- <row class="col-md-6">
+                    <label class="switch">
+                      <input type="checkbox" checked="" ng-model="user.repostSettings.poolOn" ng-change="togglePoolOn()">
+                      <div class="slider round"></div>
+                    </label>
+                    <span style='font-size:1.2em; vertical-align:middle'>AU Marketplace<a href="" ng-click="whatIsPool()">?</a></span>
+                  </row> -->
+                  <row class="col-md-6">
+                    <h4 style="text-align:left;">Credits: {{allowance}}</h4>
+                  </row>
                   <div class="submi-section" ng-repeat="sub in marketSubmissions" ng-if=" user.repostSettings.poolOn" ng-class="{'border-bottom':!$last}">
                     <div class="">
                       <div class="row">
@@ -178,7 +178,6 @@
                             </div>
                             <ul class="submissions-tab-list ">
                               <button class="btn btn-border btn-sm b-radius-10 btn-block" ng-click="marketIgnore(sub)">IGNORE</button>
-                              <!-- <button class="btn decline" ng-click="marketDecline(sub)">DECLINE</button> -->
                               <button class="btn btn-pink btn-sm b-radius-10 btn-block" ng-click="marketSave(sub)">ACCEPT</button>
                             </ul>
                           </div>
@@ -331,7 +330,10 @@
                                 <td>Repost Submissions</td>
                                 <td>Premier Submissions</td>
                                 <td>Reposts Sold</td>
-                                <td>Earnings</td>
+                                <td>Submissions Earnings</td>
+                                <td>Finders Fee Earnings</td>
+                                <td>Marketplace Earnings</td>
+                                <td>Total Earnings</td>
                                 <td>Refunds</td>
                                 <td>Amount Refunded</td>
                                 <td>Incomplete</td>
@@ -342,6 +344,9 @@
                                 <td>{{ adminStats.repSubCount }}</td>
                                 <td>{{ adminStats.premSubCount }}</td>
                                 <td>{{ adminStats.soldReposts }}</td>
+                                <td>{{ adminStats.subEarnings | currency:"$"}}</td>
+                                <td>{{ adminStats.ffEarnings | currency:"$"}}</td>
+                                <td>{{ adminStats.mpEarnings | currency:"$"}}</td>
                                 <td>{{ adminStats.earnings | currency:"$"}}</td>
                                 <td>{{ adminStats.refunds }}</td>
                                 <td>{{ adminStats.refundAmount | currency:"$" }}</td>
@@ -366,7 +371,7 @@
                                 <td>Name</td>
                                 <td>Earnings</td>
                                 <td>Reposts Sold</td>
-                                <td>Buy/Acceptance Ratio</td>
+                                <!-- <td>Buy/Acceptance Ratio</td>-->
                                 <td>Repost Submissions</td>
                                 <td>Premiere Submissions</td>
                                 <td>Refunds</td>
@@ -379,7 +384,7 @@
                                 <td><a href="{{acct.userID.soundcloud.permalinkURL}}" target="_blank">{{ acct.userID.soundcloud.username }}</a></td>
                                 <td>{{ acct.earnings | currency:"$"}}</td>
                                 <td>{{ acct.repostCount }}</td>
-                                <td>{{ acct.payAcceptRatio | number:1 }}%</td>
+                                <!-- <td>{{ acct.payAcceptRatio | number:1 }}%</td> -->
                                 <td>{{ acct.repSubCount }}</td>
                                 <td>{{ acct.premSubCount }}</td>
                                 <td>{{ acct.refunds }}</td>

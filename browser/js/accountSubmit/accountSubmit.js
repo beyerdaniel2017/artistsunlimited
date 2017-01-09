@@ -39,9 +39,9 @@ app.config(function($stateProvider) {
 app.controller('AccountSubmitSongController', function($rootScope, $state, $scope, userID, customizeSettings, $http, customizeService, $location) {
   $scope.submission = {};
   $scope.customizeSettings = customizeSettings;
-  console.log($scope.customizeSettings);
   $scope.searchString = "";
   $scope.showPlayer = false;
+  console.log(window.localStorage.getItem('hasBeenAdmin'));
   $scope.choseTrack = function(track) {
     console.log(track);
     $scope.searchString = track.title;
@@ -101,6 +101,7 @@ app.controller('AccountSubmitSongController', function($rootScope, $state, $scop
           $scope.notFound = false;
           $scope.submission = {};
           $scope.searchString = "";
+          $scope.showPlayer = false;
           document.getElementById('scPlayerCustom').style.visibility = "hidden";
           $scope.url = "";
         })

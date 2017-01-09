@@ -218,6 +218,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
   /*Load More*/
   $scope.user = SessionService.getUser();
   $rootScope.enableNavigation = false;
+  $scope.embedded = window.location.search.includes("embed");
   $scope.isBlock = function() {
     $scope.todayDate = new Date();
     $scope.blockRelease = new Date($scope.user.blockRelease);

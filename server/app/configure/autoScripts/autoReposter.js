@@ -273,10 +273,12 @@ function performStatBoosts(user, trackID) {
 
 function distributeEarnings(user, event) {
   console.log('distributing---------')
+  var adUser;
   if (event.price) {
     User.findOne({
       "paidRepost.userID": user._id
     }).then(function(adminUser) {
+      adUser = adminUser;
       return Submission.findOne({
         'pooledPayment.transactions.related_resources.sale.id': event.saleID
       }).then(function(submission) {
@@ -296,7 +298,7 @@ function distributeEarnings(user, event) {
       event.payout = payout;
       event.save();
     }).then(null, function(err) {
-      sendEmail('Christian Ayscue', 'coayscue@gmail.com', "Artists Unlimited", "coayscue@artistsunlimited.com", "Error distributing funds", "Error: " + JSON.stringify(err) + "<br><br>ATUser: " + JSON.stringify(user) + "<br><br>Event: " + JSON.stringify(event));
+      sendEmail('Christian Ayscue', 'coayscue@gmail.com', "Artists Unlimited", "coayscue@artistsunlimited.com", "Error distributing funds", "Error: " + JSON.stringify(err) + "<br><br>Admin User: " + JSON.stringify(adUser) + " <br><br>ATUser: " + JSON.stringify(user) + "<br><br>Event: " + JSON.stringify(event));
     })
   }
 }

@@ -57,7 +57,6 @@ module.exports = function(eventDetails, minDate, unrepostHours, inAvailableSlots
               var event = allEvents.find(function(eve) {
                 return eve.day.getHours() == desiredDay.getHours() && desiredDay.toLocaleDateString() == eve.day.toLocaleDateString();
               });
-              console.log(allEvents);
 
               if (!event) {
                 eventDetails.day = desiredDay;

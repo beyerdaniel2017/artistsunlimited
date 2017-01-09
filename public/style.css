@@ -2766,6 +2766,9 @@ input[type=range]:focus::-ms-fill-upper {
 .scroll-hide {
   overflow: hidden; }
 
+iframe > .main-scroll-body {
+  overflow-y: hidden; }
+
 .main-scroll-body {
   overflow-y: scroll;
   height: 100%;

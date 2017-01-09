@@ -577,7 +577,7 @@ app.directive('scheduler', function($http) {
         if ($scope.pseudoAvailableSlots[daysArray[day]].indexOf(pushhour) > -1) {
           $scope.pseudoAvailableSlots[daysArray[day]].splice($scope.pseudoAvailableSlots[daysArray[day]].indexOf(pushhour), 1);
         } else if ($scope.tooManyReposts(day, hour)) {
-          $.Zebra_Dialog("Cannot schedule slot. We only allow 10 reposts within 24 hours to prevent you from being repost blocked.");
+          $.Zebra_Dialog("Cannot schedule slot. We only allow 12 reposts within 24 hours to prevent you from being repost blocked.");
           return;
         } else {
           $scope.pseudoAvailableSlots[daysArray[day]].push(pushhour);
@@ -615,7 +615,7 @@ app.directive('scheduler', function($http) {
             else i++;
           }
           checkingSlots.push(slot);
-          if (checkingSlots.length > 10) {
+          if (checkingSlots.length > 12) {
             status = true;
           }
         })
@@ -783,7 +783,7 @@ app.directive('scheduler', function($http) {
         $scope.popup = true;
         $scope.slotType = 'track';
         var d = new Date(day).getDay();
-        // if ($scope.pseudoAvailableSlots[daysArray[d]].indexOf(hour) == -1 && data.type == 'empty') return;
+        if ($scope.pseudoAvailableSlots[daysArray[d]].indexOf(hour) == -1 && data.type == 'empty') return;
         var makeDay = new Date(day);
         makeDay.setHours(hour);
         if ($scope.user.blockRelease && new Date($scope.user.blockRelease).getTime() > new Date(makeDay).getTime()) {

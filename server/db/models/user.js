@@ -250,6 +250,10 @@ var schema = new mongoose.Schema({
   templates: {
     type: Array,
     default: []
+  },
+  ips: {
+    type: Array,
+    default: []
   }
 });
 
