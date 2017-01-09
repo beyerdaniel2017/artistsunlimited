@@ -265,7 +265,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.marketSave = function(submi) {
-    if ($scope.allowance <= 0) $.Zebra_Dialog('You are out of Marketplace Credits. For every direct submission you respond to, you will be given 5 more Marketplace Credits.')
+    if ($scope.allowance <= 0) $.Zebra_Dialog('You are out of Marketplace Credits. For every direct submission you make a sale on, you will be given 10 more Marketplace Credits.')
     else if ($scope.marketSubmissions.indexOf(submi) != 0) $.Zebra_Dialog('Please respond to the first submission first.');
     else {
       submi.selectedChannelIDS.forEach(function(cid) {
@@ -293,7 +293,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.marketIgnore = function(submission) {
-    if ($scope.allowance <= 0) $.Zebra_Dialog('You are out of Marketplace Credits. For every submission you give to the Marketplace, you will be given 5 Marketplace Credits.')
+    if ($scope.allowance <= 0) $.Zebra_Dialog('You are out of Marketplace Credits. For every direct submission you make a sale on, you will be given 10 more Marketplace Credits.')
     else if ($scope.marketSubmissions.indexOf(submission) != 0) $.Zebra_Dialog('Please respond to the first submission first.');
     else {
       $scope.processing = true;
