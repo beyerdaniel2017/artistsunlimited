@@ -178,6 +178,8 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.changeBox = function(sub, chan) {
+    // console.log('youre done');
+    // sub[chan.user.username] = false;
     var index = sub.selectedChannelIDS.indexOf(chan.user.id);
     if (index == -1) {
       sub.selectedChannelIDS.push(chan.user.id);
@@ -265,51 +267,51 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.marketSave = function(submi) {
-    if ($scope.allowance <= 0) $.Zebra_Dialog('You are out of Marketplace Credits. For every direct submission you make a sale on, you will be given 10 more Marketplace Credits.')
-    else if ($scope.marketSubmissions.indexOf(submi) != 0) $.Zebra_Dialog('Please respond to the first submission first.');
-    else {
-      submi.selectedChannelIDS.forEach(function(cid) {
-        if ($scope.selectedGroupChannelIDS.indexOf(cid) == -1) {
-          $scope.selectedGroupChannelIDS.push(cid);
-        }
-      });
-      submi.pooledChannelIDS = submi.pooledChannelIDS.concat($scope.selectedGroupChannelIDS);
-      delete submi.selectedGroups;
-      delete submi.selectedChannelIDS;
-      delete submi.selectedChannelName;
-      submi.password = $rootScope.password;
-      $scope.processing = true;
-      $http.put("/api/submissions/save", submi)
-        .then(function(sub) {
-          $scope.marketSubmissions.splice($scope.marketSubmissions.indexOf(submi), 1);
-          $scope.processing = false;
-          $scope.allowance--;
-        })
-        .then(null, function(err) {
-          $scope.processing = false;
-          $.Zebra_Dialog("ERROR: did not Save")
-        })
-    }
+    // if ($scope.allowance <= 0) $.Zebra_Dialog('You are out of Marketplace Credits. For every direct submission you make a sale on, you will be given 10 more Marketplace Credits.')
+    // else if ($scope.marketSubmissions.indexOf(submi) != 0) $.Zebra_Dialog('Please respond to the first submission first.');
+    // else {
+    submi.selectedChannelIDS.forEach(function(cid) {
+      if ($scope.selectedGroupChannelIDS.indexOf(cid) == -1) {
+        $scope.selectedGroupChannelIDS.push(cid);
+      }
+    });
+    submi.pooledChannelIDS = submi.pooledChannelIDS.concat($scope.selectedGroupChannelIDS);
+    delete submi.selectedGroups;
+    delete submi.selectedChannelIDS;
+    delete submi.selectedChannelName;
+    submi.password = $rootScope.password;
+    $scope.processing = true;
+    $http.put("/api/submissions/save", submi)
+      .then(function(sub) {
+        $scope.marketSubmissions.splice($scope.marketSubmissions.indexOf(submi), 1);
+        $scope.processing = false;
+        // $scope.allowance--;
+      })
+      .then(null, function(err) {
+        $scope.processing = false;
+        $.Zebra_Dialog("ERROR: did not Save")
+      })
+      // }
   }
 
   $scope.marketIgnore = function(submission) {
-    if ($scope.allowance <= 0) $.Zebra_Dialog('You are out of Marketplace Credits. For every direct submission you make a sale on, you will be given 10 more Marketplace Credits.')
-    else if ($scope.marketSubmissions.indexOf(submission) != 0) $.Zebra_Dialog('Please respond to the first submission first.');
-    else {
+      // if ($scope.allowance <= 0) $.Zebra_Dialog('You are out of Marketplace Credits. For every direct submission you make a sale on, you will be given 10 more Marketplace Credits.')
+      // else if ($scope.marketSubmissions.indexOf(submission) != 0) $.Zebra_Dialog('Please respond to the first submission first.');
+      // else {
       $scope.processing = true;
       $http.delete('/api/submissions/ignore/' + submission._id + '/' + $rootScope.password)
         .then(function(res) {
           var index = $scope.marketSubmissions.indexOf(submission);
           $scope.marketSubmissions.splice(index, 1);
           $scope.processing = false;
-          $scope.allowance--;
+          // $scope.allowance--;
         })
         .then(null, function(err) {
           $scope.processing = false;
           $.Zebra_Dialog("ERROR: did not Ignore");
         });
     }
-  }
+    // }
 
   $scope.openEmailClient = function(sub, item) {
     var toEmail = formatForEmailClient(item.toEmail, sub);
@@ -593,9 +595,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     ].join(' ');
   }
 
-  $http.get('/api/submissions/currentAllowance')
-    .then(function(res) {
-      $scope.allowance = res.data.allowance;
-      if (!$scope.$$phase) $scope.$apply();
-    }).then(null, console.log);
+  // $http.get('/api/submissions/currentAllowance')
+
+  //   .then(function(res) {
+  //     $scope.allowance = res.data.allowance;
+  //     if (!$scope.$$phase) $scope.$apply();
+  //   }).then(null, console.log);
 });
