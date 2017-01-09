@@ -841,7 +841,7 @@ router.get('/currentAllowance', function(req, res, next) {
           'payment.state': "approved"
         })
         .then(function(paidSubs) {
-          allowance += 5 * paidSubs.length;
+          allowance += 10 * paidSubs.length;
           res.send({
             allowance: allowance
           });
