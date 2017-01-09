@@ -440,8 +440,8 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
           if (el.data.payout) {
             if (el.data.payout.batch_header) {
               el.payout = "$" + new Number(el.data.payout.batch_header.amount.value).toFixed(2) + " Earned";
-              if (el.marketplace) $scope.mpEarnings += new Number(el.data.payout.batch_header.amount.value);
-              else $scope.subEarnings += new Number(el.data.payout.batch_header.amount.value);
+              if (el.marketplace) $scope.adminStats.mpEarnings += new Number(el.data.payout.batch_header.amount.value);
+              else $scope.adminStats.subEarnings += new Number(el.data.payout.batch_header.amount.value);
               $scope.adminStats.earnings += new Number(el.data.payout.batch_header.amount.value);
             } else {
               el.payout = "$" + new Number(el.data.payout.amount.total).toFixed(2) + " Refunded";
@@ -477,10 +477,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       $scope.adminStats.repSubCount = res.data.directSubs.length;
       $scope.adminStats.premSubCount = res.data.premiereSubs.length;
       var directSubAmounts = {};
+      $scope.adminStats.ffEarnings = 0;
       res.data.directSubs.forEach(function(el) {
         if (!!directSubAmounts[el.userID]) directSubAmounts[el.userID] += 1;
         else directSubAmounts[el.userID] = 1;
-        $scope.adminStats.ffEarnings = 0;
         $scope.adminStats.ffEarnings += !!el.ffEarnings ? el.ffEarnings : 0;
       })
       var premiereSubAmounts = {};
