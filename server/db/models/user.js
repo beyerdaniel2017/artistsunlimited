@@ -90,6 +90,9 @@ var schema = new mongoose.Schema({
     createdOn: {
       type: Date,
       default: new Date()
+    },
+    linkInBio: {
+      type: Boolean
     }
   }],
   submissionsCustomEmailButtons: {

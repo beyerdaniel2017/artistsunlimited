@@ -1341,9 +1341,10 @@ router.get('/paidRepostSignupStatus', function(req, res, next) {
           };
           promiseArray.push(new Promise(function(resolve, reject) {
             scWrapper.request(reqObj, function(err, data) {
-              if (data) acct.bioLink = JSON.stringify(data).includes('artistsunlimited');
+              if (data) acct.linkInBio = JSON.stringify(data).includes('artistsunlimited');
+              if (pr.linkInBio) acct.linkInBio = pr.linkInBio;
               if (err) acct.error = err;
-              if (acct.bioLink) resObj.totalAccepting += acct.followers;
+              if (acct.linkInBio) resObj.totalAccepting += acct.followers;
               userData.accounts.push(acct);
               resolve('done');
             })
@@ -1358,5 +1359,4 @@ router.get('/paidRepostSignupStatus', function(req, res, next) {
           res.send(resObj);
         }).then(null, next)
     }).then(null, next);
-
 });

@@ -318,34 +318,45 @@ router.get('/getGroupedSubmissions', function(req, res, next) {
     .then(0, next);
 });
 
-router.get('/getPaidRepostAccounts', function(req, res) {
+router.get('/getPaidRepostAccounts', function(req, res, next) {
   if (!req.user) {
     next(new Error('Unauthorized'));
     return;
   }
-  var accounts = req.user.paidRepost;
+  var accPromArray = [];
   var results = [];
-  var i = -1;
-  var next = function() {
-    i++;
-    if (i < accounts.length) {
-      var acc = accounts[i].toJSON();
-      User.findOne({
-        _id: acc.userID
-      }, function(e, u) {
+  req.user.paidRepost.forEach(function(pr) {
+    var pr = pr.toJSON();
+    accPromArray.push(User.findOne({
+        _id: pr.userID
+      }).then(function(u) {
         if (u) {
-          acc.user = u.soundcloud;
-          results.push(acc);
+          pr.user = u.soundcloud;
+          return new Promise(function(resolve, reject) {
+            scWrapper.setToken(pr.user.token);
+            var reqObj = {
+              method: 'GET',
+              path: '/me',
+              qs: {}
+            };
+            scWrapper.request(reqObj, function(err, data) {
+              if (pr.linkInBio == undefined && data) pr.linkInBio = JSON.stringify(data).includes('artistsunlimited');
+              resolve(pr);
+            })
+          })
         }
-        next();
-      });
-    } else {
+      })
+      .then(function(newPr) {
+        if (newPr) {
+          results.push(pr);
+        }
+      }))
+  });
+  Promise.all(accPromArray)
+    .then(function(arr) {
       res.send(results);
-    }
-  }
-  next();
+    }).then(null, next);
 });
-
 
 router.get('/getAccountsByIndex/:user_id', function(req, res) {
   if (!req.user) {
@@ -486,38 +497,48 @@ router.get('/withID/:subID', function(req, res, next) {
           }
         }
       }
-      User.find(query, function(e, channels) {
-        if (channels && channels.length > 0) {
-          var i = -1;
-          var next = function() {
-            i++;
-            if (i < channels.length) {
-              var channel = channels[i].toJSON();
-              User.findOne({
-                'paidRepost.userID': channel._id
-              }, function(e, admin) {
-                if (admin) {
-                  var ch = admin.paidRepost.find(function(acc) {
-                    return acc.userID.toString() == channel._id.toString()
-                  });
-                  if (ch) {
-                    ch = ch.toJSON();
-                    ch.user = channel.soundcloud;
-                    arrChannels.push(ch);
-                  }
+      User.find(query)
+        .then(function(channels) {
+          var channelPromArray = [];
+          channels.forEach(function(channel) {
+            channel = channel.toJSON();
+            channelPromArray.push(User.findOne({
+              'paidRepost.userID': channel._id
+            }).then(function(admin) {
+              if (admin) {
+                var ch = admin.paidRepost.find(function(acc) {
+                  return acc.userID.toString() == channel._id.toString()
+                });
+                if (ch) {
+                  ch = ch.toJSON();
+                  ch.user = channel.soundcloud;
+                  return new Promise(function(resolve, reject) {
+                    scWrapper.setToken(ch.user.token);
+                    var reqObj = {
+                      method: 'GET',
+                      path: '/me',
+                      qs: {}
+                    };
+                    scWrapper.request(reqObj, function(err, data) {
+                      if (ch.linkInBio == undefined && data) ch.linkInBio = JSON.stringify(data).includes('artistsunlimited');
+                      resolve(ch);
+                    })
+                  })
                 }
-                next();
-              });
-            } else {
-              sub.channels = arrChannels;
-              res.send(sub);
-            }
-          }
-          next();
-        }
-      });
-    })
-    .then(null, next);
+              }
+            }).then(function(newCh) {
+              if (newCh && newCh.linkInBio) {
+                arrChannels.push(newCh);
+              }
+            }));
+          })
+          return Promise.all(channelPromArray)
+        }).then(function(chans) {
+          console.log(arrChannels);
+          sub.channels = arrChannels;
+          res.send(sub);
+        }).then(null, next)
+    }).then(null, next);
 });
 
 router.post('/youtubeInquiry', function(req, res, next) {

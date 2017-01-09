@@ -178,15 +178,19 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
   }
 
   $scope.changeBox = function(sub, chan) {
-    // console.log('youre done');
-    // sub[chan.user.username] = false;
-    var index = sub.selectedChannelIDS.indexOf(chan.user.id);
-    if (index == -1) {
-      sub.selectedChannelIDS.push(chan.user.id);
-      sub.selectedChannelName.push(chan.user.username);
+    console.log(sub.approvedChannels);
+    if (!chan.linkInBio) {
+      sub[chan.user.username] = false;
+      $.Zebra_Dialog("You need to put this link in your soundcloud bio to be able to sell submissions with this account: <a href='" + chan.submissionUrl + "' target='_blank'>" + chan.submissionUrl.substring(chan.submissionUrl.indexOf('artists')) + '</a>');
     } else {
-      sub.selectedChannelIDS.splice(index, 1);
-      sub.selectedChannelName.splice(index, 1);
+      var index = sub.selectedChannelIDS.indexOf(chan.user.id);
+      if (index == -1) {
+        sub.selectedChannelIDS.push(chan.user.id);
+        sub.selectedChannelName.push(chan.user.username);
+      } else {
+        sub.selectedChannelIDS.splice(index, 1);
+        sub.selectedChannelName.splice(index, 1);
+      }
     }
   }
 
