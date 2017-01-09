@@ -169,7 +169,6 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
       },
       status: "pooled"
     };
-    console.log(query);
     if (genre != undefined && genre != 'null') {
       query.genre = genre;
     }
@@ -180,7 +179,6 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
       .skip(skipcount)
       .limit(limitcount)
       .then(function(subs) {
-        console.log(subs);
         var i = -1;
         var cont = function() {
           i++;
@@ -214,10 +212,6 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
 });
 
 router.get('/counts', function(req, res, next) {
-  var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-
-  console.log(ip);
-
   function getCount(user) {
     var paidRepostIds = [];
     if (user.paidRepost.length > 0) {
@@ -762,22 +756,6 @@ router.post('/submissionData', function(req, res, next) {
       var userIDS = adminUser.paidRepost.map(function(element) {
         return element.userID._id;
       });
-      // Submission.find({
-      //     submissionDate: {
-      //       $gt: req.body.lowDate,
-      //       $lt: req.body.highDate
-      //     },
-      //     $or: [{
-      //       channelIDS: {
-      //         $in: adminIDS
-      //       }
-      //     }, {
-      //       pooledChannelIDS: {
-      //         $in: adminIDS
-      //       }
-      //     }]
-      //   }).then(function(subs) {
-      //     resObj.acceptedSubs = subs
       Submission.find({
           submissionDate: {
             $gt: req.body.lowDate,
@@ -791,25 +769,32 @@ router.post('/submissionData', function(req, res, next) {
           directSubs.forEach(function(sub) {
             dsPromArray.push(new Promise(function(resolve, reject) {
               if (sub.pooledPayment && sub.pooledPayment.state == "approved") {
-                Event.find({
+                RepostEvent.find({
                   saleID: sub.pooledPayment.transactions[0].related_resources[0].sale.id,
                   payout: {
                     $ne: null
                   }
                 }).then(function(events) {
-                  sub.ffEarnings = 0;
+                  var ffEarnings = 0;
                   events.forEach(function(event) {
-                    sub.ffEarnings += event.price * 0.15;
+                    ffEarnings += event.price * 0.15;
                   })
-                  resolve(sub);
+                  resolve({
+                    sub: sub,
+                    ffEarnings: ffEarnings
+                  });
                 }).then(null, reject);
               } else {
-                resolve(sub);
+                resolve({
+                  sub: sub,
+                  ffEarnings: 0
+                });
               }
             }))
           })
           return Promise.all(dsPromArray);
         }).then(function(directSubs) {
+          console.log(directSubs);
           resObj.directSubs = directSubs;
           return PremiereSubmission.find({
             submissionDate: {
@@ -830,25 +815,28 @@ router.post('/submissionData', function(req, res, next) {
 
 router.get('/currentAllowance', function(req, res, next) {
   Submission.find({
-      ignoredBy: req.user._id,
-      status: 'pooled'
+      ignoredBy: req.user._id.toJSON(),
+      status: 'pooled',
+      pooledSendDate: {
+        $gt: new Date()
+      }
     })
     .then(function(subs) {
       var allowance = 0;
       var prIDS = [];
       req.user.paidRepost.forEach(function(pr) {
-        prIDS.push(pr.userID);
+        prIDS.push(pr.userID.toJSON());
       });
       subs.forEach(function(sub) {
-        if (!prIDS.includes(sub.userID)) allowance -= 1;
+        if (!prIDS.includes(sub.userID.toJSON())) allowance -= 1;
       })
       Submission.find({
           userID: {
             $in: prIDS
           },
           pooledSendDate: {
-            $lt: new Date(new Date().getTime() + 3 * 24 * 3600000),
-            $gt: new Date(new Date().getTime() - 4 * 24 * 3600000)
+            $lt: new Date(new Date().getTime() + 2 * 24 * 3600000),
+            $gt: new Date(new Date().getTime() - 1 * 24 * 3600000)
           },
           'payment.state': "approved"
         })

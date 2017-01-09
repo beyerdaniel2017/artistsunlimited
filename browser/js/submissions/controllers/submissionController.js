@@ -479,8 +479,8 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
       var directSubAmounts = {};
       $scope.adminStats.ffEarnings = 0;
       res.data.directSubs.forEach(function(el) {
-        if (!!directSubAmounts[el.userID]) directSubAmounts[el.userID] += 1;
-        else directSubAmounts[el.userID] = 1;
+        if (!!directSubAmounts[el.sub.userID]) directSubAmounts[el.sub.userID] += 1;
+        else directSubAmounts[el.sub.userID] = 1;
         $scope.adminStats.ffEarnings += !!el.ffEarnings ? el.ffEarnings : 0;
       })
       var premiereSubAmounts = {};
@@ -578,6 +578,7 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
 
   $scope.getPaidRepostAccounts();
   $scope.loadSubmissions();
+  $scope.loadMarketSubmissions();
 
   $scope.getDiffTimeText = function(date) {
     var t = Math.floor((new Date(date).getTime() - new Date().getTime()) / 1000);
