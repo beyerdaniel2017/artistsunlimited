@@ -306,37 +306,38 @@ body {
   </div>
   <div id="embedTemplate" ng-if="embedded" style="margin:10px auto;">
     <div style="margin:0 auto; text-align:center;">
-      <div class="row">
-        <div class="search" style="max-width:350px; width:80%; margin:0 auto;">
-          <scsearch kind='track' returnitem='choseTrack(item)' customstyle="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}};"></scsearch>
+      <form role="form" ng-submit="submit()">
+        <div class="row">
+          <div class="search" style="max-width:350px; width:80%; margin:0 auto;">
+            <scsearch kind='track' returnitem='choseTrack(item)' customstyle="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}};"></scsearch>
+          </div>
         </div>
-      </div>
-      <div class="row text-center" ng-show="showPlayer">
-        <div style="max-width:350px; width:80%; margin:0 auto;">
-          <iframe id="scPlayerCustom" width="700" height="160" src="https://w.soundcloud.com/player/?url=&auto_play=false&show_artwork=true" style="margin-top:10px; position:relative; z-index:1; border:none; max-width:100%;"></iframe>
+        <div class="row text-center" ng-show="showPlayer">
+          <div style="max-width:350px; width:80%; margin:0 auto;">
+            <iframe id="scPlayerCustom" width="700" height="160" src="https://w.soundcloud.com/player/?url=&auto_play=false&show_artwork=true" style="margin-top:10px; position:relative; z-index:1; border:none; max-width:100%;"></iframe>
+          </div>
         </div>
-      </div>
-      <br>
-      <div class="row">
-        <div style="max-width:350px; width:80%; margin: 0 auto;">
-          <input type="text" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}};" required/>
-        </div>
-      </div>
-      <br>
-      <div class="row">
-        <div style="max-width:350px; width:80%; margin: 0 auto;">
-          <input type="email" placeholder="Email" ng-model="submission.email" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px;border-color:{{customizeSettings.inputFields.style.borderColor}};" required/>
-        </div>
-      </div>
-      <br>
-      <div class="text-center">
-        <button class="btn btn-default" style="color:{{customizeSettings.button.style.fontColor}}; 
-        font-size:{{customizeSettings.button.style.fontSize}}px; 
-        background-color:{{customizeSettings.button.style.bgColor}}; border:solid {{customizeSettings.inputFields.style.borderColor}} {{customizeSettings.button.style.border}}px; border-radius:{{customizeSettings.button.style.borderRadius}}px;">{{customizeSettings.button.text}}</button>
         <br>
+        <div class="row">
+          <div style="max-width:350px; width:80%; margin: 0 auto;">
+            <input type="text" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}};" required/>
+          </div>
+        </div>
         <br>
-      </div>
-      <br>
+        <div class="row">
+          <div style="max-width:350px; width:80%; margin: 0 auto;">
+            <input type="email" placeholder="Email" ng-model="submission.email" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px;border-color:{{customizeSettings.inputFields.style.borderColor}};" required/>
+          </div>
+        </div>
+        <br>
+        <div class="text-center">
+          <button class="btn btn-default" style="color:{{customizeSettings.button.style.fontColor}}; 
+          font-size:{{customizeSettings.button.style.fontSize}}px; 
+          background-color:{{customizeSettings.button.style.bgColor}}; border:solid {{customizeSettings.inputFields.style.borderColor}} {{customizeSettings.button.style.border}}px; border-radius:{{customizeSettings.button.style.borderRadius}}px;">{{customizeSettings.button.text}}</button>
+          <br>
+          <br>
+        </div>
+        <br>
       </form>
     </div>
   </div>
