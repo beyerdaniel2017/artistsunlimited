@@ -534,7 +534,6 @@ router.get('/withID/:subID', function(req, res, next) {
           })
           return Promise.all(channelPromArray)
         }).then(function(chans) {
-          console.log(arrChannels);
           sub.channels = arrChannels;
           res.send(sub);
         }).then(null, next)

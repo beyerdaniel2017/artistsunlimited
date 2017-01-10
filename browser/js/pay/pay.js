@@ -11,6 +11,9 @@ app.config(function($stateProvider) {
           })
       },
       channels: function($http, submission) {
+        submission.channels.sort(function() {
+          return .5 - Math.random();
+        });
         return submission.channels;
       }
     }
