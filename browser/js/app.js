@@ -539,7 +539,7 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
         })
     }
   }
-  if ($scope.user.role == "admin") $rootScope.getUserNetwork();
+  if ($scope.user && $scope.user.role == "admin") $rootScope.getUserNetwork();
   //    $scope.checkNotification();
 });
 
