@@ -541,13 +541,29 @@ router.get('/adminUserNetwork/:id', function(req, res, next) {
   }
   User.findById(req.params.id).populate('paidRepost.userID')
     .then(function(user) {
-      var network = [];
+      var error;
+      var networkPromise = [];
       user.paidRepost.forEach(function(pr) {
-        network.push(pr.userID);
+        networkPromise.push(new Promise(function(resolve, reject) {
+          scWrapper.setToken(pr.userID.soundcloud.token);
+          var reqObj = {
+            method: 'GET',
+            path: '/me',
+            qs: {}
+          };
+          scWrapper.request(reqObj, function(err, data) {
+            var person = pr.userID.toJSON();
+            if (err) person.error = true;
+            if (err) console.log('error')
+            resolve(person)
+          })
+        }))
       })
-      res.send(network);
+      return Promise.all(networkPromise)
+    }).then(function(network) {
+      res.send(network)
     }).then(null, next);
-})
+});
 
 router.get('/downloadurl/:id', function(req, res, next) {
   var downloadTrackID = req.params.id;
@@ -1300,11 +1316,31 @@ router.get('/userNetworks', function(req, res, next) {
     .populate('channels')
     .then(function(una) {
       if (una) {
-        res.send(una.channels)
+        var networkPromise = [];
+        una.channels.forEach(function(chan) {
+          networkPromise.push(new Promise(function(resolve, reject) {
+            scWrapper.setToken(chan.soundcloud.token);
+            var reqObj = {
+              method: 'GET',
+              path: '/me',
+              qs: {}
+            };
+            scWrapper.request(reqObj, function(err, data) {
+              chan = chan.toJSON();
+              if (err) chan.error = true;
+              resolve(chan)
+            })
+          }))
+        })
+        return Promise.all(networkPromise)
       } else {
-        res.send([]);
+        return [];
       }
-    }).then(null, next);
+    })
+    .then(function(channels) {
+      res.send(channels);
+    })
+    .then(null, next);
 });
 
 router.get('/paidRepostSignupStatus', function(req, res, next) {

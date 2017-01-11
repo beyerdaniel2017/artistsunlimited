@@ -395,8 +395,7 @@ router.put('/save', function(req, res, next) {
         .then(null, next);
     } else {
       req.body.status = "pooled";
-      if (req.user.repostSettings.poolOn) req.body.pooledSendDate = new Date((new Date()).getTime() + 72 * 3600000);
-      else req.body.pooledSendDate = new Date(0);
+      req.body.pooledSendDate = new Date((new Date()).getTime() + 72 * 3600000);
       req.body.ignoredBy = [req.user._id.toJSON()];
       Submission.findByIdAndUpdate(req.body._id, req.body, {
           new: true
@@ -449,7 +448,6 @@ function formatForEmail(item, sub) {
 }
 
 router.delete('/decline/:subID/:password', function(req, res, next) {
-
   if (!req.user.role == 'admin') {
     next(new Error('Unauthorized'));
     return;

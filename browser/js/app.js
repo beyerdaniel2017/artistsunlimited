@@ -493,16 +493,53 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
       var adminUser = JSON.parse($window.localStorage.getItem('adminUser'));
       return $http.get("/api/database/adminUserNetwork/" + adminUser._id)
         .then(function(res) {
+          var troubleUser = res.data.find(function(user) {
+            return user.error;
+          })
+          if (troubleUser) {
+            $.Zebra_Dialog("Please log back in with <span style='font-weight:bold'>" + troubleUser.soundcloud.username + "</span> to be able to continue to manage <span style='font-weight:bold'>" + troubleUser.soundcloud.username + "</span>. Otherwise, please remove it from your \"accounts\".", {
+              'type': 'question',
+              'buttons': [{
+                caption: 'Cancel',
+                callback: function() {}
+              }, {
+                caption: 'Log In',
+                callback: function() {
+                  $scope.rootSoundcloudLogin();
+                  $state.go('scheduler');
+                }
+              }]
+            })
+          }
           $rootScope.userlinkedAccounts = res.data;
         })
     } else {
       return $http.get("/api/database/userNetworks")
-        .then(function(networks) {
-          $rootScope.userlinkedAccounts = networks.data;
+        .then(function(res) {
+          var troubleUser = res.data.find(function(user) {
+            return user.error;
+          })
+          console.log(res.data);
+          if (troubleUser) {
+            console.log(troubleUser)
+            $.Zebra_Dialog("Please log back in with <span style='font-weight:bold'>" + troubleUser.soundcloud.username + "</span> to be able to continue to manage <span style='font-weight:bold'>" + troubleUser.soundcloud.username + "</span>. Otherwise, please remove it from your \"Linked Accounts\".", {
+              'type': 'question',
+              'buttons': [{
+                caption: 'Cancel',
+                callback: function() {}
+              }, {
+                caption: 'Log In',
+                callback: function() {
+                  $scope.rootSoundcloudLogin();
+                }
+              }]
+            })
+          }
+          $rootScope.userlinkedAccounts = res.data;
         })
     }
   }
-
+  if ($scope.user.role == "admin") $rootScope.getUserNetwork();
   //    $scope.checkNotification();
 });
 

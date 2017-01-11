@@ -116,7 +116,7 @@ function repostAndRemove(event, user, repCount) {
           if (event.email && event.name) {
             var newEvent = JSON.parse(JSON.stringify(event));
             delete newEvent._id;
-            scheduleRepost(newEvent, new Date(), 7 * 24)
+            scheduleRepost(newEvent, new Date(new Date().getTime() + 2 * 24 * 3600000), 7 * 24)
               .then(function(ev) {
                 Submission.findOne({
                   $or: [{
