@@ -371,7 +371,8 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
         userData.isAdmin = false;
         SessionService.create(userData);
         $scope.user = SessionService.getUser();
-        window.location.reload();
+        if (window.location.href.includes('/admin')) window.location.href = '/admin/scheduler'
+        else window.location.reload();
       })
       .then(null, function(err) {
         console.log(err);
@@ -506,7 +507,6 @@ app.controller('FullstackGeneratedController', function($stateParams, $window, $
                 caption: 'Log In',
                 callback: function() {
                   $scope.rootSoundcloudLogin();
-                  $state.go('scheduler');
                 }
               }]
             })
