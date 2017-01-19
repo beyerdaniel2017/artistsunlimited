@@ -77,7 +77,11 @@ module.exports = (function() {
             callback(undefined, d);
           }
         } catch (e) {
-          callback(body, undefined);
+          if (response.statusCode < 400) {
+            callback(undefined, body);
+          } else {
+            callback(body, undefined);
+          }
         }
       });
     });
