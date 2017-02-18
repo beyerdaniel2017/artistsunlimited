@@ -204,10 +204,10 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     }
     $scope.selectedGroupChannelIDS = [];
     sub.selectedGroups.forEach(function(g) {
-      $scope.user.paidRepost.forEach(function(acc) {
+      $scope.paidRepostAccounts.forEach(function(acc) {
         if (acc.groups.indexOf(g) != -1) {
-          if ($scope.selectedGroupChannelIDS.indexOf(acc.id) == -1) {
-            $scope.selectedGroupChannelIDS.push(acc.id);
+          if ($scope.selectedGroupChannelIDS.indexOf(acc.user.id) == -1) {
+            $scope.selectedGroupChannelIDS.push(acc.user.id);
           }
         }
       });
