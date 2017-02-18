@@ -17,7 +17,9 @@ router.get('/unaccepted', function(req, res, next) {
   var skipcount = parseInt(req.query.skip);
   var limitcount = parseInt(req.query.limit);
   var paidRepostIds = [];
-  if (req.user.paidRepost.length > 0) {
+  if (req.query.userID != "all") {
+    paidRepostIds.push(req.query.userID);
+  } else if (req.user.paidRepost.length > 0) {
     req.user.paidRepost.forEach(function(acc) {
       paidRepostIds.push(acc.userID);
     })
@@ -25,7 +27,8 @@ router.get('/unaccepted', function(req, res, next) {
   var searchObj = {
     userID: {
       $in: paidRepostIds
-    }
+    },
+    status: req.query.status
   };
   if (genre != undefined && genre != 'null') {
     searchObj = {
@@ -181,7 +184,9 @@ router.get('/count', function(req, res, next) {
     PremierSubmission.count(searchObj, function(err, count) {
       if (err) next(err);
       else {
-        res.send({ count: count });
+        res.send({
+          count: count
+        });
       }
     })
   }

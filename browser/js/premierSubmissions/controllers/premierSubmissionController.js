@@ -11,6 +11,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   if (!SessionService.getUser()) {
     $state.go('admin');
   }
+  $scope.channelSelect = "all";
   $scope.user = SessionService.getUser();
   $scope.user.isAdmin = $scope.user.role == 'admin' ? true : false;
   $scope.viewStatus = 'new';
@@ -22,6 +23,7 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
   $scope.selectedChannelIDS = [];
   $scope.selectedGroupChannelIDS = [];
   $scope.selectedChannelName = [];
+  $scope.paidRepostAccounts = [];
   $scope.genre = "";
   $scope.limit = 20;
   $scope.dynamicButton = [{
@@ -53,9 +55,28 @@ app.controller('PremierSubmissionController', function($rootScope, $state, $scop
     $('.nav-tabs a[href="#managesubmissions"]').tab('show');
   }
 
+  $scope.changeChannelSelect = function() {
+    $scope.showingElements = [];
+    $scope.loadSubmissions();
+  }
+
+  $scope.getPaidRepostAccounts = function() {
+    $http.get('/api/submissions/getPaidRepostAccounts').then(function(res) {
+      $scope.paidRepostAccounts = res.data;
+      for (var i = 0; i < $scope.paidRepostAccounts.length; i++) {
+        $scope.paidRepostAccounts[i].groups.forEach(function(acc) {
+          if (acc != "" && $scope.uniqueGroup.indexOf(acc) === -1) {
+            $scope.uniqueGroup.push(acc);
+          }
+        });
+      }
+    });
+  }
+  $scope.getPaidRepostAccounts();
+
   $scope.loadSubmissions = function() {
     $scope.processing = true;
-    $http.get('/api/premier/unaccepted?genre=' + $scope.genre + "&skip=" + $scope.showingElements.length + "&limit=" + $scope.limit)
+    $http.get('/api/premier/unaccepted?genre=' + $scope.genre + "&skip=" + $scope.showingElements.length + "&limit=" + $scope.limit + "&userID=" + $scope.channelSelect + "&status=" + $scope.viewStatus)
       .then(function(res) {
         $scope.processing = false;
         if (res.data.length > 0) {
