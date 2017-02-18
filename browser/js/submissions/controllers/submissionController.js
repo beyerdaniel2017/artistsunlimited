@@ -8,6 +8,7 @@ app.config(function($stateProvider) {
 
 app.controller('SubmissionController', function($rootScope, $state, $scope, $http, $window, AuthService, SessionService, AccountSettingServices, $sce) {
   $scope.counter = 0;
+  $scope.channelSelect = "all";
   $scope.showingElements = [];
   $scope.marketSubmissions = [];
   $scope.selectedGroups = [];
@@ -110,11 +111,16 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $.Zebra_Dialog("By enabling the AU Marketplace you agree that every submission that you accept will also be shared to all other AU Admins in the AU Marketplace. By doing so, you will gain access to all submissions from other admins that have enabled the AU MarketPlace. As well, you will make 10% of every sale that is made from a submission that originated to one of your network accounts.");
   }
 
+  $scope.changeChannelSelect = function() {
+    $scope.showingElements = [];
+    $scope.loadSubmissions();
+  }
+
   $scope.loadSubmissions = function() {
     var genre = $scope.genre.replace(/[0-9]/g, '');
     var selectedGenre = genre.replace('(', '').replace(')', '').trim();
     $scope.processing = true;
-    $http.get('/api/submissions/unaccepted?genre=' + encodeURIComponent(selectedGenre) + "&skip=" + $scope.showingElements.length + "&limit=" + $scope.limit)
+    $http.get('/api/submissions/unaccepted?genre=' + encodeURIComponent(selectedGenre) + "&skip=" + $scope.showingElements.length + "&limit=" + $scope.limit + "&userID=" + $scope.channelSelect)
       .then(function(res) {
         $scope.processing = false;
         if (res.data.length > 0) {

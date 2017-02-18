@@ -91,7 +91,9 @@ router.get('/unaccepted', function(req, res, next) {
     var limitcount = parseInt(req.query.limit);
     var genre = req.query.genre ? req.query.genre : undefined;
     var paidRepostIds = [];
-    if (req.user.paidRepost.length > 0) {
+    if (req.query.userID != "all") {
+      paidRepostIds.push(req.query.userID);
+    } else if (req.user.paidRepost.length > 0) {
       req.user.paidRepost.forEach(function(acc) {
         paidRepostIds.push(acc.userID);
       })
