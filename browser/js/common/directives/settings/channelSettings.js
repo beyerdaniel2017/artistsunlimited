@@ -690,6 +690,7 @@ app.directive('channelsettings', function($http) {
               var next = true;
               if ($scope.AccountsStepData.price < 6 || $scope.AccountsStepData.price == undefined) {
                 next = false;
+                $scope.AccountsStepData.price = 6;
                 $.Zebra_Dialog('Please enter a price (minimum $6).');
                 return;
               }

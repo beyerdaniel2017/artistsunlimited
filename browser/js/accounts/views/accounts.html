@@ -55,7 +55,7 @@
                   <br>
                   <div class="row">
                     <div class="col-md-12">
-                      <div class="account-vertical-container" ng-repeat="userdata in paidRepostAccounts">
+                      <div class="account-vertical-container" ng-repeat="userdata in user.paidRepost">
                         <ul>
                           <li>
                             <div class="list-img-container">
@@ -72,7 +72,7 @@
                             <div class="price-box vertical-text text-center">
                               <div style="display: inline-block;">
                                 <span class="pull-left" style="margin-right: 10px; padding-top: 7px; font-size: 15px;">Price for repost: $</span>
-                                <span class="pull-right" style="position: relative;"> <input type="number" name="" placeholder="10.00" class="price-input-box price-input" ng-model="userdata.price" ng-blur="editprice($index, userdata)" min="3"></span>
+                                <span class="pull-right" style="position: relative;"> <input style="width:55px;" type="number" name="" placeholder="10.00" class="price-input-box price-input" ng-model="userdata.price" min="6"><button class='btn btn-border' style="margin-left:10px;" ng-click="editprice($index, userdata)">Save</button></span>
                               </div>
                               <br>
                               <span>

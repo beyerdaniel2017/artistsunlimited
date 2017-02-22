@@ -12,7 +12,6 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
     $state.go('admin');
   }
   SessionService.removeAccountusers();
-  $scope.paidRepostAccounts = [];
   $scope.user = SessionService.getUser();
   $scope.user.paidRepost.groups = $scope.user.paidRepost.groups ? $scope.user.paidRepost.groups : [];
   $scope.soundcloudLogin = function() {
@@ -55,10 +54,10 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
       'buttons': [{
         caption: 'Yes',
         callback: function() {
-          var postRepost = $scope.paidRepostAccounts[index].userID;
+          var postRepost = $scope.user.paidRepost[index].userID;
           accountService.deleteUserAccount(postRepost)
             .then(function(res) {
-              $scope.paidRepostAccounts.splice(index, 1);
+              $scope.user.paidRepost.splice(index, 1);
             })
         }
       }, {
@@ -122,13 +121,16 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
 
   $scope.getPaidRepostAccounts = function() {
     $http.get('/api/submissions/getPaidRepostAccounts').then(function(res) {
-      $scope.paidRepostAccounts = res.data;
+      res.data = res.data.sort(function(a, b) {
+        return a.user.id - b.user.id;
+      });
+      $scope.user.paidRepost = res.data;
     });
   }
 
   $scope.editprice = function(index, userdata) {
     if (userdata.price < 6 || userdata.price == undefined) {
-      next = false;
+      userdata.price = 6;
       $.Zebra_Dialog('Please enter a price (minimum $6).');
       return;
     }
@@ -140,6 +142,7 @@ app.controller('accountsController', function($rootScope, $state, $scope, $http,
       $scope.processing = false;
       SessionService.create(res.data);
       $scope.user = SessionService.getUser();
+      $scope.getPaidRepostAccounts();
     });
   }
 

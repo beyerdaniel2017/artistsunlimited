@@ -911,6 +911,7 @@ router.post('/updateUserAccount', function(req, res, next) {
 router.post('/updateGroup', function(req, res, next) {
   if (!req.user) {
     next(new Error('Unauthorized'));
+
     return;
   }
   User.findOneAndUpdate({
