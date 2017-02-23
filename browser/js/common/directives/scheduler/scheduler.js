@@ -575,7 +575,11 @@ app.directive('scheduler', function($http) {
       $scope.toggleAvailableSlot = function(day, hour) {
         var pushhour = parseInt(hour);
         if ($scope.pseudoAvailableSlots[daysArray[day]].indexOf(pushhour) > -1) {
-          $scope.pseudoAvailableSlots[daysArray[day]].splice($scope.pseudoAvailableSlots[daysArray[day]].indexOf(pushhour), 1);
+          if ($scope.pseudoAvailableSlots[daysArray[day]].length <= 2) {
+            $.Zebra_Dialog("Cannot remove slot. You must have at least 2 repost slots per day.");
+          } else {
+            $scope.pseudoAvailableSlots[daysArray[day]].splice($scope.pseudoAvailableSlots[daysArray[day]].indexOf(pushhour), 1);
+          }
         } else if ($scope.tooManyReposts(day, hour)) {
           $.Zebra_Dialog("Cannot schedule slot. We only allow 12 reposts within 24 hours to prevent you from being repost blocked.");
           return;
