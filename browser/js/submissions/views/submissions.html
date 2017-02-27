@@ -54,9 +54,15 @@
                   <!--                   <row class="col-md-12">
                     <h4 style="text-align:right;">{{counts.regularCount}} submissions</h4>
                   </row>    -->
-                  <select id="paidUsers" class="form-control" ng-model="channelSelect" ng-change="changeChannelSelect()" style="max-width:200px;">
+                  <span>Account: </span>
+                  <select id="paidUsers" class="form-control" ng-model="channelSelect" ng-change="changeChannelSelect()" style="max-width:200px; display:inline-block;">
                     <option value="all" default>All</option>
                     <option ng-repeat="chan in paidRepostAccounts" value="{{chan.userID}}">{{chan.user.username}}</option>
+                  </select>
+                  <span style="margin-left:20px;">Genre: </span>
+                  <select id="paidUsers" class="form-control" ng-model="genre" ng-change="changeChannelSelect()" style="max-width:200px; display:inline-block;">
+                    <option value="all" default>All</option>
+                    <option ng-repeat="g in genres" value="{{g}}">{{g}}</option>
                   </select>
                   <div class="submi-section" ng-repeat="sub in showingElements" ng-if="channelSelect == 'all' || channelSelect == sub.userID._id" ng-class="{'border-bottom':!$last}">
                     <div class="">

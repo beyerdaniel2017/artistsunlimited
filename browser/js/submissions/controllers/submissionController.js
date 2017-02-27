@@ -24,8 +24,33 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     refundAmount: 0,
     future: 0
   };
+
+  $scope.genres = [
+    'Alternative Rock',
+    'Ambient',
+    'Creative',
+    'Chill',
+    'Classical',
+    'Country',
+    'Dance & EDM',
+    'Dancehall',
+    'Deep House',
+    'Disco',
+    'Drum & Bass',
+    'Dubstep',
+    'Electronic',
+    'Festival',
+    'Folk',
+    'Hip-Hop/RNB',
+    'House',
+    'Indie/Alternative',
+    'Latin',
+    'Trap',
+    'Vocalists/Singer-Songwriter'
+  ];
+
   $scope.allowance = 0;
-  $scope.genre = "";
+  $scope.genre = "all";
   $scope.displayType = 'channel';
   $scope.limit = 10;
   $scope.marketLimit = 10;
@@ -92,11 +117,6 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
 
   function formatForTestEmail(item, email) {
     return encodeURIComponent(item.replace(/{SUBMITTERS_EMAIL}/g, email).replace(/{SUBMITTERS_NAME}/g, "Johnny Submitter").replace(/{TRACK_TITLE_WITH_LINK}/g, "Oliver Nelson ft. Kaleem Taylor - Ain't A Thing" + ' (https://soundcloud.com/olivernelson/oliver-nelson-ft-kaleem-taylor-aint-a-thing-3)').replace(/{TRACK_TITLE}/g, "Oliver Nelson ft. Kaleem Taylor - Ain't A Thing").replace(/{TRACK_ARTIST_WITH_LINK}/g, "Oliver Nelson" + ' (https://soundcloud.com/olivernelson)').replace(/{TRACK_ARTIST}/g, "Oliver Nelson").replace(/{SUBMITTED_TO_ACCOUNT_NAME}/g, "La Tropical").replace(/{SUBMITTED_ACCOUNT_NAME_WITH_LINK}/g, 'La Tropical (https://soundcloud.com/latropical)').replace('{TODAYSDATE}', new Date().toLocaleDateString()));
-  }
-
-  $scope.getSubmissionsByGenre = function() {
-    $scope.showingElements = [];
-    $scope.loadSubmissions();
   }
 
   $scope.togglePoolOn = function() {

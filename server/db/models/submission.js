@@ -81,6 +81,9 @@ var schema = new mongoose.Schema({
   },
   artworkURL: {
     type: String
+  },
+  genre: {
+    type: String
   }
 });
 

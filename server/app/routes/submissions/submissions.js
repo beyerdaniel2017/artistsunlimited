@@ -108,7 +108,7 @@ router.get('/unaccepted', function(req, res, next) {
       },
       status: "submitted"
     };
-    if (genre != undefined && genre != 'null') {
+    if (genre != undefined && genre != 'null' && genre != 'all') {
       query.genre = genre;
     }
     Submission.find(query).sort({
@@ -171,7 +171,7 @@ router.get('/getMarketPlaceSubmission', function(req, res, next) {
       },
       status: "pooled"
     };
-    if (genre != undefined && genre != 'null') {
+    if (genre != undefined && genre != 'null' && genre != 'all') {
       query.genre = genre;
     }
     Submission.find(query).sort({

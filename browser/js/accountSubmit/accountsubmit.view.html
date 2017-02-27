@@ -102,6 +102,15 @@ body {
             <br>
             <div class="row">
               <div style="max-width:350px; width:80%; margin: 0 auto;">
+                <select id="paidUsers" class="form-control" ng-model="submission.genre" ng-change="changeChannelSelect()" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required>
+                  <option value="genre" default>Genre</option>
+                  <option ng-repeat="g in genreArray" value="{{g}}">{{g}}</option>
+                </select>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div style="max-width:350px; width:80%; margin: 0 auto;">
                 <input type="text" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
               </div>
             </div>
@@ -150,6 +159,15 @@ body {
               <div class="row text-center" ng-show="showPlayer">
                 <div style="max-width:350px; width:80%; margin:0 auto;">
                   <iframe id="scPlayerCustom" width="700" height="160" src="https://w.soundcloud.com/player/?url=&auto_play=false&show_artwork=true" style="margin-top:10px; position:relative; z-index:1; border:none; max-width:100%"></iframe>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div style="max-width:350px; width:80%; margin: 0 auto;">
+                  <select id="paidUsers" class="form-control" ng-model="submission.genre" ng-change="changeChannelSelect()" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required>
+                    <option value="genre" default>Genre</option>
+                    <option ng-repeat="g in genreArray" value="{{g}}">{{g}}</option>
+                  </select>
                 </div>
               </div>
               <br>
@@ -219,6 +237,15 @@ body {
               <br>
               <div class="row">
                 <div style="max-width:350px; width:80%; margin: 0 auto;">
+                  <select id="paidUsers" class="form-control" ng-model="submission.genre" ng-change="changeChannelSelect()" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required>
+                    <option value="genre" default>Genre</option>
+                    <option ng-repeat="g in genreArray" value="{{g}}">{{g}}</option>
+                  </select>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div style="max-width:350px; width:80%; margin: 0 auto;">
                   <input type="text" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required/>
                 </div>
               </div>
@@ -280,6 +307,15 @@ body {
               <br>
               <div class="row">
                 <div style="max-width:350px; width:80%; margin: 0 auto;">
+                  <select id="paidUsers" class="form-control" ng-model="submission.genre" ng-change="changeChannelSelect()" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required>
+                    <option value="genre" default>Genre</option>
+                    <option ng-repeat="g in genreArray" value="{{g}}">{{g}}</option>
+                  </select>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div style="max-width:350px; width:80%; margin: 0 auto;">
                   <input type="text" placeholder="Name" ng-model="submission.name" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}};" required/>
                 </div>
               </div>
@@ -315,6 +351,15 @@ body {
         <div class="row text-center" ng-show="showPlayer">
           <div style="max-width:350px; width:80%; margin:0 auto;">
             <iframe id="scPlayerCustom" width="700" height="160" src="https://w.soundcloud.com/player/?url=&auto_play=false&show_artwork=true" style="margin-top:10px; position:relative; z-index:1; border:none; max-width:100%;"></iframe>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div style="max-width:350px; width:80%; margin: 0 auto;">
+            <select id="paidUsers" class="form-control" ng-model="submission.genre" ng-change="changeChannelSelect()" style="width:100%; height:34px; padding:5px; border:solid {{customizeSettings.inputFields.style.border}}px; border-radius:{{customizeSettings.inputFields.style.borderRadius}}px; border-color:{{customizeSettings.inputFields.style.borderColor}}" required>
+              <option value="genre" default>Genre</option>
+              <option ng-repeat="g in genreArray" value="{{g}}">{{g}}</option>
+            </select>
           </div>
         </div>
         <br>

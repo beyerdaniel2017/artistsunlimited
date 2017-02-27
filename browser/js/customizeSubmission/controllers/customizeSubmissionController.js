@@ -47,7 +47,6 @@ app.controller('CustomizeSubmissionController', function($rootScope, $state, $sc
     customizeService.addCustomize($scope.postData)
       .then(function(response) {
         $scope.processing = false;
-        $.Zebra_Dialog("Saved Successfully");
       }).catch(function(error) {
         console.log("er", error);
       });

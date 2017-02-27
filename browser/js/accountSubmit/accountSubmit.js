@@ -37,7 +37,33 @@ app.config(function($stateProvider) {
 });
 
 app.controller('AccountSubmitSongController', function($rootScope, $state, $scope, userID, customizeSettings, $http, customizeService, $location) {
-  $scope.submission = {};
+  $scope.genreArray = [
+    'Alternative Rock',
+    'Ambient',
+    'Creative',
+    'Chill',
+    'Classical',
+    'Country',
+    'Dance & EDM',
+    'Dancehall',
+    'Deep House',
+    'Disco',
+    'Drum & Bass',
+    'Dubstep',
+    'Electronic',
+    'Festival',
+    'Folk',
+    'Hip-Hop/RNB',
+    'House',
+    'Indie/Alternative',
+    'Latin',
+    'Trap',
+    'Vocalists/Singer-Songwriter'
+  ];
+
+  $scope.submission = {
+    genre: "genre"
+  };
   $scope.customizeSettings = customizeSettings;
   $scope.searchString = "";
   $scope.showPlayer = false;
@@ -77,7 +103,7 @@ app.controller('AccountSubmitSongController', function($rootScope, $state, $scop
   }
 
   $scope.submit = function() {
-    if (!$scope.submission.email || !$scope.submission.name || !$scope.submission.trackID) {
+    if (!$scope.submission.email || !$scope.submission.name || !$scope.submission.trackID || $scope.submission.genre == "genre") {
       $.Zebra_Dialog("Please fill in all fields")
     } else {
       $scope.processing = true;
@@ -93,13 +119,15 @@ app.controller('AccountSubmitSongController', function($rootScope, $state, $scop
           channelIDS: [],
           invoiceIDS: [],
           userID: userID.userid,
-          genre: ''
+          genre: $scope.submission.genre
         })
         .then(function(res) {
           $.Zebra_Dialog("Your song has been submitted and will be reviewed soon.");
           $scope.processing = false;
           $scope.notFound = false;
-          $scope.submission = {};
+          $scope.submission = {
+            genre: "genre"
+          };
           $scope.searchString = "";
           $scope.showPlayer = false;
           document.getElementById('scPlayerCustom').style.visibility = "hidden";
