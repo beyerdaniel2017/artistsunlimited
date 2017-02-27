@@ -164,6 +164,11 @@
                   <!--                   <row class="col-md-6">
                     <h4 style="text-align:left;">Credits: {{allowance}}</h4>
                   </row> -->
+                  <span style="margin-left:20px;">Genre: </span>
+                  <select id="paidUsers" class="form-control" ng-model="genre" ng-change="changeChannelSelect()" style="max-width:200px; display:inline-block;">
+                    <option value="all" default>All</option>
+                    <option ng-repeat="g in genres" value="{{g}}">{{g}}</option>
+                  </select>
                   <div class="submi-section" ng-repeat="sub in marketSubmissions" ng-if=" user.repostSettings.poolOn" ng-class="{'border-bottom':!$last}">
                     <div class="">
                       <div class="row">
