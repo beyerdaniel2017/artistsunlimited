@@ -136,7 +136,11 @@ app.controller('SubmissionController', function($rootScope, $state, $scope, $htt
     $scope.loadSubmissions();
   }
   
-  //rascal add 4-5 
+  //rascal add 4-6 
+  /*$scope.changeChannelSelect_repost = function() {
+    $scope.showingElements = [];
+    $scope.loadMarketSubmissions();
+  }*/
   $scope.changeChannelSelect_repost = function() {
     $scope.showingElements = [];
     $scope.loadMarketSubmissions();
