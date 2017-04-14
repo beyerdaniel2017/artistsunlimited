@@ -7,6 +7,8 @@ nbproject/project.properties
 
 nbproject/project.xml
 
+tmp/*
+
 public/main.js
 public/style.css
 

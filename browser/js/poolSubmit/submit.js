@@ -35,7 +35,7 @@ app.controller('SubmitSongController', function(SessionService, $rootScope, $sta
   
   $scope.choseTrack = function(track) {
     console.log(track.permalink_url);
-    if (track.permalink_url!="https://soundcloud.com/tropisnetwork/clean-bandit-ft-zara-larsson-ben-van-kuringen-remix-free-download") 
+    if (track.user.permalink_url!="http://soundcloud.com/tropisnetwork") 
     {
       $scope.searchString = track.title;
       $scope.submission.trackID = track.id;
