@@ -85,22 +85,22 @@ app.directive('scsearch', function($http) {
       }
 
       
-      $scope.setItemText = function(item) {
-        switch (item.kind) {
-          case 'track':
-            item.displayName = item.title + ' - ' + item.user.username;
-            item.header = item.title;
-            item.subheader = item.user.username;
-            break;
+      $scope.setItemText = function(user) {
+        switch (user.kind) {          
           case 'playlist':
-            item.displayName = item.title + ' - ' + item.user.username;
-            item.header = item.title;
-            item.subheader = item.user.username;
+            user.displayName = user.title + ' - ' + user.user.username;
+            user.header = user.title;
+            user.subheader = user.user.username;
             break;
           case 'user':
-            item.displayName = item.username + ' - ' + item.followers_count + " followers";
-            item.header = item.username;
-            item.subheader = item.followers_count + " followers";
+            user.displayName = user.username + ' - ' + user.followers_count + " followers";
+            user.header = user.username;
+            user.subheader = user.followers_count + " followers";
+            break;
+          case 'track':
+            user.displayName = user.title + ' - ' + user.user.username;
+            user.header = user.title;
+            user.subheader = user.user.username;
             break;
         }
       }
