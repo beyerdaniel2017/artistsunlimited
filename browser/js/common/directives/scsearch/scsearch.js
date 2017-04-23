@@ -91,12 +91,7 @@ app.directive('scsearch', function($http) {
         }
       }
 
-      $scope.directSearch = function() {
-        if ($scope.searchString.indexOf('soundcloud.com') > -1) {
-          $scope.sendSearch();
-        }
-      }
-
+      
       $scope.setItemText = function(item) {
         switch (item.kind) {
           case 'track':
@@ -127,6 +122,11 @@ app.directive('scsearch', function($http) {
         });
       }
 
+      $scope.directSearch = function() {
+        if ($scope.searchString.indexOf('soundcloud.com') > -1) {
+          $scope.sendSearch();
+        }
+      }
       $scope.keypress = function(keyEvent) {
         if (keyEvent.which === 13) {
           $scope.sendSearch();
