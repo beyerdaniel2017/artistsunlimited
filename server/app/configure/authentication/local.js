@@ -22,7 +22,7 @@ module.exports = function(app) {
         // user.correctPassword is a method from the User schema.
         // if (!user || !user.correctPassword(password)) {
         if (!user || !user.correctPassword(password)) {
-          done(null, user);
+          done(null, false);
         } else {
           // Properly authenticated.
           done(null, user);
