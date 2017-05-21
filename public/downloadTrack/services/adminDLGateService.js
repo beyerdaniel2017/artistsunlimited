@@ -1,0 +1,28 @@
+
+app.service('AdminDLGateService', ['$http', function($http){
+
+	function resolveData(data) {
+		return $http.post('/api/soundcloud/resolve', data);
+	}
+
+	function getDownloadList() {
+		return $http.get('/api/database/downloadurl/admin');
+	}
+
+	function getDownloadGateway(data) {
+		return $http.get('/api/database/downloadurl/' + data.id);
+	}
+
+	function deleteDownloadGateway(data) {
+		return $http.post('/api/database/downloadurl/delete', data);
+	}
+
+	return {
+		resolveData: resolveData,
+		getDownloadList: getDownloadList,
+		getDownloadGateway: getDownloadGateway,
+		deleteDownloadGateway: deleteDownloadGateway
+	};
+}]);
+
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiIiwic291cmNlcyI6WyJkb3dubG9hZFRyYWNrL3NlcnZpY2VzL2FkbWluRExHYXRlU2VydmljZS5qcyJdLCJzb3VyY2VzQ29udGVudCI6WyJcclxuYXBwLnNlcnZpY2UoJ0FkbWluRExHYXRlU2VydmljZScsIFsnJGh0dHAnLCBmdW5jdGlvbigkaHR0cCl7XHJcblxyXG5cdGZ1bmN0aW9uIHJlc29sdmVEYXRhKGRhdGEpIHtcclxuXHRcdHJldHVybiAkaHR0cC5wb3N0KCcvYXBpL3NvdW5kY2xvdWQvcmVzb2x2ZScsIGRhdGEpO1xyXG5cdH1cclxuXHJcblx0ZnVuY3Rpb24gZ2V0RG93bmxvYWRMaXN0KCkge1xyXG5cdFx0cmV0dXJuICRodHRwLmdldCgnL2FwaS9kYXRhYmFzZS9kb3dubG9hZHVybC9hZG1pbicpO1xyXG5cdH1cclxuXHJcblx0ZnVuY3Rpb24gZ2V0RG93bmxvYWRHYXRld2F5KGRhdGEpIHtcclxuXHRcdHJldHVybiAkaHR0cC5nZXQoJy9hcGkvZGF0YWJhc2UvZG93bmxvYWR1cmwvJyArIGRhdGEuaWQpO1xyXG5cdH1cclxuXHJcblx0ZnVuY3Rpb24gZGVsZXRlRG93bmxvYWRHYXRld2F5KGRhdGEpIHtcclxuXHRcdHJldHVybiAkaHR0cC5wb3N0KCcvYXBpL2RhdGFiYXNlL2Rvd25sb2FkdXJsL2RlbGV0ZScsIGRhdGEpO1xyXG5cdH1cclxuXHJcblx0cmV0dXJuIHtcclxuXHRcdHJlc29sdmVEYXRhOiByZXNvbHZlRGF0YSxcclxuXHRcdGdldERvd25sb2FkTGlzdDogZ2V0RG93bmxvYWRMaXN0LFxyXG5cdFx0Z2V0RG93bmxvYWRHYXRld2F5OiBnZXREb3dubG9hZEdhdGV3YXksXHJcblx0XHRkZWxldGVEb3dubG9hZEdhdGV3YXk6IGRlbGV0ZURvd25sb2FkR2F0ZXdheVxyXG5cdH07XHJcbn1dKTtcclxuIl0sImZpbGUiOiJkb3dubG9hZFRyYWNrL3NlcnZpY2VzL2FkbWluRExHYXRlU2VydmljZS5qcyJ9
